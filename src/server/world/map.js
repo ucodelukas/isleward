@@ -95,8 +95,11 @@ define([
 			if (this.instanced)
 				this.instanced = (this.instanced == '1');
 
-			if (mapFile.properties.spawn)
+			if (mapFile.properties.spawn) {
 				this.spawn = JSON.parse(mapFile.properties.spawn);
+				if (!this.spawn.push)
+					this.spawn = [ this.spawn ];
+			}
 		},
 		create: function() {
 			this.getMapFile();
@@ -361,6 +364,13 @@ define([
 					this.objBlueprints.push(obj);
 				}
 			}
+		},
+
+		getSpawnPos: function(obj) {
+			var stats = obj.components.find(c => (c.type == 'stats'));
+			var level = stats.values.level;
+
+			return ((this.spawn.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (this.spawn[0]));
 		}
 	}
 

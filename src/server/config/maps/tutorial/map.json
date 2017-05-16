@@ -1085,7 +1085,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 2, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a warrior or thief.\"}"
+                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a warrior or thief.\"}"
                     },
                  "rotation":0,
                  "type":"",
@@ -1130,7 +1130,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 2, \"msg\": \"You can loot items by standing on them then open your inventory with <font class='color-green'>i<\/font>.<br \/><br \/>To equip an item, simply right click the item in your inventory.\"}"
+                     "cpnNotice":"{\"maxLevel\": 2, \"msg\": \"Far to the north, you see a small shack. Civilization!<br \/><br \/>You can read more help by pressing <font class='color-green'>h<\/font>.\"}"
                     },
                  "rotation":0,
                  "type":"",
@@ -1145,7 +1145,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 2, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a warrior or thief.\"}"
+                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a warrior or thief.\"}"
                     },
                  "rotation":0,
                  "type":"",
@@ -1419,7 +1419,7 @@
     {
      "instanced":"0",
      "name":"Test Zone",
-     "spawn":"{\"x\":60,\"y\":116}"
+     "spawn":"[{\"maxLevel\":1,\"x\":60,\"y\":116},{\"maxLevel\":2,\"x\":89,\"y\":48}]"
     },
  "renderorder":"right-down",
  "tileheight":8,
