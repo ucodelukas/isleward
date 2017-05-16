@@ -200,8 +200,10 @@ define([
 			clientMap.collisionMap = _.get2dArray(w, h);
 
 			var startTemplate = startRoom.template;
-			map.spawn.x = startRoom.x + ~~(startTemplate.width / 2);
-			map.spawn.y = startRoom.y + ~~(startTemplate.height / 2);
+			map.spawn = [{
+				x: startRoom.x + ~~(startTemplate.width / 2),
+				y: startRoom.y + ~~(startTemplate.height / 2)
+			}];
 
 			this.drawRoom(instance, startRoom);
 

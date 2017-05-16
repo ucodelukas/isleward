@@ -46,7 +46,7 @@ define([
 			var w = this.physics.width;
 			var h = this.physics.height;
 
-			var spawn = this.map.spawn;
+			var spawn = this.map.spawn[0];
 			var x = null;
 			var y = null;
 
