@@ -16,7 +16,7 @@ define([
 		},
 
 		bindEvents: function() {
-			this.lifetime = 30;
+			this.lifetime = 100;
 
 			this.fGetHighest.inCombat = this.master.aggro.getHighest.bind(this.master.aggro);
 			this.fGetHighest.outOfCombat = this.returnNoAggro.bind(this);
