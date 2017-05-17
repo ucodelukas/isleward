@@ -315,6 +315,10 @@ define([
 				if (death.success) {
 					var deathEvent = {};
 
+					var killSource = source;
+					if (source.follower)
+						killSource = source.follower.master;
+
 					if (source.player)
 						source.stats.kill(this.obj);
 					else
