@@ -69,12 +69,20 @@ define([
 							y: mob.y,
 							cell: 34,
 							sheetName: 'mobs',
-							name: 'Squiggle'
+							name: 'Squiggle',
+							properties: {
+								cpnFollower: {}
+							},
+							extraProperties: {
+								follower: {
+									master: this
+								}
+							}
 						}
 					});
 
 					mobBuilder.build(mob, {
-						level: 5,
+						level: item.level,
 						faction: this.aggro.faction,
 						walkDistance: 2,
 						regular: {
@@ -82,7 +90,14 @@ define([
 							hpMult: 1,
 							dmgMult: 1
 						},
+						spells: [{
+							type: 'melee',
+							damage: 1,
+							statMult: 0.1
+						}]
 					}, false, 'regular');
+
+					mob.follower.bindEvents();
 				}
 			}
 		},
