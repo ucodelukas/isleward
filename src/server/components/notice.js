@@ -69,11 +69,13 @@ define([
 			}, [obj.serverId]);
 		},
 
-		collisionExit: function(obj) {
-			if (!obj.player)
-				return;
-			else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
-				return;
+		collisionExit: function(obj, force) {
+			if (!force) {
+				if (!obj.player)
+					return;
+				else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+					return;
+			}
 
 			this.callAction(obj, 'exit');
 
@@ -83,6 +85,13 @@ define([
 			this.syncer.queue('onRemoveDialogue', {
 				src: this.obj.id
 			}, [obj.serverId]);
+		},
+
+		events: {
+			onCellPlayerLevelUp: function(obj) {
+				if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+					this.collisionExit(obj, true);
+			}
 		}
 	};
 });
