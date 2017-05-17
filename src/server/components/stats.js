@@ -156,45 +156,54 @@ define([
 		},
 
 		getXp: function(amount) {
-			amount = ~~(amount * (1 + (this.values.xpIncrease / 100)));
+			var obj = this.obj;
+			var values = this.values;
 
-			this.values.xpTotal = ~~(this.values.xpTotal + amount);
-			this.values.xp = ~~(this.values.xp + amount);
+			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
+
+			values.xpTotal = ~~(values.xpTotal + amount);
+			values.xp = ~~(values.xp + amount);
 
 			this.syncer.queue('onGetDamage', {
-				id: this.obj.id,
+				id: obj.id,
 				event: true,
 				text: '+' + amount + ' xp'
 			});
 
 			var syncO = {};
-
 			var didLevelUp = false;
-			while (this.values.xp >= this.values.xpMax) {
-				didLevelUp = true;
-				this.values.xp -= this.values.xpMax;
-				this.values.level++;
 
-				this.values.hpMax += 40;
+			while (values.xp >= values.xpMax) {
+				didLevelUp = true;
+				values.xp -= values.xpMax;
+				values.level++;
+
+				values.hpMax += 40;
 
 				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
+					id: obj.id,
 					event: true,
 					text: 'level up'
 				});
 
-				this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
+				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 
-				syncO.level = this.values.level;
+				syncO.level = values.level;
 
 				this.calcXpMax();
 			}
 
-			if (didLevelUp)
-				this.obj.auth.doSave();
+			if (didLevelUp) {
+				var cellContents = obj.instance.physics.getCell(obj.x, obj.y);
+				cellContents.forEach(function(c) {
+					c.fireEvent('onCellPlayerLevelUp', obj);
+				});
 
-			this.obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
+				obj.auth.doSave();
+			}
+
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
 
 			process.send({
 				method: 'object',
@@ -237,13 +246,13 @@ define([
 					var amount = level * 10 * mult;
 					if (Math.abs(levelDelta) <= 10)
 						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult);
-					else 
+					else
 						amount = 0;
 
 					a.obj.stats.getXp(amount, this.obj);
 				}
-				
-	
+
+
 				a.obj.fireEvent('afterKillMob', target);
 			}
 
