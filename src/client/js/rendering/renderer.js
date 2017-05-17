@@ -51,6 +51,11 @@ define([
 		moveSpeedMax: 1.50,
 		moveSpeedInc: 0.5,
 
+		lastUpdatePos: {
+			x: 0,
+			y: 0
+		},
+
 		zoneId: null,
 
 		textures: {},
@@ -412,8 +417,13 @@ define([
 
 			var w = this.w;
 			var h = this.h;
-			var x = ~~player.x;
-			var y = ~~player.y;
+
+			var x = ~~((-this.stage.x / scale) + (this.width / (scale * 2)));
+			var y = ~~((-this.stage.y / scale) + (this.height / (scale * 2)));
+
+			this.lastUpdatePos.x = this.stage.x;
+			this.lastUpdatePos.y = this.stage.y;
+
 			var sprites = this.sprites;
 			var map = this.map;
 			var container = this.layers.tileSprites;
@@ -421,10 +431,10 @@ define([
 			var sw = this.showTilesW;
 			var sh = this.showTilesH;
 
-			var lowX = Math.max(0, x - sw);
-			var lowY = Math.max(0, y - sh);
-			var highX = Math.min(w - 1, x + sw);
-			var highY = Math.min(h - 1, y + sh);
+			var lowX = Math.max(0, x - sw) + 2;
+			var lowY = Math.max(0, y - sh) + 2;
+			var highX = Math.min(w - 1, x + sw) - 2;
+			var highY = Math.min(h - 1, y + sh) - 2;
 
 			var addedSprite = false;
 
@@ -536,8 +546,13 @@ define([
 					this.moveTo = null;
 				}
 
-				this.stage.x = -~~this.pos.x;
-				this.stage.y = -~~this.pos.y;
+				var stage = this.stage;
+				stage.x = -~~this.pos.x;
+				stage.y = -~~this.pos.y;
+
+				var halfScale = scale / 2;
+				if ((Math.abs(stage.x - this.lastUpdatePos.x) > halfScale) || (Math.abs(stage.y - this.lastUpdatePos.y) > halfScale))
+					this.updateSprites();
 
 				events.emit('onSceneMove');
 			}

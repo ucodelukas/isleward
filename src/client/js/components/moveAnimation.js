@@ -1,7 +1,7 @@
 define([
-
+	'js/rendering/renderer'
 ], function(
-
+	renderer
 ) {
 	return {
 		type: 'moveAnimation',
@@ -114,6 +114,8 @@ define([
 
 				this.obj.setSpritePosition();
 			}
+
+			renderer.updateSprites();
 		}
 	};
 });
