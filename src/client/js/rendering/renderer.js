@@ -154,14 +154,43 @@ define([
 
 			for (var i = 0; i < w; i++) {
 				for (var j = 0; j < h; j++) {
+					var ii = i / 10;
+					var alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
 					var tile = 5;
-					if (Math.random() < 0.4)
-						tile = 6;
-					var tile = new pixi.Sprite(this.getTexture('sprites', tile));
+					if (j < 7)
+						tile = 5;
+					//else if (j > 26)
+					//	tile = 3;
+					else if (alpha < -0.2)
+						tile = 3;
+					else if (alpha < 0.2)
+						tile = 4;
+					else if ((alpha < 0.5) && (j > 7))
+						tile = 53;
 
-					var alpha = Math.sin((i % 4) + Math.cos(j % 8));
+					alpha = Math.random();
+
 					if (tile == 5)
-						alpha /= 2;
+						alpha *= 2;
+					else if (tile == 3)
+						alpha *= 1;
+					else if (tile == 4)
+						alpha *= 1;
+					else if (tile == 53)
+						alpha *= 2;
+
+					alpha = Math.min(Math.max(0.1, alpha), 0.8);
+
+					if (Math.random() < 0.35) {
+						tile = {
+							'5': 6,
+							'3': 0,
+							'4': 1,
+							'53': 54
+						}[tile];
+					}
+
+					var tile = new pixi.Sprite(this.getTexture('sprites', tile));
 
 					tile.alpha = alpha;
 					tile.position.x = i * scale;
