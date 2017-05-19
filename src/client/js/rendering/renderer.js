@@ -155,12 +155,12 @@ define([
 			for (var i = 0; i < w; i++) {
 				for (var j = 0; j < h; j++) {
 					var ii = i / 10;
-					var alpha = Math.sin(((j * 0.2) % 4) + Math.cos(ii % 8));
+					var alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
 					var tile = 5;
 					if (j < 7)
 						tile = 5;
-					else if ((j > 18) && (alpha >= 0.2))
-						tile = 3;
+					//else if (j > 26)
+					//	tile = 3;
 					else if (alpha < -0.2)
 						tile = 3;
 					else if (alpha < 0.2)
