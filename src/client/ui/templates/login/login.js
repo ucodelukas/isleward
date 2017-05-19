@@ -29,6 +29,9 @@ define([
 				.eq(0).focus();
 
 			renderer.buildTitleScreen();
+
+			this.find('.extra, .version')
+				.appendTo($('<div class="uiLoginExtra"></div>>').appendTo('.ui-container'));
 		},
 
 		redirect: function(e) {
