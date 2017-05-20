@@ -22,16 +22,16 @@ define([
 			this.on('.btnLogin', 'click', this.onLoginClick.bind(this));
 			this.on('.btnRegister', 'click', this.onRegisterClick.bind(this));
 
-			this.find('.right .buttons .button').on('click', this.redirect.bind(this));
+			this.find('.extra, .version')
+				.appendTo($('<div class="uiLoginExtra"></div>>').appendTo('.ui-container'));
+
+			$('.uiLoginExtra').find('.button').on('click', this.redirect.bind(this));
 
 			this.find('input')
 				.on('keyup', this.onKeyDown.bind(this))
 				.eq(0).focus();
 
 			renderer.buildTitleScreen();
-
-			this.find('.extra, .version')
-				.appendTo($('<div class="uiLoginExtra"></div>>').appendTo('.ui-container'));
 		},
 
 		redirect: function(e) {
@@ -66,6 +66,7 @@ define([
 			if (!res) {
 				uiFactory.build('characters', {});
 
+				$('.uiLoginExtra').remove();
 				this.el.remove();
 			} else
 				this.el.find('.message').html(res);
