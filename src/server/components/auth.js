@@ -1,5 +1,5 @@
 define([
-	'bcrypt',
+	'bcrypt-nodejs',
 	'security/io',
 	'misc/messages',
 	'security/connections',
@@ -243,7 +243,7 @@ define([
 			}
 		},
 		onUnhashedLogin: function(msg) {
-			bcrypt.hash(msg.data.password, 10, this.onPasswordHashed.bind(this, msg));
+			bcrypt.hash(msg.data.password, null, null, this.onPasswordHashed.bind(this, msg));
 		},
 		onPasswordHashed: function(msg, err, hashedPassword) {
 			io.set({
@@ -294,7 +294,7 @@ define([
 
 			var credentials = msg.data;
 
-			bcrypt.hash(credentials.password, 10, this.onHashGenerated.bind(this, msg));
+			bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 		},
 		onHashGenerated: function(msg, err, hashedPassword) {
 			io.set({
