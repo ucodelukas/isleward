@@ -290,7 +290,7 @@ define([
 		description: 'Jagged Crystals break ground at your target destination',
 		type: 'warnBlast',
 		animation: 'raiseHands',
-		icon: [4, 0],
+		icon: [0, 7],
 		particles: {
 			color: {
 				start: ['c0c3cf', '929398'],

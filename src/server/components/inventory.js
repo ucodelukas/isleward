@@ -342,6 +342,15 @@ define([
 				item.eq = true;
 				item.noSalvage = true;
 				this.getItem(item);
+
+				item = generator.generate({
+					spell: true,
+					spellQuality: 'basic',
+					spellName: classes.spells[this.obj.class][1]
+				});
+				item.eq = true;
+				item.noSalvage = true;
+				this.getItem(item);
 			}
 		},
 
