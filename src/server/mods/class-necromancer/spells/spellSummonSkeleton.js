@@ -15,7 +15,25 @@ define([
 
 		needLos: true,
 
+		minions: [],
+
 		cast: function(action) {
+			var currentMinion = this.minions[0];
+			if (currentMinion) {
+				currentMinion.destroyed = true;
+				this.minions = [];
+
+				this.obj.syncer.queue('onGetObject', {
+					x: currentMinion.x,
+					y: currentMinion.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}
+
 			var obj = this.obj;
 			var target = action.target;
 
@@ -26,10 +44,12 @@ define([
 					x: target.x,
 					y: target.y,
 					cell: 0,
-					spriteSheet: `${this.folderName}/images/mobs.png`,
+					sheetName: `${this.folderName}/images/mobs.png`,
 					name: 'Skeletal Minion',
 					properties: {
-						cpnFollower: {}
+						cpnFollower: {
+							maxDistance: 3
+						}
 					},
 					extraProperties: {
 						follower: {
@@ -57,7 +77,22 @@ define([
 
 			mob.follower.bindEvents();
 
+			this.minions.push(mob);
+
 			return true;
+		},
+
+		update: function() {
+			var minions = this.minions;
+			var mLen = minions.length;
+			for (var i = 0; i < mLen; i++) {
+				var m = minions[i];
+				if (m.destroyed) {
+					minions.splice(i, 1);
+					i--;
+					mLen--;
+				}
+			}
 		}
 	};
 });

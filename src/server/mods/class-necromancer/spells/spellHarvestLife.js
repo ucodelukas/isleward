@@ -12,6 +12,7 @@ define([
 		range: 1,
 
 		damage: 1,
+		healMultiplier: 0.1,
 
 		col: 4,
 		row: 1,
@@ -44,11 +45,18 @@ define([
 			return true;
 		},
 		explode: function(target) {
-			if ((this.obj.destroyed) || (target.destroyed))
+			var obj = this.obj;
+
+			if ((obj.destroyed) || (target.destroyed))
 				return;
 			
 			var damage = this.getDamage(target);
-			target.stats.takeDamage(damage, this.threatMult, this.obj);
+			target.stats.takeDamage(damage, this.threatMult, obj);
+
+			var healAmount = damage.amount * this.healMultiplier;
+			obj.stats.getHp({
+				amount: healAmount
+			}, obj);
 		}
 	};
 });

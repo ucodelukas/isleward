@@ -71,7 +71,9 @@ define([
 							sheetName: 'mobs',
 							name: 'Squiggle',
 							properties: {
-								cpnFollower: {}
+								cpnFollower: {
+									lifetime: 100
+								}
 							},
 							extraProperties: {
 								follower: {

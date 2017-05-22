@@ -25,6 +25,7 @@ define([
 		beforeGetResourceList: function(list) {
 			list.push(`${this.folderName}/images/inGameSprite.png`);
 			list.push(`${this.folderName}/images/abilityIcons.png`);
+			list.push(`${this.folderName}/images/mobs.png`);
 		},
 
 		beforeGetClasses: function(classes) {
@@ -72,39 +73,40 @@ define([
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				element: 'arcane',
+				element: 'physical',
 				auto: true,
 				cdMax: 7,
 				manaCost: 0,
 				range: 9,
 				random: {
-					damage: [2, 4]
+					damage: [2, 4],
+					healPercent: [10, 20]
 				}
 			};
 
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				element: 'arcane',
-				auto: true,
+				element: 'physical',
 				cdMax: 7,
 				manaCost: 0,
 				range: 9,
 				random: {
-					damage: [2, 4]
+					damage: [2, 4],
+					life: [100, 200]
 				}
 			};
 
 			spells['blood barrier'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				element: 'arcane',
-				auto: true,
+				element: 'physical',
 				cdMax: 7,
 				manaCost: 0,
 				range: 9,
 				random: {
-					damage: [2, 4]
+					damage: [2, 4],
+					shieldPercentage: [50, 150]
 				}
 			};
 		},
@@ -147,7 +149,7 @@ define([
 
 			spells.push({
 				name: 'Summon Skeleton',
-				description: 'Absorbs the life-force of your enemies.',
+				description: 'Summons a skeletal warrior to assist you in combat.',
 				type: 'summonSkeleton',
 				icon: [1, 0],
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,
@@ -182,7 +184,7 @@ define([
 
 			spells.push({
 				name: 'Blood Barrier',
-				description: 'Absorbs the life-force of your enemies.',
+				description: 'Sacrifice some life force to grant a protective barrier around an ally.',
 				type: 'bloodBarrier',
 				icon: [2, 0],
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,

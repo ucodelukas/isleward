@@ -1,7 +1,7 @@
 define([
-	
+
 ], function(
-	
+
 ) {
 	return {
 		type: 'follower',
@@ -9,6 +9,7 @@ define([
 		master: null,
 
 		lifetime: -1,
+		maxDistance: 10,
 
 		fGetHighest: {
 			inCombat: null,
@@ -16,8 +17,6 @@ define([
 		},
 
 		bindEvents: function() {
-			this.lifetime = 100;
-
 			this.fGetHighest.inCombat = this.master.aggro.getHighest.bind(this.master.aggro);
 			this.fGetHighest.outOfCombat = this.returnNoAggro.bind(this);
 		},
@@ -49,10 +48,12 @@ define([
 		},
 
 		update: function() {
-			this.lifetime--;
-			if (this.lifetime <= 0) {
-				this.despawn();
-				return;
+			if (this.lifetime > 0) {
+				this.lifetime--;
+				if (this.lifetime <= 0) {
+					this.despawn();
+					return;
+				}
 			}
 
 			var obj = this.obj;
@@ -63,9 +64,11 @@ define([
 				return;
 			}
 
+			var maxDistance = this.maxDistance;
+
 			var doMove = (
-				(Math.abs(obj.x - master.x) >= 10) ||
-				(Math.abs(obj.y - master.y) >= 10)
+				(Math.abs(obj.x - master.x) >= maxDistance) ||
+				(Math.abs(obj.y - master.y) >= maxDistance)
 			);
 
 			if (doMove) {
