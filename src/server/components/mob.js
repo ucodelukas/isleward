@@ -31,7 +31,7 @@ define([
 			if (this.obj.aggro)
 				target = this.obj.aggro.getHighest();
 			var goHome = false;
-			if (target) {
+			if ((target) && (target != this.obj)) {
 				this.fight(target);
 				return;
 			} else if (this.target) {

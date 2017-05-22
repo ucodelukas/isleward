@@ -51,6 +51,11 @@ define([
 		moveSpeedMax: 1.50,
 		moveSpeedInc: 0.5,
 
+		lastUpdatePos: {
+			x: 0,
+			y: 0
+		},
+
 		zoneId: null,
 
 		textures: {},
@@ -149,14 +154,43 @@ define([
 
 			for (var i = 0; i < w; i++) {
 				for (var j = 0; j < h; j++) {
+					var ii = i / 10;
+					var alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
 					var tile = 5;
-					if (Math.random() < 0.4)
-						tile = 6;
-					var tile = new pixi.Sprite(this.getTexture('sprites', tile));
+					if (j < 7)
+						tile = 5;
+					//else if (j > 26)
+					//	tile = 3;
+					else if (alpha < -0.2)
+						tile = 3;
+					else if (alpha < 0.2)
+						tile = 4;
+					else if ((alpha < 0.5) && (j > 7))
+						tile = 53;
 
-					var alpha = Math.sin((i % 4) + Math.cos(j % 8));
+					alpha = Math.random();
+
 					if (tile == 5)
-						alpha /= 2;
+						alpha *= 2;
+					else if (tile == 3)
+						alpha *= 1;
+					else if (tile == 4)
+						alpha *= 1;
+					else if (tile == 53)
+						alpha *= 2;
+
+					alpha = Math.min(Math.max(0.1, alpha), 0.8);
+
+					if (Math.random() < 0.35) {
+						tile = {
+							'5': 6,
+							'3': 0,
+							'4': 1,
+							'53': 54
+						}[tile];
+					}
+
+					var tile = new pixi.Sprite(this.getTexture('sprites', tile));
 
 					tile.alpha = alpha;
 					tile.position.x = i * scale;
@@ -412,8 +446,13 @@ define([
 
 			var w = this.w;
 			var h = this.h;
-			var x = ~~player.x;
-			var y = ~~player.y;
+
+			var x = ~~((-this.stage.x / scale) + (this.width / (scale * 2)));
+			var y = ~~((-this.stage.y / scale) + (this.height / (scale * 2)));
+
+			this.lastUpdatePos.x = this.stage.x;
+			this.lastUpdatePos.y = this.stage.y;
+
 			var sprites = this.sprites;
 			var map = this.map;
 			var container = this.layers.tileSprites;
@@ -421,10 +460,10 @@ define([
 			var sw = this.showTilesW;
 			var sh = this.showTilesH;
 
-			var lowX = Math.max(0, x - sw);
-			var lowY = Math.max(0, y - sh);
-			var highX = Math.min(w - 1, x + sw);
-			var highY = Math.min(h - 1, y + sh);
+			var lowX = Math.max(0, x - sw) + 2;
+			var lowY = Math.max(0, y - sh) + 2;
+			var highX = Math.min(w - 1, x + sw) - 2;
+			var highY = Math.min(h - 1, y + sh) - 2;
 
 			var addedSprite = false;
 
@@ -536,8 +575,13 @@ define([
 					this.moveTo = null;
 				}
 
-				this.stage.x = -~~this.pos.x;
-				this.stage.y = -~~this.pos.y;
+				var stage = this.stage;
+				stage.x = -~~this.pos.x;
+				stage.y = -~~this.pos.y;
+
+				var halfScale = scale / 2;
+				if ((Math.abs(stage.x - this.lastUpdatePos.x) > halfScale) || (Math.abs(stage.y - this.lastUpdatePos.y) > halfScale))
+					this.updateSprites();
 
 				events.emit('onSceneMove');
 			}

@@ -40,11 +40,13 @@ define([
 					item.spell.properties = item.spell.properties || {};
 					item.spell.properties.range = item.range;
 				}
-
-				this.getItem(items[i], true);
 			}
 
-			this.hookItemEvents();
+			this.hookItemEvents(items);
+
+			for (var i = 0; i < iLen; i++) {
+				this.getItem(items[i], true);
+			}
 
 			if ((this.obj.player) && (!isTransfer)) {
 				this.getDefaultAbilities();
@@ -75,8 +77,8 @@ define([
 			this.hookItemEvents();
 		},
 
-		hookItemEvents: function() {
-			var items = this.items;
+		hookItemEvents: function(items) {
+			var items = items || this.items;
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];

@@ -150,8 +150,12 @@ define([
 			physics.removeObject(this.obj, this.obj.x, this.obj.y);
 
 			if (!permadeath) {
-				this.obj.x = this.obj.spawn.x;
-				this.obj.y = this.obj.spawn.y;
+				var level = this.obj.stats.values.level;
+				var spawns = this.obj.spawn;
+				var spawnPos = ((spawns.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (spawns[0]));
+
+				this.obj.x = spawnPos.x;
+				this.obj.y = spawnPos.y;
 
 				var syncer = this.obj.syncer;
 				syncer.o.x = this.obj.x;
