@@ -78,6 +78,13 @@ define([
 
 
 			obj.aggro.getHighest = doMove ? this.fGetHighest.outOfCombat : this.fGetHighest.inCombat;
+		},
+
+		simplify: function() {
+			return {
+				type: 'follower',
+				master: this.master.id
+			};
 		}
 	};
 });

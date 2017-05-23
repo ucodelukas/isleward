@@ -22,7 +22,7 @@ define([
 
 			this.obj.addComponent('pather');
 
-			events.emit('onGetPortrait', this.obj.class);
+			events.emit('onGetPortrait', this.obj.portrait);
 		},
 
 		update: function() {

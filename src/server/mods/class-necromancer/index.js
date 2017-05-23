@@ -38,6 +38,11 @@ define([
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 			classes.weapons.necromancer = 'Sickle';
+			classes.portraits.necromancer = {
+				spritesheet: `${this.folderName}/images/avatar.png`,
+				x: 0,
+				y: 0
+			};
 		},
 
 		beforeGetSpellTemplate: function(spell) {

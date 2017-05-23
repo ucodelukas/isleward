@@ -65,13 +65,13 @@ define([
 				walkDistance: 2,
 				regular: {
 					drops: 0,
-					hpMult: 1,
+					hpMult: 0.1,
 					dmgMult: 1
 				},
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 0.1
+					statMult: 0.000001
 				}]
 			}, false, 'regular');
 
@@ -93,6 +93,10 @@ define([
 					mLen--;
 				}
 			}
+		},
+
+		onAfterSimplify: function(simple) {
+			delete simple.minions;
 		}
 	};
 });

@@ -147,6 +147,9 @@ define([
 			if (this.values)
 				values.values = this.values;
 
+			if (this.onAfterSimplify)
+				this.onAfterSimplify(values);
+
 			return values;
 		},
 

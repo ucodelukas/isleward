@@ -23,29 +23,9 @@ define([
 			var obj = this.obj;
 			var target = action.target;
 
-			var ttl = (Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed) - 50;
-
-			this.sendAnimation({
-				caster: this.obj.id,
-				components: [{
-					idSource: this.obj.id,
-					idTarget: target.id,
-					type: 'projectile',
-					ttl: ttl,
-					projectileOffset: this.projectileOffset,
-					particles: this.particles
-				}, {
-					type: 'attackAnimation',
-					layer: 'projectiles',
-					loop: -1,
-					row: this.row,
-					col: this.col
-				}]
-			});
-
 			this.sendBump(target);
 
-			this.queueCallback(this.explode.bind(this, target), ttl, null, target);
+			this.queueCallback(this.explode.bind(this, target), 1, null, target);
 
 			return true;
 		},
@@ -53,14 +33,16 @@ define([
 			if ((this.obj.destroyed) || (target.destroyed))
 				return;
 
-			var damage = this.getDamage(target);
+			var amount = this.obj.stats.values.hpMax / 10;
+			var damage = {
+				amount: amount
+			};
+			this.obj.stats.takeDamage(damage, 0, this.obj);
 
-			if (!target.stats) {
-				console.log('has no stats???');
-				console.log(target);
-				return;
-			}
-			target.stats.takeDamage(damage, this.threatMult, this.obj);
+			var heal = {
+				amount: amount
+			};
+			target.stats.getHp(heal, this.obj);
 		}
 	};
 });

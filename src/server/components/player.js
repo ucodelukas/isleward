@@ -59,7 +59,8 @@ define([
 
 			stats.stats.logins++;
 
-			//obj.addComponent('spellbook', { spells: extend(true, [], classes.spells[obj.class]) });
+			obj.portrait = classes.portraits[character.class];
+
 			obj.addComponent('spellbook');
 
 			obj.addComponent('dialogue');
