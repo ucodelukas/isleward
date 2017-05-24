@@ -28,7 +28,7 @@ define([
 		renderRange: null,
 
 		reticleSprite: null,
-		tarpSprite: null,
+		targetSprite: null,
 
 		shiftDown: false,
 
@@ -141,7 +141,12 @@ define([
 		},
 
 		tabTarget: function() {
-			this.onMouseDown(null, objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target));
+			var closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
+
+			this.target = closest;
+			this.targetSprite.visible = !!this.target;	
+
+			events.emit('onSetTarget', this.target, null);
 		},
 
 		build: function(destroy) {
