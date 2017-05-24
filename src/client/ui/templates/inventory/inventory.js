@@ -5,8 +5,7 @@ define([
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
 	'html!ui/templates/inventory/templateTooltip',
-	'js/input',
-	'js/rendering/spriteShader'
+	'js/input'
 ], function(
 	events,
 	client,
@@ -14,8 +13,7 @@ define([
 	styles,
 	tplItem,
 	tplTooltip,
-	input,
-	spriteShader
+	input
 ) {
 	var qualityColors = [{
 		r: 252,
@@ -372,30 +370,6 @@ define([
 		onGetItems: function(items) {
 			this.items = items;
 
-			this.items.forEach(function(item) {
-				var prefix = -1;
-				['quest', 'material', 'ability'].forEach(function(p, i) {
-					if (item[p])
-						prefix += 1 + i;
-				});
-				if (prefix == -1)
-					prefix = 3 + item.slot + item.type;
-
-				item.sortName = prefix + item.name + item.level + item.id;
-
-				if ((item == this.hoverItem))
-					this.onHover(null, item);
-			}, this);
-
-			this.items.sort(function(a, b) {
-				if (a.sortName < b.sortName)
-					return -1;
-				else if (a.sortName > b.sortName)
-					return 1;
-				else
-					return 0;
-			});
-
 			if (this.shown)
 				this.build();
 		},
@@ -444,9 +418,9 @@ define([
 		performItemAction: function(item, action) {
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quast) || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.level > window.player.stats.values.level)))
 				return;
-			if (item.factions) {
+			if ((item.factions) && (action == 'equip')) {
 				if (item.factions.some(function(f) {
 						return f.noEquip;
 					}))

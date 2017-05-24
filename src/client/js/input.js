@@ -1,6 +1,6 @@
 define([
 	'js/system/events',
-	'js/renderer'
+	'js/rendering/renderer'
 ], function(
 	events,
 	renderer
@@ -54,6 +54,10 @@ define([
 		},
 
 		resetKeys: function() {
+			for (var k in this.keys) {
+				events.emit('onKeyUp', k);
+			}
+
 			this.keys = {};
 		},
 

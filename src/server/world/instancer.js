@@ -124,15 +124,14 @@ define([
 					msg.keepPos = false;
 				}
 
+				var spawnPos = map.getSpawnPos(obj);
+
 				if ((!msg.keepPos) || (obj.x == null)) {
-					obj.x = map.spawn.x;
-					obj.y = map.spawn.y;
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
-				obj.spawn = {
-					x: map.spawn.x,
-					y: map.spawn.y
-				};
+				obj.spawn = map.spawn;
 
 				syncer.queue('onGetMap', map.clientMap, [obj.serverId]);
 
@@ -140,13 +139,11 @@ define([
 					objects.addObject(obj, this.onAddObject.bind(this));
 				else {
 					var o = objects.transferObject(obj);
-					if (o.zoneName != 'tutorial-cove')
-						questBuilder.obtain(o);
+					questBuilder.obtain(o);
 				}
 			},
 			onAddObject: function(obj) {
-				if (obj.zoneName != 'tutorial-cove')
-					questBuilder.obtain(obj);
+				questBuilder.obtain(obj);
 			},
 			updateObject: function(msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
@@ -314,25 +311,23 @@ define([
 						msg.keepPos = false;
 				}
 
+				var spawnPos = map.getSpawnPos(obj);
+
 				if ((!msg.keepPos) || (obj.x == null)) {
-					obj.x = map.spawn.x;
-					obj.y = map.spawn.y;
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
-				obj.spawn = {
-					x: map.spawn.x,
-					y: map.spawn.y
-				};
+				obj.spawn = map.spawn;
 
 				if (exists) {
 					//Keep track of what the connection id is (sent from the server)
 					obj.serverId = obj.id;
 					delete obj.id;
 
-					obj.spawn = {
-						x: exists.map.spawn.x,
-						y: exists.map.spawn.y
-					};
+					var spawnPos = exists.map.getSpawnPos(obj);
+
+					obj.spawn = exists.map.spawn;
 
 					exists.syncer.queue('onGetMap', exists.map.clientMap, [obj.serverId]);
 
@@ -355,14 +350,14 @@ define([
 			},
 			onAddObject: function(keepPos, obj) {
 				if (!keepPos) {
-					obj.x = obj.instance.map.spawn.x;
-					obj.y = obj.instance.map.spawn.y;
+					var spawnPos = obj.instance.map.getSpawnPos(obj);
+
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
 				obj.instance.spawners.scale(obj.stats.values.level);
-
-				if (obj.zoneName != 'tutorial-cove')
-					obj.instance.questBuilder.obtain(obj);
+				obj.instance.questBuilder.obtain(obj);
 			},
 			updateObject: function(msg) {
 				var id = msg.id;
@@ -462,7 +457,8 @@ define([
 					questBuilder: extend(true, {}, questBuilder),
 					map: {
 						spawn: extend(true, {}, map.spawn),
-						clientMap: extend(true, {}, map.clientMap)
+						clientMap: extend(true, {}, map.clientMap),
+						getSpawnPos: map.getSpawnPos.bind(map)
 					}
 				};
 
@@ -500,11 +496,13 @@ define([
 					obj = instance.objects.addObject(objToAdd, this.onAddObject.bind(this, false));
 				else {
 					obj = instance.objects.transferObject(objToAdd);
-					obj.x = instance.map.spawn.x;
-					obj.y = instance.map.spawn.y;
-					if (obj.zoneName != 'tutorial-cove')
-						instance.questBuilder.obtain(obj);
 
+					var spawnPos = instance.map.getSpawnPos(obj);
+
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
+					
+					instance.questBuilder.obtain(obj);
 					obj.instance.spawners.scale(obj.stats.values.level);
 				}
 

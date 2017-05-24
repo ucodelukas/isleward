@@ -37,6 +37,11 @@ define([
 
 					item.effects.push(result);
 				}
+				//This is a hack for items that were never generated properly
+				else if (!result.chance) {
+					result.chance = chanceRoll;
+					result.text = chanceRoll + '% chance on kill to summon a critter to assist you in battle';
+				}
 
 				if (!result.events)
 					result.events = {};
@@ -53,7 +58,7 @@ define([
 					var effect = item.effects.find(e => (e.factionId == 'gaekatla'));
 
 					var roll = Math.random() * 100;
-					if (roll >= this.chance)
+					if (roll >= effect.chance)
 						return;
 
 					//Spawn a mob
@@ -64,12 +69,20 @@ define([
 							y: mob.y,
 							cell: 34,
 							sheetName: 'mobs',
-							name: 'Squiggle'
+							name: 'Squiggle',
+							properties: {
+								cpnFollower: {}
+							},
+							extraProperties: {
+								follower: {
+									master: this
+								}
+							}
 						}
 					});
 
 					mobBuilder.build(mob, {
-						level: 5,
+						level: item.level,
 						faction: this.aggro.faction,
 						walkDistance: 2,
 						regular: {
@@ -77,7 +90,14 @@ define([
 							hpMult: 1,
 							dmgMult: 1
 						},
+						spells: [{
+							type: 'melee',
+							damage: 1,
+							statMult: 0.1
+						}]
 					}, false, 'regular');
+
+					mob.follower.bindEvents();
 				}
 			}
 		},

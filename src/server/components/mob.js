@@ -31,7 +31,7 @@ define([
 			if (this.obj.aggro)
 				target = this.obj.aggro.getHighest();
 			var goHome = false;
-			if (target) {
+			if ((target) && (target != this.obj)) {
 				this.fight(target);
 				return;
 			} else if (this.target) {
@@ -47,7 +47,7 @@ define([
 				return;
 
 			var walkDistance = this.walkDistance;
-			if (walkDistance <= 0)
+			if ((!goHome) && (walkDistance <= 0))
 				return;
 
 			var obj = this.obj;

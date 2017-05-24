@@ -33,17 +33,18 @@ define([
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
 
+				//Hacks for old items
 				if ((item.spell) && (!item.spell.rolls))
 					continue;
-
-				if (item.effects) {
-					item.effects.forEach(function(e) {
-						var faction = require('config/factions/' + e.factionId);
-						var statGenerator = faction.uniqueStat;
-						statGenerator.generate(item);
-					});
+				else if ((item.spell) && (item.type == 'Spear')) {
+					item.spell.properties = item.spell.properties || {};
+					item.spell.properties.range = item.range;
 				}
+			}
 
+			this.hookItemEvents(items);
+
+			for (var i = 0; i < iLen; i++) {
 				this.getItem(items[i], true);
 			}
 
@@ -55,9 +56,10 @@ define([
 					spellName: 'arcane barrier'
 				}));*/
 
-				/*for (var i = 0; i < 10; i++) {
+				/*for (var i = 0; i < 1; i++) {
 					var item = generator.generate({
 						slot: 'twoHanded',
+						type: 'Spear',
 						quality: 4,
 						level: 1
 					});
@@ -69,6 +71,27 @@ define([
 			delete blueprint.items;
 
 			this.blueprint = blueprint;
+		},
+
+		transfer: function() {
+			this.hookItemEvents();
+		},
+
+		hookItemEvents: function(items) {
+			var items = items || this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+
+				if (item.effects) {
+					item.effects.forEach(function(e) {
+						var faction = require('config/factions/' + e.factionId);
+						var statGenerator = faction.uniqueStat;
+						statGenerator.generate(item);
+					});
+				}
+			}
+
 		},
 
 		//Client Actions
@@ -341,8 +364,10 @@ define([
 
 			if (topQuality == 0)
 				bagCell = 50;
-			else if (topQuality < 3)
+			else if (topQuality == 1)
 				bagCell = 51;
+			else if (topQuality == 2)
+				bagCell = 128;
 			else if (topQuality == 3)
 				bagCell = 52;
 			else
@@ -365,7 +390,7 @@ define([
 
 			return obj;
 		},
-
+		
 		getItem: function(item, hideMessage) {
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
@@ -565,6 +590,9 @@ define([
 				var blueprints = blueprint.blueprints;
 				for (var i = 0; i < blueprints.length; i++) {
 					var drop = blueprints[i];
+					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+						continue;
+
 					drop.level = drop.level || level;
 					drop.magicFind = magicFind;
 
@@ -672,6 +700,9 @@ define([
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+				if (!item.eq)
+					continue;
+
 				var effects = item.effects;
 				if (!effects)
 					continue;

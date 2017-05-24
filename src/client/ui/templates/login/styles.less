@@ -7,18 +7,18 @@
 @logoWidth: 559px;
 @logoHeight: 200px;
 
-@boxHeight: 370px;
+@boxHeight: 169px;
 
 @messageHeight: @boxPadding;
 
-@totalWidth: (@leftWidth + @rightWidth + (@boxPadding * 2));
+@totalWidth: @rightWidth;
 @totalHeight: (@logoHeight + @boxHeight + (@boxPadding * 3) + @messageHeight);
 
 .uiLogin {
 	display: none;
 	width: @totalWidth;
 	height: @totalHeight;
-	margin-top: -30px;
+	margin-top: -80px;
 
 	.logo {
 		width: 562px;
@@ -27,25 +27,38 @@
 		margin-bottom: (@boxPadding * 3);
 	}
 
-	.left, .right, .news {
+	.right {
 		height: @boxHeight;
 		float: left;
 		background-color: #3a3b4a;
-	}
 
-	.left {
-		width: @leftWidth;
-		padding: @boxPadding;
-	}
-
-	.right {
 		width: @rightWidth;
 		padding: @boxPadding;
-		margin-left: (@boxPadding * 2);
 
-		.textbox, input:-webkit-autofill {
+		.label, input {
+			float: left;
+		}
+
+		.label {
+			width: 30%;
+			padding-top: 10px;
+			color: @green;
+		}
+
+		input {
+			width: 70%;
+		}
+
+		input, .textbox, input:-webkit-autofill {
 		    box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
-			width: 100%;
+			color: @white;
+			-webkit-text-fill-color: @white;
+			margin-bottom: @boxPadding;
+		}
+
+		/* We duplicate this for firefox which doesn't like the webkit selector */
+		input, .textbox {
+		    box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
 			color: @white;
 			-webkit-text-fill-color: @white;
 			margin-bottom: @boxPadding;
@@ -53,11 +66,26 @@
 
 		.message {
 			height: @messageHeight;
-			width: 100%;
-			margin-top: @boxPadding;
+			width: 200%;
+			margin-left: -50%;
+			margin-top: 36px;
 			float: left;
 			text-align: center;
-			color: @redA;
+			color: @orange;
+
+			filter: 
+				brightness(100%)
+				drop-shadow(0px -4px 0px @blackD) 
+				drop-shadow(0px 4px 0px @blackD)
+				drop-shadow(4px 0px 0px @blackD) 
+				drop-shadow(-4px 0px 0px @blackD);
+
+			-moz-filter: 
+				brightness(100%)
+				drop-shadow(0px -4px 0px @blackD) 
+				drop-shadow(0px 4px 0px @blackD)
+				drop-shadow(4px 0px 0px @blackD) 
+				drop-shadow(-4px 0px 0px @blackD);
 		}
 
 		.top-buttons {
@@ -80,52 +108,55 @@
 				}
 			}
 		}
-
-		.buttons {
-			width: 100%;
-			height: 35px;
-			margin-top: 80px;
-
-			.button {
-				width: 100%;
-				margin-bottom: calc(@boxPadding / 2);
-				background-color: @blueC;
-				color: @white;
-
-				&:hover {
-					background-color: @blueB;
-				}
-			}
-		}
-	}
-
-	.news {
-		width: @leftWidth;
-		padding: @boxPadding;
-
-		.heading {
-			background-color: @grayD;
-			width: 100%;
-			color: @white;
-			margin-bottom: 8px;
-			text-align: center;
-			height: 35px;
-			padding-top: 9px;
-		}
-
-		.list {
-			overflow-y: auto;
-			padding: 16px;
-
-			.item {
-				text-align: justify;
-				color: @grayB;
-				margin-bottom: 22px;
-			}
-		}
 	}
 
 	.spacer-h {
 		height: 61px;
+	}
+}
+
+.uiLoginExtra {
+	.extra {
+		position: absolute;
+		left: 10px;
+		bottom: 10px;
+
+		.button {
+			padding-left: 10px;
+			padding-right: 10px;
+			width: 100%;
+			margin-bottom: 10px;
+			background-color: @blueD;
+			color: @white;
+
+			&:last-child {
+				margin-bottom: 0px;
+			}
+
+			&:hover {
+				background-color: @blueC;
+			}
+		}
+	}
+
+	.version {
+		position: absolute;
+		right: 10px;
+		bottom: 10px;
+		color: @yellow;
+
+		filter: 
+			brightness(100%)
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
+
+		-moz-filter: 
+			brightness(100%)
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
 	}
 }
