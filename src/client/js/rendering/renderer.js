@@ -159,8 +159,8 @@ define([
 					var tile = 5;
 					if (j < 7)
 						tile = 5;
-					//else if (j > 26)
-					//	tile = 3;
+					else if (j > 21)
+						tile = 3;
 					else if (alpha < -0.2)
 						tile = 3;
 					else if (alpha < 0.2)
@@ -440,6 +440,9 @@ define([
 		},
 
 		updateSprites: function() {
+			if (this.titleScreen)
+				return;
+
 			var player = window.player;
 			if (!player)
 				return;
