@@ -209,7 +209,7 @@ define([
 				var addStats = Math.min(statCount, blueprint.stats.length);
 				for (var i = 0; i < addStats; i++) {
 					var choice = useStats[~~(Math.random() * useStats.length)];
-					useStats.spliceWhere(s => s == choice);
+					useStats.spliceFirstWhere(s => s == choice);
 					this.buildStat(item, blueprint, choice, result);
 					statCount--;
 				}
