@@ -45,6 +45,13 @@ define([
 			}
 		},
 
+		getRoleLevel: function(player) {
+			var account = player.account;
+			var level = this.accounts[account] ? this.accounts[account].level : 0;
+
+			return level;
+		},
+
 		isRoleLevel: function(player, requireLevel, message) {
 			var account = player.account;
 			var level = this.accounts[account] ? this.accounts[account].level : 0;

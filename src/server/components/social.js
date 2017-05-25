@@ -12,7 +12,14 @@ define([
 		partyLeaderId: null,
 		party: null,
 
-		init: function() {},
+		init: function() {
+			var roleLevel = roles.getRoleLevel(this.obj);
+			if (roleLevel >= 10) {
+				this.obj.extendComponent('social', 'adminCommands', {
+					roleLevel: roleLevel
+				});
+			}
+		},
 
 		simplify: function() {
 			return {
@@ -68,6 +75,12 @@ define([
 		},
 
 		chat: function(msg) {
+			if (this.onBeforeChat) {
+				this.onBeforeChat(msg.data);
+				if (msg.data.ignore)
+					return;
+			}
+
 			var charname = this.obj.auth.charname;
 			var level = this.obj.stats.values.level;
 			if (level >= 10)
