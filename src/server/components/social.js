@@ -77,8 +77,7 @@ define([
 		chat: function(msg) {
 			if (this.onBeforeChat) {
 				this.onBeforeChat(msg.data);
-				if (msg.data.ignore)
-					return;
+				if (msg.data.success)
 			}
 
 			var charname = this.obj.auth.charname;
