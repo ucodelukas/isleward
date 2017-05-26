@@ -75,11 +75,6 @@ define([
 		},
 
 		chat: function(msg) {
-			if (this.onBeforeChat) {
-				this.onBeforeChat(msg.data);
-				if (msg.data.success)
-			}
-
 			var charname = this.obj.auth.charname;
 			var level = this.obj.stats.values.level;
 			if (level >= 10)
