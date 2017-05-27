@@ -148,7 +148,7 @@ define([
 			}
 
 			delete item.eq;
-			this.eq[item.slot] = null;
+			delete this.eq[item.slot];
 
 			if (item.spell) {
 				item.eq = true;
