@@ -1,7 +1,7 @@
 define([
-
+    'config/serverConfig'
 ], function(
-
+    config
 ) {
 	return {
 		init: function(callback) {
@@ -31,9 +31,9 @@ define([
 
 			io.on('connection', this.listeners.onConnection.bind(this));
 
-			var port = process.env.PORT || 4000;
+			var port = process.env.PORT || config.port || 4000;
 			server.listen(port, function() {
-				var message = 'Server: Ready';
+				var message = config.startupMessage || 'Server: Ready';
 				console.log(message);
 
 				callback();
