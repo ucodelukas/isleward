@@ -29,6 +29,11 @@ define([
 				var max = (((10 + (item.level * 200)) / 20) / 2) / 10;
 
 				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
+			},
+			lvlRequire: function(item, blueprint) {
+				var max = ~~(item.level / 2);
+
+				return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
 			}
 		},
 
@@ -48,6 +53,10 @@ define([
 			regenMana: {
 				min: 1,
 				max: 7
+			},
+
+			lvlRequire: {
+				generator: 'lvlRequire'
 			},
 
 			str: {

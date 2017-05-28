@@ -40,6 +40,9 @@ define([
 			if (blueprint.noSalvage)
 				item.noSalvage = true;
 
+			if ((item.stats) && (item.stats.lvlRequire))
+				item.level -= item.stats.lvlRequire;
+
 			return item;
 		},
 

@@ -19,6 +19,7 @@ define([
 		'dmgPercent': 'to all damage',
 		'allAttributes': 'to all attributes',
 		'xpIncrease': 'additional xp per kill',
+		'lvlRequire': 'level requirement reduction',
 
 		'elementArcanePercent': 'increased arcane damage',
 		'elementFrostPercent': 'increased frost damage',
