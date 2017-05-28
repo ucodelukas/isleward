@@ -286,6 +286,7 @@ define([
 				},
 				offense: {
 					'crit chance': (~~(stats.critChance * 10) / 10) + '%',
+					'crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
 					gap1: '',
 					'arcane increase': stats.elementArcanePercent + '%',
 					'fire increase': stats.elementFirePercent + '%',

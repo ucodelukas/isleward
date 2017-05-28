@@ -22,7 +22,9 @@ define([
 			regenHp: 0,
 			regenMana: 10,
 			addCritChance: 0,
+			addCritMultiplier: 0,
 			critChance: 5,
+			critMultiplier: 150,
 			armor: 0,
 			dmgPercent: 0,
 
@@ -137,6 +139,9 @@ define([
 			if (stat == 'addCritChance') {
 				this.values.critChance += (0.05 * value);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
+			} else if (stat == 'addCritMultiplier') {
+				this.values.critMultiplier += value;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);

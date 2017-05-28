@@ -64,7 +64,7 @@ define([
 					var statName = statTranslations.translate(s);
 					var value = tempStats[s];
 
-					if (['addCritChance', 'sprintChance', 'dmgPercent', 'xpIncrease'].indexOf(s) > -1)
+					if (['addCritChance', 'addCritMultiplier', 'sprintChance', 'dmgPercent', 'xpIncrease'].indexOf(s) > -1)
 						value += '%';
 					else if ((s.indexOf('element') == 0) && (s.indexOf('Resist') == -1))
 						value += '%';

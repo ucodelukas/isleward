@@ -54,7 +54,7 @@ define([
 				var roll = mathRandom() * 100;
 				if ((roll < critChance) || (config.crit)) {
 					isCrit = true;
-					amount *= 1.5;
+					amount *= (srcValues.critMultiplier / 100);
 				}
 			}
 
