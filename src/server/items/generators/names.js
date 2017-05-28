@@ -42,6 +42,7 @@ define([
 			elementAllResist: 'Protective',
 
 			xpIncrease: `Scholar's`,
+			lvlRequire: 'Elementary'
 		},
 		suffixes: {
 			hpMax: 'Health',
@@ -73,7 +74,8 @@ define([
 			elementPoisonResist: 'Poison Resistance',
 			elementAllResist: 'Arcane Resistance',
 
-			xpIncrease: 'Experience'
+			xpIncrease: 'Experience',
+			lvlRequire: 'Ease'
 		},
 		generate: function(item, blueprint) {
 			if (blueprint.name) {
