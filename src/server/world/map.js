@@ -274,7 +274,7 @@ define([
 				if (sheetName == 'walls')
 					cell += 192;
 				else if (sheetName == 'objects')
-					cell += 384;
+					cell += 448;
 
 				if ((layerName != 'hiddenWalls') && (layerName != 'hiddenTiles')) {
 					var layer = this.layers;

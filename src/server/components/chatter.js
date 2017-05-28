@@ -9,7 +9,7 @@ define([
 		chats: null,
 		cdMax: 50,
 		cd: 0,
-		chance: 0.02,
+		chance: 0.035,
 
 		init: function(blueprint) {
 			this.chats = extend(true, [], blueprint.chats);

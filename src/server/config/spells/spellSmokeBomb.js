@@ -65,6 +65,21 @@ define([
 		radius: 1,
 		targetGround: true,
 
+		update: function() {
+			var selfCast = this.selfCast;
+			
+			if (!selfCast)
+				return;
+
+			if ((selfCast !== true) && (Math.random() >= selfCast))
+				return;
+
+			if (this.canCast()) {
+				this.cd = this.cdMax;
+				this.cast();
+			}
+		},
+
 		cast: function(action) {
 			var obj = this.obj;
 
@@ -117,10 +132,12 @@ define([
 				}
 			}
 
-			this.sendBump({
-				x: x,
-				y: y - 1
-			});
+			if (!this.castEvent) {
+				this.sendBump({
+					x: x,
+					y: y - 1
+				});
+			}
 
 			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 
