@@ -54,7 +54,7 @@ define([
 			dex: 'the Assassin',
 			addArmor: 'the Fortress',
 			addCritChance: 'Pain',
-			addCritMultiplier: 'of Ferocity',
+			addCritMultiplier: 'Ferocity',
 			magicFind: 'Luck',
 			sprintChance: 'Haste',
 			dmgPercent: 'Power',
