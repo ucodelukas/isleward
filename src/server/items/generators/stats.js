@@ -91,6 +91,10 @@ define([
 				min: 1,
 				max: 90
 			},
+			addCritMultiplier: {
+				min: 5,
+				max: 50
+			},
 
 			magicFind: {
 				min: 1,

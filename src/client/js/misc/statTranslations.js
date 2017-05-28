@@ -14,6 +14,7 @@ define([
 		'dex': 'dexterity',
 		'armor': 'armor',
 		'addCritChance': 'increased crit chance',
+		'addCritMultiplier': 'increased crit multiplier',
 		'magicFind': 'magic find',
 		'sprintChance': 'sprint chance',
 		'dmgPercent': 'to all damage',

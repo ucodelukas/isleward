@@ -58,10 +58,9 @@ define([
 
 				/*for (var i = 0; i < 1; i++) {
 					var item = generator.generate({
-						slot: 'twoHanded',
-						type: 'Spear',
 						quality: 4,
-						level: 1
+						level: 3,
+						stats: ['addCritMultiplier']
 					});
 
 					this.getItem(item);
