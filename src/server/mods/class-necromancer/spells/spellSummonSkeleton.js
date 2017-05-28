@@ -23,7 +23,7 @@ define([
 				currentMinion.destroyed = true;
 				this.minions = [];
 
-				this.obj.syncer.queue('onGetObject', {
+				this.obj.instance.syncer.queue('onGetObject', {
 					x: currentMinion.x,
 					y: currentMinion.y,
 					components: [{
@@ -60,20 +60,22 @@ define([
 			});
 
 			mobBuilder.build(mob, {
-				level: 1,
+				level: obj.stats.values.level,
 				faction: obj.aggro.faction,
 				walkDistance: 2,
 				regular: {
 					drops: 0,
-					hpMult: 0.1,
-					dmgMult: 1
+					hpMult: 0.5,
+					dmgMult: 0.01
 				},
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 0.000001
+					statMult: 1
 				}]
 			}, false, 'regular');
+			mob.stats.values.regenHp = mob.stats.values.hpMax / 100;
+			mob.spellbook.spells[0].threatMult *= 10;
 
 			mob.follower.bindEvents();
 

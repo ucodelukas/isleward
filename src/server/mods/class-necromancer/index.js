@@ -82,10 +82,10 @@ define([
 				auto: true,
 				cdMax: 7,
 				manaCost: 0,
-				range: 9,
+				range: 1,
 				random: {
 					damage: [2, 4],
-					healPercent: [10, 20]
+					healPercent: [25, 75]
 				}
 			};
 
@@ -110,8 +110,8 @@ define([
 				manaCost: 0,
 				range: 9,
 				random: {
-					damage: [2, 4],
-					shieldPercentage: [50, 150]
+					i_drainPercentage: [10, 50],
+					shieldMultiplier: [2, 5]
 				}
 			};
 		},

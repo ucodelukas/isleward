@@ -77,7 +77,7 @@ define([
 		},
 
 		update: function() {
-			if ((this.obj.mob) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
 			var regen = {
@@ -302,6 +302,11 @@ define([
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
 				recipients.push(source.serverId);
+			if ((source.follower) && (source.follower.master.serverId))
+				recipients.push(source.follower.master.serverId);
+			if ((this.obj.follower) && (this.obj.follower.master.serverId))
+				recipients.push(this.obj.follower.master.serverId);
+
 			if (recipients.length > 0) {
 				this.syncer.queue('onGetDamage', {
 					id: this.obj.id,

@@ -34,7 +34,7 @@ define([
 			if ((target) && (target != this.obj) && ((!this.obj.follower) || (this.obj.follower.master != target))) {
 				this.fight(target);
 				return;
-			} else if (this.target) {
+			} else if ((!target) && (this.target)) {
 				this.target = null;
 				this.obj.clearQueue();
 				goHome = true;

@@ -151,6 +151,10 @@ define([
 		},
 
 		tryEngage: function(obj, amount, threatMult) {
+			//Don't aggro yourself, stupid
+			if (obj == this.obj)
+				return;
+
 			var result = {
 				success: true
 			};
@@ -293,7 +297,7 @@ define([
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
 				if (l.obj.destroyed) {
-					list.splice(i, 1);
+					this.unAggro(l.obj);
 					i--;
 					lLen--;
 				}

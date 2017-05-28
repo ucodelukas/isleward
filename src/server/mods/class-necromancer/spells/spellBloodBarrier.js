@@ -33,12 +33,13 @@ define([
 			if ((this.obj.destroyed) || (target.destroyed))
 				return;
 
-			var amount = this.obj.stats.values.hpMax / 10;
+			var amount = this.obj.stats.values.hpMax / 100 * this.drainPercentage;
 			var damage = {
 				amount: amount
 			};
 			this.obj.stats.takeDamage(damage, 0, this.obj);
 
+			amount  = amount * this.shieldMultiplier;
 			var heal = {
 				amount: amount
 			};
