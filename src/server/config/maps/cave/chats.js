@@ -16,5 +16,12 @@ module.exports = {
 		msg: 'Thorald will be expecting us soon'
 	}, {
 		msg: 'This is useless'
+	}],
+	'cultist': [{
+		msg: '*pockets a small crystal*'
+	}, {
+		msg: '*sighs*'
+	}, {
+		msg: '*stares into a crystal*'
 	}]
 };

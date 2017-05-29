@@ -148,6 +148,120 @@ module.exports = {
 					}
 				}
 			}
+		},
+		gas: {
+			components: {
+				cpnParticles: {
+					simplify: function() {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['c0c3cf', '929398'],
+									end: ['69696e', '69696e']
+								},
+								scale: {
+									start: {
+										min: 32,
+										max: 18
+									},
+									end: {
+										min: 16,
+										max: 8
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 4,
+									max: 16
+								},
+								alpha: {
+									start: 0.2,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.02,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -80,
+									y: -80,
+									w: 160,
+									h: 160
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		bubbles: {
+			components: {
+				cpnParticles: {
+					simplify: function() {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['48edff', '3fa7dd'],
+									end: ['69696e', '42548d']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 8
+									},
+									end: {
+										min: 2,
+										max: 4
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 3
+								},
+								alpha: {
+									start: 0.5,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -20,
+									y: -20,
+									w: 60,
+									h: 60
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 };
