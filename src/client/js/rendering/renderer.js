@@ -317,6 +317,9 @@ define([
 			var alpha = tileOpacity.map(c);
 			var canFlip = tileOpacity.canFlip(c);
 
+			if (c == 536870624)
+				console.log(i, j);
+
 			var tile = new pixi.Sprite(this.getTexture('sprites', c));
 
 			tile.alpha = alpha;

@@ -174,8 +174,8 @@ define([
 				rune.spell.cdMult = 1;
 			mob.inventory.getItem(rune);*/
 
-			var dmgMult = 4;
-			var hpMult = 1;
+			var dmgMult = 4 * mob.mob.dmgMult;
+			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
 				hpMult *= [0.005, 0.01, 0.1, 0.2, 0.5, 0.65, 0.75, 0.85, 0.95][level - 1];

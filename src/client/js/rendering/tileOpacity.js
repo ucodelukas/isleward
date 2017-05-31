@@ -76,9 +76,9 @@ define([
 
 		],
 		wallsNoFlip: [
-			156, 158, 162, 163, 167, 168,			//Ledges
-			189,									//Wall Sign
-			195, 196, 197, 198, 199, 200, 201		//Stone Ledges
+			156, 158, 162, 163, 167, 168,					//Ledges
+			189,											//Wall Sign
+			195, 196, 197, 198, 199, 200, 201, 202, 203		//Stone Ledges
 		],
 		objectsNoFlip: [
 			96, 101, 								//Clotheslines

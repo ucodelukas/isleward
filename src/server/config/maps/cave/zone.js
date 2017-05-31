@@ -76,6 +76,89 @@ module.exports = {
 			}]
 		},
 
+		pockshell: {
+			level: 3,
+			
+			regular: {
+				hpMult: 1000,
+				dmgMult: 0.000000001
+			},
+
+			mobile: false,
+			spells: [{
+				type: 'projectile',
+				particles: {
+					scale: {
+						start: {
+							min: 6,
+							max: 18
+						},
+						end: {
+							min: 2,
+							max: 8
+						}
+					},
+					color: {
+						start: ['fc66f7', 'a24eff'],
+						end: ['393268', '933159']
+					},
+					chance: 0.65,
+					randomScale: true,
+					randomColor: true,
+				}
+			}, {
+				type: 'smokeBomb',
+				radius: 2,
+				repeat: 3,
+				duration: 8,
+				randomPos: true,
+				range: 6,
+				statMult: 1,
+				damage: 0.25,
+				element: 'arcane',
+				cdMax: 8,
+				particles: {
+					scale: {
+						start: {
+							min: 6,
+							max: 18
+						},
+						end: {
+							min: 4,
+							max: 10
+						}
+					},
+					opacity: {
+						start: 0.01,
+						end: 0
+					},
+					lifetime: {
+						min: 1,
+						max: 3
+					},
+					speed: {
+						start: 2,
+						end: 0
+					},
+					color: {
+						start: ['ff4252', 'd43346'],
+						end: ['802343', 'a82841']
+					},
+					chance: 0.03,
+					randomColor: true,
+					randomScale: true,
+					blendMode: 'add',
+					spawnType: 'rect',
+					spawnRect: {
+						x: -15,
+						y: -15,
+						w: 30,
+						h: 30
+					}
+				}
+			}]
+		},
+
 		'cultist': {
 			level: 13
 		},

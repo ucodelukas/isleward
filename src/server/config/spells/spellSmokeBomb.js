@@ -67,7 +67,7 @@ define([
 
 		update: function() {
 			var selfCast = this.selfCast;
-			
+
 			if (!selfCast)
 				return;
 
@@ -85,61 +85,71 @@ define([
 
 			var radius = this.radius;
 
-			var x = obj.x;
-			var y = obj.y;
+			var repeat = this.repeat || 1;
 
-			var objects = this.obj.instance.objects;
-			var patches = [];
+			for (var r = 0; r < repeat; r++) {
+				var x = obj.x;
+				var y = obj.y;
 
-			var physics = this.obj.instance.physics;
-
-			for (var i = x - radius; i <= x + radius; i++) {
-				var dx = Math.abs(x - i);
-				for (var j = y - radius; j <= y + radius; j++) {
-					var distance = dx + Math.abs(j - y);
-
-					if (distance > radius + 1)
-						continue;
-
-					if (!physics.hasLos(x, y, i, j))
-						continue;
-
-					var patch = objects.buildObjects([{
-						x: i,
-						y: j,
-						properties: {
-							cpnHealPatch: cpnSmokePatch,
-							cpnParticles: {
-								simplify: function() {
-									return {
-										type: 'particles',
-										blueprint: this.blueprint
-									};
-								},
-								blueprint: this.particles
-							}
-						},
-						extraProperties: {
-							smokePatch: {
-								caster: obj,
-								statType: this.statType,
-								getDamage: this.getDamage.bind(this)
-							}
-						}
-					}]);
-
-					patches.push(patch);
+				if (this.randomPos) {
+					var range = this.range;
+					x += ~~(Math.random() * range * 2) - range;
+					y += ~~(Math.random() * range * 2) - range;
 				}
-			}
 
-			if (!this.castEvent) {
-				this.sendBump({
-					x: x,
-					y: y - 1
-				});
-			}
+				var objects = this.obj.instance.objects;
+				var patches = [];
 
-			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
+				var physics = this.obj.instance.physics;
+
+				for (var i = x - radius; i <= x + radius; i++) {
+					var dx = Math.abs(x - i);
+					for (var j = y - radius; j <= y + radius; j++) {
+						var distance = dx + Math.abs(j - y);
+
+						if (distance > radius + 1)
+							continue;
+
+						if (!physics.hasLos(x, y, i, j))
+							continue;
+
+						var patch = objects.buildObjects([{
+							x: i,
+							y: j,
+							properties: {
+								cpnHealPatch: cpnSmokePatch,
+								cpnParticles: {
+									simplify: function() {
+										return {
+											type: 'particles',
+											blueprint: this.blueprint
+										};
+									},
+									blueprint: this.particles
+								}
+							},
+							extraProperties: {
+								smokePatch: {
+									caster: obj,
+									statType: this.statType,
+									getDamage: this.getDamage.bind(this)
+								}
+							}
+						}]);
+
+						patches.push(patch);
+					}
+				}
+
+				if (!this.castEvent) {
+					this.sendBump({
+						x: x,
+						y: y - 1
+					});
+				}
+
+				this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
+			}
 
 			return true;
 		},
