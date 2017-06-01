@@ -103,7 +103,7 @@ define([
 				this.stage.addChild(layers[l])
 			}, this);
 
-			var spriteNames = ['sprites', 'tiles', 'mobs', 'bosses', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss'];
+			var spriteNames = ['tiles', 'mobs', 'bosses', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss'];
 			resources.spriteNames.forEach(function(s) {
 				if (s.indexOf('.png') > -1)
 					spriteNames.push(s);
@@ -118,6 +118,33 @@ define([
 				renderer: this.renderer,
 				stage: this.layers.particles
 			});
+
+			this.buildSpritesTexture();
+		},
+
+		buildSpritesTexture: function() {
+			var container = new pixi.Container();
+
+			var totalHeight = 0;
+			['tiles', 'walls', 'objects'].forEach(function(t) {
+				var texture = this.textures[t];
+				var tile = new pixi.Sprite(new pixi.Texture(texture));
+				tile.width = texture.width;
+				tile.height = texture.height;
+				tile.x = 0;
+				tile.y = totalHeight;
+
+				container.addChild(tile);
+
+				totalHeight += tile.height;
+			}, this);
+
+			var renderTexture = pixi.RenderTexture.create(this.textures.tiles.width, totalHeight);
+			console.log(renderTexture);
+			this.renderer.render(container, renderTexture);
+
+			this.textures.sprites = renderTexture;
+			this.textures.scaleMult = pixi.SCALE_MODES.NEAREST;
 		},
 
 		toggleScreen: function() {

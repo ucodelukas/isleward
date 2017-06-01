@@ -76,6 +76,61 @@ module.exports = {
 			}]
 		},
 
+		'overloaded slug': {
+			level: 3,
+			spells: [{
+				type: 'melee'
+			}, {
+				type: 'smokeBomb',
+				radius: 1,
+				duration: 3,
+				selfCast: 0.25,
+				statMult: 1,
+				damage: 0.25,
+				element: 'poison',
+				cdMax: 5,
+				particles: {
+					scale: {
+						start: {
+							min: 4,
+							max: 14
+						},
+						end: {
+							min: 2,
+							max: 8
+						}
+					},
+					opacity: {
+						start: 0.01,
+						end: 0
+					},
+					lifetime: {
+						min: 1,
+						max: 2
+					},
+					speed: {
+						start: 4,
+						end: 0
+					},
+					color: {
+						start: ['faac45', 'ff4252'],
+						end: ['763b3b', '802343']
+					},
+					chance: 0.085,
+					randomColor: true,
+					randomScale: true,
+					blendMode: 'add',
+					spawnType: 'rect',
+					spawnRect: {
+						x: -15,
+						y: -15,
+						w: 30,
+						h: 30
+					}
+				}
+			}]
+		},
+
 		pockshell: {
 			level: 3,
 			
