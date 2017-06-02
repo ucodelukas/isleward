@@ -82,7 +82,7 @@ define([
 			this.showTilesH = Math.ceil((this.height / scale) / 2) + 3;
 
 			this.renderer = pixi.autoDetectRenderer(this.width, this.height, {
-				backgroundColor: 0x2d2136
+				backgroundColor: '0x2d2136'
 			});
 
 			window.onresize = this.onResize.bind(this);
@@ -115,8 +115,9 @@ define([
 			}, this);
 
 			particles.init({
+				r: this,
 				renderer: this.renderer,
-				stage: this.layers.particles
+				stage: this.layers.tileSprites
 			});
 
 			this.buildSpritesTexture();
@@ -140,7 +141,6 @@ define([
 			}, this);
 
 			var renderTexture = pixi.RenderTexture.create(this.textures.tiles.width, totalHeight);
-			console.log(renderTexture);
 			this.renderer.render(container, renderTexture);
 
 			this.textures.sprites = renderTexture;
@@ -343,9 +343,6 @@ define([
 		buildTile: function(c, i, j) {
 			var alpha = tileOpacity.map(c);
 			var canFlip = tileOpacity.canFlip(c);
-
-			if (c == 536870624)
-				console.log(i, j);
 
 			var tile = new pixi.Sprite(this.getTexture('sprites', c));
 
@@ -639,14 +636,18 @@ define([
 
 			graphics.beginFill(obj.color || '0x48edff', fillAlpha);
 
+			graphics.pivot = new pixi.Point(0, 0);
+
 			if (obj.strokeColor)
 				graphics.lineStyle(scaleMult, obj.strokeColor);
 
-			graphics.moveTo(obj.x, obj.y);
+			graphics.drawRect(obj.x, obj.y, obj.w, obj.h);
+
+			/*graphics.moveTo(obj.x, obj.y);
 			graphics.lineTo(obj.x + obj.w, obj.y);
 			graphics.lineTo(obj.x + obj.w, obj.y + obj.h);
 			graphics.lineTo(obj.x, obj.y + obj.h);
-			graphics.lineTo(obj.x, obj.y);
+			graphics.lineTo(obj.x, obj.y);*/
 
 			graphics.endFill();
 
@@ -656,11 +657,33 @@ define([
 		},
 
 		moveRectangle(obj) {
+			obj.sprite.position = new pixi.Point(obj.x, obj.y);
+			obj.sprite.width = obj.w;
+			obj.sprite.height = obj.h;
+			return;
+
 			var points = obj.sprite.graphicsData[0].shape.points;
 			if (!points)
 				return;
 
-			obj.sprite.dirty = true;
+			graphics.clear();
+
+			graphics.beginFill(obj.color || '0x48edff', fillAlpha);
+
+			if (obj.strokeColor)
+				graphics.lineStyle(scaleMult, obj.strokeColor);
+
+			graphics.drawRect(obj.x, obj.y, obj.w, obj.h);
+
+			/*graphics.moveTo(obj.x, obj.y);
+			graphics.lineTo(obj.x + obj.w, obj.y);
+			graphics.lineTo(obj.x + obj.w, obj.y + obj.h);
+			graphics.lineTo(obj.x, obj.y + obj.h);
+			graphics.lineTo(obj.x, obj.y);*/
+
+			graphics.endFill();
+
+			/*obj.sprite.dirty = true;
 			obj.sprite.clearDirty = true;
 
 			points[0] = obj.x;
@@ -672,7 +695,7 @@ define([
 			points[6] = obj.x;
 			points[7] = obj.y + obj.h;
 			points[8] = obj.x;
-			points[9] = obj.y;
+			points[9] = obj.y;*/
 		},
 
 		buildObject: function(obj) {

@@ -344,6 +344,63 @@ module.exports = {
 				}
 			}
 		},
+		sunlight: {
+			components: {
+				cpnParticles: {
+					simplify: function() {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['ffeb38', 'ffeb38'],
+									end: ['ffeb38', 'ffeb38']
+								},
+								scale: {
+									start: {
+										min: 40,
+										max: 120
+									},
+									end: {
+										min: 20,
+										max: 80
+									}
+								},
+								speed: {
+									start: {
+										min: 0,
+										max: 2
+									},
+									end: {
+										min: 0,
+										max: 0
+									}
+								},
+								lifetime: {
+									min: 12,
+									max: 40
+								},
+								alpha: {
+									start: 0.1,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.02,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'overlay',
+								spawnRect: {
+									x: -80,
+									y: -80,
+									w: 160,
+									h: 160
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		bubbles: {
 			components: {
 				cpnParticles: {

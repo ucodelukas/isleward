@@ -30,16 +30,16 @@ define([
 				layerName: 'effects',
 				x: 0,
 				y: 0,
-				w: 0,
-				h: 0,
+				w: 1,
+				h: 1,
 				color: 0x802343
 			});
 
 			renderer.buildRectangle({
 				x: 0,
 				y: 0,
-				w: 0,
-				h: 0,
+				w: 1,
+				h: 1,
 				parent: this.hpSprite,
 				color: 0xd43346
 			});
@@ -73,7 +73,7 @@ define([
 				h: 5
 			});
 
-			this.hpSprite.visible = (this.values.hp < this.values.hpMax);
+			this.hpSprite.visible = true;//(this.values.hp < this.values.hpMax);
 		},
 
 		extend: function(blueprint) {

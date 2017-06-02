@@ -1,9 +1,11 @@
 define([
 	'particles',
-	'js/rendering/particleDefaults'
+	'js/rendering/particleDefaults',
+	'js/rendering/shaders/outline'
 ], function(
 	pixiParticles,
-	particleDefaults
+	particleDefaults,
+	shaderOutline
 ) {
 	return {
 		renderer: null,
@@ -14,6 +16,7 @@ define([
 		lastTick: null,
 
 		init: function(options) {
+			this.r = options.r;
 			this.renderer = options.renderer;
 			this.stage = options.stage;
 			this.lastTick = Date.now();
@@ -22,7 +25,7 @@ define([
 		buildEmitter: function(config) {
 			var options = $.extend(true, {}, particleDefaults, config);
 
-			var emitter = new PIXI.particles.Emitter(this.stage, ['images/particles.png'], options);
+			var emitter = new PIXI.particles.Emitter(this.r.layers.tileSprites, ['images/particles.png'], options);
 			emitter.emit = true;
 
 			this.emitters.push(emitter);
