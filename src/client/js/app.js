@@ -16,6 +16,7 @@ require.config({
 		'main': 'js/main',
 		'helpers': 'js/misc/helpers',
 		'particles': 'plugins/pixi.particles',
+		'picture': 'plugins/pixi.picture',
 		'pixi': 'plugins/pixi.min'
 	},
 	shim: {
@@ -34,6 +35,11 @@ require.config({
 			exports: 'PIXI'
 		},
 		'particles': {
+			deps: [
+				'pixi'
+			]
+		},
+		'picture': {
 			deps: [
 				'pixi'
 			]

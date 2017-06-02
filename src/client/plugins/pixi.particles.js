@@ -754,6 +754,7 @@ if (!Array.prototype.random) {
 		this.randomColor = config.randomColor || false;
 		this.randomScale = config.randomScale || false;
 		this.randomSpeed = config.randomSpeed || false;
+		this.blendMode = config.blendMode;
 
 		/**
 		 * The constructor used to create new particles. The default is
@@ -1425,6 +1426,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} delta Time elapsed since the previous frame, in __seconds__.
 	 */
 	p.update = function(delta) {
+		var r = [];
 		//if we don't have a parent to add particles to, then don't do anything.
 		//this also works as a isDestroyed check
 		if (!this._parent) return;
@@ -1503,6 +1505,7 @@ if (!Array.prototype.random) {
 						} else {
 							p = new this.particleConstructor(this);
 						}
+						r.push(p);
 
 						//set a random texture if we have more than one
 						if (this.particleImages.length > 1) {
@@ -1620,6 +1623,8 @@ if (!Array.prototype.random) {
 			this._prevPosIsValid = true;
 			this._posChanged = false;
 		}
+
+		return r;
 	};
 
 	/**

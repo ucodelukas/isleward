@@ -25,7 +25,7 @@ define([
 		buildEmitter: function(config) {
 			var options = $.extend(true, {}, particleDefaults, config);
 
-			var emitter = new PIXI.particles.Emitter(this.r.layers.tileSprites, ['images/particles.png'], options);
+			var emitter = new PIXI.particles.Emitter(this.r.layers.particles, ['images/particles.png'], options);
 			emitter.emit = true;
 
 			this.emitters.push(emitter);
@@ -56,7 +56,11 @@ define([
 					continue;
 				} 
 
-				e.update((now - this.lastTick) * 0.001);
+				var r = e.update((now - this.lastTick) * 0.001);
+				r.forEach(function(rr) {
+					if (e.blendMode == 'overlay')
+						rr.pluginName = 'picture';
+				}, this);
 			}
 
 			this.lastTick = now;

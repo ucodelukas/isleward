@@ -80,60 +80,12 @@ module.exports = {
 			level: 3,
 			spells: [{
 				type: 'melee'
-			}, {
-				type: 'smokeBomb',
-				radius: 1,
-				duration: 3,
-				selfCast: 0.25,
-				statMult: 1,
-				damage: 0.25,
-				element: 'poison',
-				cdMax: 5,
-				particles: {
-					scale: {
-						start: {
-							min: 4,
-							max: 14
-						},
-						end: {
-							min: 2,
-							max: 8
-						}
-					},
-					opacity: {
-						start: 0.01,
-						end: 0
-					},
-					lifetime: {
-						min: 1,
-						max: 2
-					},
-					speed: {
-						start: 4,
-						end: 0
-					},
-					color: {
-						start: ['faac45', 'ff4252'],
-						end: ['763b3b', '802343']
-					},
-					chance: 0.085,
-					randomColor: true,
-					randomScale: true,
-					blendMode: 'add',
-					spawnType: 'rect',
-					spawnRect: {
-						x: -15,
-						y: -15,
-						w: 30,
-						h: 30
-					}
-				}
 			}]
 		},
 
 		pockshell: {
 			level: 3,
-			
+
 			regular: {
 				hpMult: 1000,
 				dmgMult: 0.000000001
@@ -352,23 +304,23 @@ module.exports = {
 							type: 'particles',
 							blueprint: {
 								color: {
-									start: ['ffeb38', 'ffeb38'],
-									end: ['ffeb38', 'ffeb38']
+									start: ['fff7b2', 'fff7b2'],
+									end: ['fff7b2', 'fff7b2']
 								},
 								scale: {
 									start: {
-										min: 40,
-										max: 120
+										min: 400,
+										max: 400
 									},
 									end: {
-										min: 20,
-										max: 80
+										min: 400,
+										max: 400
 									}
 								},
 								speed: {
 									start: {
 										min: 0,
-										max: 2
+										max: 0
 									},
 									end: {
 										min: 0,
@@ -380,9 +332,10 @@ module.exports = {
 									max: 40
 								},
 								alpha: {
-									start: 0.1,
-									end: 0
+									start: 0.75,
+									end: 0.75
 								},
+								maxParticles: 1,
 								randomScale: true,
 								randomSpeed: true,
 								chance: 0.02,
@@ -390,10 +343,10 @@ module.exports = {
 								spawnType: 'rect',
 								blendMode: 'overlay',
 								spawnRect: {
-									x: -80,
-									y: -80,
-									w: 160,
-									h: 160
+									x: 0,
+									y: 0,
+									w: 0,
+									h: 0
 								}
 							}
 						}

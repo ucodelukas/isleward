@@ -6,7 +6,8 @@ define([
 	'js/rendering/tileOpacity',
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
-	'js/rendering/spritePool'
+	'js/rendering/spritePool',
+	'picture'
 ], function(
 	resources,
 	events,
@@ -15,7 +16,8 @@ define([
 	tileOpacity,
 	particles,
 	shaderOutline,
-	spritePool
+	spritePool,
+	picture
 ) {
 	var scale = 40;
 	var scaleMult = 5;
@@ -117,7 +119,7 @@ define([
 			particles.init({
 				r: this,
 				renderer: this.renderer,
-				stage: this.layers.tileSprites
+				stage: this.layers.particles
 			});
 
 			this.buildSpritesTexture();
@@ -372,6 +374,9 @@ define([
 
 			this.clean();
 			spritePool.clean();
+
+			this.stage.filters = [new PIXI.filters.VoidFilter()];
+			this.stage.filterArea = new PIXI.Rectangle(0, 0, w * scale, h * scale);
 
 			this.buildHiddenRooms(msg);
 
