@@ -903,6 +903,73 @@
         }, 
         {
          "draworder":"topdown",
+         "name":"clientObjects",
+         "objects":[
+                {
+                 "height":64,
+                 "id":797,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":72,
+                 "x":568,
+                 "y":1264
+                }, 
+                {
+                 "height":24,
+                 "id":798,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":696,
+                 "y":1272
+                }, 
+                {
+                 "height":16,
+                 "id":799,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":560,
+                 "y":1336
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "name":"objects",
          "objects":[
                 {
@@ -1470,18 +1537,6 @@
                  "y":1176
                 }, 
                 {
-                 "gid":377,
-                 "height":8,
-                 "id":789,
-                 "name":"sunlight",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":8,
-                 "x":600,
-                 "y":1296
-                }, 
-                {
                  "gid":382,
                  "height":8,
                  "id":792,
@@ -1511,7 +1566,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":794,
+ "nextobjectid":800,
  "orientation":"orthogonal",
  "properties":
     {
