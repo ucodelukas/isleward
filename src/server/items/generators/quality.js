@@ -25,7 +25,7 @@ define([
 
 		generate: function(item, blueprint) {
 			if (blueprint.quality != null) {
-				item.quality = blueprint.quality;
+				item.quality = ~~blueprint.quality;
 				return;
 			}
 

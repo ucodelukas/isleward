@@ -34,9 +34,12 @@ define([
 				var item = items[i];
 
 				//Hacks for old items
-				if ((item.spell) && (!item.spell.rolls))
+				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
+					items.splice(i, 1);
+					i--;
+					iLen--;
 					continue;
-				else if ((item.spell) && (item.type == 'Spear')) {
+				} else if ((item.spell) && (item.type == 'Spear')) {
 					item.spell.properties = item.spell.properties || {};
 					item.spell.properties.range = item.range;
 				}
@@ -149,7 +152,7 @@ define([
 					this.obj.syncer.setArray(true, 'inventory', 'getItems', replaceItem);
 				}
 			}
-			
+
 			if (spellbook.spells.length >= 3) {
 				if (item.slot)
 					item.spellId = -1;
@@ -175,7 +178,7 @@ define([
 			var stash = this.obj.stash;
 			if (!stash.active)
 				return;
-			
+
 			var clonedItem = extend(true, {}, item);
 			this.destroyItem(id);
 			stash.deposit(clonedItem);
@@ -398,7 +401,7 @@ define([
 
 			return obj;
 		},
-		
+
 		getItem: function(item, hideMessage) {
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
@@ -529,7 +532,7 @@ define([
 						text: e.text,
 						properties: e.properties
 					}));
-					
+
 					var reputation = this.obj.reputation;
 
 					//Don't do this check if we don't have a reputation cpn. That means this is most likely a bag
