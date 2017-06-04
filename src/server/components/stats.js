@@ -301,7 +301,6 @@ define([
 				amount = this.values.hp;
 
 			this.values.hp -= amount;
-
 			var recipients = [];
 			if (this.obj.serverId != null)
 				recipients.push(this.obj.serverId);

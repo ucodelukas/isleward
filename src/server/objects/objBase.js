@@ -316,6 +316,8 @@ define([
 				this.prophecies.fireEvent(event, args);
 			if (this.inventory)
 				this.inventory.fireEvent(event, args);
+			if (this.spellbook)
+				this.spellbook.fireEvent(event, args);
 		},
 
 		destroy: function() {

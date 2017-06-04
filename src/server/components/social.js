@@ -12,7 +12,14 @@ define([
 		partyLeaderId: null,
 		party: null,
 
-		init: function() {},
+		init: function() {
+			var roleLevel = roles.getRoleLevel(this.obj);
+			if (roleLevel >= 10) {
+				this.obj.extendComponent('social', 'adminCommands', {
+					roleLevel: roleLevel
+				});
+			}
+		},
 
 		simplify: function() {
 			return {

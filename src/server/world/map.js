@@ -274,7 +274,7 @@ define([
 				if (sheetName == 'walls')
 					cell += 192;
 				else if (sheetName == 'objects')
-					cell += 384;
+					cell += 448;
 
 				if ((layerName != 'hiddenWalls') && (layerName != 'hiddenTiles')) {
 					var layer = this.layers;
@@ -319,7 +319,7 @@ define([
 				if ((this.zone) && (this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
 					extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
 
-				if ((blueprint.properties.cpnNotice) || (layerName == 'rooms') || (layerName == 'hiddenRooms')) {
+				if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName == 'rooms') || (layerName == 'hiddenRooms')) {
 					blueprint.y++;
 					blueprint.width = cell.width / mapScale;
 					blueprint.height = cell.height / mapScale;

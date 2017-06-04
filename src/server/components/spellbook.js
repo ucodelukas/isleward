@@ -114,8 +114,7 @@ define([
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
 					builtSpell.animation.name = animationName;
-				}
-				else
+				} else
 					builtSpell.animation = null;
 			}
 
@@ -138,7 +137,7 @@ define([
 			if (builtSpell.init)
 				builtSpell.init();
 
-			if (this.obj.player) 
+			if (this.obj.player)
 				this.obj.syncer.setArray(true, 'spellbook', 'getSpells', builtSpell.simplify());
 
 			return builtSpell.id;
@@ -156,7 +155,7 @@ define([
 				runeSpell.rolls = {};
 
 			runeSpell.values = {};
-			
+
 			var builtSpell = extend(true, {
 				values: {}
 			}, playerSpell, playerSpellConfig);
@@ -172,8 +171,7 @@ define([
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
-				}
-				else
+				} else
 					val = ~~(val * 10) / 10;
 
 				builtSpell[r] = val;
@@ -220,8 +218,7 @@ define([
 				});
 
 				return true;
-			}
-			else
+			} else
 				exists.target = action.target;
 		},
 		getRandomSpell: function(target) {
@@ -230,10 +227,10 @@ define([
 				if (s.canCast(target))
 					valid.push(i);
 			});
-			
+
 			if (valid.length > 0)
 				return valid[~~(Math.random() * valid.length)]
-			else 
+			else
 				return null;
 		},
 		cast: function(action, isAuto) {
@@ -253,8 +250,7 @@ define([
 						x: this.obj.x,
 						y: this.obj.y
 					};
-				}
-				else if (spell.spellType == 'buff') {
+				} else if (spell.spellType == 'buff') {
 					action.target = this.obj;
 				}
 			}
@@ -377,9 +373,9 @@ define([
 					if ((spell.range > furthest) && (spell.canCast()))
 						furthest = spell.range;
 				}
-				if (furthest == 0) 
+				if (furthest == 0)
 					furthest = this.furthestRange;
-				
+
 				return furthest;
 			}
 		},
@@ -493,6 +489,26 @@ define([
 					}]
 				}
 			});
+		},
+
+		fireEvent: function(event, args) {
+			var spells = this.spells;
+			var sLen = spells.length;
+			for (var i = 0; i < sLen; i++) {
+				var s = spells[i];
+
+				var events = s.events;
+				if (events) {
+					var callback = events[event];
+					if (!callback)
+						continue;
+
+					callback.apply(s, args);
+				}
+
+				if (s.castEvent == event)
+					s.cast();
+			}
 		},
 
 		events: {
