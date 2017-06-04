@@ -89,6 +89,8 @@ define([
 				o = this;
 			}
 
+			var syncTypes = ['portrait'];
+
 			for (var p in o) {
 				var value = o[p];
 				if (value == null)
@@ -117,9 +119,10 @@ define([
 								result.components.push(component);
 						}
 					}
-				} else if (type == 'function') {
-
-				} else
+					else if (syncTypes.indexOf(p) > -1) {
+						result[p] = value;
+					}
+				} else if (type != 'function')
 					result[p] = value;
 			}
 

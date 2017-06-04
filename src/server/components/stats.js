@@ -79,7 +79,7 @@ define([
 		},
 
 		update: function() {
-			if ((this.obj.mob) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
 			var regen = {
@@ -242,7 +242,7 @@ define([
 					mult = (1 + (partySize * 0.1));
 				}
 
-				if (a.obj.stats) {
+				if ((a.obj.stats) && (!a.obj.follower)) {
 					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 					//Mobs that are farther then 10 levels from you, give no xp
 					//We don't currently do this for quests/herb gathering
@@ -307,6 +307,11 @@ define([
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
 				recipients.push(source.serverId);
+			if ((source.follower) && (source.follower.master.serverId))
+				recipients.push(source.follower.master.serverId);
+			if ((this.obj.follower) && (this.obj.follower.master.serverId))
+				recipients.push(this.obj.follower.master.serverId);
+
 			if (recipients.length > 0) {
 				this.syncer.queue('onGetDamage', {
 					id: this.obj.id,
@@ -330,11 +335,12 @@ define([
 					var deathEvent = {};
 
 					var killSource = source;
+
 					if (source.follower)
 						killSource = source.follower.master;
 
-					if (source.player)
-						source.stats.kill(this.obj);
+					if (killSource.player)
+						killSource.stats.kill(this.obj);
 					else
 						this.obj.fireEvent('afterDeath', deathEvent);
 
@@ -344,12 +350,12 @@ define([
 							this.obj.auth.permadie();
 
 							this.syncer.queue('onPermadeath', {
-								source: source.name
+								source: killSource.name
 							}, [this.obj.serverId]);
 						} else
 							this.values.hp = 0;
 
-						this.obj.player.die(source, deathEvent.permadeath);
+						this.obj.player.die(killSource, deathEvent.permadeath);
 					} else {
 						this.obj.effects.die();
 						if (this.obj.spellbook)
@@ -370,14 +376,14 @@ define([
 										if (done.some(d => d == p))
 											return;
 
-										this.obj.inventory.dropBag(p, source);
+										this.obj.inventory.dropBag(p, killSource);
 										done.push(p);
 									}, this);
 								} else {
 									if (a.serverId == null)
 										continue;
 
-									this.obj.inventory.dropBag(a.serverId, source);
+									this.obj.inventory.dropBag(a.serverId, killSource);
 									done.push(a.serverId);
 								}
 							}

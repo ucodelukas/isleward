@@ -126,12 +126,15 @@ define([
 			var components = template.components || [];
 			delete template.components;
 
+			var syncTypes = ['portrait'];
+
 			for (var p in template) {
 				var value = template[p];
 				var type = typeof(value);
 
 				if (type == 'object') {
-
+					if (syncTypes.indexOf(p) > -1)
+						obj[p] = value;
 				} else
 					obj[p] = value;
 			}
