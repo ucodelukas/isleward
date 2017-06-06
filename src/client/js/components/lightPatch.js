@@ -12,7 +12,8 @@ define([
 		type: 'lightPatch',
 
 		color: 'f7ffb2',
-		sprites: [],
+		patches: [],
+		rays: [],
 
 		init: function(blueprint) {
 			this.blueprint = this.blueprint || {};
@@ -41,45 +42,22 @@ define([
 					sprite.blendMode = PIXI.BLEND_MODES.OVERLAY;
 					sprite.pluginName = 'picture';
 
-					this.sprites.push(sprite);
+					this.patches.push(sprite);
 				}
 			}
 
-			/*var rCount = (obj.width * obj.height) / 11;
+			var rCount = ((obj.width * obj.height) / 10) + ~~(Math.random() + 2);
 			for (var i = 0; i < rCount; i++) {
-				var nx = x + ~~(Math.random() * obj.width) + 2;
-				var ny = y + ~~(Math.random() * obj.height) - (obj.height / 3);
+				var nx = x + 3 + ~~(Math.random() * (obj.width - 1));
+				var ny = y - 4 + ~~(Math.random() * (obj.height));
 				var w = 1 + ~~(Math.random() * 2);
-				var h = (obj.height / 2) + ~~(Math.random() * obj.height * 7);
+				var h = 6 + ~~(Math.random() * 13);
+				var hm = 2;
 
-				var ray = renderer.buildObject({
-					x: nx,
-					y: ny,
-					cell: 0,
-					sheetName: 'ray',
+				var rContainer = renderer.buildContainer({
 					layerName: 'lightBeams'
 				});
-				ray.alpha = 0.1 + (Math.random() * 0.2);
-				ray.width = w * scaleMult;
-				ray.height = h * scaleMult;	
-				//ray.position = new PIXI.Point((nx * scale), (ny * scale));
-				ray.pivot = new PIXI.Point(0.5, 0.5);
-				ray.rotation = 0.5;
-				ray.tint = 0xffeb38;
-
-				ray.blendMode = PIXI.BLEND_MODES.ADD;
-				sprite.pluginName = 'picture';
-
-				this.sprites.push(ray);
-			}*/
-
-			var rCount = (obj.width * obj.height) / 11;
-			for (var i = 0; i < rCount; i++) {
-				var nx = x + ~~(Math.random() * obj.width);
-				var ny = y + ~~(Math.random() * (obj.height)) - (obj.height / 2);
-				var w = 1 + ~~(Math.random() * 2);
-				var h = (obj.height / 4) + ~~(Math.random() * obj.height * 3);
-				var hm = 2;
+				this.rays.push(rContainer);
 
 				for (var j = 0; j < h; j++) {
 					var ray = renderer.buildObject({
@@ -87,30 +65,43 @@ define([
 						y: ny,
 						cell: 0,
 						sheetName: 'white',
-						layerName: 'lightBeams'
+						parent: rContainer
 					});
 					ray.x = ~~((nx * scale) - (scaleMult * j));
 					ray.y = (ny * scale) + (scaleMult * j * hm);
-					ray.alpha = ((1.0 - (j / h)) * 0.45) * (0.5 + (Math.random() * 0.5));
+					ray.alpha = ((1.0 - (j / h)) * 0.4);// * (0.5 + (Math.random() * 0.5));
 					ray.width = w * scaleMult;
 					ray.height = scaleMult * hm;
 					ray.tint = 0xffeb38;
 					ray.blendMode = PIXI.BLEND_MODES.ADD;
-
-					this.sprites.push(ray);
 				}
 			}
 		},
 
 		update: function() {
+			var rays = this.rays;
+			var rLen = rays.length;
+			for (var i = 0; i < rLen; i++) {
+				var r = rays[i];
 
+				r.alpha += (Math.random() * 0.03) - 0.015;
+				if (r.alpha < 0.3)
+					r.alpha = 0.3;
+				else if (r.alpha > 1)
+					r.alpha = 1;
+			}
 		},
 
 		destroy: function() {
-			this.sprites.forEach(function(s) {
-				s.parent.removeChild(s);
+			this.patches.forEach(function(p) {
+				p.parent.removeChild(p);
 			});
-			this.sprites = [];
+			this.patches = [];
+
+			this.rays.forEach(function(r) {
+				r.parent.removeChild(r);
+			});
+			this.rays = [];
 		}
 	};
 });

@@ -748,7 +748,8 @@ define([
                 else
                     sprite.x += scale;
             }
-            (this.layers[obj.layerName || obj.sheetName] || this.layers.objects).addChild(sprite);
+
+            (obj.parent || this.layers[obj.layerName || obj.sheetName] || this.layers.objects).addChild(sprite);
 
             return sprite;
         },
