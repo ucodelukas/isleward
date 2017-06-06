@@ -45,7 +45,7 @@ define([
 				}
 			}
 
-			var rCount = (obj.width * obj.height) / 11;
+			/*var rCount = (obj.width * obj.height) / 11;
 			for (var i = 0; i < rCount; i++) {
 				var nx = x + ~~(Math.random() * obj.width) + 2;
 				var ny = y + ~~(Math.random() * obj.height) - (obj.height / 3);
@@ -71,6 +71,34 @@ define([
 				sprite.pluginName = 'picture';
 
 				this.sprites.push(ray);
+			}*/
+
+			var rCount = (obj.width * obj.height) / 11;
+			for (var i = 0; i < rCount; i++) {
+				var nx = x + ~~(Math.random() * obj.width);
+				var ny = y + ~~(Math.random() * (obj.height)) - (obj.height / 2);
+				var w = 1 + ~~(Math.random() * 2);
+				var h = (obj.height / 4) + ~~(Math.random() * obj.height * 3);
+				var hm = 2;
+
+				for (var j = 0; j < h; j++) {
+					var ray = renderer.buildObject({
+						x: nx,
+						y: ny,
+						cell: 0,
+						sheetName: 'white',
+						layerName: 'lightBeams'
+					});
+					ray.x = ~~((nx * scale) - (scaleMult * j));
+					ray.y = (ny * scale) + (scaleMult * j * hm);
+					ray.alpha = ((1.0 - (j / h)) * 0.45) * (0.5 + (Math.random() * 0.5));
+					ray.width = w * scaleMult;
+					ray.height = scaleMult * hm;
+					ray.tint = 0xffeb38;
+					ray.blendMode = PIXI.BLEND_MODES.ADD;
+
+					this.sprites.push(ray);
+				}
 			}
 		},
 
