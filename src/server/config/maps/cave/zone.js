@@ -187,6 +187,24 @@ module.exports = {
 		}
 	},
 	objects: {
+		bigportal: {
+			components: {
+				cpnAttackAnimation: {
+					simplify: function() {
+						return {
+							type: 'attackAnimation',
+							spriteSheet: 'animBigObjects',
+							row: 1,
+							col: 0,
+							frames: 6,
+							frameDelay: 10,
+							loop: -1,
+							hideSprite: true
+						};
+					}
+				}
+			}
+		},
 		pinktile: {
 			components: {
 				cpnParticles: {

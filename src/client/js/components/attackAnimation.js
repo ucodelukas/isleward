@@ -32,6 +32,9 @@ define([
 		init: function(blueprint) {
 			effects.register(this);
 
+			if (this.hideSprite)
+				this.obj.sprite.visible = false;
+
 			this.flipped = (Math.random() < 0.5);
 
 			this.frameDelayCd = this.frameDelay;
@@ -47,6 +50,7 @@ define([
 				offsetY: this.obj.offsetY,
 				flipX: this.flipped
 			});
+			this.sprite.alpha = 1;
 		},
 
 		renderManual: function() {

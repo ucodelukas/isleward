@@ -107,7 +107,7 @@ define([
                 this.stage.addChild(layers[l])
             }, this);
 
-            var spriteNames = ['tiles', 'mobs', 'bosses', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss', 'white', 'ray'];
+            var spriteNames = ['tiles', 'mobs', 'bosses', 'animBigObjects', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss', 'white', 'ray'];
             resources.spriteNames.forEach(function(s) {
                 if (s.indexOf('.png') > -1)
                     spriteNames.push(s);
@@ -712,13 +712,8 @@ define([
                 h = obj.h / scaleMult;
             }
 
-            if (obj.sheetName == 'bosses') {
-                obj.layerName = 'mobs';
-                w = 24;
-                h = 24;
-                obj.w = w * scaleMult;
-                obj.h = h * scaleMult;
-            } else if (obj.sheetName == 'bigObjects') {
+            var bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
+            if (bigSheets.indexOf(obj.sheetName) > -1) {
                 obj.layerName = 'mobs';
                 w = 24;
                 h = 24;
@@ -732,19 +727,16 @@ define([
             sprite.width = obj.w || scale;
             sprite.height = obj.h || scale;
 
-            if (obj.sheetName == 'bosses') {
+            var bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
+            if (bigSheets.indexOf(obj.sheetName) > -1) {
                 sprite.x -= scale;
                 sprite.y -= (scale * 2);
-            } else if (obj.sheetName == 'bigObjects') {
-                sprite.x -= scale;
-                sprite.y -= (scale * 2);
-                sprite.alpha = 0.80;
             }
 
             if (obj.flipX) {
                 sprite.scale.x *= -1;
-                if ((obj.sheetName == 'bosses') || (obj.sheetName == 'bigObjects'))
-                    sprite.x += (scale * 2);
+                if (bigSheets.indexOf(obj.sheetName) > -1)
+                    sprite.x -= (scale * 2);
                 else
                     sprite.x += scale;
             }
