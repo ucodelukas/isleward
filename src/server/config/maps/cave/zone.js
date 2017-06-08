@@ -163,6 +163,8 @@ module.exports = {
 						h: 30
 					}
 				}
+			}, {
+				type: 'summonConsumableFollower'
 			}]
 		},
 
