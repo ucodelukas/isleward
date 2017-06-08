@@ -197,7 +197,7 @@ module.exports = {
 							row: 1,
 							col: 0,
 							frames: 6,
-							frameDelay: 10,
+							frameDelay: 7,
 							loop: -1,
 							hideSprite: true
 						};

@@ -736,7 +736,7 @@ define([
             if (obj.flipX) {
                 sprite.scale.x *= -1;
                 if (bigSheets.indexOf(obj.sheetName) > -1)
-                    sprite.x -= (scale * 2);
+                    sprite.x += (scale * 2);
                 else
                     sprite.x += scale;
             }
