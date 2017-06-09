@@ -33,6 +33,8 @@ define([
 			if (!target)
 				return false;
 
+			obj.syncer.set(false, 'chatter', 'msg', '*tummy grumbles*');
+
 			//Spawn a mob
 			var mob = obj.instance.spawners.spawn({
 				amountLeft: 1,
