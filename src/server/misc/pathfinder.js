@@ -425,7 +425,8 @@
 
 	return {
 		astar: astar,
-		Graph: Graph
+		Graph: Graph,
+		gridNode: GridNode
 	};
 
 });

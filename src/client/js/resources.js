@@ -10,6 +10,7 @@ define([
 			'walls',
 			'mobs',
 			'bosses',
+			'animBigObjects',
 			'bigObjects',
 			'objects',
 			'characters',

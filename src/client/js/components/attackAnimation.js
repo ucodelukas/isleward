@@ -6,7 +6,7 @@ define([
 	renderer
 ) {
 	var scale = 40;
-	
+
 	return {
 		type: 'attackAnimation',
 
@@ -32,6 +32,9 @@ define([
 		init: function(blueprint) {
 			effects.register(this);
 
+			if (this.hideSprite)
+				this.obj.sprite.visible = false;
+
 			this.flipped = (Math.random() < 0.5);
 
 			this.frameDelayCd = this.frameDelay;
@@ -41,12 +44,13 @@ define([
 			this.sprite = renderer.buildObject({
 				sheetName: this.spriteSheet,
 				cell: cell,
-				x: this.obj.x,
+				x: this.obj.x + (this.flipped ? 1 : 0),
 				y: this.obj.y,
 				offsetX: this.obj.offsetX,
 				offsetY: this.obj.offsetY,
 				flipX: this.flipped
 			});
+			this.sprite.alpha = 1;
 		},
 
 		renderManual: function() {
@@ -63,14 +67,15 @@ define([
 						else
 							this.destroyed = true;
 						return;
-					}
-					else
+					} else
 						this.frame = 0;
 				}
 			}
 
-			this.sprite.x = this.obj.x * scale;
-			this.sprite.y = this.obj.y * scale;
+			if (!this.hideSprite) {
+				this.sprite.x = this.obj.x * scale;
+				this.sprite.y = this.obj.y * scale;
+			}
 
 			var cell = (this.row * 8) + this.col + this.frame;
 
@@ -81,8 +86,10 @@ define([
 				sprite: this.sprite
 			});
 
-			if (this.flipped)
-				this.sprite.x += scale;
+			if (!this.hideSprite) {
+				if (this.flipped)
+					this.sprite.x += scale;
+			}
 		},
 
 		destroyManual: function() {
@@ -92,6 +99,6 @@ define([
 			});
 
 			effects.unregister(this);
-		}	
+		}
 	};
 });

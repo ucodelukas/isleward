@@ -163,6 +163,8 @@ module.exports = {
 						h: 30
 					}
 				}
+			}, {
+				type: 'summonConsumableFollower'
 			}]
 		},
 
@@ -187,6 +189,33 @@ module.exports = {
 		}
 	},
 	objects: {
+		redwall: {
+			components: {
+				cpnBlocker: {
+					init: function() {
+						this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+					}
+				}
+			}
+		},
+		bigportal: {
+			components: {
+				cpnAttackAnimation: {
+					simplify: function() {
+						return {
+							type: 'attackAnimation',
+							spriteSheet: 'animBigObjects',
+							row: 1,
+							col: 0,
+							frames: 6,
+							frameDelay: 7,
+							loop: -1,
+							hideSprite: true
+						};
+					}
+				}
+			}
+		},
 		pinktile: {
 			components: {
 				cpnParticles: {
@@ -235,6 +264,135 @@ module.exports = {
 								}
 							}
 						}
+					}
+				}
+			}
+		},
+		walltrigger: {
+			components: {
+				cpnParticles: {
+					simplify: function() {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['fff4252', 'ff6942'],
+									end: ['802343', 'f953f36']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 0,
+										max: 4
+									},
+									end: {
+										min: 0,
+										max: 0
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 2
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -20,
+									y: -20,
+									w: 40,
+									h: 40
+								}
+							}
+						}
+					}
+				},
+				cpnTrigger: {
+					init: function() {
+						this.obj.instance.triggerPuzzle = {
+							activated: []
+						};
+					},
+					collisionEnter: function(o) {
+						if (!o.player)
+							return;
+
+						var order = this.obj.order;
+						var triggerPuzzle = this.obj.instance.triggerPuzzle;
+						var activated = triggerPuzzle.activated;
+
+						activated.push(order);
+						var valid = true;
+						for (var i = 0; i < activated.length; i++) {
+							if (activated[i] != i) {
+								valid = false;
+								break;
+							}
+						}
+
+						if (!valid) {
+							triggerPuzzle.activated = [];
+
+							process.send({
+								method: 'events',
+								data: {
+									'onGetAnnouncement': [{
+										obj: {
+											msg: 'nothing happens'
+										},
+										to: [o.serverId]
+									}]
+								}
+							});
+
+							return;
+						}
+						else if (activated.length == 4) {
+							triggerPuzzle.activated = [];
+							this.activate();
+						}
+
+						process.send({
+							method: 'events',
+							data: {
+								'onGetAnnouncement': [{
+									obj: {
+										msg: this.obj.message
+									},
+									to: [o.serverId]
+								}]
+							}
+						});
+					},
+					activate: function() {
+						var syncer = this.obj.instance.syncer;
+						var physics = this.obj.instance.physics;
+						var walls = this.obj.instance.objects.objects.filter(o => (o.name == 'redwall'));
+						walls.forEach(function(w) {
+							w.destroyed = true;
+							physics.setCollision(w.x, w.y, false);
+
+							syncer.queue('onGetObject', {
+								x: w.x,
+								y: w.y,
+								components: [{
+									type: 'attackAnimation',
+									row: 0,
+									col: 4
+								}]
+							});
+						});
 					}
 				}
 			}

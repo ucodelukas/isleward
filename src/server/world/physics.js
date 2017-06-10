@@ -456,7 +456,7 @@ define([
 		setCollision: function(x, y, collides) {
 			var grid = this.graph.grid;
 			if (!grid[x][y]) {
-				grid[x][y] = new pathfinder.astar.GridNode(x, y, collides ? 0 : 1);
+				grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
 			}
 			else {
 				grid[x][y].weight = collides ? 0 : 1;
