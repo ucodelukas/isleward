@@ -494,10 +494,10 @@ define([
             var sw = this.showTilesW;
             var sh = this.showTilesH;
 
-            var lowX = Math.max(0, x - sw) + 2;
-            var lowY = Math.max(0, y - sh) + 2;
-            var highX = Math.min(w - 1, x + sw) - 2;
-            var highY = Math.min(h - 1, y + sh) - 2;
+            var lowX = Math.max(0, x - sw + 1);
+            var lowY = Math.max(0, y - sh + 2);
+            var highX = Math.min(w, x + sw - 2);
+            var highY = Math.min(h, y + sh - 2);
 
             var addedSprite = false;
 
