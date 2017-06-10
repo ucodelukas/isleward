@@ -1,7 +1,9 @@
 define([
-    'config/serverConfig'
+    'config/serverConfig',
+    'security/router'
 ], function(
-    config
+    config,
+    router
 ) {
 	return {
 		init: function(callback) {
@@ -59,9 +61,16 @@ define([
 				if (!msg.data)
 					msg.data = {};
 
-				if (msg.cpn)
+				if (msg.cpn) {
+					if (!router.allowedCpn(msg))
+						return;
+
 					cons.route(socket, msg);
+				}
 				else {
+					if (!router.allowedGlobal(msg))
+						return;
+
 					msg.socket = socket;
 					global[msg.module][msg.method](msg);
 				}
