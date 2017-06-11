@@ -40,13 +40,55 @@ define([
 			'judgment',
 			'inception',
 			'keeper',
-			'doctrine'
+			'doctrine',
+			'penance',
+			'terror',
+			'abomination',
+			'sanctum',
+			'derision',
+			'conclave',
+			'snare',
+			'mind',
+			'shade',
+			'conqueror',
+			'word',
+			'breath',
+			'omen',
+			'ruin',
+			'legend',
+			'desire',
+			'gift',
+			'savvy',
+			'scar',
+			'rage',
+			'star',
+			'technique',
+			'talent',
+			'quest',
+			'relic',
+			'vision',
+			'prospect',
+			'serenity',
+			'font',
+			'heart',
+			'shard',
+			'pride',
+			'acumen',
+			'vessel',
+			'glitter',
+			'terminus',
+			'eater',
+			'salvation'
 		],
 		armor: [
 			'barrier',
 			'protector',
 			'armor',
-			'cover'
+			'cover',
+			'ward',
+			'salvation',
+			'plate',
+			'fortress'
 		],
 		jewelry: [
 
@@ -60,32 +102,51 @@ define([
 			'executor',
 			'bite',
 			'union',
-			'talon'
+			'talon',
+			'splitter',
+			'wrecker',
+			'implement',
+			'siphon'
 		],
 		slots: {
 			feet: [
 				'crushers',
 				'hooves',
-				'stompers'
+				'stompers',
+				'talons',
+				'runners',
+				'groundpounders'
 			],
 			hands: [
 				'vices',
 				'restraints',
-				'hands'
+				'hands',
+				'gauntlets',
+				'talons'
 			],
 			head: [
 				'sentinel',
 				'crown',
 				'visor',
-				'crest'
+				'crest',
+				'visage',
+				'brim'
 			],
 			waist: [
 				'sheath',
-				'brace'
+				'brace',
+				'strap',
+				'cirque',
+				'clasp',
+				'truss'
+			],
+			legs: [
+				'bounders',
+				'runners'
 			],
 			chest: [
 				'vestments',
-				'heart'
+				'aegis'
 			]
 		}
 	};

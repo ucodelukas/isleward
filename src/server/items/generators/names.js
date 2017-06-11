@@ -8,7 +8,7 @@ define([
 	return {
 		generators: [
 			'basic',
-			[ 'basic', 'prefix' ],
+			[ 'basic' ],
 			[ 'gPrefix', 'gSuffix' ],
 			[ 'gPrefix', 'gSuffix' ],
 			[ 'gPrefix', 'gSuffix' ]

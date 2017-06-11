@@ -1,7 +1,7 @@
 define([
-	
+
 ], function(
-	
+
 ) {
 	return {
 		generic: [
@@ -61,31 +61,103 @@ define([
 			'shrewd',
 			'awful',
 			'master%',
-			'scout%'
+			'scout%',
+			'dread',
+			'unwavering',
+			'magi',
+			'prey',
+			`thinker's`,
+			'reviving',
+			'vagabond%',
+			'dreadlands',
+			'solemn',
+			'pathfinder',
+			'centurion%',
+			'inscrutable',
+			'soldier%',
+			`northlander's`,
+			'unity%',
+			'vehement',
+			'ramble',
+			'sage%',
+			'damnation',
+			'horizon',
+			'ingenious',
+			'opulent',
+			'combat',
+			'shattered',
+			'northern',
+			'eternal',
+			'war',
+			'bone',
+			'glistening',
+			'noble',
+			'journeyman%',
+			'dire',
+			'intrepid',
+			'empty',
+			'magnificent',
+			'apprentice%',
+			'hulk',
+			'dazzling',
+			'resolute',
+			'vampiric',
+			'racking',
+			'precious',
+			'empty',
+			`dissector's`,
+			'genesis',
+			'virile',
+			'living',
+			'blazon',
+			'unearthed',
+			'fissure',
+			'cosmos',
+			'herald',
+			`scholar's`,
+			'bolstering',
+			'magic'
 		],
 		armor: [
 			'unyielding',
 			'phalanx',
+			'protection',
+			'rugged',
+			'sheltered'
 		],
 		weapons: [
 			'biting',
 			'forge',
 			'piercing',
-			'steady'
+			'steady',
+			'cleave',
+			'carve',
+			'booming',
+			'devouring'
 		],
 		slots: {
 			feet: [
 				'trail',
-				'kick'
+				'kick',
+				'strider'
 			],
 			hands: [
 				'knuckle',
 				'hand',
 				'pummel',
-				'grip'
+				'grip',
+				'fist',
+				'choke',
+				'claw',
+				'shackle',
+				'crush',
+				'strider'
 			],
 			waist: [
 				'sheath'
+			],
+			head: [
+				'masked'
 			]
 		}
 	};
