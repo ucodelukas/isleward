@@ -332,6 +332,12 @@ module.exports = {
 						var triggerPuzzle = this.obj.instance.triggerPuzzle;
 						var activated = triggerPuzzle.activated;
 
+						if (this.obj.forceOpen) {
+							triggerPuzzle.activated = [];
+							this.activate();
+							return;
+						}						
+
 						activated.push(order);
 						var valid = true;
 						for (var i = 0; i < activated.length; i++) {
