@@ -91,6 +91,11 @@ define([
 
 			var values = this.values;
 			var isInCombat = (this.obj.aggro.list.length > 0);
+			if (this.obj.follower) {
+				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
+				if (isInCombat)
+					return;
+			}
 
 			var regenHp = 0;
 			var regenMana = 0;

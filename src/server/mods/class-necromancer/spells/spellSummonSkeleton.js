@@ -77,16 +77,21 @@ define([
 				regular: {
 					drops: 0,
 					hpMult: 0.5,
-					dmgMult: 0.01
+					dmgMult: 1
 				},
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 1
+					statMult: 0.2
 				}]
 			}, false, 'regular');
 			mob.stats.values.regenHp = mob.stats.values.hpMax / 100;
-			mob.spellbook.spells[0].threatMult *= 10;
+
+			var spell = mob.spellbook.spells[0];
+			spell.statType = ['str', 'int'];
+			mob.stats.values.str = obj.stats.values.str;
+			mob.stats.values.int = obj.stats.values.int;
+			spell.threatMult *= 2;
 
 			mob.follower.bindEvents();
 

@@ -257,9 +257,16 @@ define([
 
 			if (!spell.targetGround) {
 				if (action.target == null) {
-					console.log('NO TARGET');
-					console.log(action);
-					return false;
+					if (spell.autoTargetFollower) {
+						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
+						if (action.target)
+							action.target = action.target.minions[0];
+						else {
+							console.log('NO TARGET');
+							console.log(action);
+							return false;
+						}
+					}
 				}
 
 				//Did we pass in the target id?

@@ -18,6 +18,7 @@ define([
 		col: 0,
 
 		needLos: true,
+		autoTargetFollower: true,
 
 		cast: function(action) {
 			var obj = this.obj;
