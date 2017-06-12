@@ -27,6 +27,11 @@ define([
 
 			this.queueCallback(this.explode.bind(this, target), 1, null, target);
 
+			this.sendBump({
+				x: obj.x,
+				y: obj.y - 1
+			});
+
 			return true;
 		},
 		explode: function(target) {

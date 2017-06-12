@@ -20,6 +20,62 @@ define([
 			this.events.on('onBeforeGetSpellsConfig', this.beforeGetSpellsConfig.bind(this));
 			this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
 			this.events.on('onBeforeGetResourceList', this.beforeGetResourceList.bind(this));
+			this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
+		},
+
+		beforeGetAnimations: function(animations) {
+			var spritesheet = `${this.folderName}/images/inGameSprite.png`;
+
+			animations.classes.necromancer = {
+				'0': {
+					magic: {
+						spritesheet: spritesheet,
+						row: 0,
+						col: 1,
+						frames: 4,
+						frameDelay: 4
+					},
+					melee: {
+						spritesheet: spritesheet,
+						row: 1,
+						col: 1,
+						frames: 3,
+						frameDelay: 4
+					}
+				}
+			};
+
+			//Skeleton animations
+			var mobsheet = `${this.folderName}/images/mobs.png`;
+			if (!animations.mobs[mobsheet])
+				animations.mobs[mobsheet] = {};
+
+			animations.mobs[mobsheet]['0'] = {
+				melee: {
+					spritesheet: mobsheet,
+					row: 1,
+					col: 0,
+					frames: 2,
+					frameDelay: 4
+				},
+				spawn: {
+					spritesheet: mobsheet,
+					row: 2,
+					col: 0,
+					frames: 3,
+					frameDelay: 4,
+					hideSprite: true,
+					type: 'attackAnimation'
+				},
+				death: {
+					spritesheet: mobsheet,
+					row: 3,
+					col: 0,
+					frames: 4,
+					frameDelay: 3,
+					type: 'attackAnimation'
+				}
+			};
 		},
 
 		beforeGetResourceList: function(list) {
@@ -122,6 +178,7 @@ define([
 				description: 'Absorbs the life-force of your enemies.',
 				type: 'harvestLife',
 				icon: [0, 0],
+				animation: 'melee',
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,
 				particles: {
 					color: {
@@ -157,6 +214,7 @@ define([
 				description: 'Summons a skeletal warrior to assist you in combat.',
 				type: 'summonSkeleton',
 				icon: [1, 0],
+				animation: 'magic',
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,
 				particles: {
 					color: {
@@ -192,6 +250,7 @@ define([
 				description: 'Sacrifice some life force to grant a protective barrier around an ally.',
 				type: 'bloodBarrier',
 				icon: [2, 0],
+				animation: 'magic',
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,
 				particles: {
 					color: {

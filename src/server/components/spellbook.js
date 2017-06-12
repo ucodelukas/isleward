@@ -104,12 +104,12 @@ define([
 				var sheetName = this.obj.sheetName;
 				var animationName = builtSpell.animation;
 
-				if (sheetName == 'characters')
-					animation = animations.classes[this.obj.class];
-				else if (sheetName == 'mobs')
+				if (sheetName == 'mobs')
 					animation = animations.mobs;
 				else if (sheetName == 'bosses')
 					animation = animations.bosses;
+				else
+					animation = animations.classes[this.obj.class];
 
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
