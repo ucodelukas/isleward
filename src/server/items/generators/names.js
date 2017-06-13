@@ -23,7 +23,7 @@ define([
 			addCritChance: 'Precise',
 			addCritMultiplier: 'Piercing',
 			magicFind: `Seeker's`,
-			sprintChance: `Traveller's`,
+			sprintChance: `Traveler's`,
 			dmgPercent: 'Powerful',
 			allAttributes: 'Hybrid',
 			elementArcanePercent: 'Volatile',
