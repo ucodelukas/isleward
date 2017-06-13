@@ -19,7 +19,6 @@ define([
 			this.obj.addComponent('keyboardMover');
 			this.obj.addComponent('mouseMover');
 			this.obj.addComponent('serverActions');
-			this.obj.addComponent('lightningEffect');
 
 			this.obj.addComponent('pather');
 

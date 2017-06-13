@@ -381,6 +381,12 @@ define([
 			randomSpeed: true,
 			chance: 0.02
 		}
+	}, {
+		name: 'Chain Lightning',
+		description: 'Creates a circle of pure holy energy that heals allies for a brief period.',
+		type: 'chainLightning',
+		icon: [0, 1],
+		animation: 'raiseStaff'
 	}];
 
 	events.emit('onBeforeGetSpellsInfo', spells);

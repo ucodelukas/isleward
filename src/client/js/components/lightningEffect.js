@@ -13,14 +13,18 @@ define([
 
 		effect: null,
 
+		ttl: 6,
+
 		init: function() {
 			effects.register(this);
 
+			var xOffset = (this.toX > this.obj.x) ? 1 : 0;
+
 			this.effect = lightningBuilder.build({
-				fromX: this.obj.x + 0,
+				fromX: this.obj.x + xOffset,
 				fromY: this.obj.y + 0.5,
-				toX: this.obj.x - 2.5,
-				toY: this.obj.y - 6.5
+				toX: this.toX + 0.5,
+				toY: this.toY + 0.5
 			});
 		},
 
@@ -34,16 +38,24 @@ define([
 
 			lightningBuilder.destroy(this.effect);
 
+			this.ttl--;
+			if (this.ttl == 0) {
+				this.destroyed = true;
+				return;
+			}
+
+			var xOffset = (this.toX > this.obj.x) ? 1 : 0;
+
 			this.effect = lightningBuilder.build({
-				fromX: this.obj.x + 0,
+				fromX: this.obj.x + xOffset,
 				fromY: this.obj.y + 0.5,
-				toX: this.obj.x - 2.5,
-				toY: this.obj.y - 6.5
+				toX: this.toX + 0.5,
+				toY: this.toY + 0.5
 			});
 		},
 
 		destroyManual: function() {
-			lightningBuilder.destroy(this.effect);
+			//lightningBuilder.destroy(this.effect);
 
 			effects.unregister(this);
 		}
