@@ -1491,6 +1491,101 @@
                  "width":32,
                  "x":1208,
                  "y":136
+                }, 
+                {
+                 "height":72,
+                 "id":907,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":72,
+                 "x":120,
+                 "y":1080
+                }, 
+                {
+                 "height":40,
+                 "id":908,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":416,
+                 "y":1352
+                }, 
+                {
+                 "height":24,
+                 "id":909,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":568,
+                 "y":1512
+                }, 
+                {
+                 "height":72,
+                 "id":910,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":72,
+                 "x":920,
+                 "y":1200
+                }, 
+                {
+                 "height":24,
+                 "id":911,
+                 "name":"lightpatch",
+                 "properties":
+                    {
+                     "cpnLightPatch":"{\"color\":\"ffff00\"}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnLightPatch":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":680,
+                 "y":1024
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2296,13 +2391,13 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":907,
+ "nextobjectid":912,
  "orientation":"orthogonal",
  "properties":
     {
      "instanced":"0",
      "name":"Test Zone",
-     "spawn":"{\"x\":20,\"y\":139}"
+     "spawn":"[{\"x\":20,\"y\":139}, {\"source\": \"pockshell\", \"x\": 163, \"y\": 35}]"
     },
  "propertytypes":
     {

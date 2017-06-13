@@ -88,7 +88,7 @@ module.exports = {
 
 			regular: {
 				hpMult: 1000,
-				dmgMult: 0.000000001
+				dmgMult: 99.000000001
 			},
 
 			mobile: false,
