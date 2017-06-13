@@ -4,6 +4,7 @@ var components = [
 	'player',
 	'pather',
 	'attackAnimation',
+	'lightningEffect',
 	'moveAnimation',
 	'bumpAnimation',
 	'animation',
