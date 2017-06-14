@@ -49,18 +49,18 @@ define([
 				var patches = {};
 
 				for (var j = 0; j < steps; j++) {
-					var c = 105 + ~~(Math.random() * 150);
+					var c = [0xffeb38, 0xfaac45, 0xfafcfc][~~(Math.random() * 3)];
 					line.sprites.push(renderer.buildRectangle({
 						x: ~~(x / scaleMult) * scaleMult,
 						y: ~~(y / scaleMult) * scaleMult,
 						w: scaleMult,
 						h: scaleMult,
-						color: this.toHex(c, c, ~~(Math.random() * 100)),
+						color: c,
 						layerName: 'effects'
 					}));
 
-					var xx = x;//((~~((x / scale) / scaleMult) * scaleMult) * scale) - scaleMult;
-					var yy = y;//((~~((y / scale) / scaleMult) * scaleMult) * scale) - scaleMult;
+					var xx = x;
+					var yy = y;
 					if (!patches[xx + '-' + yy]) {
 						patches[xx + '-' + yy] = 1;
 
@@ -71,7 +71,7 @@ define([
 							cell: 0,
 							layerName: 'lightPatches'
 						});
-						lightPatch.alpha = Math.random() * 0.75;
+						lightPatch.alpha = Math.random() * 0.5;
 						lightPatch.tint = '0xffffff';
 						lightPatch.x = ~~((xx - scaleMult) / scaleMult) * scaleMult;
 						lightPatch.y = ~~((yy - scaleMult) / scaleMult) * scaleMult;

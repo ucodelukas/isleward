@@ -13,7 +13,7 @@ define([
 
 		effect: null,
 
-		ttl: 6,
+		ttl: 6000,
 
 		init: function() {
 			effects.register(this);
