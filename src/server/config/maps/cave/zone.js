@@ -80,7 +80,22 @@ module.exports = {
 			level: 3,
 			spells: [{
 				type: 'melee'
-			}]
+			}],
+
+			regular: {
+				drops: {
+					chance: 20,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Digested Crystal',
+						quality: 0,
+						quest: true,
+						sprite: [1, 1]
+					}]
+				}
+			}
 		},
 
 		pockshell: {
@@ -185,7 +200,30 @@ module.exports = {
 		},
 		'cult leader': {
 			level: 15,
-			walkDistance: 0
+			walkDistance: 0,
+
+			deathRep: -15,
+			rare: {
+				count: 0
+			},
+
+			properties: {
+				cpnTrade: {
+					items: {
+						min: 5,
+						max: 10,
+						extra: []
+					},
+					faction: {
+						id: 'akarei',
+						tier: 0
+					},
+					markup: {
+						buy: 0.25,
+						sell: 10
+					}
+				}
+			}
 		}
 	},
 	objects: {
@@ -512,6 +550,26 @@ module.exports = {
 									h: 60
 								}
 							}
+						}
+					}
+				}
+			}
+		},
+
+		shopcultleader: {
+			properties: {
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'dialogue',
+							method: 'talk',
+							args: [{
+								targetName: 'cult leader'
+							}]
+						},
+						exit: {
+							cpn: 'dialogue',
+							method: 'stopTalk'
 						}
 					}
 				}

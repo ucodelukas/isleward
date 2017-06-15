@@ -612,14 +612,20 @@ define([
 					drop.level = drop.level || level;
 					drop.magicFind = magicFind;
 
-					this.getItem(generator.generate(drop), true);
+					var item = drop;
+					if (!item.quest)
+						item = generator.generate(drop);
+
+					this.getItem(item, true);
 				}
 
 				killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
 
 				if (this.items.length > 0)
 					this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-			} else {
+			} 
+
+			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var instancedItems = extend(true, [], this.items);
 				var useItems = [];
 
@@ -731,7 +737,7 @@ define([
 					if (!effectEvent)
 						continue;
 
-					effectEvent.call(this.obj, item, args[0]);
+					effectEvent.apply(this.obj, [item, ...args]);
 				}
 			}
 		},

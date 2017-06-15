@@ -14,7 +14,6 @@ define([
 				lines: []
 			};
 
-			var divisions = 20;
 			var maxDeviate = scale * 0.3;
 
 			var fx = config.fromX * scale;
@@ -25,7 +24,8 @@ define([
 
 			var angle = Math.atan2(ty - fy, tx - fx);
 			var distance = Math.sqrt(Math.pow(tx - fx, 2) + Math.pow(ty - fy, 2));
-			var divDistance = distance / divisions;
+			var divDistance = Math.min(20, distance);
+			var divisions = Math.max(1, distance / divDistance);
 
 			var x = fx;
 			var y = fy;

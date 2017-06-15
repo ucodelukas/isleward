@@ -720,7 +720,7 @@
                  "gid":320,
                  "height":8,
                  "id":867,
-                 "name":"",
+                 "name":"cult leader",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -787,6 +787,17 @@
                  "width":8,
                  "x":824,
                  "y":240
+                }, 
+                {
+                 "height":24,
+                 "id":912,
+                 "name":"shopCultLeader",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":704,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2391,7 +2402,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":912,
+ "nextobjectid":913,
  "orientation":"orthogonal",
  "properties":
     {

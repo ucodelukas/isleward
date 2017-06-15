@@ -28,8 +28,7 @@ define([
 				}]
 			});
 
-			//this.queueCallback(this.explode.bind(this, target), 1);
-			this.explode(target);
+			this.queueCallback(this.explode.bind(this, target), 1);
 
 			return true;
 		},
