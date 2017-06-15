@@ -54,6 +54,11 @@ define([
 			if ((this.obj.player) && (!isTransfer)) {
 				this.getDefaultAbilities();
 
+				this.getItem(generator.generate({
+					spell: true,
+					spellName: 'chain lightning'
+				}));
+
 				/*this.getItem(generator.generate({
 					spell: true,
 					spellName: 'arcane barrier'
@@ -338,23 +343,23 @@ define([
 			});
 
 			//if (!hasSpell) {
-				var item = generator.generate({
-					spell: true,
-					spellQuality: 'basic',
-					spellName: classes.spells[this.obj.class][0]
-				});
-				item.eq = true;
-				item.noSalvage = true;
-				this.getItem(item);
+			var item = generator.generate({
+				spell: true,
+				spellQuality: 'basic',
+				spellName: classes.spells[this.obj.class][0]
+			});
+			item.eq = true;
+			item.noSalvage = true;
+			this.getItem(item);
 
-				item = generator.generate({
-					spell: true,
-					spellQuality: 'basic',
-					spellName: classes.spells[this.obj.class][1]
-				});
-				item.eq = true;
-				item.noSalvage = true;
-				this.getItem(item);
+			item = generator.generate({
+				spell: true,
+				spellQuality: 'basic',
+				spellName: classes.spells[this.obj.class][1]
+			});
+			item.eq = true;
+			item.noSalvage = true;
+			this.getItem(item);
 			//}
 		},
 
