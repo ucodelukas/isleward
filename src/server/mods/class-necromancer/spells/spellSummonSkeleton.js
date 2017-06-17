@@ -1,7 +1,9 @@
 define([
-	'world/mobBuilder'
+	'world/mobBuilder',
+	'config/animations'
 ], function(
-	mobBuilder
+	mobBuilder,
+	animations
 ) {
 	return {
 		type: 'summonSkeleton',
@@ -23,15 +25,24 @@ define([
 				currentMinion.destroyed = true;
 				this.minions = [];
 
-				this.obj.instance.syncer.queue('onGetObject', {
-					x: currentMinion.x,
-					y: currentMinion.y,
-					components: [{
-						type: 'attackAnimation',
-						row: 0,
-						col: 4
-					}]
-				});
+				var deathAnimation = _.getDeepProperty(animations, ['mobs', currentMinion.sheetName, currentMinion.cell, 'death']);
+				if (deathAnimation) {
+					this.obj.instance.syncer.queue('onGetObject', {
+						x: currentMinion.x,
+						y: currentMinion.y,
+						components: [deathAnimation]
+					});
+				} else {
+					this.obj.instance.syncer.queue('onGetObject', {
+						x: currentMinion.x,
+						y: currentMinion.y,
+						components: [{
+							type: 'attackAnimation',
+							row: 0,
+							col: 4
+						}]
+					});
+				}
 			}
 
 			var obj = this.obj;
@@ -66,20 +77,40 @@ define([
 				regular: {
 					drops: 0,
 					hpMult: 0.5,
-					dmgMult: 0.01
+					dmgMult: 1
 				},
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 1
+					statMult: 0.2
 				}]
 			}, false, 'regular');
 			mob.stats.values.regenHp = mob.stats.values.hpMax / 100;
-			mob.spellbook.spells[0].threatMult *= 10;
+
+			var spell = mob.spellbook.spells[0];
+			spell.statType = ['str', 'int'];
+			mob.stats.values.str = obj.stats.values.str;
+			mob.stats.values.int = obj.stats.values.int;
+			spell.threatMult *= 2;
 
 			mob.follower.bindEvents();
 
 			this.minions.push(mob);
+
+			this.sendBump({
+				x: obj.x,
+				y: obj.y - 1
+			});
+
+			if (this.animation) {
+				this.obj.instance.syncer.queue('onGetObject', {
+					id: this.obj.id,
+					components: [{
+						type: 'animation',
+						template: this.animation
+					}]
+				});
+			}
 
 			return true;
 		},

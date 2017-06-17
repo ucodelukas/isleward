@@ -87,17 +87,10 @@ define([
 
 			extend(true, simple, extensionObj);
 
-			try {
-				var a = JSON.stringify(simple);
-			}
-			catch (e) {
-				console.log(simple.components.find(c => (c.type == 'spellbook')).spells);
-			}
-
 			io.set({
 				ent: this.charname,
 				field: 'character',
-				value: JSON.stringify(simple),
+				value: JSON.stringify(simple).split(`'`).join(`''`),
 				callback: callback
 			});
 

@@ -194,11 +194,15 @@ define([
 				this.target = this.obj;
 			}
 
-			if ((!spell.targetGround) && (!this.target))
+			if ((!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
 				return;
 
 			var hoverTile = this.obj.mouseMover.hoverTile;
-			var target = spell.targetGround ? hoverTile : this.target.id;
+			var target = hoverTile;
+			if ((!spell.targetGround) && (this.target))
+				target = this.target.id;
+			if ((spell.autoTargetFollower) && (target.id == null))
+				target = null;
 
 			if (this.shiftDown)
 				this.target = oldTarget;

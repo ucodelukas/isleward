@@ -18,7 +18,7 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 50,
+					chance: 30,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
@@ -37,7 +37,9 @@ module.exports = {
 				type: 'smokeBomb',
 				radius: 1,
 				duration: 3,
-				selfCast: 0.25,
+				randomPos: true,
+				range: 2,
+				selfCast: 0.2,
 				statMult: 1,
 				damage: 0.25,
 				element: 'poison',
@@ -54,7 +56,7 @@ module.exports = {
 						}
 					},
 					opacity: {
-						start: 0.01,
+						start: 0.3,
 						end: 0
 					},
 					lifetime: {
@@ -62,7 +64,7 @@ module.exports = {
 						max: 2
 					},
 					speed: {
-						start: 4,
+						start: 2,
 						end: 0
 					},
 					color: {
@@ -92,8 +94,8 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 20,
-					rolls: 1,
+					chance: 30,
+					rolls: 2,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
@@ -103,10 +105,65 @@ module.exports = {
 						sprite: [1, 1]
 					}]
 				}
-			}
+			},
+
+			spells: [{
+				type: 'melee'
+			}, {
+				type: 'smokeBomb',
+				radius: 1,
+				duration: 3,
+				randomPos: true,
+				range: 2,
+				repeat: 2,
+				selfCast: 0.3,
+				statMult: 1,
+				damage: 0.25,
+				element: 'poison',
+				cdMax: 5,
+				particles: {
+					scale: {
+						start: {
+							min: 4,
+							max: 14
+						},
+						end: {
+							min: 2,
+							max: 8
+						}
+					},
+					opacity: {
+						start: 0.2,
+						end: 0
+					},
+					lifetime: {
+						min: 1,
+						max: 2
+					},
+					speed: {
+						start: 2,
+						end: 0
+					},
+					color: {
+						start: ['ff6942', 'ffeb38'],
+						end: ['953f36', '9a5a3c']
+					},
+					chance: 0.085,
+					randomColor: true,
+					randomScale: true,
+					blendMode: 'add',
+					spawnType: 'rect',
+					spawnRect: {
+						x: -15,
+						y: -15,
+						w: 30,
+						h: 30
+					}
+				}
+			}]
 		},
 
-		pockshell: {
+		'radulos': {
 			level: 18,
 
 			regular: {
@@ -191,30 +248,30 @@ module.exports = {
 			}]
 		},
 
-		'cultist': {
+		'akarei scout': {
 			level: 20,
 			faction: 'akarei',
 			deathRep: -3
 		},
-		'cultist biorn': {
+		'biorn': {
 			level: 22,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
-		'cultist veleif': {
+		'veleif': {
 			level: 22,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
 
-		'zealot': {
+		'akarei artificer': {
 			level: 24,
 			faction: 'akarei',
 			deathRep: -6
 		},
-		'cult leader': {
+		'thaumaturge yala': {
 			level: 30,
 			walkDistance: 0,
 
@@ -577,7 +634,7 @@ module.exports = {
 			}
 		},
 
-		shopcultleader: {
+		shopyala: {
 			properties: {
 				cpnNotice: {
 					actions: {
