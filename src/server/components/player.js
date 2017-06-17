@@ -154,7 +154,16 @@ define([
 			if (!permadeath) {
 				var level = this.obj.stats.values.level;
 				var spawns = this.obj.spawn;
-				var spawnPos = ((spawns.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (spawns[0]));
+				var spawnPos = spawns.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
+				if ((spawnPos.length == 0) || (!source.name))
+					spawnPos = spawns[0];
+				else if (source.name) {
+					var sourceSpawnPos = spawnPos.find(s => (s.source == source.name));
+					if (sourceSpawnPos)
+						spawnPos = sourceSpawnPos;
+					else
+						spawnPos = spawnPos[0];
+				}
 
 				this.obj.x = spawnPos.x;
 				this.obj.y = spawnPos.y;

@@ -5,31 +5,41 @@ module.exports = {
 	resources: {},
 	mobs: {
 		default: {
-			faction: 2,
-			grantRep: {
-				gaekatla: 3
-			},
-
 			regular: {
-				dmgMult: 8,
-
 				drops: {
-					chance: 45,
-					rolls: 1,
-					magicFind: 70
+					chance: 35,
+					rolls: 1
 				}
 			}
 		},
 
 		'crystal slug': {
-			level: 3,
+			level: 14,
+
+			regular: {
+				drops: {
+					chance: 30,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Digested Crystal',
+						quality: 0,
+						quest: true,
+						sprite: [1, 1]
+					}]
+				}
+			},
+
 			spells: [{
 				type: 'melee'
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
 				duration: 3,
-				selfCast: 0.25,
+				randomPos: true,
+				range: 2,
+				selfCast: 0.2,
 				statMult: 1,
 				damage: 0.25,
 				element: 'poison',
@@ -46,7 +56,7 @@ module.exports = {
 						}
 					},
 					opacity: {
-						start: 0.01,
+						start: 0.3,
 						end: 0
 					},
 					lifetime: {
@@ -54,7 +64,7 @@ module.exports = {
 						max: 2
 					},
 					speed: {
-						start: 4,
+						start: 2,
 						end: 0
 					},
 					color: {
@@ -77,14 +87,84 @@ module.exports = {
 		},
 
 		'overloaded slug': {
-			level: 3,
+			level: 16,
 			spells: [{
 				type: 'melee'
+			}],
+
+			regular: {
+				drops: {
+					chance: 30,
+					rolls: 2,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Digested Crystal',
+						quality: 0,
+						quest: true,
+						sprite: [1, 1]
+					}]
+				}
+			},
+
+			spells: [{
+				type: 'melee'
+			}, {
+				type: 'smokeBomb',
+				radius: 1,
+				duration: 3,
+				randomPos: true,
+				range: 2,
+				repeat: 2,
+				selfCast: 0.3,
+				statMult: 1,
+				damage: 0.25,
+				element: 'poison',
+				cdMax: 5,
+				particles: {
+					scale: {
+						start: {
+							min: 4,
+							max: 14
+						},
+						end: {
+							min: 2,
+							max: 8
+						}
+					},
+					opacity: {
+						start: 0.2,
+						end: 0
+					},
+					lifetime: {
+						min: 1,
+						max: 2
+					},
+					speed: {
+						start: 2,
+						end: 0
+					},
+					color: {
+						start: ['ff6942', 'ffeb38'],
+						end: ['953f36', '9a5a3c']
+					},
+					chance: 0.085,
+					randomColor: true,
+					randomScale: true,
+					blendMode: 'add',
+					spawnType: 'rect',
+					spawnRect: {
+						x: -15,
+						y: -15,
+						w: 30,
+						h: 30
+					}
+				}
 			}]
 		},
 
-		pockshell: {
-			level: 3,
+		'radulos': {
+			level: 18,
 
 			regular: {
 				hpMult: 1000,
@@ -168,24 +248,61 @@ module.exports = {
 			}]
 		},
 
-		'cultist': {
-			level: 13
+		'akarei scout': {
+			level: 20,
+			faction: 'akarei',
+			deathRep: -3
 		},
-		'cultist biorn': {
-			level: 14,
-			walkDistance: 0
+		'biorn': {
+			level: 22,
+			walkDistance: 0,
+			faction: 'akarei',
+			deathRep: -3
 		},
-		'cultist veleif': {
-			level: 14,
-			walkDistance: 0
+		'veleif': {
+			level: 22,
+			walkDistance: 0,
+			faction: 'akarei',
+			deathRep: -3
 		},
 
-		'zealot': {
-			level: 10
+		'akarei artificer': {
+			level: 24,
+			faction: 'akarei',
+			deathRep: -6
 		},
-		'cult leader': {
-			level: 15,
-			walkDistance: 0
+		'thaumaturge yala': {
+			level: 30,
+			walkDistance: 0,
+
+			deathRep: -15,
+
+			regular: {
+				hpMult: 1000,
+				dmgMult: 10
+			},
+
+			rare: {
+				count: 0
+			},
+
+			properties: {
+				cpnTrade: {
+					items: {
+						min: 5,
+						max: 10,
+						extra: []
+					},
+					faction: {
+						id: 'akarei',
+						tier: 5
+					},
+					markup: {
+						buy: 0.25,
+						sell: 10
+					}
+				}
+			}
 		}
 	},
 	objects: {
@@ -332,6 +449,12 @@ module.exports = {
 						var triggerPuzzle = this.obj.instance.triggerPuzzle;
 						var activated = triggerPuzzle.activated;
 
+						if (this.obj.forceOpen) {
+							triggerPuzzle.activated = [];
+							this.activate();
+							return;
+						}
+
 						activated.push(order);
 						var valid = true;
 						for (var i = 0; i < activated.length; i++) {
@@ -357,8 +480,7 @@ module.exports = {
 							});
 
 							return;
-						}
-						else if (activated.length == 4) {
+						} else if (activated.length == 4) {
 							triggerPuzzle.activated = [];
 							this.activate();
 						}
@@ -506,6 +628,26 @@ module.exports = {
 									h: 60
 								}
 							}
+						}
+					}
+				}
+			}
+		},
+
+		shopyala: {
+			properties: {
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'dialogue',
+							method: 'talk',
+							args: [{
+								targetName: 'cult leader'
+							}]
+						},
+						exit: {
+							cpn: 'dialogue',
+							method: 'stopTalk'
 						}
 					}
 				}

@@ -294,6 +294,7 @@ define([
 
 			var credentials = msg.data;
 
+			console.log(1);
 			bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 		},
 		onHashGenerated: function(msg, err, hashedPassword) {

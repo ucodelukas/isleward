@@ -34,7 +34,9 @@ define([
 			var factionBlueprint = null;
 			try {
 				factionBlueprint = require('config/factions/' + factionId);
-			} catch (e) {}
+			} catch (e) {
+				console.log(e);
+			}
 
 			if (factionBlueprint == null)
 				return;

@@ -42,7 +42,8 @@ define([
 				} else if ((item.spell) && (item.type == 'Spear')) {
 					item.spell.properties = item.spell.properties || {};
 					item.spell.properties.range = item.range;
-				}
+				} else if (item.quantity == NaN)
+					item.quantity = 1;
 			}
 
 			this.hookItemEvents(items);
@@ -53,11 +54,6 @@ define([
 
 			if ((this.obj.player) && (!isTransfer)) {
 				this.getDefaultAbilities();
-
-				this.getItem(generator.generate({
-					spell: true,
-					spellName: 'chain lightning'
-				}));
 
 				/*this.getItem(generator.generate({
 					spell: true,
@@ -161,6 +157,7 @@ define([
 			if (spellbook.spells.length >= 3) {
 				if (item.slot)
 					item.spellId = -1;
+				delete item.eq;
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 				return;
 			}
@@ -420,8 +417,10 @@ define([
 					exists = true;
 					if (!existItem.quantity)
 						existItem.quantity = 1;
-					existItem.quantity += item.quantity;
+					existItem.quantity += (item.quantity || 1);
 					item = existItem;
+
+					console.log(existItem.quantity);
 				}
 			}
 
@@ -603,14 +602,20 @@ define([
 					drop.level = drop.level || level;
 					drop.magicFind = magicFind;
 
-					this.getItem(generator.generate(drop), true);
+					var item = drop;
+					if (!item.quest)
+						item = generator.generate(drop);
+
+					this.getItem(item, true);
 				}
 
 				killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
 
 				if (this.items.length > 0)
 					this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-			} else {
+			} 
+
+			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var instancedItems = extend(true, [], this.items);
 				var useItems = [];
 
@@ -722,7 +727,7 @@ define([
 					if (!effectEvent)
 						continue;
 
-					effectEvent.call(this.obj, item, args[0]);
+					effectEvent.apply(this.obj, [item, ...args]);
 				}
 			}
 		},

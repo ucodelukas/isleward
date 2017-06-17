@@ -108,6 +108,11 @@ define([
 				else
 					return null;
 			}
+			else if (stateConfig.method) {
+				stateConfig.method(sourceObj);
+				if (!stateConfig.msg)
+					return;
+			}
 
 			var result = {
 				id: this.obj.id,
@@ -145,16 +150,25 @@ define([
 				result.options = Object.keys(result.options);
 			}
 
-			result.options = result.options.map(function(o) {
-				var gotoState = this.states[(o + '').split('.')[0]];
-				if (!gotoState.options[o])
-					return null;
+			result.options = result.options
+				.map(function(o) {
+					var gotoState = this.states[(o + '').split('.')[0]];
+					var picked = gotoState.options[o];
 
-				return {
-					id: o,
-					msg: gotoState.options[o].msg
-				};
-			}, this);
+					if (!picked)
+						return null;
+					else if (picked.prereq) {
+						var doesConform = picked.prereq(sourceObj);
+						if (!doesConform)
+							return null;
+					}
+
+					return {
+						id: o,
+						msg: picked.msg
+					};
+				}, this)
+				.filter(o => !!o);
 
 			result.options.push({
 				msg: 'Goodbye',
