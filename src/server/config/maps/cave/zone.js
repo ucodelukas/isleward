@@ -5,31 +5,39 @@ module.exports = {
 	resources: {},
 	mobs: {
 		default: {
-			faction: 2,
-			grantRep: {
-				gaekatla: 3
-			},
-
 			regular: {
-				dmgMult: 8,
-
 				drops: {
-					chance: 45,
-					rolls: 1,
-					magicFind: 70
+					chance: 35,
+					rolls: 1
 				}
 			}
 		},
 
 		'crystal slug': {
-			level: 3,
+			level: 14,
+
+			regular: {
+				drops: {
+					chance: 50,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Digested Crystal',
+						quality: 0,
+						quest: true,
+						sprite: [1, 1]
+					}]
+				}
+			},
+
 			spells: [{
 				type: 'melee'
 			}, {
 				type: 'smokeBomb',
-				radius: 1,
+				radius: 5,
 				duration: 3,
-				selfCast: 0.25,
+				selfCast: 1,
 				statMult: 1,
 				damage: 0.25,
 				element: 'poison',
@@ -77,7 +85,7 @@ module.exports = {
 		},
 
 		'overloaded slug': {
-			level: 3,
+			level: 16,
 			spells: [{
 				type: 'melee'
 			}],
@@ -99,11 +107,11 @@ module.exports = {
 		},
 
 		pockshell: {
-			level: 3,
+			level: 18,
 
 			regular: {
 				hpMult: 1000,
-				dmgMult: 99.000000001
+				dmgMult: 0.000000001
 			},
 
 			mobile: false,
@@ -184,25 +192,39 @@ module.exports = {
 		},
 
 		'cultist': {
-			level: 13
+			level: 20,
+			faction: 'akarei',
+			deathRep: -3
 		},
 		'cultist biorn': {
-			level: 14,
-			walkDistance: 0
+			level: 22,
+			walkDistance: 0,
+			faction: 'akarei',
+			deathRep: -3
 		},
 		'cultist veleif': {
-			level: 14,
-			walkDistance: 0
+			level: 22,
+			walkDistance: 0,
+			faction: 'akarei',
+			deathRep: -3
 		},
 
 		'zealot': {
-			level: 10
+			level: 24,
+			faction: 'akarei',
+			deathRep: -6
 		},
 		'cult leader': {
-			level: 15,
+			level: 30,
 			walkDistance: 0,
 
 			deathRep: -15,
+
+			regular: {
+				hpMult: 1000,
+				dmgMult: 10
+			},
+
 			rare: {
 				count: 0
 			},
@@ -216,7 +238,7 @@ module.exports = {
 					},
 					faction: {
 						id: 'akarei',
-						tier: 0
+						tier: 5
 					},
 					markup: {
 						buy: 0.25,
@@ -374,7 +396,7 @@ module.exports = {
 							triggerPuzzle.activated = [];
 							this.activate();
 							return;
-						}						
+						}
 
 						activated.push(order);
 						var valid = true;
@@ -401,8 +423,7 @@ module.exports = {
 							});
 
 							return;
-						}
-						else if (activated.length == 4) {
+						} else if (activated.length == 4) {
 							triggerPuzzle.activated = [];
 							this.activate();
 						}

@@ -54,11 +54,6 @@ define([
 			if ((this.obj.player) && (!isTransfer)) {
 				this.getDefaultAbilities();
 
-				this.getItem(generator.generate({
-					spell: true,
-					spellName: 'chain lightning'
-				}));
-
 				/*this.getItem(generator.generate({
 					spell: true,
 					spellName: 'arcane barrier'
@@ -161,6 +156,7 @@ define([
 			if (spellbook.spells.length >= 3) {
 				if (item.slot)
 					item.spellId = -1;
+				delete item.eq;
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 				return;
 			}

@@ -30,7 +30,7 @@ define([
 
 				this.items[name] = list;
 				this.regenList(list);
-			} else if ((list.level != requestLevel) || (Math.random() < 2))
+			} else if (list.level != requestLevel)
 				this.regenList(list);
 
 			var reputation = requestedBy.reputation;
