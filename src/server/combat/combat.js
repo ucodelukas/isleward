@@ -65,13 +65,6 @@ define([
 				}
 			}
 
-			isCrit = Math.random() < 0.4;
-
-			if (config.target.player)
-				amount = 0;
-			else
-				amount = 99999;
-
 			return {
 				amount: amount,
 				crit: isCrit,

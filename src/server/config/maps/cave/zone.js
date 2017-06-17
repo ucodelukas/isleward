@@ -642,7 +642,7 @@ module.exports = {
 							cpn: 'dialogue',
 							method: 'talk',
 							args: [{
-								targetName: 'cult leader'
+								targetName: 'thaumaturge yala'
 							}]
 						},
 						exit: {

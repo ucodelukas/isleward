@@ -245,7 +245,6 @@ define([
 				}
 			}
 
-
 			if ((template.x != 0) || (template.y != 0)) {
 				if (obj.stats)
 					obj.stats.updateHpSprite();

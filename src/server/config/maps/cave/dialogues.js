@@ -1,5 +1,5 @@
 module.exports = {
-	'cult leader': {
+	'thaumaturge yala': {
 		'1': {
 			msg: [{
 				msg: `Is there anything I can help you with today?`,
@@ -56,7 +56,10 @@ module.exports = {
 			}],
 			method: function(obj) {
 				var inventory = obj.inventory;
+
 				var crystals = inventory.items.find(i => (i.name == 'Digested Crystal'));
+				obj.reputation.getReputation('akarei', crystals.quantity * 15);
+
 				inventory.destroyItem(crystals.id);
 			}
 		}

@@ -116,7 +116,7 @@ define([
 					if (!mob)
 						continue;
 
-					var name = l.blueprint.name.toLowerCase();
+					var name = (l.blueprint.objZoneName || l.blueprint.name).toLowerCase();
 
 					if ((l.blueprint.sheetName == 'mobs') || (l.blueprint.sheetName == 'bosses'))
 						this.setupMob(mob, l.zonePrint, l.blueprint.scaleDrops);

@@ -316,6 +316,9 @@ define([
 					properties: cell.properties || {}
 				};
 
+				if (objZoneName != name)
+					blueprint.objZoneName = objZoneName;
+
 				if ((this.zone) && (this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
 					extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
 
