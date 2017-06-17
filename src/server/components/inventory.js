@@ -54,6 +54,11 @@ define([
 			if ((this.obj.player) && (!isTransfer)) {
 				this.getDefaultAbilities();
 
+				this.getItem(generator.generate({
+					spell: true,
+					spellName: 'chain lightning'
+				}));
+
 				/*this.getItem(generator.generate({
 					spell: true,
 					spellName: 'arcane barrier'

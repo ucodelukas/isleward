@@ -2170,6 +2170,26 @@
                  "width":24,
                  "x":1504,
                  "y":64
+                }, 
+                {
+                 "gid":377,
+                 "height":8,
+                 "id":897,
+                 "name":"",
+                 "properties":
+                    {
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":82,\"y\":66}}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnPortal":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":168,
+                 "y":1128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2177,7 +2197,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":897,
+ "nextobjectid":898,
  "orientation":"orthogonal",
  "properties":
     {
