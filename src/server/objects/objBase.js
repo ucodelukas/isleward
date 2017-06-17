@@ -328,6 +328,8 @@ define([
 				if (c.destroy)
 					c.destroy();
 			}
+
+			components = null;
 		}
 	};
 });
