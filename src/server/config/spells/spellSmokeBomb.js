@@ -158,6 +158,7 @@ define([
 			for (var i = 0; i < pLen; i++) {
 				patches[i].destroyed = true;
 			}
+			patches = null;
 		}
 	};
 });

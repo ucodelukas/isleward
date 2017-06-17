@@ -35,9 +35,9 @@ module.exports = {
 				type: 'melee'
 			}, {
 				type: 'smokeBomb',
-				radius: 5,
+				radius: 1,
 				duration: 3,
-				selfCast: 1,
+				selfCast: 0.25,
 				statMult: 1,
 				damage: 0.25,
 				element: 'poison',
