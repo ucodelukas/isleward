@@ -60,8 +60,7 @@ define([
 					field: 'leaderboard',
 					value: JSON.stringify(list)
 				});
-			}
-			else
+			} else
 				this.parseList(result);
 
 			this.loaded = true;
@@ -111,11 +110,10 @@ define([
 			if (exists) {
 				if (exists.level != level) {
 					exists.level = level;
-					
+
 					this.save();
 				}
-			}
-			else {
+			} else {
 				this.list.push({
 					name: name,
 					level: level,
@@ -152,12 +150,14 @@ define([
 			if (!this.loaded)
 				return;
 
+			var value = JSON.stringify({
+				list: this.list
+			}).split(`'`).join(`''`);
+
 			io.set({
 				ent: 'list',
 				field: 'leaderboard',
-				value: JSON.stringify({
-					list: this.list
-				})
+				value: value
 			});
 		}
 	};
