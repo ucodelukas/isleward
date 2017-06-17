@@ -42,7 +42,8 @@ define([
 				} else if ((item.spell) && (item.type == 'Spear')) {
 					item.spell.properties = item.spell.properties || {};
 					item.spell.properties.range = item.range;
-				}
+				} else if (item.quantity == NaN)
+					item.quantity = 1;
 			}
 
 			this.hookItemEvents(items);
@@ -425,8 +426,10 @@ define([
 					exists = true;
 					if (!existItem.quantity)
 						existItem.quantity = 1;
-					existItem.quantity += item.quantity;
+					existItem.quantity += (item.quantity || 1);
 					item = existItem;
+
+					console.log(existItem.quantity);
 				}
 			}
 
