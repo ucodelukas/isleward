@@ -1,7 +1,9 @@
 define([
-	'world/mobBuilder'
+	'world/mobBuilder',
+	'config/animations'
 ], function(
-	mobBuilder
+	mobBuilder,
+	animations
 ) {
 	var cSpawner = {
 		cd: -1,
@@ -57,15 +59,33 @@ define([
 			var blueprint = spawner.blueprint;
 			var obj = this.objects.buildObjects([blueprint]);
 
-			this.syncer.queue('onGetObject', {
-				x: obj.x,
-				y: obj.y,
-				components: [{
-					type: 'attackAnimation',
-					row: 0,
-					col: 4
-				}]
-			});
+			var customSpawn = false;
+
+			var sheetName = blueprint.sheetName;
+			if ((sheetName) && (blueprint.sheetName.indexOf('/'))) {
+				var spawnAnimation = _.getDeepProperty(animations, ['mobs', sheetName, blueprint.cell, 'spawn']);
+				if (spawnAnimation) {
+					customSpawn = true;
+
+					this.syncer.queue('onGetObject', {
+						id: obj.id,
+						performLast: true,
+						components: [spawnAnimation]
+					});
+				}
+			}
+
+			if (!customSpawn) {
+				this.syncer.queue('onGetObject', {
+					x: obj.x,
+					y: obj.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}
 
 			if (spawner.amountLeft != -1)
 				spawner.amountLeft--;

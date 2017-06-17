@@ -342,25 +342,16 @@ define([
 				);
 			});
 
-			//if (!hasSpell) {
-			var item = generator.generate({
-				spell: true,
-				spellQuality: 'basic',
-				spellName: classes.spells[this.obj.class][0]
-			});
-			item.eq = true;
-			item.noSalvage = true;
-			this.getItem(item);
-
-			item = generator.generate({
-				spell: true,
-				spellQuality: 'basic',
-				spellName: classes.spells[this.obj.class][1]
-			});
-			item.eq = true;
-			item.noSalvage = true;
-			this.getItem(item);
-			//}
+			if (!hasSpell) {
+				var item = generator.generate({
+					spell: true,
+					spellQuality: 'basic',
+					spellName: classes.spells[this.obj.class][0]
+				});
+				item.eq = true;
+				item.noSalvage = true;
+				this.getItem(item);
+			}
 		},
 
 		createBag: function(x, y, items, ownerId) {

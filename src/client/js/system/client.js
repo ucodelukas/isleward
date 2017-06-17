@@ -62,6 +62,17 @@ define([
 
 			for (var e in response) {
 				var r = response[e];
+
+				//Certain messages expect to be performed last (because the object they act on hasn't been greated when they get queued)
+				r.sort(function(a, b) {
+					if (a.performLast)
+						return 1;
+					else if (b.performLast)
+						return -1;
+					else
+						return 0;
+				});
+
 				r.forEach(function(o) {
 					events.emit(e, o);
 				});

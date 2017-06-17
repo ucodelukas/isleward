@@ -18,6 +18,7 @@ define([
 		col: 0,
 
 		needLos: true,
+		autoTargetFollower: true,
 
 		cast: function(action) {
 			var obj = this.obj;
@@ -26,6 +27,11 @@ define([
 			this.sendBump(target);
 
 			this.queueCallback(this.explode.bind(this, target), 1, null, target);
+
+			this.sendBump({
+				x: obj.x,
+				y: obj.y - 1
+			});
 
 			return true;
 		},
