@@ -19,7 +19,7 @@ define([
 			var isPlayer = !!this.caster.player;
 			var isTargetPlayer = !!o.player;
 
-			if ((!this.caster.aggro.willAttack(o)) && (isPlayer == isTargetPlayer))
+			if ((!this.caster.aggro.canAttack(o)) && (isPlayer == isTargetPlayer))
 				return;
 
 			this.contents.push(o);
