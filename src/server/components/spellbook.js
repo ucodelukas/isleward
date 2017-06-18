@@ -276,9 +276,14 @@ define([
 						return false;
 				}
 
-				if ((action.target.aggro) && (!this.obj.aggro.willAttack(action.target)) && (spell.spellType != 'buff')) {
-					if ((this.obj.player) && (action.target.player))
+				if (spell.spellType == 'buff') {
+					if (!!action.target.player != !!this.obj.player)
 						return;
+				}
+				else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
+					if (this.obj.player)
+						this.sendAnnouncement("You don't feel like attacking that target");
+					return;
 				}
 			}
 

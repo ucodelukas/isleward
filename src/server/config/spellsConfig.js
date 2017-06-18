@@ -158,19 +158,6 @@ define([
 				i_delay: [4, 8]
 			}
 		},
-		'arcane barrier': {
-			statType: 'int',
-			statMult: 0.454,
-			element: 'holy',
-			cdMax: 10,
-			manaCost: 10,
-			range: 9,
-			radius: 3,
-			random: {
-				healing: [0.7, 1.3],
-				i_duration: [7, 13]
-			}
-		},
 		'chain lightning': {
 			statType: 'int',
 			statMult: 0.454,

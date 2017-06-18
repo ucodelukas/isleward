@@ -120,7 +120,7 @@ define([
 					continue;
 				} else if (!m.aggro)
 					continue;
-				else if ((!m.aggro.willAttack(this.obj)) && (!!this.obj.player == !!m.player))
+				else if ((!m.aggro.canAttack(this.obj)) && (!!this.obj.player == !!m.player))
 					continue;
 
 				var damage = this.getDamage(m);
