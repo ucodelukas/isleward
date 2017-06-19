@@ -26,6 +26,7 @@ define([
 		spawn: function(character) {
 			var obj = this.obj;
 			extend(true, obj, {
+				faction: 'players',
 				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,

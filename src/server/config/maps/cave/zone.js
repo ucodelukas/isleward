@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'estuary',
+	name: 'cave',
 	level: 20,
 	addLevel: 0,
 	resources: {},
@@ -13,7 +13,7 @@ module.exports = {
 			}
 		},
 
-		'crystal slug': {
+		'crystal snail': {
 			level: 14,
 
 			regular: {
@@ -86,7 +86,7 @@ module.exports = {
 			}]
 		},
 
-		'overloaded slug': {
+		'crystal whelk': {
 			level: 16,
 			spells: [{
 				type: 'melee'
@@ -167,8 +167,8 @@ module.exports = {
 			level: 18,
 
 			regular: {
-				hpMult: 1000,
-				dmgMult: 0.000000001
+				hpMult: 100,
+				dmgMult: 2
 			},
 
 			mobile: false,
@@ -278,8 +278,8 @@ module.exports = {
 			deathRep: -15,
 
 			regular: {
-				hpMult: 1000,
-				dmgMult: 10
+				hpMult: 100,
+				dmgMult: 2
 			},
 
 			rare: {

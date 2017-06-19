@@ -617,6 +617,26 @@
                  "width":8,
                  "x":616,
                  "y":808
+                }, 
+                {
+                 "gid":694,
+                 "height":24,
+                 "id":637,
+                 "name":"",
+                 "properties":
+                    {
+                     "cpnPortal":"{\"zone\":\"cave\",\"pos\":{\"x\":269,\"y\":27}}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnPortal":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":272,
+                 "y":296
                 }],
          "opacity":1,
          "properties":
@@ -701,26 +721,6 @@
                  "width":8,
                  "x":592,
                  "y":456
-                }, 
-                {
-                 "gid":692,
-                 "height":24,
-                 "id":636,
-                 "name":"City Entrance",
-                 "properties":
-                    {
-                     "cpnPortal":"{\"zone\":\"cave\",\"pos\":{\"x\":269,\"y\":27}}"
-                    },
-                 "propertytypes":
-                    {
-                     "cpnPortal":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":648,
-                 "y":528
                 }],
          "opacity":1,
          "properties":
@@ -1376,7 +1376,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":637,
+ "nextobjectid":638,
  "orientation":"orthogonal",
  "properties":
     {
