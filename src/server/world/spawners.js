@@ -125,6 +125,9 @@ define([
 						this.setupObj(mob, blueprint);
 					}
 
+					if (l.blueprint.objZoneName)
+						mob.objZoneName = l.blueprint.objZoneName;
+
 					l.mob = mob;
 				}
 			}

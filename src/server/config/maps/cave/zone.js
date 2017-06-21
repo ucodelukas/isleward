@@ -167,7 +167,7 @@ module.exports = {
 			level: 18,
 
 			regular: {
-				hpMult: 100,
+				hpMult: 75,
 				dmgMult: 2
 			},
 
@@ -500,7 +500,7 @@ module.exports = {
 					activate: function() {
 						var syncer = this.obj.instance.syncer;
 						var physics = this.obj.instance.physics;
-						var walls = this.obj.instance.objects.objects.filter(o => (o.name == 'redwall'));
+						var walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
 						walls.forEach(function(w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);

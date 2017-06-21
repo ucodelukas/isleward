@@ -9,7 +9,7 @@ define([
 ) {
 	return {
 		id: 'akarei',
-		name: 'Akarei',
+		name: 'The Akarei',
 		description: `The last descendents of the ancient Akarei.`,
 
 		uniqueStat: {
