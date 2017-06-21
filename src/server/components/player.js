@@ -26,7 +26,6 @@ define([
 		spawn: function(character) {
 			var obj = this.obj;
 			extend(true, obj, {
-				faction: 'players',
 				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,
@@ -71,7 +70,7 @@ define([
 			obj.addComponent('social');
 			obj.social.init();
 			obj.addComponent('aggro', {
-				faction: 1
+				faction: 'players'
 			});
 			obj.addComponent('gatherer');
 			obj.addComponent('stash', {

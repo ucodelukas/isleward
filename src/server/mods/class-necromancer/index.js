@@ -137,7 +137,7 @@ define([
 				element: 'physical',
 				auto: true,
 				cdMax: 7,
-				manaCost: 0,
+				manaCost: 1,
 				range: 1,
 				random: {
 					damage: [2, 4],
@@ -150,7 +150,7 @@ define([
 				statMult: 0.1,
 				element: 'physical',
 				cdMax: 7,
-				manaCost: 0,
+				manaCost: 6,
 				range: 9,
 				random: {
 					damage: [2, 4],

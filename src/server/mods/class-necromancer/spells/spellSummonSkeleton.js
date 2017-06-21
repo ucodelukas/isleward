@@ -77,7 +77,7 @@ define([
 				regular: {
 					drops: 0,
 					hpMult: 0.5,
-					dmgMult: 1
+					dmgMult: 2
 				},
 				spells: [{
 					type: 'melee',
@@ -91,7 +91,7 @@ define([
 			spell.statType = ['str', 'int'];
 			mob.stats.values.str = obj.stats.values.str;
 			mob.stats.values.int = obj.stats.values.int;
-			spell.threatMult *= 2;
+			spell.threatMult *= 10;
 
 			mob.follower.bindEvents();
 

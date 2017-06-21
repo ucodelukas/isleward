@@ -26,6 +26,8 @@ define([
 			this.lastMasterPos.x = master.x;
 			this.lastMasterPos.y = master.y;
 
+			this.obj.aggro.faction = master.aggro.faction;
+
 			this.fGetHighest.inCombat = master.aggro.getHighest.bind(master.aggro);
 			this.fGetHighest.outOfCombat = this.returnNoAggro.bind(this);
 		},
