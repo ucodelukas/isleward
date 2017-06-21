@@ -108,6 +108,8 @@ define([
 					animation = animations.mobs;
 				else if (sheetName == 'bosses')
 					animation = animations.bosses;
+				else if (sheetName.indexOf('/') > -1)
+					animation = animations.mobs[sheetName];
 				else
 					animation = animations.classes[this.obj.class];
 

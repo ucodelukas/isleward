@@ -368,10 +368,8 @@ define([
 					return;
 
 				var obj = exists.objects.find(o => o.serverId == id);
-				if (!obj) {
-					console.log('OBJECT NOT FOUND!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-					console.log(msg);
-				}
+				if (!obj)
+					return;
 
 				var msgObj = msg.obj;
 

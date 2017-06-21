@@ -5,7 +5,7 @@ define([
 ) {
 	return {
 		generate: function(item, blueprint) {
-			item.level = blueprint.level || 1;
+			item.level = ~~(blueprint.level || 1);
 		}
 	};
 });

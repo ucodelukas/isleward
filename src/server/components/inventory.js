@@ -419,8 +419,6 @@ define([
 						existItem.quantity = 1;
 					existItem.quantity += (item.quantity || 1);
 					item = existItem;
-
-					console.log(existItem.quantity);
 				}
 			}
 

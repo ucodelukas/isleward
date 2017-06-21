@@ -76,15 +76,18 @@ define([
 				walkDistance: 2,
 				regular: {
 					drops: 0,
-					hpMult: 0.5,
-					dmgMult: 2
+					hpMult: this.hpPercent / 100,
+					dmgMult: this.damagePercent / 100
 				},
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 0.2
+					statMult: 0.2,
+					animation: 'melee'
 				}]
 			}, false, 'regular');
+			mob.stats.values.hpMax = obj.stats.values.hpMax * (this.hpPercent / 100);
+			mob.stats.values.hp = mob.stats.values.hpMax;
 			mob.stats.values.regenHp = mob.stats.values.hpMax / 100;
 
 			var spell = mob.spellbook.spells[0];

@@ -26,7 +26,7 @@ define([
 		beforeGetAnimations: function(animations) {
 			var spritesheet = `${this.folderName}/images/inGameSprite.png`;
 
-			animations.classes.necromancer = {
+			animations.mobs[spritesheet] = {
 				'0': {
 					magic: {
 						spritesheet: spritesheet,
@@ -56,7 +56,7 @@ define([
 					row: 1,
 					col: 0,
 					frames: 2,
-					frameDelay: 4
+					frameDelay: 5
 				},
 				spawn: {
 					spritesheet: mobsheet,
@@ -72,7 +72,7 @@ define([
 					row: 3,
 					col: 0,
 					frames: 4,
-					frameDelay: 3,
+					frameDelay: 4,
 					type: 'attackAnimation'
 				}
 			};
@@ -137,7 +137,7 @@ define([
 				element: 'physical',
 				auto: true,
 				cdMax: 7,
-				manaCost: 1,
+				manaCost: 0,
 				range: 1,
 				random: {
 					damage: [2, 4],
@@ -150,11 +150,11 @@ define([
 				statMult: 0.1,
 				element: 'physical',
 				cdMax: 7,
-				manaCost: 6,
+				manaCost: 5,
 				range: 9,
 				random: {
-					damage: [2, 4],
-					life: [100, 200]
+					damagePercent: [80, 120],
+					hpPercent: [80, 120]
 				}
 			};
 
