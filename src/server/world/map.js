@@ -376,7 +376,8 @@ define([
 			var stats = obj.components.find(c => (c.type == 'stats'));
 			var level = stats.values.level;
 
-			return ((this.spawn.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (this.spawn[0]));
+			var spawns = this.spawn.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
+			return spawns[0];
 		}
 	}
 

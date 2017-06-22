@@ -120,9 +120,8 @@ define([
 				obj.serverId = obj.id;
 				delete obj.id;
 
-				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y))) {
+				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
 					msg.keepPos = false;
-				}
 
 				var spawnPos = map.getSpawnPos(obj);
 
@@ -454,7 +453,7 @@ define([
 					closeTtl: null,
 					questBuilder: extend(true, {}, questBuilder),
 					map: {
-						spawn: extend(true, {}, map.spawn),
+						spawn: extend(true, [], map.spawn),
 						clientMap: extend(true, {}, map.clientMap),
 						getSpawnPos: map.getSpawnPos.bind(map)
 					}
