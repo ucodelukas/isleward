@@ -473,6 +473,16 @@ define([
             this.updateSprites();
         },
 
+        isVisible: function(x, y) {
+            var sx = -this.stage.x;
+            var sy = -this.stage.y;
+
+            var sw = this.width;
+            var sh = this.height;
+
+            return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
+        },
+
         updateSprites: function() {
             if (this.titleScreen)
                 return;
