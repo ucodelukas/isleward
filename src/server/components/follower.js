@@ -104,19 +104,19 @@ define([
 				return;
 			}
 
+			var attacker = this.fGetHighest.inCombat();
 			var maxDistance = this.maxDistance;
 			var distance = Math.max(Math.abs(obj.x - master.x), Math.abs(obj.y - master.y));
 
 			var doMove = (distance >= maxDistance);
 			//When we're too far, just teleport
-			if (distance >= maxDistance * 2) {
+			if ((!attacker) && (distance >= maxDistance * 2)) {
 				this.teleport();
 				return;
 			}
 
 			var doMove = false;
 			//If we're not too far from the master but the master is not in combat, move anyway
-			var attacker = this.fGetHighest.inCombat();
 			if (!attacker) {
 				var lastMasterPos = this.lastMasterPos;
 

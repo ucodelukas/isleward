@@ -36,13 +36,13 @@ module.exports = {
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
-				duration: 3,
+				duration: 10,
 				randomPos: true,
 				range: 2,
-				selfCast: 0.2,
+				selfCast: 0.1,
 				statMult: 1,
-				damage: 0.25,
-				element: 'poison',
+				damage: 10,
+				element: 'arcane',
 				cdMax: 5,
 				particles: {
 					scale: {
@@ -71,7 +71,7 @@ module.exports = {
 						start: ['fc66f7', 'a24eff'],
 						end: ['933159', '393268']
 					},
-					chance: 0.085,
+					chance: 0.1,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
@@ -119,7 +119,7 @@ module.exports = {
 				selfCast: 0.3,
 				statMult: 1,
 				damage: 0.25,
-				element: 'poison',
+				element: 'arcane',
 				cdMax: 5,
 				particles: {
 					scale: {

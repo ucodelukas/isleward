@@ -92,8 +92,8 @@ define([
 
 			var spell = mob.spellbook.spells[0];
 			spell.statType = ['str', 'int'];
-			mob.stats.values.str = obj.stats.values.str;
-			mob.stats.values.int = obj.stats.values.int;
+			mob.stats.values.str = obj.stats.values.str || 1;
+			mob.stats.values.int = obj.stats.values.int || 1;
 			spell.threatMult *= 10;
 
 			mob.follower.bindEvents();

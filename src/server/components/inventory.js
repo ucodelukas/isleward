@@ -330,12 +330,11 @@ define([
 				this.getItem(item);
 			}
 
+			var secondarySpellName = classes.spells[this.obj.class][0];
 			var hasSpell = this.items.some(function(i) {
 				return (
 					(i.spell) &&
-					(i.spell.rolls) &&
-					((i.spell.rolls.damage != null) || (i.spell.rolls.healing != null)) &&
-					(i.slot != 'twoHanded')
+					(i.spell.name.toLowerCase() == secondarySpellName)
 				);
 			});
 
@@ -343,7 +342,7 @@ define([
 				var item = generator.generate({
 					spell: true,
 					spellQuality: 'basic',
-					spellName: classes.spells[this.obj.class][0]
+					spellName: secondarySpellName
 				});
 				item.eq = true;
 				item.noSalvage = true;

@@ -15,6 +15,17 @@ define([
 					sprite: [12, 0],
 					keyId: 'world'
 				}]
+			},
+			asd: {
+				level: 10,
+				messageStyle: 'color-cyan',
+				messagePrefix: '(dev) ',
+				items: [{
+					type: 'key',
+					name: 'Key to the world',
+					sprite: [12, 0],
+					keyId: 'world'
+				}]
 			}
 		},
 
