@@ -41,7 +41,7 @@ module.exports = {
 				range: 2,
 				selfCast: 0.1,
 				statMult: 1,
-				damage: 10,
+				damage: 0.03,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -71,7 +71,7 @@ module.exports = {
 						start: ['fc66f7', 'a24eff'],
 						end: ['933159', '393268']
 					},
-					chance: 0.1,
+					chance: 0.08,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
@@ -95,7 +95,7 @@ module.exports = {
 			regular: {
 				drops: {
 					chance: 30,
-					rolls: 2,
+					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
@@ -112,13 +112,13 @@ module.exports = {
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
-				duration: 3,
+				duration: 10,
 				randomPos: true,
 				range: 2,
 				repeat: 2,
-				selfCast: 0.3,
+				selfCast: 0.1,
 				statMult: 1,
-				damage: 0.25,
+				damage: 0.03,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -148,7 +148,7 @@ module.exports = {
 						start: ['ff6942', 'ffeb38'],
 						end: ['953f36', '9a5a3c']
 					},
-					chance: 0.085,
+					chance: 0.08,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
@@ -169,6 +169,9 @@ module.exports = {
 			regular: {
 				hpMult: 75,
 				dmgMult: 2
+			},
+			rare: {
+				count: 0
 			},
 
 			mobile: false,

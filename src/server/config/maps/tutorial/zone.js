@@ -153,7 +153,7 @@ module.exports = {
 			}
 		},
 		elk: {
-			level: 4,
+			level: 5,
 			regular: {
 				drops: {
 					chance: 55,
@@ -171,7 +171,7 @@ module.exports = {
 		crab: {
 			faction: 'gaekatla',
 			deathRep: -3,
-			level: 5,
+			level: 7,
 
 			regular: {
 				drops: {
@@ -190,7 +190,7 @@ module.exports = {
 		'titan crab': {
 			faction: 'gaekatla',
 			deathRep: -5,
-			level: 6,
+			level: 8,
 			rare: {
 				name: 'The Pincer King'
 			}

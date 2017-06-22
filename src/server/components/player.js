@@ -158,7 +158,7 @@ define([
 				if ((spawnPos.length == 0) || (!source.name))
 					spawnPos = spawns[0];
 				else if (source.name) {
-					var sourceSpawnPos = spawnPos.find(s => (s.source == source.name));
+					var sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() == source.name.toLowerCase())));
 					if (sourceSpawnPos)
 						spawnPos = sourceSpawnPos;
 					else

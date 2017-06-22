@@ -588,34 +588,10 @@ define([
 
 			var blueprint = this.blueprint;
 
-			if (blueprint.noRandom) {
-				this.items = [];
-				var blueprints = blueprint.blueprints;
-				for (var i = 0; i < blueprints.length; i++) {
-					var drop = blueprints[i];
-					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
-						continue;
-
-					drop.level = drop.level || level;
-					drop.magicFind = magicFind;
-
-					var item = drop;
-					if (!item.quest)
-						item = generator.generate(drop);
-
-					this.getItem(item, true);
-				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
-
-				if (this.items.length > 0)
-					this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-			} 
+			var instancedItems = extend(true, [], this.items);
+			this.items = [];
 
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
-				var instancedItems = extend(true, [], this.items);
-				var useItems = [];
-
 				var magicFind = (blueprint.magicFind || 0) + killSource.stats.values.magicFind;
 				for (var i = 0; i < blueprint.rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
@@ -654,14 +630,35 @@ define([
 
 					useItem = generator.generate(itemBlueprint);
 
-					useItems.push(useItem);
+					this.getItem(useItem);
 				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, useItems);
-
-				if (useItems.length > 0)
-					this.createBag(this.obj.x, this.obj.y, useItems, ownerId);
 			}
+
+			if (blueprint.noRandom) {
+				var blueprints = blueprint.blueprints;
+				for (var i = 0; i < blueprints.length; i++) {
+					var drop = blueprints[i];
+					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
+						continue;
+
+					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+						continue;
+
+					drop.level = drop.level || this.obj.stats.values.level;
+					drop.magicFind = magicFind;
+
+					var item = drop;
+					if (!item.quest)
+						item = generator.generate(drop);
+
+					this.getItem(item, true);
+				}
+			} 
+
+			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+
+			if (this.items.length > 0)
+				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
 		},
 
 		giveItems: function(obj, hideMessage) {

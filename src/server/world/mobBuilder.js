@@ -53,7 +53,7 @@ define([
 				}
 			});
 
-		mob.addComponent('spellbook', {
+			mob.addComponent('spellbook', {
 				spells: spells,
 				dmgMult: typeDefinition.dmgMult
 			});
@@ -109,7 +109,7 @@ define([
 
 			statValues.level = level;
 
-			if (!drops.blueprints) {
+			if ((!drops.blueprints) || (drops.alsoRandom)) {
 				[
 					'head',
 					'chest',
@@ -174,13 +174,13 @@ define([
 			statValues.hp = statValues.hpMax;
 			statValues.mana = statValues.manaMax;
 
-			mob.spellbook.spells.forEach(function(s) {
+			mob.spellbook.spells.forEach(function(s, i) {
 				s.dmgMult = dmgMult;
 				s.statType = preferStat;
 				s.element = elementType;
 				s.manaCost = 0;
 
-				var damage = combat.getDamage({
+				/*var damage = combat.getDamage({
 					source: mob,
 					target: mob,
 					damage: (s.damage || s.healing) * (s.dmgMult || 1),
@@ -188,8 +188,9 @@ define([
 					element: s.element,
 					statType: s.statType,
 					statMult: s.statMult,
-					noMitigate: false
-				});
+					noMitigate: false,
+					noCrit: true
+				});*/
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function(s) {
