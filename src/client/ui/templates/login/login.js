@@ -23,7 +23,8 @@ define([
 			this.on('.btnRegister', 'click', this.onRegisterClick.bind(this));
 
 			this.find('.extra, .version')
-				.appendTo($('<div class="uiLoginExtra"></div>>').appendTo('.ui-container'));
+				.appendTo($('<div class="uiLoginExtra"></div>')
+					.appendTo('.ui-container'));
 
 			$('.uiLoginExtra').find('.button').on('click', this.redirect.bind(this));
 

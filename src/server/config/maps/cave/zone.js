@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'estuary',
+	name: 'cave',
 	level: 20,
 	addLevel: 0,
 	resources: {},
@@ -13,7 +13,7 @@ module.exports = {
 			}
 		},
 
-		'crystal slug': {
+		'crystal snail': {
 			level: 14,
 
 			regular: {
@@ -36,13 +36,13 @@ module.exports = {
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
-				duration: 3,
+				duration: 10,
 				randomPos: true,
 				range: 2,
-				selfCast: 0.2,
+				selfCast: 0.1,
 				statMult: 1,
-				damage: 0.25,
-				element: 'poison',
+				damage: 0.03,
+				element: 'arcane',
 				cdMax: 5,
 				particles: {
 					scale: {
@@ -71,7 +71,7 @@ module.exports = {
 						start: ['fc66f7', 'a24eff'],
 						end: ['933159', '393268']
 					},
-					chance: 0.085,
+					chance: 0.08,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
@@ -86,7 +86,7 @@ module.exports = {
 			}]
 		},
 
-		'overloaded slug': {
+		'crystal whelk': {
 			level: 16,
 			spells: [{
 				type: 'melee'
@@ -95,7 +95,7 @@ module.exports = {
 			regular: {
 				drops: {
 					chance: 30,
-					rolls: 2,
+					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
@@ -112,14 +112,14 @@ module.exports = {
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
-				duration: 3,
+				duration: 10,
 				randomPos: true,
 				range: 2,
 				repeat: 2,
-				selfCast: 0.3,
+				selfCast: 0.1,
 				statMult: 1,
-				damage: 0.25,
-				element: 'poison',
+				damage: 0.03,
+				element: 'arcane',
 				cdMax: 5,
 				particles: {
 					scale: {
@@ -148,7 +148,7 @@ module.exports = {
 						start: ['ff6942', 'ffeb38'],
 						end: ['953f36', '9a5a3c']
 					},
-					chance: 0.085,
+					chance: 0.08,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
@@ -167,8 +167,11 @@ module.exports = {
 			level: 18,
 
 			regular: {
-				hpMult: 1000,
-				dmgMult: 0.000000001
+				hpMult: 75,
+				dmgMult: 2
+			},
+			rare: {
+				count: 0
 			},
 
 			mobile: false,
@@ -278,8 +281,8 @@ module.exports = {
 			deathRep: -15,
 
 			regular: {
-				hpMult: 1000,
-				dmgMult: 10
+				hpMult: 100,
+				dmgMult: 2
 			},
 
 			rare: {
@@ -500,7 +503,7 @@ module.exports = {
 					activate: function() {
 						var syncer = this.obj.instance.syncer;
 						var physics = this.obj.instance.physics;
-						var walls = this.obj.instance.objects.objects.filter(o => (o.name == 'redwall'));
+						var walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
 						walls.forEach(function(w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);

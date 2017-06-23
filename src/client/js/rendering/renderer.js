@@ -474,6 +474,9 @@ define([
         },
 
         updateSprites: function() {
+            if (this.titleScreen)
+                return;
+
             var player = window.player;
             if (!player)
                 return;

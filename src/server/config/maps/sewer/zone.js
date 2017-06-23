@@ -13,7 +13,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 4
 			},
-			level: 8,
+			level: 10,
 
 			rare: {
 				count: 0
@@ -25,7 +25,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 10
 			},
-			level: 11,
+			level: 12,
 
 			rare: {
 				count: 0

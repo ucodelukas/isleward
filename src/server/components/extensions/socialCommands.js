@@ -2,12 +2,14 @@ define([
 	'config/roles',
 	'world/atlas',
 	'items/generator',
-	'misc/random'
+	'misc/random',
+	'items/config/slots'
 ], function(
 	roles,
 	atlas,
 	generator,
-	random
+	random,
+	configSlots
 ) {
 	return {
 		roleLevel: null,
@@ -51,6 +53,21 @@ define([
 
 		//actions
 		getItem: function(config) {
+			if (config.slot == 'set') {
+				configSlots.slots.forEach(function(s) {
+					if (s == 'tool')
+						return;
+
+					var newConfig = extend(true, {}, config, {
+						slot: s
+					});
+
+					this.getItem(newConfig);
+				}, this);
+
+				return;
+			}
+
 			if (config.stats)
 				config.stats = config.stats.split(',');
 

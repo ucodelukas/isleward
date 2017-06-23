@@ -1,7 +1,7 @@
 define([
-
+	'config/animations'
 ], function(
-
+	animations
 ) {
 	return {
 		type: 'stats',
@@ -366,6 +366,15 @@ define([
 							this.obj.spellbook.die();
 						this.obj.destroyed = true;
 
+						var deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
+						if (deathAnimation) {
+							this.obj.instance.syncer.queue('onGetObject', {
+								x: this.obj.x,
+								y: this.obj.y,
+								components: [deathAnimation]
+							});
+						}
+
 						if (this.obj.inventory) {
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
@@ -403,13 +412,16 @@ define([
 		},
 
 		getHp: function(heal, source) {
+			var amount = heal.amount;
+			if (amount == 0)
+				return;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
 			if (values.hp >= hpMax)
 				return;
 
-			var amount = heal.amount;
 			if (hpMax - values.hp < amount)
 				amount = hpMax - values.hp;
 

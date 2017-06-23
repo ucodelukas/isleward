@@ -129,7 +129,7 @@ define([
 				return false;
 			else if (obj.player)
 				return true;
-			else 
+			else if (target.aggro.faction != obj.aggro.faction)
 				return true;
 		},
 

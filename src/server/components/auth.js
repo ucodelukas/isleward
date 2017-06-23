@@ -352,6 +352,7 @@ define([
 
 			this.obj.cell = skins.getCell(this.obj.class, this.obj.costume);
 			this.obj.previewSpritesheet = skins.getSpritesheet(this.obj.class);
+			console.log(this.obj.name, this.obj.class, this.obj.previewSpritesheet);
 
 			var simple = this.obj.getSimple(true);
 			simple.components.push({

@@ -7,7 +7,7 @@ define([
 		allowedCpn: function(msg) {
 			var allowed = {
 				player: ['performAction', 'queueAction', 'move'],
-				auth: ['login', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkins', 'createCharacter'],
+				auth: ['login', 'register', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkins', 'createCharacter'],
 				social: ['chat', 'getInvite', 'acceptInvite', 'declineInvite', 'removeFromParty', 'leaveParty']
 			};
 
