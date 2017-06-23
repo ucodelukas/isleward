@@ -25,6 +25,7 @@ define([
 			`devotion`,
 			`dispute`,
 			`doctrine`,
+			`doom`,
 			`eater`,
 			`eclipse`,
 			`envy`,
@@ -88,20 +89,24 @@ define([
 			`tide`,
 			`vessel`,
 			`vision`,
+			`will`,
 			`wind`,
 			`wish`,
 			`wisp`,
-			`word`,
+			`word`
 		],
 		armor: [
 			`armor`,
 			`barrier`,
+			`bulwark`,
 			`cover`,
 			`fortress`
 			`plate`,
+			`guard`,
+			`shell`,
 			`protector`,
 			`salvation`,
-			`ward`,
+			`ward`
 		],
 		jewelry: [
 
@@ -121,6 +126,10 @@ define([
 			`union`,
 			`weapon`,
 			`wrecker`,
+			`decimator`,
+			`reach`,
+			`bane`,
+			`obliterator`
 		],
 		slots: {
 			feet: [
@@ -130,6 +139,7 @@ define([
 				`runners`,
 				`stompers`,
 				`talons`,
+				`step`
 			],
 			hands: [
 				`gauntlets`,
@@ -144,7 +154,7 @@ define([
 				`crown`,
 				`sentinel`,
 				`visage`,
-				`visor`,
+				`visor`
 			],
 			waist: [
 				`brace`,
@@ -161,6 +171,17 @@ define([
 			chest: [
 				`aegis`
 				`vestments`,
+			],
+			finger: [
+				`ring`,
+				`loop`,
+				`circle`,
+				`twist`
+			],
+			neck: [
+				`curio`,
+				`chain`,
+				`noose`
 			]
 		}
 	};
