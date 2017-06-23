@@ -294,7 +294,6 @@ define([
 
 			var credentials = msg.data;
 
-			console.log(1);
 			bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 		},
 		onHashGenerated: function(msg, err, hashedPassword) {
@@ -352,7 +351,6 @@ define([
 
 			this.obj.cell = skins.getCell(this.obj.class, this.obj.costume);
 			this.obj.previewSpritesheet = skins.getSpritesheet(this.obj.class);
-			console.log(this.obj.name, this.obj.class, this.obj.previewSpritesheet);
 
 			var simple = this.obj.getSimple(true);
 			simple.components.push({

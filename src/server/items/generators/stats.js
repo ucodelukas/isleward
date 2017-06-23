@@ -273,6 +273,12 @@ define([
 					item.enchantedStats[stat] = value;
 			}
 
+			if (stat == 'lvlRequire') {
+				item.level -= value;
+				if (item.level < 1)
+					item.level = 1;
+			}
+
 			if (item.stats[stat])
 				value += item.stats[stat];
 

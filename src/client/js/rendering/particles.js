@@ -38,12 +38,14 @@ define([
 		},
 
 		update: function() {
+			var renderer = this.r;
 			var now = Date.now();
 
 			var emitters = this.emitters;
 			var eLen = emitters.length;
 			for (var i = 0; i < eLen; i++) {
 				var e = emitters[i];
+
 				var destroy = ((!e.emit) && (e.particleCount == 0));
 
 				if (destroy) {
@@ -55,6 +57,9 @@ define([
 					eLen--;
 					continue;
 				} 
+
+				if (!renderer.isVisible(e.spawnPos.x, e.spawnPos.y))
+					continue;
 
 				var r = e.update((now - this.lastTick) * 0.001);
 				r.forEach(function(rr) {
