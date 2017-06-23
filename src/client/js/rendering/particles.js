@@ -46,7 +46,15 @@ define([
 			for (var i = 0; i < eLen; i++) {
 				var e = emitters[i];
 
-				var destroy = ((!e.emit) && (e.particleCount == 0));
+				var visible = null;
+				var destroy = !e.emit;
+				if (destroy) {
+					if (e.particleCount > 0) {
+						visible = renderer.isVisible(e.spawnPos.x, e.spawnPos.y);
+						if (visible)
+							destroy = false;
+					}
+				}
 
 				if (destroy) {
 					emitters.splice(i, 1);
@@ -58,7 +66,9 @@ define([
 					continue;
 				} 
 
-				if (!renderer.isVisible(e.spawnPos.x, e.spawnPos.y))
+				if (visible === null)
+					visible = renderer.isVisible(e.spawnPos.x, e.spawnPos.y);
+				if (!visible)
 					continue;
 
 				var r = e.update((now - this.lastTick) * 0.001);

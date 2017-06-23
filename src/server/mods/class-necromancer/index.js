@@ -141,7 +141,7 @@ define([
 				range: 1,
 				random: {
 					damage: [2, 4],
-					healPercent: [25, 75]
+					healPercent: [5, 15]
 				}
 			};
 

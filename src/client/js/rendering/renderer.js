@@ -474,8 +474,9 @@ define([
         },
 
         isVisible: function(x, y) {
-            var sx = -this.stage.x;
-            var sy = -this.stage.y;
+            var stage = this.stage;
+            var sx = -stage.x;
+            var sy = -stage.y;
 
             var sw = this.width;
             var sh = this.height;
