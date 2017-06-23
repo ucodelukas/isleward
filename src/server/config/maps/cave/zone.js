@@ -35,11 +35,12 @@ module.exports = {
 				type: 'melee'
 			}, {
 				type: 'smokeBomb',
-				radius: 1,
-				duration: 10,
+				radius: 0,
+				repeat: 5,
+				duration: 7,
 				randomPos: true,
 				range: 2,
-				selfCast: 0.1,
+				selfCast: 0.2,
 				statMult: 1,
 				damage: 0.03,
 				element: 'arcane',
@@ -47,12 +48,12 @@ module.exports = {
 				particles: {
 					scale: {
 						start: {
-							min: 4,
-							max: 14
+							min: 15,
+							max: 25
 						},
 						end: {
-							min: 2,
-							max: 8
+							min: 10,
+							max: 0
 						}
 					},
 					opacity: {
@@ -64,23 +65,23 @@ module.exports = {
 						max: 2
 					},
 					speed: {
-						start: 2,
+						start: 3,
 						end: 0
 					},
 					color: {
 						start: ['fc66f7', 'a24eff'],
 						end: ['933159', '393268']
 					},
-					chance: 0.08,
+					chance: 0.1,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
 					spawnType: 'rect',
 					spawnRect: {
-						x: -15,
-						y: -15,
-						w: 30,
-						h: 30
+						x: -10,
+						y: -10,
+						w: 20,
+						h: 20
 					}
 				}
 			}]
