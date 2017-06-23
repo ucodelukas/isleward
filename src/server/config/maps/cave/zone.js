@@ -42,13 +42,13 @@ module.exports = {
 				range: 2,
 				selfCast: 0.2,
 				statMult: 1,
-				damage: 0.03,
+				damage: 0.2,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
 					scale: {
 						start: {
-							min: 15,
+							min: 10,
 							max: 25
 						},
 						end: {
@@ -72,7 +72,7 @@ module.exports = {
 						start: ['fc66f7', 'a24eff'],
 						end: ['933159', '393268']
 					},
-					chance: 0.1,
+					chance: 0.125,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',

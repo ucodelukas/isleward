@@ -93,8 +93,10 @@ define([
 
 				if (this.randomPos) {
 					var range = this.range;
-					x += ~~(Math.random() * range * 2) - range;
-					y += ~~(Math.random() * range * 2) - range;
+					while ((x == obj.x) && (y == obj.y)) {
+						x = obj.x + ~~(Math.random() * range * 2) - range;
+						y = obj.y + ~~(Math.random() * range * 2) - range;
+					}
 				}
 
 				var objects = this.obj.instance.objects;
