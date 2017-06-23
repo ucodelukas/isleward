@@ -63,7 +63,7 @@ define([
 			`revenge`,
 			`rigor`,
 			`ruin`,
-			`salvation`
+			`salvation`,
 			`sanctum`,
 			`savvy`,
 			`scar`,
@@ -100,7 +100,7 @@ define([
 			`barrier`,
 			`bulwark`,
 			`cover`,
-			`fortress`
+			`fortress`,
 			`plate`,
 			`guard`,
 			`shell`,
@@ -118,7 +118,7 @@ define([
 			`implement`,
 			`reaper`,
 			`render`,
-			`siphon`
+			`siphon`,
 			`slasher`,
 			`smite`,
 			`splitter`,
@@ -134,7 +134,7 @@ define([
 		slots: {
 			feet: [
 				`crushers`,
-				`groundpounders`
+				`groundpounders`,
 				`hooves`,
 				`runners`,
 				`stompers`,
@@ -145,11 +145,11 @@ define([
 				`gauntlets`,
 				`hands`,
 				`restraints`,
-				`talons`
-				`vices`,
+				`talons`,
+				`vices`
 			],
 			head: [
-				`brim`
+				`brim`,
 				`crest`,
 				`crown`,
 				`sentinel`,
@@ -169,7 +169,7 @@ define([
 				`runners`
 			],
 			chest: [
-				`aegis`
+				`aegis`,
 				`vestments`,
 			],
 			finger: [

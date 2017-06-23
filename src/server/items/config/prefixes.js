@@ -86,7 +86,7 @@ define([
 			`knight%`,
 			`lingering`,
 			`living`,
-			`magi`'
+			`magi`,
 			`magi`,
 			`magnificent`,
 			`majesty`,
@@ -134,7 +134,7 @@ define([
 			`star`,
 			`the`,
 			`thief%`,
-			`thinker's`
+			`thinker's`,
 			`timeworn`,
 			`total`,
 			`tower`,
@@ -155,31 +155,31 @@ define([
 			`vulcanized`,
 			`war`,
 			`wind`,
-			`wisdom%`,
+			`wisdom%`
 		],
 		armor: [
 			`phalanx`,
 			`protection`,
 			`rugged`,
-			`sheltered`
-			`unyielding`,
+			`sheltered`,
+			`unyielding`
 		],
 		weapons: [
 			`biting`,
 			`booming`,
 			`carve`,
 			`cleave`,
-			`devouring`
+			`devouring`,
 			`forge`,
 			`piercing`,
 			`reaper%`,
-			`steady`,
+			`steady`
 		],
 		slots: {
 			feet: [
 				`kick`,
-				`strider`
-				`trail`,
+				`strider`,
+				`trail`
 			],
 			hands: [
 				`choke`,
