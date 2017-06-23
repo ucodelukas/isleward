@@ -592,7 +592,8 @@ define([
 			this.items = [];
 
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
-				var magicFind = (blueprint.magicFind || 0) + killSource.stats.values.magicFind;
+				var magicFind = (blueprint.magicFind || 0);
+				var bonusMagicFind = killSource.stats.values.magicFind;
 				for (var i = 0; i < blueprint.rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
@@ -625,7 +626,8 @@ define([
 						type: useItem.type,
 						spell: !!useItem.ability,
 						stats: useItem.stats ? Object.keys(useItem.stats) : null,
-						magicFind: magicFind
+						magicFind: magicFind,
+						bonusMagicFind: bonusMagicFind
 					};
 
 					useItem = generator.generate(itemBlueprint);
