@@ -1382,7 +1382,7 @@
     {
      "instanced":"0",
      "name":"Test Zone",
-     "spawn":"[{\"maxLevel\":1,\"x\":60,\"y\":116},{\"maxLevel\":2,\"x\":89,\"y\":48}]"
+     "spawn":"[{\"maxLevel\":1,\"x\":60,\"y\":116},{\"maxLevel\":999,\"x\":89,\"y\":48}]"
     },
  "propertytypes":
     {
