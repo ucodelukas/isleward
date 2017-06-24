@@ -206,13 +206,13 @@ module.exports = {
 			}, {
 				type: 'smokeBomb',
 				radius: 1,
-				repeat: 5,
+				repeat: 4,
 				duration: 14,
 				randomPos: true,
 				range: 6,
-				selfCast: 0.3,
+				selfCast: 0.25,
 				statMult: 1,
-				damage: 0.225,
+				damage: 0.15,
 				element: 'arcane',
 				cdMax: 8,
 				particles: {
