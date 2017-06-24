@@ -77,6 +77,36 @@ define([
 		getGold: function(amount) {
 			this.obj.trade.gold += ~~amount;
 			this.obj.syncer.set(true, 'trade', 'gold', this.obj.trade.gold);
+		},
+
+		setLevel: function(level) {
+			var obj = this.obj;
+			var syncer = obj.syncer;
+
+			level = Math.max(1, ~~level);
+
+			var stats = obj.stats;
+			var values = stats.values;
+			var oldLevel = values.level;
+
+			values.level = level;
+
+			var delta = level - oldLevel;
+
+			values.hpMax += (40 * delta);
+
+			syncer.setObject(true, 'stats', 'values', 'level', level);
+			syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+
+			process.send({
+				method: 'object',
+				serverId: obj.serverId,
+				obj: {
+					level: level
+				}
+			});
+
+			stats.calcXpMax();
 		}
 	};
 });

@@ -42,7 +42,7 @@ module.exports = {
 				range: 2,
 				selfCast: 0.2,
 				statMult: 1,
-				damage: 0.2,
+				damage: 0.225,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -112,14 +112,14 @@ module.exports = {
 				type: 'melee'
 			}, {
 				type: 'smokeBomb',
-				radius: 1,
-				duration: 10,
+				radius: 0,
+				repeat: 5,
+				duration: 7,
 				randomPos: true,
 				range: 2,
-				repeat: 2,
-				selfCast: 0.1,
+				selfCast: 0.2,
 				statMult: 1,
-				damage: 0.03,
+				damage: 0.2,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -149,16 +149,16 @@ module.exports = {
 						start: ['ff6942', 'ffeb38'],
 						end: ['953f36', '9a5a3c']
 					},
-					chance: 0.08,
+					chance: 0.125,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
 					spawnType: 'rect',
 					spawnRect: {
-						x: -15,
-						y: -15,
-						w: 30,
-						h: 30
+						x: -10,
+						y: -10,
+						w: 20,
+						h: 20
 					}
 				}
 			}]
@@ -169,7 +169,13 @@ module.exports = {
 
 			regular: {
 				hpMult: 75,
-				dmgMult: 2
+				dmgMult: 2,
+
+				drops: {
+					chance: 100,
+					rolls: 5,
+					magicFind: [300, 50]
+				}
 			},
 			rare: {
 				count: 0
@@ -199,13 +205,14 @@ module.exports = {
 				}
 			}, {
 				type: 'smokeBomb',
-				radius: 2,
-				repeat: 3,
-				duration: 8,
+				radius: 1,
+				repeat: 4,
+				duration: 14,
 				randomPos: true,
 				range: 6,
+				selfCast: 0.25,
 				statMult: 1,
-				damage: 0.25,
+				damage: 0.15,
 				element: 'arcane',
 				cdMax: 8,
 				particles: {
@@ -235,16 +242,16 @@ module.exports = {
 						start: ['ff4252', 'd43346'],
 						end: ['802343', 'a82841']
 					},
-					chance: 0.03,
+					chance: 0.125,
 					randomColor: true,
 					randomScale: true,
 					blendMode: 'add',
 					spawnType: 'rect',
 					spawnRect: {
-						x: -15,
-						y: -15,
-						w: 30,
-						h: 30
+						x: -10,
+						y: -10,
+						w: 20,
+						h: 20
 					}
 				}
 			}, {

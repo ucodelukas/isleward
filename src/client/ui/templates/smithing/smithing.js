@@ -222,11 +222,11 @@ define([
 			var imgX = -item.sprite[0] * 64;
 			var imgY = -item.sprite[1] * 64;
 
-			var spritesheet = item.spritesheet || 'items';
+			var spritesheet = item.spritesheet || '../../../images/items.png';
 			if (item.material)
-				spritesheet = 'materials';
+				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
-				spritesheet = 'questItems';
+				spritesheet = '../../../images/questItems.png';
 
 			var el = $(templateItem)
 				.appendTo(container);
@@ -236,7 +236,7 @@ define([
 				.on('mousemove', this.onHover.bind(this, el, item))
 				.on('mouseleave', this.hideTooltip.bind(this, el, item))
 				.find('.icon')
-				.css('background', 'url(../../../images/' + spritesheet + '.png) ' + imgX + 'px ' + imgY + 'px');
+				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
 			if (item.quantity) {
 				var quantityText = item.quantityText;

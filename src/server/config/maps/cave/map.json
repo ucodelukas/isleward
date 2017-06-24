@@ -2548,7 +2548,7 @@
     {
      "instanced":"0",
      "name":"Test Zone",
-     "spawn":"[{\"x\":16,\"y\":136}, {\"source\": \"pockshell\", \"x\": 163, \"y\": 35}]"
+     "spawn":"[{\"x\":16,\"y\":136}, {\"source\": \"radulos\", \"x\": 163, \"y\": 35}]"
     },
  "propertytypes":
     {
