@@ -125,15 +125,11 @@ define([
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 
-			var id = [0, 1, 2].find(function(s) {
-				return (!this.spells.some(f => (f.id == s)));
-			}, this);
-			builtSpell.id = (spellId == null) ? id : spellId;
-
-			if (spellId == null)
-				this.spells.push(builtSpell);
-			else
-				this.spells.splice(spellId, 0, builtSpell);
+			builtSpell.id = spellId;
+			this.spells.push(builtSpell);
+			this.spells.sort(function(a, b) {
+				return (a.id - b.id);
+			});
 
 			builtSpell.calcDps(null, true);
 			if (builtSpell.init)
@@ -201,11 +197,14 @@ define([
 		},
 
 		removeSpellById: function(id) {
-			this.spells.spliceWhere(s => (s.id == id));
+			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
-			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+			if (exists) {
+				exists.unlearn && exists.unlearn();
 
-			this.auto.spliceWhere(a => a.spell == id);
+				this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+				this.auto.spliceWhere(a => a.spell == id);
+			}
 		},
 
 		queueAuto: function(action) {
@@ -278,8 +277,7 @@ define([
 				if (spell.spellType == 'buff') {
 					if (this.obj.aggro.faction != action.target.aggro.faction)
 						return;
-				}
-				else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
+				} else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
 					if (this.obj.player)
 						this.sendAnnouncement("You don't feel like attacking that target");
 					return;

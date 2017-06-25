@@ -52,24 +52,8 @@ define([
 				this.getItem(items[i], true);
 			}
 
-			if ((this.obj.player) && (!isTransfer)) {
+			if ((this.obj.player) && (!isTransfer))
 				this.getDefaultAbilities();
-
-				/*this.getItem(generator.generate({
-					spell: true,
-					spellName: 'arcane barrier'
-				}));*/
-
-				/*for (var i = 0; i < 1; i++) {
-					var item = generator.generate({
-						quality: 4,
-						level: 3,
-						stats: ['addCritMultiplier']
-					});
-
-					this.getItem(item);
-				}*/
-			}
 
 			delete blueprint.items;
 
@@ -118,55 +102,62 @@ define([
 			this.resolveCallback(msg, result);
 		},
 
-		learnAbility: function(id, forceLearn) {
-			var replaceId = null;
-			var newSpellId = id.spellId;
-			if (id.id != null) {
-				replaceId = id.replaceId;
-				id = id.id;
+		learnAbility: function(itemId, runeSlot) {
+			if (itemId.itemId != null) {
+				var msg = itemId;
+				itemId = msg.itemId;
+				runeSlot = msg.slot;
 			}
 
-			var item = this.findItem(id);
-			if ((!item) || (!item.spell) || ((item.spellId == null) && (item.eq) && (!forceLearn))) {
-				if (item)
-					item.eq = false;
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
 				return;
 			}
 
 			var spellbook = this.obj.spellbook;
 
-			if ((item.eq) && (!forceLearn)) {
-				delete item.eq;
-				spellbook.removeSpellById(item.spellId);
-				delete item.spellId;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			if (item.slot == 'twoHanded')
+				runeSlot = 0;
+			else if (runeSlot == null) {
+				if (!this.items.some(i => (i.runeSlot == 2)))
+					runeSlot = 2;
+				else
+					runeSlot = 1;
+			}
+
+			var currentEq = this.items.find(i => (i.runeSlot == runeSlot));
+			if (currentEq) {
+				spellbook.removeSpellById(runeSlot);
+				delete currentEq.eq;
+				delete currentEq.runeSlot;
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', currentEq);
+			}
+
+			item.eq = true;
+			item.runeSlot = runeSlot;
+			spellbook.addSpellFromRune(item.spell, runeSlot);
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		unlearnAbility: function(itemId) {
+			if (itemId.itemId != null)
+				itemId = itemId.itemId;
+
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
 				return;
 			}
 
-			if (replaceId != null) {
-				var replaceItem = this.findItem(replaceId);
-				if (replaceItem) {
-					delete replaceItem.eq;
-					spellbook.removeSpellById(replaceItem.spellId);
-					newSpellId = replaceItem.spellId;
-					delete replaceItem.spellId;
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', replaceItem);
-				}
-			}
-
-			if (spellbook.spells.length >= 3) {
-				if (item.slot)
-					item.spellId = -1;
-				delete item.eq;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				return;
-			}
-
-			item.spellId = spellbook.addSpellFromRune(item.spell, newSpellId);
-			if (item.spellId != -1)
-				item.eq = true;
-			else
-				delete item.spell;
+			var spellbook = this.obj.spellbook;
+			spellbook.removeSpellById(item.runeSlot);
+			delete item.eq;
+			delete item.runeSlot;
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
@@ -512,7 +503,7 @@ define([
 
 			if (item.eq) {
 				if (item.ability)
-					this.learnAbility(item.id, true);
+					this.learnAbility(item.id, item.runeSlot);
 				else
 					this.obj.equipment.equip(item.id);
 			} else {
@@ -656,7 +647,7 @@ define([
 
 					this.getItem(item, true);
 				}
-			} 
+			}
 
 			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
 
