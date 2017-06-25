@@ -139,6 +139,10 @@ define([
 			}
 		},
 
+		unlearn: function() {
+			this.killMinion();
+		},
+
 		events: {
 			onAfterDeath: function(source) {
 				this.killMinion();

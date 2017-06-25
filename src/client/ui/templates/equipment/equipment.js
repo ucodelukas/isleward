@@ -99,11 +99,11 @@ define([
 
 			items
 				.filter(function(item) {
-					var spellId = item.spellId;
-					if ((spellId != null) && (item.slot))
-						skipSpellId = spellId;
+					var runeSlot = item.runeSlot;
+					if ((runeSlot != null) && (item.slot))
+						skipSpellId = runeSlot;
 
-					return ((item.eq) && ((item.slot) || (item.spellId != null)));
+					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
 				}, this)
 				.forEach(function(item) {
 					var imgX = -item.sprite[0] * 64;
@@ -111,10 +111,10 @@ define([
 
 					var slot = item.slot;
 					if (!slot) {
-						var spellId = item.spellId;
-						if (spellId > skipSpellId)
-							spellId--;
-						slot = 'rune-' + spellId;
+						var runeSlot = item.runeSlot;
+						if (runeSlot > skipSpellId)
+							runeSlot--;
+						slot = 'rune-' + runeSlot;
 					}
 
 					var spritesheet = item.spritesheet || '../../../images/items.png';
@@ -177,7 +177,7 @@ define([
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.on('mousemove', this.onHoverItem.bind(this, el, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.equipItem.bind(this, item));
+						.on('click', this.equipItem.bind(this, item, slot));
 
 					if (item == this.hoverCompare)
 						el.find('.icon').addClass('eq');
@@ -187,7 +187,7 @@ define([
 				container.hide();
 		},
 
-		equipItem: function(item) {
+		equipItem: function(item, slot) {
 			if (item == this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
@@ -204,8 +204,8 @@ define([
 				cpn = 'inventory';
 				method = 'learnAbility';
 				data = {
-					id: item.id,
-					replaceId: this.hoverCompare ? this.hoverCompare.id : null
+					itemId: item.id,
+					slot: ~~slot.replace('rune-', '') + 1
 				};
 
 				if (item.empty) {
@@ -213,8 +213,10 @@ define([
 						this.find('.itemList').hide();
 						return;
 					}
-					else
-						data = this.hoverCompare.id;
+					else {
+						method = 'unlearnAbility';
+						data.itemId = this.hoverCompare.id;
+					}
 				}
 			}
 

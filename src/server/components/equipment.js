@@ -91,12 +91,8 @@ define([
 			this.obj.spellbook.calcDps();
 
 			if ((!this.obj.mob) || (item.ability)) {
-				if (item.spell) {
-					this.obj.inventory.learnAbility({
-						id: itemId,
-						spellId: spellId
-					}, true);
-				}
+				if (item.spell)
+					this.obj.inventory.learnAbility(itemId, item.runeSlot);
 				else {
 					var result = item;
 					if (item.effects) {
@@ -152,7 +148,7 @@ define([
 
 			if (item.spell) {
 				item.eq = true;
-				this.obj.inventory.learnAbility(itemId);
+				this.obj.inventory.unlearnAbility(itemId, item.runeSlot);
 			} else {
 				if (!item.effects)
 					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);

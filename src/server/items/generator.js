@@ -29,6 +29,9 @@ define([
 					isSpell = Math.random() < this.spellChance;
 			}
 
+			if (blueprint.isSpell)
+				isSpell = true;
+
 			if (isSpell)
 				spellGenerators.forEach(g => g.generate(item, blueprint));
 			else {
