@@ -119,6 +119,14 @@ define([
 			else
 				this.tooltip.find('.level').show();
 
+			if ((!item.type) || (item.type == item.name))
+				this.tooltip.find('.type').hide();
+			else {
+				this.tooltip.find('.type')
+					.html(item.type)
+					.show();
+			}
+
 			if (item.power)
 				this.tooltip.find('.power').show();
 

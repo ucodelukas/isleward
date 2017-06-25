@@ -263,11 +263,8 @@ define([
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
 						if (action.target)
 							action.target = action.target.minions[0];
-						else {
-							console.log('NO TARGET');
-							console.log(action);
+						else
 							return false;
-						}
 					}
 				}
 
@@ -279,7 +276,7 @@ define([
 				}
 
 				if (spell.spellType == 'buff') {
-					if (!!action.target.player != !!this.obj.player)
+					if (this.obj.aggro.faction != action.target.aggro.faction)
 						return;
 				}
 				else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
@@ -352,7 +349,11 @@ define([
 
 			if (success) {
 				this.obj.stats.values.mana -= spell.manaCost;
-				spell.cd = spell.cdMax;
+				var cd = {
+					cd: spell.cdMax
+				};
+				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+				spell.cd = cd.cd;
 
 				if (this.obj.player) {
 					var syncer = this.obj.syncer;

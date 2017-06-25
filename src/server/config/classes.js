@@ -23,7 +23,7 @@ define([
 			}
 		},
 		spells: {
-			wizard: ['ice spear'],
+			wizard: ['ice spear', 'fireblast'],
 			cleric: ['healing circle'],
 			warrior: ['charge'],
 			thief: ['smokebomb']

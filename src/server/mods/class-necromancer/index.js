@@ -163,11 +163,12 @@ define([
 				statMult: 0.1,
 				element: 'physical',
 				cdMax: 7,
-				manaCost: 0,
+				manaCost: 5,
 				range: 9,
 				random: {
 					i_drainPercentage: [10, 50],
-					shieldMultiplier: [2, 5]
+					shieldMultiplier: [2, 5],
+					i_frenzyDuration: [10, 20]
 				}
 			};
 		},
@@ -247,10 +248,11 @@ define([
 
 			spells.push({
 				name: 'Blood Barrier',
-				description: 'Sacrifice some life force to grant a protective barrier around an ally.',
+				description: 'Sacrifice some life force to granting an ally a protective barrier and increased attack speed.',
 				type: 'bloodBarrier',
 				icon: [2, 0],
 				animation: 'magic',
+				spellType: 'buff',
 				spritesheet: `${this.folderName}/images/abilityIcons.png`,
 				particles: {
 					color: {

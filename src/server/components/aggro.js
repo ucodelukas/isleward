@@ -251,7 +251,7 @@ define([
 			if (this.obj.spellbook)
 				this.obj.spellbook.unregisterCallback(obj.id, true);
 
-			if ((this.list.length == 0) && (this.obj.mob))
+			if ((this.list.length == 0) && (this.obj.mob) && (!this.obj.follower))
 				this.obj.stats.resetHp();
 		},
 

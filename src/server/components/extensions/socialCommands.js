@@ -107,6 +107,32 @@ define([
 			});
 
 			stats.calcXpMax();
+		},
+
+		godMode: function() {
+			var obj = this.obj;
+
+			var statValues = obj.stats.values;
+			var newValues = {
+				int: 10000000,
+				str: 10000000,
+				dex: 10000000,
+				hpMax: 10000000,
+				hp: 10000000,
+				manaMax: 10000000,
+				mana: 10000000
+			};
+
+			var syncer = obj.syncer;
+
+			for (var s in newValues) {
+				var newValue = newValues[s];
+				statValues[s] = newValue;
+
+				syncer.setObject(true, 'stats', 'values', s, newValue);
+			}
+
+			obj.spellbook.calcDps();
 		}
 	};
 });

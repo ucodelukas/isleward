@@ -50,6 +50,12 @@ define([
 				amount: amount
 			};
 			target.stats.getHp(heal, this.obj);
+
+			target.spellbook.spells[0].cd = 0;
+			target.effects.addEffect({
+				type: 'frenzy',
+				ttl: this.frenzyDuration
+			});
 		}
 	};
 });

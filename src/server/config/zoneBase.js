@@ -40,7 +40,7 @@ define([
 					drops: {
 						chance: 100,
 						rolls: 1,
-						magicFind: 75
+						magicFind: 2000
 					}
 				},
 
@@ -51,7 +51,7 @@ define([
 					drops: {
 						chance: 100,
 						rolls: 2,
-						magicFind: 115
+						magicFind: [2000, 175]
 					}
 				}
 			}

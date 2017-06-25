@@ -50,7 +50,7 @@ define([
 		},
 
 		calcDps: function(target, noSync) {
-			if (!this.values)
+			if ((!this.values) || (this.spellType == 'buff'))
 				return;
 
 			if ((!this.damage) && (!this.healing))

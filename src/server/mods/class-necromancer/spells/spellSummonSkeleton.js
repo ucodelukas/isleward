@@ -20,30 +20,7 @@ define([
 		minions: [],
 
 		cast: function(action) {
-			var currentMinion = this.minions[0];
-			if (currentMinion) {
-				currentMinion.destroyed = true;
-				this.minions = [];
-
-				var deathAnimation = _.getDeepProperty(animations, ['mobs', currentMinion.sheetName, currentMinion.cell, 'death']);
-				if (deathAnimation) {
-					this.obj.instance.syncer.queue('onGetObject', {
-						x: currentMinion.x,
-						y: currentMinion.y,
-						components: [deathAnimation]
-					});
-				} else {
-					this.obj.instance.syncer.queue('onGetObject', {
-						x: currentMinion.x,
-						y: currentMinion.y,
-						components: [{
-							type: 'attackAnimation',
-							row: 0,
-							col: 4
-						}]
-					});
-				}
-			}
+			this.killMinion();
 
 			var obj = this.obj;
 			var target = action.target;
@@ -133,6 +110,39 @@ define([
 
 		onAfterSimplify: function(simple) {
 			delete simple.minions;
+		},
+
+		killMinion: function(minion) {
+			var currentMinion = this.minions[0];
+			if ((currentMinion) && (!currentMinion.destroyed)) {
+				currentMinion.destroyed = true;
+				this.minions = [];
+
+				var deathAnimation = _.getDeepProperty(animations, ['mobs', currentMinion.sheetName, currentMinion.cell, 'death']);
+				if (deathAnimation) {
+					this.obj.instance.syncer.queue('onGetObject', {
+						x: currentMinion.x,
+						y: currentMinion.y,
+						components: [deathAnimation]
+					});
+				} else {
+					this.obj.instance.syncer.queue('onGetObject', {
+						x: currentMinion.x,
+						y: currentMinion.y,
+						components: [{
+							type: 'attackAnimation',
+							row: 0,
+							col: 4
+						}]
+					});
+				}
+			}
+		},
+
+		events: {
+			onAfterDeath: function(source) {
+				this.killMinion();
+			}
 		}
 	};
 });
