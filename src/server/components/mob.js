@@ -105,7 +105,7 @@ define([
 				if (!doesCollide) {
 					hasLos = this.physics.hasLos(x, y, tx, ty);
 					if (hasLos) {
-						if (rnd() < 0.65) {
+						if (((obj.follower) && (obj.follower.master.player)) || (rnd() < 0.65)) {
 							var spell = obj.spellbook.getRandomSpell(target);
 							var success = obj.spellbook.cast({
 								spell: spell,
