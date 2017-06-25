@@ -174,7 +174,7 @@ module.exports = {
 				drops: {
 					chance: 100,
 					rolls: 5,
-					magicFind: [300, 50]
+					magicFind: [2000, 200]
 				}
 			},
 			rare: {

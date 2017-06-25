@@ -16,7 +16,7 @@ module.exports = {
 				drops: {
 					chance: 45,
 					rolls: 1,
-					magicFind: 70
+					magicFind: 500
 				}
 			}	
 		},

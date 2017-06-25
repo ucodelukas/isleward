@@ -16,7 +16,7 @@ define([
 	var spellGenerators = [g1, g8];
 
 	var generator = {
-		spellChance: 0.03,
+		spellChance: 0.075,
 		generate: function(blueprint) {
 			var hadBlueprint = !!blueprint;
 			blueprint = blueprint || {};

@@ -25,11 +25,12 @@ define([
 
 		spawn: function(character) {
 			var obj = this.obj;
+
 			extend(true, obj, {
 				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,
-				previewSpritesheet: character.previewSpritesheet,
+				previewSpritesheet: character.previewSpritesheet || null,
 				name: character.name,
 				class: character.class,
 				zoneName: character.zoneName || 'tutorial',
@@ -178,6 +179,8 @@ define([
 			}
 			else
 				this.obj.stats.dead = true;
+
+			this.obj.fireEvent('onAfterDeath', source);
 
 			this.obj.aggro.die();
 			this.obj.spellbook.die();

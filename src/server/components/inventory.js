@@ -330,24 +330,25 @@ define([
 				this.getItem(item);
 			}
 
-			var secondarySpellName = classes.spells[this.obj.class][0];
-			var hasSpell = this.items.some(function(i) {
-				return (
-					(i.spell) &&
-					(i.spell.name.toLowerCase() == secondarySpellName)
-				);
-			});
-
-			if (!hasSpell) {
-				var item = generator.generate({
-					spell: true,
-					spellQuality: 'basic',
-					spellName: secondarySpellName
+			classes.spells[this.obj.class].forEach(function(spellName) {
+				var hasSpell = this.items.some(function(i) {
+					return (
+						(i.spell) &&
+						(i.spell.name.toLowerCase() == spellName)
+					);
 				});
-				item.eq = true;
-				item.noSalvage = true;
-				this.getItem(item);
-			}
+
+				if (!hasSpell) {
+					var item = generator.generate({
+						spell: true,
+						spellQuality: 'basic',
+						spellName: spellName
+					});
+					item.eq = true;
+					item.noSalvage = true;
+					this.getItem(item);
+				}
+			}, this);
 		},
 
 		createBag: function(x, y, items, ownerId) {
@@ -588,6 +589,7 @@ define([
 
 			var blueprint = this.blueprint;
 
+			var savedItems = extend(true, [], this.items);
 			var instancedItems = extend(true, [], this.items);
 			this.items = [];
 
@@ -625,7 +627,6 @@ define([
 						slot: useItem.slot,
 						type: useItem.type,
 						spell: !!useItem.ability,
-						stats: useItem.stats ? Object.keys(useItem.stats) : null,
 						magicFind: magicFind,
 						bonusMagicFind: bonusMagicFind
 					};
@@ -661,6 +662,8 @@ define([
 
 			if (this.items.length > 0)
 				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
+
+			this.items = savedItems;
 		},
 
 		giveItems: function(obj, hideMessage) {

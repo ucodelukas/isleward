@@ -37,14 +37,14 @@ define([
 			else
 				magicFind = extend(true, [], magicFind);
 
-			var bonusMagicFind = blueprint.bonusMagicFind;
+			var bonusMagicFind = blueprint.bonusMagicFind || 0;
 
 			var mLen = magicFind.length
 			for (var i = 0; i < mLen; i++) {
-				qualities[i] = Math.max(0, qualities[i] - (magicFind[i] * this.magicFindMult));
+				qualities[i] = Math.max(0, qualities[i] - magicFind[i]);
 				if (qualities[i] > 0) {
 					if (i == 0)
-						qualities[i] -= bonusMagicFind;
+						qualities[i] -= (bonusMagicFind * this.magicFindMult);
 					
 					break;
 				}
