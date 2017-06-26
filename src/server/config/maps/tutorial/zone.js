@@ -224,6 +224,19 @@ module.exports = {
 							worth: 10,
 							sprite: [11, 0],
 							infinite: true
+						},
+						{
+							name: 'Reinforced Fishing Rod',
+							type: 'Fishing Rod',
+							slot: 'tool',
+							quality: 1,
+							worth: 400,
+							sprite: [11, 0],
+							infinite: true,
+							stats: {
+								catchSpeed: 50,
+								catchChance: 35
+							}
 						}
 					],
 					level: {
