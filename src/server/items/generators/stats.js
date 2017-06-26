@@ -196,7 +196,7 @@ define([
 
 		generate: function(item, blueprint, result) {
 			if (item.slot == 'tool') {
-				statsFishingRod.generate(item, blueprint);
+				statsFishingRod.generate(item, blueprint, result);
 				return;
 			}
 

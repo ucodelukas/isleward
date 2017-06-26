@@ -18,7 +18,8 @@ module.exports = {
 			ttl: 30,
 			max: 1,
 			x: 97,
-			y: 33
+			y: 33,
+			quantity: [2, 4]
 		}
 	},
 	objects: {

@@ -46,7 +46,8 @@ define([
 		'catchChance': 'extra catch chance',
 		'catchSpeed': 'faster catch speed' ,
 		'fishRarity': 'higher fish rarity',
-		'fishWeight': 'increased fish weight'
+		'fishWeight': 'increased fish weight',
+		'fishItems': 'extra chance to hook items'
 	};
 
 	return {

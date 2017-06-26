@@ -19,10 +19,14 @@ define([
 
 			fishWeight: function(item, blueprint) {
 				return random.expNorm(0, 75);
+			},
+
+			fishItems: function(item, blueprint) {
+				return random.expNorm(0, 50);
 			}
 		},
 
-		generate: function(item, blueprint) {
+		generate: function(item, blueprint, result) {
 			var statCount = blueprint.statCount || (item.quality + 1);
 			var stats = Object.keys(this.generators);
 
@@ -31,8 +35,14 @@ define([
 
 			for (var i = 0; i < statCount; i++) {
 				var stat = stats[~~(Math.random() * stats.length)];
-
 				var value = Math.ceil(this.generators[stat].call(this, item, blueprint));
+
+				if (result) {
+					result.addStatMsgs.push({
+						stat: stat,
+						value: value
+					});
+				}
 
 				if (!item.stats[stat])
 					item.stats[stat] = 0;

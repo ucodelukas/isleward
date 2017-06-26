@@ -73,7 +73,22 @@ define([
 				}
 			}
 
-			var obj = this.objects.buildObjects([node.blueprint]);
+			var quantity = 1;
+			if (blueprint.quantity)
+				quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
+
+			var objBlueprint = extend(true, {}, node.blueprint);
+			objBlueprint.properties = {
+				cpnResourceNode: {
+					nodeType: blueprint.type,
+					ttl: blueprint.ttl,
+					xp: this.map.zone.level * this.map.zone.level,
+					blueprint: blueprint,
+					quantity: quantity
+				}
+			};
+
+			var obj = this.objects.buildObjects([objBlueprint]);
 
 			this.syncer.queue('onGetObject', {
 				x: obj.x,
@@ -83,13 +98,6 @@ define([
 					row: 0,
 					col: 4
 				}]
-			});
-
-			obj.addComponent('resourceNode', {
-				type: blueprint.type,
-				ttl: blueprint.ttl,
-				xp: this.map.zone.level * this.map.zone.level,
-				blueprint: blueprint
 			});
 
 			var inventory = obj.addComponent('inventory');
@@ -107,7 +115,7 @@ define([
 			};
 
 			if (blueprint.type == 'fish')
-				item.stackable = false;
+				item.noStack = true;
 
 			inventory.getItem(item);
 

@@ -26,7 +26,7 @@ define([
 
 			var ttlMax = firstNode.resourceNode.ttl || this.defaultTtlMax;
 
-			if (firstNode.resourceNode.type == 'fish') {
+			if (firstNode.resourceNode.nodeType == 'fish') {
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 
@@ -49,13 +49,15 @@ define([
 
 				var progress = 100 - ~~((this.gatheringTtl / this.gatheringTtlMax) * 100);
 				this.obj.syncer.set(true, 'gatherer', 'progress', progress);
-				if (gathering.resourceNode.type == 'fish')
+				if (gathering.resourceNode.nodeType == 'fish')
 					this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 				return;
 			}
 
-			if (gathering.resourceNode.type == 'fish') {
+			var isFish = (gathering.resourceNode.nodeType == 'fish');
+
+			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 
@@ -106,20 +108,53 @@ define([
 				});
 			}
 
-			this.nodes.spliceWhere(n => n == gathering);
+			var items = extend(true, [], gathering.inventory.items);
+			if (isFish) {
+				var rod = this.obj.equipment.eq.tool;
+				rod = this.obj.inventory.findItem(rod);
+				var itemChance = 1 + (rod.stats.fishItem || 0);
+				if (~~(Math.random() * 100) < itemChance) {
+					gathering.inventory.items = [{
+						name: 'Cerulean Pearl',
+						material: true,
+						quantity: 1,
+						sprite: [11, 9]
+					}];
+				}
+			}
 
 			gathering.inventory.giveItems(this.obj, true);
-			gathering.destroyed = true;
+			gathering.inventory.items = items;
+
+			gathering.resourceNode.gather();
 
 			this.obj.stats.getXp(gathering.resourceNode.xp);
 
 			this.obj.fireEvent('afterGatherResource');
 
+			if (this.gathering.destroyed) {
+				if (isFish) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'The school has been depleted'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+				}
+
+				this.nodes.spliceWhere(n => n == gathering);
+			}
+
 			this.gathering = null;
 		},
 
 		enter: function(node) {
-			var nodeType = node.resourceNode.type;
+			var nodeType = node.resourceNode.nodeType;
 			var msg = `Press G to $ (${node.name})`;
 			msg = msg.replace('$', {
 				herb: 'gather',

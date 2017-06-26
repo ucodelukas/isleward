@@ -20,6 +20,12 @@ define([
 			obj.gatherer.exit(this.obj);
 		},
 
+		gather: function() {
+			this.quantity--;
+			if (!this.quantity)
+				this.obj.destroyed = true;
+		},
+
 		simplify: function() {
 			return {
 				type: 'resourceNode'

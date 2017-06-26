@@ -20,7 +20,8 @@ define([
 		'catchChance',
 		'catchSpeed',
 		'fishRarity',
-		'fishWeight'
+		'fishWeight',
+		'fishItems'
 	];
 
 	return {

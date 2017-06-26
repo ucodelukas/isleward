@@ -187,9 +187,27 @@ define([
 				`twist`
 			],
 			neck: [
+				`choker`,
 				`curio`,
 				`chain`,
 				`noose`
+			],
+			tool: [
+				`angler`,
+				`bait-caster`,
+				`baiter`,
+				`branch`,
+				`fish-catcher`,
+				`fish-stick`,
+				`fisher`,
+				`hook`,
+				`line`,
+				`lure`,
+				`pole`,
+				`rod`,
+				`stick`,
+				`tackle`,
+				`twig`
 			]
 		}
 	};

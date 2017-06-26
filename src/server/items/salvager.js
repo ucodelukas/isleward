@@ -28,6 +28,14 @@ define([
 				chance: 100,
 				quantity: 1
 			}]
+		}, {
+			list: ['tool'],
+			materials: [{
+				name: 'Cerulean Pearl',
+				chance: 100,
+				quantity: 1,
+				qualityMult: 1.1
+			}]
 		}],
 		types: [{
 			list: ['Helmet', 'Belt', 'Legplates', 'Gauntlets', 'Steel Boots', 'Breastplate'],
@@ -51,6 +59,14 @@ define([
 				name: 'Leather Scrap',
 				chance: 100,
 				quantity: 3,
+				qualityMult: 1.1
+			}]
+		}, {
+			list: ['Fishing Rod'],
+			materials: [{
+				name: 'Ashen Pearl',
+				chance: 100,
+				quantity: 1,
 				qualityMult: 1.1
 			}]
 		}]
@@ -80,6 +96,9 @@ define([
 		},
 		'Legendary Essence': {
 			sprite: [0, 6]
+		},
+		'Ashen Pearl': {
+			sprite: [11, 9]
 		}
 	};
 
