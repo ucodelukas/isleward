@@ -12,7 +12,7 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 200,
+		cdMax: 10,
 
 		init: function(instance) {
 			this.objects = instance.objects;
@@ -25,11 +25,10 @@ define([
 		register: function(name, blueprint) {
 			blueprint = extend(true, {}, blueprint, herbs[name], {
 				name: name
-			});	
+			});
 
 			var max = blueprint.max;
 			delete blueprint.max;
-			delete blueprint.type;
 
 			this.nodes.push({
 				cd: 0,
@@ -47,38 +46,30 @@ define([
 			var h = this.physics.height;
 
 			var spawn = this.map.spawn[0];
-			var x = null;
-			var y = null;
+			var x = blueprint.x || ~~(Math.random() * w);
+			var y = blueprint.y || ~~(Math.random() * h);
 
-			while (true) {
-				x = ~~(Math.random() * w);
-				y = ~~(Math.random() * h);
+			if (this.physics.isTileBlocking(x, y))
+				return false;
 
-				if (this.physics.isTileBlocking(x, y))
-					continue;
+			var path = this.physics.getPath(spawn, {
+				x: x,
+				y: y
+			});
+
+			var endTile = path[path.length - 1];
+			if (!endTile)
+				return false;
+			else if ((endTile.x != x) || (endTile.y != y))
+				return false;
+			else {
+				//Don't spawn in rooms
+				var cell = this.physics.getCell(x, y);
+				if (cell.some(c => c.notice))
+					return false;
 				else {
-					var path = this.physics.getPath(spawn, {
-						x: x,
-						y: y
-					});
-
-					var endTile = path[path.length - 1];
-					if (!endTile)
-						continue;
-					else if ((endTile.x != x) || (endTile.y != y))
-						continue;
-					else {
-						//Don't spawn in rooms
-						var cell = this.physics.getCell(x, y);
-						if (cell.some(c => c.notice))
-							continue;
-						else {
-							blueprint.x = x;
-							blueprint.y = y;
-
-							break;
-						}
-					}
+					blueprint.x = x;
+					blueprint.y = y;
 				}
 			}
 
@@ -94,20 +85,33 @@ define([
 				}]
 			});
 
-			obj.addComponent('resourceNode').xp = (this.map.zone.level * this.map.zone.level);
+			obj.addComponent('resourceNode', {
+				type: blueprint.type,
+				ttl: blueprint.ttl,
+				xp: this.map.zone.level * this.map.zone.level,
+				blueprint: blueprint
+			});
+
 			var inventory = obj.addComponent('inventory');
 			obj.layerName = 'objects';
 
 			node.spawns.push(obj);
 
-			inventory.getItem({
+			var item = {
 				material: true,
-				type: 'herb',
+				type: node.type,
 				sprite: node.blueprint.itemSprite,
 				name: node.blueprint.name,
 				quantity: 1,
 				quality: 0
-			});
+			};
+
+			if (blueprint.type == 'fish')
+				item.stackable = false;
+
+			inventory.getItem(item);
+
+			return true;
 		},
 
 		update: function() {
@@ -134,9 +138,10 @@ define([
 				}
 
 				if ((sLen < node.max) && (node.cd == 0)) {
-					node.cd = this.cdMax;
-					this.spawn(node);
-					break;
+					if (this.spawn(node)) {
+						node.cd = this.cdMax;
+						break;
+					}
 				}
 			}
 		}

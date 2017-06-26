@@ -18,6 +18,12 @@ define([
 			sheetName: 'tiles',
 			cell: 51,
 			itemSprite: [1, 0]
+		},
+		'Sun Carp': {
+			sheetName: 'objects',
+			cell: 45,
+			itemSprite: [11, 2],
+			baseWeight: 3
 		}
 	};
 });

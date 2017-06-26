@@ -13,7 +13,7 @@ define([
 		},
 
 		extend: function(msg) {
-			events.emit('onShowProgress', 'Gathering...', msg.progress);
+			events.emit('onShowProgress', (msg.action || 'Gathering') + '...', msg.progress);
 		},
 
 		onKeyDown: function(key) {

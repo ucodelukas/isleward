@@ -12,6 +12,13 @@ module.exports = {
 		Emberleaf: {
 			type: 'herb',
 			max: 1
+		},
+		'Sun Carp': {
+			type: 'fish',
+			ttl: 30,
+			max: 1,
+			x: 97,
+			y: 33
 		}
 	},
 	objects: {
@@ -208,6 +215,17 @@ module.exports = {
 						min: 3,
 						max: 5
 					},
+					forceItems: [
+						{
+							name: 'Flimsy Fishing Rod',
+							type: 'Fishing Rod',
+							slot: 'tool',
+							quality: 0,
+							worth: 10,
+							sprite: [11, 0],
+							infinite: true
+						}
+					],
 					level: {
 						min: 1,
 						max: 5

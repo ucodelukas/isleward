@@ -27,10 +27,8 @@ define([
 			if ((typeBlueprint.material) && (blueprint.statMult.armor))
 				blueprint.statMult.armor *= armorMaterials[typeBlueprint.material].statMult.armor;
 
-			if (item.slot == 'tool') {
-				blueprint.noStats = true;
+			if (item.slot == 'tool')
 				blueprint.noName = true;
-			}
 		}
 	}
 });

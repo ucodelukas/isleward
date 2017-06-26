@@ -1,7 +1,7 @@
 define([
-
+	'items/generators/statsFishingRod'
 ], function(
-
+	statsFishingRod
 ) {
 	return {
 		generators: {
@@ -195,6 +195,11 @@ define([
 		mainStatChance: 0.7,
 
 		generate: function(item, blueprint, result) {
+			if (item.slot == 'tool') {
+				statsFishingRod.generate(item, blueprint);
+				return;
+			}
+
 			if (!blueprint.statCount)
 				item.stats = {};
 

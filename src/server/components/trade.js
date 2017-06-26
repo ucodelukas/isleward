@@ -23,6 +23,20 @@ define([
 		init: function(blueprint) {
 			this.gold = blueprint.gold;
 
+			(blueprint.forceItems || []).forEach(function(f, i) {
+				var item = extend(true, {}, f);
+
+				var id = 0;
+				this.items.forEach(function(checkItem) {
+					if (checkItem.id >= id)
+						id = checkItem.id + 1;
+				});
+
+				item.id = id;
+
+				this.items.push(item);
+			}, this);
+
 			if (!blueprint.items)
 				return;
 
@@ -159,7 +173,7 @@ define([
 
 			if (msg.action == 'buyback')
 				targetTrade.removeBuyback(msg.itemId, this.obj.name);
-			else if (item.type != 'skin')
+			else if ((item.type != 'skin') && (!item.infinite))
 				targetTrade.removeItem(msg.itemId, this.obj.name);
 
 			targetTrade.gold += worth;
@@ -168,8 +182,13 @@ define([
 			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 
 			if (item.type != 'skin') {
-				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
-				this.obj.inventory.getItem(item);
+				if (!item.infinite)
+					this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
+				
+				var clonedItem = extend(true, {}, item);
+				delete clonedItem.infinite;
+
+				this.obj.inventory.getItem(clonedItem);
 			}
 			else {
 				this.obj.auth.saveSkin(item.id);

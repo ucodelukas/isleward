@@ -22,5 +22,17 @@ extend(true, random, {
 
 		var result = (mid + (roll * range));
 		return result;
+	},
+
+	expNorm: function(low, high) {
+		var roll = random.norm(0, 100);
+		if (roll > 50)
+			roll = 100 - roll;
+		
+		roll = (50 - roll) / 50;
+		
+		roll = low + ((high - low) * roll);
+
+		return roll;
 	}
 });
