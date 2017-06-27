@@ -1376,7 +1376,7 @@
                  "name":"sun carp school",
                  "properties":
                     {
-                     "resource":"sun carp"
+                     "resource":"Sun Carp"
                     },
                  "propertytypes":
                     {
@@ -1395,7 +1395,7 @@
                  "name":"sun carp school",
                  "properties":
                     {
-                     "resource":"sun carp"
+                     "resource":"Sun Carp"
                     },
                  "propertytypes":
                     {
@@ -1407,6 +1407,196 @@
                  "width":56,
                  "x":776,
                  "y":336
+                }, 
+                {
+                 "height":40,
+                 "id":640,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":784,
+                 "y":512
+                }, 
+                {
+                 "height":24,
+                 "id":641,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":776,
+                 "y":600
+                }, 
+                {
+                 "height":40,
+                 "id":642,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":552,
+                 "y":632
+                }, 
+                {
+                 "height":32,
+                 "id":643,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":528,
+                 "y":528
+                }, 
+                {
+                 "height":40,
+                 "id":645,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":456,
+                 "y":32
+                }, 
+                {
+                 "height":40,
+                 "id":646,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":328,
+                 "y":40
+                }, 
+                {
+                 "height":32,
+                 "id":647,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":56,
+                 "x":168,
+                 "y":152
+                }, 
+                {
+                 "height":40,
+                 "id":648,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":72,
+                 "y":320
+                }, 
+                {
+                 "height":32,
+                 "id":649,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":88,
+                 "y":496
+                }, 
+                {
+                 "height":32,
+                 "id":651,
+                 "name":"sun carp school",
+                 "properties":
+                    {
+                     "resource":"Sun Carp"
+                    },
+                 "propertytypes":
+                    {
+                     "resource":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":288,
+                 "y":488
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1414,7 +1604,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":640,
+ "nextobjectid":652,
  "orientation":"orthogonal",
  "properties":
     {

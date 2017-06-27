@@ -21,9 +21,9 @@ define([
 		},
 		'Sun Carp': {
 			sheetName: 'objects',
-			cell: 45,
 			itemSprite: [11, 2],
-			baseWeight: 3
+			baseWeight: 3,
+			ttl: 30
 		}
 	};
 });

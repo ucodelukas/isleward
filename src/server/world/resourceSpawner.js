@@ -12,7 +12,7 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 10,
+		cdMax: 200,
 
 		init: function(instance) {
 			this.objects = instance.objects;
@@ -23,6 +23,26 @@ define([
 		},
 
 		register: function(name, blueprint) {
+			var exists = this.nodes.find(n => (n.blueprint.name == name));
+			if (exists) {
+				if (!exists.blueprint.positions)
+					exists.blueprint.positions = [{
+						x: exists.blueprint.x,
+						y: exists.blueprint.y,
+						width: exists.blueprint.width,
+						height: exists.blueprint.height
+					}];
+
+				exists.blueprint.positions.push({
+					x: blueprint.x,
+					y: blueprint.y,
+					width: blueprint.width,
+					height: blueprint.height
+				});
+
+				return;
+			}
+
 			blueprint = extend(true, {}, blueprint, herbs[name], {
 				name: name
 			});
@@ -45,13 +65,16 @@ define([
 			var w = this.physics.width;
 			var h = this.physics.height;
 
-			var spawn = this.map.spawn[0];
 			var x = blueprint.x || ~~(Math.random() * w);
 			var y = blueprint.y || ~~(Math.random() * h);
+
+			var position = null;
 
 			if (blueprint.type == 'herb') {
 				if (this.physics.isTileBlocking(x, y))
 					return false;
+
+				var spawn = this.map.spawn[0];
 
 				var path = this.physics.getPath(spawn, {
 					x: x,
@@ -73,13 +96,20 @@ define([
 						blueprint.y = y;
 					}
 				}
+			} else if (blueprint.positions) {
+				//Find all possible positions in which a node hasn't spawned yet
+				position = blueprint.positions.filter(f => !node.spawns.some(s => ((s.x == f.x) && (s.y == f.y))));
+				if (position.length == 0)
+					return false;
+
+				position = position[~~(Math.random() * position.length)];
 			}
 
 			var quantity = 1;
 			if (blueprint.quantity)
 				quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
 
-			var objBlueprint = extend(true, {}, blueprint);
+			var objBlueprint = extend(true, {}, blueprint, position);
 			objBlueprint.properties = {
 				cpnResourceNode: {
 					nodeType: blueprint.type,

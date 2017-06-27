@@ -36,6 +36,12 @@ define([
 
 			this.gatheringTtlMax = ttlMax;
 			this.gatheringTtl = this.gatheringTtlMax;
+
+			if (firstNode.width) {
+				['x', 'y', 'width', 'height'].forEach(function(p) {
+					this.obj.syncer.set(true, 'gatherer', p, firstNode[p]);
+				}, this);
+			}
 		},
 
 		update: function() {
@@ -54,6 +60,8 @@ define([
 
 				return;
 			}
+
+			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
 
 			var isFish = (gathering.resourceNode.nodeType == 'fish');
 
