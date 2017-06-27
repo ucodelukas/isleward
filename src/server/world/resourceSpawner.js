@@ -49,27 +49,29 @@ define([
 			var x = blueprint.x || ~~(Math.random() * w);
 			var y = blueprint.y || ~~(Math.random() * h);
 
-			if (this.physics.isTileBlocking(x, y))
-				return false;
+			if (blueprint.type == 'herb') {
+				if (this.physics.isTileBlocking(x, y))
+					return false;
 
-			var path = this.physics.getPath(spawn, {
-				x: x,
-				y: y
-			});
+				var path = this.physics.getPath(spawn, {
+					x: x,
+					y: y
+				});
 
-			var endTile = path[path.length - 1];
-			if (!endTile)
-				return false;
-			else if ((endTile.x != x) || (endTile.y != y))
-				return false;
-			else {
-				//Don't spawn in rooms
-				var cell = this.physics.getCell(x, y);
-				if (cell.some(c => c.notice))
+				var endTile = path[path.length - 1];
+				if (!endTile)
+					return false;
+				else if ((endTile.x != x) || (endTile.y != y))
 					return false;
 				else {
-					blueprint.x = x;
-					blueprint.y = y;
+					//Don't spawn in rooms
+					var cell = this.physics.getCell(x, y);
+					if (cell.some(c => c.notice))
+						return false;
+					else {
+						blueprint.x = x;
+						blueprint.y = y;
+					}
 				}
 			}
 
@@ -77,7 +79,7 @@ define([
 			if (blueprint.quantity)
 				quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
 
-			var objBlueprint = extend(true, {}, node.blueprint);
+			var objBlueprint = extend(true, {}, blueprint);
 			objBlueprint.properties = {
 				cpnResourceNode: {
 					nodeType: blueprint.type,
@@ -90,15 +92,17 @@ define([
 
 			var obj = this.objects.buildObjects([objBlueprint]);
 
-			this.syncer.queue('onGetObject', {
-				x: obj.x,
-				y: obj.y,
-				components: [{
-					type: 'attackAnimation',
-					row: 0,
-					col: 4
-				}]
-			});
+			if (blueprint.type == 'herb') {
+				this.syncer.queue('onGetObject', {
+					x: obj.x,
+					y: obj.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}
 
 			var inventory = obj.addComponent('inventory');
 			obj.layerName = 'objects';

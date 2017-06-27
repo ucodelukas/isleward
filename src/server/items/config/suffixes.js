@@ -204,6 +204,7 @@ define([
 				`line`,
 				`lure`,
 				`pole`,
+				`reel`,
 				`rod`,
 				`stick`,
 				`tackle`,

@@ -12,17 +12,15 @@ module.exports = {
 		Emberleaf: {
 			type: 'herb',
 			max: 1
-		},
-		'Sun Carp': {
-			type: 'fish',
-			ttl: 30,
-			max: 1,
-			x: 97,
-			y: 33,
-			quantity: [2, 4]
 		}
 	},
 	objects: {
+		'sun carp school': {
+			max: 1,
+			type: 'fish',
+			quanity: [2, 2],
+			ttl: 30
+		},
 		shophermit: {
 			properties: {
 				cpnNotice: {

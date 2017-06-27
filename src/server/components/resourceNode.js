@@ -28,7 +28,8 @@ define([
 
 		simplify: function() {
 			return {
-				type: 'resourceNode'
+				type: 'resourceNode',
+				nodeType: this.nodeType
 			};
 		}
 	};
