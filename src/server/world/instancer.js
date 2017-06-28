@@ -8,7 +8,8 @@ define([
 	'config/spells/spellCallbacks',
 	'config/quests/questBuilder',
 	'world/randomMap',
-	'world/customMap'
+	'world/customMap',
+	'events/events'
 ], function(
 	map,
 	syncer,
@@ -19,7 +20,8 @@ define([
 	spellCallbacks,
 	questBuilder,
 	randomMap,
-	customMap
+	customMap,
+	events
 ) {
 	return {
 		instances: [],
@@ -36,39 +38,24 @@ define([
 			map.init(args);
 
 			if (!map.instanced) {
-				spawners.init({
-					objects: objects,
-					syncer: syncer,
-					zone: map.zone
-				});
-
-				map.create();
-				map.clientMap.zoneId = this.zoneId;
-
-				resourceSpawner.init({
-					objects: objects,
-					syncer: syncer,
-					zone: map.zone,
-					physics: physics,
-					map: map
-				});
-
-				syncer.init({
-					objects: objects
-				});
-
-				objects.init({
+				var fakeInstance = {
 					objects: objects,
 					syncer: syncer,
 					physics: physics,
 					zoneId: this.zoneId,
 					spawners: spawners,
-					questBuilder: questBuilder
-				});
+					questBuilder: questBuilder,
+					events: events,
+					zone: map.zone,
+					map: map
+				};
 
-				questBuilder.init({
-					spawners: spawners
-				});
+				spawners.init(fakeInstance);
+
+				map.create();
+				map.clientMap.zoneId = this.zoneId;
+
+				[resourceSpawner, syncer, objects, questBuilder, events].forEach(i => i.init(fakeInstance));
 
 				this.addObject = this.nonInstanced.addObject.bind(this);
 				this.onAddObject = this.nonInstanced.onAddObject.bind(this);
@@ -109,7 +96,7 @@ define([
 				objects.update();
 				spawners.update();
 				resourceSpawner.update();
-
+				events.update();
 				syncer.update();
 
 				setTimeout(this.tick.bind(this), this.speed);
@@ -452,19 +439,16 @@ define([
 					zone: map.zone,
 					closeTtl: null,
 					questBuilder: extend(true, {}, questBuilder),
+					events: extend(true, {}, events),
 					map: {
+						name: map.name,
 						spawn: extend(true, [], map.spawn),
 						clientMap: extend(true, {}, map.clientMap),
 						getSpawnPos: map.getSpawnPos.bind(map)
 					}
 				};
 
-				instance.objects.init(instance);
-				instance.spawners.init(instance);
-				instance.syncer.init(instance);
-				instance.resourceSpawner.init(instance);
-
-				instance.questBuilder.init(instance);
+				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events'].forEach(i => instance[i].init(instance));
 
 				this.instances.push(instance);
 

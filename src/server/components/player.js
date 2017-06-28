@@ -86,6 +86,7 @@ define([
 			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
 			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
 			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
+			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 
 			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
 			if (blueprintEffects.effects) {
