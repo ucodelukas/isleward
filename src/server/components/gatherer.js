@@ -69,7 +69,8 @@ define([
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 
-				var catchChance = 30 + (rod.stats.catchChance || 0);
+				var catchChance = 40 + (rod.stats.catchChance || 0);
+				console.log(catchChance);
 				if (~~(Math.random() * 100) >= catchChance) {
 					process.send({
 						method: 'events',

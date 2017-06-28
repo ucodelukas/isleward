@@ -43,12 +43,16 @@ define([
 		},
 
 		renderManual: function() {
+			var cdMax = this.cdMax;
+			if (((this.lineGrow) && (this.linePercentage < 1)) || ((this.shrinking) && (this.linePercentage > 0)))
+				cdMax = 1;
+
 			if (this.cd > 0) {
 				this.cd--;
 				return;
 			}
 
-			this.cd = this.cdMax;
+			this.cd = cdMax;
 
 			lightningBuilder.destroy(this.effect);
 			this.effect = null;
@@ -83,7 +87,7 @@ define([
 			if (changeTo) {
 				var linePercentage = this.linePercentage;
 				if (this.shrinking) {
-					linePercentage /= 3;
+					linePercentage /= 1.5;
 				} else {
 					linePercentage *= 1.5;
 					if (linePercentage > 1)

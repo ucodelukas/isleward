@@ -6,7 +6,7 @@ define([
 	return {
 		generators: {
 			catchChance: function(item, blueprint) {
-				return random.expNorm(0, 70);
+				return random.expNorm(0, 60);
 			},
 
 			catchSpeed: function(item, blueprint) {
