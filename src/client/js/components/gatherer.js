@@ -16,7 +16,7 @@ define([
 		},
 
 		extend: function(msg) {
-			if (msg.width) {
+			if ((msg.width) && (msg.progress != 100)) {
 				if (this.effect)
 					this.effect.destroyed = true;
 
@@ -29,6 +29,9 @@ define([
 						break;
 				}
 
+				this.obj.flipX = (x < this.obj.x);
+				this.obj.setSpritePosition();
+
 				this.effect = this.obj.addComponent('lightningEffect', {
 					new: true,
 					toX: x,
@@ -36,11 +39,13 @@ define([
 					ttl: -1,
 					divisions: 4,
 					cdMax: 12,
-					colors: [0xfafcfc, 0xc0c3cf, 0xc0c3cf],
-					maxDeviate: 5
+					colors: [0xc0c3cf, 0xc0c3cf, 0x929398],
+					maxDeviate: 5,
+					lineGrow: true,
+					lineShrink: true
 				});
 			} else {
-				if (msg.progress == 100) {
+				if ((msg.progress == 100) && (this.effect)) {
 					this.effect.destroyed = true;
 					this.effect = null;
 				}
