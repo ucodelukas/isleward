@@ -9,7 +9,8 @@ define([
 	'config/quests/questBuilder',
 	'world/randomMap',
 	'world/customMap',
-	'events/events'
+	'events/events',
+	'misc/scheduler'
 ], function(
 	map,
 	syncer,
@@ -21,7 +22,8 @@ define([
 	questBuilder,
 	randomMap,
 	customMap,
-	events
+	events,
+	scheduler
 ) {
 	return {
 		instances: [],
@@ -47,10 +49,12 @@ define([
 					questBuilder: questBuilder,
 					events: events,
 					zone: map.zone,
-					map: map
+					map: map,
+					scheduler: scheduler
 				};
 
 				spawners.init(fakeInstance);
+				scheduler.init();
 
 				map.create();
 				map.clientMap.zoneId = this.zoneId;
@@ -98,6 +102,7 @@ define([
 				resourceSpawner.update();
 				events.update();
 				syncer.update();
+				scheduler.update();
 
 				setTimeout(this.tick.bind(this), this.speed);
 			},
@@ -234,6 +239,7 @@ define([
 					instance.objects.update();
 					instance.spawners.update();
 					instance.resourceSpawner.update();
+					instance.scheduler.update();
 
 					instance.syncer.update();
 
@@ -440,6 +446,7 @@ define([
 					closeTtl: null,
 					questBuilder: extend(true, {}, questBuilder),
 					events: extend(true, {}, events),
+					scheduler: extend(true, {}, scheduler),
 					map: {
 						name: map.name,
 						spawn: extend(true, [], map.spawn),
@@ -448,7 +455,7 @@ define([
 					}
 				};
 
-				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events'].forEach(i => instance[i].init(instance));
+				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler'].forEach(i => instance[i].init(instance));
 
 				this.instances.push(instance);
 

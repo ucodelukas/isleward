@@ -12,8 +12,7 @@ define([
 			var configs = null;
 			try {
 				configs = require('../config/maps/' + this.instance.map.name + '/events');
-			}
-			catch (e) {}
+			} catch (e) {}
 
 			if (!configs)
 				return;
@@ -27,21 +26,24 @@ define([
 			if (!configs)
 				return;
 
+			var scheduler = this.instance.scheduler;
+
 			var cLen = configs.length;
 			for (var i = 0; i < cLen; i++) {
 				var c = configs[i];
+
 				if (c.event) {
-					this.updateEvent(c.event);					
+					this.updateEvent(c.event);
 					continue;
-				}
-				else if (c.ttl > 0) {
+				} else if ((c.ttl) && (c.ttl > 0)) {
 					c.ttl--;
 					continue;
-				}
+				} else if ((c.cron) && (!scheduler.shouldRun(c)))
+					continue;
 
 				c.event = this.startEvent(c);
 			}
-		}, 
+		},
 
 		startEvent: function(config) {
 			var event = {
@@ -95,7 +97,7 @@ define([
 					instance: this.instance,
 					event: event
 				}, phaseTemplate, typeTemplate, p);
-				
+
 				event.phases.push(phase);
 
 				phase.init();
@@ -131,10 +133,16 @@ define([
 				for (var j = 0; j < oLen; j++) {
 					var o = objects[j];
 
-					if ((Math.abs(x - o.x) < distance) && (Math.abs(y - o.y) < distance)) {
+					if (
+						(distance == -1) ||
+						(!distance) ||
+						(
+							(Math.abs(x - o.x) < distance) &&
+							(Math.abs(y - o.y) < distance)
+						)
+					) {
 						event.participators.push(obj);
 						result.push(event);
-						break;
 					}
 				}
 			}
