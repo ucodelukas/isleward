@@ -125,7 +125,7 @@ define([
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 
-			builtSpell.id = spellId;
+			builtSpell.id = (options.id == null) ? spellId : options.id;
 			this.spells.push(builtSpell);
 			this.spells.sort(function(a, b) {
 				return (a.id - b.id);

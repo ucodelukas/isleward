@@ -78,7 +78,6 @@ define([
 					});
 				}
 			}
-
 		},
 
 		//Client Actions

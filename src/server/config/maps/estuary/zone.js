@@ -11,7 +11,7 @@ module.exports = {
 			},
 
 			regular: {
-				dmgMult: 8,
+				dmgMult: 2,
 
 				drops: {
 					chance: 45,
