@@ -12,7 +12,7 @@ define([
 			global.io = require('socket.io')(server);
 
 			app.use(function(req, res, next) {
-				if (req.url.indexOf('/server') != 0)
+				if ((req.url.indexOf('/server') != 0) && (req.url.indexOf('/mods') != 0))
 					req.url = '/client/' + req.url;
 				else
 					req.url.substr(7);
