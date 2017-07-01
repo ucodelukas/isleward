@@ -11,14 +11,15 @@ module.exports = {
 			},
 
 			regular: {
-				dmgMult: 8,
+				hpMult: 1.5,
+				dmgMult: 2,
 
 				drops: {
 					chance: 45,
 					rolls: 1,
 					magicFind: 500
 				}
-			}	
+			}
 		},
 		'giant gull': {
 			level: 6,

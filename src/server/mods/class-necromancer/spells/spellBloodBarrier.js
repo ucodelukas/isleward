@@ -39,7 +39,7 @@ define([
 			if ((this.obj.destroyed) || (target.destroyed))
 				return;
 
-			var amount = this.obj.stats.values.hpMax / 100 * this.drainPercentage;
+			var amount = (this.obj.stats.values.hpMax / 100) * this.drainPercentage;
 			var damage = {
 				amount: amount
 			};
