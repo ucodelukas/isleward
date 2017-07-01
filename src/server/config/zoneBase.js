@@ -34,8 +34,8 @@ define([
 					count: 1,
 					chance: 1,
 
-					hpMult: 1,
-					dmgMult: 1,
+					hpMult: 1.5,
+					dmgMult: 1.5,
 
 					drops: {
 						chance: 100,
@@ -45,8 +45,8 @@ define([
 				},
 
 				champion: {
-					hpMult: 1,
-					dmgMult: 1,
+					hpMult: 2,
+					dmgMult: 2,
 
 					drops: {
 						chance: 100,

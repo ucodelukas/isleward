@@ -11,6 +11,7 @@ module.exports = {
 			},
 
 			regular: {
+				hpMult: 1.5,
 				dmgMult: 2,
 
 				drops: {
@@ -18,7 +19,7 @@ module.exports = {
 					rolls: 1,
 					magicFind: 500
 				}
-			}	
+			}
 		},
 		'giant gull': {
 			level: 6,
