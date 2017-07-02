@@ -11,6 +11,7 @@ define([
 ) {
 	return {
 		tpl: template,
+		modal: true,
 
 		postRender: function() {			
 			this.onEvent('onContextMenu', this.onContextMenu.bind(this));

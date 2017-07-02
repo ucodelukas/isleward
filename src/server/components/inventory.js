@@ -34,12 +34,16 @@ define([
 				var item = items[i];
 
 				//Hacks for old items
-				if ((item.spell) && (!item.spell.rolls))
+				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
+					items.splice(i, 1);
+					i--;
+					iLen--;
 					continue;
-				else if ((item.spell) && (item.type == 'Spear')) {
+				} else if ((item.spell) && (item.type == 'Spear')) {
 					item.spell.properties = item.spell.properties || {};
 					item.spell.properties.range = item.range;
-				}
+				} else if (item.quantity == NaN)
+					item.quantity = 1;
 			}
 
 			this.hookItemEvents(items);
@@ -48,25 +52,8 @@ define([
 				this.getItem(items[i], true);
 			}
 
-			if ((this.obj.player) && (!isTransfer)) {
+			if ((this.obj.player) && (!isTransfer))
 				this.getDefaultAbilities();
-
-				/*this.getItem(generator.generate({
-					spell: true,
-					spellName: 'arcane barrier'
-				}));*/
-
-				/*for (var i = 0; i < 1; i++) {
-					var item = generator.generate({
-						slot: 'twoHanded',
-						type: 'Spear',
-						quality: 4,
-						level: 1
-					});
-
-					this.getItem(item);
-				}*/
-			}
 
 			delete blueprint.items;
 
@@ -91,7 +78,6 @@ define([
 					});
 				}
 			}
-
 		},
 
 		//Client Actions
@@ -115,54 +101,62 @@ define([
 			this.resolveCallback(msg, result);
 		},
 
-		learnAbility: function(id, forceLearn) {
-			var replaceId = null;
-			var newSpellId = id.spellId;
-			if (id.id != null) {
-				replaceId = id.replaceId;
-				id = id.id;
+		learnAbility: function(itemId, runeSlot) {
+			if (itemId.itemId != null) {
+				var msg = itemId;
+				itemId = msg.itemId;
+				runeSlot = msg.slot;
 			}
 
-			var item = this.findItem(id);
-			if ((!item) || (!item.spell) || ((item.spellId == null) && (item.eq) && (!forceLearn))) {
-				if (item)
-					item.eq = false;
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
 				return;
 			}
 
 			var spellbook = this.obj.spellbook;
 
-			if ((item.eq) && (!forceLearn)) {
-				delete item.eq;
-				spellbook.removeSpellById(item.spellId);
-				delete item.spellId;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			if (item.slot == 'twoHanded')
+				runeSlot = 0;
+			else if (runeSlot == null) {
+				if (!this.items.some(i => (i.runeSlot == 2)))
+					runeSlot = 2;
+				else
+					runeSlot = 1;
+			}
+
+			var currentEq = this.items.find(i => (i.runeSlot == runeSlot));
+			if (currentEq) {
+				spellbook.removeSpellById(runeSlot);
+				delete currentEq.eq;
+				delete currentEq.runeSlot;
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', currentEq);
+			}
+
+			item.eq = true;
+			item.runeSlot = runeSlot;
+			spellbook.addSpellFromRune(item.spell, runeSlot);
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		unlearnAbility: function(itemId) {
+			if (itemId.itemId != null)
+				itemId = itemId.itemId;
+
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
 				return;
 			}
 
-			if (replaceId != null) {
-				var replaceItem = this.findItem(replaceId);
-				if (replaceItem) {
-					delete replaceItem.eq;
-					spellbook.removeSpellById(replaceItem.spellId);
-					newSpellId = replaceItem.spellId;
-					delete replaceItem.spellId;
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', replaceItem);
-				}
-			}
-			
-			if (spellbook.spells.length >= 3) {
-				if (item.slot)
-					item.spellId = -1;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				return;
-			}
-
-			item.spellId = spellbook.addSpellFromRune(item.spell, newSpellId);
-			if (item.spellId != -1)
-				item.eq = true;
-			else
-				delete item.spell;
+			var spellbook = this.obj.spellbook;
+			spellbook.removeSpellById(item.runeSlot);
+			delete item.eq;
+			delete item.runeSlot;
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
@@ -176,7 +170,7 @@ define([
 			var stash = this.obj.stash;
 			if (!stash.active)
 				return;
-			
+
 			var clonedItem = extend(true, {}, item);
 			this.destroyItem(id);
 			stash.deposit(clonedItem);
@@ -326,25 +320,25 @@ define([
 				this.getItem(item);
 			}
 
-			var hasSpell = this.items.some(function(i) {
-				return (
-					(i.spell) &&
-					(i.spell.rolls) &&
-					((i.spell.rolls.damage != null) || (i.spell.rolls.healing != null)) &&
-					(i.slot != 'twoHanded')
-				);
-			});
-
-			if (!hasSpell) {
-				var item = generator.generate({
-					spell: true,
-					spellQuality: 'basic',
-					spellName: classes.spells[this.obj.class][0]
+			classes.spells[this.obj.class].forEach(function(spellName) {
+				var hasSpell = this.items.some(function(i) {
+					return (
+						(i.spell) &&
+						(i.spell.name.toLowerCase() == spellName)
+					);
 				});
-				item.eq = true;
-				item.noSalvage = true;
-				this.getItem(item);
-			}
+
+				if (!hasSpell) {
+					var item = generator.generate({
+						spell: true,
+						spellQuality: 'basic',
+						spellName: spellName
+					});
+					item.eq = true;
+					item.noSalvage = true;
+					this.getItem(item);
+				}
+			}, this);
 		},
 
 		createBag: function(x, y, items, ownerId) {
@@ -390,7 +384,7 @@ define([
 
 			return obj;
 		},
-		
+
 		getItem: function(item, hideMessage) {
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
@@ -413,7 +407,7 @@ define([
 					exists = true;
 					if (!existItem.quantity)
 						existItem.quantity = 1;
-					existItem.quantity += item.quantity;
+					existItem.quantity += (item.quantity || 1);
 					item = existItem;
 				}
 			}
@@ -508,7 +502,7 @@ define([
 
 			if (item.eq) {
 				if (item.ability)
-					this.learnAbility(item.id, true);
+					this.learnAbility(item.id, item.runeSlot);
 				else
 					this.obj.equipment.equip(item.id);
 			} else {
@@ -521,7 +515,7 @@ define([
 						text: e.text,
 						properties: e.properties
 					}));
-					
+
 					var reputation = this.obj.reputation;
 
 					//Don't do this check if we don't have a reputation cpn. That means this is most likely a bag
@@ -585,29 +579,13 @@ define([
 
 			var blueprint = this.blueprint;
 
-			if (blueprint.noRandom) {
-				this.items = [];
-				var blueprints = blueprint.blueprints;
-				for (var i = 0; i < blueprints.length; i++) {
-					var drop = blueprints[i];
-					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
-						continue;
+			var savedItems = extend(true, [], this.items);
+			var instancedItems = extend(true, [], this.items);
+			this.items = [];
 
-					drop.level = drop.level || level;
-					drop.magicFind = magicFind;
-
-					this.getItem(generator.generate(drop), true);
-				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
-
-				if (this.items.length > 0)
-					this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-			} else {
-				var instancedItems = extend(true, [], this.items);
-				var useItems = [];
-
-				var magicFind = (blueprint.magicFind || 0) + killSource.stats.values.magicFind;
+			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
+				var magicFind = (blueprint.magicFind || 0);
+				var bonusMagicFind = killSource.stats.values.magicFind;
 				for (var i = 0; i < blueprint.rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
@@ -639,20 +617,43 @@ define([
 						slot: useItem.slot,
 						type: useItem.type,
 						spell: !!useItem.ability,
-						stats: useItem.stats ? Object.keys(useItem.stats) : null,
-						magicFind: magicFind
+						magicFind: magicFind,
+						bonusMagicFind: bonusMagicFind
 					};
 
 					useItem = generator.generate(itemBlueprint);
 
-					useItems.push(useItem);
+					this.getItem(useItem);
 				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, useItems);
-
-				if (useItems.length > 0)
-					this.createBag(this.obj.x, this.obj.y, useItems, ownerId);
 			}
+
+			if (blueprint.noRandom) {
+				var blueprints = blueprint.blueprints;
+				for (var i = 0; i < blueprints.length; i++) {
+					var drop = blueprints[i];
+					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
+						continue;
+
+					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+						continue;
+
+					drop.level = drop.level || this.obj.stats.values.level;
+					drop.magicFind = magicFind;
+
+					var item = drop;
+					if (!item.quest)
+						item = generator.generate(drop);
+
+					this.getItem(item, true);
+				}
+			}
+
+			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+
+			if (this.items.length > 0)
+				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
+
+			this.items = savedItems;
 		},
 
 		giveItems: function(obj, hideMessage) {
@@ -715,7 +716,7 @@ define([
 					if (!effectEvent)
 						continue;
 
-					effectEvent.call(this.obj, item, args[0]);
+					effectEvent.apply(this.obj, [item, ...args]);
 				}
 			}
 		},

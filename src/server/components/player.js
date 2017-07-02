@@ -25,11 +25,12 @@ define([
 
 		spawn: function(character) {
 			var obj = this.obj;
+
 			extend(true, obj, {
 				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,
-				previewSpritesheet: character.previewSpritesheet,
+				previewSpritesheet: character.previewSpritesheet || null,
 				name: character.name,
 				class: character.class,
 				zoneName: character.zoneName || 'tutorial',
@@ -59,7 +60,8 @@ define([
 
 			stats.stats.logins++;
 
-			//obj.addComponent('spellbook', { spells: extend(true, [], classes.spells[obj.class]) });
+			obj.portrait = classes.portraits[character.class];
+
 			obj.addComponent('spellbook');
 
 			obj.addComponent('dialogue');
@@ -67,8 +69,9 @@ define([
 			obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
 
 			obj.addComponent('social');
+			obj.social.init();
 			obj.addComponent('aggro', {
-				faction: 1
+				faction: 'players'
 			});
 			obj.addComponent('gatherer');
 			obj.addComponent('stash', {
@@ -152,7 +155,16 @@ define([
 			if (!permadeath) {
 				var level = this.obj.stats.values.level;
 				var spawns = this.obj.spawn;
-				var spawnPos = ((spawns.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (spawns[0]));
+				var spawnPos = spawns.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
+				if ((spawnPos.length == 0) || (!source.name))
+					spawnPos = spawns[0];
+				else if (source.name) {
+					var sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() == source.name.toLowerCase())));
+					if (sourceSpawnPos)
+						spawnPos = sourceSpawnPos;
+					else
+						spawnPos = spawnPos[0];
+				}
 
 				this.obj.x = spawnPos.x;
 				this.obj.y = spawnPos.y;
@@ -167,6 +179,8 @@ define([
 			}
 			else
 				this.obj.stats.dead = true;
+
+			this.obj.fireEvent('onAfterDeath', source);
 
 			this.obj.aggro.die();
 			this.obj.spellbook.die();

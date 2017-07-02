@@ -104,18 +104,19 @@ define([
 				var sheetName = this.obj.sheetName;
 				var animationName = builtSpell.animation;
 
-				if (sheetName == 'characters')
-					animation = animations.classes[this.obj.class];
-				else if (sheetName == 'mobs')
+				if (sheetName == 'mobs')
 					animation = animations.mobs;
 				else if (sheetName == 'bosses')
 					animation = animations.bosses;
+				else if (sheetName.indexOf('/') > -1)
+					animation = animations.mobs[sheetName];
+				else
+					animation = animations.classes[this.obj.class];
 
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
 					builtSpell.animation.name = animationName;
-				}
-				else
+				} else
 					builtSpell.animation = null;
 			}
 
@@ -124,21 +125,17 @@ define([
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 
-			var id = [0, 1, 2].find(function(s) {
-				return (!this.spells.some(f => (f.id == s)));
-			}, this);
-			builtSpell.id = (spellId == null) ? id : spellId;
-
-			if (spellId == null)
-				this.spells.push(builtSpell);
-			else
-				this.spells.splice(spellId, 0, builtSpell);
+			builtSpell.id = (options.id == null) ? spellId : options.id;
+			this.spells.push(builtSpell);
+			this.spells.sort(function(a, b) {
+				return (a.id - b.id);
+			});
 
 			builtSpell.calcDps(null, true);
 			if (builtSpell.init)
 				builtSpell.init();
 
-			if (this.obj.player) 
+			if (this.obj.player)
 				this.obj.syncer.setArray(true, 'spellbook', 'getSpells', builtSpell.simplify());
 
 			return builtSpell.id;
@@ -156,7 +153,7 @@ define([
 				runeSpell.rolls = {};
 
 			runeSpell.values = {};
-			
+
 			var builtSpell = extend(true, {
 				values: {}
 			}, playerSpell, playerSpellConfig);
@@ -172,8 +169,7 @@ define([
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
-				}
-				else
+				} else
 					val = ~~(val * 10) / 10;
 
 				builtSpell[r] = val;
@@ -201,11 +197,14 @@ define([
 		},
 
 		removeSpellById: function(id) {
-			this.spells.spliceWhere(s => (s.id == id));
+			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
-			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+			if (exists) {
+				exists.unlearn && exists.unlearn();
 
-			this.auto.spliceWhere(a => a.spell == id);
+				this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+				this.auto.spliceWhere(a => a.spell == id);
+			}
 		},
 
 		queueAuto: function(action) {
@@ -220,8 +219,7 @@ define([
 				});
 
 				return true;
-			}
-			else
+			} else
 				exists.target = action.target;
 		},
 		getRandomSpell: function(target) {
@@ -230,10 +228,10 @@ define([
 				if (s.canCast(target))
 					valid.push(i);
 			});
-			
+
 			if (valid.length > 0)
 				return valid[~~(Math.random() * valid.length)]
-			else 
+			else
 				return null;
 		},
 		cast: function(action, isAuto) {
@@ -253,17 +251,20 @@ define([
 						x: this.obj.x,
 						y: this.obj.y
 					};
-				}
-				else if (spell.spellType == 'buff') {
+				} else if (spell.spellType == 'buff') {
 					action.target = this.obj;
 				}
 			}
 
 			if (!spell.targetGround) {
 				if (action.target == null) {
-					console.log('NO TARGET');
-					console.log(action);
-					return false;
+					if (spell.autoTargetFollower) {
+						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
+						if (action.target)
+							action.target = action.target.minions[0];
+						else
+							return false;
+					}
 				}
 
 				//Did we pass in the target id?
@@ -273,9 +274,13 @@ define([
 						return false;
 				}
 
-				if ((action.target.aggro) && (!this.obj.aggro.willAttack(action.target)) && (spell.spellType != 'buff')) {
-					if ((this.obj.player) && (action.target.player))
+				if (spell.spellType == 'buff') {
+					if (this.obj.aggro.faction != action.target.aggro.faction)
 						return;
+				} else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
+					if (this.obj.player)
+						this.sendAnnouncement("You don't feel like attacking that target");
+					return;
 				}
 			}
 
@@ -342,7 +347,11 @@ define([
 
 			if (success) {
 				this.obj.stats.values.mana -= spell.manaCost;
-				spell.cd = spell.cdMax;
+				var cd = {
+					cd: spell.cdMax
+				};
+				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+				spell.cd = cd.cd;
 
 				if (this.obj.player) {
 					var syncer = this.obj.syncer;
@@ -377,9 +386,9 @@ define([
 					if ((spell.range > furthest) && (spell.canCast()))
 						furthest = spell.range;
 				}
-				if (furthest == 0) 
+				if (furthest == 0)
 					furthest = this.furthestRange;
-				
+
 				return furthest;
 			}
 		},
@@ -493,6 +502,26 @@ define([
 					}]
 				}
 			});
+		},
+
+		fireEvent: function(event, args) {
+			var spells = this.spells;
+			var sLen = spells.length;
+			for (var i = 0; i < sLen; i++) {
+				var s = spells[i];
+
+				var events = s.events;
+				if (events) {
+					var callback = events[event];
+					if (!callback)
+						continue;
+
+					callback.apply(s, args);
+				}
+
+				if (s.castEvent == event)
+					s.cast();
+			}
 		},
 
 		events: {

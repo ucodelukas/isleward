@@ -5,30 +5,35 @@ define([
 ) {
 	return {
 		generators: {
-			hpMax: function(item, blueprint) {
-				var max = ((item.level * 15) + item.level) / 10;
+			hpMax: function(item, level, blueprint) {
+				var max = ((level * 15) + level) / 10;
 
 				return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
 			},
-			mainStat: function(item, blueprint) {
-				var min = ((item.level * 6.05) - ((item.level - 1) * 1.2)) / 10;
-				var max = ((item.level * 14.9) + ((item.level - 1) * 31.49)) / 10;
+			mainStat: function(item, level, blueprint) {
+				var min = ((level * 6.05) - ((level - 1) * 1.2)) / 10;
+				var max = ((level * 14.9) + ((level - 1) * 31.49)) / 10;
 
 				return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
 			},
-			armor: function(item, blueprint) {
-				var min = (item.level * 20);
-				var max = (item.level * 51.2);
+			armor: function(item, level, blueprint) {
+				var min = (level * 20);
+				var max = (level * 51.2);
 
 				return random.norm(min, max) * blueprint.statMult.armor;
 			},
-			elementResist: function(item, blueprint) {
+			elementResist: function(item, level, blueprint) {
 				return random.norm(1, 7.5) * (blueprint.statMult.elementResist || 1);
 			},
-			regenHp: function(item, blueprint) {
-				var max = (((10 + (item.level * 200)) / 20) / 2) / 10;
+			regenHp: function(item, level, blueprint) {
+				var max = (((10 + (level * 200)) / 20) / 2) / 10;
 
 				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
+			},
+			lvlRequire: function(item, level, blueprint) {
+				var max = ~~(level / 2);
+
+				return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
 			}
 		},
 
@@ -48,6 +53,10 @@ define([
 			regenMana: {
 				min: 1,
 				max: 7
+			},
+
+			lvlRequire: {
+				generator: 'lvlRequire'
 			},
 
 			str: {
@@ -90,6 +99,10 @@ define([
 			addCritChance: {
 				min: 1,
 				max: 90
+			},
+			addCritMultiplier: {
+				min: 5,
+				max: 50
 			},
 
 			magicFind: {
@@ -209,7 +222,7 @@ define([
 				var addStats = Math.min(statCount, blueprint.stats.length);
 				for (var i = 0; i < addStats; i++) {
 					var choice = useStats[~~(Math.random() * useStats.length)];
-					useStats.spliceWhere(s => s == choice);
+					useStats.spliceFirstWhere(s => s == choice);
 					this.buildStat(item, blueprint, choice, result);
 					statCount--;
 				}
@@ -239,8 +252,9 @@ define([
 
 			var value = null;
 
-			if (statBlueprint.generator) {
-				value = Math.ceil(this.generators[statBlueprint.generator](item, blueprint, statBlueprint));
+			if (statBlueprint.generator) { 
+				var level = item.originalLevel || item.level;
+				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, statBlueprint));
 			} else
 				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
 
@@ -258,6 +272,15 @@ define([
 					item.enchantedStats[stat] += value;
 				else
 					item.enchantedStats[stat] = value;
+			}
+
+			if (stat == 'lvlRequire') {
+				if (!item.originalLevel)
+					item.originalLevel = item.level;
+
+				item.level -= value;
+				if (item.level < 1)
+					item.level = 1;
 			}
 
 			if (item.stats[stat])

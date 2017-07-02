@@ -4,9 +4,10 @@ define([
 
 ) {
 	return [
-		'tutorial',
-		'estuary',
+		'cave',
 		'city',
-		'sewer'
+		'estuary',
+		'sewer',
+		'tutorial'
 	];
 });

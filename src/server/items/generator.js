@@ -16,7 +16,7 @@ define([
 	var spellGenerators = [g1, g8];
 
 	var generator = {
-		spellChance: 0.15,
+		spellChance: 0.075,
 		generate: function(blueprint) {
 			var hadBlueprint = !!blueprint;
 			blueprint = blueprint || {};
@@ -28,6 +28,9 @@ define([
 				if ((!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats))))
 					isSpell = Math.random() < this.spellChance;
 			}
+
+			if (blueprint.isSpell)
+				isSpell = true;
 
 			if (isSpell)
 				spellGenerators.forEach(g => g.generate(item, blueprint));

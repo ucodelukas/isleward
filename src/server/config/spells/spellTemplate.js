@@ -50,7 +50,7 @@ define([
 		},
 
 		calcDps: function(target, noSync) {
-			if (!this.values)
+			if ((!this.values) || (this.spellType == 'buff'))
 				return;
 
 			if ((!this.damage) && (!this.healing))
@@ -75,8 +75,9 @@ define([
 				}).amount;
 
 				var critChance = this.obj.stats.values.critChance;
+				var critMultiplier = this.obj.stats.values.critMultiplier;
 
-				dmg = ((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * 1.5);
+				dmg = ((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100));
 
 				if (this.damage) {
 					this.values.dmg = ~~(dmg * 10) / 10 + '/tick';
@@ -146,6 +147,9 @@ define([
 				values.animation = this.animation.name;
 			if (this.values)
 				values.values = this.values;
+
+			if (this.onAfterSimplify)
+				this.onAfterSimplify(values);
 
 			return values;
 		},

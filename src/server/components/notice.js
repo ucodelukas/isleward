@@ -13,6 +13,8 @@ define([
 
 		maxLevel: 0,
 
+		contents: [],
+
 		init: function(blueprint) {
 			this.msg = blueprint.msg;
 			this.actions = blueprint.actions || {};

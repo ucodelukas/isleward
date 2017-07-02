@@ -90,7 +90,7 @@ define([
 			io.set({
 				ent: this.charname,
 				field: 'character',
-				value: JSON.stringify(simple),
+				value: JSON.stringify(simple).split(`'`).join(`''`),
 				callback: callback
 			});
 

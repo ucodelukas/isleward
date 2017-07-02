@@ -274,7 +274,7 @@ define([
 				if (sheetName == 'walls')
 					cell += 192;
 				else if (sheetName == 'objects')
-					cell += 384;
+					cell += 448;
 
 				if ((layerName != 'hiddenWalls') && (layerName != 'hiddenTiles')) {
 					var layer = this.layers;
@@ -316,10 +316,16 @@ define([
 					properties: cell.properties || {}
 				};
 
+				if (objZoneName != name)
+					blueprint.objZoneName = objZoneName;
+
 				if ((this.zone) && (this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
 					extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
 
-				if ((blueprint.properties.cpnNotice) || (layerName == 'rooms') || (layerName == 'hiddenRooms')) {
+				if (blueprint.blocking)
+					this.collisionMap[blueprint.x][blueprint.y] = 1;
+
+				if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName == 'rooms') || (layerName == 'hiddenRooms')) {
 					blueprint.y++;
 					blueprint.width = cell.width / mapScale;
 					blueprint.height = cell.height / mapScale;
@@ -370,7 +376,8 @@ define([
 			var stats = obj.components.find(c => (c.type == 'stats'));
 			var level = stats.values.level;
 
-			return ((this.spawn.find(s => ((s.maxLevel) && (s.maxLevel >= level)))) || (this.spawn[0]));
+			var spawns = this.spawn.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
+			return spawns[0];
 		}
 	}
 

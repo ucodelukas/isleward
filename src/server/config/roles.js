@@ -5,7 +5,7 @@ define([
 ) {
 	return {
 		accounts: {
-			admin: {
+			waffle: {
 				level: 10,
 				messageStyle: 'color-cyan',
 				messagePrefix: '(dev) ',
@@ -43,6 +43,13 @@ define([
 					items.push(item);
 				}, this);
 			}
+		},
+
+		getRoleLevel: function(player) {
+			var account = player.account;
+			var level = this.accounts[account] ? this.accounts[account].level : 0;
+
+			return level;
 		},
 
 		isRoleLevel: function(player, requireLevel, message) {

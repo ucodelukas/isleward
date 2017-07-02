@@ -157,20 +157,18 @@ define([
 				damage: [9.3, 18.6],
 				i_delay: [4, 8]
 			}
-		},
-		'arcane barrier': {
+		}/*,
+		'chain lightning': {
 			statType: 'int',
 			statMult: 0.454,
 			element: 'holy',
-			cdMax: 10,
-			manaCost: 10,
+			cdMax: 5,
+			manaCost: 0,
 			range: 9,
-			radius: 3,
 			random: {
-				healing: [0.7, 1.3],
-				i_duration: [7, 13]
+				damage: [9.3, 18.6]
 			}
-		}
+		}*/
 	};
 
 	events.emit('onBeforeGetSpellsConfig', spells);

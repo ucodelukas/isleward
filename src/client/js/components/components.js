@@ -4,10 +4,12 @@ var components = [
 	'player',
 	'pather',
 	'attackAnimation',
+	'lightningEffect',
 	'moveAnimation',
 	'bumpAnimation',
 	'animation',
 	'light',
+	'lightPatch',
 	'projectile',
 	'particles',
 	'explosion',
@@ -41,6 +43,9 @@ define(components, function() {
 
 	return {
 		getTemplate: function(type) {
+			if (type == 'lightpatch')
+				type = 'lightPatch';
+			
 			return templates[type];
 		}
 	};

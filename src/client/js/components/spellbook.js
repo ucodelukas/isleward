@@ -28,7 +28,7 @@ define([
 		renderRange: null,
 
 		reticleSprite: null,
-		tarpSprite: null,
+		targetSprite: null,
 
 		shiftDown: false,
 
@@ -141,7 +141,12 @@ define([
 		},
 
 		tabTarget: function() {
-			this.onMouseDown(null, objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target));
+			var closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
+
+			this.target = closest;
+			this.targetSprite.visible = !!this.target;	
+
+			events.emit('onSetTarget', this.target, null);
 		},
 
 		build: function(destroy) {
@@ -189,11 +194,15 @@ define([
 				this.target = this.obj;
 			}
 
-			if ((!spell.targetGround) && (!this.target))
+			if ((!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
 				return;
 
 			var hoverTile = this.obj.mouseMover.hoverTile;
-			var target = spell.targetGround ? hoverTile : this.target.id;
+			var target = hoverTile;
+			if ((!spell.targetGround) && (this.target))
+				target = this.target.id;
+			if ((spell.autoTargetFollower) && (target.id == null))
+				target = null;
 
 			if (this.shiftDown)
 				this.target = oldTarget;

@@ -76,8 +76,9 @@ define([
 
 		],
 		wallsNoFlip: [
-			156, 158, 162, 163, 167, 168,			//Ledges
-			189										//Wall Sign
+			156, 158, 162, 163, 167, 168,					//Ledges
+			189,											//Wall Sign
+			195, 196, 197, 198, 199, 200, 201, 202, 203		//Stone Ledges
 		],
 		objectsNoFlip: [
 			96, 101, 								//Clotheslines
@@ -88,7 +89,7 @@ define([
 		getSheetNum: function(tile) {
 			if (tile < 192)
 				return 0;
-			else if (tile < 384)
+			else if (tile < 448)
 				return 1;
 			else
 				return 2;
@@ -99,12 +100,12 @@ define([
 
 			if (tile < 192)
 				sheetNum = 0;
-			else if (tile < 384) {
+			else if (tile < 448) {
 				tile -= 192;
 				sheetNum = 1;
 			}
 			else {
-				tile -= 384;
+				tile -= 448;
 				sheetNum = 2;
 			}
 			
@@ -124,12 +125,12 @@ define([
 
 			if (tile < 192)
 				sheetNum = 0;
-			else if (tile < 384) {
+			else if (tile < 448) {
 				tile -= 192;
 				sheetNum = 1;
 			}
 			else {
-				tile -= 384;
+				tile -= 448;
 				sheetNum = 2;
 			}
 			

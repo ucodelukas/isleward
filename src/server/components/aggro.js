@@ -90,7 +90,7 @@ define([
 			//find mobs in range
 			var range = this.range;
 			var faction = this.faction;
-			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (c.aggro) && (c.aggro.willAttack(obj)))));
+			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
 			if (inRange.length == 0)
 				return;
@@ -118,16 +118,28 @@ define([
 			}
 		},
 
-		willAttack: function(target) {
+		canAttack: function(target) {
+			var obj = this.obj;
+
+			if (target == obj)
+				return false;
+			else if ((target.player) && (obj.player))
+				return ((obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
+			else if ((target.follower) && (target.follower.master.player) && (obj.player))
+				return false;
+			else if (obj.player)
+				return true;
+			else if (target.aggro.faction != obj.aggro.faction)
+				return true;
+		},
+
+		willAutoAttack: function(target) {
 			if (this.obj == target)
 				return false;
 
 			var faction = target.aggro.faction;
 			if (faction == null)
 				return false;
-
-			if ((target.player) && (this.obj.player))
-				return ((this.obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
 
 			var rep = this.obj.reputation;
 			if (!rep) {
@@ -151,6 +163,10 @@ define([
 		},
 
 		tryEngage: function(obj, amount, threatMult) {
+			//Don't aggro yourself, stupid
+			if (obj == this.obj)
+				return;
+
 			var result = {
 				success: true
 			};
@@ -235,7 +251,7 @@ define([
 			if (this.obj.spellbook)
 				this.obj.spellbook.unregisterCallback(obj.id, true);
 
-			if ((this.list.length == 0) && (this.obj.mob))
+			if ((this.list.length == 0) && (this.obj.mob) && (!this.obj.follower))
 				this.obj.stats.resetHp();
 		},
 
@@ -293,7 +309,7 @@ define([
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
 				if (l.obj.destroyed) {
-					list.splice(i, 1);
+					this.unAggro(l.obj);
 					i--;
 					lLen--;
 				}

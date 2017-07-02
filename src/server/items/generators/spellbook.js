@@ -31,6 +31,8 @@ define([
 				else if (statType instanceof Array) {
 					if ((statType.indexOf('dex') > -1) && (statType.indexOf('int') > -1))
 						sprite = [10, 3];
+					else if ((statType.indexOf('str') > -1) && (statType.indexOf('int') > -1))
+						sprite = [10, 4];
 				}
 
 				item.name = 'Rune of ' + spellAesthetic.name;

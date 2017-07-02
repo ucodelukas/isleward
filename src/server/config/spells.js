@@ -290,7 +290,7 @@ define([
 		description: 'Jagged Crystals break ground at your target destination',
 		type: 'warnBlast',
 		animation: 'raiseHands',
-		icon: [4, 0],
+		icon: [0, 7],
 		particles: {
 			color: {
 				start: ['c0c3cf', '929398'],
@@ -332,55 +332,11 @@ define([
 			randomColor: true
 		}
 	}, {
-		name: 'Arcane Barrier',
+		name: 'Chain Lightning',
 		description: 'Creates a circle of pure holy energy that heals allies for a brief period.',
-		type: 'arcaneBarrier',
+		type: 'chainLightning',
 		icon: [0, 1],
-		animation: 'raiseStaff',
-		particles: {
-			scale: {
-				start: {
-					min: 6,
-					max: 16
-				},
-				end: {
-					min: 0,
-					max: 4
-				}
-			},
-			speed: {
-				start: {
-					min: 2,
-					max: 12
-				},
-				end: {
-					min: 0,
-					max: 4
-				}
-			},
-			lifetime: {
-				min: 1,
-				max: 3
-			},
-			alpha: {
-				start: 0.45,
-				end: 0
-			},
-			color: {
-				start: ['ffeb38', 'fcfcfc'],
-				end: ['fcfcfc', 'faac45']
-			},
-			spawnType: 'circle',
-			spawnCircle: {
-				x: 0,
-				y: 0,
-				r: 12
-			},
-			randomScale: true,
-			randomColor: true,
-			randomSpeed: true,
-			chance: 0.02
-		}
+		animation: 'raiseStaff'
 	}];
 
 	events.emit('onBeforeGetSpellsInfo', spells);

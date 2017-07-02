@@ -1,7 +1,7 @@
 define([
-
+	'config/animations'
 ], function(
-
+	animations
 ) {
 	return {
 		type: 'stats',
@@ -22,7 +22,9 @@ define([
 			regenHp: 0,
 			regenMana: 10,
 			addCritChance: 0,
+			addCritMultiplier: 0,
 			critChance: 5,
+			critMultiplier: 150,
 			armor: 0,
 			dmgPercent: 0,
 
@@ -77,7 +79,7 @@ define([
 		},
 
 		update: function() {
-			if ((this.obj.mob) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
 			var regen = {
@@ -89,6 +91,11 @@ define([
 
 			var values = this.values;
 			var isInCombat = (this.obj.aggro.list.length > 0);
+			if (this.obj.follower) {
+				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
+				if (isInCombat)
+					return;
+			}
 
 			var regenHp = 0;
 			var regenMana = 0;
@@ -137,6 +144,9 @@ define([
 			if (stat == 'addCritChance') {
 				this.values.critChance += (0.05 * value);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
+			} else if (stat == 'addCritMultiplier') {
+				this.values.critMultiplier += value;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
@@ -237,7 +247,7 @@ define([
 					mult = (1 + (partySize * 0.1));
 				}
 
-				if (a.obj.stats) {
+				if ((a.obj.stats) && (!a.obj.follower)) {
 					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 					//Mobs that are farther then 10 levels from you, give no xp
 					//We don't currently do this for quests/herb gathering
@@ -296,12 +306,16 @@ define([
 				amount = this.values.hp;
 
 			this.values.hp -= amount;
-
 			var recipients = [];
 			if (this.obj.serverId != null)
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
 				recipients.push(source.serverId);
+			if ((source.follower) && (source.follower.master.serverId))
+				recipients.push(source.follower.master.serverId);
+			if ((this.obj.follower) && (this.obj.follower.master.serverId))
+				recipients.push(this.obj.follower.master.serverId);
+
 			if (recipients.length > 0) {
 				this.syncer.queue('onGetDamage', {
 					id: this.obj.id,
@@ -325,11 +339,12 @@ define([
 					var deathEvent = {};
 
 					var killSource = source;
+
 					if (source.follower)
 						killSource = source.follower.master;
 
-					if (source.player)
-						source.stats.kill(this.obj);
+					if (killSource.player)
+						killSource.stats.kill(this.obj);
 					else
 						this.obj.fireEvent('afterDeath', deathEvent);
 
@@ -339,17 +354,26 @@ define([
 							this.obj.auth.permadie();
 
 							this.syncer.queue('onPermadeath', {
-								source: source.name
+								source: killSource.name
 							}, [this.obj.serverId]);
 						} else
 							this.values.hp = 0;
 
-						this.obj.player.die(source, deathEvent.permadeath);
+						this.obj.player.die(killSource, deathEvent.permadeath);
 					} else {
 						this.obj.effects.die();
 						if (this.obj.spellbook)
 							this.obj.spellbook.die();
 						this.obj.destroyed = true;
+
+						var deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
+						if (deathAnimation) {
+							this.obj.instance.syncer.queue('onGetObject', {
+								x: this.obj.x,
+								y: this.obj.y,
+								components: [deathAnimation]
+							});
+						}
 
 						if (this.obj.inventory) {
 							var aggroList = this.obj.aggro.list;
@@ -365,14 +389,14 @@ define([
 										if (done.some(d => d == p))
 											return;
 
-										this.obj.inventory.dropBag(p, source);
+										this.obj.inventory.dropBag(p, killSource);
 										done.push(p);
 									}, this);
 								} else {
 									if (a.serverId == null)
 										continue;
 
-									this.obj.inventory.dropBag(a.serverId, source);
+									this.obj.inventory.dropBag(a.serverId, killSource);
 									done.push(a.serverId);
 								}
 							}
@@ -388,13 +412,16 @@ define([
 		},
 
 		getHp: function(heal, source) {
+			var amount = heal.amount;
+			if (amount == 0)
+				return;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
 			if (values.hp >= hpMax)
 				return;
 
-			var amount = heal.amount;
 			if (hpMax - values.hp < amount)
 				amount = hpMax - values.hp;
 

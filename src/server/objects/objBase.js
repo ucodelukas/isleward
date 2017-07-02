@@ -89,6 +89,8 @@ define([
 				o = this;
 			}
 
+			var syncTypes = ['portrait'];
+
 			for (var p in o) {
 				var value = o[p];
 				if (value == null)
@@ -117,9 +119,10 @@ define([
 								result.components.push(component);
 						}
 					}
-				} else if (type == 'function') {
-
-				} else
+					else if (syncTypes.indexOf(p) > -1) {
+						result[p] = value;
+					}
+				} else if (type != 'function')
 					result[p] = value;
 			}
 
@@ -313,6 +316,8 @@ define([
 				this.prophecies.fireEvent(event, args);
 			if (this.inventory)
 				this.inventory.fireEvent(event, args);
+			if (this.spellbook)
+				this.spellbook.fireEvent(event, args);
 		},
 
 		destroy: function() {
@@ -323,6 +328,8 @@ define([
 				if (c.destroy)
 					c.destroy();
 			}
+
+			components = null;
 		}
 	};
 });

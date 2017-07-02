@@ -10,6 +10,7 @@ define([
 			'walls',
 			'mobs',
 			'bosses',
+			'animBigObjects',
 			'bigObjects',
 			'objects',
 			'characters',
@@ -24,7 +25,9 @@ define([
 			'sprites',
 			'animChar',
 			'animMob',
-			'animBoss'
+			'animBoss',
+			'white',
+			'ray'
 		],
 		sprites: {},
 		ready: false,

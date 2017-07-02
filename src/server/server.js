@@ -1,7 +1,9 @@
 define([
-
+    'config/serverConfig',
+    'security/router'
 ], function(
-
+    config,
+    router
 ) {
 	return {
 		init: function(callback) {
@@ -10,7 +12,7 @@ define([
 			global.io = require('socket.io')(server);
 
 			app.use(function(req, res, next) {
-				if (req.url.indexOf('/server') != 0)
+				if ((req.url.indexOf('/server') != 0) && (req.url.indexOf('/mods') != 0))
 					req.url = '/client/' + req.url;
 				else
 					req.url.substr(7);
@@ -31,9 +33,9 @@ define([
 
 			io.on('connection', this.listeners.onConnection.bind(this));
 
-			var port = process.env.PORT || 4000;
+			var port = process.env.PORT || config.port || 4000;
 			server.listen(port, function() {
-				var message = 'Server: Ready';
+				var message = config.startupMessage || 'Server: Ready';
 				console.log(message);
 
 				callback();
@@ -59,9 +61,16 @@ define([
 				if (!msg.data)
 					msg.data = {};
 
-				if (msg.cpn)
+				if (msg.cpn) {
+					if (!router.allowedCpn(msg))
+						return;
+
 					cons.route(socket, msg);
+				}
 				else {
+					if (!router.allowedGlobal(msg))
+						return;
+
 					msg.socket = socket;
 					global[msg.module][msg.method](msg);
 				}

@@ -1,15 +1,17 @@
 define([
-	
+	'items/config/prefixes',
+	'items/config/suffixes'
 ], function(
-	
+	prefixes,
+	suffixes
 ) {
 	return {
 		generators: [
 			'basic',
-			[ 'basic', 'prefix' ],
-			[ 'basic', 'prefix', 'suffix' ],
-			[ 'basic', 'prefix', 'suffix' ],
-			[ 'basic', 'legendary', 'suffix']
+			[ 'basic' ],
+			[ 'gPrefix', 'gSuffix' ],
+			[ 'gPrefix', 'gSuffix' ],
+			[ 'gPrefix', 'gSuffix' ]
 		],
 		prefixes: {
 			hpMax: 'Healthy',
@@ -21,8 +23,9 @@ define([
 			dex: 'Agile',
 			addArmor: 'Plated',
 			addCritChance: 'Precise',
+			addCritMultiplier: 'Piercing',
 			magicFind: `Seeker's`,
-			sprintChance: `Traveller's`,
+			sprintChance: `Traveler's`,
 			dmgPercent: 'Powerful',
 			allAttributes: 'Hybrid',
 			elementArcanePercent: 'Volatile',
@@ -41,6 +44,7 @@ define([
 			elementAllResist: 'Protective',
 
 			xpIncrease: `Scholar's`,
+			lvlRequire: 'Elementary'
 		},
 		suffixes: {
 			hpMax: 'Health',
@@ -52,6 +56,7 @@ define([
 			dex: 'the Assassin',
 			addArmor: 'the Fortress',
 			addCritChance: 'Pain',
+			addCritMultiplier: 'Ferocity',
 			magicFind: 'Luck',
 			sprintChance: 'Haste',
 			dmgPercent: 'Power',
@@ -71,7 +76,8 @@ define([
 			elementPoisonResist: 'Poison Resistance',
 			elementAllResist: 'Arcane Resistance',
 
-			xpIncrease: 'Experience'
+			xpIncrease: 'Experience',
+			lvlRequire: 'Ease'
 		},
 		generate: function(item, blueprint) {
 			if (blueprint.name) {
@@ -119,8 +125,32 @@ define([
 
 				item.name = item.name + ' of ' + this.suffixes[stats[useIndex].stat];
 			},
-			legendary: function(item, blueprint) {
-				item.name = 'Legendary ' + item.name;
+			gPrefix: function(item, blueprint) {
+				var list = prefixes.generic.concat(prefixes.slots[item.slot] || []);
+
+				if (item.stats.armor)
+					list = list.concat(prefixes.armor);
+				else if (item.slot == 'twoHanded')
+					list = list.concat(prefixes.weapons);
+
+				var pick = list[~~(Math.random() * list.length)];
+				item.name = pick[0].toUpperCase() + pick.substr(1);
+
+				if (item.name.indexOf('%') > -1) {
+					var replacer = (Math.random() < 0.5) ? `'s` : '';
+					item.name = item.name.split('%').join(replacer);
+				}
+			},
+			gSuffix: function(item, blueprint) {
+				var list = suffixes.generic.concat(suffixes.slots[item.slot] || []);
+
+				if (item.stats.armor)
+					list = list.concat(suffixes.armor);
+				else if (item.slot == 'twoHanded')
+					list = list.concat(suffixes.weapons);
+
+				var pick = list[~~(Math.random() * list.length)];
+				item.name += ' ' + pick[0].toUpperCase() + pick.substr(1);
 			}
 		}
 	};

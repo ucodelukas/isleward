@@ -120,9 +120,8 @@ define([
 				obj.serverId = obj.id;
 				delete obj.id;
 
-				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y))) {
+				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
 					msg.keepPos = false;
-				}
 
 				var spawnPos = map.getSpawnPos(obj);
 
@@ -368,10 +367,8 @@ define([
 					return;
 
 				var obj = exists.objects.find(o => o.serverId == id);
-				if (!obj) {
-					console.log('OBJECT NOT FOUND!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-					console.log(msg);
-				}
+				if (!obj)
+					return;
 
 				var msgObj = msg.obj;
 
@@ -456,7 +453,7 @@ define([
 					closeTtl: null,
 					questBuilder: extend(true, {}, questBuilder),
 					map: {
-						spawn: extend(true, {}, map.spawn),
+						spawn: extend(true, [], map.spawn),
 						clientMap: extend(true, {}, map.clientMap),
 						getSpawnPos: map.getSpawnPos.bind(map)
 					}

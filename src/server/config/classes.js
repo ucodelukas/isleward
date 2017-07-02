@@ -4,8 +4,26 @@ define([
 	events
 ) {
 	var classes = {
+		portraits: {
+			warrior: {
+				x: 0,
+				y: 0
+			},
+			cleric: {
+				x: 1,
+				y: 0
+			},
+			wizard: {
+				x: 2,
+				y: 0
+			},
+			thief: {
+				x: 3,
+				y: 0
+			}
+		},
 		spells: {
-			wizard: ['ice spear'],
+			wizard: ['ice spear', 'fireblast'],
 			cleric: ['healing circle'],
 			warrior: ['charge'],
 			thief: ['smokebomb']

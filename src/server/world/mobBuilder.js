@@ -39,8 +39,8 @@ define([
 
 			var cpnMob = mob.addComponent('mob');
 			cpnMob.walkDistance = blueprint.walkDistance;
-			cpnMob.hpMult = typeDefinition.hpMult;
-			cpnMob.dmgMult = typeDefinition.dmgMult;
+			cpnMob.hpMult = blueprint.hpMult || typeDefinition.hpMult;
+			cpnMob.dmgMult = blueprint.dmgMult || typeDefinition.dmgMult;
 			cpnMob.grantRep = blueprint.grantRep;
 			cpnMob.deathRep = blueprint.deathRep;
 
@@ -109,7 +109,7 @@ define([
 
 			statValues.level = level;
 
-			if (!drops.blueprints) {
+			if ((!drops.blueprints) || (drops.alsoRandom)) {
 				[
 					'head',
 					'chest',
@@ -152,30 +152,8 @@ define([
 				mob.inventory.getItem(rune);
 			}
 
-			/*var rune = itemGenerator.generate({
-				spell: true,
-				spellName: 'crystal spikes',
-				spellProperties: {
-					radius: 4,
-					attackTemplate: '0 x x x x x x x 0 x 1 x x x x x 1 x x x 2 x x x 2 x x x x x 3 x 3 x x x x x x x 4 x x x x x x x 3 x 3 x x x x x 2 x x x 2 x x x 1 x x x x x 1 x 0 x x x x x x x 0'
-				}
-			});
-			rune.eq = true;
-			if (i == 0)
-				rune.spell.cdMult = 1;
-			mob.inventory.getItem(rune);
-
-			rune = itemGenerator.generate({
-				spell: true,
-				spellName: 'magic missile'
-			});
-			rune.eq = true;
-			if (i == 0)
-				rune.spell.cdMult = 1;
-			mob.inventory.getItem(rune);*/
-
-			var dmgMult = 4;
-			var hpMult = 1;
+			var dmgMult = 4 * mob.mob.dmgMult;
+			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
 				hpMult *= [0.005, 0.01, 0.1, 0.2, 0.5, 0.65, 0.75, 0.85, 0.95][level - 1];
@@ -196,13 +174,13 @@ define([
 			statValues.hp = statValues.hpMax;
 			statValues.mana = statValues.manaMax;
 
-			mob.spellbook.spells.forEach(function(s) {
+			mob.spellbook.spells.forEach(function(s, i) {
 				s.dmgMult = dmgMult;
 				s.statType = preferStat;
 				s.element = elementType;
 				s.manaCost = 0;
 
-				var damage = combat.getDamage({
+				/*var damage = combat.getDamage({
 					source: mob,
 					target: mob,
 					damage: (s.damage || s.healing) * (s.dmgMult || 1),
@@ -210,8 +188,9 @@ define([
 					element: s.element,
 					statType: s.statType,
 					statMult: s.statMult,
-					noMitigate: false
-				});
+					noMitigate: false,
+					noCrit: true
+				});*/
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function(s) {

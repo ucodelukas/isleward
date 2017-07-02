@@ -25,7 +25,7 @@ define([
 
 		generate: function(item, blueprint) {
 			if (blueprint.quality != null) {
-				item.quality = blueprint.quality;
+				item.quality = ~~blueprint.quality;
 				return;
 			}
 
@@ -37,11 +37,17 @@ define([
 			else
 				magicFind = extend(true, [], magicFind);
 
+			var bonusMagicFind = blueprint.bonusMagicFind || 0;
+
 			var mLen = magicFind.length
 			for (var i = 0; i < mLen; i++) {
-				qualities[i] = Math.max(0, qualities[i] - (magicFind[i] * this.magicFindMult));
-				if (qualities[i] > 0)
+				qualities[i] = Math.max(0, qualities[i] - magicFind[i]);
+				if (qualities[i] > 0) {
+					if (i == 0)
+						qualities[i] -= (bonusMagicFind * this.magicFindMult);
+					
 					break;
+				}
 			}
 
 			var max = qualities.reduce((p, n) => p + n);
