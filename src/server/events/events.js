@@ -5,6 +5,7 @@ define([
 ) {
 	return {
 		configs: null,
+		nextId: 0,
 
 		init: function(instance) {
 			this.instance = instance;
@@ -18,7 +19,6 @@ define([
 				return;
 
 			this.configs = extend(true, [], configs);
-			this.configs.forEach(c => (c.ttl = 5));
 		},
 
 		update: function() {
@@ -34,6 +34,8 @@ define([
 
 				if (c.event) {
 					this.updateEvent(c.event);
+					if (c.event.done)
+						this.stopEvent(c);
 					continue;
 				} else if ((c.ttl) && (c.ttl > 0)) {
 					c.ttl--;
@@ -47,14 +49,40 @@ define([
 
 		startEvent: function(config) {
 			var event = {
+				id: this.nextId++,
 				config: config,
 				phases: [],
 				participators: [],
 				objects: [],
-				nextPhase: 0
+				nextPhase: 0,
+				age: 0
 			};
 
 			return event;
+		},
+
+		stopEvent: function(config) {
+			var event = config.event;
+
+			config.event.participators.forEach(function(p) {
+				p.events.unregisterEvent(event);
+			}, this);
+
+			config.event.objects.forEach(function(o) {
+				o.destroyed = true;
+
+				this.instance.syncer.queue('onGetObject', {
+					x: o.x,
+					y: o.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}, this);
+
+			delete config.event;
 		},
 
 		updateEvent: function(event) {
@@ -73,13 +101,30 @@ define([
 			var stillBusy = false;
 			for (var i = 0; i < cLen; i++) {
 				var phase = currentPhases[i];
-				if (phase.end)
+				if ((phase.end) || (phase.endMark == event.age))
 					continue
 				else {
 					stillBusy = true;
 					phase.update();
 				}
 			}
+
+			if (event.config.notifications) {
+				var n = event.config.notifications.find(f => (f.mark == event.age));
+				if (n) {
+					this.instance.syncer.queue('onGetMessages', {
+						messages: {
+							class: 'q4',
+							message: n.msg
+						}
+					});
+				}
+			}
+
+			event.age++;
+
+			if (event.age == event.config.duration)
+				event.done = true;
 
 			if (stillBusy)
 				return;
@@ -106,6 +151,16 @@ define([
 
 				if (!p.auto)
 					break;
+			}
+
+			var oList = this.instance.objects.objects;
+			var oLen = oList.length;
+			for (var i = 0; i < oLen; i++) {
+				var o = oList[i];
+				if (!o.player)
+					continue;
+
+				o.events.events.afterMove.call(o.events);
 			}
 		},
 
@@ -143,6 +198,7 @@ define([
 					) {
 						event.participators.push(obj);
 						result.push(event);
+						break;
 					}
 				}
 			}

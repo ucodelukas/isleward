@@ -135,6 +135,7 @@ define([
 			},
 			onAddObject: function(obj) {
 				questBuilder.obtain(obj);
+				obj.fireEvent('afterMove');
 			},
 			updateObject: function(msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
@@ -350,6 +351,7 @@ define([
 
 				obj.instance.spawners.scale(obj.stats.values.level);
 				obj.instance.questBuilder.obtain(obj);
+				obj.fireEvent('afterMove');
 			},
 			updateObject: function(msg) {
 				var id = msg.id;

@@ -114,11 +114,13 @@ define([
 				});
 			}
 
+			if (obj.id == 'anglerNayla')
+				console.log($.extend(true, {}, obj));
+
 			if (!exists)
 				exists = this.buildObject(obj);
-			else {
+			else
 				this.updateObject(exists, obj);
-			}
 		},
 		buildObject: function(template) {
 			var obj = $.extend(true, {}, objBase);

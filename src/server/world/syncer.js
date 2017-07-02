@@ -59,6 +59,7 @@ define([
 							destroyed: true
 						};
 
+
 						objects.removeObject(o);
 
 						oLen--;
@@ -85,6 +86,9 @@ define([
 								toList.push(p.serverId);
 								sendTo = true;
 							}
+
+							if (destroyed)
+								p.player.unsee(oId);
 						}
 						else if (!destroyed) {
 							var cached = null;

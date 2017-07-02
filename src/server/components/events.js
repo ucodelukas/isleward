@@ -1,7 +1,7 @@
 define([
-	
+
 ], function(
-	
+
 ) {
 	return {
 		type: 'events',
@@ -18,8 +18,9 @@ define([
 
 			if (this.list.length > 0) {
 				result.list = this.list.map(l => ({
-					name: l.name,
-					description: l.description
+					id: l.id,
+					name: l.config.name,
+					description: l.config.description
 				}));
 			}
 
@@ -28,6 +29,14 @@ define([
 
 		save: function() {
 			return null;
+		},
+
+		unregisterEvent: function(event) {
+			this.list.spliceWhere(l => (l == event));
+
+			this.obj.syncer.setArray(true, 'events', 'removeList', {
+				id: event.id
+			});
 		},
 
 		events: {
@@ -41,11 +50,12 @@ define([
 					this.list.push(c);
 
 					this.obj.syncer.setArray(true, 'events', 'updateList', {
+						id: c.id,
 						name: c.config.name,
 						description: c.config.description
 					});
 				}, this);
 			}
-		}	
+		}
 	};
 });

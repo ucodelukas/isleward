@@ -19,7 +19,14 @@ define([
 					events.emit('onObtainEvent', q);
 					this.list.push(q);
 				}, this);
-			}	
+			}
+
+			if (blueprint.removeList) {
+				blueprint.removeList.forEach(function(q) {
+					events.emit('onRemoveEvent', q.id);
+					this.list.spliceWhere(l => (l.id == q.id));
+				}, this);
+			}
 		}	
 	};
 });

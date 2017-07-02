@@ -22,6 +22,7 @@ define([
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainEvent', this.onObtainEvent.bind(this));
+			this.onEvent('onRemoveEvent', this.onRemoveEvent.bind(this));
 			this.onEvent('onUpdateEvent', this.onUpdateEvent.bind(this));
 			this.onEvent('onCompleteEvent', this.onCompleteEvent.bind(this));
 		},
@@ -29,6 +30,15 @@ define([
 		onRezone: function() {
 			this.list = [];
 			this.el.find('.list').empty();
+		},
+
+		onRemoveEvent: function(id) {
+			var l = this.list.spliceFirstWhere(function(l) {
+				return (l.id == id);
+			});
+
+			if (l)
+				l.el.remove();
 		},
 
 		onObtainEvent: function(event) {

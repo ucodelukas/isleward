@@ -83,11 +83,44 @@ define([
 						}
 
 						this.event.objects.push(mob);
+
+						if (l.dialogue) {
+							mob.addComponent('dialogue', {
+								config: l.dialogue.config
+							});
+
+							if (l.dialogue.auto) {
+								objects.buildObjects([{
+									properties: {
+										x: mob.x - 1,
+										y: mob.y - 1,
+										width: 3,
+										height: 3,
+										cpnNotice: {
+											actions: {
+												enter: {
+													cpn: 'dialogue',
+													method: 'talk',
+													args: [{
+														targetName: 'angler nayla'
+													}]
+												},
+												exit: {
+													cpn: 'dialogue',
+													method: 'stopTalk'
+												}
+											}
+										}
+									}
+								}]);
+							}
+						}
 					}
 				}
 			}, this);
 
-			this.end = true;
+			if (!this.endMark)
+				this.end = true;
 		},
 
 		spawnAnimation: function(mob) {

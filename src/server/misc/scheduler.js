@@ -58,9 +58,14 @@ define([
 
 							return tCheck.some(function(f) {
 								f = f.split('-');
-								if (f.length == 1)
-									return (useTime == f[0]);
-								else
+								if (f.length == 1) {
+									f = f[0].split('/');
+									if (f.length == 1)
+										return (useTime == f[0]);
+									else
+										return ((useTime % f[1]) == 0);
+								}
+								else 
 									return ((useTime >= f[0]) && (useTime <= f[1]));
 							});
 						});
