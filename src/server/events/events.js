@@ -101,8 +101,13 @@ define([
 			var stillBusy = false;
 			for (var i = 0; i < cLen; i++) {
 				var phase = currentPhases[i];
-				if ((phase.end) || (phase.endMark == event.age))
-					continue
+				if ((phase.end) || (phase.endMark == event.age)) {
+					if ((phase.destroy) && (!phase.destroyed)) {
+						phase.destroyed = true;
+						phase.destroy();
+					}
+					continue;
+				}
 				else {
 					stillBusy = true;
 					phase.update();

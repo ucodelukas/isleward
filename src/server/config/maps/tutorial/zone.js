@@ -3,7 +3,7 @@ module.exports = {
 	resources: {
 		Moonbell: {
 			type: 'herb',
-			max: 5
+			max: 500
 		},
 		Skyblossom: {
 			type: 'herb',

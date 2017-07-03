@@ -21,11 +21,11 @@ module.exports = [{
 		msg: 'Angler Nayla: The Fishing Tournament is over.'
 	}],
 
-	duration: 46,
+	duration: 460000,
 
 	phases: [{
 		type: 'spawnMob',
-		endMark: 40,
+		endMark: 4,
 		mobs: {
 			name: 'Angler Nayla',
 			attackable: false,
@@ -80,6 +80,14 @@ module.exports = [{
 						}]
 					}
 				}
+			}
+		}
+	}, {
+		endMark: 450000,
+		type: 'hookEvents',
+		events: {
+			beforeGatherResource: function(gatherResult) {
+				
 			}
 		}
 	}]

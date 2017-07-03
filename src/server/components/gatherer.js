@@ -1,7 +1,9 @@
 define([
-	'items/generators/quality'
+	'items/generators/quality',
+	'misc/events'
 ], function(
-	qualityGenerator
+	qualityGenerator,
+	events
 ) {
 	return {
 		type: 'gatherer',
@@ -46,24 +48,32 @@ define([
 
 		update: function() {
 			var gathering = this.gathering;
-
 			if (!gathering)
 				return;
+
+			var isFish = (gathering.resourceNode.nodeType == 'fish');
 
 			if (this.gatheringTtl > 0) {
 				this.gatheringTtl--;
 
 				var progress = 100 - ~~((this.gatheringTtl / this.gatheringTtlMax) * 100);
 				this.obj.syncer.set(true, 'gatherer', 'progress', progress);
-				if (gathering.resourceNode.nodeType == 'fish')
+				if (isFish)
 					this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 				return;
 			}
 
-			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+			var resourceNode = gathering.resourceNode;
+			var gatherResult = extend(true, {}, {
+				nodeType: resourceNode.nodeType,
+				blueprint: resourceNode.blueprint,
+				xp: resourceNode.xp,
+				items: gathering.inventory.items
+			});
+			events.emit('beforeGatherResource', gatherResult);
 
-			var isFish = (gathering.resourceNode.nodeType == 'fish');
+			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
 
 			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
@@ -88,9 +98,7 @@ define([
 					return;
 				}
 
-				var blueprint = gathering.resourceNode.blueprint;
-
-				gathering.inventory.items.forEach(function(g) {
+				gatherResult.items.forEach(function(g) {
 					delete g.quantity;
 
 					qualityGenerator.generate(g, {
@@ -107,7 +115,7 @@ define([
 					}[g.quality] + g.name;
 
 					var statFishWeight = 1 + ((rod.stats.fishWeight || 0) / 100);
-					var weight = ~~((blueprint.baseWeight + g.quality + (Math.random() * statFishWeight)) * 100) / 100;
+					var weight = ~~((gatherResult.blueprint.baseWeight + g.quality + (Math.random() * statFishWeight)) * 100) / 100;
 					g.stats = {
 						weight: weight
 					};
@@ -116,13 +124,12 @@ define([
 				});
 			}
 
-			var items = extend(true, [], gathering.inventory.items);
 			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 				var itemChance = 1 + (rod.stats.fishItem || 0);
 				if (~~(Math.random() * 100) < itemChance) {
-					gathering.inventory.items = [{
+					gatherResult.items = [{
 						name: 'Cerulean Pearl',
 						material: true,
 						quantity: 1,
@@ -131,16 +138,18 @@ define([
 				}
 			}
 
-			gathering.inventory.giveItems(this.obj, true);
-			gathering.inventory.items = items;
+			gatherResult.items.forEach(function(i) {
+				this.obj.inventory.getItem(i);
+			}, this);
 
-			gathering.resourceNode.gather();
+			if (!gatherResult.noChangeAmount)
+				resourceNode.gather();
 
-			this.obj.stats.getXp(gathering.resourceNode.xp);
+			this.obj.stats.getXp(gatherResult.xp);
 
 			this.obj.fireEvent('afterGatherResource');
 
-			if (this.gathering.destroyed) {
+			if (gathering.destroyed) {
 				if (isFish) {
 					process.send({
 						method: 'events',
