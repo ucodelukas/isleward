@@ -109,7 +109,8 @@ define([
 					continue;
 				}
 				else {
-					stillBusy = true;
+					if (!phase.auto)
+						stillBusy = true;
 					phase.update();
 				}
 			}

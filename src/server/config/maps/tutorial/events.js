@@ -84,10 +84,40 @@ module.exports = [{
 		}
 	}, {
 		endMark: 450000,
+		auto: true,
 		type: 'hookEvents',
 		events: {
 			beforeGatherResource: function(gatherResult) {
 				
+			}
+		}
+	}, {
+		type: 'modifyDialogue',
+		mobId: 'anglerNayla',
+		dialogue: {
+			add: {
+				'1': {
+					'1.3': {
+						msg: 'Take my fish, yo.',
+						prereq: function(obj) {
+							var fishies = obj.inventory.items.find(i => (i.name == 'Ancient Carp'));
+							return !!fishies;
+						},
+						goto: 'giveFish'
+					}
+				},
+				'giveFish': {
+					msg: [{
+						msg: `Noice.`,
+						options: [1.1, 1.2, 1.3]
+					}],
+					method: function(obj) {
+						var inventory = obj.inventory;
+
+						var fishies = inventory.items.find(i => (i.name == 'Ancient Carp'));
+						inventory.destroyItem(fishies.id);
+					}
+				}
 			}
 		}
 	}]
