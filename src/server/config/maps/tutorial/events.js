@@ -88,7 +88,8 @@ module.exports = [{
 		type: 'hookEvents',
 		events: {
 			beforeGatherResource: function(gatherResult) {
-				
+				if (Math.random() < 1.0)
+					gatherResult.items[0].name = 'Ancient Carp';
 			}
 		}
 	}, {
@@ -101,7 +102,7 @@ module.exports = [{
 						msg: 'Take my fish, yo.',
 						prereq: function(obj) {
 							var fishies = obj.inventory.items.find(i => (i.name == 'Ancient Carp'));
-							return !!fishies;
+							return true;//!!fishies;
 						},
 						goto: 'giveFish'
 					}
