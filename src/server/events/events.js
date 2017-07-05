@@ -34,6 +34,23 @@ define([
 
 			event.participators.forEach(p => p.events.syncList());
 		},
+		setEventRewards: function(name, rewards) {
+			var config = this.getEvent(name);
+			var event = config.event;
+			if (!event)
+				return;
+
+			event.rewards = rewards;
+			event.age = event.config.duration - 2;
+		},
+		setWinText: function(name, text) {
+			var config = this.getEvent(name);
+			var event = config.event;
+			if (!event)
+				return;
+
+			event.winText = text;
+		},
 
 		update: function() {
 			var configs = this.configs;
@@ -80,6 +97,13 @@ define([
 
 			config.event.participators.forEach(function(p) {
 				p.events.unregisterEvent(event);
+
+				var rewards = event.rewards[p.name];
+				if (rewards) {
+					rewards.forEach(function(r) {
+						p.inventory.getItem(extend(true, {}, r));
+					});
+				}
 			}, this);
 
 			config.event.objects.forEach(function(o) {
@@ -95,6 +119,15 @@ define([
 					}]
 				});
 			}, this);
+
+			if (event.winText) {
+				this.instance.syncer.queue('onGetMessages', {
+					messages: {
+						class: 'q4',
+						message: event.winText
+					}
+				});
+			}
 
 			delete config.event;
 		},

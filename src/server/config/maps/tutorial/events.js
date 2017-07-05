@@ -183,14 +183,42 @@ module.exports = [{
 							}
 						}
 
+						var tplRewards = {
+							'0': [{
+								name: 'Cerulean Pearl',
+								material: true,
+								quantity: 6,
+								sprite: [11, 9]
+							}],
+							'1': [{
+								name: 'Cerulean Pearl',
+								material: true,
+								quantity: 4,
+								sprite: [11, 9]
+							}],
+							'2': [{
+								name: 'Cerulean Pearl',
+								material: true,
+								quantity: 2,
+								sprite: [11, 9]
+							}]
+						};
+						var rewards = {};
+
 						var desc = `Catch the biggest Ancient Carp with a Competition Rod. Get a Competition Rod from Angler Nayla if you don't have one already.<br /><br />Leaderboard:<br />`;
 						for (var i = 0; i < 3; i++) {
 							ranks[i].forEach(function(r) {
-								desc += i + ': ' + r.owner + '<br />';
+								desc += (i + 1) + ': ' + r.owner + '<br />';
+
+								rewards[r.owner] = tplRewards[i];
 							});
 						}
 
 						this.instance.events.setEventDescription('Fishing Tournament', desc);
+						this.instance.events.setEventRewards('Fishing Tournament', rewards);
+
+						var winText = 'Angler Nayla: ' + ranks[0].map(r => r.owner).join(', ') + ' won!';
+						this.instance.events.setWinText('Fishing Tournament', winText)
 
 						return reply;
 					}
