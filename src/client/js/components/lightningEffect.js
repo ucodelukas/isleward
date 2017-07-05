@@ -120,7 +120,7 @@ define([
 				if (this.effect)
 					lightningBuilder.destroy(this.effect);
 
-				effects.unregister(this);
+				//effects.unregister(this);
 				return;
 			}
 

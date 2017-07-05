@@ -114,9 +114,6 @@ define([
 				});
 			}
 
-			if (obj.id == 'anglerNayla')
-				console.log($.extend(true, {}, obj));
-
 			if (!exists)
 				exists = this.buildObject(obj);
 			else

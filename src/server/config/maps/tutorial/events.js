@@ -8,16 +8,16 @@ module.exports = [{
 		mark: 0,
 		msg: 'Angler Nayla: The Fishing Tournament begins in 15 minutes.'
 	}, {
-		mark: 30,//1543,
+		mark: 30, //1543,
 		msg: 'Angler Nayla: The Fishing Tournament begins in 5 minutes.'
 	}, {
-		mark: 35,//2229,
+		mark: 35, //2229,
 		msg: 'Angler Nayla: The Fishing Tournament begins in 1 minute.'
 	}, {
-		mark: 40,//2400,
+		mark: 40, //2400,
 		msg: 'Angler Nayla: The Fishing Tournament has begun!'
 	}, {
-		mark: 45,//2410,
+		mark: 45, //2410,
 		msg: 'Angler Nayla: The Fishing Tournament is over.'
 	}],
 
@@ -101,8 +101,8 @@ module.exports = [{
 					'1.3': {
 						msg: 'Take my fish, yo.',
 						prereq: function(obj) {
-							var fishies = obj.inventory.items.find(i => (i.name == 'Ancient Carp'));
-							return true;//!!fishies;
+							var fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
+							return true; //!!fishies;
 						},
 						goto: 'giveFish'
 					}
@@ -113,10 +113,77 @@ module.exports = [{
 						options: [1.1, 1.2, 1.3]
 					}],
 					method: function(obj) {
-						var inventory = obj.inventory;
+						var myInventory = this.inventory;
+						var heaviest = 0;
 
-						var fishies = inventory.items.find(i => (i.name == 'Ancient Carp'));
-						inventory.destroyItem(fishies.id);
+						var inventory = obj.inventory;
+						var fishies = inventory.items.filter(i => (i.name.indexOf('Ancient Carp') > -1));
+						var count = fishies.length;
+						fishies.forEach(function(f) {
+							var w = f.stats.weight;
+							if (w > heaviest)
+								heaviest = w;
+
+							f.owner = obj.name;
+
+							inventory.destroyItem(f.id);
+							myInventory.getItem(f);
+						});
+
+						var reply = 'Thanks, but ' + ((count == 1) ? 'that one' : 'these') + ' are a bit too small';
+
+						var myFishies = myInventory.items
+							.filter(i => (i.name.indexOf('Ancient Carp') > -1))
+							.sort((a, b) => (b.stats.weight - a.stats.weight));
+
+						var mLen = myFishies.length;
+						var ranks = {
+							'0': [],
+							'1': [],
+							'2': []
+						};
+						var players = [];
+						var nextRank = 0;
+						for (var i = 0; i < mLen; i++) {
+							var f = myFishies[i];
+							var player = f.owner;
+							if (players.some(p => (p == player)))
+								continue;
+
+							var rank = ranks[nextRank];
+							if ((rank.length == 0) || (rank[0].stats.weight == f.stats.weight)) {
+								players.push(player);
+								rank.push(f);
+							} else {
+								i--;
+								nextRank++;
+							}
+
+							if (nextRank == 3)
+								break;
+						}
+
+						var rank = Object.keys(ranks).find(r => (ranks[r].some(p => (p.owner == obj.name))));
+						if (rank) {
+							var winWeight = ranks[rank].find(p => (p.owner == obj.name)).stats.weight;
+							if (winWeight == heaviest) {
+								var position = {
+									'0': 'first',
+									'1': 'second',
+									'2': 'third'
+								}[rank];
+								reply = `Wow, that one's huge! You've taken ${position} place.`;
+
+								this.instance.syncer.queue('onGetMessages', {
+									messages: {
+										class: 'q4',
+										message: `Angler Nayla: ${obj.name} has taken ${position} place in the Fishing Tournament!`
+									}
+								});
+							}
+						}
+
+						return reply;
 					}
 				}
 			}
