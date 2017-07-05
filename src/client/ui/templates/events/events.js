@@ -42,6 +42,15 @@ define([
 		},
 
 		onObtainEvent: function(event) {
+			var exists = this.list.find(function(l) {
+				return (l.id == event.id);
+			});
+			if (exists) {
+				exists.el.find('.name').html(event.name);
+				exists.el.find('.description').html(event.description);
+				return;
+			}
+
 			var container = this.el.find('.list');
 
 			var html = templateEvent
@@ -52,11 +61,6 @@ define([
 
 			if (event.isReady)
 				el.addClass('ready');
-
-			/*if (event.active) 
-				el.addClass('active');
-			else if (!event.isReady)
-				el.addClass('disabled');*/
 
 			this.list.push({
 				id: event.id,

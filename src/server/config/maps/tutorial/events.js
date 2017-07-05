@@ -183,6 +183,15 @@ module.exports = [{
 							}
 						}
 
+						var desc = `Catch the biggest Ancient Carp with a Competition Rod. Get a Competition Rod from Angler Nayla if you don't have one already.<br /><br />Leaderboard:<br />`;
+						for (var i = 0; i < 3; i++) {
+							ranks[i].forEach(function(r) {
+								desc += i + ': ' + r.owner + '<br />';
+							});
+						}
+
+						this.instance.events.setEventDescription('Fishing Tournament', desc);
+
 						return reply;
 					}
 				}

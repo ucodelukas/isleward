@@ -21,6 +21,20 @@ define([
 			this.configs = extend(true, [], configs);
 		},
 
+		getEvent: function(name) {
+			return this.configs.find(c => (c.name == name));
+		},
+		setEventDescription: function(name, desc) {
+			var config = this.getEvent(name);
+			var event = config.event;
+			if (!event)
+				return;
+
+			config.description = desc;
+
+			event.participators.forEach(p => p.events.syncList());
+		},
+
 		update: function() {
 			var configs = this.configs;
 			if (!configs)

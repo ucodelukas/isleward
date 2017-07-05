@@ -39,6 +39,16 @@ define([
 			});
 		},
 
+		syncList: function() {
+			this.list.forEach(function(l) {
+				this.obj.syncer.setArray(true, 'events', 'updateList', {
+					id: l.id,
+					name: l.config.name,
+					description: l.config.description
+				});
+			}, this);
+		},
+
 		events: {
 			afterMove: function() {
 				var events = this.obj.instance.events;
