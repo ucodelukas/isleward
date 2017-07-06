@@ -1,24 +1,26 @@
 define([
-	'../config/eventPhases/phaseTemplate'
+	'../config/eventPhases/phaseTemplate',
+	'fs'
 ], function(
-	phaseTemplate
+	phaseTemplate,
+	fs
 ) {
 	return {
-		configs: null,
+		configs: [],
 		nextId: 0,
 
 		init: function(instance) {
 			this.instance = instance;
 
-			var configs = null;
-			try {
-				configs = require('../config/maps/' + this.instance.map.name + '/events');
-			} catch (e) {}
-
-			if (!configs)
+			var path = 'config/maps/' + this.instance.map.name + '/events';
+			if (!fs.existsSync(path))
 				return;
 
-			this.configs = extend(true, [], configs);
+			var files = fs.readdirSync(path);
+			files.forEach(function(f) {
+				var e = require('../' + path + '/' + f);
+				this.configs.push(extend(true, {}, e));
+			}, this);
 		},
 
 		getEvent: function(name) {

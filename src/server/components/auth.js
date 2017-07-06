@@ -40,9 +40,8 @@ define([
 
 			this.charname = character.name;
 
-			data.callback();
 			this.obj.player.sessionStart = +new Date;
-			this.obj.player.spawn(character);
+			this.obj.player.spawn(character, data.callback);
 
 			var prophecies = this.obj.prophecies ? this.obj.prophecies.simplify().list : [];
 			leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);

@@ -1,11 +1,13 @@
 define([
 	'world/atlas',
 	'config/classes',
-	'config/roles'
+	'config/roles',
+	'misc/mail'
 ], function(
 	atlas,
 	classes,
-	roles
+	roles,
+	mail
 ) {
 	return {
 		type: 'player',
@@ -23,7 +25,7 @@ define([
 			}
 		},
 
-		spawn: function(character) {
+		spawn: function(character, cb) {
 			var obj = this.obj;
 
 			extend(true, obj, {
@@ -107,17 +109,23 @@ define([
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
 
-			atlas.addObject(obj, true);
+			mail.getMail(this.obj.name, this.onGetMail.bind(this, cb));
+		},
+
+		onGetMail: function(cb) {
+			atlas.addObject(this.obj, true);
 
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
 						class: 'q3',
-						message: obj.name + ' has come online'
+						message: this.obj.name + ' has come online'
 					}]
 				}],
 				onGetConnectedPlayer: [cons.getCharacterList()]
 			});
+
+			cb();
 		},
 
 		broadcastSelf: function() {
