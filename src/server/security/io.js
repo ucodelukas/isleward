@@ -15,7 +15,8 @@ define([
 			skins: null,
 			login: null,
 			leaderboard: null,
-			customMap: null
+			customMap: null,
+			mail: null
 		},
 
 		init: function(cbReady) {
@@ -24,24 +25,24 @@ define([
 			this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
 		},
 		onDbCreated: function(cbReady) {
-			if (this.exists) {
-				cbReady();
-				return;
-			}
-
 			var db = this.db;
 			var tables = this.tables;
+			var scope = this;
 			db.serialize(function() {
 				for (var t in tables) {
+
 					db.run(`
 						CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
-					`);
+					`, scope.onTableCreated.bind(scope));
 				}
 
 				cbReady();
 			}, this);
 
 			this.exists = true;
+		},
+		onTableCreated: function() {
+
 		},
 
 		//ent, field
@@ -83,7 +84,9 @@ define([
 		},
 
 		done: function(options, err, result) {
-			result = result || { value: null };
+			result = result || {
+				value: null
+			};
 
 			if (options.callback)
 				options.callback(result.value);

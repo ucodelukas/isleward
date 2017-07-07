@@ -1,14 +1,14 @@
 define([
-	'security/io',
-	'security/connections'
+	'security/io'
 ], function(
-	io,
-	connections
+	io
 ) {
 	return {
-		getMail: function(playerName, cb) {
-			setTimeout(this.getMail.bind(this, playerName), 10000);
+		init: function(instance) {
+			this.instance = instance;
+		},
 
+		getMail: function(playerName, cb) {
 			io.get({
 				ent: playerName,
 				field: 'mail',
@@ -16,31 +16,24 @@ define([
 			});
 		},
 		onGetMail: function(playerName, cb, result) {
+			if (result == 'null')
+				result = null;
+
 			result = JSON.parse(result || '[]');
 
-			result = [{
-				name: 'Cerulean Pearl',
-				material: true,
-				quantity: 2,
-				sprite: [11, 9]
-			}];
-
-			var player = connections.players.find(p => (p.name == playerName));
+			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 			if (player) {
 				var inventory = player.inventory;
 
 				result.forEach(function(r) {
-					if (player.zone) {
-						player.player.performAction({
-							data: {
-								cpn: 'inventory',
-								method: 'getItem',
-								data: r
+					if (r.removeAll) {
+						inventory.items.forEach(function(i) {
+							if ((r.nameLike) && (i.name.indexOf(r.nameLike) > -1)) {
+								inventory.destroyItem(i.id, i.quantity ? i.quantity : null);
 							}
 						});
-					} else {
-						inventory.items.push(r);
-					}
+					} else 
+						inventory.getItem(r);
 				});
 
 				io.set({
@@ -57,10 +50,10 @@ define([
 			if (!items.push)
 				items = [items];
 
-			var player = connections.players.find(p => (p.name == playerName));
+			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 
 			if (player)
-				this.onGetMail(player, null, JSON.stringify(items));
+				this.onGetMail(playerName, null, JSON.stringify(items));
 			else {
 				io.get({
 					ent: playerName,
@@ -70,6 +63,9 @@ define([
 			}
 		},
 		doSendMail: function(playerName, items, result) {
+			if (result == 'null')
+				result = null;
+
 			result = JSON.parse(result || '[]');
 
 			items.forEach(function(i) {
@@ -79,7 +75,8 @@ define([
 			io.set({
 				ent: playerName,
 				field: 'mail',
-				value: JSON.stringify(result)
+				value: JSON.stringify(result),
+				callback: this.getMail.bind(this, playerName)
 			});
 		}
 	};

@@ -1,9 +1,11 @@
 define([
 	'../config/eventPhases/phaseTemplate',
-	'fs'
+	'fs',
+	'misc/mail'
 ], function(
 	phaseTemplate,
-	fs
+	fs,
+	mail
 ) {
 	return {
 		configs: [],
@@ -100,8 +102,15 @@ define([
 			config.event.participators.forEach(function(p) {
 				p.events.unregisterEvent(event);
 
-				var rewards = event.rewards[p.name];
-				if (rewards) {
+				mail.sendMail(p.name, [{
+					nameLike: 'Pearl',
+					removeAll: true
+				}]);
+
+				var rewards = event.rewards;
+				if ((rewards) && (rewards[p.name])) {
+					rewards = rewards[p.name];
+
 					rewards.forEach(function(r) {
 						p.inventory.getItem(extend(true, {}, r));
 					});

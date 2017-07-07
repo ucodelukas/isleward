@@ -1,13 +1,11 @@
 define([
 	'world/atlas',
 	'config/classes',
-	'config/roles',
-	'misc/mail'
+	'config/roles'
 ], function(
 	atlas,
 	classes,
-	roles,
-	mail
+	roles
 ) {
 	return {
 		type: 'player',
@@ -109,10 +107,6 @@ define([
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
 
-			mail.getMail(this.obj.name, this.onGetMail.bind(this, cb));
-		},
-
-		onGetMail: function(cb) {
 			atlas.addObject(this.obj, true);
 
 			io.sockets.emit('events', {
@@ -185,8 +179,7 @@ define([
 				physics.addObject(this.obj, this.obj.x, this.obj.y);
 
 				this.obj.stats.die(source);
-			}
-			else
+			} else
 				this.obj.stats.dead = true;
 
 			this.obj.fireEvent('onAfterDeath', source);

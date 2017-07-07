@@ -10,7 +10,8 @@ define([
 	'world/randomMap',
 	'world/customMap',
 	'events/events',
-	'misc/scheduler'
+	'misc/scheduler',
+	'misc/mail'
 ], function(
 	map,
 	syncer,
@@ -23,7 +24,8 @@ define([
 	randomMap,
 	customMap,
 	events,
-	scheduler
+	scheduler,
+	mail
 ) {
 	return {
 		instances: [],
@@ -59,7 +61,7 @@ define([
 				map.create();
 				map.clientMap.zoneId = this.zoneId;
 
-				[resourceSpawner, syncer, objects, questBuilder, events].forEach(i => i.init(fakeInstance));
+				[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
 				this.addObject = this.nonInstanced.addObject.bind(this);
 				this.onAddObject = this.nonInstanced.onAddObject.bind(this);
@@ -134,6 +136,9 @@ define([
 				}
 			},
 			onAddObject: function(obj) {
+				if (obj.player)
+					mail.getMail(obj.name);
+
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
 			},
@@ -351,6 +356,10 @@ define([
 
 				obj.instance.spawners.scale(obj.stats.values.level);
 				obj.instance.questBuilder.obtain(obj);
+
+				if (obj.player)
+					mail.getMail(obj.name);
+
 				obj.fireEvent('afterMove');
 			},
 			updateObject: function(msg) {
@@ -457,7 +466,7 @@ define([
 					}
 				};
 
-				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler'].forEach(i => instance[i].init(instance));
+				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));
 
 				this.instances.push(instance);
 
