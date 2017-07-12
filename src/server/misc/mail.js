@@ -72,10 +72,12 @@ define([
 				result.push(i);
 			});
 
+			var itemString = JSON.stringify(items).split(`'`).join(`''`);
+
 			io.set({
 				ent: playerName,
 				field: 'mail',
-				value: JSON.stringify(result),
+				value: itemString,
 				callback: this.getMail.bind(this, playerName)
 			});
 		}

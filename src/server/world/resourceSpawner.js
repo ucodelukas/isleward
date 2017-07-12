@@ -12,7 +12,7 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 20,
+		cdMax: 2,
 
 		init: function(instance) {
 			this.objects = instance.objects;

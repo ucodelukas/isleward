@@ -34,22 +34,19 @@ module.exports = {
 
 			var tplRewards = {
 				'0': [{
-					name: 'Cerulean Pearl',
-					material: true,
-					quantity: 6,
-					sprite: [11, 9]
+					name: `Angler's Mark`,
+					quantity: 35,
+					sprite: [12, 9]
 				}],
 				'1': [{
-					name: 'Cerulean Pearl',
-					material: true,
-					quantity: 4,
-					sprite: [11, 9]
+					name: `Angler's Mark`,
+					quantity: 20,
+					sprite: [12, 9]
 				}],
 				'2': [{
-					name: 'Cerulean Pearl',
-					material: true,
-					quantity: 2,
-					sprite: [11, 9]
+					name: `Angler's Mark`,
+					quantity: 10,
+					sprite: [12, 9]
 				}]
 			};
 
@@ -208,15 +205,16 @@ module.exports = {
 						options: [1.1, 1.2, 1.3]
 					}],
 					method: function(obj) {
-						var event = this.instance.events.getEvent('Fishing Tournament');
-						if (!event)
+						var eventConfig = this.instance.events.getEvent('Fishing Tournament');
+						if (!eventConfig)
 							return;
 
-						var helpers = event.helpers;
+						var helpers = eventConfig.helpers;
+						var event = eventConfig.event;
 
 						var oldRank = helpers.getRank(event, obj.name);
 
-						event.helpers.giveFish(obj, this);
+						helpers.giveFish(obj, this);
 						helpers.updateRewards(event, this);
 
 						var newRank = helpers.getRank(event, obj.name);

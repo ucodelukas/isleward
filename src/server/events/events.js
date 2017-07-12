@@ -34,6 +34,9 @@ define([
 			if (!event)
 				return;
 
+			if (!config.oldDescription)
+				config.oldDescription = config.description;
+
 			config.description = desc;
 
 			event.participators.forEach(p => p.events.syncList());
@@ -83,6 +86,9 @@ define([
 		},
 
 		startEvent: function(config) {
+			if (config.oldDescription)
+				config.description = config.oldDescription;
+
 			var event = {
 				id: this.nextId++,
 				config: config,
@@ -102,19 +108,17 @@ define([
 			config.event.participators.forEach(function(p) {
 				p.events.unregisterEvent(event);
 
-				mail.sendMail(p.name, [{
-					nameLike: 'Pearl',
+				var rList = [{
+					nameLike: 'Ancient Carp',
 					removeAll: true
-				}]);
+				}];
 
 				var rewards = event.rewards;
 				if ((rewards) && (rewards[p.name])) {
-					rewards = rewards[p.name];
-
-					rewards.forEach(function(r) {
-						p.inventory.getItem(extend(true, {}, r));
-					});
+					rewards[p.name].forEach(r => rList.push(r));
 				}
+
+				mail.sendMail(p.name, rList);
 			}, this);
 
 			config.event.objects.forEach(function(o) {
