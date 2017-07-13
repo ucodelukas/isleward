@@ -144,6 +144,13 @@ define([
 				});
 			}
 
+			event.phases.forEach(function(p) {
+				if ((p.destroy) && (!p.destroyed)) {
+					p.destroyed = true;
+					p.destroy();
+				}
+			});
+
 			delete config.event;
 		},
 
