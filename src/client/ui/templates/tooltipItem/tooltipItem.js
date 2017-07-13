@@ -173,7 +173,7 @@ define([
 			} else
 				this.tooltip.find('.spellName').hide();
 
-			this.tooltip.find('.worth').html(item.worth ? ('<br />value: ' + item.worth) : '');
+			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
 			if (item.effects) {
 				var htmlEffects = '';

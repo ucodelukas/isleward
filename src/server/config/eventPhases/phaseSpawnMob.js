@@ -115,6 +115,9 @@ define([
 								}]);
 							}
 						}
+
+						if (l.trade)
+							mob.addComponent('trade', l.trade);
 					}
 				}
 			}, this);

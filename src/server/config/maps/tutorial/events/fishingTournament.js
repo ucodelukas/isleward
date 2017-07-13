@@ -134,7 +134,7 @@ module.exports = {
 					'1': {
 						msg: [{
 							msg: `Hi, LOL?`,
-							options: [1.1, 1.2]
+							options: [1.1, 1.2, 1.3]
 						}],
 						options: {
 							'1.1': {
@@ -144,6 +144,10 @@ module.exports = {
 							'1.2': {
 								msg: `Gimme sumdat leet comp-rod plox!`,
 								goto: 3
+							},
+							'1.3': {
+								msg: `Wanbuy tang`,
+								goto: 'tradeBuy'
 							}
 						}
 					},
@@ -170,7 +174,71 @@ module.exports = {
 								}
 							}
 						}]
+					},
+					tradeBuy: {
+						cpn: 'trade',
+						method: 'startBuy',
+						args: [{
+							targetName: 'angler nayla'
+						}]
 					}
+				}
+			},
+			trade: {
+				items: {
+					min: 0,
+					max: 0
+				},
+				forceItems: [{
+					name: 'Common Fishing Rod',
+					type: 'Fishing Rod',
+					slot: 'tool',
+					quality: 0,
+					worth: {
+						currency: `Angler's Mark`,
+						amount: 5
+					},
+					sprite: [11, 0],
+					infinite: true,
+					stats: {
+						stats: '???'
+					}
+				}, {
+					name: 'Magic Fishing Rod',
+					type: 'Fishing Rod',
+					slot: 'tool',
+					quality: 1,
+					worth: {
+						currency: `Angler's Mark`,
+						amount: 15
+					},
+					sprite: [11, 0],
+					infinite: true,
+					stats: {
+						stats: '???'
+					}
+				}, {
+					name: 'Rare Fishing Rod',
+					type: 'Fishing Rod',
+					slot: 'tool',
+					quality: 2,
+					worth: {
+						currency: `Angler's Mark`,
+						amount: 45
+					},
+					sprite: [11, 0],
+					infinite: true,
+					stats: {
+						stats: '???'
+					}
+				}],
+				level: {
+					min: 1,
+					max: 5
+				},
+				markup: {
+					buy: 0.25,
+					sell: 2.5
 				}
 			}
 		}
@@ -190,7 +258,7 @@ module.exports = {
 		dialogue: {
 			add: {
 				'1': {
-					'1.3': {
+					'1.4': {
 						msg: 'Take my fish, yo.',
 						prereq: function(obj) {
 							var fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
@@ -202,7 +270,7 @@ module.exports = {
 				'giveFish': {
 					msg: [{
 						msg: `Noice.`,
-						options: [1.1, 1.2, 1.3]
+						options: [1.1, 1.2, 1.3, 1.4]
 					}],
 					method: function(obj) {
 						var eventConfig = this.instance.events.getEvent('Fishing Tournament');
@@ -228,8 +296,7 @@ module.exports = {
 								'2': `Nice catch. You took second place!`,
 								'3': `Not bad at all. You too third place!`
 							}[newRank];
-						}
-						else
+						} else
 							return 'Not quite heavy enough, keep trying!';
 
 						return reply;
