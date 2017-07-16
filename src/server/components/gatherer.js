@@ -14,6 +14,12 @@ define([
 		gatheringTtlMax: 7,
 		defaultTtlMax: 7,
 
+		simplify: function() {
+			return {
+				type: 'gatherer'
+			};
+		},
+
 		gather: function() {
 			if (this.gathering != null)
 				return;
@@ -41,7 +47,7 @@ define([
 
 			if (firstNode.width) {
 				['x', 'y', 'width', 'height'].forEach(function(p) {
-					this.obj.syncer.set(true, 'gatherer', p, firstNode[p]);
+					this.obj.syncer.set(false, 'gatherer', p, firstNode[p]);
 				}, this);
 			}
 		},
@@ -73,7 +79,7 @@ define([
 			});
 			events.emit('beforeGatherResource', gatherResult);
 
-			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
 			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
@@ -216,6 +222,9 @@ define([
 					return;
 
 				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+
+				if (this.gathering.resourceNode.nodeType == 'fish')
+					this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 				this.gathering = null;
 			}

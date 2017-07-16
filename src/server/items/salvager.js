@@ -64,7 +64,7 @@ define([
 		}, {
 			list: ['Fishing Rod'],
 			materials: [{
-				name: 'Ashen Pearl',
+				name: 'Cerulean Pearl',
 				chance: 100,
 				quantity: 1,
 				qualityMult: 1.1
@@ -97,7 +97,7 @@ define([
 		'Legendary Essence': {
 			sprite: [0, 6]
 		},
-		'Ashen Pearl': {
+		'Cerulean Pearl': {
 			sprite: [11, 9]
 		}
 	};
