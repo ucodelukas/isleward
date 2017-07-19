@@ -44,12 +44,6 @@ define([
 
 			this.gatheringTtlMax = ttlMax;
 			this.gatheringTtl = this.gatheringTtlMax;
-
-			if (firstNode.width) {
-				['x', 'y', 'width', 'height'].forEach(function(p) {
-					this.obj.syncer.set(false, 'gatherer', p, firstNode[p]);
-				}, this);
-			}
 		},
 
 		update: function() {
@@ -60,6 +54,12 @@ define([
 			var isFish = (gathering.resourceNode.nodeType == 'fish');
 
 			if (this.gatheringTtl > 0) {
+				if ((this.gatheringTtl == this.gatheringTtlMax) && (gathering.width)) {
+					['x', 'y', 'width', 'height'].forEach(function(p) {
+						this.obj.syncer.set(false, 'gatherer', p, gathering[p]);
+					}, this);
+				}
+
 				this.gatheringTtl--;
 
 				var progress = 100 - ~~((this.gatheringTtl / this.gatheringTtlMax) * 100);
@@ -220,6 +220,10 @@ define([
 			beforeMove: function() {
 				if (!this.gathering)
 					return;
+
+				['x', 'y', 'width', 'height'].forEach(function(p) {
+					this.obj.syncer.delete(false, 'gatherer', p);
+				}, this);
 
 				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
 

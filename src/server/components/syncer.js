@@ -5,8 +5,12 @@ define([
 ) {
 	return {
 		type: 'syncer',
-		o: { components: [] },
-		oSelf: { components: [] },
+		o: {
+			components: []
+		},
+		oSelf: {
+			components: []
+		},
 		reset: function() {
 			this.o = {
 				components: []
@@ -23,7 +27,7 @@ define([
 
 			var keys = Object.keys(o);
 			if (o.components.length == 0) {
-				if (keys.length == 1) 
+				if (keys.length == 1)
 					return null;
 				else
 					delete o.components;
@@ -102,6 +106,23 @@ define([
 				o[property] = [];
 
 			o[property].push(value);
+		},
+
+		delete: function(self, cpnType, property) {
+			var o = this.o;
+			if (self)
+				o = this.oSelf;
+
+			if (cpnType) {
+				var cpn = o.components.find(c => (c.type == cpnType))
+
+				if (!cpn)
+					return;
+
+				delete cpn[property];
+			} else {
+				delete o[property];
+			}
 		}
 	};
 });
