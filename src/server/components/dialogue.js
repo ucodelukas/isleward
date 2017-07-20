@@ -9,8 +9,15 @@ define([
 		states: {},
 		sourceStates: {},
 
+		trigger: null,
+
 		init: function(blueprint) {
 			this.states = blueprint.config;
+		},
+
+		destroy: function() {
+			if (this.trigger)
+				this.trigger.destroyed = true;
 		},
 
 		talk: function(msg) {

@@ -73,9 +73,6 @@ define([
 						mobBuilder.build(mob, l);
 						this.spawnAnimation(mob);
 
-						//TESTCODE
-						mob.stats.values.hp = 0.1;
-						mob.stats.values.hpMax = 0.1;
 
 						if (l.id) {
 							var id = l.id.split('$').join(i);
@@ -90,7 +87,7 @@ define([
 							});
 
 							if (l.dialogue.auto) {
-								objects.buildObjects([{
+								mob.dialogue.trigger = objects.buildObjects([{
 									properties: {
 										x: mob.x - 1,
 										y: mob.y - 1,

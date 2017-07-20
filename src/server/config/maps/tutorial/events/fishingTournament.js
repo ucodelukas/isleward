@@ -21,7 +21,7 @@ module.exports = {
 		msg: 'Angler Nayla: The Fishing Tournament is over.'
 	}],
 
-	duration: 100,
+	duration: 30,
 
 	helpers: {
 		updateRewards: function(event, anglerNayla) {
