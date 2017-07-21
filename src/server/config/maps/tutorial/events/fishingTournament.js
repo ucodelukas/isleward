@@ -133,7 +133,7 @@ module.exports = {
 				config: {
 					'1': {
 						msg: [{
-							msg: `Hi, LOL?`,
+							msg: `Hi there!`,
 							options: [1.1, 1.2, 1.3]
 						}],
 						options: {
@@ -143,28 +143,47 @@ module.exports = {
 							},
 							'1.2': {
 								msg: `Gimme sumdat leet comp-rod plox!`,
-								goto: 3
+								goto: 5
 							},
 							'1.3': {
-								msg: `Wanbuy tang`,
+								msg: `I would like to trade some Angler's Marks.`,
 								goto: 'tradeBuy'
 							}
 						}
 					},
 					'2': {
-						msg: `Making fishcatch, fool.`,
+						msg: `Why, the Grand Fishing Tournament, of course! Anglers come from all over to compete in this esteemed event.`,
 						options: {
 							'2.1': {
-								msg: `Soz.`
+								msg: `How does it work?`,
+								goto: 3
 							}
 						}
 					},
 					'3': {
+						msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the biggest one, you win!`,
+						options: {
+							'3.1': {
+								msg: `I would like to ask something else.`,
+								goto: 1
+							}
+						}
+					},
+					'4': {
+						msg: `The top three people will win Ang;er's Marks that can be exchanged for Fishing Rods and Cerulean Pearls.`,
+						options: {
+							'3.1': {
+								msg: `What are the prizes?`,
+								goto: 4
+							}
+						}
+					},
+					'5': {
 						cpn: 'dialogue',
 						method: 'getItem',
 						args: [{
 							item: {
-								name: 'Leet Comp-Rod',
+								name: 'Competition Rod',
 								slot: 'tool',
 								sprite: [11, 1],
 								type: 'Competition Fishing Rod',
@@ -259,17 +278,17 @@ module.exports = {
 			add: {
 				'1': {
 					'1.4': {
-						msg: 'Take my fish, yo.',
+						msg: `I'd like to hand in some fish.`,
 						prereq: function(obj) {
 							var fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
-							return true; //!!fishies;
+							return !!fishies;
 						},
 						goto: 'giveFish'
 					}
 				},
 				'giveFish': {
 					msg: [{
-						msg: `Noice.`,
+						msg: ``,
 						options: [1.1, 1.2, 1.3, 1.4]
 					}],
 					method: function(obj) {
