@@ -3,6 +3,7 @@ module.exports = {
 	description: `Rodriguez, the Hermit's only chicken companion, has been kidnapped by a band of imps. Who knows what they plan on doing with him.`,
 	distance: -1,
 	cron: '0 */2 * * *',
+	disabled: true,
 
 	phases: [{
 		type: 'spawnMob',

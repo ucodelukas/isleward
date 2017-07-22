@@ -21,7 +21,8 @@ define([
 			var files = fs.readdirSync(path);
 			files.forEach(function(f) {
 				var e = require('../' + path + '/' + f);
-				this.configs.push(extend(true, {}, e));
+				if (!e.disabled) 
+					this.configs.push(extend(true, {}, e));
 			}, this);
 		},
 

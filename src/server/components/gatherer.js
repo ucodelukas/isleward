@@ -77,7 +77,7 @@ define([
 				xp: resourceNode.xp,
 				items: gathering.inventory.items
 			});
-			events.emit('beforeGatherResource', gatherResult);
+			events.emit('beforeGatherResource', gatherResult, this.obj);
 
 			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 

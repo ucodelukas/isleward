@@ -1,27 +1,33 @@
 module.exports = {
 	name: 'Fishing Tournament',
-	description: `Catch the biggest Ancient Carp with a Competition Rod. Get a Competition Rod from Angler Nayla if you don't have one already.`,
+	description: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '* * * * *',
+	cron: '*/14 * * * *',
 
 	notifications: [{
 		mark: 0,
-		msg: 'Angler Nayla: The Fishing Tournament begins in 15 minutes.'
+		msg: 'Angler Nayla: The Fishing Tournament begins in 10 minutes.'
 	}, {
-		mark: 30, //1543,
+		mark: 857,
 		msg: 'Angler Nayla: The Fishing Tournament begins in 5 minutes.'
 	}, {
-		mark: 35, //2229,
+		mark: 1543,
 		msg: 'Angler Nayla: The Fishing Tournament begins in 1 minute.'
 	}, {
-		mark: 40, //2400,
+		mark: 1714,
 		msg: 'Angler Nayla: The Fishing Tournament has begun!'
 	}, {
-		mark: 45, //2410,
+		mark: 2571,
+		msg: 'Angler Nayla: The Fishing Tournament ends in 5 minutes.'
+	}, {
+		mark: 3256,
+		msg: 'Angler Nayla: The Fishing Tournament ends in 1 minute.'
+	}, {
+		mark: 3428,
 		msg: 'Angler Nayla: The Fishing Tournament is over.'
 	}],
 
-	duration: 30,
+	duration: 3428,
 
 	helpers: {
 		updateRewards: function(event, anglerNayla) {
@@ -70,7 +76,7 @@ module.exports = {
 		updateDescription: function(event, events) {
 			var ranks = event.ranks;
 
-			var desc = `Catch the biggest Ancient Carp with a Competition Rod. Get a Competition Rod from Angler Nayla if you don't have one already.<br /><br />Leaderboard:<br />`;
+			var desc = `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.<br /><br />Leaderboard:<br />`;
 			for (var playerName in ranks) {
 				desc += ranks[playerName] + ': ' + playerName + '<br />';
 			}
@@ -117,7 +123,7 @@ module.exports = {
 
 	phases: [{
 		type: 'spawnMob',
-		endMark: 4,
+		endMark: 1714,
 		mobs: {
 			name: 'Angler Nayla',
 			attackable: false,
@@ -133,7 +139,7 @@ module.exports = {
 				config: {
 					'1': {
 						msg: [{
-							msg: `Hi there!`,
+							msg: `Hi there, are you here to compete?`,
 							options: [1.1, 1.2, 1.3]
 						}],
 						options: {
@@ -142,7 +148,7 @@ module.exports = {
 								goto: 2
 							},
 							'1.2': {
-								msg: `Gimme sumdat leet comp-rod plox!`,
+								msg: `Could I please have a Competition Rod?`,
 								goto: 5
 							},
 							'1.3': {
@@ -164,17 +170,17 @@ module.exports = {
 						msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the biggest one, you win!`,
 						options: {
 							'3.1': {
-								msg: `I would like to ask something else.`,
-								goto: 1
+								msg: `What are the prizes?`,
+								goto: 4
 							}
 						}
 					},
 					'4': {
-						msg: `The top three people will win Ang;er's Marks that can be exchanged for Fishing Rods and Cerulean Pearls.`,
+						msg: `The top three participants will win Angler's Marks that can be exchanged for Fishing Rods and Cerulean Pearls.`,
 						options: {
-							'3.1': {
-								msg: `What are the prizes?`,
-								goto: 4
+							'4.1': {
+								msg: `I would like to ask something else.`,
+								goto: 1
 							}
 						}
 					},
@@ -187,6 +193,8 @@ module.exports = {
 								slot: 'tool',
 								sprite: [11, 1],
 								type: 'Competition Fishing Rod',
+								worth: 0,
+								noSalvage: true,
 								stats: {
 									catchSpeed: 50,
 									catchChance: 25
@@ -262,13 +270,16 @@ module.exports = {
 			}
 		}
 	}, {
-		endMark: 450000,
+		endMark: 6857,
 		auto: true,
 		type: 'hookEvents',
 		events: {
-			beforeGatherResource: function(gatherResult) {
-				if (Math.random() < 1.0)
-					gatherResult.items[0].name = 'Ancient Carp';
+			beforeGatherResource: function(gatherResult, gatherer) {
+				var hasCompRod = gatherer.inventory.items.some(i => (i.name == 'Competition Rod'));
+				if (!hasCompRod)
+					return;
+
+				gatherResult.items[0].name = 'Ancient Carp';
 			}
 		}
 	}, {
