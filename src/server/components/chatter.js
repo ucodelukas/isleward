@@ -19,6 +19,8 @@ define([
 		update: function() {
 			if ((this.obj.aggro) && (this.obj.aggro.list.length > 0))
 				return;
+			else if (this.chats.length == 0)
+				return;
 
 			if ((this.cd == 0) && (Math.random() < this.chance)) {
 				this.cd = this.cdMax;

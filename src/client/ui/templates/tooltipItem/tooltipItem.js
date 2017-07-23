@@ -11,6 +11,19 @@ define([
 	tplTooltip,
 	statTranslations
 ) {
+	var percentageStats = [
+		'addCritChance',
+		'addCritMultiplier',
+		'sprintChance',
+		'dmgPercent',
+		'xpIncrease',
+		'catchChance',
+		'catchSpeed',
+		'fishRarity',
+		'fishWeight',
+		'fishItems'
+	];
+
 	return {
 		tpl: template,
 		type: 'tooltipItem',
@@ -20,7 +33,7 @@ define([
 
 		postRender: function() {
 			this.tooltip = this.el.find('.tooltip');
-			
+
 			this.onEvent('onShowItemTooltip', this.onShowItemTooltip.bind(this));
 			this.onEvent('onHideItemTooltip', this.onHideItemTooltip.bind(this));
 		},
@@ -47,8 +60,7 @@ define([
 								tempStats[s] = '+' + delta;
 							else if (delta < 0)
 								tempStats[s] = delta;
-						}
-						else
+						} else
 							tempStats[s] = '+' + tempStats[s];
 					}
 					for (var s in compareStats) {
@@ -64,7 +76,7 @@ define([
 					var statName = statTranslations.translate(s);
 					var value = tempStats[s];
 
-					if (['addCritChance', 'addCritMultiplier', 'sprintChance', 'dmgPercent', 'xpIncrease'].indexOf(s) > -1)
+					if (percentageStats.indexOf(s) > -1)
 						value += '%';
 					else if ((s.indexOf('element') == 0) && (s.indexOf('Resist') == -1))
 						value += '%';
@@ -141,14 +153,12 @@ define([
 					this.tooltip.find('.material').show();
 				else if (item.quest)
 					this.tooltip.find('.quest').show();
-			} 
-			else if (item.eq) 
+			} else if (item.eq)
 				this.tooltip.find('.info').hide();
 
 			if (!item.ability) {
 				this.tooltip.find('.damage').hide();
-			}
-			else
+			} else
 				this.tooltip.find('.info').hide();
 
 			if (item.spell) {
@@ -156,15 +166,14 @@ define([
 					.html('<br />' + item.spell.name)
 					.addClass('q' + item.spell.quality)
 					.show();
-				this.tooltip.find('.damage')	
+				this.tooltip.find('.damage')
 					.show();
 				if (item.ability)
 					this.tooltip.find('.spellName').hide();
-			}
-			else
-				this.tooltip.find('.spellName').hide();	
+			} else
+				this.tooltip.find('.spellName').hide();
 
-			this.tooltip.find('.worth').html(item.worth ? ('<br />value: ' + item.worth) : '');
+			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
 			if (item.effects) {
 				var htmlEffects = '';
@@ -178,8 +187,7 @@ define([
 				this.find('.effects')
 					.html(htmlEffects)
 					.show();
-			}
-			else
+			} else
 				this.find('.effects').hide();
 
 			if (item.factions) {
@@ -198,8 +206,7 @@ define([
 				this.find('.faction')
 					.html(htmlFactions)
 					.show();
-			}
-			else
+			} else
 				this.find('.faction').hide();
 
 			if ((shiftDown) || (!compare))

@@ -66,45 +66,5 @@ define([
 		}
 	};
 
-	/*require('misc/random');
-
-	for (var i = 0; i < 1000; i++) {
-		var item = generator.generate();
-		if (item.slot == 'tool') {
-			console.log(item);
-		}
-	}*/
-
-	/*var qualities = [0, 0, 0, 0, 0];
-	var count = 716;
-
-	for (var i = 0; i < count; i++) {
-		qualities[generator.generate({
-			magicFind: 200,
-			noSpell: true
-		}).quality]++;
-	}
-
-	//console.log(qualities.map(q => (q / count) * 100));
-	console.log(qualities.map(q => q));*/
-
-	/*for (var i = 0; i < 10; i++) {
-		var item = generator.generate({
-			quality: 4,
-			level: 10
-		});
-
-		if (item.slot)
-			console.log(item.slot + ' ' + ~~item.stats.armor);
-	}*/
-
-	/*var max = 0;
-	for (var i = 0; i < 1000; i++) {
-		var roll = random.norm(20, 32);
-		if (roll > max)
-			max = roll;
-	}
-	console.log(max);*/
-
 	return generator;
 });

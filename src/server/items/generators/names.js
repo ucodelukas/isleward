@@ -7,11 +7,10 @@ define([
 ) {
 	return {
 		generators: [
-			'basic',
-			[ 'basic' ],
-			[ 'gPrefix', 'gSuffix' ],
-			[ 'gPrefix', 'gSuffix' ],
-			[ 'gPrefix', 'gSuffix' ]
+			'basic', ['basic'],
+			['gPrefix', 'gSuffix'],
+			['gPrefix', 'gSuffix'],
+			['gPrefix', 'gSuffix']
 		],
 		prefixes: {
 			hpMax: 'Healthy',
@@ -83,15 +82,14 @@ define([
 			if (blueprint.name) {
 				item.name = blueprint.name;
 				return;
-			}
-			else if (blueprint.noName) {
+			} else if (blueprint.noName) {
 				item.name = item.type;
 				return;
 			}
 
 			var gen = this.generators[item.quality];
 			if (!(gen instanceof Array))
-				gen = [ gen ];
+				gen = [gen];
 
 			gen.forEach(g => this.types[g].call(this, item, blueprint));
 		},
@@ -115,7 +113,10 @@ define([
 				var stats = [];
 				for (var s in item.stats) {
 					if (this.suffixes[s])
-						stats.push({ stat: s, value: item.stats[s] });
+						stats.push({
+							stat: s,
+							value: item.stats[s]
+						});
 				}
 				stats.sort((a, b) => b.value - a.value);
 
@@ -142,12 +143,18 @@ define([
 				}
 			},
 			gSuffix: function(item, blueprint) {
-				var list = suffixes.generic.concat(suffixes.slots[item.slot] || []);
+				var list = null;
 
-				if (item.stats.armor)
-					list = list.concat(suffixes.armor);
-				else if (item.slot == 'twoHanded')
-					list = list.concat(suffixes.weapons);
+				if (item.slot == 'tool') {
+					list = suffixes.slots.tool;
+				} else {
+					list = suffixes.generic.concat(suffixes.slots[item.slot] || []);
+
+					if (item.stats.armor)
+						list = list.concat(suffixes.armor);
+					else if (item.slot == 'twoHanded')
+						list = list.concat(suffixes.weapons);
+				}
 
 				var pick = list[~~(Math.random() * list.length)];
 				item.name += ' ' + pick[0].toUpperCase() + pick.substr(1);

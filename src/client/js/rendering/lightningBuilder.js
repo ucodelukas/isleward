@@ -14,7 +14,7 @@ define([
 				lines: []
 			};
 
-			var maxDeviate = scale * 0.3;
+			var maxDeviate = config.maxDeviate || (scale * 0.3);
 
 			var fx = config.fromX * scale;
 			var fy = config.fromY * scale;
@@ -25,7 +25,7 @@ define([
 			var angle = Math.atan2(ty - fy, tx - fx);
 			var distance = Math.sqrt(Math.pow(tx - fx, 2) + Math.pow(ty - fy, 2));
 			var divDistance = Math.min(20, distance);
-			var divisions = Math.max(1, distance / divDistance);
+			var divisions = config.divisions || Math.max(1, distance / divDistance);
 
 			var x = fx;
 			var y = fy;
@@ -49,19 +49,24 @@ define([
 				var patches = {};
 
 				for (var j = 0; j < steps; j++) {
-					var c = [0xffeb38, 0xfaac45, 0xfafcfc][~~(Math.random() * 3)];
+					var alpha = 1;
+					if ((config.colors) && (i == divisions - 1) && (j > (steps * 0.75)))
+						alpha = 1 - (j / steps);
+
+					var c = (config.colors || [0xffeb38, 0xfaac45, 0xfafcfc])[~~(Math.random() * (config.colors ? config.colors.length : 3))];
 					line.sprites.push(renderer.buildRectangle({
 						x: ~~(x / scaleMult) * scaleMult,
 						y: ~~(y / scaleMult) * scaleMult,
 						w: scaleMult,
 						h: scaleMult,
+						alpha: alpha,
 						color: c,
 						layerName: 'effects'
 					}));
 
 					var xx = x;
 					var yy = y;
-					if (!patches[xx + '-' + yy]) {
+					if ((!patches[xx + '-' + yy]) && (!config.colors)) {
 						patches[xx + '-' + yy] = 1;
 
 						var lightPatch = renderer.buildObject({

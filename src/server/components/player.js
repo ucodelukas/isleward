@@ -23,7 +23,7 @@ define([
 			}
 		},
 
-		spawn: function(character) {
+		spawn: function(character, cb) {
 			var obj = this.obj;
 
 			extend(true, obj, {
@@ -86,6 +86,7 @@ define([
 			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
 			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
 			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
+			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 
 			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
 			if (blueprintEffects.effects) {
@@ -106,17 +107,19 @@ define([
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
 
-			atlas.addObject(obj, true);
+			atlas.addObject(this.obj, true);
 
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
 						class: 'q3',
-						message: obj.name + ' has come online'
+						message: this.obj.name + ' has come online'
 					}]
 				}],
 				onGetConnectedPlayer: [cons.getCharacterList()]
 			});
+
+			cb();
 		},
 
 		broadcastSelf: function() {
@@ -176,8 +179,7 @@ define([
 				physics.addObject(this.obj, this.obj.x, this.obj.y);
 
 				this.obj.stats.die(source);
-			}
-			else
+			} else
 				this.obj.stats.dead = true;
 
 			this.obj.fireEvent('onAfterDeath', source);

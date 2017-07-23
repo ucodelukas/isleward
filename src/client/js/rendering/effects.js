@@ -32,15 +32,14 @@ define([
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
 
-				if ((l.destroyed) || (l.obj.destroyed)) {
-					list.splice(i, 1);
-					i--;
-					lLen--;
+				if ((l.destroyed) || (!l.obj) || (l.obj.destroyed)) {
+					if (((l.destroyManual) && (!l.destroyManual())) || (!l.destroyManual)) {
+						list.splice(i, 1);
+						i--;
+						lLen--;
 
-					if (l.destroyManual)
-						l.destroyManual();
-					
-					continue;
+						continue;
+					}
 				}
 
 				l.renderManual();

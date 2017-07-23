@@ -24,6 +24,10 @@ define([
 			this.syncer = this.obj.instance.syncer;
 		},
 
+		destroy: function() {
+			this.contents.forEach(c => this.collisionExit(c));
+		},
+
 		callAction: function(obj, actionName) {
 			var action = this.actions[actionName];
 			if (!action)
@@ -50,6 +54,8 @@ define([
 				return;
 			else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
 				return;
+
+			this.contents.push(obj);
 
 			this.callAction(obj, 'enter');
 
@@ -78,6 +84,8 @@ define([
 				else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
 					return;
 			}
+
+			this.contents.spliceWhere(c => (c == obj));
 
 			this.callAction(obj, 'exit');
 

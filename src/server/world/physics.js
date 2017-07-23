@@ -38,9 +38,20 @@ define([
 			for (var i = lowX; i < highX; i++) {
 				var row = cells[i];
 				for (var j = lowY; j < highY; j++) {
-					if (!row[j])
+					var cell = row[j];
+
+					if (!cell)
 						continue;
-					row[j].push(obj);
+
+					var cLen = cell.length;
+					for (var k = 0; k < cLen; k++) {
+						var c = cell[k];
+
+						c.collisionEnter(obj);
+						obj.collisionEnter(c);
+					}
+
+					cell.push(obj);
 				}
 			}
 		},

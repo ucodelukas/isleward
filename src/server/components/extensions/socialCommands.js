@@ -71,6 +71,9 @@ define([
 			if (config.stats)
 				config.stats = config.stats.split(',');
 
+			if (config.name)
+				config.name = config.name.split('_').join(' ');
+
 			this.obj.inventory.getItem(generator.generate(config));
 		},
 

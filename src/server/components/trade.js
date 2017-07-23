@@ -1,7 +1,9 @@
 define([
-	'items/generator'
+	'items/generator',
+	'items/generators/stats'
 ], function(
-	generator
+	generator,
+	statGenerator
 ) {
 	return {
 		type: 'trade',
@@ -22,6 +24,20 @@ define([
 
 		init: function(blueprint) {
 			this.gold = blueprint.gold;
+
+			(blueprint.forceItems || []).forEach(function(f, i) {
+				var item = extend(true, {}, f);
+
+				var id = 0;
+				this.items.forEach(function(checkItem) {
+					if (checkItem.id >= id)
+						id = checkItem.id + 1;
+				});
+
+				item.id = id;
+
+				this.items.push(item);
+			}, this);
 
 			if (!blueprint.items)
 				return;
@@ -119,13 +135,19 @@ define([
 				return;
 			}
 
-			var worth = ~~(item.worth * markup);
-			if (this.gold < worth) {
+			var canAfford = false;
+			if (item.worth.currency) {
+				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+				canAfford = ((currencyItem) && (currencyItem.quantity >= item.worth.amount));
+			} else
+				canAfford = this.gold < ~~(item.worth * markup);
+			
+			if (!canAfford) {
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
 						class: 'q0',
-						message: `you don't have enough gold to buy that item`,
+						message: `you can't afford that item`,
 						type: 'info'
 					}]
 				}, [this.obj.serverId]);
@@ -159,17 +181,33 @@ define([
 
 			if (msg.action == 'buyback')
 				targetTrade.removeBuyback(msg.itemId, this.obj.name);
-			else if (item.type != 'skin')
+			else if ((item.type != 'skin') && (!item.infinite))
 				targetTrade.removeItem(msg.itemId, this.obj.name);
 
-			targetTrade.gold += worth;
-			this.gold -= worth;
-
-			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
+			if (item.worth.currency) {
+				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount);
+			} else {
+				targetTrade.gold += worth;
+				this.gold -= worth;
+				this.obj.syncer.set(true, 'trade', 'gold', this.gold);
+			}
 
 			if (item.type != 'skin') {
-				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
-				this.obj.inventory.getItem(item);
+				if (!item.infinite)
+					this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
+				
+				var clonedItem = extend(true, {}, item);
+				if (item.worth.currency)
+					clonedItem.worth = 0;
+				if ((item.stats) && (item.stats.stats)) {
+					delete clonedItem.stats;
+					statGenerator.generate(clonedItem, {});
+				}
+
+				delete clonedItem.infinite;
+
+				this.obj.inventory.getItem(clonedItem);
 			}
 			else {
 				this.obj.auth.saveSkin(item.id);

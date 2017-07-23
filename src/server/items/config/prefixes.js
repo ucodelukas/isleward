@@ -206,6 +206,12 @@ define([
 			],
 			head: [
 				`masked`
+			],
+			tool: [
+				`angler%`,
+				`fisherman%`,
+				`linesman%`,
+				`trawler%`
 			]
 		}
 	};

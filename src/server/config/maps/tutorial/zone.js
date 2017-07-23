@@ -15,6 +15,11 @@ module.exports = {
 		}
 	},
 	objects: {
+		'sun carp school': {
+			max: 4,
+			type: 'fish',
+			quantity: [3, 6]
+		},
 		shophermit: {
 			properties: {
 				cpnNotice: {
@@ -208,6 +213,30 @@ module.exports = {
 						min: 3,
 						max: 5
 					},
+					forceItems: [
+						{
+							name: 'Flimsy Fishing Rod',
+							type: 'Fishing Rod',
+							slot: 'tool',
+							quality: 0,
+							worth: 10,
+							sprite: [11, 0],
+							infinite: true
+						},
+						{
+							name: 'Reinforced Fishing Rod',
+							type: 'Fishing Rod',
+							slot: 'tool',
+							quality: 1,
+							worth: 400,
+							sprite: [11, 0],
+							infinite: true,
+							stats: {
+								catchSpeed: 50,
+								catchChance: 35
+							}
+						}
+					],
 					level: {
 						min: 1,
 						max: 5
