@@ -186,10 +186,10 @@ define([
 				.split('>')
 				.join('');
 
+			textbox.blur();
+
 			if (val == '')
 				return;
-
-			textbox.blur();
 
 			client.request({
 				cpn: 'social',
