@@ -66,6 +66,24 @@ define([
 				}
 			}
 
+			var equipMsg = {
+				success: true,
+				item: item
+			};
+			this.obj.fireEvent('beforeEquipItem', equipMsg);
+			if (!equipMsg.success) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: [{
+						class: 'q0',
+						message: equipMsg.msg || 'you cannot equip that item',
+						type: 'info'
+					}]
+				}, [this.obj.serverId]);
+
+				return;
+			}
+
 			var spellId = null;
 			var currentEqId = this.eq[item.slot];
 			var currentEq = this.obj.inventory.findItem(currentEqId);
