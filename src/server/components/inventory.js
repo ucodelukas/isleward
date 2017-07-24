@@ -77,6 +77,26 @@ define([
 						statGenerator.generate(item);
 					});
 				}
+
+				if ((item.pos == null) && (!item.eq)) {
+					var pos = i;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fj => (fj.pos == j))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
+					var pos = item.pos;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				}
 			}
 		},
 
