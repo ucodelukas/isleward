@@ -265,8 +265,6 @@ define([
 
 				a.obj.fireEvent('afterKillMob', target);
 			}
-
-			target.fireEvent('afterDeath');
 		},
 
 		die: function(source) {
@@ -345,8 +343,8 @@ define([
 
 					if (killSource.player)
 						killSource.stats.kill(this.obj);
-					else
-						this.obj.fireEvent('afterDeath', deathEvent);
+					
+					this.obj.fireEvent('afterDeath', deathEvent);
 
 					if (this.obj.player) {
 						this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
