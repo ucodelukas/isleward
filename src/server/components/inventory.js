@@ -421,7 +421,7 @@ define([
 
 			//Material?
 			var exists = false;
-			if (((item.material) || (item.quest)) && (!item.noStack)) {
+			if (((item.material) || (item.quest)) && (!item.noStack) || (item.quantity)) {
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;

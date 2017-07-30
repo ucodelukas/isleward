@@ -225,6 +225,7 @@ define([
 			});
 		},
 		onHashCompare: function(msg, storedPassword) {
+			console.log(storedPassword);
 			var credentials = msg.data;
 
 			bcrypt.compare(credentials.password, storedPassword, this.onLogin.bind(this, msg, storedPassword));

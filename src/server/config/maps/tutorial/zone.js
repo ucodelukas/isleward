@@ -16,7 +16,7 @@ module.exports = {
 	},
 	objects: {
 		'sun carp school': {
-			max: 4,
+			max: 8,
 			type: 'fish',
 			quantity: [3, 6]
 		},
@@ -219,22 +219,9 @@ module.exports = {
 							type: 'Fishing Rod',
 							slot: 'tool',
 							quality: 0,
-							worth: 10,
+							worth: 5,
 							sprite: [11, 0],
 							infinite: true
-						},
-						{
-							name: 'Reinforced Fishing Rod',
-							type: 'Fishing Rod',
-							slot: 'tool',
-							quality: 1,
-							worth: 400,
-							sprite: [11, 0],
-							infinite: true,
-							stats: {
-								catchSpeed: 50,
-								catchChance: 35
-							}
 						}
 					],
 					level: {

@@ -140,7 +140,7 @@ define([
 				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
 				canAfford = ((currencyItem) && (currencyItem.quantity >= item.worth.amount));
 			} else
-				canAfford = this.gold < ~~(item.worth * markup);
+				canAfford = this.gold >= ~~(item.worth * markup);
 			
 			if (!canAfford) {
 				this.obj.instance.syncer.queue('onGetMessages', {
@@ -188,8 +188,8 @@ define([
 				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
 				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount);
 			} else {
-				targetTrade.gold += worth;
-				this.gold -= worth;
+				targetTrade.gold += ~~(item.worth * markup);
+				this.gold -= ~~(item.worth * markup);
 				this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 			}
 

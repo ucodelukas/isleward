@@ -103,12 +103,10 @@ define([
 			return event;
 		},
 
-		stopEvent: function(config) {
-			var event = config.event;
+		giveRewards: function(config) {
+			var event = config.event;	
 
 			config.event.participators.forEach(function(p) {
-				p.events.unregisterEvent(event);
-
 				var rList = [{
 					nameLike: 'Ancient Carp',
 					removeAll: true
@@ -120,6 +118,14 @@ define([
 				}
 
 				mail.sendMail(p.name, rList);
+			}, this);
+		},
+
+		stopEvent: function(config) {
+			var event = config.event;
+
+			config.event.participators.forEach(function(p) {
+				p.events.unregisterEvent(event);
 			}, this);
 
 			config.event.objects.forEach(function(o) {
@@ -201,6 +207,8 @@ define([
 
 			if (event.age == event.config.duration)
 				event.done = true;
+			else if ((event.config.prizeTime) && (event.age == event.config.prizeTime))
+				this.giveRewards(event.config);
 
 			if (stillBusy)
 				return;

@@ -38,7 +38,7 @@ define([
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 
-				var statCatchSpeed = Math.min(150, rod.stats.catchSpeed || 0);
+				var statCatchSpeed = Math.min(150, (rod.stats || {}).catchSpeed || 0);
 				ttlMax *= (1 - (statCatchSpeed / 200));
 			}
 
@@ -85,7 +85,7 @@ define([
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
 
-				var catchChance = 40 + (rod.stats.catchChance || 0);
+				var catchChance = 40 + ((rod.stats || {}).catchChance || 0);
 				if (~~(Math.random() * 100) >= catchChance) {
 					process.send({
 						method: 'events',
@@ -109,7 +109,7 @@ define([
 
 					qualityGenerator.generate(g, {
 						//100 x 2.86 = 2000 (chance for a common)
-						bonusMagicFind: (rod.stats.fishRarity || 0) * 2.82
+						bonusMagicFind: ((rod.stats || {}).fishRarity || 0) * 2.82
 					});
 
 					g.name = {
@@ -120,7 +120,7 @@ define([
 						'4': 'Fabled '
 					}[g.quality] + g.name;
 
-					var statFishWeight = 1 + ((rod.stats.fishWeight || 0) / 100);
+					var statFishWeight = 1 + (((rod.stats || {}).fishWeight || 0) / 100);
 					var weight = ~~((gatherResult.blueprint.baseWeight + g.quality + (Math.random() * statFishWeight)) * 100) / 100;
 					g.stats = {
 						weight: weight
@@ -133,7 +133,7 @@ define([
 			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
-				var itemChance = 1 + (rod.stats.fishItem || 0);
+				var itemChance = 1 + ((rod.stats || {}).fishItem || 0);
 				if (~~(Math.random() * 100) < itemChance) {
 					gatherResult.items = [{
 						name: 'Cerulean Pearl',
