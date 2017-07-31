@@ -144,7 +144,7 @@ define([
 				type: node.type,
 				sprite: node.blueprint.itemSprite,
 				name: node.blueprint.name,
-				quantity: 1,
+				quantity: (blueprint.type != 'fish') ? 1 : null,
 				quality: 0
 			};
 

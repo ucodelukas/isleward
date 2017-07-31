@@ -28,7 +28,13 @@ module.exports = {
 	}],
 
 	duration: 4285,
-	prizeTime: 342,
+	prizeTime: 3428,
+
+	events: {
+		afterGiveRewards: function(events) {
+			events.setEventDescription('Fishing Tournament', 'The tournament has ended.');
+		}
+	},
 
 	helpers: {
 		updateRewards: function(event, anglerNayla) {
@@ -136,7 +142,7 @@ module.exports = {
 
 	phases: [{
 		type: 'spawnMob',
-		endMark: 1,
+		endMark: 1714,
 		mobs: {
 			name: 'Angler Nayla',
 			attackable: false,

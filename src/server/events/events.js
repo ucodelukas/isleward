@@ -119,6 +119,9 @@ define([
 
 				mail.sendMail(p.name, rList);
 			}, this);
+
+			if ((config.events) && (config.events.afterGiveRewards))
+				config.events.afterGiveRewards(this);
 		},
 
 		stopEvent: function(config) {

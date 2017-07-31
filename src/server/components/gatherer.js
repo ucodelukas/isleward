@@ -145,6 +145,7 @@ define([
 			}
 
 			gatherResult.items.forEach(function(i) {
+				delete i.pos;
 				this.obj.inventory.getItem(i);
 			}, this);
 
@@ -226,6 +227,7 @@ define([
 				}, this);
 
 				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+				this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
 				if (this.gathering.resourceNode.nodeType == 'fish')
 					this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
