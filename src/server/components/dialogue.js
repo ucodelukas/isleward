@@ -114,8 +114,13 @@ define([
 					else
 						return this.getState(sourceObj, stateConfig.goto.failure);
 				}
-				else
-					return null;
+				else {
+					if (result) {
+						useMsg = extend(true, [], useMsg);
+						useMsg[0].msg = result;
+					} else
+						return null;
+				}
 			}
 			else if (stateConfig.method) {
 				var methodResult = stateConfig.method.call(this.obj, sourceObj);
@@ -215,7 +220,7 @@ define([
 				return true;
 			}
 			else
-				return false;
+				return msg.existsMsg || false;
 		}
 	};
 });

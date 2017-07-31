@@ -64,8 +64,6 @@ module.exports = {
 				}]
 			};
 
-			console.log(fish);
-
 			var rank = 0;
 			var lastWeight = fish[0].stats.weight;
 			for (var i = 0; i < fish.length; i++) {
@@ -200,6 +198,10 @@ module.exports = {
 						}
 					},
 					'5': {
+						msg: [{
+							msg: ``,
+							options: [1.1, 1.2, 1.3, 1.4]
+						}],
 						cpn: 'dialogue',
 						method: 'getItem',
 						args: [{
@@ -214,7 +216,8 @@ module.exports = {
 									catchSpeed: 50,
 									catchChance: 25
 								}
-							}
+							},
+							existsMsg: 'Oh, it seems that you already have one.'
 						}]
 					},
 					tradeBuy: {
@@ -290,11 +293,15 @@ module.exports = {
 		type: 'hookEvents',
 		events: {
 			beforeGatherResource: function(gatherResult, gatherer) {
-				var hasCompRod = gatherer.inventory.items.some(i => (i.name == 'Competition Rod'));
+				if (!gatherResult.nodeType == 'fish')
+					return;
+
+				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
 				if (!hasCompRod)
 					return;
 
 				gatherResult.items[0].name = 'Ancient Carp';
+				gatherResult.items[0].sprite = [11, 4];
 			}
 		}
 	}, {
