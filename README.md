@@ -2,7 +2,7 @@
 
 A multiplayer, moddable, extensible roguelike built with NodeJS, JS, HTML and CSS
 
-[Test Server](http://play.isleward.com/) | [Discord](https://discord.gg/gnsn7ZP) | [Subreddit](https://www.reddit.com/r/isleward) | [Blog](http://blog.isleward.com/) | [Wiki](http://isleward.gamepedia.com/) | [Twitter](https://twitter.com/bigbadwofl) | [Patreon](http://patreon.com/bigbadwaffle)
+[Play in Browser](http://play.isleward.com/) | [Discord](https://discord.gg/gnsn7ZP) | [Subreddit](https://www.reddit.com/r/isleward) | [Blog](http://blog.isleward.com/) | [Wiki](http://isleward.gamepedia.com/) | [Twitter](https://twitter.com/bigbadwofl) | [Patreon](http://patreon.com/bigbadwaffle)
 
 ### Installation
 1. Download and install NodeJS: `https://nodejs.org/en/download/`
