@@ -93,6 +93,7 @@ define([
 			if (!this.prophecyFilter) {
 				var prophecies = window.player.prophecies;
 				this.prophecyFilter = prophecies ? prophecies.list : [];
+				this.prophecyFilter = $.extend(true, [], this.prophecyFilter);
 			}
 
 			client.request({
