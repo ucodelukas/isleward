@@ -15,6 +15,7 @@ define([
 				x: (this.obj.x * scale) + (scale / 2),
 				y: (this.obj.y * scale) + (scale / 2)
 			};
+			this.ttl = blueprint.ttl;
 
 			this.emitter = renderer.buildEmitter(this.blueprint);
 		},

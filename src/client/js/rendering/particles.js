@@ -51,7 +51,7 @@ define([
 				if (destroy) {
 					if (e.particleCount > 0) {
 						visible = renderer.isVisible(e.spawnPos.x, e.spawnPos.y);
-						if (visible)
+						if (visible) 
 							destroy = false;
 					}
 				}
