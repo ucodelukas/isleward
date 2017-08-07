@@ -50,8 +50,8 @@ define([
 
 			message.ttl--;
 
-			if (message.ttl <= 0)
-				this.clearMessage();
+			//if (message.ttl <= 0)
+			//	this.clearMessage();
 		},
 
 		clearMessage: function() {
