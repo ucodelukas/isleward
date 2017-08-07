@@ -70,6 +70,18 @@ define([
 			this.changed = true;
 		},
 
+		destroy: function(id) {
+			var item = this.items.find(i => i.id == id);
+			if (!item)
+				return;
+
+			this.items.spliceWhere(i => i == item);
+
+			this.obj.syncer.setArray(true, 'stash', 'destroyItems', id);
+
+			this.changed = true;
+		},
+
 		withdraw: function(id) {
 			if (!this.active)
 				return;

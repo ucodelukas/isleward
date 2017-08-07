@@ -67,7 +67,7 @@ define([
 				if (!config)
 					return false;
 
-				var goto = config.options[state].goto;
+				var goto = (config.options[state] || {}).goto;
 				if (goto instanceof Array) {
 					var gotos = [];
 					goto.forEach(function(g) {
@@ -86,14 +86,7 @@ define([
 			this.sourceStates[sourceObj.id] = state;
 
 			if (!this.states) {
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log(this.obj);				
+				console.log(sourceObj.name, this.obj.name, state);			
 				return null;
 			}
 			var stateConfig = this.states[state];

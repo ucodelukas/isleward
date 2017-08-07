@@ -24,12 +24,19 @@ define([
 			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 			if (player) {
 				var inventory = player.inventory;
+				var stash = player.stash;
 
 				result.forEach(function(r) {
 					if (r.removeAll) {
 						inventory.items.forEach(function(i) {
 							if ((r.nameLike) && (i.name.indexOf(r.nameLike) > -1)) {
 								inventory.destroyItem(i.id, i.quantity ? i.quantity : null);
+							}
+						});
+
+						stash.items.forEach(function(i) {
+							if ((r.nameLike) && (i.name.indexOf(r.nameLike) > -1)) {
+								stash.destroy(i.id);
 							}
 						});
 					} else 

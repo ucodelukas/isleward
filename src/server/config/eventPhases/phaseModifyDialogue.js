@@ -14,7 +14,7 @@ define([
 
 		addStates: function(dialogue, states) {
 			for (var s in states) {
-				var source = states[s];
+				var source = extend(true, {}, states[s]);
 				var target = dialogue[s];
 				if (!target) {
 					dialogue[s] = source;
@@ -29,7 +29,25 @@ define([
 		},
 
 		removeStates: function(dialogue, states) {
+			for (var s in states) {
+				var source = states[s];
+				var target = dialogue[s];
 
+				if (!target)
+					continue;
+				else if (source == null) {
+					delete dialogue[s];
+					continue;
+				}
+
+				for (var o in source) {
+					var targetOptions = target.msg[0].options;
+					if (targetOptions.options)
+						targetOptions.spliceWhere(t => (t == o));
+
+					delete target.options[o];
+				}
+			}
 		}
 	};
 });

@@ -21,13 +21,13 @@ define([
 			var files = fs.readdirSync(path);
 			files.forEach(function(f) {
 				var e = require('../' + path + '/' + f);
-				if (!e.disabled) 
+				if (!e.disabled)
 					this.configs.push(extend(true, {}, e));
 			}, this);
 		},
 
 		getEvent: function(name) {
-			return this.configs.find(c => (c.name == name));
+			return this.configs.find(c => (c.name == name)).event.config;
 		},
 		setEventDescription: function(name, desc) {
 			var config = this.getEvent(name);
@@ -38,7 +38,11 @@ define([
 			if (!config.oldDescription)
 				config.oldDescription = config.description;
 
-			config.description = desc;
+			if ((config.events) && (config.events.beforeSetDescription))
+				config.events.beforeSetDescription(this);
+
+			if (desc)
+				config.description = desc;
 
 			event.participators.forEach(p => p.events.syncList());
 		},
@@ -92,19 +96,20 @@ define([
 
 			var event = {
 				id: this.nextId++,
-				config: config,
+				config: extend(true, {}, config),
 				phases: [],
 				participators: [],
 				objects: [],
 				nextPhase: 0,
 				age: 0
 			};
+			event.config.event = event;
 
 			return event;
 		},
 
 		giveRewards: function(config) {
-			var event = config.event;	
+			var event = config.event;
 
 			config.event.participators.forEach(function(p) {
 				var rList = [{
@@ -180,17 +185,17 @@ define([
 			var stillBusy = false;
 			for (var i = 0; i < cLen; i++) {
 				var phase = currentPhases[i];
-				if ((phase.end) || (phase.endMark == event.age)) {
-					if ((phase.destroy) && (!phase.destroyed)) {
+				if (!phase.destroyed) {
+					if ((phase.end) || (phase.endMark == event.age)) {
+						if ((phase.destroy) && (!phase.destroyed))
+							phase.destroy();
 						phase.destroyed = true;
-						phase.destroy();
+						continue;
+					} else {
+						if (!phase.auto)
+							stillBusy = true;
+						phase.update();
 					}
-					continue;
-				}
-				else {
-					if (!phase.auto)
-						stillBusy = true;
-					phase.update();
 				}
 			}
 
@@ -203,6 +208,11 @@ define([
 							message: n.msg
 						}
 					});
+
+					if (n.desc != null) {
+						event.config.descTimer = n.desc;
+						this.setEventDescription(event.config.name);
+					}
 				}
 			}
 

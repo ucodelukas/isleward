@@ -6,22 +6,28 @@ module.exports = {
 
 	notifications: [{
 		mark: 0,
-		msg: 'Angler Nayla: The Fishing Tournament begins in 10 minutes.'
+		msg: 'Angler Nayla: The Fishing Tournament begins in 10 minutes.',
+		desc: 'Begins in 10 minutes.'
 	}, {
 		mark: 857,
-		msg: 'Angler Nayla: The Fishing Tournament begins in 5 minutes.'
+		msg: 'Angler Nayla: The Fishing Tournament begins in 5 minutes.',
+		desc: 'Begins in 5 minutes.'
 	}, {
 		mark: 1543,
-		msg: 'Angler Nayla: The Fishing Tournament begins in 1 minute.'
+		msg: 'Angler Nayla: The Fishing Tournament begins in 1 minute.',
+		desc: 'Begins in 1 minute.'
 	}, {
 		mark: 1714,
-		msg: 'Angler Nayla: The Fishing Tournament has begun!'
+		msg: 'Angler Nayla: The Fishing Tournament has begun!',
+		desc: ''
 	}, {
 		mark: 2571,
-		msg: 'Angler Nayla: The Fishing Tournament ends in 5 minutes.'
+		msg: 'Angler Nayla: The Fishing Tournament ends in 5 minutes.',
+		desc: 'Ends in 5 minutes.'
 	}, {
 		mark: 3256,
-		msg: 'Angler Nayla: The Fishing Tournament ends in 1 minute.'
+		msg: 'Angler Nayla: The Fishing Tournament ends in 1 minute.',
+		desc: 'Ends in 1 minute.'
 	}, {
 		mark: 3428,
 		msg: 'Angler Nayla: The Fishing Tournament is over.'
@@ -30,9 +36,28 @@ module.exports = {
 	duration: 4285,
 	prizeTime: 3428,
 
+	descBase: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
+	descLeaderboard: null,
+	descTimer: null,
+
 	events: {
 		afterGiveRewards: function(events) {
-			events.setEventDescription('Fishing Tournament', 'The tournament has ended.');
+			var event = events.getEvent('Fishing Tournament');
+			event.descBase = 'The tournament has ended.';
+			event.descLeaderboard = null;
+			event.descTimer = null;
+
+			events.setEventDescription('Fishing Tournament', this.description);
+		},
+
+		beforeSetDescription: function(events) {
+			var event = events.getEvent('Fishing Tournament');
+
+			event.description = event.descBase;
+			if (event.descLeaderboard)
+				event.description += '<br /><br />' + event.descLeaderboard;
+			if (event.descTimer)
+				event.description += '<br /><br />' + event.descTimer;
 		}
 	},
 
@@ -95,12 +120,14 @@ module.exports = {
 			var ranks = event.ranks;
 			var weights = event.weights;
 
-			var desc = `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.<br /><br />Leaderboard:<br />`;
+			var desc = `Leaderboard:<br />`;
 			for (var playerName in ranks) {
 				desc += `${ranks[playerName]}: ${playerName} (${weights[playerName]}) <br />`;
 			}
+			desc = desc.substr(0, desc.length - 6);
 
-			events.setEventDescription('Fishing Tournament', desc);
+			event.config.descLeaderboard = desc;
+			events.setEventDescription('Fishing Tournament');
 		},
 
 		updateWinText: function(event, events) {
@@ -294,9 +321,8 @@ module.exports = {
 			}
 		}
 	}, {
-		endMark: 3428,
-		auto: true,
 		type: 'hookEvents',
+		auto: true,
 		events: {
 			beforeGatherResource: function(gatherResult, gatherer) {
 				if (!gatherResult.nodeType == 'fish')
@@ -312,6 +338,7 @@ module.exports = {
 		}
 	}, {
 		type: 'modifyDialogue',
+		endMark: 3428,
 		mobId: 'anglerNayla',
 		dialogue: {
 			add: {
@@ -360,6 +387,17 @@ module.exports = {
 						return reply;
 					}
 				}
+			}
+		}
+	}, {
+		type: 'modifyDialogue',
+		mobId: 'anglerNayla',
+		dialogue: {
+			remove: {
+				'1': {
+					'1.4': null
+				},
+				'giveFish': null
 			}
 		}
 	}]
