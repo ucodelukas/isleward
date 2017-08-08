@@ -309,6 +309,15 @@ module.exports = {
 					stats: {
 						stats: '???'
 					}
+				}, {
+					name: 'Cerulean Pearl',
+					material: true,
+					sprite: [11, 9],
+					infinite: true,
+					worth: {
+						currency: `Angler's Mark`,
+						amount: 7
+					},
 				}],
 				level: {
 					min: 1,

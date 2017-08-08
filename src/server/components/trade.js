@@ -222,6 +222,9 @@ define([
 				}, [this.obj.serverId]);
 			}
 
+			//Hack to always redraw the UI (to give items the red overlay if they can't be afforded)
+			this.obj.syncer.setArray(true, 'trade', 'redraw', true);
+
 			this.resolveCallback(msg);
 		},
 

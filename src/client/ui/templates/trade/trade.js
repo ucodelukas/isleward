@@ -18,11 +18,20 @@ define([
 
 		modal: true,
 
+		list: null,
+		action: null,
+
 		postRender: function() {
 			this.onEvent('onGetTradeList', this.onGetTradeList.bind(this));
 		},
 
 		onGetTradeList: function(itemList, action) {
+			itemList = itemList || this.itemList;
+			action = action || this.action;
+
+			this.itemList = itemList;
+			this.action = action;
+
 			this.find('.heading-text').html(action);
 
 			var uiInventory = $('.uiInventory').data('ui');
@@ -113,7 +122,7 @@ define([
 						});
 						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
 					} else
-						noAfford = (item.worth > window.player.trade.gold)
+						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold)
 
 					if ((!noAfford) && (item.factions)) {
 						noAfford = item.factions.some(function(f) {
@@ -175,7 +184,7 @@ define([
 					});
 					canAfford = ((currencyItems) && (currencyItems.quantity >= item.worth.amount));
 				} else
-					canAfford = (item.worth <= window.player.trade.gold)
+					canAfford = (item.worth * this.itemList.markup <= window.player.trade.gold)
 			}
 
 			var uiTooltipItem = $('.uiTooltipItem').data('ui');

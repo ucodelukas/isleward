@@ -40,6 +40,9 @@ define([
 				delete blueprint.removeItems;
 			}
 
+			if (blueprint.redraw)
+				redraw = true;
+
 			for (var p in blueprint) {
 				this[p] = blueprint[p];
 			}
