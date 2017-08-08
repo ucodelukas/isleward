@@ -114,7 +114,7 @@ module.exports = {
 					rolls: 1,
 					noRandom: true,
 					blueprints: [{
-						maxLevel: 2,
+						maxLevel: 1,
 						name: 'Family Heirloom',
 						quality: 2,
 						slot: 'neck',
