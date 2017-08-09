@@ -23,6 +23,7 @@ define([
 
 		postRender: function() {
 			this.onEvent('onGetTradeList', this.onGetTradeList.bind(this));
+			this.onEvent('onCloseTrade', this.hide.bind(this));
 		},
 
 		onGetTradeList: function(itemList, action) {
@@ -189,6 +190,10 @@ define([
 
 			var uiTooltipItem = $('.uiTooltipItem').data('ui');
 			uiTooltipItem.showWorth(canAfford);
+		},
+
+		beforeHide: function() {
+			events.emit('onHideOverlay', this.el);
 		},
 
 		onServerRespond: function(el) {

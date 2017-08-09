@@ -49,6 +49,9 @@ define([
 
 			if (redraw)
 				events.emit('onGetTradeList', this.itemList, this.action);
+
+			if (blueprint.closeTrade)
+				events.emit('onCloseTrade');
 		}
 	};
 });

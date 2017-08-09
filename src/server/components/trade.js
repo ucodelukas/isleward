@@ -341,6 +341,17 @@ define([
 				result.gold = this.gold;
 
 			return result;
+		},
+
+		events: {
+			beforeMove: function() {
+				if (!this.target)
+					return;
+
+				this.obj.syncer.set(true, 'trade', 'closeTrade', true);
+
+				this.target = null;
+			}
 		}
 	};
 });
