@@ -210,7 +210,7 @@ define([
 			var exists = inventory.items.find(i => (i.name == msg.item.name));
 			if (!exists) {
 				inventory.getItem(msg.item);
-				return true;
+				return msg.successMsg || false;
 			}
 			else
 				return msg.existsMsg || false;

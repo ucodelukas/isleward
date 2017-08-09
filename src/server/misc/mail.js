@@ -28,17 +28,21 @@ define([
 
 				result.forEach(function(r) {
 					if (r.removeAll) {
-						inventory.items.forEach(function(i) {
-							if ((r.nameLike) && (i.name.indexOf(r.nameLike) > -1)) {
-								inventory.destroyItem(i.id, i.quantity ? i.quantity : null);
+						for (var i = 0; i < inventory.items.length; i++) {
+							var item = inventory.items[i];
+							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
+								inventory.destroyItem(item.id, item.quantity ? item.quantity : null);
+								i--;
 							}
-						});
+						}
 
-						stash.items.forEach(function(i) {
-							if ((r.nameLike) && (i.name.indexOf(r.nameLike) > -1)) {
-								stash.destroy(i.id);
+						for (var i = 0; i < stash.items.length; i++) {
+							var item = stash.items[i];
+							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
+								stash.destroy(item.id);
+								i--;
 							}
-						});
+						}
 					} else 
 						inventory.getItem(r);
 				});

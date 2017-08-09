@@ -65,12 +65,15 @@ define([
 			var w = this.physics.width;
 			var h = this.physics.height;
 
-			var x = blueprint.x || ~~(Math.random() * w);
-			var y = blueprint.y || ~~(Math.random() * h);
+			var x = blueprint.x;
+			var y = blueprint.y;
 
 			var position = null;
 
 			if (blueprint.type == 'herb') {
+				x = ~~(Math.random() * w)
+				y = ~~(Math.random() * h)
+
 				if (this.physics.isTileBlocking(x, y))
 					return false;
 

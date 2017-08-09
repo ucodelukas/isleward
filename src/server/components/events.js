@@ -28,7 +28,9 @@ define([
 		},
 
 		save: function() {
-			return null;
+			return {
+				type: 'events'
+			};
 		},
 
 		unregisterEvent: function(event) {

@@ -250,6 +250,7 @@ module.exports = {
 									catchChance: 25
 								}
 							},
+							successMsg: 'May it cast true.',
 							existsMsg: 'Oh, it seems that you already have one.'
 						}]
 					},
@@ -331,10 +332,11 @@ module.exports = {
 		}
 	}, {
 		type: 'hookEvents',
+		endMark: 3428,
 		auto: true,
 		events: {
 			beforeGatherResource: function(gatherResult, gatherer) {
-				if (!gatherResult.nodeType == 'fish')
+				if (gatherResult.nodeType != 'fish')
 					return;
 
 				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));

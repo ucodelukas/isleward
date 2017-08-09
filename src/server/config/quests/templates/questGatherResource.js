@@ -20,7 +20,10 @@ define([
 		},
 
 		events: {
-			afterGatherResource: function(item) {
+			afterGatherResource: function(gatherResult) {
+				if (gatherResult.nodeType != 'herb')
+					return;
+				
 				if ((this.obj.zoneName != this.zoneName) || (this.have >= this.need))
 					return;
 

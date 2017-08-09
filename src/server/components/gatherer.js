@@ -154,7 +154,7 @@ define([
 
 			this.obj.stats.getXp(gatherResult.xp);
 
-			this.obj.fireEvent('afterGatherResource');
+			this.obj.fireEvent('afterGatherResource', gatherResult);
 
 			if (gathering.destroyed) {
 				if (isFish) {
