@@ -188,7 +188,7 @@ define([
 					this.mouse.x = e.offsetX + (renderer.pos.x);
 					this.mouse.y = e.offsetY + (renderer.pos.y);
 
-					events.emit('mouseMove', this.mouse);
+					//events.emit('mouseMove', this.mouse);
 				}
 			}
 		}

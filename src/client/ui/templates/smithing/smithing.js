@@ -124,7 +124,7 @@ define([
 				this.offEvent(this.eventClickInv);
 				return;
 			}
-			else if (!msg.item.slot) {
+			else if ((!msg.item.slot) || (msg.item.noAugment)) {
 				var msg = {
 					msg: 'Incorrect Item Type',
 					type: 'failure',
@@ -152,7 +152,7 @@ define([
 			$('.uiInventory').data('ui').toggle();
 
 			this.el.show();
-			events.emit('onShowOverlay', this.el);
+			//events.emit('onShowOverlay', this.el);
 
 			msg.success = false;
 
@@ -285,10 +285,10 @@ define([
 				this.find('.chance').html('');
 				this.show();
 				//this.build();
-				events.emit('onShowOverlay', this.el);
+				//events.emit('onShowOverlay', this.el);
 			} else {
 				this.hide();
-				events.emit('onHideOverlay', this.el);
+				//events.emit('onHideOverlay', this.el);
 			}
 		},
 		onKeyDown: function(key) {

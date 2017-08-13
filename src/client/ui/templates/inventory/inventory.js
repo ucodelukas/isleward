@@ -150,6 +150,15 @@ define([
 		},
 
 		onClick: function(item) {
+			var msg = {
+				item: item,
+				success: true
+			};
+			events.emit('beforeInventoryClickItem', msg);
+
+			if (!msg.success)
+				return;
+
 			if (!this.ctrlDown)
 				return;
 

@@ -18,6 +18,8 @@ define([
 				this.queue.splice(i, 1);
 				i--;
 
+				console.log(q);
+
 				q.args.splice(0, 0, event);
 
 				this.emit.apply(this, q.args);
@@ -26,7 +28,10 @@ define([
 			return callback;
 		},
 		clearQueue: function() {
-			this.queue = [];
+			//Hack to allow the player list to persist
+			this.queue.spliceWhere(function(q) {
+				return (q.event != 'onGetConnectedPlayer');
+			});
 		},
 		off: function(event, callback) {
 			var list = this.events[event] || [];

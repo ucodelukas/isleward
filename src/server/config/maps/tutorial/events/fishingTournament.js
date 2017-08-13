@@ -176,6 +176,7 @@ module.exports = {
 			level: 20,
 			cell: 69,
 			id: 'anglerNayla',
+			hpMult: 1,
 			pos: {
 				x: 95,
 				y: 31
@@ -245,6 +246,7 @@ module.exports = {
 								type: 'Competition Fishing Rod',
 								worth: 0,
 								noSalvage: true,
+								noAugment: true,
 								stats: {
 									catchSpeed: 50,
 									catchChance: 25

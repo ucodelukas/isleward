@@ -104,7 +104,7 @@ define([
 
 		enchantItem: function(msg) {
 			var item = this.findItem(msg.itemId);
-			if ((!item) || (!item.slot) || (item.eq) || ((msg.action == 'scour') && (item.power == 0))) {
+			if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action == 'scour') && (item.power == 0))) {
 				this.resolveCallback(msg);
 				return;
 			}
