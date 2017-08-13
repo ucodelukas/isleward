@@ -18,8 +18,6 @@ define([
 				this.queue.splice(i, 1);
 				i--;
 
-				console.log(q);
-
 				q.args.splice(0, 0, event);
 
 				this.emit.apply(this, q.args);

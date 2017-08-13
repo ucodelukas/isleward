@@ -233,6 +233,37 @@ define([
 					this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 				this.gathering = null;
+			},
+
+			afterEquipItem: function(item) {
+				var firstNode = this.nodes[0];
+				if (!firstNode)
+					return;
+				else if (item.slot != 'tool')
+					return;				
+
+				if (firstNode.resourceNode.nodeType == 'fish') {
+					var rod = this.obj.equipment.eq.tool;
+					if (rod == null) {
+						process.send({
+							method: 'events',
+							data: {
+								'onGetAnnouncement': [{
+									obj: {
+										msg: 'You need a fishing rod to fish'
+									},
+									to: [this.obj.serverId]
+								}]
+							}
+						});
+
+						this.nodes.splice(0, 1);
+					}
+				}
+			},
+
+			afterUnequipItem: function(item) {
+				this.events.afterEquipItem.call(this, item);
 			}
 		}
 	};
