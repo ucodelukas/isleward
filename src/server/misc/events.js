@@ -57,6 +57,21 @@ define([
 				var l = list[i];
 				l.apply(null, args);
 			}
+		},
+
+		//In the future, all events should be non sticky
+		emitNoSticky: function(event) {
+			var args = [].slice.call(arguments, 1);
+
+			var list = this.events[event];
+			if (!list)
+				return;
+
+			var len = list.length
+			for (var i = 0; i < len; i++) {
+				var l = list[i];
+				l.apply(null, args);
+			}
 		}
 	};
 });
