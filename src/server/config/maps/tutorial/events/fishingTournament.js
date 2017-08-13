@@ -319,7 +319,7 @@ module.exports = {
 					infinite: true,
 					worth: {
 						currency: `Angler's Mark`,
-						amount: 7
+						amount: 4
 					},
 				}],
 				level: {
@@ -341,7 +341,7 @@ module.exports = {
 				if (gatherResult.nodeType != 'fish')
 					return;
 
-				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
+ 				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
 				if (!hasCompRod)
 					return;
 
