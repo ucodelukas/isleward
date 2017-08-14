@@ -347,6 +347,11 @@ module.exports = {
 
 				gatherResult.items[0].name = 'Ancient Carp';
 				gatherResult.items[0].sprite = [11, 4];
+			},
+
+			beforeEnterPool: function(gatherResult, gatherer) {
+				if (gatherResult.nodeName == 'Sun Carp')
+					gatherResult.nodeName = 'Ancient Carp';
 			}
 		}
 	}, {

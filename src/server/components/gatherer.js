@@ -178,8 +178,13 @@ define([
 		},
 
 		enter: function(node) {
+			var gatherResult = extend(true, {
+				nodeName: node.name
+			});
+			events.emitNoSticky('beforeEnterPool', gatherResult, this.obj);
+
 			var nodeType = node.resourceNode.nodeType;
-			var msg = `Press G to $ (${node.name})`;
+			var msg = `Press G to $ (${gatherResult.nodeName})`;
 			msg = msg.replace('$', {
 				herb: 'gather',
 				fish: 'fish for'
