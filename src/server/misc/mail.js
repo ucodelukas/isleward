@@ -39,7 +39,7 @@ define([
 						for (var i = 0; i < stash.items.length; i++) {
 							var item = stash.items[i];
 							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
-								stash.destroy(item.id);
+								stash.destroyItem(item.id);
 								i--;
 							}
 						}

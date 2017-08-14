@@ -70,7 +70,7 @@ define([
 			this.changed = true;
 		},
 
-		destroy: function(id) {
+		destroyItem: function(id) {
 			var item = this.items.find(i => i.id == id);
 			if (!item)
 				return;
