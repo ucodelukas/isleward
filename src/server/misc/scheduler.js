@@ -88,6 +88,12 @@ define([
 				month: time.getMonth(),
 				weekday: time.getDay()
 			};
+		},
+
+		daysInMonth: function(month) {
+			var year = (new Date()).getYear();
+
+			return new Date(year, month, 0).getDate();
 		}
 	};
 });

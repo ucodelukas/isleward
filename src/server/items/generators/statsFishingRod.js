@@ -48,6 +48,15 @@ define([
 					item.stats[stat] = 0;
 
 				item.stats[stat] += value;
+
+				if (blueprint.statCount) {
+					if (!item.enchantedStats)
+						item.enchantedStats = {};
+					if (item.enchantedStats[stat])
+						item.enchantedStats[stat] += value;
+					else
+						item.enchantedStats[stat] = value;
+				}
 			}
 		}
 	};

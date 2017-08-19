@@ -21,6 +21,8 @@ define([
 
 			result = JSON.parse(result || '[]');
 
+			var sentMessages = [];
+
 			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 			if (player) {
 				var inventory = player.inventory;
@@ -43,8 +45,22 @@ define([
 								i--;
 							}
 						}
-					} else 
+					} else {
+						if ((r.msg) && (!sentMessages.some(s => (s == r.msg)))) {
+							player.instance.syncer.queue('onGetMessages', {
+								id: player.id,
+								messages: [{
+									class: 'q0',
+									message: r.msg,
+									type: 'info'
+								}]
+							}, [player.serverId]);
+
+							sentMessages.push(r.msg);
+							delete r.msg;
+						}
 						inventory.getItem(r);
+					}
 				});
 
 				io.set({
@@ -57,23 +73,25 @@ define([
 			cb && cb();
 		},
 
-		sendMail: function(playerName, items) {
+		sendMail: function(playerName, items, onlySend) {
 			if (!items.push)
 				items = [items];
 
-			var player = this.instance.objects.objects.find(o => (o.name == playerName));
+			var player = null;
+			if (this.instance)
+				player = this.instance.objects.objects.find(o => (o.name == playerName));
 
-			if (player)
+			if ((player) && (!onlySend))
 				this.onGetMail(playerName, null, JSON.stringify(items));
 			else {
 				io.get({
 					ent: playerName,
 					field: 'mail',
-					callback: this.doSendMail.bind(this, playerName, items)
+					callback: this.doSendMail.bind(this, playerName, items, onlySend)
 				});
 			}
 		},
-		doSendMail: function(playerName, items, result) {
+		doSendMail: function(playerName, items, onlySend, result) {
 			if (result == 'null')
 				result = null;
 
@@ -85,11 +103,13 @@ define([
 
 			var itemString = JSON.stringify(items).split(`'`).join(`''`);
 
+			var cb = onlySend ? null : this.getMail.bind(this, playerName);
+
 			io.set({
 				ent: playerName,
 				field: 'mail',
 				value: itemString,
-				callback: this.getMail.bind(this, playerName)
+				callback: cb
 			});
 		}
 	};
