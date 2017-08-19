@@ -347,7 +347,7 @@ define([
 
 					if (killSource.player)
 						killSource.stats.kill(this.obj);
-					
+
 					this.obj.fireEvent('afterDeath', deathEvent);
 
 					if (this.obj.player) {
@@ -505,15 +505,17 @@ define([
 			var time = scheduler.getTime();
 			var lastLogin = stats.lastLogin;
 			if ((!lastLogin) || (lastLogin.day != time.day)) {
-				var daysSkipped = 0;
-				if (time.day > lastLogin.day)
-					daysSkipped = time.day - lastLogin.day;
-				else {
-					var daysInMonth = scheduler.daysInMonth(lastLogin.month);
-					daysSkipped = (daysInMonth - lastLogin.day) + time.day;
+				var daysSkipped = 1;
+				if (lastLogin) {
+					if (time.day > lastLogin.day)
+						daysSkipped = time.day - lastLogin.day;
+					else {
+						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
+						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
 
-					for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
-						daysSkipped += scheduler.daysInMonth(i);
+						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
+							daysSkipped += scheduler.daysInMonth(i);
+						}
 					}
 				}
 
@@ -521,15 +523,16 @@ define([
 					stats.loginStreak++;
 					if (stats.loginStreak > 21)
 						stats.loginStreak = 21;
-				}
-				else {
+				} else {
 					stats.loginStreak -= (daysSkipped - 1);
 					if (stats.loginStreak < 1)
 						stats.loginStreak = 1;
 				}
 
-				var mail = require('misc/mail');
-				mail.sendMail(this.obj.name, loginRewards.generate(stats.loginStreak), true);
+				if (stats.loginStreak > 1) {
+					var mail = require('misc/mail');
+					mail.sendMail(this.obj.name, loginRewards.generate(stats.loginStreak), true);
+				}
 			}
 
 			stats.lastLogin = time;
