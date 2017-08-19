@@ -58,8 +58,6 @@ define([
 			}
 			stats.vitScale = blueprintStats.vitScale;
 
-			stats.stats.logins++;
-
 			obj.portrait = classes.portraits[character.class];
 
 			obj.addComponent('spellbook');
@@ -106,6 +104,8 @@ define([
 
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
+
+			stats.onLogin();
 
 			atlas.addObject(this.obj, true);
 

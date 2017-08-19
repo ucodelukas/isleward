@@ -34,6 +34,7 @@ define([
 				name: 'Cerulean Pearl',
 				chance: 100,
 				quantity: 1,
+				quality: 3,
 				qualityMult: 1.1
 			}]
 		}],
@@ -154,7 +155,8 @@ define([
 				if (m.qualityName) {
 					newItem.quality = item.quality;
 					newItem.name = m.qualityName[item.quality];
-				}
+				} else if (m.quality != null)
+					newItem.quality = m.quality;
 
 				newItem.sprite = materialItems[newItem.name].sprite;
 

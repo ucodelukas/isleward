@@ -271,6 +271,16 @@ module.exports = {
 					max: 0
 				},
 				forceItems: [{
+					name: 'Cerulean Pearl',
+					material: true,
+					sprite: [11, 9],
+					infinite: true,
+					quality: 3,
+					worth: {
+						currency: `Angler's Mark`,
+						amount: 4
+					},
+				}, {
 					name: 'Common Fishing Rod',
 					type: 'Fishing Rod',
 					slot: 'tool',
@@ -312,15 +322,6 @@ module.exports = {
 					stats: {
 						stats: '???'
 					}
-				}, {
-					name: 'Cerulean Pearl',
-					material: true,
-					sprite: [11, 9],
-					infinite: true,
-					worth: {
-						currency: `Angler's Mark`,
-						amount: 4
-					},
 				}],
 				level: {
 					min: 1,
