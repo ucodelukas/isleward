@@ -139,6 +139,7 @@ define([
 						name: 'Cerulean Pearl',
 						material: true,
 						quantity: 1,
+						qulity: 3,
 						sprite: [11, 9]
 					}];
 				}
