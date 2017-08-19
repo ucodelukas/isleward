@@ -133,7 +133,7 @@ define([
 			if (isFish) {
 				var rod = this.obj.equipment.eq.tool;
 				rod = this.obj.inventory.findItem(rod);
-				var itemChance = 1 + ((rod.stats || {}).fishItem || 0);
+				var itemChance = 1 + ((rod.stats || {}).fishItems || 0);
 				if (~~(Math.random() * 100) < itemChance) {
 					gatherResult.items = [{
 						name: 'Cerulean Pearl',
