@@ -120,6 +120,7 @@ define([
 				var rewards = event.rewards;
 				if ((rewards) && (rewards[p.name])) {
 					rewards[p.name].forEach(r => rList.push(r));
+					rList[1].msg = `Fishing tournament reward:`;
 				}
 
 				mail.sendMail(p.name, rList);
