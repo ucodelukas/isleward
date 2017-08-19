@@ -1,7 +1,9 @@
 define([
-	'config/animations'
+	'config/animations',
+	'config/loginRewards'
 ], function(
-	animations
+	animations,
+	loginRewards
 ) {
 	return {
 		type: 'stats',
@@ -55,7 +57,9 @@ define([
 
 		stats: {
 			logins: 0,
-			played: 0
+			played: 0,
+			lastLogin: null,
+			loginStreak: 0
 		},
 
 		dead: false,
@@ -491,6 +495,44 @@ define([
 				stats: this.stats,
 				vitScale: this.vitScale
 			};
+		},
+
+		onLogin: function() {
+			var stats = this.stats;
+			stats.logins++;
+
+			var scheduler = require('misc/scheduler');
+			var time = scheduler.getTime();
+			var lastLogin = stats.lastLogin;
+			if ((!lastLogin) || (lastLogin.day != time.day)) {
+				var daysSkipped = 0;
+				if (time.day > lastLogin.day)
+					daysSkipped = time.day - lastLogin.day;
+				else {
+					var daysInMonth = scheduler.daysInMonth(lastLogin.month);
+					daysSkipped = (daysInMonth - lastLogin.day) + time.day;
+
+					for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
+						daysSkipped += scheduler.daysInMonth(i);
+					}
+				}
+
+				if (daysSkipped == 1) {
+					stats.loginStreak++;
+					if (stats.loginStreak > 21)
+						stats.loginStreak = 21;
+				}
+				else {
+					stats.loginStreak -= (daysSkipped - 1);
+					if (stats.loginStreak < 1)
+						stats.loginStreak = 1;
+				}
+
+				var mail = require('misc/mail');
+				mail.sendMail(this.obj.name, loginRewards.generate(stats.loginStreak), true);
+			}
+
+			stats.lastLogin = time;
 		}
 	};
 });
