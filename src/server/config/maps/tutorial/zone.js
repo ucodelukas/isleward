@@ -16,9 +16,9 @@ module.exports = {
 	},
 	objects: {
 		'sun carp school': {
-			max: 5,
+			max: 6,
 			type: 'fish',
-			quantity: [3, 6]
+			quantity: [5, 10]
 		},
 		shophermit: {
 			properties: {

@@ -358,7 +358,7 @@ define([
 				obj.instance.questBuilder.obtain(obj);
 
 				if (obj.player)
-					mail.getMail(obj.name);
+					obj.instance.mail.getMail(obj.name);
 
 				obj.fireEvent('afterMove');
 			},
@@ -458,6 +458,7 @@ define([
 					questBuilder: extend(true, {}, questBuilder),
 					events: extend(true, {}, events),
 					scheduler: extend(true, {}, scheduler),
+					mail: extend(true, {}, mail),
 					map: {
 						name: map.name,
 						spawn: extend(true, [], map.spawn),
