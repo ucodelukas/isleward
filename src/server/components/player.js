@@ -105,7 +105,7 @@ define([
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
 
-			stats.onLogin();
+			stats.stats.logins++;
 
 			atlas.addObject(this.obj, true);
 
