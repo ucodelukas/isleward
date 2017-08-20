@@ -23,6 +23,12 @@ define([
 		onGetMail: function(playerName, cb, result) {
 			if (result == 'null')
 				result = null;
+			else if (result) {
+				result = result.split('`').join(`'`);
+				//Hack for weird google datastore error
+				if (result[0] == '<')
+					return;
+			}
 
 			result = JSON.parse(result || '[]');
 
@@ -104,7 +110,7 @@ define([
 				result.push(i);
 			});
 
-			var itemString = JSON.stringify(items).split(`'`).join(`''`);
+			var itemString = JSON.stringify(items).split(`'`).join('`');
 
 			io.set({
 				ent: playerName,

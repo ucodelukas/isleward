@@ -89,7 +89,7 @@ define([
 			io.set({
 				ent: this.charname,
 				field: 'character',
-				value: JSON.stringify(simple).split(`'`).join(`''`),
+				value: JSON.stringify(simple).split(`'`).join('`'),
 				callback: callback
 			});
 
@@ -141,6 +141,10 @@ define([
 			});
 		},
 		onGetCharacter: function(data, result) {
+			if (result) {
+				result = result.split('`').join(`'`);
+				result = result.replace(/''+/g, '\'');
+			}
 			var character = JSON.parse(result || '{}');
 			this.characters[data.data.name] = character;
 
