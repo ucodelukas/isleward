@@ -138,7 +138,7 @@ define([
 			},
 			onAddObject: function(obj) {
 				if (obj.player)
-					setTimeout(mail.getMail.bind(mail, obj.name), 2000);
+					obj.stats.onLogin();
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
@@ -359,7 +359,7 @@ define([
 				obj.instance.questBuilder.obtain(obj);
 
 				if (obj.player)
-					obj.instance.mail.getMail(obj.name);
+					obj.stats.onLogin();
 
 				obj.fireEvent('afterMove');
 			},

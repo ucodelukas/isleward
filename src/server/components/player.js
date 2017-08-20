@@ -21,6 +21,9 @@ define([
 				this.cdSave = this.cdSaveMax;
 				this.obj.auth.doSave();
 			}
+
+			if ((this.cdSave % 85) == 0)
+				this.obj.instance.mail.getMail(this.obj.name);
 		},
 
 		spawn: function(character, cb) {
