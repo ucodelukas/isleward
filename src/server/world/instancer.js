@@ -51,6 +51,7 @@ define([
 					questBuilder: questBuilder,
 					events: events,
 					zone: map.zone,
+					mail: mail,
 					map: map,
 					scheduler: scheduler
 				};
@@ -137,7 +138,7 @@ define([
 			},
 			onAddObject: function(obj) {
 				if (obj.player)
-					mail.getMail(obj.name);
+					setTimeout(mail.getMail.bind(mail, obj.name), 2000);
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
@@ -329,9 +330,9 @@ define([
 
 					exists.syncer.queue('onGetMap', exists.map.clientMap, [obj.serverId]);
 
-					if (!msg.transfer) {
+					if (!msg.transfer)
 						exists.objects.addObject(obj, this.onAddObject.bind(this, msg.keepPos));
-					} else {
+					else {
 						var newObj = exists.objects.transferObject(obj);
 						this.onAddObject(false, newObj);
 					}

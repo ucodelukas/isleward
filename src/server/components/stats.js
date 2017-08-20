@@ -72,7 +72,18 @@ define([
 				this.values[v] = values[v];
 			}
 
+			var stats = (blueprint || {}).stats || {};
+			for (var v in stats) {
+				this.stats[v] = stats[v];
+			}
+
 			this.calcXpMax();
+
+			if (this.obj.player) {
+				this.onLogin();
+				if (blueprint)
+					delete blueprint.stats;
+			}
 		},
 
 		resetHp: function() {
@@ -499,7 +510,6 @@ define([
 
 		onLogin: function() {
 			var stats = this.stats;
-			stats.logins++;
 
 			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
@@ -529,10 +539,9 @@ define([
 						stats.loginStreak = 1;
 				}
 
-				if (stats.loginStreak > 1) {
-					var mail = require('misc/mail');
-					mail.sendMail(this.obj.name, loginRewards.generate(stats.loginStreak), true);
-				}
+				var mail = this.obj.instance.mail;
+				var rewards = loginRewards.generate(stats.loginStreak);
+				mail.sendMail(this.obj.name, rewards, true);
 			}
 
 			stats.lastLogin = time;

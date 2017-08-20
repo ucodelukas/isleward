@@ -94,7 +94,7 @@ define([
 								obj: {
 									msg: 'The fish got away'
 								},
-								to: [this.obj.serverId]
+								to: [this.obj.serverId] 
 							}]
 						}
 					});
