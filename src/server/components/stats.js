@@ -64,7 +64,7 @@ define([
 
 		dead: false,
 
-		init: function(blueprint) {
+		init: function(blueprint, isTransfer) {
 			this.syncer = this.obj.instance.syncer;
 
 			var values = (blueprint || {}).values || {};
@@ -79,11 +79,8 @@ define([
 
 			this.calcXpMax();
 
-			if (this.obj.player) {
-				this.onLogin();
-				if (blueprint)
-					delete blueprint.stats;
-			}
+			if (blueprint)
+				delete blueprint.stats;
 		},
 
 		resetHp: function() {
@@ -541,7 +538,7 @@ define([
 
 				var mail = this.obj.instance.mail;
 				var rewards = loginRewards.generate(stats.loginStreak);
-				mail.sendMail(this.obj.name, rewards, true);
+				mail.sendMail(this.obj.name, rewards);
 			}
 
 			stats.lastLogin = time;

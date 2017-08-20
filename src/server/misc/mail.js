@@ -4,11 +4,16 @@ define([
 	io
 ) {
 	return {
+		busy: {},
+
 		init: function(instance) {
 			this.instance = instance;
 		},
 
 		getMail: function(playerName, cb) {
+			if (this.busy[playerName])
+				return;
+
 			io.get({
 				ent: playerName,
 				field: 'mail',
@@ -73,7 +78,9 @@ define([
 			cb && cb();
 		},
 
-		sendMail: function(playerName, items, onlySend) {
+		sendMail: function(playerName, items) {
+			this.busy[playerName] = true;
+
 			if (!items.push)
 				items = [items];
 
@@ -81,17 +88,13 @@ define([
 			if (this.instance)
 				player = this.instance.objects.objects.find(o => (o.name == playerName));
 
-			if ((player) && (!onlySend))
-				this.onGetMail(playerName, null, JSON.stringify(items));
-			else {
-				io.get({
-					ent: playerName,
-					field: 'mail',
-					callback: this.doSendMail.bind(this, playerName, items, onlySend)
-				});
-			}
+			io.get({
+				ent: playerName,
+				field: 'mail',
+				callback: this.doSendMail.bind(this, playerName, items)
+			});
 		},
-		doSendMail: function(playerName, items, onlySend, result) {
+		doSendMail: function(playerName, items, result) {
 			if (result == 'null')
 				result = null;
 
@@ -103,14 +106,17 @@ define([
 
 			var itemString = JSON.stringify(items).split(`'`).join(`''`);
 
-			var cb = onlySend ? null : this.getMail.bind(this, playerName);
-
 			io.set({
 				ent: playerName,
 				field: 'mail',
 				value: itemString,
-				callback: cb
+				callback: this.onDoSendMail.bind(this, playerName)
 			});
+		},
+		onDoSendMail: function(playerName) {
+			delete this.busy[playerName];
+
+			this.getMail(playerName);
 		}
 	};
 });
