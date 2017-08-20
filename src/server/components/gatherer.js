@@ -94,7 +94,7 @@ define([
 								obj: {
 									msg: 'The fish got away'
 								},
-								to: [this.obj.serverId] 
+								to: [this.obj.serverId]
 							}]
 						}
 					});
@@ -246,7 +246,7 @@ define([
 				if (!firstNode)
 					return;
 				else if (item.slot != 'tool')
-					return;				
+					return;
 
 				if (firstNode.resourceNode.nodeType == 'fish') {
 					var rod = this.obj.equipment.eq.tool;
@@ -264,6 +264,15 @@ define([
 						});
 
 						this.nodes.splice(0, 1);
+
+						if (this.gathering) {
+							if (this.gathering.resourceNode.nodeType == 'fish')
+								this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
+
+							this.gathering = null;
+							this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+							this.obj.syncer.set(false, 'gatherer', 'progress', 100);
+						}
 					}
 				}
 			},
