@@ -68,6 +68,18 @@ define([
 
 		parseList: function(result) {
 			this.list = JSON.parse(result).list;
+			if (!(this.list instanceof Array)) {
+				this.list = this.list
+					.split('$')
+					.map(function(l) {
+						var values = l.split('|');
+						return {
+							name: values[0],
+							level: values[1],
+							prophecies: (values[2] || '').split(',')
+						};
+					});
+			}
 
 			var doSave = false;
 
@@ -150,9 +162,16 @@ define([
 			if (!this.loaded)
 				return;
 
-			var value = JSON.stringify({
-				list: this.list
-			}).split(`'`).join(`''`);
+			var list = '';
+			this.list.forEach(function(l) {
+				list += l.name + '|' + l.level + '|' + l.prophecies.join(',') + '$';
+			});
+
+			var value = {
+				list: list
+			};
+
+			value = JSON.stringify(value).split(`'`).join(`''`);
 
 			io.set({
 				ent: 'list',
