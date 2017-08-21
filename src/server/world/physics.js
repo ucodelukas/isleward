@@ -56,6 +56,8 @@ define([
 			}
 		},
 		removeRegion: function(obj) {
+			var oId = obj.id;
+
 			var lowX = obj.x;
 			var lowY = obj.y;
 			var highX = lowX + obj.width;
@@ -83,8 +85,6 @@ define([
 							cLen--;
 						}
 					}
-
-					cell.push(obj);
 				}
 			}
 		},
