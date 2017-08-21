@@ -234,7 +234,7 @@ define([
 
 		destroyItem: function(id, amount) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || (item.noDestroy))
 				return;
 
 			amount = amount || item.quantity;
@@ -264,7 +264,7 @@ define([
 
 		dropItem: function(id) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || (item.noDrop))
 				return;
 
 			delete item.pos;

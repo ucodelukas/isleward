@@ -107,12 +107,12 @@ module.exports = {
 					rank++;
 				}
 
-				event.ranks[f.owner] = rank + 1;
-				event.weights[f.owner] = f.stats.weight;
-				event.rewards[f.owner] = extend(true, [], tplRewards[rank]);
-
 				if (rank > 2)
 					break;
+
+				event.ranks[f.owner] = rank + 1;
+				event.weights[f.owner] = f.stats.weight;
+				event.rewards[f.owner] = extend(true, [], tplRewards[rank]);				
 			}
 		},
 
@@ -342,12 +342,15 @@ module.exports = {
 				if (gatherResult.nodeType != 'fish')
 					return;
 
- 				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
+				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
 				if (!hasCompRod)
 					return;
 
-				gatherResult.items[0].name = 'Ancient Carp';
-				gatherResult.items[0].sprite = [11, 4];
+				extend(true, gatherResult.items[0], {
+					name: 'Ancient Carp',
+					sprite: [11, 4],
+					noDrop: true
+				});
 			},
 
 			beforeEnterPool: function(gatherResult, gatherer) {
@@ -400,10 +403,10 @@ module.exports = {
 								'2': `Nice catch. You took second place!`,
 								'3': `Not bad at all. You took third place!`
 							}[newRank];
-						} else
+						} else if (newRank == 1)
+							return `Great, you're still in first place!`;
+						else
 							return 'Not quite heavy enough, keep trying!';
-
-						return reply;
 					}
 				}
 			}

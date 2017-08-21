@@ -1,11 +1,9 @@
 define([
 	'../config/eventPhases/phaseTemplate',
-	'fs',
-	'misc/mail'
+	'fs'
 ], function(
 	phaseTemplate,
-	fs,
-	mail
+	fs
 ) {
 	return {
 		configs: [],
@@ -124,7 +122,7 @@ define([
 						rList[1].msg = `Fishing tournament reward:`;
 				}
 
-				mail.sendMail(p.name, rList);
+				this.instance.mail.sendMail(p.name, rList);
 			}, this);
 
 			if ((config.events) && (config.events.afterGiveRewards))
@@ -297,6 +295,14 @@ define([
 					) {
 						event.participators.push(obj);
 						result.push(event);
+
+						var rList = [{
+							nameLike: 'Ancient Carp',
+							removeAll: true
+						}];
+
+						this.instance.mail.sendMail(obj.name, rList);
+
 						break;
 					}
 				}

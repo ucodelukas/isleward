@@ -22,7 +22,7 @@ define([
 
 		gather: function() {
 			this.quantity--;
-			if (!this.quantity)
+			if (this.quantity <= 0)
 				this.obj.destroyed = true;
 		},
 

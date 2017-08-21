@@ -22,7 +22,7 @@ define([
 				this.obj.auth.doSave();
 			}
 
-			if ((this.cdSave % 85) == 0)
+			if ((this.cdSave % 101) == 0)
 				this.obj.instance.mail.getMail(this.obj.name);
 		},
 

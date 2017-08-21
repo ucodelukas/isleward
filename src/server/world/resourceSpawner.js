@@ -12,7 +12,7 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 200,
+		cdMax: 2,
 
 		init: function(instance) {
 			this.objects = instance.objects;
@@ -118,7 +118,7 @@ define([
 					nodeType: blueprint.type,
 					ttl: blueprint.ttl,
 					xp: this.map.zone.level * this.map.zone.level,
-					blueprint: blueprint,
+					blueprint: extend(true, {}, blueprint),
 					quantity: quantity
 				}
 			};

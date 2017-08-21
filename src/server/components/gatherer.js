@@ -172,7 +172,7 @@ define([
 					});
 				}
 
-				this.nodes.spliceWhere(n => n == gathering);
+				this.nodes.spliceWhere(n => (n == gathering));
 			}
 
 			this.gathering = null;
@@ -215,12 +215,12 @@ define([
 			if (!success)
 				return;
 
-			this.nodes.spliceWhere(n => n == node);
+			this.nodes.spliceWhere(n => (n == node));
 			this.nodes.push(node);
 		},
 
 		exit: function(node) {
-			this.nodes.spliceWhere(n => n == node);
+			this.nodes.spliceWhere(n => (n == node));
 		},
 
 		events: {
@@ -242,36 +242,41 @@ define([
 			},
 
 			afterEquipItem: function(item) {
-				var firstNode = this.nodes[0];
-				if (!firstNode)
-					return;
-				else if (item.slot != 'tool')
-					return;
+				var nodes = this.nodes;
+				var nLen = nodes.length;
 
-				if (firstNode.resourceNode.nodeType == 'fish') {
-					var rod = this.obj.equipment.eq.tool;
-					if (rod == null) {
-						process.send({
-							method: 'events',
-							data: {
-								'onGetAnnouncement': [{
-									obj: {
-										msg: 'You need a fishing rod to fish'
-									},
-									to: [this.obj.serverId]
-								}]
+				for (var i = 0; i < nLen; i++) {
+					var node = nodes[i];
+					if (item.slot != 'tool')
+						continue;
+
+					if (node.resourceNode.nodeType == 'fish') {
+						var rod = this.obj.equipment.eq.tool;
+						if (rod == null) {
+							process.send({
+								method: 'events',
+								data: {
+									'onGetAnnouncement': [{
+										obj: {
+											msg: 'You need a fishing rod to fish'
+										},
+										to: [this.obj.serverId]
+									}]
+								}
+							});
+
+							nodes.splice(i, 1);
+							i--;
+							nLen--;
+
+							if (this.gathering == node) {
+								if (this.gathering.resourceNode.nodeType == 'fish')
+									this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
+
+								this.gathering = null;
+								this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+								this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 							}
-						});
-
-						this.nodes.splice(0, 1);
-
-						if (this.gathering) {
-							if (this.gathering.resourceNode.nodeType == 'fish')
-								this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
-
-							this.gathering = null;
-							this.obj.syncer.set(true, 'gatherer', 'progress', 100);
-							this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 						}
 					}
 				}

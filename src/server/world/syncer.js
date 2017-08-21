@@ -59,7 +59,6 @@ define([
 							destroyed: true
 						};
 
-
 						objects.removeObject(o);
 
 						oLen--;

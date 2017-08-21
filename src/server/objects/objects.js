@@ -163,8 +163,13 @@ define([
 				}
 			}
 
-			if (this.physics)
-				this.physics.removeObject(found, found.x, found.y);
+			var physics = this.physics;
+			if (physics) {
+				if (!found.width)
+					physics.removeObject(found, found.x, found.y);
+				else
+					physics.removeRegion(found);
+			}
 
 			callback && callback(found);
 		},

@@ -55,6 +55,39 @@ define([
 				}
 			}
 		},
+		removeRegion: function(obj) {
+			var lowX = obj.x;
+			var lowY = obj.y;
+			var highX = lowX + obj.width;
+			var highY = lowY + obj.height;
+			var cells = this.cells;
+
+			for (var i = lowX; i < highX; i++) {
+				var row = cells[i];
+				for (var j = lowY; j < highY; j++) {
+					var cell = row[j];
+
+					if (!cell)
+						continue;
+
+					var cLen = cell.length;
+					for (var k = 0; k < cLen; k++) {
+						var c = cell[k];
+
+						if (c.id != oId) {
+							c.collisionExit(obj);
+							obj.collisionExit(c);
+						} else {
+							cell.splice(k, 1);
+							k--;
+							cLen--;
+						}
+					}
+
+					cell.push(obj);
+				}
+			}
+		},
 
 		addObject: function(obj, x, y, fromX, fromY) {
 			var row = this.cells[x];
@@ -163,7 +196,7 @@ define([
 				y1 = 0;
 			if (y2 >= height)
 				y2 = height - 1;
-			
+
 			var cells = this.cells;
 			var grid = this.graph.grid;
 
@@ -372,8 +405,7 @@ define([
 					incX = -1;
 					lowX = x2;
 					highX = x1 - 1;
-				}
-				else {
+				} else {
 					incX = 1;
 					lowX = x1;
 					highX = x2 + 1;
@@ -383,8 +415,7 @@ define([
 					incY = -1;
 					lowY = y2;
 					highY = y1 - 1;
-				}
-				else {
+				} else {
 					incY = 1;
 					lowY = y1;
 					highY = y2 + 1;
@@ -468,8 +499,7 @@ define([
 			var grid = this.graph.grid;
 			if (!grid[x][y]) {
 				grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
-			}
-			else {
+			} else {
 				grid[x][y].weight = collides ? 0 : 1;
 				pathfinder.astar.cleanNode(grid[x][y]);
 			}

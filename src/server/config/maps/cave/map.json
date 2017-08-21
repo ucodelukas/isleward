@@ -2400,7 +2400,7 @@
                  "gid":377,
                  "height":8,
                  "id":914,
-                 "name":"|portalEntry",
+                 "name":"exit|portalEntry",
                  "properties":
                     {
                      "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"

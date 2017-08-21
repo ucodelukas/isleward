@@ -622,7 +622,7 @@
                  "gid":702,
                  "height":24,
                  "id":659,
-                 "name":"",
+                 "name":"crystal caves",
                  "properties":
                     {
                      "cpnPortal":"{\"zone\":\"cave\",\"pos\":{\"x\":269,\"y\":27}}"
@@ -1043,7 +1043,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a warrior or thief.\"}"
+                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>1<\/font> to toggle auto-attack. Remember to stand close if you are a Warrior, Thief or Necromancer.\"}"
                     },
                  "propertytypes":
                     {
