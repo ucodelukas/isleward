@@ -15,6 +15,11 @@ module.exports = {
 		}
 	},
 	objects: {
+		'sun carp school': {
+			max: 6,
+			type: 'fish',
+			quantity: [6, 12]
+		},
 		shophermit: {
 			properties: {
 				cpnNotice: {
@@ -109,7 +114,7 @@ module.exports = {
 					rolls: 1,
 					noRandom: true,
 					blueprints: [{
-						maxLevel: 2,
+						maxLevel: 1,
 						name: 'Family Heirloom',
 						quality: 2,
 						slot: 'neck',
@@ -208,6 +213,17 @@ module.exports = {
 						min: 3,
 						max: 5
 					},
+					forceItems: [
+						{
+							name: 'Flimsy Fishing Rod',
+							type: 'Fishing Rod',
+							slot: 'tool',
+							quality: 0,
+							worth: 5,
+							sprite: [11, 0],
+							infinite: true
+						}
+					],
 					level: {
 						min: 1,
 						max: 5

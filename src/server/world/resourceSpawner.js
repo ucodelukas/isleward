@@ -12,7 +12,7 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 200,
+		cdMax: 2,
 
 		init: function(instance) {
 			this.objects = instance.objects;
@@ -23,13 +23,32 @@ define([
 		},
 
 		register: function(name, blueprint) {
+			var exists = this.nodes.find(n => (n.blueprint.name == name));
+			if (exists) {
+				if (!exists.blueprint.positions)
+					exists.blueprint.positions = [{
+						x: exists.blueprint.x,
+						y: exists.blueprint.y,
+						width: exists.blueprint.width,
+						height: exists.blueprint.height
+					}];
+
+				exists.blueprint.positions.push({
+					x: blueprint.x,
+					y: blueprint.y,
+					width: blueprint.width,
+					height: blueprint.height
+				});
+
+				return;
+			}
+
 			blueprint = extend(true, {}, blueprint, herbs[name], {
 				name: name
-			});	
+			});
 
 			var max = blueprint.max;
 			delete blueprint.max;
-			delete blueprint.type;
 
 			this.nodes.push({
 				cd: 0,
@@ -46,68 +65,98 @@ define([
 			var w = this.physics.width;
 			var h = this.physics.height;
 
-			var spawn = this.map.spawn[0];
-			var x = null;
-			var y = null;
+			var x = blueprint.x;
+			var y = blueprint.y;
 
-			while (true) {
-				x = ~~(Math.random() * w);
-				y = ~~(Math.random() * h);
+			var position = null;
+
+			if (blueprint.type == 'herb') {
+				x = ~~(Math.random() * w)
+				y = ~~(Math.random() * h)
 
 				if (this.physics.isTileBlocking(x, y))
-					continue;
+					return false;
+
+				var spawn = this.map.spawn[0];
+
+				var path = this.physics.getPath(spawn, {
+					x: x,
+					y: y
+				});
+
+				var endTile = path[path.length - 1];
+				if (!endTile)
+					return false;
+				else if ((endTile.x != x) || (endTile.y != y))
+					return false;
 				else {
-					var path = this.physics.getPath(spawn, {
-						x: x,
-						y: y
-					});
-
-					var endTile = path[path.length - 1];
-					if (!endTile)
-						continue;
-					else if ((endTile.x != x) || (endTile.y != y))
-						continue;
+					//Don't spawn in rooms
+					var cell = this.physics.getCell(x, y);
+					if (cell.some(c => c.notice))
+						return false;
 					else {
-						//Don't spawn in rooms
-						var cell = this.physics.getCell(x, y);
-						if (cell.some(c => c.notice))
-							continue;
-						else {
-							blueprint.x = x;
-							blueprint.y = y;
-
-							break;
-						}
+						blueprint.x = x;
+						blueprint.y = y;
 					}
 				}
+			} else if (blueprint.positions) {
+				//Find all possible positions in which a node hasn't spawned yet
+				position = blueprint.positions.filter(f => !node.spawns.some(s => ((s.x == f.x) && (s.y == f.y))));
+				if (position.length == 0)
+					return false;
+
+				position = position[~~(Math.random() * position.length)];
 			}
 
-			var obj = this.objects.buildObjects([node.blueprint]);
+			var quantity = 1;
+			if (blueprint.quantity)
+				quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
 
-			this.syncer.queue('onGetObject', {
-				x: obj.x,
-				y: obj.y,
-				components: [{
-					type: 'attackAnimation',
-					row: 0,
-					col: 4
-				}]
-			});
+			var objBlueprint = extend(true, {}, blueprint, position);
+			objBlueprint.properties = {
+				cpnResourceNode: {
+					nodeType: blueprint.type,
+					ttl: blueprint.ttl,
+					xp: this.map.zone.level * this.map.zone.level,
+					blueprint: extend(true, {}, blueprint),
+					quantity: quantity
+				}
+			};
 
-			obj.addComponent('resourceNode').xp = (this.map.zone.level * this.map.zone.level);
+			var obj = this.objects.buildObjects([objBlueprint]);
+
+			if (blueprint.type == 'herb') {
+				this.syncer.queue('onGetObject', {
+					x: obj.x,
+					y: obj.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}
+
 			var inventory = obj.addComponent('inventory');
 			obj.layerName = 'objects';
 
 			node.spawns.push(obj);
 
-			inventory.getItem({
+			var item = {
 				material: true,
-				type: 'herb',
+				type: node.type,
 				sprite: node.blueprint.itemSprite,
 				name: node.blueprint.name,
-				quantity: 1,
+				quantity: (blueprint.type != 'fish') ? 1 : null,
 				quality: 0
-			});
+			};
+
+			if (blueprint.type == 'fish')
+				item.noStack = true;
+
+			inventory.getItem(item);
+
+			return true;
 		},
 
 		update: function() {
@@ -134,9 +183,10 @@ define([
 				}
 
 				if ((sLen < node.max) && (node.cd == 0)) {
-					node.cd = this.cdMax;
-					this.spawn(node);
-					break;
+					if (this.spawn(node)) {
+						node.cd = this.cdMax;
+						break;
+					}
 				}
 			}
 		}

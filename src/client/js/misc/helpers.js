@@ -57,7 +57,7 @@ Array.prototype.spliceFirstWhere = function(callback, thisArg) {
 
 			if (callback.call(T, kValue, k, O)) {
 				O.splice(k, 1);
-				return;
+				return kValue;
 			}
 		}
 		k++;

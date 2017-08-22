@@ -32,6 +32,7 @@ define([
 						y: j,
 						components: [{
 							type: 'particles',
+							ttl: 10,
 							blueprint: this.particles
 						}]
 					};

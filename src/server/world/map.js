@@ -344,7 +344,9 @@ define([
 						});
 
 						room.exits.push(blueprint);
-					} else {
+					} else if (blueprint.properties.resource)
+						resourceSpawner.register(blueprint.properties.resource, blueprint);
+					else {
 						blueprint.exits = [];
 						blueprint.objects = [];
 						this.rooms.push(blueprint);

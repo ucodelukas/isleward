@@ -38,7 +38,16 @@ define([
 		'elementAllResist': 'all resistance',
 
 		//This stat is used for gambling when you can't see the stats
-		'stats': 'stats'
+		'stats': 'stats',
+
+		//Fishing
+		'weight': 'lb',
+		//Rods
+		'catchChance': 'extra catch chance',
+		'catchSpeed': 'faster catch speed' ,
+		'fishRarity': 'higher fish rarity',
+		'fishWeight': 'increased fish weight',
+		'fishItems': 'extra chance to hook items'
 	};
 
 	return {

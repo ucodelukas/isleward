@@ -36,6 +36,14 @@ define([
 			return cpn;
 		},
 
+		removeComponent: function(type) {
+			var cpn = this[type];
+			if (!cpn)
+				return;
+
+			cpn.destroyed = true;
+		},
+
 		extendComponent: function(ext, type, blueprint) {
 			var template = require('./components/extensions/' + type);
 			var cpn = this[ext];
@@ -58,6 +66,14 @@ define([
 				if (c.update) {
 					if (c.update())
 						usedTurn = true;
+				}
+
+				if (c.destroyed) {
+					this.syncer.setSelfArray(false, 'removeComponents', c.type);
+					this.components.spliceWhere(f => (f == c));
+					delete this[c.type];
+					len--;
+					i--;
 				}
 			}
 
@@ -114,6 +130,16 @@ define([
 								component = value.save ? value.save() : value.simplify(self);
 							else
 								component = value.simplify(self);
+
+							if (value.destroyed) {
+								if (!component) {
+									component = {
+										type: value.type
+									};
+								}
+
+								component.destroyed = true;
+							}
 
 							if (component)
 								result.components.push(component);
@@ -222,25 +248,27 @@ define([
 			var data = action.data;
 			var physics = this.instance.physics;
 
-			if (physics.isTileBlocking(data.x, data.y))
-				return false;
-
-			data.success = true;
-			this.fireEvent('beforeMove', data);
-			if (data.success == false) {
-				action.priority = true;
-				this.queue(action);
-				return true;
-			}
-
-			if (!action.isDouble) {
-				var deltaX = Math.abs(this.x - data.x);
-				var deltaY = Math.abs(this.y - data.y);
-				if (
-					((deltaX > 1) || (deltaY > 1)) ||
-					((deltaX == 0) && (deltaY == 0))
-				)
+			if (!action.force) {
+				if (physics.isTileBlocking(data.x, data.y))
 					return false;
+
+				data.success = true;
+				this.fireEvent('beforeMove', data);
+				if (data.success == false) {
+					action.priority = true;
+					this.queue(action);
+					return true;
+				}
+
+				if (!action.isDouble) {
+					var deltaX = Math.abs(this.x - data.x);
+					var deltaY = Math.abs(this.y - data.y);
+					if (
+						((deltaX > 1) || (deltaY > 1)) ||
+						((deltaX == 0) && (deltaY == 0))
+					)
+						return false;
+				}
 			}
 
 			//Don't allow mob overlap during combat
@@ -265,6 +293,8 @@ define([
 
 			if (this.aggro)
 				this.aggro.move();
+
+			this.fireEvent('afterMove');
 
 			return true;
 		},

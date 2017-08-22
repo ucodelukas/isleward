@@ -20,6 +20,7 @@ var components = [
 	'effects',
 	'aggro',
 	'quests',
+	'events',
 	'resourceNode',
 	'gatherer',
 	'stash',

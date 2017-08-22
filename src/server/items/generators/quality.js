@@ -43,8 +43,11 @@ define([
 			for (var i = 0; i < mLen; i++) {
 				qualities[i] = Math.max(0, qualities[i] - magicFind[i]);
 				if (qualities[i] > 0) {
-					if (i == 0)
+					if (i == 0) {
 						qualities[i] -= (bonusMagicFind * this.magicFindMult);
+						if (qualities[i] < 0)
+							qualities[i] = 0;
+					}
 					
 					break;
 				}

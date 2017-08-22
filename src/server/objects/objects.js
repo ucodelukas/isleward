@@ -107,7 +107,8 @@ define([
 						continue;
 					}
 
-					var type = p.replace('cpn', '').toLowerCase();
+					var type = p.replace('cpn', '');
+					type = type[0].toLowerCase() + type.substr(1);
 					var blueprint = properties[p] || null;
 					if ((blueprint) && (typeof(blueprint) == 'string'))
 						blueprint = JSON.parse(blueprint);
@@ -162,8 +163,13 @@ define([
 				}
 			}
 
-			if (this.physics)
-				this.physics.removeObject(found, found.x, found.y);
+			var physics = this.physics;
+			if (physics) {
+				if (!found.width)
+					physics.removeObject(found, found.x, found.y);
+				else
+					physics.removeRegion(found);
+			}
 
 			callback && callback(found);
 		},

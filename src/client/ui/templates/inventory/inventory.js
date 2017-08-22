@@ -150,6 +150,15 @@ define([
 		},
 
 		onClick: function(item) {
+			var msg = {
+				item: item,
+				success: true
+			};
+			events.emit('beforeInventoryClickItem', msg);
+
+			if (!msg.success)
+				return;
+
 			if (!this.ctrlDown)
 				return;
 
@@ -300,13 +309,15 @@ define([
 					if ((window.player.stash.active) && (!item.noSalvage))
 						config.push(menuItems.stash);
 
-					config.push(menuItems.drop);
+					if (!item.noDrop)
+						config.push(menuItems.drop);
 
 					if ((!item.material) && (!item.noSalvage))
 						config.push(menuItems.salvage);
 				}
 
-				config.push(menuItems.destroy);
+				if (!item.noDestroy)
+					config.push(menuItems.destroy);
 			}
 
 			if (config.length > 0)

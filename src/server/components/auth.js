@@ -40,9 +40,8 @@ define([
 
 			this.charname = character.name;
 
-			data.callback();
 			this.obj.player.sessionStart = +new Date;
-			this.obj.player.spawn(character);
+			this.obj.player.spawn(character, data.callback);
 
 			var prophecies = this.obj.prophecies ? this.obj.prophecies.simplify().list : [];
 			leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
@@ -90,7 +89,7 @@ define([
 			io.set({
 				ent: this.charname,
 				field: 'character',
-				value: JSON.stringify(simple).split(`'`).join(`''`),
+				value: JSON.stringify(simple).split(`'`).join('`'),
 				callback: callback
 			});
 
@@ -142,6 +141,10 @@ define([
 			});
 		},
 		onGetCharacter: function(data, result) {
+			if (result) {
+				result = result.split('`').join(`'`);
+				result = result.replace(/''+/g, '\'');
+			}
 			var character = JSON.parse(result || '{}');
 			this.characters[data.data.name] = character;
 

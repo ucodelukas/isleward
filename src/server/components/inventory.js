@@ -44,6 +44,10 @@ define([
 					item.spell.properties.range = item.range;
 				} else if (item.quantity == NaN)
 					item.quantity = 1;
+
+				while (item.name.indexOf(`''`) > -1) {
+					item.name = item.name.replace(`''`, `'`);
+				}
 			}
 
 			this.hookItemEvents(items);
@@ -77,6 +81,26 @@ define([
 						statGenerator.generate(item);
 					});
 				}
+
+				if ((item.pos == null) && (!item.eq)) {
+					var pos = i;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fj => (fj.pos == j))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
+					var pos = item.pos;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				}
 			}
 		},
 
@@ -84,7 +108,7 @@ define([
 
 		enchantItem: function(msg) {
 			var item = this.findItem(msg.itemId);
-			if ((!item) || (!item.slot) || (item.eq) || ((msg.action == 'scour') && (item.power == 0))) {
+			if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action == 'scour') && (item.power == 0))) {
 				this.resolveCallback(msg);
 				return;
 			}
@@ -210,7 +234,7 @@ define([
 
 		destroyItem: function(id, amount) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || (item.noDestroy))
 				return;
 
 			amount = amount || item.quantity;
@@ -240,7 +264,7 @@ define([
 
 		dropItem: function(id) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || (item.noDrop))
 				return;
 
 			delete item.pos;
@@ -401,7 +425,7 @@ define([
 
 			//Material?
 			var exists = false;
-			if ((item.material) || (item.quest)) {
+			if (((item.material) || (item.quest)) && (!item.noStack) || (item.quantity)) {
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;

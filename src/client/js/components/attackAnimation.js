@@ -101,8 +101,6 @@ define([
 				layerName: this.spriteSheet,
 				sprite: this.sprite
 			});
-
-			effects.unregister(this);
 		}
 	};
 });

@@ -29,7 +29,7 @@ define([
 			feet: 10,
 			trinket: 2,
 			twoHanded: 6,
-			tool: 1
+			tool: 0
 		},
 
 		armorMult: {

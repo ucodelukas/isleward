@@ -116,9 +116,8 @@ define([
 
 			if (!exists)
 				exists = this.buildObject(obj);
-			else {
+			else
 				this.updateObject(exists, obj);
-			}
 		},
 		buildObject: function(template) {
 			var obj = $.extend(true, {}, objBase);
@@ -209,6 +208,13 @@ define([
 			}, this);
 
 			delete template.components;
+
+			if (template.removeComponents) {
+				template.removeComponents.forEach(function(r) {
+					obj.removeComponent(r);
+				});
+				delete template.removeComponents;
+			}
 
 			var oldX = obj.x;
 

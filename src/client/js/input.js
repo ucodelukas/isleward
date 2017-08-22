@@ -28,7 +28,13 @@ define([
 			'38': 'up',
 			'39': 'right',
 			'40': 'down',
-			'46': 'del'
+			'46': 'del',
+
+			//hacks for mac cmd key
+			'17': 'ctrl',
+			'224': 'ctrl',
+			'91': 'ctrl',
+			'93': 'ctrl'
 		},
 
 		mouse: {
@@ -188,7 +194,7 @@ define([
 					this.mouse.x = e.offsetX + (renderer.pos.x);
 					this.mouse.y = e.offsetY + (renderer.pos.y);
 
-					events.emit('mouseMove', this.mouse);
+					//events.emit('mouseMove', this.mouse);
 				}
 			}
 		}

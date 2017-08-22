@@ -9,8 +9,15 @@ define([
 		states: {},
 		sourceStates: {},
 
+		trigger: null,
+
 		init: function(blueprint) {
 			this.states = blueprint.config;
+		},
+
+		destroy: function() {
+			if (this.trigger)
+				this.trigger.destroyed = true;
 		},
 
 		talk: function(msg) {
@@ -60,7 +67,7 @@ define([
 				if (!config)
 					return false;
 
-				var goto = config.options[state].goto;
+				var goto = (config.options[state] || {}).goto;
 				if (goto instanceof Array) {
 					var gotos = [];
 					goto.forEach(function(g) {
@@ -79,19 +86,14 @@ define([
 			this.sourceStates[sourceObj.id] = state;
 
 			if (!this.states) {
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log(this.obj);				
+				console.log(sourceObj.name, this.obj.name, state);			
 				return null;
 			}
 			var stateConfig = this.states[state];
 			if (!stateConfig)
 				return null;
+
+			var useMsg = stateConfig.msg;
 
 			if (stateConfig.cpn) {
 				var cpn = sourceObj[stateConfig.cpn];
@@ -105,12 +107,22 @@ define([
 					else
 						return this.getState(sourceObj, stateConfig.goto.failure);
 				}
-				else
-					return null;
+				else {
+					if (result) {
+						useMsg = extend(true, [], useMsg);
+						useMsg[0].msg = result;
+					} else
+						return null;
+				}
 			}
 			else if (stateConfig.method) {
-				stateConfig.method(sourceObj);
-				if (!stateConfig.msg)
+				var methodResult = stateConfig.method.call(this.obj, sourceObj);
+				if (methodResult) {
+					useMsg = extend(true, [], useMsg);
+					useMsg[0].msg = methodResult;
+				}
+
+				if (!useMsg)
 					return;
 			}
 
@@ -121,9 +133,9 @@ define([
 				options: []
 			};
 
-			if (stateConfig.msg instanceof Array) {
+			if (useMsg instanceof Array) {
 				var msgs = [];
-				stateConfig.msg.forEach(function(m, i) {
+				useMsg.forEach(function(m, i) {
 					var rolls = (m.chance * 100) || 100;
 					for (var j = 0; j < rolls; j++) {
 						msgs.push({
@@ -136,10 +148,10 @@ define([
 				var pick = msgs[~~(Math.random() * msgs.length)];
 
 				result.msg = pick.msg.msg;
-				result.options = stateConfig.msg[pick.index].options;
+				result.options = useMsg[pick.index].options;
 			}
 			else {
-				result.msg = stateConfig.msg;
+				result.msg = useMsg;
 				result.options = stateConfig.options;
 			}
 
@@ -198,10 +210,10 @@ define([
 			var exists = inventory.items.find(i => (i.name == msg.item.name));
 			if (!exists) {
 				inventory.getItem(msg.item);
-				return true;
+				return msg.successMsg || false;
 			}
 			else
-				return false;
+				return msg.existsMsg || false;
 		}
 	};
 });
