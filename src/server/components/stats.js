@@ -511,7 +511,7 @@ define([
 			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
 			var lastLogin = stats.lastLogin;
-			if ((true) || (!lastLogin) || (lastLogin.day != time.day)) {
+			if ((!lastLogin) || (lastLogin.day != time.day)) {
 				var daysSkipped = 1;
 				if (lastLogin) {
 					if (time.day > lastLogin.day)
