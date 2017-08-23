@@ -12,13 +12,19 @@ define([
 		},
 
 		getMail: function(playerName) {
+			var player = this.instance.objects.objects.find(o => (o.name == playerName));
+			if (!player) {
+				this.processQueue(playerName);
+				return;
+			}
+
 			io.get({
 				ent: playerName,
 				field: 'mail',
-				callback: this.onGetMail.bind(this, playerName)
+				callback: this.onGetMail.bind(this, player)
 			});
 		},
-		onGetMail: function(playerName, result) {
+		onGetMail: function(player, result) {
 			if (result == 'null')
 				result = null;
 			else if (result) {
@@ -32,56 +38,53 @@ define([
 
 			var sentMessages = [];
 
-			var player = this.instance.objects.objects.find(o => (o.name == playerName));
-			if (player) {
-				var inventory = player.inventory;
-				var stash = player.stash;
+			var inventory = player.inventory;
+			var stash = player.stash;
 
-				result.forEach(function(r) {
-					if (r.removeAll) {
-						for (var i = 0; i < inventory.items.length; i++) {
-							var item = inventory.items[i];
-							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
-								inventory.destroyItem(item.id, item.quantity ? item.quantity : null);
-								i--;
-							}
+			result.forEach(function(r) {
+				if (r.removeAll) {
+					for (var i = 0; i < inventory.items.length; i++) {
+						var item = inventory.items[i];
+						if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
+							inventory.destroyItem(item.id, item.quantity ? item.quantity : null);
+							i--;
 						}
-
-						for (var i = 0; i < stash.items.length; i++) {
-							var item = stash.items[i];
-							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
-								stash.destroyItem(item.id);
-								i--;
-							}
-						}
-					} else {
-						if ((r.msg) && (!sentMessages.some(s => (s == r.msg)))) {
-							player.instance.syncer.queue('onGetMessages', {
-								id: player.id,
-								messages: [{
-									class: 'q0',
-									message: r.msg,
-									type: 'info'
-								}]
-							}, [player.serverId]);
-
-							sentMessages.push(r.msg);
-							delete r.msg;
-						}
-						inventory.getItem(r);
 					}
-				});
 
-				io.set({
-					ent: playerName,
-					field: 'mail',
-					value: null, 
-					callback: this.onClearMail.bind(this, playerName)
-				});
-			}
+					for (var i = 0; i < stash.items.length; i++) {
+						var item = stash.items[i];
+						if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
+							stash.destroyItem(item.id);
+							i--;
+						}
+					}
+				} else {
+					if ((r.msg) && (!sentMessages.some(s => (s == r.msg)))) {
+						player.instance.syncer.queue('onGetMessages', {
+							id: player.id,
+							messages: [{
+								class: 'q0',
+								message: r.msg,
+								type: 'info'
+							}]
+						}, [player.serverId]);
+
+						sentMessages.push(r.msg);
+						delete r.msg;
+					}
+					inventory.getItem(r);
+				}
+			});
+
+			io.set({
+				ent: player.name,
+				field: 'mail',
+				value: null,
+				callback: this.processQueue.bind(this, player.name)
+			});
 		},
 
-		onClearMail: function(playerName) {
+		processQueue: function(playerName) {
 			delete this.busy[playerName];
 			var queue = this.queue[playerName];
 			if (!queue)
