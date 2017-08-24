@@ -14,7 +14,7 @@ define([
 				return;
 
 			item.type = type;
-			item.sprite = typeBlueprint.sprite;
+			item.sprite = blueprint.sprite || typeBlueprint.sprite;
 			if (typeBlueprint.spritesheet)
 				item.spritesheet = typeBlueprint.spritesheet;
 

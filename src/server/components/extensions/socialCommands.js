@@ -74,7 +74,29 @@ define([
 			if (config.name)
 				config.name = config.name.split('_').join(' ');
 
-			this.obj.inventory.getItem(generator.generate(config));
+			if (config.sprite)
+				config.sprite = config.sprite.split('_');
+
+			var factions = (config.factions || '').split(',');
+			delete config.factions;
+
+			var item = generator.generate(config);
+
+			factions.forEach(function(f) {
+				if (f == '')
+					return;
+
+				var faction = require('./config/factions/' + f);
+				faction.uniqueStat.generate(item);
+
+				item.factions = [];
+				item.factions.push({
+					id: f,
+					tier: 3
+				});
+			});
+
+			this.obj.inventory.getItem(item);
 		},
 
 		getGold: function(amount) {
