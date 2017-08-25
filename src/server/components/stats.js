@@ -48,7 +48,14 @@ define([
 
 			sprintChance: 0,
 
-			xpIncrease: 0
+			xpIncrease: 0,
+
+			//fishing stats
+			catchChance: 0,
+			catchSpeed: 0,
+			fishRarity: 0,
+			fishWeight: 0,
+			fishItems: 0
 		},
 
 		vitScale: 10,
