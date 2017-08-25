@@ -486,6 +486,8 @@ define([
 				var msg = item.name;
 				if (quantity)
 					msg += ' x' + quantity;
+				else if ((item.stats)  && (item.stats.weight))
+					msg += ` ${item.stats.weight}lb`;
 				messages.push({
 					class: 'q' + item.quality,
 					message: 'loot (' + msg + ')',
