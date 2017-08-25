@@ -2,7 +2,7 @@ module.exports = {
 	name: 'Fishing Tournament',
 	description: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '20 * * * *',
+	cron: '0 */2 * * *',
 
 	notifications: [{
 		mark: 0,
@@ -243,7 +243,7 @@ module.exports = {
 								name: 'Competition Rod',
 								slot: 'tool',
 								sprite: [11, 1],
-								type: 'Competition Fishing Rod',
+								type: 'Fishing Rod',
 								worth: 0,
 								noSalvage: true,
 								noAugment: true,
@@ -323,6 +323,9 @@ module.exports = {
 						stats: '???'
 					}
 				}],
+				faction: {
+					id: 'anglers'
+				},
 				level: {
 					min: 1,
 					max: 5
@@ -346,11 +349,13 @@ module.exports = {
 				if (!hasCompRod)
 					return;
 
-				extend(true, gatherResult.items[0], {
-					name: 'Ancient Carp',
-					sprite: [11, 4],
-					noDrop: true
-				});
+				gatherResult.items.forEach(function(g) {
+					extend(true, g, {
+						name: 'Ancient Carp',
+						sprite: [11, 4],
+						noDrop: true
+					});
+				});			
 			},
 
 			beforeEnterPool: function(gatherResult, gatherer) {

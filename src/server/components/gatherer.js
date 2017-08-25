@@ -78,6 +78,7 @@ define([
 				items: gathering.inventory.items
 			});
 			events.emitNoSticky('beforeGatherResource', gatherResult, this.obj);
+			this.obj.fireEvent('beforeGatherResource', gatherResult, this.obj);
 
 			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
