@@ -10,8 +10,8 @@ define([
 
 		uniqueStat: {
 			chance: {
-				min: 1,
-				max: 2
+				min: 2,
+				max: 7
 			},
 
 			generate: function(item) {
@@ -29,7 +29,7 @@ define([
 					result = {
 						factionId: 'anglers',
 						chance: chanceRoll,
-						text: chanceRoll + '% chance to multicatch',
+						text: chanceRoll + '% chance to multi-catch',
 						events: {}
 					};
 

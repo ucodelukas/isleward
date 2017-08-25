@@ -243,7 +243,7 @@ module.exports = {
 								name: 'Competition Rod',
 								slot: 'tool',
 								sprite: [11, 1],
-								type: 'Competition Fishing Rod',
+								type: 'Fishing Rod',
 								worth: 0,
 								noSalvage: true,
 								noAugment: true,

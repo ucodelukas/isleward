@@ -74,13 +74,25 @@ define([
 			if (config.name)
 				config.name = config.name.split('_').join(' ');
 
+			if (config.type)
+				config.type = config.type.split('_');
+
 			if (config.sprite)
 				config.sprite = config.sprite.split('_');
 
 			var factions = (config.factions || '').split(',');
 			delete config.factions;
 
+			var safe = config.safe;
+			delete config.safe;
+
 			var item = generator.generate(config);
+
+			if (safe) {
+				item.noDrop = true;
+				item.noDestroy = true;
+				item.noSalvage = true;
+			}
 
 			factions.forEach(function(f) {
 				if (f == '')
