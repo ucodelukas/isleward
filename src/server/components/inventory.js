@@ -490,7 +490,8 @@ define([
 					msg += ` ${item.stats.weight}lb`;
 				messages.push({
 					class: 'q' + item.quality,
-					message: 'loot (' + msg + ')',
+					message: 'loot: {' + msg + '}',
+					item: item,
 					type: 'loot'
 				});
 
