@@ -2,7 +2,7 @@ module.exports = {
 	name: 'Fishing Tournament',
 	description: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '0 */2 * * *',
+	cron: '* * * * *',
 
 	notifications: [{
 		mark: 0,
@@ -82,7 +82,8 @@ module.exports = {
 				name: `Angler's Mark`,
 				sprite: [12, 9],
 				noDrop: true,
-				noDestroy: true
+				noDestroy: true,
+				noSalvage: true
 			};
 
 			var rank = 0;
