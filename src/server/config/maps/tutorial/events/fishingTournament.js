@@ -77,22 +77,12 @@ module.exports = {
 					fish.push(t);
 			});
 
-			var tplRewards = {
-				'0': [{
-					name: `Angler's Mark`,
-					quantity: 35,
-					sprite: [12, 9]
-				}],
-				'1': [{
-					name: `Angler's Mark`,
-					quantity: 20,
-					sprite: [12, 9]
-				}],
-				'2': [{
-					name: `Angler's Mark`,
-					quantity: 10,
-					sprite: [12, 9]
-				}]
+			var rewardCounts = [35, 20, 10];
+			var tpl = {
+				name: `Angler's Mark`,
+				sprite: [12, 9],
+				noDrop: true,
+				noDestroy: true
 			};
 
 			var rank = 0;
@@ -112,7 +102,10 @@ module.exports = {
 
 				event.ranks[f.owner] = rank + 1;
 				event.weights[f.owner] = f.stats.weight;
-				event.rewards[f.owner] = extend(true, [], tplRewards[rank]);				
+
+				event.rewards[f.owner] = [ extend(true, { 
+					quantity: rewardCounts[rank]
+				}, tpl) ];
 			}
 		},
 
