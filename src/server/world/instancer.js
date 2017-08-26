@@ -30,7 +30,7 @@ define([
 	return {
 		instances: [],
 		zoneId: -1,
-		speed: 8,
+		speed: 350,
 
 		lastTime: 0,
 
