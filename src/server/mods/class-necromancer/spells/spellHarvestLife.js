@@ -12,7 +12,6 @@ define([
 		range: 1,
 
 		damage: 1,
-		healMultiplier: 0.1,
 
 		col: 4,
 		row: 1,
@@ -53,7 +52,7 @@ define([
 			var damage = this.getDamage(target);
 			target.stats.takeDamage(damage, this.threatMult, obj);
 
-			var healAmount = damage.amount * this.healMultiplier;
+			var healAmount = damage.amount * (this.healPercent / 100);
 			obj.stats.getHp({
 				amount: healAmount
 			}, obj);
