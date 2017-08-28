@@ -378,7 +378,7 @@ define([
 			});
 
 			this.characters[name] = simple;
-			this.characterList.push();
+			this.characterList.push(name);
 			io.set({
 				ent: this.username,
 				field: 'characterList',
