@@ -71,7 +71,7 @@ define([
 			spell.statType = ['str', 'int'];
 			mob.stats.values.str = obj.stats.values.str || 1;
 			mob.stats.values.int = obj.stats.values.int || 1;
-			spell.threatMult *= 10;
+			spell.threatMult *= 8;
 
 			mob.follower.bindEvents();
 
