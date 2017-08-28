@@ -221,7 +221,8 @@ module.exports = {
 							quality: 0,
 							worth: 5,
 							sprite: [11, 0],
-							infinite: true
+							infinite: true,
+							noSalvage: true
 						}
 					],
 					level: {
