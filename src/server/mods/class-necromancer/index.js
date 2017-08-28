@@ -154,7 +154,7 @@ define([
 				range: 9,
 				random: {
 					damagePercent: [80, 120],
-					hpPercent: [80, 120]
+					hpPercent: [65, 85]
 				}
 			};
 
