@@ -378,7 +378,7 @@ define([
 			});
 
 			this.characters[name] = simple;
-			this.characterList.push(name);
+			this.characterList.push();
 			io.set({
 				ent: this.username,
 				field: 'characterList',
@@ -393,7 +393,7 @@ define([
 			if ((!data.name) || (!this.username))
 				return;
 
-			if (!this.characterList.some(c => (c.name == data.name))) {
+			if (!this.characterList.some(c => ((c.name == data.name) || (c == data.name)))) {
 				msg.callback([]);
 				return;
 			}
@@ -405,7 +405,7 @@ define([
 			});
 		},
 		onDeleteCharacter: function(msg, result) {
-			this.characterList.spliceWhere(c => (c.name == msg.data.name));
+			this.characterList.spliceWhere(c => ((c.name == msg.data.name) || (c == msg.data.name)));
 			var characterList = this.characterList
 				.map(c => ({
 					name: c.name ? c.name : c,
