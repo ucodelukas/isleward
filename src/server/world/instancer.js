@@ -312,6 +312,9 @@ define([
 
 				var spawnPos = map.getSpawnPos(obj);
 
+				if (exists)
+					spawnPos = exists.map.getSpawnPos(obj);
+
 				if ((!msg.keepPos) || (obj.x == null)) {
 					obj.x = spawnPos.x;
 					obj.y = spawnPos.y;
@@ -446,6 +449,13 @@ define([
 			},
 
 			createInstance: function(objToAdd, transfer) {
+				var newMap = {
+					name: map.name,
+					spawn: extend(true, [], map.spawn),
+					clientMap: extend(true, {}, map.clientMap)
+				};
+				newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
+
 				var instance = {
 					id: objToAdd.name + '_' + (+new Date),
 					objects: extend(true, {}, objects),
@@ -460,12 +470,7 @@ define([
 					events: extend(true, {}, events),
 					scheduler: extend(true, {}, scheduler),
 					mail: extend(true, {}, mail),
-					map: {
-						name: map.name,
-						spawn: extend(true, [], map.spawn),
-						clientMap: extend(true, {}, map.clientMap),
-						getSpawnPos: map.getSpawnPos.bind(map)
-					}
+					map: newMap
 				};
 
 				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));
