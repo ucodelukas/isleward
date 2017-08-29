@@ -10,7 +10,7 @@ define([
 		rooms: [],
 		exitAreas: [],
 
-		maxDistance: 14,
+		maxDistance: 12,
 		minDistance: 0,
 
 		bounds: [0, 0, 0, 0],
@@ -197,7 +197,7 @@ define([
 			var clientMap = map.clientMap;
 
 			clientMap.map = _.get2dArray(w, h);
-			clientMap.collisionMap = _.get2dArray(w, h);
+			clientMap.collisionMap = _.get2dArray(w, h, 1);
 
 			var startTemplate = startRoom.template;
 			map.spawn = [{
