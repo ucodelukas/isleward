@@ -75,7 +75,7 @@ define([
 				config.name = config.name.split('_').join(' ');
 
 			if (config.type)
-				config.type = config.type.split('_');
+				config.type = config.type.split('_').join(' ');
 
 			if (config.sprite)
 				config.sprite = config.sprite.split('_');
