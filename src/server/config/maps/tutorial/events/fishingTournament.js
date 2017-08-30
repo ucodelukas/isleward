@@ -2,7 +2,7 @@ module.exports = {
 	name: 'Fishing Tournament',
 	description: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '20 * * * *',
+	cron: '50 */3 * * *',
 
 	notifications: [{
 		mark: 0,
@@ -77,22 +77,13 @@ module.exports = {
 					fish.push(t);
 			});
 
-			var tplRewards = {
-				'0': [{
-					name: `Angler's Mark`,
-					quantity: 35,
-					sprite: [12, 9]
-				}],
-				'1': [{
-					name: `Angler's Mark`,
-					quantity: 20,
-					sprite: [12, 9]
-				}],
-				'2': [{
-					name: `Angler's Mark`,
-					quantity: 10,
-					sprite: [12, 9]
-				}]
+			var rewardCounts = [35, 20, 10];
+			var tpl = {
+				name: `Angler's Mark`,
+				sprite: [12, 9],
+				noDrop: true,
+				noDestroy: true,
+				noSalvage: true
 			};
 
 			var rank = 0;
@@ -112,7 +103,10 @@ module.exports = {
 
 				event.ranks[f.owner] = rank + 1;
 				event.weights[f.owner] = f.stats.weight;
-				event.rewards[f.owner] = extend(true, [], tplRewards[rank]);				
+
+				event.rewards[f.owner] = [ extend(true, { 
+					quantity: rewardCounts[rank]
+				}, tpl) ];
 			}
 		},
 
@@ -243,7 +237,7 @@ module.exports = {
 								name: 'Competition Rod',
 								slot: 'tool',
 								sprite: [11, 1],
-								type: 'Competition Fishing Rod',
+								type: 'Fishing Rod',
 								worth: 0,
 								noSalvage: true,
 								noAugment: true,
@@ -323,6 +317,9 @@ module.exports = {
 						stats: '???'
 					}
 				}],
+				faction: {
+					id: 'anglers'
+				},
 				level: {
 					min: 1,
 					max: 5
@@ -346,11 +343,13 @@ module.exports = {
 				if (!hasCompRod)
 					return;
 
-				extend(true, gatherResult.items[0], {
-					name: 'Ancient Carp',
-					sprite: [11, 4],
-					noDrop: true
-				});
+				gatherResult.items.forEach(function(g) {
+					extend(true, g, {
+						name: 'Ancient Carp',
+						sprite: [11, 4],
+						noDrop: true
+					});
+				});			
 			},
 
 			beforeEnterPool: function(gatherResult, gatherer) {

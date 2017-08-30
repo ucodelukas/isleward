@@ -8,13 +8,13 @@ define([
 	return {
 		generate: function(item, blueprint) {
 			var type = blueprint.type || _.randomKey(configTypes[item.slot]);
-			var typeBlueprint = configTypes[item.slot][type];
+			var typeBlueprint = configTypes[item.slot][type] || {};
 
 			if (!typeBlueprint)
 				return;
 
 			item.type = type;
-			item.sprite = typeBlueprint.sprite;
+			item.sprite = blueprint.sprite || typeBlueprint.sprite;
 			if (typeBlueprint.spritesheet)
 				item.spritesheet = typeBlueprint.spritesheet;
 

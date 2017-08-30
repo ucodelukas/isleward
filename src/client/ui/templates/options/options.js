@@ -59,9 +59,9 @@ define([
 		onResize: function() {
 			var isFullscreen = (window.innerHeight == screen.height);
 			if (isFullscreen)
-				this.el.find('.btnScreen').html('Fullscreen');
-			else
 				this.el.find('.btnScreen').html('Windowed');
+			else
+				this.el.find('.btnScreen').html('Fullscreen');
 		},
 
 		toggle: function() {

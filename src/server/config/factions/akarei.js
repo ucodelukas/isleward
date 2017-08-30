@@ -57,11 +57,11 @@ define([
 					if (!damage.crit)
 						return;
 
-					/*var effect = item.effects.find(e => (e.factionId == 'akarei'));
+					var effect = item.effects.find(e => (e.factionId == 'akarei'));
 
 					var roll = Math.random() * 100;
 					if (roll >= effect.chance)
-						return;*/
+						return;
 
 					var cbExplode = function(target) {
 						if ((this.destroyed) || (target.destroyed))
