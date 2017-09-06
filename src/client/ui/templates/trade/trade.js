@@ -79,15 +79,9 @@ define([
 				var size = 64;
 				var offset = 0;
 
-				var spritesheet = item.spritesheet || 'items';
-				if (item.material)
-					spritesheet = 'materials';
-				else if (item.quest)
-					spritesheet = 'questItems';
-				else if (item.type == 'skin') {
+				if (item.type == 'skin') {
 					offset = 13.5;
 					size = 32;
-					spritesheet = 'charas';
 				}
 
 				var imgX = (-item.sprite[0] * size) + offset;
@@ -101,6 +95,8 @@ define([
 					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
 					spritesheet = '../../../images/questItems.png';
+				else if (item.type == 'skin')
+					spritesheet = 'charas';
 
 				itemEl
 					.data('item', item)
