@@ -49,6 +49,9 @@ define([
 		},
 
 		onLoginClick: function() {
+			if (this.el.hasClass('disabled'))
+				return;
+
 			this.el.addClass('disabled');
 
 			client.request({
