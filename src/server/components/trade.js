@@ -74,15 +74,14 @@ define([
 
 		startBuy: function(msg) {
 			var target = msg.target;
-			var targetName = (msg.targetName || '').toLowerCase();
 
 			if ((target == null) && (!targetName))
 				return false;
 
 			if ((target != null) && (target.id == null))
 				target = this.obj.instance.objects.objects.find(o => o.id == target);
-			else if (targetName != null)
-				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == targetName)));
+			else if (msg.targetName)
+				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
 
 			this.target = null;
 
