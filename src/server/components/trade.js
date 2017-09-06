@@ -75,7 +75,7 @@ define([
 		startBuy: function(msg) {
 			var target = msg.target;
 
-			if ((target == null) && (!targetName))
+			if ((target == null) && (!msg.targetName))
 				return false;
 
 			if ((target != null) && (target.id == null))
@@ -185,7 +185,7 @@ define([
 
 			if (item.worth.currency) {
 				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
-				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount);
+				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
 			} else {
 				targetTrade.gold += ~~(item.worth * markup);
 				this.gold -= ~~(item.worth * markup);

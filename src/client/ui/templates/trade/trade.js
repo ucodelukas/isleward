@@ -96,7 +96,7 @@ define([
 				else if (item.quest)
 					spritesheet = '../../../images/questItems.png';
 				else if (item.type == 'skin')
-					spritesheet = 'charas';
+					spritesheet = '../../../images/charas.png';
 
 				itemEl
 					.data('item', item)

@@ -232,9 +232,9 @@ define([
 			this.destroyItem(id);
 		},
 
-		destroyItem: function(id, amount) {
+		destroyItem: function(id, amount, force) {
 			var item = this.findItem(id);
-			if ((!item) || (item.noDestroy))
+			if ((!item) || ((item.noDestroy) && (!force)))
 				return;
 
 			amount = amount || item.quantity;
