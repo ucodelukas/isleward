@@ -12,11 +12,15 @@ define([
 			var slotNames = slots.slots
 				.filter(s => (s != 'tool'));
 
+			if (this.slot) {
+				if (!slotNames.some(s => (s == this.slot)))
+					this.slot = null;
+			}
+
 			if (!this.slot) {
 				this.slot = slotNames[~~(Math.random() * slotNames.length)];
 				this.slotName = this.slot[0].toUpperCase() + this.slot.substr(1);
-			} else if (!slotNames.some(s => (s == this.slot)))
-				return false;
+			}
 				
 			this.description = 'Loot 1x ' + this.slotName + ' slot item';
 
