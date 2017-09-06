@@ -74,15 +74,14 @@ define([
 
 		startBuy: function(msg) {
 			var target = msg.target;
-			var targetName = (msg.targetName || '').toLowerCase();
 
-			if ((target == null) && (!targetName))
+			if ((target == null) && (!msg.targetName))
 				return false;
 
 			if ((target != null) && (target.id == null))
 				target = this.obj.instance.objects.objects.find(o => o.id == target);
-			else if (targetName != null)
-				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == targetName)));
+			else if (msg.targetName)
+				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
 
 			this.target = null;
 
@@ -186,7 +185,7 @@ define([
 
 			if (item.worth.currency) {
 				var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
-				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount);
+				this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
 			} else {
 				targetTrade.gold += ~~(item.worth * markup);
 				this.gold -= ~~(item.worth * markup);

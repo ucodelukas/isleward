@@ -6,12 +6,16 @@ define([
 	skins
 ) {
 	return {
-		items: {},
+		baseItems: [],
+
 		cdMax: 10,
 
 		blueprint: null,
 
 		init: function(blueprint) {
+			this.baseItems = this.items;
+			this.items = {};
+
 			this.faction = blueprint.faction;
 			this.blueprint = blueprint;
 		},
@@ -120,6 +124,12 @@ define([
 				list.items.push(item);
 			}
 
+			var baseItems = this.baseItems;
+			var bLen = baseItems.length;
+			for (var i = 0; i < bLen; i++) {
+				list.items.push(baseItems[i]);
+			}
+
 			var extra = blueprint.items.extra;
 			if (!extra)
 				return;
@@ -137,6 +147,7 @@ define([
 				}
 
 				list.items.push(item);
+
 			}
 		},
 
@@ -146,7 +157,7 @@ define([
 				item = this.findItem(itemId, requestedBy.name);
 			else if (action == 'buyback')
 				item = this.findBuyback(itemId, requestedBy.name);
-			
+
 			var result = true;
 			if (item.factions)
 				result = requestedBy.reputation.canEquipItem(item);

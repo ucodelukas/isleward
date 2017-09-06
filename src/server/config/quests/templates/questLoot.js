@@ -9,13 +9,19 @@ define([
 		type: 'loot',
 
 		build: function() {
+			var slotNames = slots.slots
+				.filter(s => (s != 'tool'));
+
+			if (this.slot) {
+				if (!slotNames.some(s => (s == this.slot)))
+					this.slot = null;
+			}
+
 			if (!this.slot) {
-				var slotNames = slots.slots;
-				this.slot = slotNames.filter(s => (s != 'tool'));
 				this.slot = slotNames[~~(Math.random() * slotNames.length)];
 				this.slotName = this.slot[0].toUpperCase() + this.slot.substr(1);
 			}
-
+				
 			this.description = 'Loot 1x ' + this.slotName + ' slot item';
 
 			return true;
