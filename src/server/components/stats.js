@@ -169,6 +169,7 @@ define([
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
+				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
 			} else if (stat == 'allAttributes') {
 				['int', 'str', 'dex'].forEach(function(s) {
 					this.values[s] += value;
