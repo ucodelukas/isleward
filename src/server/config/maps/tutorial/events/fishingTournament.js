@@ -85,6 +85,7 @@ module.exports = {
 				noDestroy: true,
 				noSalvage: true
 			};
+			var consolationQty = 2;
 
 			var rank = 0;
 			var lastWeight = fish[0].stats.weight;
@@ -98,14 +99,13 @@ module.exports = {
 					rank++;
 				}
 
-				if (rank > 2)
-					break;
-
 				event.ranks[f.owner] = rank + 1;
 				event.weights[f.owner] = f.stats.weight;
 
+				var rewardQty = rewardCounts[rank] || consolationQty;
+
 				event.rewards[f.owner] = [ extend(true, { 
-					quantity: rewardCounts[rank]
+					quantity: rewardQty
 				}, tpl) ];
 			}
 		},
