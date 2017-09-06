@@ -65,6 +65,8 @@ define([
 			var master = this.master;
 
 			var newPosition = physics.getOpenCellInArea(master.x - 1, master.y - 1, master.x + 1, master.y + 1);
+			if (!newPosition)
+				return;
 			
 			physics.removeObject(obj, obj.x, obj.y);
 
