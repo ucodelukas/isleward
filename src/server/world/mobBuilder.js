@@ -69,6 +69,7 @@ define([
 
 			mob.addComponent('equipment');
 			mob.addComponent('inventory', drops);
+			mob.inventory.inventorySize = -1;
 
 			if (this.zone) {
 				var chats = this.zone.chats;
