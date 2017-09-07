@@ -1,9 +1,7 @@
 define([
-	'objects/objects',
-	'world/atlas'
+	'objects/objects'
 ], function(
 	objects,
-	atlas
 ) {
 	return {
 		players: [],

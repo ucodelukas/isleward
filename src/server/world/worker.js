@@ -8,16 +8,15 @@ requirejs.config({
 global.io = true;
 var instancer = null;
 
-
-
 requirejs([
-	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods'
+	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods', 'misc/mail'
 ], function(
-	extend, helpers, components, _instancer, io, mods
+	extend, helpers, components, _instancer, io, mods, mail
 ) {
 	var onDbReady = function() {
 		global.extend = extend;
 		global._ = helpers;
+		global.mail = mail;
 		require('../misc/random');
 		
 		instancer = _instancer;
@@ -39,7 +38,9 @@ requirejs([
 });
 
 process.on('message', (m) => {
-	if (m.method) {
+	if (m.module) {
+		var module = global[m.module];
+		module[m.method].apply(module, m.args);
+	} else if (m.method)
 		instancer[m.method](m.args);
-	}
 });
