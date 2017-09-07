@@ -3,7 +3,7 @@ define([
 ], function(
 	inventory
 ) {
-	var components = ['inventory', 'reputation'];
+	var components = ['inventory', 'reputation', 'dialogue'];
 
 	return {
 		stats: {

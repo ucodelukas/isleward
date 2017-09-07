@@ -22,9 +22,8 @@ define([
 
 		talk: function(msg) {
 			var target = msg.target;
-			var targetName = (msg.targetName || '').toLowerCase();
 
-			if ((target == null) && (!targetName))
+			if ((target == null) && (!msg.targetName))
 				return false;
 
 			if ((target != null) && (target.id == null)) {
@@ -32,8 +31,8 @@ define([
 				if (!target)
 					return false;
 			}
-			else if (targetName != null) {
-				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == targetName)));
+			else if (msg.targetName != null) {
+				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
 				if (!target)
 					return false;	
 			}

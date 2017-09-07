@@ -4,8 +4,11 @@ define([
 	
 ) {
 	return {
+		nextId: 0,
+
 		player: function(blueprint) {
 			var result = {
+				id: this.nextId++,
 				fireEvent: function() {},
 				syncer: {},
 				instance: {
