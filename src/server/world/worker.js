@@ -9,14 +9,14 @@ global.io = true;
 var instancer = null;
 
 requirejs([
-	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods', 'misc/mail'
+	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods', 'world/atlas'
 ], function(
-	extend, helpers, components, _instancer, io, mods, mail
+	extend, helpers, components, _instancer, io, mods, atlas
 ) {
 	var onDbReady = function() {
 		global.extend = extend;
 		global._ = helpers;
-		global.mail = mail;
+		global.atlas = atlas;
 		require('../misc/random');
 		
 		instancer = _instancer;
@@ -39,8 +39,25 @@ requirejs([
 
 process.on('message', (m) => {
 	if (m.module) {
-		var module = global[m.module];
-		module[m.method].apply(module, m.args);
+		var instances = atlas.instances;
+		var iLen = instances.length;
+		for (var i = 0; i < iLen; i++) {
+			var objects = instances[i].objects.objects;
+			var oLen = objects.length;
+			var found = false;
+			for (var j = 0; j < oLen; j++) {
+				var object = objects[j];
+
+				if (object.name == m.args[0]) {
+					object.instance[m.method].apply(module, n.args);
+
+					found = true;
+					break;
+				}
+			}
+			if (found)
+				break;
+		}
 	} else if (m.method)
 		instancer[m.method](m.args);
 });

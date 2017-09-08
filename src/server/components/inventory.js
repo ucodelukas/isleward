@@ -303,6 +303,8 @@ define([
 				return;
 			}
 
+			delete item.pos;
+
 			var io = require('security/io');
 			io.get({
 				ent: msg.recipient,

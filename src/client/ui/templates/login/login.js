@@ -34,9 +34,9 @@ define([
 
 			renderer.buildTitleScreen();
 
-			this.find('.txtUsername').val('waffle');
+			/*this.find('.txtUsername').val('waffle');
 			this.find('.txtPassword').val('1skulpie!');
-			this.onLoginClick();
+			this.onLoginClick();*/
 		},
 
 		redirect: function(e) {
