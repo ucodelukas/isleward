@@ -4,7 +4,7 @@ define([
 
 ) {
 	return {
-		name: 'Necormancer Class',
+		name: 'Necromancer Class',
 
 		extraScripts: [
 			'spells/spellHarvestLife',
