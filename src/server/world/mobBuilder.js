@@ -131,6 +131,7 @@ define([
 						slot: slot,
 						forceStats: [preferStat]
 					});
+					delete item.spell;
 					mob.inventory.getItem(item);
 					mob.equipment.autoEquip(item.id);
 				}, this);
