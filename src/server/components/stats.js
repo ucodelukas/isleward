@@ -548,6 +548,8 @@ define([
 				var rewards = loginRewards.generate(stats.loginStreak);
 				mail.sendMail(this.obj.name, rewards);
 			}
+			else
+				this.obj.instance.mail.getMail(this.obj.name);
 
 			stats.lastLogin = time;
 		}

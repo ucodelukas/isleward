@@ -56,6 +56,8 @@ define([
 					scheduler: scheduler
 				};
 
+				this.instances.push(fakeInstance);
+
 				spawners.init(fakeInstance);
 				scheduler.init();
 

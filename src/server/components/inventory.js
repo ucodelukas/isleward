@@ -296,6 +296,35 @@ define([
 			}, this);
 		},
 
+		mailItem: function(msg) {
+			var item = this.findItem(msg.itemId);
+			if (!item) {
+				this.resolveCallback(msg);
+				return;
+			}
+
+			delete item.pos;
+
+			var io = require('security/io');
+			io.get({
+				ent: msg.recipient,
+				field: 'character',
+				callback: this.onCheckCharExists.bind(this, msg, item)
+			});
+		},
+		onCheckCharExists: function(msg, item, res) {
+			if (!res) {
+				this.resolveCallback(msg, 'Recipient does not exist');
+				return;
+			}
+
+			this.obj.instance.mail.sendMail(msg.recipient, [ extend(true, {}, item) ]);
+
+			this.destroyItem(item.id);
+
+			this.resolveCallback(msg);
+		},
+
 		//Helpers
 
 		resolveCallback: function(msg, result) {

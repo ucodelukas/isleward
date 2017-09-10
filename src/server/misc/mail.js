@@ -14,6 +14,16 @@ define([
 		getMail: function(playerName) {
 			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 			if (!player) {
+				process.send({
+					method: 'callDifferentThread',
+					playerName: playerName,
+					data: {
+						module: 'mail',
+						method: 'getMail',
+						args: [ playerName ]
+					}
+				});
+
 				this.processQueue(playerName);
 				return;
 			}

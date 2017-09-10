@@ -33,7 +33,6 @@ define([
 				'help',
 				'dialogue',
 				'buffs',
-				'partyLoot',
 				'tooltips',
 				'tooltipInfo',
 				'tooltipItem',
@@ -48,7 +47,8 @@ define([
 				'overlay',
 				'death',
 				'leaderboard',
-				'reputation'
+				'reputation',
+				'mail'
 			].forEach(function(u) {
 				this.build(u);
 			}, this);
