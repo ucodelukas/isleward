@@ -318,7 +318,7 @@ define([
 				return;
 			}
 
-			require('misc/mail').sendMail(msg.recipient, [ extend(true, {}, item) ]);
+			this.obj.instance.mail.sendMail(msg.recipient, [ extend(true, {}, item) ]);
 
 			this.destroyItem(item.id);
 

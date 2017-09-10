@@ -163,7 +163,11 @@ define([
 			},
 			callDifferentThread: function(thread, message) {
 				var obj = connections.players.find(p => (p.name == message.playerName));
+				if (!obj)
+					return;
 				var thread = this.getThreadFromName(obj.zoneName);
+				if (!thread)
+					return;
 
 				thread.worker.send({
 					module: message.data.module,

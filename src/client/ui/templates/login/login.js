@@ -33,10 +33,6 @@ define([
 				.eq(0).focus();
 
 			renderer.buildTitleScreen();
-
-			/*this.find('.txtUsername').val('waffle');
-			this.find('.txtPassword').val('1skulpie!');
-			this.onLoginClick();*/
 		},
 
 		redirect: function(e) {

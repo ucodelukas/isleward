@@ -1,7 +1,7 @@
 define([
 	'objects/objects'
 ], function(
-	objects,
+	objects
 ) {
 	return {
 		players: [],
