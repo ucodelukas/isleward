@@ -143,15 +143,17 @@ module.exports = {
 			var srcInventory = source.inventory;
 			var tgtInventory = target.inventory;
 
-			var fishies = srcInventory.items
+			srcInventory.items
 				.filter(i => (i.name.indexOf('Ancient Carp') > -1))
-				.sort((a, b) => (b.stats.weight - a.stats.weight));
+				.sort((a, b) => (b.stats.weight - a.stats.weight))
+				.forEach(function(f, i) {
+					if (i == 0) {
+						f.owner = source.name;
+						tgtInventory.getItem(extend(true, {}, f));
+					}
 
-			var fish = fishies[0];
-			fish.owner = source.name;
-
-			srcInventory.destroyItem(fish.id);
-			tgtInventory.getItem(fish);
+					srcInventory.destroyItem(f.id);
+				});
 		},
 
 		getRank: function(event, playerName) {
