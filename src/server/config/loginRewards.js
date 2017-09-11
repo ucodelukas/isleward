@@ -43,7 +43,7 @@ define([
 			var items = [];
 
 			var qualityTotals = {
-				'0': 1 + Math.min(streak * 3, 15),
+				'0': 1z + Math.min(streak * 3, 15),
 				'1': ~~(streak / 3),
 				'2': ~~(streak / 5),
 				'3': ~~(streak / 10),
