@@ -52,6 +52,11 @@ define([
 						item.stats[p] -= value;
 						if (item.stats[p] <= 0)
 							delete item.stats[p];
+
+						if (p == 'lvlRequire') {
+							item.level += value;
+							delete item.originalLevel;
+						}
 					}
 				}
 
