@@ -1,5 +1,5 @@
 define([
-	'items/generators/statsFishingRod'
+	'./statsFishingRod'
 ], function(
 	statsFishingRod
 ) {

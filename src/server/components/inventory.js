@@ -1,9 +1,9 @@
 define([
-	'items/generator',
-	'items/salvager',
-	'items/enchanter',
-	'objects/objects',
-	'config/classes'
+	'../items/generator',
+	'../items/salvager',
+	'../items/enchanter',
+	'../objects/objects',
+	'../config/classes'
 ], function(
 	generator,
 	salvager,
@@ -296,6 +296,35 @@ define([
 			}, this);
 		},
 
+		mailItem: function(msg) {
+			var item = this.findItem(msg.itemId);
+			if (!item) {
+				this.resolveCallback(msg);
+				return;
+			}
+
+			delete item.pos;
+
+			var io = require('security/io');
+			io.get({
+				ent: msg.recipient,
+				field: 'character',
+				callback: this.onCheckCharExists.bind(this, msg, item)
+			});
+		},
+		onCheckCharExists: function(msg, item, res) {
+			if (!res) {
+				this.resolveCallback(msg, 'Recipient does not exist');
+				return;
+			}
+
+			this.obj.instance.mail.sendMail(msg.recipient, [ extend(true, {}, item) ]);
+
+			this.destroyItem(item.id);
+
+			this.resolveCallback(msg);
+		},
+
 		//Helpers
 
 		resolveCallback: function(msg, result) {
@@ -442,19 +471,20 @@ define([
 				var items = this.items;
 				var iLen = items.length;
 
-				var nonEqItems = items.filter(f => !f.eq).length;
+				if (this.inventorySize != -1) {
+					var nonEqItems = items.filter(f => !f.eq).length;
+					if ((nonEqItems >= this.inventorySize) && (!hideMessage)) {
+						this.obj.instance.syncer.queue('onGetMessages', {
+							id: this.obj.id,
+							messages: [{
+								class: 'q0',
+								message: 'you bags are too full to loot any more items',
+								type: 'info'
+							}]
+						}, [this.obj.serverId]);
 
-				if ((nonEqItems >= this.inventorySize) && (!hideMessage)) {
-					this.obj.instance.syncer.queue('onGetMessages', {
-						id: this.obj.id,
-						messages: [{
-							class: 'q0',
-							message: 'you bags are too full to loot any more items',
-							type: 'info'
-						}]
-					}, [this.obj.serverId]);
-
-					return false;
+						return false;
+					}
 				}
 
 				for (var i = 0; i < iLen; i++) {
@@ -486,7 +516,7 @@ define([
 				var msg = item.name;
 				if (quantity)
 					msg += ' x' + quantity;
-				else if ((item.stats)  && (item.stats.weight))
+				else if ((item.stats) && (item.stats.weight))
 					msg += ` ${item.stats.weight}lb`;
 				messages.push({
 					class: 'q' + item.quality,

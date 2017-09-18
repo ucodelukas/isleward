@@ -281,6 +281,10 @@ define([
 					text: 'augment',
 					callback: this.openAugmentUi.bind(this, item)
 				},
+				mail: {
+					text: 'mail',
+					callback: this.openMailUi.bind(this, item)
+				},
 				divider: '----------'
 			};
 
@@ -319,6 +323,9 @@ define([
 				if (!item.noDestroy)
 					config.push(menuItems.destroy);
 			}
+
+			if ((!item.noDrop) && (!item.quest) && (!item.noSalvage))
+				config.push(menuItems.mail);
 
 			if (config.length > 0)
 				events.emit('onContextMenu', config, e);
@@ -455,6 +462,12 @@ define([
 
 		openAugmentUi: function(item) {
 			events.emit('onSetSmithItem', {
+				item: item
+			});
+		},
+
+		openMailUi: function(item) {
+			events.emit('onSetMailItem', {
 				item: item
 			});
 		},

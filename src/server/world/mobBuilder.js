@@ -69,6 +69,7 @@ define([
 
 			mob.addComponent('equipment');
 			mob.addComponent('inventory', drops);
+			mob.inventory.inventorySize = -1;
 
 			if (this.zone) {
 				var chats = this.zone.chats;
@@ -130,6 +131,7 @@ define([
 						slot: slot,
 						forceStats: [preferStat]
 					});
+					delete item.spell;
 					mob.inventory.getItem(item);
 					mob.equipment.autoEquip(item.id);
 				}, this);
@@ -158,8 +160,8 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				hpMult *= [0.005, 0.01, 0.1, 0.2, 0.5, 0.65, 0.75, 0.85, 0.95][level - 1];
-				dmgMult *= [0.2, 0.45, 0.7, 0.8, 0.9, 0.92, 0.94, 0.96, 0.98][level - 1]
+				hpMult *= [0.005, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
+				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1]
 			}
 
 			if (mob.isRare) {

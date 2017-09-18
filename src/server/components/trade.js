@@ -1,6 +1,6 @@
 define([
-	'items/generator',
-	'items/generators/stats'
+	'../items/generator',
+	'../items/generators/stats'
 ], function(
 	generator,
 	statGenerator
