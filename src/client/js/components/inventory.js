@@ -40,12 +40,16 @@ define([
 						return (item.id == nId);
 					});
 					if (findItem) {
-						if (!nItem.eq)
-							delete findItem.eq;
-						if (nItem.stats)
-							delete findItem.stats;
-						if (!nItem.power)
-							delete findItem.power;
+						[
+							'eq',
+							'stats',
+							'power',
+							'pos'
+						].forEach(function(s) {
+							if (!nItem[s])
+								delete findItem[s];
+						});
+
 						$.extend(true, findItem, nItem);
 
 						newItems.splice(i, 1);
