@@ -84,6 +84,9 @@ define([
 				return;
 			}
 
+			delete item.pos;
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+
 			var spellId = null;
 			var currentEqId = this.eq[item.slot];
 			var currentEq = this.obj.inventory.findItem(currentEqId);
