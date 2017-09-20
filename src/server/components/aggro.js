@@ -128,7 +128,7 @@ define([
 			else if ((target.player) && (obj.player)) {
 				var hasButcher = (obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher'));
 
-				if (!target.social.party || !obj.social.party)
+				if ((!target.social.party) || (!obj.social.party))
 					return hasButcher;
 				else if (target.social.partyLeaderId != obj.social.partyLeaderId)
 					return hasButcher;
