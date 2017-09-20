@@ -84,19 +84,6 @@ define([
 				var item = items.find(function(item) {
 					return ((item.pos != null) && (item.pos == i));
 				});
-				if (!item) {
-					item = items.find(function(item) {
-						if ((item.pos != null) && (i < item.pos) && (item.pos < iLen))
-							return false;
-
-						return (!rendered.some(function(r) {
-							return (r == item);
-						}));
-					});
-					if (item)
-						rendered.push(item);
-				} else
-					rendered.push(item);
 
 				if (!item) {
 					var itemEl = $(tplItem)
@@ -110,6 +97,8 @@ define([
 						.remove();
 
 					continue;
+				} else {
+					rendered.push(item);
 				}
 
 				var imgX = -item.sprite[0] * 64;
