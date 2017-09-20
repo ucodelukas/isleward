@@ -126,7 +126,7 @@ define([
 
 			if (target == obj)
 				return false;
-			else if ((target.player) && (obj.player))
+			else if ((target.player) && (obj.player) && (!target.social.isInParty))
 				return ((obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
 			else if ((target.follower) && (target.follower.master.player) && (obj.player))
 				return false;
