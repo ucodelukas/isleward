@@ -465,6 +465,9 @@ define([
 				}
 			}
 
+			if (!exists)
+				delete item.pos;
+
 			//Get next id
 			if (!exists) {
 				var id = 0;
