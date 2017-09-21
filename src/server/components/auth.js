@@ -148,7 +148,7 @@ define([
 			var character = JSON.parse(result || '{}');
 			this.characters[data.data.name] = character;
 
-			this.getStash(data, character);
+			this.getCustomChannels(data, character);
 		},
 
 		getStash: function(data, character) {
@@ -210,6 +210,23 @@ define([
 
 		doesOwnSkin: function(skinId) {
 			return this.skins.some(s => s == skinId);
+		},
+
+		getCustomChannels: function(data, character) {
+			io.get({
+				ent: character.name,
+				field: 'customChannels',
+				callback: this.onGetCustomChannels.bind(this, data, character)
+			});
+		},
+
+		onGetCustomChannels: function(data, character, result) {
+			this.customChannels = JSON.parse(result || '[]');
+			
+			if (this.customChannels != null)
+				data.callback(character);
+			
+			this.getStash(data, character);
 		},
 
 		login: function(msg) {
