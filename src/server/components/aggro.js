@@ -123,11 +123,18 @@ define([
 
 		canAttack: function(target) {
 			var obj = this.obj;
-
 			if (target == obj)
 				return false;
-			else if ((target.player) && (obj.player))
-				return ((obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
+			else if ((target.player) && (obj.player)) {
+				var hasButcher = (obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher'));
+
+				if ((!target.social.party) || (!obj.social.party))
+					return hasButcher;
+				else if (target.social.partyLeaderId != obj.social.partyLeaderId)
+					return hasButcher;
+				else
+					return false;
+			}
 			else if ((target.follower) && (target.follower.master.player) && (obj.player))
 				return false;
 			else if (obj.player)
