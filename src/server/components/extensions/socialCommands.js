@@ -3,14 +3,30 @@ define([
 	'world/atlas',
 	'items/generator',
 	'misc/random',
-	'items/config/slots'
+	'items/config/slots',
+	'security/io'
 ], function(
 	roles,
 	atlas,
 	generator,
 	random,
-	configSlots
+	configSlots,
+	io
 ) {
+	var commandRoles = {
+		join: 0,
+		leave: 0,
+		getItem: 10,
+		getGold: 10,
+		setLevel: 10,
+		godMode: 10
+	};
+
+	var localCommands = [
+		'join',
+		'leave'
+	];
+
 	return {
 		roleLevel: null,
 
@@ -19,9 +35,6 @@ define([
 		},
 
 		onBeforeChat: function(msg) {
-			if (this.roleLevel < 10)
-				return;
-
 			var messageText = msg.message;
 			if (messageText[0] != '/')
 				return;
@@ -31,6 +44,10 @@ define([
 			actionName = Object.keys(this).find(a => (a.toLowerCase() == actionName));
 			if (!actionName)
 				return;
+			else if (this.roleLevel < commandRoles[actionName])
+				return;
+
+			msg.ignore = true;
 
 			var config = {};
 			if ((messageText.length == 1) && (messageText[0].indexOf('=') == -1))
@@ -42,16 +59,91 @@ define([
 				});
 			}
 
-			msg.ignore = true;
-
-			atlas.performAction(this.obj, {
-				cpn: 'social',
-				method: actionName,
-				data: config
-			});
+			if (localCommands.indexOf(actionName) > -1) {
+				this[actionName].call(this, config);
+			} else {
+				atlas.performAction(this.obj, {
+					cpn: 'social',
+					method: actionName,
+					data: config
+				});
+			}
 		},
 
 		//actions
+		join: function(value) {
+			var obj = this.obj;
+
+			var channels = obj.auth.customChannels;
+			if (!channels.some(c => (c == value)))
+				channels.push(value);
+			else
+				return;
+
+			channels.push(value);
+
+			var charname = obj.auth.charname;
+			io.set({
+				ent: charname,
+				field: 'customChannels',
+				value: JSON.stringify(channels)
+			});
+
+			obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'q0',
+						message: 'joined channel: ' + value,
+						type: 'info'
+					}]
+				}]
+			});
+
+			obj.socket.emit('event', {
+				event: 'onJoinChannel',
+				data: value
+			});
+		},
+
+		leave: function(value) {
+			var obj = this.obj;
+
+			var channels = obj.auth.customChannels;
+			if (!channels.some(c => (c == value))) {
+				obj.socket.emit('events', {
+					onGetMessages: [{
+						messages: [{
+							class: 'q0',
+							message: 'you are not currently in that channel',
+							type: 'info'
+						}]
+					}]
+				});
+
+				return;
+			}
+
+			var channels = obj.auth.customChannels;
+			channels.spliceWhere(c => (c == value));
+
+			var charname = obj.auth.charname;
+			io.set({
+				ent: charname,
+				field: 'customChannels',
+				value: JSON.stringify(channels)
+			});
+
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'q0',
+						message: 'left channel: ' + value,
+						type: 'info'
+					}]
+				}]
+			});
+		},
+
 		getItem: function(config) {
 			if (config.slot == 'set') {
 				configSlots.slots.forEach(function(s) {
@@ -170,6 +262,11 @@ define([
 			}
 
 			obj.spellbook.calcDps();
+		},
+
+		//custom channels
+		isInChannel: function(character, channel) {
+			return character.auth.customChannels.some(c => (c == channel));
 		}
 	};
 });

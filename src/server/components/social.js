@@ -1,11 +1,9 @@
 define([
 	'world/atlas',
-	'config/roles',
-	'security/io'
+	'config/roles'
 ], function(
 	atlas,
-	roles,
-	io
+	roles
 ) {
 	return {
 		type: 'social',
@@ -71,17 +69,6 @@ define([
 			}, this); 
 		},
 
-		isInChannel: function(character, channel) {
-			if (character.auth.customChannels) {
-				var cLen = character.auth.customChannels.length;
-				for (var c = 0; c < cLen; c++) {
-					if (character.auth.customChannels[c] == channel)
-						return true;
-				}
-			}
-			return false;
-		},
-
 		sendCustomChannelMessage: function(msg) {
 			var pList = cons.players;
 			var pLen = pList.length;
@@ -126,111 +113,6 @@ define([
 						});
 					}
 				}
-			}
-
-		},
-
-		chatCommand: function(msg) {
-			var origMessage = msg.data.message.substr(1);
-			var command = origMessage.split(' ')[0];
-			var value = origMessage.split(' ')[1];
-
-			var charCommands = ['join', 'leave'];
-
-			if ((!command) || (!value) || (charCommands.indexOf(command) == -1)) {
-				this.obj.socket.emit('events', {
-					onGetMessages: [{
-						messages: [{
-							class: 'q0',
-							message: 'invalid command',
-							type: 'info'
-						}]
-					}]
-				});
-				return;
-			}
-
-			switch(command) {
-				case 'join':
-					var channels = []
-					var charname = this.obj.auth.charname;
-					if (this.obj.auth.customChannels) {
-						var cLen = this.obj.auth.customChannels.length;
-						for (i = 0; i < cLen; i++) {
-							channels.push(this.obj.auth.customChannels[i]);
-						}
-					} else {
-						this.obj.auth.customChannels = [];
-					}
-					channels.push(value);
-					
-					io.set({
-						ent: charname,
-						field: 'customChannels',
-						value: JSON.stringify(channels)
-					});
-
-					this.obj.auth.customChannels.push(value);
-
-					this.obj.socket.emit('events', {
-						onGetMessages: [{
-							messages: [{
-								class: 'q0',
-								message: 'joined channel: ' + value,
-								type: 'info'
-							}]
-						}]
-					});
-					
-					this.obj.socket.emit('event', {
-						event: 'onJoinChannel',
-						data: value
-					});
-					break;
-				case "leave":
-					var targetChannelIndex = this.obj.auth.customChannels.indexOf(value);
-
-					if (targetChannelIndex == -1) {
-						this.obj.socket.emit('events', {
-							onGetMessages: [{
-								messages: [{
-									class: 'q0',
-									message: 'you are not currently in that channel',
-									type: 'info'
-								}]
-							}]
-						});
-						return;
-					}
-
-					var channels = []
-					var charname = this.obj.auth.charname;
-					var cLen = this.obj.auth.customChannels.length;
-					if (this.obj.auth.customChannels[0]) {
-						for (i = 0; i < cLen; i++) {
-							if (this.obj.auth.customChannels[i] != value)
-								channels.push(this.obj.auth.customChannels[i]);
-						}
-					}
-					
-					io.set({
-						ent: charname,
-						field: 'customChannels',
-						value: JSON.stringify(channels)
-					});
-
-					this.obj.auth.customChannels.splice(targetChannelIndex);
-
-					this.obj.socket.emit('events', {
-						onGetMessages: [{
-							messages: [{
-								class: 'q0',
-								message: 'left channel: ' + value,
-								type: 'info'
-							}]
-						}]
-					});
-					break;
 			}
 		},
 
@@ -294,8 +176,6 @@ define([
 				this.sendCustomChannelMessage(msg);
 			} else if (messageString[0] == '%') {
 				this.sendPartyMessage(msg);
-			} else if (messageString[0] == '/') {
-				this.chatCommand(msg);
 			} else {
 				var prefix = roles.getRoleMessagePrefix(this.obj) || '';
 
