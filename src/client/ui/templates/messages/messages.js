@@ -30,7 +30,8 @@ define([
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
 			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
-			this.onEvent('onLeaveChannel', this.onJoinChannel.bind(this));
+			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
+			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 
 			this.find('input')
 				.on('keydown', this.sendChat.bind(this))
@@ -45,6 +46,12 @@ define([
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 		},
 
+		onGetCustomChatChannels: function(channels) {
+			channels.forEach(function(c) {
+				this.onJoinChannel(c);
+			}, this);
+		},
+
 		onJoinChannel: function(channel) {
 			var container = this.find('.filters');
 			var newFilter = $(tplTab)
@@ -57,7 +64,7 @@ define([
 		},
 		
 		onLeaveChannel: function(channel) {
-			this.hoverFilter = hover;
+			this.find('.filters [filter="' + channel + '"]').remove();
 		},
 
 		onFilterHover: function(hover) {

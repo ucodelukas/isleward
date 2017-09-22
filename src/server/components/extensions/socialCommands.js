@@ -31,6 +31,11 @@ define([
 		roleLevel: null,
 
 		init: function(blueprint) {
+			if (this.customChannels) {
+				this.customChannels = this.customChannels
+					.filter((c, i) => (this.customChannels.indexOf(c) == i));
+			}
+
 			this.roleLevel = roles.getRoleLevel(this.obj);
 		},
 
@@ -131,6 +136,11 @@ define([
 				ent: charname,
 				field: 'customChannels',
 				value: JSON.stringify(channels)
+			});
+
+			obj.socket.emit('event', {
+				event: 'onLeaveChannel',
+				data: value
 			});
 
 			this.obj.socket.emit('events', {

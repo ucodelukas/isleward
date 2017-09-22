@@ -66,7 +66,7 @@ define([
 			obj.addComponent('trade', character.components.find(c => c.type == 'trade'));
 			obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
 
-			obj.addComponent('social');
+			obj.addComponent('social', character.components.find(c => c.type == 'social'));
 			obj.social.init();
 			obj.addComponent('aggro', {
 				faction: 'players'

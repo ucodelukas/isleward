@@ -12,14 +12,17 @@ define([
 		partyLeaderId: null,
 		party: null,
 
-		init: function() {
+		customChannels: null,
+
+		init: function(blueprint) {
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
 
 		simplify: function() {
 			return {
 				type: 'social',
-				party: this.party
+				party: this.party,
+				customChannels: this.customChannels
 			};
 		},
 
