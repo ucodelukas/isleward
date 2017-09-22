@@ -1,18 +1,22 @@
 define([
 	'js/system/events',
 	'html!ui/templates/messages/template',
+	'html!ui/templates/messages/tplTab',
 	'css!ui/templates/messages/styles',
 	'js/input',
 	'js/system/client'
 ], function(
 	events,
 	template,
+	tplTab,
 	styles,
 	input,
 	client
 ) {
 	return {
 		tpl: template,
+
+		currentFilter: 'info',
 
 		messages: [],
 		maxTtl: 500,
@@ -25,6 +29,8 @@ define([
 		postRender: function() {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
+			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
+			this.onEvent('onLeaveChannel', this.onJoinChannel.bind(this));
 
 			this.find('input')
 				.on('keydown', this.sendChat.bind(this))
@@ -39,6 +45,21 @@ define([
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 		},
 
+		onJoinChannel: function(channel) {
+			var container = this.find('.filters');
+			var newFilter = $(tplTab)
+				.appendTo(container)
+				.attr('filter', channel.trim())
+				.html(channel.trim())
+				.on('mouseover', this.onFilterHover.bind(this, true))
+				.on('mouseleave', this.onFilterHover.bind(this, false))
+				.on('click', this.onClickFilter.bind(this));
+		},
+		
+		onLeaveChannel: function(channel) {
+			this.hoverFilter = hover;
+		},
+
 		onFilterHover: function(hover) {
 			this.hoverFilter = hover;
 		},
@@ -46,9 +67,15 @@ define([
 		onClickFilter: function(e) {
 			var el = $(e.currentTarget);
 			el.toggleClass('active');
-
-			this.find('.list').toggleClass(el.attr('filter'));
-
+		
+			var filter = el.attr('filter');
+		
+			var method = (el.hasClass('active') ? 'show' : 'hide');
+		
+			this.find('.list')
+				.toggleClass(filter)
+				.find('.' + filter)[method]();
+		
 			this.find('.el.message').focus();
 		},
 

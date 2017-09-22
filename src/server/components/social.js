@@ -72,10 +72,12 @@ define([
 		},
 
 		isInChannel: function(character, channel) {
-			var cLen = character.auth.customChannels.length;
-			for (var c = 0; c < cLen; c++) {
-				if (character.auth.customChannels[c] == channel)
-					return true;
+			if (character.auth.customChannels) {
+				var cLen = character.auth.customChannels.length;
+				for (var c = 0; c < cLen; c++) {
+					if (character.auth.customChannels[c] == channel)
+						return true;
+				}
 			}
 			return false;
 		},
@@ -118,7 +120,7 @@ define([
 								messages: [{
 									class: 'q0',
 									message: '(' + channel + ': ' + this.obj.auth.charname + '): ' + message,
-									type: 'chat'
+									type: channel.trim()
 								}]
 							}]
 						});
@@ -152,11 +154,13 @@ define([
 				case 'join':
 					var channels = []
 					var charname = this.obj.auth.charname;
-					var cLen = this.obj.auth.customChannels.length;
-					if (this.obj.auth.customChannels[0]) {
+					if (this.obj.auth.customChannels) {
+						var cLen = this.obj.auth.customChannels.length;
 						for (i = 0; i < cLen; i++) {
 							channels.push(this.obj.auth.customChannels[i]);
 						}
+					} else {
+						this.obj.auth.customChannels = [];
 					}
 					channels.push(value);
 					
@@ -176,6 +180,11 @@ define([
 								type: 'info'
 							}]
 						}]
+					});
+					
+					this.obj.socket.emit('event', {
+						event: 'onJoinChannel',
+						data: value
 					});
 					break;
 				case "leave":
@@ -290,7 +299,7 @@ define([
 			} else {
 				var prefix = roles.getRoleMessagePrefix(this.obj) || '';
 
-				io.sockets.emit('event', {
+				global.io.sockets.emit('event', {
 					event: 'onGetMessages',
 					data: {
 						messages: [{
