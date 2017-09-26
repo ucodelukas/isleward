@@ -222,6 +222,15 @@ define([
 					continue;
 
 				var data = layer.data || layer.objects;
+				var firstItem = data[0];
+				if ((firstItem) && ((firstItem.id) || (firstItem.gid))) {
+					var info = {
+						map: this.name,
+						layer: layerName,
+						objects: data
+					};
+					events.emit('onAfterGetLayerObjects', info);
+				}
 
 				var len = data.length;
 				for (var j = 0; j < len; j++) {
@@ -230,16 +239,17 @@ define([
 					if ((cell.gid) || (cell.id))
 						builders.object(layerName, cell, j);
 					else {
-						var y = ~~(i / this.size.w);
-						var x = i - (y * this.size.w);
+						var y = ~~(j / this.size.w);
+						var x = j - (y * this.size.w);
 
 						var info = {
+							map: this.name,
 							layer: layerName,
 							cell: cell,
 							x: x,
 							y: y
 						};
-						events.emit('getLayerTile', info);
+						events.emit('onBeforeBuildLayerTile', info);
 						builders.tile(layerName, info.cell, j);
 					}
 				}
