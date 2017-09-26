@@ -141,6 +141,22 @@ module.exports = {
 				sprite: [0, 0]
 			}
 		},
+		"captain squash": {
+			level: 2,
+			regular: {
+				drops: {
+					chance: 75,
+					rolls: 1
+				}
+			},
+			rare: {
+				count: 0
+			},
+			questItem: {
+				name: 'Gull Feather',
+				sprite: [0, 0]
+			}
+		},
 		bunny: {
 			level: 3,
 			regular: {

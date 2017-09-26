@@ -146,8 +146,15 @@ define([
 				}
 			}
 
+			var blueprint = gatherResult.blueprint;
+
 			gatherResult.items.forEach(function(i) {
 				delete i.pos;
+				if (blueprint.itemName)
+					i.name = blueprint.itemName;
+				if (blueprint.itemAmount)
+					i.quantity = ~~(Math.random() * blueprint.itemAmount[1]) + blueprint.itemAmount[0];
+
 				this.obj.inventory.getItem(i);
 			}, this);
 

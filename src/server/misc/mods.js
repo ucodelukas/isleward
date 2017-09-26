@@ -1,38 +1,38 @@
 define([
 	'misc/fileLister',
-	'misc/events'
+	'misc/events',
+	'util'
 ], function(
 	fileLister,
-	events
+	events,
+	util
 ) {
 	return {
 		init: function() {
 			var modList = fileLister.getFolderList('mods');
 
 			modList.forEach(function(m) {
-				var mod = null;
-				try {
-					mod = require('mods/' + m + '/index');
-				}
-				catch (e) {}
-
-				if (mod) {
-					mod.events = events;
-					mod.folderName = 'server/mods/' + m;
-					mod.relativeFolderName = 'mods/' + m;
-
-					(mod.extraScripts || []).forEach(function(e) {
-						try {
-							var script = require('mods/' + m + '/' + e);
-							script.folderName = mod.folderName;
-							script.relativeFolderName = mod.relativeFolderName;
-						}
-						catch (e) {}
-					}, this);
-
-					mod.init();
-				}
+				require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
 			}, this);
+		},
+
+		onGetMod: function(name, mod) {
+			mod.events = events;
+			mod.folderName = 'server/mods/' + m;
+			mod.relativeFolderName = 'mods/' + m;
+
+			var list = mod.extraScripts;
+			if (list) {
+				var lLen = list.length
+				for (var i = 0; i < lLen; i++) {
+					var script = util.promisify(require)(['mods/' + name + '/' + list[i]]);
+					script.folderName = mod.folderName;
+					script.relativeFolderName = mod.relativeFolderName;
+				}
+			}
+			console.log(111);
+
+			mod.init();
 		}
 	};
 });

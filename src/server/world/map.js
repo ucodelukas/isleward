@@ -4,14 +4,16 @@ define([
 	'world/spawners',
 	'world/resourceSpawner',
 	'config/zoneBase',
-	'world/randomMap'
+	'world/randomMap',
+	'misc/events'
 ], function(
 	objects,
 	physics,
 	spawners,
 	resourceSpawner,
 	globalZone,
-	randomMap
+	randomMap,
+	events
 ) {
 	var mapFile = null;
 	var mapscale = 38;
@@ -75,10 +77,12 @@ define([
 			try {
 				dialogues = require('../config/maps/' + this.name + '/dialogues');
 			} catch (e) {}
-			if (dialogues)
+			events.emit('onBeforeGetDialogue', this.name, dialogues);
+			if (dialogues) 
 				this.zone.dialogues = dialogues;
 
 			this.zone = extend(true, {}, globalZone, this.zone);
+			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var resources = this.zone.resources || {};
 			for (var r in resources) {
@@ -225,8 +229,19 @@ define([
 
 					if ((cell.gid) || (cell.id))
 						builders.object(layerName, cell, j);
-					else
-						builders.tile(layerName, cell, j);
+					else {
+						var y = ~~(i / this.size.w);
+						var x = i - (y * this.size.w);
+
+						var info = {
+							layer: layerName,
+							cell: cell,
+							x: x,
+							y: y
+						};
+						events.emit('getLayerTile', info);
+						builders.tile(layerName, info.cell, j);
+					}
 				}
 			}
 		},

@@ -1,9 +1,11 @@
 define([
 	'../config/eventPhases/phaseTemplate',
-	'fs'
+	'fs',
+	'misc/events'
 ], function(
 	phaseTemplate,
-	fs
+	fs,
+	events
 ) {
 	return {
 		configs: [],
@@ -16,9 +18,13 @@ define([
 			if (!fs.existsSync(path))
 				return;
 
-			var files = fs.readdirSync(path);
+			var files = fs.readdirSync(path)
+				.map(f => ('../' + path + '/' + f));
+
+			events.emit('onBeforeGetEventList', this.instance.map.name, files);
+
 			files.forEach(function(f) {
-				var e = require('../' + path + '/' + f);
+				var e = require(f);
 				if (!e.disabled)
 					this.configs.push(extend(true, {}, e));
 			}, this);
