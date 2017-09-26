@@ -8,6 +8,8 @@ define([
 	util
 ) {
 	return {
+		waiting: {},
+
 		init: function() {
 			var modList = fileLister.getFolderList('mods');
 
@@ -18,21 +20,25 @@ define([
 
 		onGetMod: function(name, mod) {
 			mod.events = events;
-			mod.folderName = 'server/mods/' + m;
-			mod.relativeFolderName = 'mods/' + m;
+			mod.folderName = 'server/mods/' + name;
+			mod.relativeFolderName = 'mods/' + name;
 
-			var list = mod.extraScripts;
-			if (list) {
-				var lLen = list.length
-				for (var i = 0; i < lLen; i++) {
-					var script = util.promisify(require)(['mods/' + name + '/' + list[i]]);
-					script.folderName = mod.folderName;
-					script.relativeFolderName = mod.relativeFolderName;
-				}
+			var list = (mod.extraScripts || []);
+			var lLen = list.length;
+			this.waiting[name] = lLen;
+
+			for (var i = 0; i < lLen; i++) {
+				require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));;
 			}
-			console.log(111);
 
-			mod.init();
+			if (this.waiting[name] == 0)
+				mod.init();
+		},
+
+		onGetExtra: function(name, mod) {
+			this.waiting[name]--;
+			if (this.waiting[name] == 0)
+				mod.init();
 		}
 	};
 });

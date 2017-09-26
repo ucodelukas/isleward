@@ -8,8 +8,6 @@ requirejs.config({
 global.io = true;
 var instancer = null;
 
-
-
 requirejs([
 	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods'
 ], function(

@@ -18,7 +18,7 @@ define([
 		mapFile: null,
 
 		init: function() {
-			this.mapFile = require('json!' + this.relativeFolderName + '/maps/tutorial/map');
+			this.mapFile = require('../' + this.relativeFolderName + '/maps/tutorial/map');
 
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetQuests', this.onBeforeGetQuests.bind(this));
