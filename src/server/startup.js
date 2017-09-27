@@ -25,7 +25,9 @@ define([
 				global.gc();
 			}, 60000);
 			
-			mods.init();
+			mods.init(this.onModsLoaded.bind(this));
+		},
+		onModsLoaded: function() {
 			globals.init();
 			components.init(this.onComponentsReady.bind(this));
 		},

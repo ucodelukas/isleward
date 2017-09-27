@@ -12,7 +12,7 @@ define([
 		},
 
 		extraScripts: [
-			
+			'maps/tutorial/events/halloween.js'
 		],
 
 		mapFile: null,

@@ -7,13 +7,17 @@ define([
 	events,
 	util
 ) {
+	var cbDone = cbDone;
+
 	return {
 		waiting: {},
 
-		init: function() {
+		init: function(_cbDone) {
+			cbDone = _cbDone;
 			var modList = fileLister.getFolderList('mods');
 
 			modList.forEach(function(m) {
+				this.waiting[m] = 0;
 				require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
 			}, this);
 		},
@@ -31,14 +35,26 @@ define([
 				require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));;
 			}
 
-			if (this.waiting[name] == 0)
+			if (this.waiting[name] == 0) {
 				mod.init();
+				delete this.waiting[name];
+
+				if (Object.keys(this.waiting).length == 0)
+					cbDone();
+			}
 		},
 
-		onGetExtra: function(name, mod) {
+		onGetExtra: function(name, mod, extra) {
+			extra.folderName = 'server/mods/' + name;
+
 			this.waiting[name]--;
-			if (this.waiting[name] == 0)
+			if (this.waiting[name] == 0) {
 				mod.init();
+				delete this.waiting[name];
+
+				if (Object.keys(this.waiting).length == 0)
+					cbDone();
+			}
 		}
 	};
 });

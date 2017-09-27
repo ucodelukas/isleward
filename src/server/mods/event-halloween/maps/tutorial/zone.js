@@ -19,8 +19,9 @@ define([
 			}
 		},
 		mobs: {
-			"captain squash": {
+			'captain squash': {
 				level: 2,
+				walkDistance: 0,
 				regular: {
 					drops: {
 						chance: 75,

@@ -20,17 +20,21 @@ requirejs([
 		
 		instancer = _instancer;
 
-		components.init(function() {
-			process.send({
-				method: 'onReady'
-			});
-		});
-
-		mods.init();
+		components.init(onCpnsReady);
 
 		setInterval(function() {
 			global.gc();
 		}, 60000);
+	};
+
+	var onCpnsReady = function() {
+		mods.init(onModsReady);
+	};
+
+	var onModsReady = function() {
+		process.send({
+			method: 'onReady'
+		});
 	};
 
 	io.init(onDbReady);

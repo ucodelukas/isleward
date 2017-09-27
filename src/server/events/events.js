@@ -285,6 +285,11 @@ define([
 					continue;
 
 				var distance = event.config.distance;
+				if (distance == -1) {
+					event.participators.push(obj);
+					result.push(event);
+					continue;
+				}
 
 				var objects = event.objects;
 				var oLen = objects.length;

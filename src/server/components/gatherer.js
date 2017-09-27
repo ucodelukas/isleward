@@ -148,14 +148,17 @@ define([
 
 			var blueprint = gatherResult.blueprint;
 
-			gatherResult.items.forEach(function(i) {
-				delete i.pos;
-				if (blueprint.itemName)
-					i.name = blueprint.itemName;
-				if (blueprint.itemAmount)
-					i.quantity = ~~(Math.random() * blueprint.itemAmount[1]) + blueprint.itemAmount[0];
+			gatherResult.items.forEach(function(item, i) {
+				delete item.pos;
 
-				this.obj.inventory.getItem(i);
+				if (i == 0) {
+					if (blueprint.itemName)
+						item.name = blueprint.itemName;
+					if (blueprint.itemAmount)
+						item.quantity = ~~(Math.random() * blueprint.itemAmount[1]) + blueprint.itemAmount[0];
+				}
+
+				this.obj.inventory.getItem(item);
 			}, this);
 
 			if (!gatherResult.noChangeAmount)
