@@ -6,7 +6,8 @@ define([
 	'leaderboard/leaderboard',
 	'security/io',
 	'misc/mods',
-	'mtx/mtx'
+	'mtx/mtx',
+	'config/animations'
 ], function(
 	globals,
 	server,
@@ -15,7 +16,8 @@ define([
 	leaderboard,
 	io,
 	mods,
-	mtx
+	mtx,
+	animations
 ) {
 	return {
 		init: function() {
@@ -27,6 +29,7 @@ define([
 				global.gc();
 			}, 60000);
 			
+			animations.init();
 			mods.init(this.onModsLoaded.bind(this));
 		},
 		onModsLoaded: function() {

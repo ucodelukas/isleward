@@ -1,9 +1,7 @@
 define([
-	'world/mobBuilder',
-	'config/animations'
+	'world/mobBuilder'
 ], function(
-	mobBuilder,
-	animations
+	mobBuilder
 ) {
 	return {
 		type: 'summonSkeleton',
@@ -25,26 +23,30 @@ define([
 			var obj = this.obj;
 			var target = action.target;
 
+			var blueprint = {
+				x: target.x,
+				y: target.y,
+				cell: 0,
+				sheetName: `${this.folderName}/images/mobs.png`,
+				name: 'Skeletal Minion',
+				properties: {
+					cpnFollower: {
+						maxDistance: 3
+					}
+				},
+				extraProperties: {
+					follower: {
+						master: obj
+					}
+				}
+			};
+
+			this.obj.fireEvent('beforeSummonMinion', blueprint);
+
 			//Spawn a mob
 			var mob = obj.instance.spawners.spawn({
 				amountLeft: 1,
-				blueprint: {
-					x: target.x,
-					y: target.y,
-					cell: 0,
-					sheetName: `${this.folderName}/images/mobs.png`,
-					name: 'Skeletal Minion',
-					properties: {
-						cpnFollower: {
-							maxDistance: 3
-						}
-					},
-					extraProperties: {
-						follower: {
-							master: obj
-						}
-					}
-				}
+				blueprint: blueprint
 			});
 
 			mobBuilder.build(mob, {
@@ -92,8 +94,6 @@ define([
 				});
 			}
 
-			this.obj.fireEvent('afterSummonMinion', mob);
-
 			return true;
 		},
 
@@ -119,6 +119,8 @@ define([
 			if ((currentMinion) && (!currentMinion.destroyed)) {
 				currentMinion.destroyed = true;
 				this.minions = [];
+
+				var animations = require('config/animations');
 
 				var deathAnimation = _.getDeepProperty(animations, ['mobs', currentMinion.sheetName, currentMinion.cell, 'death']);
 				if (deathAnimation) {

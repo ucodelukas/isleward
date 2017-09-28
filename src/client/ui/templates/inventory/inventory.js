@@ -139,6 +139,8 @@ define([
 					itemEl.find('.quantity').html(item.quantity);
 				else if (item.eq)
 					itemEl.find('.quantity').html('EQ');
+				else if (item.active)
+					itemEl.find('.quantity').html('EQ');
 
 				if (item.eq)
 					itemEl.addClass('eq');
@@ -300,7 +302,7 @@ define([
 
 			if (item.ability)
 				config.push(menuItems.learn);
-			else if (item.mtx)
+			else if (item.type == 'mtx')
 				config.push(menuItems.activate);
 			else if (item.slot) {
 				config.push(menuItems.equip);
@@ -438,7 +440,7 @@ define([
 		performItemAction: function(item, action) {
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.mtx) || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > window.player.stats.values.level)))
 				return;
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;

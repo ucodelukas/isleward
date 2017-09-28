@@ -33,6 +33,41 @@ define([
 			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
 			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetMtxList', this.onBeforeGetMtxList.bind(this));
+			this.events.on('onBeforeGetAnimations', this.onBeforeGetAnimations.bind(this));
+		},
+
+		onBeforeGetAnimations: function(animations) {
+			//Skeleton animations
+			var mobsheet = `${this.folderName}/images/mobs.png`;
+			if (!animations.mobs[mobsheet])
+				animations.mobs[mobsheet] = {};
+
+			animations.mobs[mobsheet]['0'] = {
+				melee: {
+					spritesheet: mobsheet,
+					row: 1,
+					col: 0,
+					frames: 2,
+					frameDelay: 5
+				},
+				spawn: {
+					spritesheet: mobsheet,
+					row: 2,
+					col: 0,
+					frames: 3,
+					frameDelay: 4,
+					hideSprite: true,
+					type: 'attackAnimation'
+				},
+				death: {
+					spritesheet: mobsheet,
+					row: 3,
+					col: 0,
+					frames: 4,
+					frameDelay: 4,
+					type: 'attackAnimation'
+				}
+			};
 		},
 
 		onBeforeGetResourceList: function(list) {

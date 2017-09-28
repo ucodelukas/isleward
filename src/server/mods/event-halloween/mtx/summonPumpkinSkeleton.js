@@ -5,8 +5,8 @@ define([
 ) {
 	return {
 		events: {
-			afterSummonMinion: function(item, minion) {
-				minion.sheetName = this.folderName + '/images/mobs.png';
+			beforeSummonMinion: function(item, minion) {
+				minion.sheetName = 'server/mods/event-halloween/images/mobs.png';
 				minion.cell = 0;
 			}
 		}

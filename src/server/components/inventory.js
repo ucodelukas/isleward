@@ -76,17 +76,16 @@ define([
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
 
-				if (item.mtx) {
-					if (!item.effects)
-						item.effects = [];
-
-					var mtxUrl = mtx.get(item.mtx);
-					var mtxModule = require(mtxUrl);
-					item.effects.push(mtxModule);
-				}
-
 				if (item.effects) {
 					item.effects.forEach(function(e) {
+						if (e.mtx) {
+							var mtxUrl = mtx.get(e.mtx);
+							var mtxModule = require(mtxUrl);
+							
+							e.events = mtxModule.events;
+							return;						
+						}
+
 						if (!e.factionId)
 							return;
 
@@ -181,14 +180,12 @@ define([
 
 		activateMtx: function(itemId) {
 			var item = this.findItem(itemId);
-			if (!item)
+				if (!item)
 				return;
-			else if (!item.mtx) {
-				item.active = false;
+			else if (item.type != 'mtx') {
+				delete item.active;
 				return;
 			}
-
-			console.log(item);
 
 			item.active = !item.active;
 
@@ -759,15 +756,7 @@ define([
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
 
-				if ((item.mtx) && (item.active)) {
-					console.log(item);
-					var effectEvent = item.mtxEffect.events[event];
-					if (effectEvent)
-						effectEvent.apply(this.obj, [item, ...args]);
-				}
-
-
-				if (!item.eq)
+				if ((!item.eq) && (!item.active))
 					continue;
 
 				var effects = item.effects;
@@ -816,7 +805,8 @@ define([
 							item.effects = item.effects.map(e => ({
 								factionId: e.factionId,
 								text: e.text,
-								properties: e.properties
+								properties: e.properties,
+								mtx: e.mtx
 							}));
 							if (item.factions) {
 								item.factions = item.factions.map(function(f) {
