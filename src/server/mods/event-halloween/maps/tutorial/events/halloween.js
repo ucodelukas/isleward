@@ -28,15 +28,10 @@ define([
 						return;
 
 					gatherResult.items.push({
-						name: 'Loopy Woopy',
-						slot: 'waist',
-						type: 'belt',
-						level: 1,
+						name: 'Summon Pumpkin Skeleton',
+						type: 'rune effect',
 						spritesheet: `${this.event.config.folderName}/images/items.png`,
-						sprite: [0, 0],
-						stats: {
-							vit: 5
-						}
+						sprite: [0, 0]
 					});
 				}
 			}

@@ -273,6 +273,10 @@ define([
 					text: 'learn',
 					callback: this.performItemAction.bind(this, item, 'learnAbility')
 				},
+				activate: {
+					text: 'activate',
+					callback: this.performItemAction.bind(this, item, 'activateMtx')
+				},
 				equip: {
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
@@ -288,6 +292,9 @@ define([
 				menuItems.learn.text = 'unlearn';
 				menuItems.equip.text = 'unequip';
 			}
+
+			if (item.active)
+				menuItems.activate.text = 'deactivate';
 
 			var config = [];
 
@@ -429,7 +436,9 @@ define([
 		performItemAction: function(item, action) {
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.mtx) || (item.level > window.player.stats.values.level)))
+				return;
+			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
 			if ((item.factions) && (action == 'equip')) {
 				if (item.factions.some(function(f) {

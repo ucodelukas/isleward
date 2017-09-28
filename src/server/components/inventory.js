@@ -74,6 +74,13 @@ define([
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
 
+				if (item.mtx) {
+					if (!item.effects)
+						item.effects = [];
+
+					item.effects.push(require(item.mtx));
+				}
+
 				if (item.effects) {
 					item.effects.forEach(function(e) {
 						var faction = require('config/factions/' + e.factionId);
@@ -163,6 +170,16 @@ define([
 			item.runeSlot = runeSlot;
 			spellbook.addSpellFromRune(item.spell, runeSlot);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		activateMtx: function(itemId) {
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.mtx) {
+				item.active = false;
+				return;
+			}
 		},
 
 		unlearnAbility: function(itemId) {
@@ -728,6 +745,14 @@ define([
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+
+				if (item.mtxEffect) {
+					var effectEvent = item.mtxEffect.events[event];
+					if (effectEvent)
+						effectEvent.apply(this.obj, [item, ...args]);
+				}
+
+
 				if (!item.eq)
 					continue;
 

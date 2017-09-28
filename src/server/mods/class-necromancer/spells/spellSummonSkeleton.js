@@ -92,6 +92,8 @@ define([
 				});
 			}
 
+			this.obj.fireEvent('afterSummonMinion', mob);
+
 			return true;
 		},
 
