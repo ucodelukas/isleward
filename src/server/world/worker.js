@@ -9,9 +9,9 @@ global.io = true;
 var instancer = null;
 
 requirejs([
-	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods'
+	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods', 'mtx/mtx'
 ], function(
-	extend, helpers, components, _instancer, io, mods
+	extend, helpers, components, _instancer, io, mods, mtx
 ) {
 	var onDbReady = function() {
 		global.extend = extend;
@@ -32,6 +32,7 @@ requirejs([
 	};
 
 	var onModsReady = function() {
+		mtx.init();
 		process.send({
 			method: 'onReady'
 		});

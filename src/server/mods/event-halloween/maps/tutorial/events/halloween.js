@@ -30,6 +30,7 @@ define([
 					gatherResult.items.push({
 						name: 'Summon Pumpkin Skeleton',
 						type: 'rune effect',
+						mtx: 'summonPumpkinSkeleton',
 						spritesheet: `${this.event.config.folderName}/images/items.png`,
 						sprite: [0, 0]
 					});

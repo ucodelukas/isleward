@@ -10,6 +10,10 @@ define([
 	return {
 		init: function() {
 			events.emit('onBeforeGetMtxList', list);
-		}		
+		},
+
+		get: function(name) {
+			return list[name];
+		}
 	};
 });

@@ -300,6 +300,8 @@ define([
 
 			if (item.ability)
 				config.push(menuItems.learn);
+			else if (item.mtx)
+				config.push(menuItems.activate);
 			else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)

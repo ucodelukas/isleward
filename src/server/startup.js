@@ -5,7 +5,8 @@ define([
 	'components/components',
 	'leaderboard/leaderboard',
 	'security/io',
-	'misc/mods'
+	'misc/mods',
+	'mtx/mtx'
 ], function(
 	globals,
 	server,
@@ -13,7 +14,8 @@ define([
 	components,
 	leaderboard,
 	io,
-	mods
+	mods,
+	mtx
 ) {
 	return {
 		init: function() {

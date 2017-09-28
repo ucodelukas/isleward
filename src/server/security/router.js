@@ -22,7 +22,7 @@ define([
 				dialogue: ['talk'],
 				gatherer: ['gather'],
 				quests: ['complete'],
-				inventory: ['moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', ''],
+				inventory: ['activateMtx', 'moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', ''],
 				equipment: ['equip', 'unequip'],
 				stash: ['withdraw'],
 				trade: ['buySell' ],

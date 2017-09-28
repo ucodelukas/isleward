@@ -3,13 +3,15 @@ define([
 	'items/salvager',
 	'items/enchanter',
 	'objects/objects',
-	'config/classes'
+	'config/classes',
+	'mtx/mtx'
 ], function(
 	generator,
 	salvager,
 	enchanter,
 	objects,
-	classes
+	classes,
+	mtx
 ) {
 	return {
 		type: 'inventory',
@@ -78,11 +80,16 @@ define([
 					if (!item.effects)
 						item.effects = [];
 
-					item.effects.push(require(item.mtx));
+					var mtxUrl = mtx.get(item.mtx);
+					var mtxModule = require(mtxUrl);
+					item.effects.push(mtxModule);
 				}
 
 				if (item.effects) {
 					item.effects.forEach(function(e) {
+						if (!e.factionId)
+							return;
+
 						var faction = require('config/factions/' + e.factionId);
 						var statGenerator = faction.uniqueStat;
 						statGenerator.generate(item);
@@ -180,6 +187,12 @@ define([
 				item.active = false;
 				return;
 			}
+
+			console.log(item);
+
+			item.active = !item.active;
+
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
 		unlearnAbility: function(itemId) {
@@ -746,7 +759,8 @@ define([
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
 
-				if (item.mtxEffect) {
+				if ((item.mtx) && (item.active)) {
+					console.log(item);
 					var effectEvent = item.mtxEffect.events[event];
 					if (effectEvent)
 						effectEvent.apply(this.obj, [item, ...args]);
