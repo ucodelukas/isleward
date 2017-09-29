@@ -25,7 +25,7 @@ define([
 
 			var ttl = (Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed) - 50;
 
-			this.sendAnimation({
+			var projectileConfig = {
 				caster: this.obj.id,
 				components: [{
 					idSource: this.obj.id,
@@ -41,7 +41,11 @@ define([
 					row: this.row,
 					col: this.col
 				}]
-			});
+			};
+
+			this.obj.fireEvent('beforeSpawnProjectile', this, projectileConfig);
+
+			this.sendAnimation(projectileConfig);
 
 			this.sendBump(target);
 

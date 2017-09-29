@@ -20,7 +20,7 @@ define([
 		},
 		mobs: {
 			'captain squash': {
-				level: 2,
+				level: 25,
 				walkDistance: 0,
 				regular: {
 					drops: {

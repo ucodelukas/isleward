@@ -7,8 +7,8 @@ define([
 		name: 'Event: Halloween',
 
 		mapOffset: {
-			x: 10, 
-			y: 82
+			x: 28, 
+			y: 93
 		},
 
 		extraScripts: [
@@ -76,6 +76,7 @@ define([
 
 		onBeforeGetMtxList: function(list) {
 			list.summonPumpkinSkeleton = this.relativeFolderName + '/mtx/summonPumpkinSkeleton';
+			list.hauntedIceSpear = this.relativeFolderName + '/mtx/hauntedIceSpear';
 		},
 
 		onAfterGetLayerObjects: function(info) {

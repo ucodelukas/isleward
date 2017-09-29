@@ -4,7 +4,7 @@ define([
 
 ) {
 	return {
-		hermit: {
+		'captain squash': {
 			'1': {
 				msg: [{
 					msg: `What? Oh...what are you doing here?`,
@@ -20,3 +20,4 @@ define([
 		}
 	};
 });
+
