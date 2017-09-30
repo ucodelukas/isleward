@@ -167,6 +167,8 @@ define([
 				}
 			}
 
+			this.setupObj(mob, blueprint);
+
 			this.mobBuilder.build(mob, blueprint, scaleDrops, type);
 		},
 

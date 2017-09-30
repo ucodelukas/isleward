@@ -7,8 +7,8 @@ define([
 		name: 'Event: Halloween',
 
 		mapOffset: {
-			x: 28, 
-			y: 93
+			x: 23, 
+			y: 86
 		},
 
 		extraScripts: [
