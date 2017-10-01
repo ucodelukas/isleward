@@ -96,7 +96,7 @@ module.exports = {
 		default: {
 			regular: {
 				drops: {
-					chance: 35,
+					chance: 40,
 					rolls: 1
 				}
 			}
@@ -129,7 +129,7 @@ module.exports = {
 			level: 2,
 			regular: {
 				drops: {
-					chance: 75,
+					chance: 50,
 					rolls: 1
 				}
 			},
@@ -145,7 +145,7 @@ module.exports = {
 			level: 3,
 			regular: {
 				drops: {
-					chance: 65,
+					chance: 45,
 					rolls: 1
 				}
 			},
@@ -159,12 +159,7 @@ module.exports = {
 		},
 		elk: {
 			level: 5,
-			regular: {
-				drops: {
-					chance: 55,
-					rolls: 1
-				}
-			},
+
 			rare: {
 				name: 'Ironhorn'
 			},
@@ -178,12 +173,6 @@ module.exports = {
 			deathRep: -3,
 			level: 7,
 
-			regular: {
-				drops: {
-					chance: 45,
-					rolls: 1
-				}
-			},
 			rare: {
 				name: 'Squiggles'
 			},
