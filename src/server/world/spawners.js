@@ -33,7 +33,7 @@ define([
 
 		register: function(blueprint, cdMax) {
 			var spawner = extend(true, {
-				cdMax: cdMax || 50,
+				cdMax: cdMax || 171,
 				blueprint: blueprint,
 				amountLeft: blueprint.amount || -1
 			});
