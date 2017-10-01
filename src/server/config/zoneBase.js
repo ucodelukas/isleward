@@ -25,7 +25,7 @@ define([
 					dmgMult: 1,
 
 					drops: {
-						chance: 35,
+						chance: 40,
 						rolls: 1
 					}
 				},
