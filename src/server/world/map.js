@@ -223,7 +223,7 @@ define([
 
 				var data = layer.data || layer.objects;
 				var firstItem = data[0];
-				if ((firstItem) && ((firstItem.id) || (firstItem.gid))) {
+				if ((firstItem) && (firstItem.width != null)) {
 					var info = {
 						map: this.name,
 						layer: layerName,

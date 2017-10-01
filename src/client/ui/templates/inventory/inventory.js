@@ -315,7 +315,7 @@ define([
 				}
 			}
 
-			if (!item.eq) {
+			if ((!item.eq) && (!item.active)) {
 				if (!item.quest) {
 					if ((window.player.stash.active) && (!item.noSalvage))
 						config.push(menuItems.stash);

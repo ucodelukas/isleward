@@ -6,14 +6,16 @@ define([
 	'items/generators/stats',
 	'items/generators/names',
 	'items/generators/worth',
+	'items/generators/quantity',
 	'items/generators/spellbook',
 	'items/salvager'
 ], function(
-	g1, g2, g3, g4, g5, g6, g7,
-	g8
+	g1, g2, g3, g4, g5, g6, g7, g8,
+	g9
 ) {
 	var generators = [].slice.apply(arguments, [0, 7]);
-	var spellGenerators = [g1, g8];
+	var materialGenerators = [g6, g8];
+	var spellGenerators = [g1, g9];
 
 	var generator = {
 		spellChance: 0.075,
@@ -34,7 +36,17 @@ define([
 
 			if (isSpell)
 				spellGenerators.forEach(g => g.generate(item, blueprint));
-			else {
+			else if (blueprint.material) {
+				item.material = true;
+				item.sprite = blueprint.sprite;
+				item.noDrop = blueprint.noDrop;
+				item.noSalvage = blueprint.noSalvage;
+				item.noDestroy = blueprint.noDestroy;
+				materialGenerators.forEach(g => g.generate(item, blueprint));
+			} else if (blueprint.type == 'mtx') {
+				item = extend(true, {}, blueprint);
+				delete item.chance;
+			} else {
 				generators.forEach(g => g.generate(item, blueprint));
 				if (blueprint.spellName)
 					g8.generate(item, blueprint);

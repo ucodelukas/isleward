@@ -551,6 +551,17 @@ define([
 				}
 			}
 
+			if (item.effects) {
+				item.effects.forEach(function(e) {
+					if (e.mtx) {
+						var mtxUrl = mtx.get(e.mtx);
+						var mtxModule = require(mtxUrl);
+						
+						e.events = mtxModule.events;					
+					}
+				});
+			}
+
 			if (!exists)
 				this.items.push(item);
 
@@ -687,9 +698,11 @@ define([
 					var drop = blueprints[i];
 					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
 						continue;
-
-					if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+					else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
 						continue;
+					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance)) {
+						continue;
+					}
 
 					drop.level = drop.level || this.obj.stats.values.level;
 					drop.magicFind = magicFind;

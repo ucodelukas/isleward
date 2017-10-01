@@ -131,7 +131,7 @@ define([
 
 		onBeforeGetDialogue: function(zone, config) {
 			try {
-				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogue.js');
+				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
 				extend(true, config, modDialogue);
 			} catch (e) {
 				

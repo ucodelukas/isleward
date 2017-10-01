@@ -13,7 +13,10 @@ define([
 				mtx: 'summonPumpkinSkeleton'
 			}],
 			spritesheet: `FOLDERNAME/images/items.png`,
-			sprite: [3, 0]
+			sprite: [3, 0],
+			noDrop: true,
+			noDestroy: true,
+			noSalvage: true
 		},
 
 		hauntedIceSpear: {
@@ -23,7 +26,10 @@ define([
 				mtx: 'hauntedIceSpear'
 			}],
 			spritesheet: `FOLDERNAME/images/items.png`,
-			sprite: [3, 0]
+			sprite: [3, 0],
+			noDrop: true,
+			noDestroy: true,
+			noSalvage: true
 		}
 	};
 

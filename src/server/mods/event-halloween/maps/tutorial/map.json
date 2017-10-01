@@ -143,7 +143,29 @@
         {
          "draworder":"topdown",
          "name":"notices",
-         "objects":[],
+         "objects":[
+                {
+                 "height":24,
+                 "id":666,
+                 "name":"shopCaptain",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":48,
+                 "y":24
+                }, 
+                {
+                 "height":24,
+                 "id":667,
+                 "name":"shopCaptain",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":48,
+                 "y":24
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -160,7 +182,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":665,
+ "nextobjectid":668,
  "orientation":"orthogonal",
  "properties":
     {

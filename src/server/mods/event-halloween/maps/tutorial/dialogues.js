@@ -7,17 +7,45 @@ define([
 		'captain squash': {
 			'1': {
 				msg: [{
-					msg: `What? Oh...what are you doing here?`,
-					options: [1.1]
+					msg: `Yo!`,
+					options: [1.3, 1.4, 1.5]
 				}],
 				options: {
-					'1.1': {
-						msg: `Me? What are YOU doing in the middle of the wilderness?`,
-						goto: 2
+					'1.3': {
+						msg: `Want buy thing!`,
+						goto: 'tradeBuy'
+					},
+					'1.4': {
+						msg: `I have some items you might be interested in.`,
+						goto: 'tradeSell'
+					},
+					'1.5': {
+						msg: `I changed my mind, I want to buy something back.`,
+						goto: 'tradeBuyback'
 					}
 				}
+			},
+			tradeBuy: {
+				cpn: 'trade',
+				method: 'startBuy',
+				args: [{
+					targetName: 'captain squash'
+				}]
+			},
+			tradeSell: {
+				cpn: 'trade',
+				method: 'startSell',
+				args: [{
+					targetName: 'captain squash'
+				}]
+			},
+			tradeBuyback: {
+				cpn: 'trade',
+				method: 'startBuyback',
+				args: [{
+					targetName: 'captain squash'
+				}]
 			}
 		}
 	};
 });
-

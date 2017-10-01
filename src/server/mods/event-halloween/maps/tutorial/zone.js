@@ -22,6 +22,7 @@ define([
 			'captain squash': {
 				level: 25,
 				walkDistance: 0,
+				attackable: false,
 				regular: {
 					drops: {
 						chance: 75,
@@ -30,10 +31,104 @@ define([
 				},
 				rare: {
 					count: 0
+				},
+
+				properties: {
+					cpnTrade: {
+						items: {
+							min: 0,
+							max: 0
+						},
+						forceItems: [{
+							name: 'Summon Pumpkin Skeleton',
+							type: 'mtx',
+							effects: [{
+								mtx: 'summonPumpkinSkeleton'
+							}],
+							//HACK FOR FOLDERNAME
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [3, 0],
+							infinite: true,
+							noDrop: true,
+							noDestroy: true,
+							noSalvage: true,
+							worth: {
+								currency: `Candy Corn`,
+								amount: 4
+							}
+						}, {
+							name: 'Haunted Ice Spear',
+							type: 'mtx',
+							effects: [{
+								mtx: 'hauntedIceSpear'
+							}],
+							//HACK FOR FOLDERNAME
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [3, 0],
+							infinite: true,
+							noDrop: true,
+							noDestroy: true,
+							noSalvage: true,
+							worth: {
+								currency: `Candy Corn`,
+								amount: 7
+							}
+						}],
+						level: {
+							min: 1,
+							max: 5
+						},
+						markup: {
+							buy: 0.25,
+							sell: 2.5
+						}
+					}
 				}
 			},
 			blabby: {
 				walkDistance: 0,
+
+				regular: {
+					drops: {
+						noRandom: true,
+						chance: 100,
+						blueprints: [{
+							chance: 100,
+							name: 'Candy Corn',
+							material: true,
+							sprite: [2, 0],
+							quantity: [1, 20]
+						}, {
+							chance: 1,
+							name: 'Summon Pumpkin Skeleton',
+							type: 'mtx',
+							effects: [{
+								mtx: 'summonPumpkinSkeleton'
+							}],
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [3, 0],
+							noDrop: true,
+							noDestroy: true,
+							noSalvage: true
+						}, {
+							chance: 1,
+							name: 'Haunted Ice Spear',
+							type: 'mtx',
+							effects: [{
+								mtx: 'hauntedIceSpear'
+							}],
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [3, 0],
+							noDrop: true,
+							noDestroy: true,
+							noSalvage: true
+						}]
+					}
+				},
+
+				rare: {
+					count: 0
+				},
 
 				components: {
 					cpnParticles: {
@@ -81,6 +176,27 @@ define([
 										h: 8
 									}
 								}
+							}
+						}
+					}
+				}
+			}
+		},
+		objects: {
+			shopcaptain: {
+				properties: {
+					cpnNotice: {
+						actions: {
+							enter: {
+								cpn: 'dialogue',
+								method: 'talk',
+								args: [{
+									targetName: 'captain squash'
+								}]
+							},
+							exit: {
+								cpn: 'dialogue',
+								method: 'stopTalk'
 							}
 						}
 					}
