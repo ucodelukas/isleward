@@ -38,7 +38,6 @@ define([
 			this.zoneId = args.zoneId;
 
 			spellCallbacks.init();
-
 			map.init(args);
 
 			if (!map.instanced) {

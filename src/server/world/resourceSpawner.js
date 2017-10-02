@@ -15,6 +15,8 @@ define([
 		cdMax: 2,
 
 		init: function(instance) {
+			herbs.init();
+
 			this.objects = instance.objects;
 			this.syncer = instance.syncer;
 			this.zone = instance.zone;

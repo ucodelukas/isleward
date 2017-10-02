@@ -1,13 +1,13 @@
 define([
-	
+
 ], function(
-	
+
 ) {
 	return {
 		name: 'Event: Halloween',
 
 		mapOffset: {
-			x: 23, 
+			x: 23,
 			y: 86
 		},
 
@@ -34,6 +34,33 @@ define([
 			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetMtxList', this.onBeforeGetMtxList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.onBeforeGetAnimations.bind(this));
+			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+		},
+
+		onBeforeGetHerbConfig: function(herbs) {
+			extend(true, herbs, {
+				'Tiny Pumpkin': {
+					sheetName: 'objects',
+					cell: 167,
+					itemSprite: [2, 0],
+					itemName: 'Candy Corn',
+					itemAmount: [1, 1]
+				},
+				Pumpkin: {
+					sheetName: 'objects',
+					cell: 159,
+					itemSprite: [2, 0],
+					itemName: 'Candy Corn',
+					itemAmount: [2, 3]
+				},
+				'Giant Pumpkin': {
+					sheetName: 'objects',
+					cell: 158,
+					itemSprite: [2, 0],
+					itemName: 'Candy Corn',
+					itemAmount: [3, 6]
+				}
+			});
 		},
 
 		onBeforeGetAnimations: function(animations) {
@@ -125,7 +152,7 @@ define([
 				var modZone = require(this.relativeFolderName + '/maps/' + zone + '/zone.js');
 				extend(true, config, modZone);
 			} catch (e) {
-				
+
 			}
 		},
 
@@ -134,7 +161,7 @@ define([
 				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
 				extend(true, config, modDialogue);
 			} catch (e) {
-				
+
 			}
 		},
 
@@ -143,7 +170,7 @@ define([
 				var modQuests = require(this.relativeFolderName + '/maps/' + zone + '/quests.js');
 				extend(true, config, modQuests);
 			} catch (e) {
-				
+
 			}
 		}
 	};
