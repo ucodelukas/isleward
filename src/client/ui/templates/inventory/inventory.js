@@ -119,10 +119,12 @@ define([
 					.appendTo(container);
 
 				var spritesheet = item.spritesheet || '../../../images/items.png';
-				if (item.material)
-					spritesheet = '../../../images/materials.png';
-				else if (item.quest)
-					spritesheet = '../../../images/questItems.png';
+				if (!item.spritesheet) {
+					if (item.material)
+						spritesheet = '../../../images/materials.png';
+					else if (item.quest)
+						spritesheet = '../../../images/questItems.png';
+				}
 
 				itemEl
 					.data('item', item)
@@ -479,8 +481,7 @@ define([
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHover();
-			}
-			else if (key == 'ctrl')
+			} else if (key == 'ctrl')
 				this.ctrlDown = true;
 		},
 		onKeyUp: function(key) {
@@ -488,8 +489,7 @@ define([
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHover();
-			}
-			else if (key == 'ctrl')
+			} else if (key == 'ctrl')
 				this.ctrlDown = false;
 		}
 	};

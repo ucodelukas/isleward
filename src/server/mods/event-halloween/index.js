@@ -42,22 +42,25 @@ define([
 				'Tiny Pumpkin': {
 					sheetName: 'objects',
 					cell: 167,
-					itemSprite: [2, 0],
+					itemSprite: [3, 3],
 					itemName: 'Candy Corn',
+					itemSheet: `${this.folderName}/images/items.png`,
 					itemAmount: [1, 1]
 				},
 				Pumpkin: {
 					sheetName: 'objects',
 					cell: 159,
-					itemSprite: [2, 0],
+					itemSprite: [3, 3],
 					itemName: 'Candy Corn',
+					itemSheet: `${this.folderName}/images/items.png`,
 					itemAmount: [2, 3]
 				},
 				'Giant Pumpkin': {
 					sheetName: 'objects',
 					cell: 158,
-					itemSprite: [2, 0],
+					itemSprite: [3, 3],
 					itemName: 'Candy Corn',
+					itemSheet: `${this.folderName}/images/items.png`,
 					itemAmount: [3, 6]
 				}
 			});

@@ -15,8 +15,6 @@ define([
 		cdMax: 2,
 
 		init: function(instance) {
-			herbs.init();
-
 			this.objects = instance.objects;
 			this.syncer = instance.syncer;
 			this.zone = instance.zone;
@@ -152,6 +150,9 @@ define([
 				quantity: (blueprint.type != 'fish') ? 1 : null,
 				quality: 0
 			};
+
+			if (blueprint.itemSheet)
+				item.spritesheet = blueprint.itemSheet;
 
 			if (blueprint.type == 'fish')
 				item.noStack = true;
