@@ -1,9 +1,11 @@
 define([
 	'items/generator',
-	'items/generators/stats'
+	'items/generators/stats',
+	'config/skins'
 ], function(
 	generator,
-	statGenerator
+	statGenerator,
+	skins
 ) {
 	return {
 		type: 'trade',
@@ -27,6 +29,12 @@ define([
 
 			(blueprint.forceItems || []).forEach(function(f, i) {
 				var item = extend(true, {}, f);
+
+				if (item.type == 'skin') {
+					var skinBlueprint = skins.getBlueprint(item.id);
+					item.name = skinBlueprint.name;
+					item.sprite = skinBlueprint.sprite;
+				}
 
 				var id = 0;
 				this.items.forEach(function(checkItem) {

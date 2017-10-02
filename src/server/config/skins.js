@@ -64,6 +64,7 @@ define([
 
 	return {
 		getBlueprint: function(skinId) {
+			console.log(config);
 			return config[skinId];
 		},
 

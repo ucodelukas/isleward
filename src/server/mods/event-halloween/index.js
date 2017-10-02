@@ -25,6 +25,7 @@ define([
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
+			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetQuests', this.onBeforeGetQuests.bind(this));
 			this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
@@ -35,6 +36,15 @@ define([
 			this.events.on('onBeforeGetMtxList', this.onBeforeGetMtxList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.onBeforeGetAnimations.bind(this));
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+		},
+
+		onBeforeGetSkins: function(skins) {
+			skins['pumpkin-head necromancer'] = {
+				name: 'Pumpkin-Head Necromancer',
+				sprite: [0, 0],
+				class: 'necromancer',
+				spritesheet: `${this.folderName}/images/skins.png`
+			};
 		},
 
 		onBeforeGetHerbConfig: function(herbs) {
@@ -102,6 +112,7 @@ define([
 
 		onBeforeGetResourceList: function(list) {
 			list.push(`${this.folderName}/images/mobs.png`);
+			list.push(`${this.folderName}/images/skins.png`);
 		},
 
 		onBeforeGetMtxList: function(list) {
