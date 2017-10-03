@@ -8,7 +8,8 @@ define([
 	'misc/mods',
 	'mtx/mtx',
 	'config/animations',
-	'config/skins'
+	'config/skins',
+	'config/factions'
 ], function(
 	globals,
 	server,
@@ -19,7 +20,8 @@ define([
 	mods,
 	mtx,
 	animations,
-	skins
+	skins,
+	factions
 ) {
 	return {
 		init: function() {
@@ -40,6 +42,7 @@ define([
 		},
 		onComponentsReady: function() {
 			skins.init();
+			factions.init();
 			server.init(this.onServerReady.bind(this));
 		},
 		onServerReady: function() {

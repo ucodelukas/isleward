@@ -1,9 +1,11 @@
 define([
 	'items/generator',
-	'config/skins'
+	'config/skins',
+	'config/factions'
 ], function(
 	generator,
-	skins
+	skins,
+	factions
 ) {
 	return {
 		items: {},
@@ -84,7 +86,7 @@ define([
 			list.items = null;
 			list.items = [];
 
-			var faction = require('./config/factions/' + blueprint.faction.id);
+			var faction = factions.getFaction(blueprint.faction.id);
 			var statGenerator = faction.uniqueStat;
 
 			var itemCount = blueprint.items.min + ~~(Math.random() * (blueprint.items.max - blueprint.items.min));

@@ -1,7 +1,9 @@
 define([
-	'config/factionBase'
+	'config/factionBase',
+	'config/factions'
 ], function(
-	factionBase
+	factionBase,
+	factions
 ) {
 	return {
 		type: 'reputation',
@@ -33,7 +35,7 @@ define([
 
 			var factionBlueprint = null;
 			try {
-				factionBlueprint = require('config/factions/' + factionId);
+				factionBlueprint = factions.getFaction(factionId);
 			} catch (e) {
 				console.log(e);
 			}

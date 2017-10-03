@@ -74,14 +74,14 @@ define([
 								amount: 7
 							}
 						}, {
-								type: 'skin',
-								id: 'pumpkin-head necromancer',
-								worth: 100,
-								factions: [{
-									id: 'gaekatla',
-									tier: 7
-								}]
-							}],
+							type: 'skin',
+							id: 'pumpkin-head necromancer',
+							worth: 100,
+							factions: [{
+								id: 'pumpkinPirate',
+								tier: 7
+							}]
+						}],
 						level: {
 							min: 1,
 							max: 5

@@ -3,13 +3,15 @@ define([
 	'world/atlas',
 	'items/generator',
 	'misc/random',
-	'items/config/slots'
+	'items/config/slots',
+	'config/factions'
 ], function(
 	roles,
 	atlas,
 	generator,
 	random,
-	configSlots
+	configSlots,
+	factions
 ) {
 	return {
 		roleLevel: null,
@@ -98,7 +100,7 @@ define([
 				if (f == '')
 					return;
 
-				var faction = require('./config/factions/' + f);
+				var faction = factions.getFaction(f);
 				faction.uniqueStat.generate(item);
 
 				item.factions = [];

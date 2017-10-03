@@ -4,14 +4,16 @@ define([
 	'items/enchanter',
 	'objects/objects',
 	'config/classes',
-	'mtx/mtx'
+	'mtx/mtx',
+	'config/factions'
 ], function(
 	generator,
 	salvager,
 	enchanter,
 	objects,
 	classes,
-	mtx
+	mtx,
+	factions
 ) {
 	return {
 		type: 'inventory',
@@ -89,7 +91,7 @@ define([
 						if (!e.factionId)
 							return;
 
-						var faction = require('config/factions/' + e.factionId);
+						var faction = factions.getFaction(e.factionId);
 						var statGenerator = faction.uniqueStat;
 						statGenerator.generate(item);
 					});

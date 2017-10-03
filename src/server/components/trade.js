@@ -150,7 +150,7 @@ define([
 				canAfford = ((currencyItem) && (currencyItem.quantity >= item.worth.amount));
 			} else
 				canAfford = this.gold >= ~~(item.worth * markup);
-			
+
 			if (!canAfford) {
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
@@ -205,7 +205,7 @@ define([
 			if (item.type != 'skin') {
 				if (!item.infinite)
 					this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
-				
+
 				var clonedItem = extend(true, {}, item);
 				if (item.worth.currency)
 					clonedItem.worth = 0;
@@ -217,8 +217,7 @@ define([
 				delete clonedItem.infinite;
 
 				this.obj.inventory.getItem(clonedItem);
-			}
-			else {
+			} else {
 				this.obj.auth.saveSkin(item.id);
 
 				this.obj.instance.syncer.queue('onGetMessages', {
@@ -309,7 +308,33 @@ define([
 		},
 
 		getItems: function(requestedBy) {
-			return this.items;
+			var reputation = requestedBy.reputation;
+
+			var items = this.items.map(function(i) {
+				var item = extend(true, {}, i);
+
+				if (item.factions) {
+					item.factions = item.factions.map(function(f) {
+						var faction = reputation.getBlueprint(f.id);
+						var factionTier = reputation.getTier(f.id);
+
+						var noEquip = null;
+						if (factionTier < f.tier)
+							noEquip = true;
+
+						return {
+							name: faction.name,
+							tier: f.tier,
+							tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+							noEquip: noEquip
+						};
+					}, this);
+				}
+
+				return item;
+			});
+
+			return items;
 		},
 
 		canBuy: function(itemId, requestedBy, action) {

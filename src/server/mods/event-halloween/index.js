@@ -25,6 +25,7 @@ define([
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
+			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetQuests', this.onBeforeGetQuests.bind(this));
@@ -36,6 +37,12 @@ define([
 			this.events.on('onBeforeGetMtxList', this.onBeforeGetMtxList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.onBeforeGetAnimations.bind(this));
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+		},
+
+		onBeforeGetFactions: function(mappings) {
+			extend(true, mappings, {
+				pumpkinPirate: `${this.relativeFolderName}/factions/pumpkinPirate`
+			});
 		},
 
 		onBeforeGetSkins: function(skins) {
