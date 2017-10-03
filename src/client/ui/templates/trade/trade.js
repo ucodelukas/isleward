@@ -79,20 +79,6 @@ define([
 				var size = 64;
 				var offset = 0;
 
-				var spritesheet = item.spritesheet || 'items';
-				if (item.material)
-					spritesheet = 'materials';
-				else if (item.quest)
-					spritesheet = 'questItems';
-				else if (item.type == 'skin') {
-					offset = 13.5;
-					size = 32;
-					spritesheet = 'charas';
-				}
-
-				var imgX = (-item.sprite[0] * size) + offset;
-				var imgY = (-item.sprite[1] * size) + offset;
-
 				var itemEl = $(tplItem)
 					.appendTo(container);
 
@@ -101,6 +87,15 @@ define([
 					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
 					spritesheet = '../../../images/questItems.png';
+				else if (item.type == 'skin') {
+					offset = 4;
+					size = 8;
+					if (!item.spritesheet)
+						spritesheet = '../../../images/characters.png';
+				}
+
+				var imgX = (-item.sprite[0] * size) + offset;
+				var imgY = (-item.sprite[1] * size) + offset;
 
 				itemEl
 					.data('item', item)
@@ -108,7 +103,8 @@ define([
 					.on('mousemove', this.onHover.bind(this, itemEl, item, action))
 					.on('mouseleave', uiInventory.hideTooltip.bind(uiInventory, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
+					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
+					.addClass(item.type);
 
 				if (item.quantity)
 					itemEl.find('.quantity').html(item.quantity);

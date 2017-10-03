@@ -34,6 +34,7 @@ define([
 					var skinBlueprint = skins.getBlueprint(item.id);
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
+					item.spritesheet = skinBlueprint.spritesheet;
 				}
 
 				var id = 0;

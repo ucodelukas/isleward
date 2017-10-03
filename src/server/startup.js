@@ -7,7 +7,8 @@ define([
 	'security/io',
 	'misc/mods',
 	'mtx/mtx',
-	'config/animations'
+	'config/animations',
+	'config/skins'
 ], function(
 	globals,
 	server,
@@ -17,7 +18,8 @@ define([
 	io,
 	mods,
 	mtx,
-	animations
+	animations,
+	skins
 ) {
 	return {
 		init: function() {
@@ -37,6 +39,7 @@ define([
 			components.init(this.onComponentsReady.bind(this));
 		},
 		onComponentsReady: function() {
+			skins.init();
 			server.init(this.onServerReady.bind(this));
 		},
 		onServerReady: function() {

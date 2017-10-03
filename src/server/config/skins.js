@@ -60,11 +60,12 @@ define([
 		}
 	};
 
-	events.emit('onBeforeGetSkins', config);
-
 	return {
+		init: function() {
+			events.emit('onBeforeGetSkins', config);
+		},
+
 		getBlueprint: function(skinId) {
-			console.log(config);
 			return config[skinId];
 		},
 
