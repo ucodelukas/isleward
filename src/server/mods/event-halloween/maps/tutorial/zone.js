@@ -59,27 +59,53 @@ define([
 								amount: 50
 							},
 							stats: {
-								int: 20,
-								vit: 5,
-								addCritChance: 50,
-								addCritMultiplier: 100
+								int: 20
 							}
 
 						}, {
 							name: `Dad Man's Cord`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
-							sprite: [1, 0],
-							slot: 'waist',
-							type: 'Sash',
+							sprite: [0, 0],
+							slot: 'finger',
+							type: 'Ring',
 							level: '10',
 							worth: {
 								currency: `Candy Corn`,
 								amount: 50
 							},
 							stats: {
-								str: 20,
-								regenHp: 20,
-								armor: 250
+								str: 20
+							}
+
+						}, {
+							name: `Dad Man's Cord`,
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [0, 0],
+							slot: 'finger',
+							type: 'Ring',
+							level: '10',
+							worth: {
+								currency: `Candy Corn`,
+								amount: 50
+							},
+							stats: {
+								dex: 20
+							}
+
+						}, {
+							name: `Dad Man's Cord`,
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [0, 0],
+							slot: 'finger',
+							type: 'Ring',
+							level: '10',
+							worth: {
+								currency: `Candy Corn`,
+								amount: 50
+							},
+							stats: {
+								int: 10,
+								str: 20
 							}
 
 						}],
