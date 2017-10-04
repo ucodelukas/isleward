@@ -40,40 +40,6 @@ define([
 							max: 0
 						},
 						forceItems: [{
-							name: 'Summon Pumpkin Skeleton',
-							type: 'mtx',
-							effects: [{
-								mtx: 'summonPumpkinSkeleton'
-							}],
-							//HACK FOR FOLDERNAME
-							spritesheet: `server/mods/event-halloween/images/items.png`,
-							sprite: [3, 0],
-							infinite: true,
-							noDrop: true,
-							noDestroy: true,
-							noSalvage: true,
-							worth: {
-								currency: `Candy Corn`,
-								amount: 4
-							}
-						}, {
-							name: 'Haunted Ice Spear',
-							type: 'mtx',
-							effects: [{
-								mtx: 'hauntedIceSpear'
-							}],
-							//HACK FOR FOLDERNAME
-							spritesheet: `server/mods/event-halloween/images/items.png`,
-							sprite: [3, 0],
-							infinite: true,
-							noDrop: true,
-							noDestroy: true,
-							noSalvage: true,
-							worth: {
-								currency: `Candy Corn`,
-								amount: 7
-							}
-						}, {
 							type: 'skin',
 							id: 'pumpkin-head necromancer',
 							worth: 100,
@@ -81,6 +47,41 @@ define([
 								id: 'pumpkinSailor',
 								tier: 7
 							}]
+						}, {
+							name: `Witching Band`,
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [0, 0],
+							slot: 'finger',
+							type: 'Ring',
+							level: '10',
+							worth: {
+								currency: `Candy Corn`,
+								amount: 50
+							},
+							stats: {
+								int: 20,
+								vit: 5,
+								addCritChance: 50,
+								addCritMultiplier: 100
+							}
+
+						}, {
+							name: `Dad Man's Cord`,
+							spritesheet: `server/mods/event-halloween/images/items.png`,
+							sprite: [1, 0],
+							slot: 'waist',
+							type: 'Sash',
+							level: '10',
+							worth: {
+								currency: `Candy Corn`,
+								amount: 50
+							},
+							stats: {
+								str: 20,
+								regenHp: 20,
+								armor: 250
+							}
+
 						}],
 						level: {
 							min: 1,
