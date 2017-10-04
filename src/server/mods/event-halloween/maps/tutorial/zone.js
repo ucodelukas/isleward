@@ -19,7 +19,7 @@ define([
 			}
 		},
 		mobs: {
-			'captain squash': {
+			'the pumpkin sailor': {
 				level: 25,
 				walkDistance: 0,
 				attackable: false,
@@ -78,7 +78,7 @@ define([
 							id: 'pumpkin-head necromancer',
 							worth: 100,
 							factions: [{
-								id: 'pumpkinPirate',
+								id: 'pumpkinSailor',
 								tier: 7
 							}]
 						}],
@@ -199,7 +199,7 @@ define([
 								cpn: 'dialogue',
 								method: 'talk',
 								args: [{
-									targetName: 'captain squash'
+									targetName: 'the pumpkin sailor'
 								}]
 							},
 							exit: {

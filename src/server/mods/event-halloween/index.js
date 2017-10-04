@@ -41,7 +41,7 @@ define([
 
 		onBeforeGetFactions: function(mappings) {
 			extend(true, mappings, {
-				pumpkinPirate: `${this.relativeFolderName}/factions/pumpkinPirate`
+				pumpkinSailor: `${this.relativeFolderName}/factions/pumpkinSailor`
 			});
 		},
 

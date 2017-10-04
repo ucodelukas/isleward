@@ -4,8 +4,8 @@ define([
 	
 ) {
 	return {
-		id: 'pumpkinPirate',
-		name: 'The Pumpkin Pirate',
+		id: 'pumpkinSailor',
+		name: 'The Pumpkin Sailor',
 		description: `The Smeggy Smag.`,
 
 		rewards: {

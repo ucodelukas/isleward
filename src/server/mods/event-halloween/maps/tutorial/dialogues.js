@@ -4,7 +4,7 @@ define([
 
 ) {
 	return {
-		'captain squash': {
+		'the pumpkin sailor': {
 			'1': {
 				msg: [{
 					msg: `Yo!`,
@@ -29,21 +29,21 @@ define([
 				cpn: 'trade',
 				method: 'startBuy',
 				args: [{
-					targetName: 'captain squash'
+					targetName: 'the pumpkin sailor'
 				}]
 			},
 			tradeSell: {
 				cpn: 'trade',
 				method: 'startSell',
 				args: [{
-					targetName: 'captain squash'
+					targetName: 'the pumpkin sailor'
 				}]
 			},
 			tradeBuyback: {
 				cpn: 'trade',
 				method: 'startBuyback',
 				args: [{
-					targetName: 'captain squash'
+					targetName: 'the pumpkin sailor'
 				}]
 			}
 		}
