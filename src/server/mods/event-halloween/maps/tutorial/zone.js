@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -48,64 +48,72 @@ define([
 								tier: 7
 							}]
 						}, {
-							name: `Witching Band`,
+							name: `Signet of Witching`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
 							level: '10',
+							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 50
+								amount: 75
 							},
 							stats: {
-								int: 20
+								int: 50,
+								regenMana: 8
 							}
 
 						}, {
-							name: `Dad Man's Cord`,
+							name: `Banshee's Will`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
 							level: '10',
+							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 50
+								amount: 75
 							},
 							stats: {
-								str: 20
+								str: 25,
+								int: 25,
+								regenHp: 10
 							}
 
 						}, {
-							name: `Dad Man's Cord`,
+							name: `Black Cat's Grace`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
 							level: '10',
+							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 50
+								amount: 75
 							},
 							stats: {
-								dex: 20
+								dex: 50,
+								addCritChance: 90
 							}
 
 						}, {
-							name: `Dad Man's Cord`,
+							name: `Dead Man's Band`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
 							level: '10',
+							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 50
+								amount: 75
 							},
 							stats: {
-								int: 10,
-								str: 20
+								str: 50,
+								armor: 350
 							}
 
 						}],
@@ -167,7 +175,7 @@ define([
 
 				components: {
 					cpnParticles: {
-						simplify: function() {
+						simplify: function () {
 							return {
 								type: 'particles',
 								blueprint: {
