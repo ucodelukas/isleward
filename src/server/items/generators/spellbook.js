@@ -1,20 +1,20 @@
 define([
 	'config/spells',
 	'config/spellsConfig'
-], function(
+], function (
 	spells,
 	spellsConfig
 ) {
 	var maxQuality = 5;
 
 	return {
-		generate: function(item, blueprint) {
+		generate: function (item, blueprint) {
 			blueprint = blueprint || {};
 			var spellQuality = blueprint ? blueprint.spellQuality : '';
 			var spellName = blueprint.spellName;
-			
+
 			if (!spellName) {
-				var spellList = Object.keys(spellsConfig).filter(s => !spellsConfig[s].auto);
+				var spellList = Object.keys(spellsConfig).filter(s => ((!spellsConfig[s].auto) && (!s.noDrop)));
 				spellName = spellList[~~(Math.random() * spellList.length)];
 			}
 
@@ -38,8 +38,7 @@ define([
 				item.name = 'Rune of ' + spellAesthetic.name;
 				item.ability = true;
 				item.sprite = sprite;
-			}
-			else if (spellQuality == 'mid')
+			} else if (spellQuality == 'mid')
 				item.stats = {};
 
 			item.spell = {
@@ -67,8 +66,7 @@ define([
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
-				}
-				else
+				} else
 					val = ~~(val * 10) / 10;
 
 				item.spell.values[r] = val;
@@ -92,7 +90,7 @@ define([
 			}
 
 			var perfection = ~~(propertyPerfection.reduce((p, n) => p += n, 0) / propertyPerfection.length * 4);
-			if (!item.slot)	
+			if (!item.slot)
 				item.quality = perfection;
 			else
 				item.spell.quality = perfection

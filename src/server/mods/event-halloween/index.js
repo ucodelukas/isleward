@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -13,14 +13,15 @@ define([
 
 		extraScripts: [
 			'maps/tutorial/events/halloween.js',
-			'mtx/summonPumpkinSkeleton.js'
+			'mtx/summonPumpkinSkeleton.js',
+			'spells/scatterPumpkinPieces.js'
 		],
 
 		mapFile: null,
 		mapW: null,
 		mapH: null,
 
-		init: function() {
+		init: function () {
 			this.mapFile = require.nodeRequire('../../../mods/event-halloween/maps/tutorial/map');
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
@@ -37,15 +38,75 @@ define([
 			this.events.on('onBeforeGetMtxList', this.onBeforeGetMtxList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.onBeforeGetAnimations.bind(this));
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+
+			this.events.on('onBeforeGetSpellsInfo', this.beforeGetSpellsInfo.bind(this));
+			this.events.on('onBeforeGetSpellsConfig', this.beforeGetSpellsConfig.bind(this));
+			this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
 		},
 
-		onBeforeGetFactions: function(mappings) {
+		beforeGetSpellsInfo: function (spells) {
+			spells.push({
+				name: 'scatter pumpkin pieces',
+				description: 'Absorbs the life-force of your enemies.',
+				type: 'scatterPumpkinPieces',
+				icon: [0, 0],
+				animation: 'melee',
+				particles: {
+					color: {
+						start: ['ff4252', 'b34b3a'],
+						end: ['b34b3a', 'ff4252']
+					},
+					scale: {
+						start: {
+							min: 2,
+							max: 14
+						},
+						end: {
+							min: 0,
+							max: 8
+						}
+					},
+					lifetime: {
+						min: 1,
+						max: 3
+					},
+					alpha: {
+						start: 0.7,
+						end: 0
+					},
+					randomScale: true,
+					randomColor: true,
+					chance: 0.6
+				}
+			});
+		},
+
+		beforeGetSpellsConfig: function (spells) {
+			spells['scatter pumpkin pieces'] = {
+				statType: ['str'],
+				statMult: 0.1,
+				element: 'physical',
+				auto: true,
+				cdMax: 7,
+				manaCost: 0,
+				random: {
+
+				}
+			};
+		},
+
+		beforeGetSpellTemplate: function (spell) {
+			if (spell.type == 'ScatterPumpkinPieces')
+				spell.template = require(`${this.relativeFolderName}/spells/spellScatterPumpkinPieces`);
+		},
+
+		onBeforeGetFactions: function (mappings) {
 			extend(true, mappings, {
 				pumpkinSailor: `${this.relativeFolderName}/factions/pumpkinSailor`
 			});
 		},
 
-		onBeforeGetSkins: function(skins) {
+		onBeforeGetSkins: function (skins) {
 			skins['pumpkin-head necromancer'] = {
 				name: 'Pumpkin-Head Necromancer',
 				sprite: [0, 0],
@@ -54,7 +115,7 @@ define([
 			};
 		},
 
-		onBeforeGetHerbConfig: function(herbs) {
+		onBeforeGetHerbConfig: function (herbs) {
 			extend(true, herbs, {
 				'Tiny Pumpkin': {
 					sheetName: 'objects',
@@ -83,7 +144,7 @@ define([
 			});
 		},
 
-		onBeforeGetAnimations: function(animations) {
+		onBeforeGetAnimations: function (animations) {
 			//Skeleton animations
 			var mobsheet = `${this.folderName}/images/mobs.png`;
 			if (!animations.mobs[mobsheet])
@@ -117,17 +178,17 @@ define([
 			};
 		},
 
-		onBeforeGetResourceList: function(list) {
+		onBeforeGetResourceList: function (list) {
 			list.push(`${this.folderName}/images/mobs.png`);
 			list.push(`${this.folderName}/images/skins.png`);
 		},
 
-		onBeforeGetMtxList: function(list) {
+		onBeforeGetMtxList: function (list) {
 			list.summonPumpkinSkeleton = this.relativeFolderName + '/mtx/summonPumpkinSkeleton';
 			list.hauntedIceSpear = this.relativeFolderName + '/mtx/hauntedIceSpear';
 		},
 
-		onAfterGetLayerObjects: function(info) {
+		onAfterGetLayerObjects: function (info) {
 			if (info.map != 'tutorial')
 				return;
 
@@ -136,7 +197,7 @@ define([
 				var offset = this.mapOffset;
 				var mapScale = this.mapFile.tilesets[0].tileheight;
 
-				layer.objects.forEach(function(l) {
+				layer.objects.forEach(function (l) {
 					var newO = extend(true, {}, l);
 					newO.x += (offset.x * mapScale);
 					newO.y += (offset.y * mapScale);
@@ -146,7 +207,7 @@ define([
 			}
 		},
 
-		onBeforeBuildLayerTile: function(info) {
+		onBeforeBuildLayerTile: function (info) {
 			if (info.map != 'tutorial')
 				return;
 
@@ -164,11 +225,15 @@ define([
 				info.cell = layer.data[i];
 		},
 
-		onBeforeGetEventList: function(zone, list) {
+		onBeforeGetEventList: function (zone, list) {
+			if (zone != 'tutorial')
+				return;
+
 			list.push(this.relativeFolderName + '/maps/tutorial/events/halloween.js');
+			list.push(this.relativeFolderName + '/maps/tutorial/events/halloweenBoss.js');
 		},
 
-		onAfterGetZone: function(zone, config) {
+		onAfterGetZone: function (zone, config) {
 			try {
 				var modZone = require(this.relativeFolderName + '/maps/' + zone + '/zone.js');
 				extend(true, config, modZone);
@@ -177,7 +242,7 @@ define([
 			}
 		},
 
-		onBeforeGetDialogue: function(zone, config) {
+		onBeforeGetDialogue: function (zone, config) {
 			try {
 				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
 				extend(true, config, modDialogue);
@@ -186,7 +251,7 @@ define([
 			}
 		},
 
-		onBeforeGetQuests: function(zone, config) {
+		onBeforeGetQuests: function (zone, config) {
 			try {
 				var modQuests = require(this.relativeFolderName + '/maps/' + zone + '/quests.js');
 				extend(true, config, modQuests);
