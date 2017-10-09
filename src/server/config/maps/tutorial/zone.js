@@ -42,7 +42,7 @@ module.exports = {
 		'estuary entrance': {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -141,22 +141,6 @@ module.exports = {
 				sprite: [0, 0]
 			}
 		},
-		"captain squash": {
-			level: 2,
-			regular: {
-				drops: {
-					chance: 75,
-					rolls: 1
-				}
-			},
-			rare: {
-				count: 0
-			},
-			questItem: {
-				name: 'Gull Feather',
-				sprite: [0, 0]
-			}
-		},
 		bunny: {
 			level: 3,
 			regular: {
@@ -174,7 +158,7 @@ module.exports = {
 			}
 		},
 		elk: {
-			level: 5,
+			level: 4,
 			regular: {
 				drops: {
 					chance: 55,
@@ -189,10 +173,19 @@ module.exports = {
 				sprite: [0, 2]
 			}
 		},
+		flamingo: {
+			level: 5,
+			regular: {
+				drops: {
+					chance: 55,
+					rolls: 1
+				}
+			}
+		},
 		crab: {
 			faction: 'gaekatla',
 			deathRep: -3,
-			level: 7,
+			level: 6,
 
 			regular: {
 				drops: {
@@ -211,7 +204,7 @@ module.exports = {
 		'titan crab': {
 			faction: 'gaekatla',
 			deathRep: -5,
-			level: 8,
+			level: 7,
 			rare: {
 				name: 'The Pincer King'
 			}
@@ -229,17 +222,15 @@ module.exports = {
 						min: 3,
 						max: 5
 					},
-					forceItems: [
-						{
-							name: 'Flimsy Fishing Rod',
-							type: 'Fishing Rod',
-							slot: 'tool',
-							quality: 0,
-							worth: 5,
-							sprite: [11, 0],
-							infinite: true
-						}
-					],
+					forceItems: [{
+						name: 'Flimsy Fishing Rod',
+						type: 'Fishing Rod',
+						slot: 'tool',
+						quality: 0,
+						worth: 5,
+						sprite: [11, 0],
+						infinite: true
+					}],
 					level: {
 						min: 1,
 						max: 5
@@ -283,4 +274,4 @@ module.exports = {
 			}
 		}
 	}
-}; 
+};

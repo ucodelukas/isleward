@@ -57,7 +57,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 75
+								amount: 350
 							},
 							stats: {
 								int: 50,
@@ -74,7 +74,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 75
+								amount: 350
 							},
 							stats: {
 								str: 25,
@@ -92,7 +92,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 75
+								amount: 350
 							},
 							stats: {
 								dex: 50,
@@ -109,7 +109,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 75
+								amount: 350
 							},
 							stats: {
 								str: 50,

@@ -2363,7 +2363,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2403,7 +2403,7 @@
                  "name":"exit|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2423,7 +2423,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2443,7 +2443,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2463,7 +2463,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2523,7 +2523,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":70,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2542,7 +2542,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":921,
+ "nextobjectid":922,
  "orientation":"orthogonal",
  "properties":
     {
@@ -2557,7 +2557,6 @@
      "spawn":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
  "tileheight":8,
  "tilesets":[
         {
@@ -2803,6 +2802,6 @@
         }],
  "tilewidth":8,
  "type":"map",
- "version":1,
+ "version":"2017.05.26",
  "width":192
 }

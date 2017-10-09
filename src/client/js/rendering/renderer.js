@@ -8,7 +8,7 @@ define([
     'js/rendering/shaders/outline',
     'js/rendering/spritePool',
     'picture'
-], function(
+], function (
     resources,
     events,
     physics,
@@ -71,7 +71,7 @@ define([
 
         hiddenRooms: null,
 
-        init: function() {
+        init: function () {
             PIXI.GC_MODES.DEFAULT = PIXI.GC_MODES.AUTO;
             PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 
@@ -97,7 +97,7 @@ define([
             this.stage = new pixi.Container();
 
             var layers = this.layers;
-            Object.keys(layers).forEach(function(l) {
+            Object.keys(layers).forEach(function (l) {
                 if (l == 'tileSprites') {
                     layers[l] = new pixi.Container();
                     layers[l].layer = 'tiles';
@@ -108,12 +108,12 @@ define([
             }, this);
 
             var spriteNames = ['tiles', 'mobs', 'bosses', 'animBigObjects', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss', 'white', 'ray'];
-            resources.spriteNames.forEach(function(s) {
+            resources.spriteNames.forEach(function (s) {
                 if (s.indexOf('.png') > -1)
                     spriteNames.push(s);
             });
 
-            spriteNames.forEach(function(t) {
+            spriteNames.forEach(function (t) {
                 this.textures[t] = new pixi.BaseTexture(resources.sprites[t].image);
                 this.textures[t].scaleMode = pixi.SCALE_MODES.NEAREST;
             }, this);
@@ -127,11 +127,11 @@ define([
             this.buildSpritesTexture();
         },
 
-        buildSpritesTexture: function() {
+        buildSpritesTexture: function () {
             var container = new pixi.Container();
 
             var totalHeight = 0;
-            ['tiles', 'walls', 'objects'].forEach(function(t) {
+            ['tiles', 'walls', 'objects'].forEach(function (t) {
                 var texture = this.textures[t];
                 var tile = new pixi.Sprite(new pixi.Texture(texture));
                 tile.width = texture.width;
@@ -151,7 +151,7 @@ define([
             this.textures.scaleMult = pixi.SCALE_MODES.NEAREST;
         },
 
-        toggleScreen: function() {
+        toggleScreen: function () {
             var screenMode = 0;
 
             var isFullscreen = (window.innerHeight == screen.height);
@@ -170,7 +170,7 @@ define([
             }
         },
 
-        buildTitleScreen: function() {
+        buildTitleScreen: function () {
             this.titleScreen = true;
 
             this.setPosition({
@@ -239,14 +239,14 @@ define([
             }
         },
 
-        onDeath: function(pos) {
+        onDeath: function (pos) {
             this.setPosition({
                 x: (pos.x - (this.width / (scale * 2))) * scale,
                 y: (pos.y - (this.height / (scale * 2))) * scale
             }, true);
         },
 
-        onResize: function() {
+        onResize: function () {
             var zoom = window.devicePixelRatio;
 
             this.width = $('body').width() * zoom;
@@ -271,7 +271,7 @@ define([
             events.emit('onResize');
         },
 
-        getTexture: function(baseTex, cell, size) {
+        getTexture: function (baseTex, cell, size) {
             size = size || 8;
             var name = baseTex + '_' + cell;
 
@@ -289,7 +289,7 @@ define([
             return cached;
         },
 
-        clean: function() {
+        clean: function () {
             var container = this.layers.tileSprites;
             this.stage.removeChild(container);
 
@@ -297,7 +297,7 @@ define([
             container.layer = 'tiles';
             this.stage.addChild(container);
 
-            this.stage.children.sort(function(a, b) {
+            this.stage.children.sort(function (a, b) {
                 if (a.layer == 'tiles')
                     return -1;
                 else if (b.layer == 'tiles')
@@ -307,7 +307,7 @@ define([
             }, this);
         },
 
-        onGetMapCustomization: function(msg) {
+        onGetMapCustomization: function (msg) {
             if (!msg.collide) {
                 var children = this.layers.tiles.children;
                 var cLen = children.length;
@@ -344,7 +344,7 @@ define([
             physics.graph.grid[msg.x][msg.y] = !msg.collide;
         },
 
-        buildTile: function(c, i, j) {
+        buildTile: function (c, i, j) {
             var alpha = tileOpacity.map(c);
             var canFlip = tileOpacity.canFlip(c);
 
@@ -366,7 +366,7 @@ define([
             return tile;
         },
 
-        onGetMap: function(msg) {
+        onGetMap: function (msg) {
             this.titleScreen = false;
             physics.init(msg.collisionMap);
 
@@ -384,7 +384,7 @@ define([
 
             this.sprites = _.get2dArray(w, h, 'array');
 
-            this.stage.children.sort(function(a, b) {
+            this.stage.children.sort(function (a, b) {
                 if (a.layer == 'tiles')
                     return -1;
                 else if (b.layer == 'tiles')
@@ -397,18 +397,18 @@ define([
                 events.emit('onRezone', this.zoneId);
             this.zoneId = msg.zoneId;
 
-            msg.clientObjects.forEach(function(c) {
+            msg.clientObjects.forEach(function (c) {
                 c.zoneId = this.zoneId;
                 events.emit('onGetObject', c);
             }, this);
         },
 
-        buildHiddenRooms: function(msg) {
+        buildHiddenRooms: function (msg) {
             var hiddenWalls = msg.hiddenWalls;
             var hiddenTiles = msg.hiddenTiles;
 
             this.hiddenRooms = msg.hiddenRooms;
-            this.hiddenRooms.forEach(function(h) {
+            this.hiddenRooms.forEach(function (h) {
                 h.container = new pixi.Container();
                 this.layers.hiders.addChild(h.container);
                 this.buildRectangle({
@@ -421,7 +421,7 @@ define([
                 });
                 for (var i = h.x; i < h.x + h.width; i++) {
                     for (var j = h.y; j < h.y + h.height; j++) {
-                        [hiddenTiles, hiddenWalls].forEach(function(k) {
+                        [hiddenTiles, hiddenWalls].forEach(function (k) {
                             var cell = k[i][j];
                             if (cell == 0)
                                 return;
@@ -435,7 +435,7 @@ define([
                 }
             }, this);
         },
-        hideHiders: function() {
+        hideHiders: function () {
             var player = window.player;
             if (!player)
                 return;
@@ -456,7 +456,7 @@ define([
             }
         },
 
-        setPosition: function(pos, instant) {
+        setPosition: function (pos, instant) {
             pos.x += 16;
             pos.y += 16;
 
@@ -473,7 +473,7 @@ define([
             this.updateSprites();
         },
 
-        isVisible: function(x, y) {
+        isVisible: function (x, y) {
             var stage = this.stage;
             var sx = -stage.x;
             var sy = -stage.y;
@@ -484,7 +484,7 @@ define([
             return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
         },
 
-        updateSprites: function() {
+        updateSprites: function () {
             if (this.titleScreen)
                 return;
 
@@ -584,13 +584,13 @@ define([
 
             //Reorder
             if (addedSprite) {
-                container.children.sort(function(a, b) {
+                container.children.sort(function (a, b) {
                     return (a.sheetNum - b.sheetNum);
                 });
             }
         },
 
-        update: function() {
+        update: function () {
             var time = +new Date;
 
             if (this.moveTo) {
@@ -637,14 +637,14 @@ define([
             this.lastTick = time;
         },
 
-        buildContainer: function(obj) {
+        buildContainer: function (obj) {
             var container = new pixi.Container;
             this.layers[obj.layerName || obj.sheetName].addChild(container);
 
             return container;
         },
 
-        buildRectangle: function(obj) {
+        buildRectangle: function (obj) {
             var graphics = new pixi.Graphics;
 
             var alpha = obj.alpha;
@@ -672,7 +672,7 @@ define([
             return graphics;
         },
 
-        moveRectangle: function(obj) {
+        moveRectangle: function (obj) {
             obj.sprite.position.x = obj.x;
             obj.sprite.position.y = obj.y;
             obj.sprite.width = obj.w;
@@ -718,7 +718,7 @@ define([
             points[9] = obj.y;*/
         },
 
-        buildObject: function(obj) {
+        buildObject: function (obj) {
             var w = 8;
             var h = 8;
             if (obj.w) {
@@ -760,7 +760,7 @@ define([
             return sprite;
         },
 
-        addFilter: function(sprite) {
+        addFilter: function (sprite) {
             var thickness = 16;
             if (sprite.width > scale)
                 thickness = 8;
@@ -775,14 +775,14 @@ define([
             return filter;
         },
 
-        removeFilter: function(sprite, filter) {
+        removeFilter: function (sprite, filter) {
             if (!sprite.filters)
                 return;
 
             sprite.filters = null;
         },
 
-        buildText: function(obj) {
+        buildText: function (obj) {
             var textSprite = new pixi.Text(obj.text, {
                 fontFamily: 'bitty',
                 fontSize: (obj.fontSize || 14),
@@ -801,15 +801,15 @@ define([
             return textSprite;
         },
 
-        buildEmitter: function(config) {
+        buildEmitter: function (config) {
             return particles.buildEmitter(config);
         },
 
-        destroyEmitter: function(emitter) {
+        destroyEmitter: function (emitter) {
             particles.destroyEmitter(emitter);
         },
 
-        setSprite: function(obj) {
+        setSprite: function (obj) {
             var cell = obj.cell;
             var y = ~~(cell / 8);
             var x = cell - (y * 8);
@@ -818,21 +818,21 @@ define([
             obj.sprite.texture = this.getTexture(obj.sheetName, obj.cell, obj.sprite.width / scaleMult);
         },
 
-        reorder: function(sprite) {
+        reorder: function (sprite) {
             var mobLayer = this.layers.mobs;
             var mobs = mobLayer.children;
-            mobs.sort(function(a, b) {
+            mobs.sort(function (a, b) {
                 return (b.y - a.y);
             });
         },
 
-        destroyObject: function(obj) {
+        destroyObject: function (obj) {
             if (!obj.sprite.parent)
                 return;
             obj.sprite.parent.removeChild(obj.sprite);
         },
 
-        render: function() {
+        render: function () {
             if (!this.stage)
                 return;
 
