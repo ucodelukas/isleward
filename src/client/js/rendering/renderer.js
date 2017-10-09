@@ -727,7 +727,7 @@ define([
             }
 
             var bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
-            if (bigSheets.indexOf(obj.sheetName) > -1) {
+            if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
                 obj.layerName = 'mobs';
                 w = 24;
                 h = 24;
@@ -741,8 +741,7 @@ define([
             sprite.width = obj.w || scale;
             sprite.height = obj.h || scale;
 
-            var bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
-            if (bigSheets.indexOf(obj.sheetName) > -1) {
+            if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
                 sprite.x -= scale;
                 sprite.y -= (scale * 2);
             }

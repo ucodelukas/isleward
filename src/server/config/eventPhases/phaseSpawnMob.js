@@ -1,13 +1,13 @@
 define([
 	'../../world/mobBuilder'
-], function(
+], function (
 	mobBuilder
 ) {
 	return {
 		spawnRect: null,
 		mobs: null,
 
-		init: function() {
+		init: function () {
 			var objects = this.instance.objects;
 			var spawnRect = this.spawnRect;
 
@@ -16,7 +16,7 @@ define([
 
 			var usedSpots = ['-1,-1'];
 
-			this.mobs.forEach(function(l) {
+			this.mobs.forEach(function (l) {
 				var amount = l.amount || 1;
 				delete l.amount;
 
@@ -66,13 +66,12 @@ define([
 						var mob = objects.buildObjects([{
 							x: x,
 							y: y,
-							sheetName: 'mobs',
+							sheetName: l.sheetName || 'mobs',
 							cell: l.cell,
 							name: l.name
 						}]);
 						mobBuilder.build(mob, l);
 						this.spawnAnimation(mob);
-
 
 						if (l.id) {
 							var id = l.id.split('$').join(i);
@@ -123,7 +122,7 @@ define([
 				this.end = true;
 		},
 
-		spawnAnimation: function(mob) {
+		spawnAnimation: function (mob) {
 			this.instance.syncer.queue('onGetObject', {
 				x: mob.x,
 				y: mob.y,

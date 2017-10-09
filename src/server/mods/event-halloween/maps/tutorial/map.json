@@ -57,18 +57,6 @@
                  "width":24,
                  "x":48,
                  "y":40
-                }, 
-                {
-                 "gid":789,
-                 "height":24,
-                 "id":664,
-                 "name":"blabby",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":144,
-                 "y":32
                 }],
          "opacity":1,
          "properties":

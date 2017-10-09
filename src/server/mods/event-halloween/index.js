@@ -14,7 +14,7 @@ define([
 		extraScripts: [
 			'maps/tutorial/events/halloween.js',
 			'mtx/summonPumpkinSkeleton.js',
-			'spells/scatterPumpkinPieces.js'
+			'spells/spellScatterPumpkinPieces.js'
 		],
 
 		mapFile: null,
@@ -47,9 +47,7 @@ define([
 		beforeGetSpellsInfo: function (spells) {
 			spells.push({
 				name: 'scatter pumpkin pieces',
-				description: 'Absorbs the life-force of your enemies.',
 				type: 'scatterPumpkinPieces',
-				icon: [0, 0],
 				animation: 'melee',
 				particles: {
 					color: {
@@ -180,6 +178,7 @@ define([
 
 		onBeforeGetResourceList: function (list) {
 			list.push(`${this.folderName}/images/mobs.png`);
+			list.push(`${this.folderName}/images/bosses.png`);
 			list.push(`${this.folderName}/images/skins.png`);
 		},
 
