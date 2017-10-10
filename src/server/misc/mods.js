@@ -2,7 +2,7 @@ define([
 	'misc/fileLister',
 	'misc/events',
 	'util'
-], function(
+], function (
 	fileLister,
 	events,
 	util
@@ -12,17 +12,17 @@ define([
 	return {
 		waiting: {},
 
-		init: function(_cbDone) {
+		init: function (_cbDone) {
 			cbDone = _cbDone;
 			var modList = fileLister.getFolderList('mods');
 
-			modList.forEach(function(m) {
+			modList.forEach(function (m) {
 				this.waiting[m] = 0;
 				require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
 			}, this);
 		},
 
-		onGetMod: function(name, mod) {
+		onGetMod: function (name, mod) {
 			mod.events = events;
 			mod.folderName = 'server/mods/' + name;
 			mod.relativeFolderName = 'mods/' + name;
@@ -44,7 +44,7 @@ define([
 			}
 		},
 
-		onGetExtra: function(name, mod, extra) {
+		onGetExtra: function (name, mod, extra) {
 			extra.folderName = 'server/mods/' + name;
 
 			this.waiting[name]--;

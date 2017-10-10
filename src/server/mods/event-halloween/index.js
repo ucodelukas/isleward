@@ -95,7 +95,7 @@ define([
 
 		beforeGetSpellTemplate: function (spell) {
 			if (spell.type == 'ScatterPumpkinPieces')
-				spell.template = require(`${this.relativeFolderName}/spells/spellScatterPumpkinPieces`);
+				spell.template = require(`${this.relativeFolderName}/spells/spellScatterPumpkinPieces.js`);
 		},
 
 		onBeforeGetFactions: function (mappings) {

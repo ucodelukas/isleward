@@ -19,9 +19,9 @@ define([
 		cdMax: 5,
 		manaCost: 0,
 
-		spread: 7,
+		spread: 5,
 		range: 10,
-		speed: 700,
+		speed: 250,
 
 		cast: function (action) {
 			return this.shootChunk(action);
@@ -47,6 +47,66 @@ define([
 
 			var ttl = (Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed) - 50;
 
+			var isRotten = (Math.random() < 0.5);
+			var particles = null;
+			if (!isRotten) {
+				particles = {
+					color: {
+						start: ['ffeb38', 'db5538'],
+						end: ['d43346', '763b3b']
+					},
+					scale: {
+						start: {
+							min: 4,
+							max: 8
+						},
+						end: {
+							min: 0,
+							max: 4
+						}
+					},
+					lifetime: {
+						min: 2,
+						max: 4
+					},
+					alpha: {
+						start: 0.7,
+						end: 0
+					},
+					randomScale: true,
+					randomColor: true,
+					chance: 0.6
+				};
+			} else {
+				particles = {
+					color: {
+						start: ['fc66f7', 'a24eff'],
+						end: ['533399', '393268']
+					},
+					scale: {
+						start: {
+							min: 4,
+							max: 8
+						},
+						end: {
+							min: 0,
+							max: 4
+						}
+					},
+					lifetime: {
+						min: 2,
+						max: 4
+					},
+					alpha: {
+						start: 0.7,
+						end: 0
+					},
+					randomScale: true,
+					randomColor: true,
+					chance: 0.6
+				};
+			}
+
 			var projectileConfig = {
 				caster: this.obj.id,
 				components: [{
@@ -55,59 +115,38 @@ define([
 					type: 'projectile',
 					ttl: ttl,
 					projectileOffset: null,
-					particles: {
-						particles: {
-							color: {
-								start: ['7a3ad3', '3fa7dd'],
-								end: ['3fa7dd', '7a3ad3']
-							},
-							scale: {
-								start: {
-									min: 2,
-									max: 14
-								},
-								end: {
-									min: 0,
-									max: 8
-								}
-							},
-							lifetime: {
-								min: 1,
-								max: 3
-							},
-							alpha: {
-								start: 0.7,
-								end: 0
-							},
-							randomScale: true,
-							randomColor: true,
-							chance: 0.6
-						}
-					}
-				}, {
-					type: 'attackAnimation',
-					layer: 'projectiles',
-					loop: -1,
-					row: 2,
-					col: 4
+					particles: particles
 				}]
 			};
 
 			this.sendAnimation(projectileConfig);
 
-			this.queueCallback(this.createChunk.bind(this, target), ttl, null, target);
+			this.queueCallback(this.createChunk.bind(this, isRotten, target, particles), ttl, null, target);
 
 			return true;
 		},
 
-		createChunk: function (pos) {
+		createChunk: function (isRotten, pos, particles) {
+			var cell = isRotten ? 73 : 72;
+
+			particles.chance = 0.1;
+
 			var obj = this.obj.instance.objects.buildObjects([{
-				sheetName: 'objects',
-				cell: 167,
+				sheetName: `${this.folderName}/images/mobs.png`,
+				cell: cell,
 				x: pos.x,
 				y: pos.y,
 				properties: {
-					cpnPumpkinChunk: cpnPumpkinChunk
+					cpnPumpkinChunk: cpnPumpkinChunk,
+					cpnParticles: {
+						simplify: function () {
+							return {
+								type: 'particles',
+								blueprint: this.blueprint
+							};
+						},
+						blueprint: particles
+					}
 				}
 			}]);
 		}
