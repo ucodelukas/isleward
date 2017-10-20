@@ -6,22 +6,59 @@ define([
 	var cpnPumpkinChunk = {
 		type: 'pumpkinChunk',
 
+		caster: null,
+		isRotten: false,
+
+		ttl: 45,
+
+		update: function () {
+			this.ttl--;
+
+			if (this.ttl == 0)
+				this.obj.destroyed = true;
+		},
+
 		collisionEnter: function (o) {
 			if (!o.player)
 				return;
 
+			this.obj.destroyed = true;
+
+			if (this.isRotten) {
+				var drainCounts = this.caster.spellbook.spells.find(s => (s.type == 'scatterPumpkinPieces')).drainCounts;
+				if (drainCounts[o.name])
+					drainCounts[o.name] += 2;
+				else {
+					drainCounts[o.name] = 1;
+				}
+
+				o.effects.addEffect({
+					type: 'lifeDrain',
+					ttl: 10,
+					amount: drainCounts[o.name],
+					caster: this.caster
+				});
+			} else {
+				o.effects.addEffect({
+					type: 'frenzy',
+					ttl: 40,
+					newCd: 2
+				});
+			}
 		}
 	};
 
 	return {
 		type: 'scatterPumpkinPieces',
 
-		cdMax: 5,
+		cdMax: 20,
 		manaCost: 0,
 
 		spread: 5,
 		range: 10,
 		speed: 250,
+
+		drainCounts: {},
 
 		cast: function (action) {
 			return this.shootChunk(action);
@@ -146,6 +183,12 @@ define([
 							};
 						},
 						blueprint: particles
+					}
+				},
+				extraProperties: {
+					pumpkinChunk: {
+						caster: this.obj,
+						isRotten: isRotten
 					}
 				}
 			}]);

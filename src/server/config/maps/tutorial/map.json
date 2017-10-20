@@ -707,8 +707,8 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":408,
-                 "y":688
+                 "x":456,
+                 "y":672
                 }, 
                 {
                  "gid":292,
@@ -2070,7 +2070,7 @@
     {
      "instanced":"0",
      "name":"Test Zone",
-     "spawn":"[{\"maxLevel\":1,\"x\":100,\"y\":116},{\"maxLevel\":999,\"x\":89,\"y\":48}]"
+     "spawn":"[{\"maxLevel\":1,\"x\":100,\"y\":116},{\"maxLevel\":999,\"x\":132,\"y\":48}]"
     },
  "propertytypes":
     {

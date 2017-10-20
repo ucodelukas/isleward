@@ -68,8 +68,10 @@ define([
 							y: y,
 							sheetName: l.sheetName || 'mobs',
 							cell: l.cell,
-							name: l.name
+							name: l.name,
+							properties: l.properties
 						}]);
+
 						mobBuilder.build(mob, l);
 						this.spawnAnimation(mob);
 
@@ -114,6 +116,9 @@ define([
 
 						if (l.trade)
 							mob.addComponent('trade', l.trade);
+
+						if (l.chats)
+							mob.addComponent('chatter', l.chats);
 					}
 				}
 			}, this);

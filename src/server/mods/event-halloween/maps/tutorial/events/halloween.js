@@ -1,7 +1,7 @@
 define([
 	'mtx/mtx',
 
-], function(
+], function (
 	mtx
 ) {
 	var dropsConfig = {
@@ -40,7 +40,7 @@ define([
 
 	return {
 		name: `Soul's Moor`,
-		description: `Snappadoowap.`,
+		description: `The Pumpkin Sailor has returned to the shores of the living.`,
 		distance: -1,
 		cron: '* * * * *',
 
@@ -54,12 +54,13 @@ define([
 
 		phases: [{
 			type: 'hookEvents',
-			auto: true,
 			events: {
-				beforeGatherResource: function(gatherResult, gatherer) {
+				beforeGatherResource: function (gatherResult, gatherer) {
 					var itemName = gatherResult.blueprint.itemName;
 					if ((!itemName) || (itemName.toLowerCase() != 'candy corn'))
 						return;
+
+					gatherer.reputation.getReputation('pumpkinSailor', 10);
 
 					for (var g in gatherDrops) {
 						if (Math.random() < gatherDrops[g]) {
