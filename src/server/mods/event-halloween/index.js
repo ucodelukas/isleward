@@ -129,7 +129,7 @@ define([
 					itemSprite: [3, 3],
 					itemName: 'Candy Corn',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [2, 3]
+					itemAmount: [1, 3]
 				},
 				'Giant Pumpkin': {
 					sheetName: 'objects',
@@ -137,7 +137,7 @@ define([
 					itemSprite: [3, 3],
 					itemName: 'Candy Corn',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [3, 6]
+					itemAmount: [2, 5]
 				}
 			});
 		},

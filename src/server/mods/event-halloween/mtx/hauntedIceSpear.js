@@ -1,11 +1,11 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
 		events: {
-			beforeSpawnProjectile: function(item, spell, projectileConfig) {
+			beforeSpawnProjectile: function (item, spell, projectileConfig) {
 				if (spell.name.toLowerCase() != 'ice spear')
 					return;
 
@@ -18,11 +18,11 @@ define([
 					scale: {
 						start: {
 							min: 2,
-							max: 14
+							max: 12
 						},
 						end: {
 							min: 0,
-							max: 8
+							max: 6
 						}
 					},
 					lifetime: {
@@ -43,10 +43,24 @@ define([
 							max: 12
 						}
 					},
+					startRotation: {
+						min: 0,
+						max: 360
+					},
+					rotationSpeed: {
+						min: 0,
+						max: 360
+					},
 					randomScale: true,
 					randomColor: true,
 					randomSpeed: true,
-					chance: 0.75
+					chance: 0.55,
+					spawnType: 'circle',
+					spawnCircle: {
+						x: 0,
+						y: 0,
+						r: 8
+					}
 				};
 			}
 		}

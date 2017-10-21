@@ -42,10 +42,13 @@ define([
 						forceItems: [{
 							type: 'skin',
 							id: 'pumpkin-head necromancer',
-							worth: 100,
+							worth: {
+								currency: `Candy Corn`,
+								amount: 1800
+							},
 							factions: [{
 								id: 'pumpkinSailor',
-								tier: 7
+								tier: 5
 							}]
 						}, {
 							name: `Signet of Witching`,
@@ -57,7 +60,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 350
+								amount: 500
 							},
 							stats: {
 								int: 50,
@@ -74,7 +77,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 350
+								amount: 500
 							},
 							stats: {
 								str: 25,
@@ -92,7 +95,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 350
+								amount: 500
 							},
 							stats: {
 								dex: 50,
@@ -109,7 +112,7 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 350
+								amount: 500
 							},
 							stats: {
 								str: 50,
