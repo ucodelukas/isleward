@@ -1,6 +1,6 @@
 define([
 	'world/mobBuilder'
-], function(
+], function (
 	mobBuilder
 ) {
 	return {
@@ -14,10 +14,11 @@ define([
 		range: 9,
 
 		needLos: true,
+		killMinionsOnDeath: true,
 
 		minions: [],
 
-		cast: function(action) {
+		cast: function (action) {
 			this.killMinion();
 
 			var obj = this.obj;
@@ -75,7 +76,11 @@ define([
 			mob.stats.values.int = obj.stats.values.int || 1;
 			spell.threatMult *= 10;
 
-			mob.follower.bindEvents();
+			mob.follower.noNeedMaster = !this.killMinionsOnDeath;
+			if (this.killMinionsOnDeath)
+				mob.follower.bindEvents();
+			else
+				mob.removeComponent('follower');
 
 			this.minions.push(mob);
 
@@ -97,7 +102,7 @@ define([
 			return true;
 		},
 
-		update: function() {
+		update: function () {
 			var minions = this.minions;
 			var mLen = minions.length;
 			for (var i = 0; i < mLen; i++) {
@@ -110,11 +115,11 @@ define([
 			}
 		},
 
-		onAfterSimplify: function(simple) {
+		onAfterSimplify: function (simple) {
 			delete simple.minions;
 		},
 
-		killMinion: function(minion) {
+		killMinion: function (minion) {
 			var currentMinion = this.minions[0];
 			if ((currentMinion) && (!currentMinion.destroyed)) {
 				currentMinion.destroyed = true;
@@ -143,13 +148,14 @@ define([
 			}
 		},
 
-		unlearn: function() {
+		unlearn: function () {
 			this.killMinion();
 		},
 
 		events: {
-			onAfterDeath: function(source) {
-				this.killMinion();
+			onAfterDeath: function (source) {
+				if (this.killMinionsOnDeath)
+					this.killMinion();
 			}
 		}
 	};

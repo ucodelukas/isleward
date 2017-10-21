@@ -62,6 +62,41 @@ define([
 
 					gatherer.reputation.getReputation('pumpkinSailor', 10);
 
+					var obj = gatherResult.obj;
+					var spellbook = obj.spellbook;
+					if (!spellbook) {
+						spellbook = obj.addComponent('spellbook');
+						spellbook.addSpell('summonSkeleton');
+						var spell = spellbook.spells[0];
+						spell.killMinionsOnDeath = false;
+						spell.hpPercent = 100;
+
+						obj.addComponent('stats', {
+							values: {
+								hpMax: 100000,
+								hp: 100000,
+								str: 10,
+								level: 5
+							}
+						});
+
+						obj.addComponent('aggro', {
+							faction: 'lordSquash'
+						});
+					}
+
+					spellbook.spells[0].cast({
+						target: {
+							x: obj.x - 1,
+							y: obj.y
+						}
+					});
+					var summoned = spellbook.spells[0].minions[0];
+					summoned.aggro.list.push({
+						obj: gatherer,
+						threat: 1
+					});
+
 					for (var g in gatherDrops) {
 						if (Math.random() < gatherDrops[g]) {
 							var drop = extend(true, {}, dropsConfig[g]);
