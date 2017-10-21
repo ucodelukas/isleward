@@ -222,7 +222,9 @@ define([
 
 		onGetCustomChannels: function(data, character, result) {
 			this.customChannels = JSON.parse(result || '[]');
-			
+
+			character.components.find(c => (c.type == 'social')).customChannels = this.customChannels;
+	
 			if (this.customChannels != null)
 				data.callback(character);
 			

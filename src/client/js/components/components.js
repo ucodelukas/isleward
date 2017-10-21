@@ -30,7 +30,8 @@ var components = [
 	'trade',
 	'prophecies',
 	'reputation',
-	'serverActions'
+	'serverActions',
+	'social'
 ].map(function(c) {
 	return 'js/components/' + c;
 });
