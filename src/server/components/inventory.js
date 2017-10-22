@@ -356,6 +356,20 @@ define([
 
 		//Helpers
 
+		setItemPosition: function (id) {
+			var item = this.findItem(id);
+			if (!item)
+				return;
+
+			var iSize = this.inventorySize;
+			for (var i = 0; i < iSize; i++) {
+				if (!this.items.some(j => (j.pos == i))) {
+					item.pos = i;
+					break;
+				}
+			}
+		},
+
 		resolveCallback: function (msg, result) {
 			var callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
 			result = result || [];
