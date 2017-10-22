@@ -5,7 +5,7 @@ define([
 	'html!ui/templates/characters/template',
 	'html!ui/templates/characters/templateListItem',
 	'css!ui/templates/characters/styles'
-], function(
+], function (
 	events,
 	client,
 	uiFactory,
@@ -27,7 +27,7 @@ define([
 			cleric: [4, 0]
 		},
 
-		postRender: function() {
+		postRender: function () {
 			this.find('.btnPlay').on('click', this.onPlayClick.bind(this));
 			this.find('.btnNew').on('click', this.onNewClick.bind(this));
 			this.find('.btnDelete')
@@ -37,7 +37,7 @@ define([
 			this.getCharacters();
 		},
 
-		onPlayClick: function() {
+		onPlayClick: function () {
 			var char = this.selected;
 			if (!char)
 				return;
@@ -53,18 +53,18 @@ define([
 				callback: this.onPlay.bind(this)
 			});
 		},
-		onPlay: function() {
+		onPlay: function () {
 			this.el.removeClass('disabled');
 			this.el.remove();
 			events.emit('onEnterGame');
 		},
 
-		onNewClick: function() {
+		onNewClick: function () {
 			uiFactory.build('createCharacter', {});
 			this.el.remove();
 		},
 
-		getCharacters: function() {
+		getCharacters: function () {
 			this.el.addClass('disabled');
 
 			client.request({
@@ -73,7 +73,7 @@ define([
 				callback: this.onGetCharacters.bind(this)
 			});
 		},
-		onGetCharacters: function(characters) {
+		onGetCharacters: function (characters) {
 			this.find('.sprite').css('background', '');
 			this.find('.info div').html('');
 
@@ -83,10 +83,10 @@ define([
 				.empty();
 
 			characters
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					return (b.level - a.level);
 				})
-				.forEach(function(c, i) {
+				.forEach(function (c, i) {
 					var name = c.name;
 					if (c.level != null)
 						name += '<font class="q2"> (' + c.level + ')</font>'
@@ -103,7 +103,7 @@ define([
 						li.click();
 				}, this);
 		},
-		onCharacterClick: function(name, e) {
+		onCharacterClick: function (name, e) {
 			this.el.addClass('disabled');
 
 			var el = $(e.target);
@@ -126,23 +126,25 @@ define([
 				callback: this.onGetCharacter.bind(this, name)
 			});
 		},
-		onGetCharacter: function(name, result) {
+		onGetCharacter: function (name, result) {
 			this.find('.button').removeClass('disabled');
 
 			var spriteY = ~~(result.cell / 8);
 			var spirteX = result.cell - (spriteY * 8);
 
-			spirteX = -(spirteX * 32);
-			spriteY = -(spriteY * 32);
+			spirteX = -(spirteX * 8);
+			spriteY = -(spriteY * 8);
 
-			var spritesheet = result.previewSpritesheet || '../../../images/charas.png';
+			var spritesheet = result.sheetName;
+			if (spritesheet == 'characters')
+				spritesheet = '../../../images/characters.png';
 
 			this.find('.sprite')
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px')
 				.show();
 
 			this.find('.name').html(name);
-			var stats = result.components.find(function(c) {
+			var stats = result.components.find(function (c) {
 				return (c.type == 'stats');
 			});
 			if (stats) {
@@ -151,8 +153,7 @@ define([
 					' ' +
 					result.class[0].toUpperCase() + result.class.substr(1)
 				);
-			}
-			else {
+			} else {
 				this.find('.class').html('');
 			}
 
@@ -161,7 +162,7 @@ define([
 			this.characterInfo[name] = result;
 			this.selected = name;
 
-			var prophecies = result.components.find(function(c) {
+			var prophecies = result.components.find(function (c) {
 				return (c.type == 'prophecies');
 			});
 
@@ -176,18 +177,18 @@ define([
 			}
 		},
 
-		setMessage: function(msg) {
+		setMessage: function (msg) {
 			this.find('.message').html(msg);
 		},
 
-		onDeleteClick: function() {
+		onDeleteClick: function () {
 			if (!this.selected)
 				return;
 
 			if (this.deleteCount < 3) {
 				this.deleteCount++;
 
-				this.setMessage('click delete ' + (4 - this.deleteCount) +  ' more time' + ((this.deleteCount == 3) ? '' : 's') + ' to confirm');
+				this.setMessage('click delete ' + (4 - this.deleteCount) + ' more time' + ((this.deleteCount == 3) ? '' : 's') + ' to confirm');
 
 				this.find('.btnDelete')
 					.removeClass('deleting')
@@ -210,7 +211,7 @@ define([
 			});
 		},
 
-		onDeleteReset: function() {
+		onDeleteReset: function () {
 			this.setMessage('');
 			this.deleteCount = 0;
 			this.find('.btnDelete')

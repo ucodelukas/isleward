@@ -6,7 +6,7 @@ define([
 	'leaderboard/leaderboard',
 	'config/skins',
 	'misc/profanities'
-], function(
+], function (
 	bcrypt,
 	io,
 	messages,
@@ -24,7 +24,9 @@ define([
 		characterList: [],
 		stash: null,
 
-		play: function(data) {
+		customChannels: [],
+
+		play: function (data) {
 			if (this.username == null)
 				return;
 
@@ -47,7 +49,7 @@ define([
 			leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 		},
 
-		doSave: function(extensionObj) {
+		doSave: function (extensionObj) {
 			var simple = this.obj.getSimple(true, true);
 			simple.components.spliceWhere(c => c.type == 'stash');
 			//Don't save modified stat values
@@ -74,7 +76,7 @@ define([
 
 			//Calculate and store the ttl for effects
 			var time = +new Date;
-			simple.components.find(e => e.type == 'effects').effects.forEach(function(e) {
+			simple.components.find(e => e.type == 'effects').effects.forEach(function (e) {
 				e.expire = time + (e.ttl * 350);
 			});
 
@@ -101,7 +103,7 @@ define([
 			});
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return {
 				type: 'auth',
 				username: this.username,
@@ -110,7 +112,7 @@ define([
 			};
 		},
 
-		getCharacterList: function(data) {
+		getCharacterList: function (data) {
 			if (this.username == null)
 				return;
 
@@ -120,7 +122,7 @@ define([
 				callback: this.onGetCharacterList.bind(this, data)
 			});
 		},
-		onGetCharacterList: function(data, result) {
+		onGetCharacterList: function (data, result) {
 			var characters = JSON.parse(result || '[]');
 			this.characterList = characters;
 
@@ -133,25 +135,47 @@ define([
 			data.callback(result);
 		},
 
-		getCharacter: function(data) {
+		getCharacter: function (data) {
 			io.get({
 				ent: data.data.name,
 				field: 'character',
 				callback: this.onGetCharacter.bind(this, data)
 			});
 		},
-		onGetCharacter: function(data, result) {
+		onGetCharacter: function (data, result) {
 			if (result) {
 				result = result.split('`').join(`'`);
 				result = result.replace(/''+/g, '\'');
 			}
+
 			var character = JSON.parse(result || '{}');
+			//Hack for old characters
+			if (!character.skinId) {
+				character.skinId = character.class + ' 1';
+			}
+			character.cell = skins.getCell(character.skinId);
+			character.sheetName = skins.getSpritesheet(character.skinId);
+
 			this.characters[data.data.name] = character;
 
 			this.getCustomChannels(data, character);
 		},
 
-		getStash: function(data, character) {
+		getCustomChannels: function (data, character) {
+			io.get({
+				ent: character.name,
+				field: 'customChannels',
+				callback: this.onGetCustomChannels.bind(this, data, character)
+			});
+		},
+
+		onGetCustomChannels: function (data, character, result) {
+			this.customChannels = JSON.parse(result || '[]');
+
+			this.getStash(data, character);
+		},
+
+		getStash: function (data, character) {
 			io.get({
 				ent: this.username,
 				field: 'stash',
@@ -159,7 +183,7 @@ define([
 			});
 		},
 
-		onGetStash: function(data, character, result) {
+		onGetStash: function (data, character, result) {
 			this.stash = JSON.parse(result || '[]');
 
 			if (this.skins != null)
@@ -170,7 +194,7 @@ define([
 			}
 		},
 
-		getSkins: function(msg) {
+		getSkins: function (msg) {
 			io.get({
 				ent: this.username,
 				field: 'skins',
@@ -178,14 +202,14 @@ define([
 			});
 		},
 
-		onGetSkins: function(msg, result) {
+		onGetSkins: function (msg, result) {
 			this.skins = JSON.parse(result || '[]');
 			var skinList = skins.getSkinList(this.skins);
 
 			msg.callback(skinList);
 		},
 
-		saveSkin: function(skinId) {
+		saveSkin: function (skinId) {
 			if (!this.skins) {
 				this.getSkins({
 					callback: this.saveSkin.bind(this, skinId)
@@ -204,34 +228,15 @@ define([
 			});
 		},
 
-		onSaveSkin: function() {
+		onSaveSkin: function () {
 
 		},
 
-		doesOwnSkin: function(skinId) {
+		doesOwnSkin: function (skinId) {
 			return this.skins.some(s => s == skinId);
 		},
 
-		getCustomChannels: function(data, character) {
-			io.get({
-				ent: character.name,
-				field: 'customChannels',
-				callback: this.onGetCustomChannels.bind(this, data, character)
-			});
-		},
-
-		onGetCustomChannels: function(data, character, result) {
-			this.customChannels = JSON.parse(result || '[]');
-
-			character.components.find(c => (c.type == 'social')).customChannels = this.customChannels;
-	
-			if (this.customChannels != null)
-				data.callback(character);
-			
-			this.getStash(data, character);
-		},
-
-		login: function(msg) {
+		login: function (msg) {
 			var credentials = msg.data;
 
 			if ((credentials.username == '') | (credentials.password == '')) {
@@ -247,12 +252,12 @@ define([
 				callback: this.onHashCompare.bind(this, msg)
 			});
 		},
-		onHashCompare: function(msg, storedPassword) {
+		onHashCompare: function (msg, storedPassword) {
 			var credentials = msg.data;
 
 			bcrypt.compare(credentials.password, storedPassword, this.onLogin.bind(this, msg, storedPassword));
 		},
-		onLogin: function(msg, storedPassword, err, compareResult) {
+		onLogin: function (msg, storedPassword, err, compareResult) {
 			if (!storedPassword)
 				msg.callback(messages.login.incorrect);
 			else {
@@ -264,24 +269,24 @@ define([
 					msg.callback(messages.login.incorrect);
 			}
 		},
-		onUnhashedLogin: function(msg) {
+		onUnhashedLogin: function (msg) {
 			bcrypt.hash(msg.data.password, null, null, this.onPasswordHashed.bind(this, msg));
 		},
-		onPasswordHashed: function(msg, err, hashedPassword) {
+		onPasswordHashed: function (msg, err, hashedPassword) {
 			io.set({
 				ent: msg.data.username,
 				field: 'login',
 				value: hashedPassword,
 				callback: this.onLoginVerified.bind(this, msg)
-            });
+			});
 		},
-		onLoginVerified: function(msg) {
+		onLoginVerified: function (msg) {
 			this.username = msg.data.username;
 			connections.logOut(this.obj);
 			msg.callback();
 		},
 
-		register: function(msg) {
+		register: function (msg) {
 			var credentials = msg.data;
 
 			if ((credentials.username == '') || (credentials.password == '')) {
@@ -308,7 +313,7 @@ define([
 				callback: this.onCheckExists.bind(this, msg)
 			});
 		},
-		onCheckExists: function(msg, result) {
+		onCheckExists: function (msg, result) {
 			if (result) {
 				msg.callback(messages.login.exists);
 				return;
@@ -318,7 +323,7 @@ define([
 
 			bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 		},
-		onHashGenerated: function(msg, err, hashedPassword) {
+		onHashGenerated: function (msg, err, hashedPassword) {
 			io.set({
 				ent: msg.data.username,
 				field: 'login',
@@ -326,7 +331,7 @@ define([
 				callback: this.onRegister.bind(this, msg)
 			});
 		},
-		onRegister: function(msg, result) {
+		onRegister: function (msg, result) {
 			io.set({
 				ent: msg.data.username,
 				field: 'characterList',
@@ -334,13 +339,13 @@ define([
 				callback: this.onCreateCharacterList.bind(this, msg)
 			});
 		},
-		onCreateCharacterList: function(msg, result) {
+		onCreateCharacterList: function (msg, result) {
 			this.username = msg.data.username;
 			connections.logOut(this.obj);
 			msg.callback();
 		},
 
-		createCharacter: function(msg) {
+		createCharacter: function (msg) {
 			var data = msg.data;
 
 			if ((data.name.length < 3) || (data.name.length > 12)) {
@@ -359,7 +364,7 @@ define([
 				callback: this.onCheckCharacterExists.bind(this, msg)
 			});
 		},
-		onCheckCharacterExists: function(msg, result) {
+		onCheckCharacterExists: function (msg, result) {
 			if (result) {
 				msg.callback(messages.login.charExists);
 				return;
@@ -368,11 +373,11 @@ define([
 			var data = msg.data;
 
 			this.obj.name = data.name;
+			this.obj.skinId = data.skinId;
 			this.obj.class = data.class;
-			this.obj.costume = data.costume;
 
-			this.obj.cell = skins.getCell(this.obj.class, this.obj.costume);
-			this.obj.previewSpritesheet = skins.getSpritesheet(this.obj.class);
+			this.obj.cell = skins.getCell(this.obj.skinId);
+			this.obj.sheetName = skins.getSpritesheet(this.obj.skinId);
 
 			var simple = this.obj.getSimple(true);
 			simple.components.push({
@@ -387,13 +392,17 @@ define([
 				callback: this.onCreateCharacter.bind(this, msg)
 			});
 		},
-		onCreateCharacter: function(msg, result) {
+		onCreateCharacter: function (msg, result) {
 			var name = msg.data.name;
 
 			var simple = this.obj.getSimple(true);
 			simple.components.push({
 				type: 'prophecies',
 				list: msg.data.prophecies || []
+			});
+			simple.components.push({
+				type: 'social',
+				customChannels: this.customChannels
 			});
 
 			this.characters[name] = simple;
@@ -406,7 +415,7 @@ define([
 			});
 		},
 
-		deleteCharacter: function(msg) {
+		deleteCharacter: function (msg) {
 			var data = msg.data;
 
 			if ((!data.name) || (!this.username))
@@ -423,7 +432,7 @@ define([
 				callback: this.onDeleteCharacter.bind(this, msg)
 			});
 		},
-		onDeleteCharacter: function(msg, result) {
+		onDeleteCharacter: function (msg, result) {
 			this.characterList.spliceWhere(c => ((c.name == msg.data.name) || (c == msg.data.name)));
 			var characterList = this.characterList
 				.map(c => ({
@@ -440,11 +449,11 @@ define([
 
 			leaderboard.deleteCharacter(msg.data.name);
 		},
-		onRemoveFromList: function(msg, result) {
+		onRemoveFromList: function (msg, result) {
 			msg.callback(this.characterList);
 		},
 
-		onAppendList: function(msg, result) {
+		onAppendList: function (msg, result) {
 			this.play({
 				data: {
 					name: msg.data.name
@@ -453,7 +462,7 @@ define([
 			});
 		},
 
-		permadie: function() {
+		permadie: function () {
 			this.obj.permadead = true;
 
 			this.doSave({
@@ -462,7 +471,7 @@ define([
 			});
 		},
 
-		onPermadie: function() {
+		onPermadie: function () {
 			process.send({
 				method: 'object',
 				serverId: this.obj.serverId,

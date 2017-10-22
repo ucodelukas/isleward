@@ -1,6 +1,6 @@
 define([
 	'misc/events'
-], function(
+], function (
 	events
 ) {
 	var config = {
@@ -61,29 +61,32 @@ define([
 	};
 
 	return {
-		init: function() {
+		init: function () {
 			events.emit('onBeforeGetSkins', config);
 		},
 
-		getBlueprint: function(skinId) {
+		getBlueprint: function (skinId) {
 			return config[skinId];
 		},
 
-		getSkinList: function(skins) {
+		getSkinList: function (skins) {
 			var list = Object.keys(config)
-				.filter(function(s) {
+				.filter(function (s) {
 					return ((config[s].default) || (skins.some(f => (f == s))));
 				})
-				.map(function(s) {
-					return config[s];
+				.map(function (s) {
+					var res = extend(true, {}, config[s]);
+					res.id = s;
+					return res;
 				});
 
 			var result = {};
-			list.forEach(function(l) {
+			list.forEach(function (l) {
 				if (!result[l.class])
 					result[l.class] = [];
 
 				result[l.class].push({
+					id: l.id,
 					sprite: l.sprite[0] + ',' + l.sprite[1],
 					spritesheet: l.spritesheet
 				});
@@ -92,26 +95,14 @@ define([
 			return result;
 		},
 
-		getCell: function(className, costume) {
-			var res = Object.keys(config)
-				.filter(function(s) {
-					return (config[s].class == className);
-				})
-				.map(function(s) {
-					return config[s];
-				})[costume];
-
-			return (res.sprite[1] * 8) + res.sprite[0];
+		getCell: function (skinId) {
+			var skin = config[skinId];
+			return (skin.sprite[1] * 8) + skin.sprite[0];
 		},
 
-		getSpritesheet: function(className) {
-			return Object.keys(config)
-				.filter(function(s) {
-					return (config[s].class == className);
-				})
-				.map(function(s) {
-					return config[s];
-				})[0].spritesheet;
+		getSpritesheet: function (skinId) {
+			var skin = config[skinId];
+			return skin.spritesheet || 'characters';
 		}
 	};
 });

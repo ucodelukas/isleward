@@ -30,6 +30,7 @@ define([
 	];
 
 	return {
+		customChannels: [],
 		roleLevel: null,
 
 		init: function (blueprint) {
@@ -278,7 +279,7 @@ define([
 
 		//custom channels
 		isInChannel: function (character, channel) {
-			return character.auth.customChannels.some(c => (c == channel));
+			return character.auth.some(c => (c == channel));
 		}
 	};
 });

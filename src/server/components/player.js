@@ -2,7 +2,7 @@ define([
 	'world/atlas',
 	'config/classes',
 	'config/roles'
-], function(
+], function (
 	atlas,
 	classes,
 	roles
@@ -14,7 +14,7 @@ define([
 		cdSave: 1000,
 		cdSaveMax: 1000,
 
-		update: function() {
+		update: function () {
 			if (this.cdSave > 0)
 				this.cdSave--;
 			else {
@@ -23,14 +23,13 @@ define([
 			}
 		},
 
-		spawn: function(character, cb) {
+		spawn: function (character, cb) {
 			var obj = this.obj;
 
 			extend(true, obj, {
-				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,
-				previewSpritesheet: character.previewSpritesheet || null,
+				sheetName: character.sheetName,
 				name: character.name,
 				class: character.class,
 				zoneName: character.zoneName || 'tutorial',
@@ -90,7 +89,7 @@ define([
 			if (blueprintEffects.effects) {
 				//Calculate ttl of effects
 				var time = +new Date;
-				blueprintEffects.effects.filter(function(e) {
+				blueprintEffects.effects.filter(function (e) {
 					var remaining = e.expire - time;
 					if (remaining < 0)
 						return false;
@@ -122,7 +121,7 @@ define([
 			cb();
 		},
 
-		broadcastSelf: function() {
+		broadcastSelf: function () {
 			var obj = this.obj;
 
 			var self = {
@@ -138,17 +137,17 @@ define([
 			});
 		},
 
-		hasSeen: function(id) {
+		hasSeen: function (id) {
 			return (this.seen.indexOf(id) > -1);
 		},
-		see: function(id) {
+		see: function (id) {
 			this.seen.push(id);
 		},
-		unsee: function(id) {
+		unsee: function (id) {
 			this.seen.spliceWhere(s => s == id);
 		},
 
-		die: function(source, permadeath) {
+		die: function (source, permadeath) {
 			this.obj.clearQueue();
 
 			var physics = this.obj.instance.physics;
@@ -191,23 +190,23 @@ define([
 			this.obj.aggro.move();
 		},
 
-		move: function(msg) {
+		move: function (msg) {
 			atlas.queueAction(this.obj, {
 				action: 'move',
 				data: msg.data
 			});
 		},
-		moveList: function(msg) {
+		moveList: function (msg) {
 			atlas.queueAction(this.obj, {
 				action: 'move',
 				list: true,
 				data: msg.data
 			});
 		},
-		queueAction: function(msg) {
+		queueAction: function (msg) {
 			atlas.queueAction(this.obj, msg.data);
 		},
-		performAction: function(msg) {
+		performAction: function (msg) {
 			if (msg.callback)
 				msg.data.data.callbackId = atlas.registerCallback(msg.callback);
 

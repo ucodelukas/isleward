@@ -30,18 +30,19 @@ define([
 			(blueprint.forceItems || []).forEach(function (f, i) {
 				var item = extend(true, {}, f);
 
-				if (item.type == 'skin') {
-					var skinBlueprint = skins.getBlueprint(item.id);
-					item.name = skinBlueprint.name;
-					item.sprite = skinBlueprint.sprite;
-					item.spritesheet = skinBlueprint.spritesheet;
-				}
-
 				var id = 0;
 				this.items.forEach(function (checkItem) {
 					if (checkItem.id >= id)
 						id = checkItem.id + 1;
 				});
+
+				if (item.type == 'skin') {
+					var skinBlueprint = skins.getBlueprint(item.id);
+					item.name = skinBlueprint.name;
+					item.sprite = skinBlueprint.sprite;
+					item.spritesheet = skinBlueprint.spritesheet;
+					id = item.id;
+				}
 
 				item.id = id;
 
