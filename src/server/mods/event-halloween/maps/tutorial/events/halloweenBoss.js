@@ -5,7 +5,7 @@ define([
 ) {
 	return {
 		name: `Beware Lord Squash`,
-		description: `Lord Squash haunts the south-western shore. Stop him in the name of the Pumpkin Sailor.`,
+		description: `Lord Squash haunts the island. Stop him in the name of the Pumpkin Sailor.`,
 		distance: -1,
 		cron: '0 */2 * * *',
 
