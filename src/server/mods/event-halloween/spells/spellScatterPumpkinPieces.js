@@ -9,7 +9,7 @@ define([
 		caster: null,
 		isRotten: false,
 
-		ttl: 45,
+		ttl: 250,
 
 		update: function () {
 			this.ttl--;
@@ -84,7 +84,7 @@ define([
 
 			var ttl = (Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed) - 50;
 
-			var isRotten = (Math.random() < 0.5);
+			var isRotten = (Math.random() < 0.3);
 			var particles = null;
 			if (!isRotten) {
 				particles = {

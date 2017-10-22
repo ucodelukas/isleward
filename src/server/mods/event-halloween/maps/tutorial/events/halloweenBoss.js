@@ -30,8 +30,8 @@ define([
 				cell: 0,
 				sheetName: `server/mods/event-halloween/images/bosses.png`,
 				id: 'lordSquash',
-				hpMult: 25,
-				dmgMult: 0.25,
+				hpMult: 55,
+				dmgMult: 40,
 				grantRep: {
 					pumpkinSailor: 2000
 				},
@@ -96,6 +96,7 @@ define([
 					type: 'projectile',
 					row: 3,
 					col: 4,
+					shootAll: true,
 					particles: {
 						color: {
 							start: ['51fc9a', '48edff'],
