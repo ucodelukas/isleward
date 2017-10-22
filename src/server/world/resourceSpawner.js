@@ -151,6 +151,9 @@ define([
 				quality: 0
 			};
 
+			if (blueprint.itemSheet)
+				item.spritesheet = blueprint.itemSheet;
+
 			if (blueprint.type == 'fish')
 				item.noStack = true;
 

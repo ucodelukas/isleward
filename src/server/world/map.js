@@ -4,14 +4,16 @@ define([
 	'world/spawners',
 	'world/resourceSpawner',
 	'config/zoneBase',
-	'world/randomMap'
+	'world/randomMap',
+	'misc/events'
 ], function(
 	objects,
 	physics,
 	spawners,
 	resourceSpawner,
 	globalZone,
-	randomMap
+	randomMap,
+	events
 ) {
 	var mapFile = null;
 	var mapscale = 38;
@@ -75,10 +77,12 @@ define([
 			try {
 				dialogues = require('../config/maps/' + this.name + '/dialogues');
 			} catch (e) {}
-			if (dialogues)
+			events.emit('onBeforeGetDialogue', this.name, dialogues);
+			if (dialogues) 
 				this.zone.dialogues = dialogues;
 
 			this.zone = extend(true, {}, globalZone, this.zone);
+			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var resources = this.zone.resources || {};
 			for (var r in resources) {
@@ -218,6 +222,15 @@ define([
 					continue;
 
 				var data = layer.data || layer.objects;
+				var firstItem = data[0];
+				if ((firstItem) && (firstItem.width != null)) {
+					var info = {
+						map: this.name,
+						layer: layerName,
+						objects: data
+					};
+					events.emit('onAfterGetLayerObjects', info);
+				}
 
 				var len = data.length;
 				for (var j = 0; j < len; j++) {
@@ -225,8 +238,20 @@ define([
 
 					if ((cell.gid) || (cell.id))
 						builders.object(layerName, cell, j);
-					else
-						builders.tile(layerName, cell, j);
+					else {
+						var y = ~~(j / this.size.w);
+						var x = j - (y * this.size.w);
+
+						var info = {
+							map: this.name,
+							layer: layerName,
+							cell: cell,
+							x: x,
+							y: y
+						};
+						events.emit('onBeforeBuildLayerTile', info);
+						builders.tile(layerName, info.cell, j);
+					}
 				}
 			}
 		},

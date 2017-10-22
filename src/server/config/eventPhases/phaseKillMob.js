@@ -1,7 +1,7 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	var cpnDeathStopper = {
 		type: 'deathStopper',
@@ -9,7 +9,7 @@ define([
 		end: false,
 
 		events: {
-			beforeTakeDamage: function(damage, source) {
+			beforeTakeDamage: function (damage, source) {
 				var statValues = this.obj.stats.values;
 				var minHp = statValues.hpMax * this.percentage;
 				if (statValues.hp - damage.amount < minHp) {
@@ -23,9 +23,9 @@ define([
 	return {
 		mobs: null,
 
-		init: function() {
+		init: function () {
 			if (!this.mobs.push)
-				this.mobs = [ this.mobs ];
+				this.mobs = [this.mobs];
 
 			var mobs = this.mobs;
 			var percentage = this.percentage;
@@ -50,7 +50,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var mobs = this.mobs;
 			var mLen = mobs.length;
 			for (var i = 0; i < mLen; i++) {
@@ -71,6 +71,6 @@ define([
 
 			if (mobs.length == 0)
 				this.end = true;
-		}	
+		}
 	};
 });

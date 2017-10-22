@@ -1,7 +1,7 @@
 define([
-	'../objects/objBase',
-	'../leaderboard/leaderboard'
-], function(
+	'objects/objBase',
+	'leaderboard/leaderboard'
+], function (
 	objBase,
 	leaderboard
 ) {
@@ -10,16 +10,16 @@ define([
 
 		objects: [],
 
-		init: function(_instance) {
+		init: function (_instance) {
 			this.instance = _instance;
 			this.physics = this.instance.physics;
 		},
 
-		getNextId: function() {
+		getNextId: function () {
 			return this.nextId++;
 		},
 
-		build: function(skipPush, clientObj) {
+		build: function (skipPush, clientObj) {
 			var o = extend(true, {}, objBase);
 
 			if (clientObj)
@@ -36,7 +36,7 @@ define([
 			return o;
 		},
 
-		transferObject: function(o) {
+		transferObject: function (o) {
 			var obj = this.build();
 
 			var components = o.components;
@@ -64,7 +64,7 @@ define([
 			return obj;
 		},
 
-		buildObjects: function(list, skipPush) {
+		buildObjects: function (list, skipPush) {
 			var lLen = list.length;
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
@@ -86,9 +86,9 @@ define([
 				//Add components (certain ones need to happen first)
 				//TODO: Clean this part up
 				var properties = extend(true, {}, l.properties);
-				['cpnMob'].forEach(function(c) {
+				['cpnMob'].forEach(function (c) {
 					var blueprint = properties[c] || null;
-					if ((blueprint) && (typeof(blueprint) == 'string'))
+					if ((blueprint) && (typeof (blueprint) == 'string'))
 						blueprint = JSON.parse(blueprint);
 
 					if (!blueprint)
@@ -110,7 +110,7 @@ define([
 					var type = p.replace('cpn', '');
 					type = type[0].toLowerCase() + type.substr(1);
 					var blueprint = properties[p] || null;
-					if ((blueprint) && (typeof(blueprint) == 'string'))
+					if ((blueprint) && (typeof (blueprint) == 'string'))
 						blueprint = JSON.parse(blueprint);
 
 					obj.addComponent(type, blueprint);
@@ -139,11 +139,11 @@ define([
 			}
 		},
 
-		find: function(callback) {
+		find: function (callback) {
 			return this.objects.find(callback);
 		},
 
-		removeObject: function(obj, callback, useServerId) {
+		removeObject: function (obj, callback, useServerId) {
 			var objects = this.objects;
 			var oLen = objects.length
 			var found = null;
@@ -174,7 +174,7 @@ define([
 			callback && callback(found);
 		},
 
-		addObject: function(o, callback) {
+		addObject: function (o, callback) {
 			var newO = this.build(true);
 
 			var components = o.components;
@@ -204,7 +204,7 @@ define([
 
 			return newO;
 		},
-		sendEvent: function(msg) {
+		sendEvent: function (msg) {
 			var player = this.objects.find(p => p.id == msg.id);
 			if (!player)
 				return;
@@ -214,7 +214,7 @@ define([
 				data: msg.data.data
 			});
 		},
-		sendEvents: function(msg) {
+		sendEvents: function (msg) {
 			var players = {};
 			var objects = this.objects;
 
@@ -249,8 +249,7 @@ define([
 							var eventList = player.events[e] || (player.events[e] = []);
 							eventList.push(obj);
 						}
-					}
-					else
+					} else
 						global[obj.module][obj.method](obj.msg);
 				}
 			}
@@ -260,7 +259,7 @@ define([
 				player.socket.emit('events', player.events);
 			}
 		},
-		updateObject: function(msg) {
+		updateObject: function (msg) {
 			var player = this.objects.find(p => p.id == msg.serverId);
 			if (!player)
 				return;
@@ -287,7 +286,7 @@ define([
 				});
 			}
 		},
-		update: function() {
+		update: function () {
 			var objects = this.objects;
 			var len = objects.length;
 
@@ -298,6 +297,8 @@ define([
 				//That's syncer's job
 				if ((o.update) && (!o.destroyed))
 					o.update();
+
+				o.fireEvent('afterTick');
 			}
 		}
 	};

@@ -1,9 +1,13 @@
 define([
-	
+	'misc/events'
 ], function(
-	
+	events
 ) {
 	return {
+		init: function() {
+			events.emit('onBeforeGetHerbConfig', this);
+		},
+
 		Moonbell: {
 			sheetName: 'tiles',
 			cell: 50,

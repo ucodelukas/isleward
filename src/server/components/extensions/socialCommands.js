@@ -4,14 +4,16 @@ define([
 	'items/generator',
 	'misc/random',
 	'items/config/slots',
-	'security/io'
-], function(
+	'security/io',
+	'config/factions'
+], function (
 	roles,
 	atlas,
 	generator,
 	random,
 	configSlots,
-	io
+	io,
+	factions
 ) {
 	var commandRoles = {
 		join: 0,
@@ -30,7 +32,7 @@ define([
 	return {
 		roleLevel: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if (this.customChannels) {
 				this.customChannels = this.customChannels
 					.filter((c, i) => (this.customChannels.indexOf(c) == i));
@@ -39,7 +41,7 @@ define([
 			this.roleLevel = roles.getRoleLevel(this.obj);
 		},
 
-		onBeforeChat: function(msg) {
+		onBeforeChat: function (msg) {
 			var messageText = msg.message;
 			if (messageText[0] != '/')
 				return;
@@ -58,7 +60,7 @@ define([
 			if ((messageText.length == 1) && (messageText[0].indexOf('=') == -1))
 				config = messageText[0];
 			else {
-				messageText.forEach(function(m) {
+				messageText.forEach(function (m) {
 					m = m.split('=');
 					config[m[0]] = m[1];
 				});
@@ -76,7 +78,7 @@ define([
 		},
 
 		//actions
-		join: function(value) {
+		join: function (value) {
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
@@ -110,7 +112,7 @@ define([
 			});
 		},
 
-		leave: function(value) {
+		leave: function (value) {
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
@@ -154,9 +156,9 @@ define([
 			});
 		},
 
-		getItem: function(config) {
+		getItem: function (config) {
 			if (config.slot == 'set') {
-				configSlots.slots.forEach(function(s) {
+				configSlots.slots.forEach(function (s) {
 					if (s == 'tool')
 						return;
 
@@ -196,11 +198,11 @@ define([
 				item.noSalvage = true;
 			}
 
-			factions.forEach(function(f) {
+			factions.forEach(function (f) {
 				if (f == '')
 					return;
 
-				var faction = require('./config/factions/' + f);
+				var faction = factions.getFaction(f);
 				faction.uniqueStat.generate(item);
 
 				item.factions = [];
@@ -213,12 +215,12 @@ define([
 			this.obj.inventory.getItem(item);
 		},
 
-		getGold: function(amount) {
+		getGold: function (amount) {
 			this.obj.trade.gold += ~~amount;
 			this.obj.syncer.set(true, 'trade', 'gold', this.obj.trade.gold);
 		},
 
-		setLevel: function(level) {
+		setLevel: function (level) {
 			var obj = this.obj;
 			var syncer = obj.syncer;
 
@@ -248,7 +250,7 @@ define([
 			stats.calcXpMax();
 		},
 
-		godMode: function() {
+		godMode: function () {
 			var obj = this.obj;
 
 			var statValues = obj.stats.values;
@@ -275,7 +277,7 @@ define([
 		},
 
 		//custom channels
-		isInChannel: function(character, channel) {
+		isInChannel: function (character, channel) {
 			return character.auth.customChannels.some(c => (c == channel));
 		}
 	};

@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -16,12 +16,14 @@ define([
 			y: 0
 		},
 
+		noNeedMaster: false,
+
 		fGetHighest: {
 			inCombat: null,
 			outOfCombat: null
 		},
 
-		bindEvents: function() {
+		bindEvents: function () {
 			var master = this.master;
 			this.lastMasterPos.x = master.x;
 			this.lastMasterPos.y = master.y;
@@ -32,7 +34,7 @@ define([
 			this.fGetHighest.outOfCombat = this.returnNoAggro.bind(this);
 		},
 
-		returnNoAggro: function() {
+		returnNoAggro: function () {
 			var master = this.master;
 			var obj = this.obj;
 			var mob = obj.mob;
@@ -43,7 +45,7 @@ define([
 			return null;
 		},
 
-		despawn: function() {
+		despawn: function () {
 			var obj = this.obj;
 
 			obj.destroyed = true;
@@ -58,7 +60,7 @@ define([
 			});
 		},
 
-		teleport: function() {
+		teleport: function () {
 			var obj = this.obj;
 			var physics = obj.instance.physics;
 			var syncer = obj.syncer;
@@ -67,7 +69,7 @@ define([
 			var newPosition = physics.getOpenCellInArea(master.x - 1, master.y - 1, master.x + 1, master.y + 1);
 			if (!newPosition)
 				return;
-			
+
 			physics.removeObject(obj, obj.x, obj.y);
 
 			obj.x = newPosition.x;
@@ -89,7 +91,7 @@ define([
 			});
 		},
 
-		update: function() {
+		update: function () {
 			if (this.lifetime > 0) {
 				this.lifetime--;
 				if (this.lifetime <= 0) {
@@ -101,7 +103,7 @@ define([
 			var obj = this.obj;
 			var master = this.master;
 
-			if (master.destroyed) {
+			if ((master.destroyed) && (!this.noNeedMaster)) {
 				this.despawn();
 				return;
 			}
@@ -137,7 +139,7 @@ define([
 			obj.aggro.getHighest = doMove ? this.fGetHighest.outOfCombat : this.fGetHighest.inCombat;
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return {
 				type: 'follower',
 				master: this.master.id

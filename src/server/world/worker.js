@@ -1,37 +1,64 @@
 var requirejs = require('requirejs');
 
 requirejs.config({
-    baseUrl: '',
-    nodeRequire: require
+	baseUrl: '',
+	nodeRequire: require
 });
 
 global.io = true;
 var instancer = null;
 
 requirejs([
-	'extend', 'misc/helpers', 'components/components', 'world/instancer', 'security/io', 'misc/mods'
+	'extend', 
+	'misc/helpers', 
+	'components/components', 
+	'world/instancer', 
+	'security/io', 
+	'misc/mods', 
+	'mtx/mtx', 
+	'config/animations', 
+	'config/skins',
+	'config/factions'
 ], function(
-	extend, helpers, components, _instancer, io, mods
+	extend, 
+	helpers, 
+	components, 
+	_instancer, 
+	io, 
+	mods, 
+	mtx,
+	animations,
+	skins,
+	factions
 ) {
 	var onDbReady = function() {
 		global.extend = extend;
 		global._ = helpers;
 		global.instancer = _instancer;
 		require('../misc/random');
-		
+
 		instancer = _instancer;
 
-		components.init(function() {
-			process.send({
-				method: 'onReady'
-			});
-		});
-
-		mods.init();
+		components.init(onCpnsReady);
 
 		setInterval(function() {
 			global.gc();
 		}, 60000);
+	};
+
+	var onCpnsReady = function() {
+		mods.init(onModsReady);
+	};
+
+	var onModsReady = function() {
+		factions.init();
+		skins.init();
+		mtx.init();
+		animations.init();
+
+		process.send({
+			method: 'onReady'
+		});
 	};
 
 	io.init(onDbReady);

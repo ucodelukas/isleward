@@ -1,33 +1,39 @@
 define([
 	'../config/eventPhases/phaseTemplate',
-	'fs'
-], function(
+	'fs',
+	'misc/events'
+], function (
 	phaseTemplate,
-	fs
+	fs,
+	events
 ) {
 	return {
 		configs: [],
 		nextId: 0,
 
-		init: function(instance) {
+		init: function (instance) {
 			this.instance = instance;
 
 			var path = 'config/maps/' + this.instance.map.name + '/events';
 			if (!fs.existsSync(path))
 				return;
 
-			var files = fs.readdirSync(path);
-			files.forEach(function(f) {
-				var e = require('../' + path + '/' + f);
+			var files = fs.readdirSync(path)
+				.map(f => ('../' + path + '/' + f));
+
+			events.emit('onBeforeGetEventList', this.instance.map.name, files);
+
+			files.forEach(function (f) {
+				var e = require(f);
 				if (!e.disabled)
 					this.configs.push(extend(true, {}, e));
 			}, this);
 		},
 
-		getEvent: function(name) {
+		getEvent: function (name) {
 			return this.configs.find(c => (c.name == name)).event.config;
 		},
-		setEventDescription: function(name, desc) {
+		setEventDescription: function (name, desc) {
 			var config = this.getEvent(name);
 			var event = config.event;
 			if (!event)
@@ -44,7 +50,7 @@ define([
 
 			event.participators.forEach(p => p.events.syncList());
 		},
-		setEventRewards: function(name, rewards) {
+		setEventRewards: function (name, rewards) {
 			var config = this.getEvent(name);
 			var event = config.event;
 			if (!event)
@@ -53,7 +59,7 @@ define([
 			event.rewards = rewards;
 			event.age = event.config.duration - 2;
 		},
-		setWinText: function(name, text) {
+		setWinText: function (name, text) {
 			var config = this.getEvent(name);
 			var event = config.event;
 			if (!event)
@@ -62,7 +68,7 @@ define([
 			event.winText = text;
 		},
 
-		update: function() {
+		update: function () {
 			var configs = this.configs;
 			if (!configs)
 				return;
@@ -88,7 +94,7 @@ define([
 			}
 		},
 
-		startEvent: function(config) {
+		startEvent: function (config) {
 			if (config.oldDescription)
 				config.description = config.oldDescription;
 
@@ -106,10 +112,10 @@ define([
 			return event;
 		},
 
-		giveRewards: function(config) {
+		giveRewards: function (config) {
 			var event = config.event;
 
-			config.event.participators.forEach(function(p) {
+			config.event.participators.forEach(function (p) {
 				var rList = [{
 					nameLike: 'Ancient Carp',
 					removeAll: true
@@ -129,14 +135,14 @@ define([
 				config.events.afterGiveRewards(this);
 		},
 
-		stopEvent: function(config) {
+		stopEvent: function (config) {
 			var event = config.event;
 
-			config.event.participators.forEach(function(p) {
+			config.event.participators.forEach(function (p) {
 				p.events.unregisterEvent(event);
 			}, this);
 
-			config.event.objects.forEach(function(o) {
+			config.event.objects.forEach(function (o) {
 				o.destroyed = true;
 
 				this.instance.syncer.queue('onGetObject', {
@@ -159,7 +165,7 @@ define([
 				});
 			}
 
-			event.phases.forEach(function(p) {
+			event.phases.forEach(function (p) {
 				if ((p.destroy) && (!p.destroyed)) {
 					p.destroyed = true;
 					p.destroy();
@@ -169,7 +175,7 @@ define([
 			delete config.event;
 		},
 
-		updateEvent: function(event) {
+		updateEvent: function (event) {
 			var objects = event.objects;
 			var oLen = objects.length;
 			for (var i = 0; i < oLen; i++) {
@@ -194,6 +200,7 @@ define([
 					} else {
 						if (!phase.auto)
 							stillBusy = true;
+
 						phase.update();
 					}
 				}
@@ -246,9 +253,14 @@ define([
 
 				event.nextPhase = i + 1;
 
-				if (!p.auto)
+				if (!p.auto) {
+					stillBusy = true;
 					break;
+				}
 			}
+
+			if ((event.nextPhase >= pLen) && (!stillBusy))
+				event.done = true;
 
 			var oList = this.instance.objects.objects;
 			var oLen = oList.length;
@@ -261,7 +273,7 @@ define([
 			}
 		},
 
-		getCloseEvents: function(obj) {
+		getCloseEvents: function (obj) {
 			var x = obj.x;
 			var y = obj.y;
 
@@ -279,6 +291,11 @@ define([
 					continue;
 
 				var distance = event.config.distance;
+				if (distance == -1) {
+					event.participators.push(obj);
+					result.push(event);
+					continue;
+				}
 
 				var objects = event.objects;
 				var oLen = objects.length;

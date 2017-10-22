@@ -5,7 +5,11 @@ define([
 	'components/components',
 	'leaderboard/leaderboard',
 	'security/io',
-	'misc/mods'
+	'misc/mods',
+	'mtx/mtx',
+	'config/animations',
+	'config/skins',
+	'config/factions'
 ], function(
 	globals,
 	server,
@@ -13,7 +17,11 @@ define([
 	components,
 	leaderboard,
 	io,
-	mods
+	mods,
+	mtx,
+	animations,
+	skins,
+	factions
 ) {
 	return {
 		init: function() {
@@ -25,11 +33,16 @@ define([
 				global.gc();
 			}, 60000);
 			
-			mods.init();
+			animations.init();
+			mods.init(this.onModsLoaded.bind(this));
+		},
+		onModsLoaded: function() {
 			globals.init();
 			components.init(this.onComponentsReady.bind(this));
 		},
 		onComponentsReady: function() {
+			skins.init();
+			factions.init();
 			server.init(this.onServerReady.bind(this));
 		},
 		onServerReady: function() {

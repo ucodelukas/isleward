@@ -108,10 +108,12 @@ define([
 					.appendTo(container);
 
 				var spritesheet = item.spritesheet || '../../../images/items.png';
-				if (item.material)
-					spritesheet = '../../../images/materials.png';
-				else if (item.quest)
-					spritesheet = '../../../images/questItems.png';
+				if (!item.spritesheet) {
+					if (item.material)
+						spritesheet = '../../../images/materials.png';
+					else if (item.quest)
+						spritesheet = '../../../images/questItems.png';
+				}
 
 				itemEl
 					.data('item', item)
@@ -127,6 +129,8 @@ define([
 				if (item.quantity)
 					itemEl.find('.quantity').html(item.quantity);
 				else if (item.eq)
+					itemEl.find('.quantity').html('EQ');
+				else if (item.active)
 					itemEl.find('.quantity').html('EQ');
 
 				if (item.eq)
@@ -262,6 +266,10 @@ define([
 					text: 'learn',
 					callback: this.performItemAction.bind(this, item, 'learnAbility')
 				},
+				activate: {
+					text: 'activate',
+					callback: this.performItemAction.bind(this, item, 'activateMtx')
+				},
 				equip: {
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
@@ -282,10 +290,15 @@ define([
 				menuItems.equip.text = 'unequip';
 			}
 
+			if (item.active)
+				menuItems.activate.text = 'deactivate';
+
 			var config = [];
 
 			if (item.ability)
 				config.push(menuItems.learn);
+			else if (item.type == 'mtx')
+				config.push(menuItems.activate);
 			else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
@@ -297,7 +310,7 @@ define([
 				}
 			}
 
-			if (!item.eq) {
+			if ((!item.eq) && (!item.active)) {
 				if (!item.quest) {
 					if ((window.player.stash.active) && (!item.noSalvage))
 						config.push(menuItems.stash);
@@ -425,7 +438,9 @@ define([
 		performItemAction: function(item, action) {
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > window.player.stats.values.level)))
+				return;
+			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
 			if ((item.factions) && (action == 'equip')) {
 				if (item.factions.some(function(f) {
@@ -468,8 +483,7 @@ define([
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHover();
-			}
-			else if (key == 'ctrl')
+			} else if (key == 'ctrl')
 				this.ctrlDown = true;
 		},
 		onKeyUp: function(key) {
@@ -477,8 +491,7 @@ define([
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHover();
-			}
-			else if (key == 'ctrl')
+			} else if (key == 'ctrl')
 				this.ctrlDown = false;
 		}
 	};

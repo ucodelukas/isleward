@@ -1,6 +1,6 @@
 define([
-	'../components/components'
-], function(
+	'components/components'
+], function (
 	components
 ) {
 	return {
@@ -8,7 +8,7 @@ define([
 
 		actionQueue: [],
 
-		addComponent: function(type, blueprint, isTransfer) {
+		addComponent: function (type, blueprint, isTransfer) {
 			var cpn = this[type];
 			if (!cpn) {
 				var template = components.components[type];
@@ -36,7 +36,7 @@ define([
 			return cpn;
 		},
 
-		removeComponent: function(type) {
+		removeComponent: function (type) {
 			var cpn = this[type];
 			if (!cpn)
 				return;
@@ -44,7 +44,7 @@ define([
 			cpn.destroyed = true;
 		},
 
-		extendComponent: function(ext, type, blueprint) {
+		extendComponent: function (ext, type, blueprint) {
 			var template = require('./components/extensions/' + type);
 			var cpn = this[ext];
 
@@ -56,17 +56,13 @@ define([
 			return cpn;
 		},
 
-		update: function() {
+		update: function () {
 			var usedTurn = false;
 
 			var components = this.components;
 			var len = components.length;
 			for (var i = 0; i < len; i++) {
 				var c = components[i];
-				if (c.update) {
-					if (c.update())
-						usedTurn = true;
-				}
 
 				if (c.destroyed) {
 					this.syncer.setSelfArray(false, 'removeComponents', c.type);
@@ -74,6 +70,9 @@ define([
 					delete this[c.type];
 					len--;
 					i--;
+				} else if (c.update) {
+					if (c.update())
+						usedTurn = true;
 				}
 			}
 
@@ -81,7 +80,7 @@ define([
 				this.performQueue();
 			}
 		},
-		getSimple: function(self, isSave) {
+		getSimple: function (self, isSave) {
 			var s = this.simplify(null, self, isSave);
 			if (this.instance)
 				s.zoneId = this.instance.zoneId;
@@ -98,7 +97,7 @@ define([
 
 			return s;
 		},
-		simplify: function(o, self, isSave) {
+		simplify: function (o, self, isSave) {
 			var result = {};
 			if (!o) {
 				result.components = [];
@@ -112,7 +111,7 @@ define([
 				if (value == null)
 					continue;
 
-				var type = typeof(value);
+				var type = typeof (value);
 
 				//build component
 				if (type == 'object') {
@@ -144,8 +143,7 @@ define([
 							if (component)
 								result.components.push(component);
 						}
-					}
-					else if (syncTypes.indexOf(p) > -1) {
+					} else if (syncTypes.indexOf(p) > -1) {
 						result[p] = value;
 					}
 				} else if (type != 'function')
@@ -154,7 +152,7 @@ define([
 
 			return result;
 		},
-		sendEvent: function(event, data) {
+		sendEvent: function (event, data) {
 			process.send({
 				method: 'event',
 				id: this.serverId,
@@ -165,7 +163,7 @@ define([
 			});
 		},
 
-		queue: function(action) {
+		queue: function (action) {
 			if (action.list) {
 				var type = action.action;
 				var data = action.data;
@@ -187,13 +185,13 @@ define([
 			else
 				this.actionQueue.push(action);
 		},
-		dequeue: function() {
+		dequeue: function () {
 			if (this.actionQueue.length == 0)
 				return null;
 
 			return this.actionQueue.splice(0, 1)[0];
 		},
-		clearQueue: function() {
+		clearQueue: function () {
 			if (this.serverId != null) {
 				this.instance.syncer.queue('onClearQueue', {
 					id: this.id
@@ -203,7 +201,7 @@ define([
 			this.actionQueue = [];
 		},
 
-		performAction: function(action) {
+		performAction: function (action) {
 			if (action.instanceModule) {
 				/*action.data.obj = this;
 				this.instance[action.instanceModule][action.method](action.data);
@@ -218,7 +216,7 @@ define([
 			cpn[action.method](action.data);
 		},
 
-		performQueue: function() {
+		performQueue: function () {
 			var q = this.dequeue();
 			if (!q) {
 				return;
@@ -244,7 +242,7 @@ define([
 					this.performQueue();
 			}
 		},
-		performMove: function(action) {
+		performMove: function (action) {
 			var data = action.data;
 			var physics = this.instance.physics;
 
@@ -299,7 +297,7 @@ define([
 			return true;
 		},
 
-		collisionEnter: function(obj) {
+		collisionEnter: function (obj) {
 			var components = this.components;
 			var cLen = components.length;
 			for (var i = 0; i < cLen; i++) {
@@ -310,7 +308,7 @@ define([
 				}
 			}
 		},
-		collisionExit: function(obj) {
+		collisionExit: function (obj) {
 			var components = this.components;
 			var cLen = components.length;
 			for (var i = 0; i < cLen; i++) {
@@ -320,7 +318,7 @@ define([
 			}
 		},
 
-		fireEvent: function(event) {
+		fireEvent: function (event) {
 			var args = [].slice.call(arguments, 1);
 
 			var components = this.components;
@@ -350,7 +348,7 @@ define([
 				this.spellbook.fireEvent(event, args);
 		},
 
-		destroy: function() {
+		destroy: function () {
 			var components = this.components;
 			var len = components.length;
 			for (var i = 0; i < len; i++) {
