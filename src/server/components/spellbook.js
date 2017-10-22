@@ -257,7 +257,7 @@ define([
 			}
 
 			if (!spell.targetGround) {
-				if (action.target == null) {
+				if ((action.target == null) || (!action.target.player)) {
 					if (spell.autoTargetFollower) {
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
 						if (action.target)

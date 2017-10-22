@@ -1,7 +1,7 @@
 define([
 	'js/rendering/effects',
 	'js/rendering/renderer'
-], function(
+], function (
 	effects,
 	renderer
 ) {
@@ -29,10 +29,10 @@ define([
 
 		sprite: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			effects.register(this);
 
-			if (this.hideSprite)
+			if ((this.hideSprite) && (this.obj.sprite))
 				this.obj.sprite.visible = false;
 
 			this.flipped = (Math.random() < 0.5);
@@ -53,7 +53,7 @@ define([
 			this.sprite.alpha = 1;
 		},
 
-		renderManual: function() {
+		renderManual: function () {
 			if (this.frameDelayCd > 0)
 				this.frameDelayCd--;
 			else {
@@ -76,7 +76,7 @@ define([
 				}
 			}
 
-			if ((!this.hideSprite) || (this.loop > 0)) {
+			if (((!this.hideSprite) || (this.loop > 0)) && (this.sprite)) {
 				this.sprite.x = this.obj.x * scale;
 				this.sprite.y = this.obj.y * scale;
 			}
@@ -96,7 +96,7 @@ define([
 			}
 		},
 
-		destroyManual: function() {
+		destroyManual: function () {
 			renderer.destroyObject({
 				layerName: this.spriteSheet,
 				sprite: this.sprite

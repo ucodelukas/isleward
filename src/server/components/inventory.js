@@ -860,37 +860,37 @@ define([
 				type: 'inventory',
 				items: this.items
 					.map(function (i) {
-						if (!i.effects)
-							return i;
-						else {
-							var item = extend(true, {}, i);
+						var item = extend(true, {}, i);
+
+						if (item.effects) {
 							item.effects = item.effects.map(e => ({
 								factionId: e.factionId,
 								text: e.text,
 								properties: e.properties,
 								mtx: e.mtx
 							}));
-							if (item.factions) {
-								item.factions = item.factions.map(function (f) {
-									var faction = reputation.getBlueprint(f.id);
-									var factionTier = reputation.getTier(f.id);
-
-									var noEquip = null;
-									if (factionTier < f.tier)
-										noEquip = true;
-
-									return {
-										id: f.id,
-										name: faction.name,
-										tier: f.tier,
-										tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-										noEquip: noEquip
-									};
-								}, this);
-							}
-
-							return item;
 						}
+
+						if (item.factions) {
+							item.factions = item.factions.map(function (f) {
+								var faction = reputation.getBlueprint(f.id);
+								var factionTier = reputation.getTier(f.id);
+
+								var noEquip = null;
+								if (factionTier < f.tier)
+									noEquip = true;
+
+								return {
+									id: f.id,
+									name: faction.name,
+									tier: f.tier,
+									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+									noEquip: noEquip
+								};
+							}, this);
+						}
+
+						return item;
 					})
 			};
 		}

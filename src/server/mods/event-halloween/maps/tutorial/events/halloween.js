@@ -60,10 +60,11 @@ define([
 					if ((!itemName) || (itemName.toLowerCase() != 'candy corn'))
 						return;
 
-					gatherer.reputation.getReputation('pumpkinSailor', 50);
+					gatherer.reputation.getReputation('pumpkinSailor', 40);
 
 					//Spawn a Nibbler?
-					if (Math.random() < 0.1) {
+					var roll = Math.random();
+					if (roll < 0.15) {
 						var obj = gatherResult.obj;
 						var spellbook = obj.spellbook;
 						if (!spellbook) {
@@ -74,12 +75,18 @@ define([
 							spell.hpPercent = 100;
 							spell.damagePercent = 100;
 
+							var level = gatherer.stats.values.level;
+							var hp = ((level * 15) + level) * 2;
+							var str = ((level * 14.9) + ((level - 1) * 31.49));
+							if (level < 10)
+								str *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
+
 							obj.addComponent('stats', {
 								values: {
-									hpMax: 500,
-									hp: 500,
-									str: 150 * 8,
-									level: 5
+									hpMax: hp,
+									hp: hp,
+									str: str * 1.2,
+									level: level
 								}
 							});
 
@@ -110,7 +117,7 @@ define([
 							rolls: 2,
 							chance: 100,
 							blueprints: [{
-								chance: 5,
+								chance: 4.5,
 								name: 'Summon Pumpkin Skeleton',
 								type: 'mtx',
 								effects: [{
@@ -130,24 +137,6 @@ define([
 								quantity: [1, 5]
 							}]
 						};
-					}
-
-					for (var g in gatherDrops) {
-						if (Math.random() < gatherDrops[g]) {
-							var drop = extend(true, {}, dropsConfig[g]);
-							drop.spritesheet = drop.spritesheet.replace('FOLDERNAME', this.event.config.folderName);
-
-							if (drop.effects) {
-								var mtxUrl = mtx.get(drop.effects[0].mtx);
-								var mtxModule = require(mtxUrl);
-
-								drop.effects[0].events = mtxModule.events;
-
-								gatherResult.items.push(drop);
-
-								return;
-							}
-						}
 					}
 				}
 			}

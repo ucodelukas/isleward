@@ -7,7 +7,7 @@ define([
 		name: `Beware Lord Squash`,
 		description: `Lord Squash haunts the south-western shore. Stop him in the name of the Pumpkin Sailor.`,
 		distance: -1,
-		cron: '0 */4 * * *',
+		cron: '0 */2 * * *',
 
 		events: {
 
@@ -44,7 +44,7 @@ define([
 					rolls: 2,
 					noRandom: true,
 					blueprints: [{
-						chance: 2.5,
+						chance: 5,
 						name: 'Haunted Ice Spear',
 						type: 'mtx',
 						effects: [{

@@ -7,7 +7,7 @@ define([
 		resources: {
 			'Tiny Pumpkin': {
 				type: 'herb',
-				max: 3
+				max: 4
 			},
 			Pumpkin: {
 				type: 'herb',
@@ -42,14 +42,14 @@ define([
 						forceItems: [{
 							type: 'skin',
 							id: 'pumpkin-head necromancer',
-							/*worth: {
+							infinite: true,
+							worth: {
 								currency: `Candy Corn`,
-								amount: 1800
-							},*/
-							worth: 1,
+								amount: 1200
+							},
 							factions: [{
 								id: 'pumpkinSailor',
-								tier: 1
+								tier: 6
 							}]
 						}, {
 							name: `Signet of Witching`,
@@ -61,13 +61,20 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 500
+								amount: 400
 							},
 							stats: {
 								int: 50,
 								regenMana: 8
-							}
-
+							},
+							factions: [{
+								id: 'pumpkinSailor',
+								tier: 5
+							}],
+							infinite: true,
+							noSalvage: true,
+							noDrop: true,
+							noDestroy: true
 						}, {
 							name: `Banshee's Will`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
@@ -78,14 +85,21 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 500
+								amount: 400
 							},
 							stats: {
 								str: 25,
 								int: 25,
 								regenHp: 10
-							}
-
+							},
+							factions: [{
+								id: 'pumpkinSailor',
+								tier: 5
+							}],
+							infinite: true,
+							noSalvage: true,
+							noDrop: true,
+							noDestroy: true
 						}, {
 							name: `Black Cat's Grace`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
@@ -96,13 +110,20 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 500
+								amount: 400
 							},
 							stats: {
 								dex: 50,
 								addCritChance: 90
-							}
-
+							},
+							factions: [{
+								id: 'pumpkinSailor',
+								tier: 5
+							}],
+							infinite: true,
+							noSalvage: true,
+							noDrop: true,
+							noDestroy: true
 						}, {
 							name: `Dead Man's Band`,
 							spritesheet: `server/mods/event-halloween/images/items.png`,
@@ -113,12 +134,20 @@ define([
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
-								amount: 500
+								amount: 400
 							},
 							stats: {
 								str: 50,
 								armor: 350
-							}
+							},
+							factions: [{
+								id: 'pumpkinSailor',
+								tier: 5
+							}],
+							infinite: true,
+							noSalvage: true,
+							noDrop: true,
+							noDestroy: true
 
 						}],
 						level: {

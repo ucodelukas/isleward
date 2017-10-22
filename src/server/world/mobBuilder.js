@@ -2,13 +2,13 @@ define([
 	'config/animations',
 	'items/generator',
 	'combat/combat'
-], function(
+], function (
 	animations,
 	itemGenerator,
 	combat
 ) {
 	return {
-		build: function(mob, blueprint, scaleDrops, type) {
+		build: function (mob, blueprint, scaleDrops, type) {
 			var typeDefinition = blueprint[type] || blueprint;
 
 			var drops = typeDefinition.drops;
@@ -47,7 +47,7 @@ define([
 			cpnMob.deathRep = blueprint.deathRep;
 
 			var spells = extend(true, [], blueprint.spells);
-			spells.forEach(function(s) {
+			spells.forEach(function (s) {
 				if (!s.animation) {
 					if ((mob.sheetName == 'mobs') && (animations.mobs[mob.cell])) {
 						s.animation = 'basic';
@@ -93,7 +93,7 @@ define([
 			this.scale(mob, blueprint.level);
 		},
 
-		scale: function(mob, level) {
+		scale: function (mob, level) {
 			if ((mob.aggro) && (mob.aggro.list > 0))
 				return;
 
@@ -124,7 +124,7 @@ define([
 					'finger',
 					'trinket',
 					'twoHanded'
-				].forEach(function(slot) {
+				].forEach(function (slot) {
 					var item = itemGenerator.generate({
 						noSpell: true,
 						level: level,
@@ -137,7 +137,7 @@ define([
 				}, this);
 			} else {
 				//TODO: Don't give the mob these items: he'll drop them anyway
-				drops.blueprints.forEach(function(d) {
+				drops.blueprints.forEach(function (d) {
 					var drop = extend(true, {}, d);
 					d.level = level;
 					mob.inventory.getItem(itemGenerator.generate(drop));
@@ -161,7 +161,7 @@ define([
 
 			if (level < 10) {
 				hpMult *= [0.005, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
-				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1]
+				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
 			}
 
 			if (mob.isRare) {
@@ -178,7 +178,7 @@ define([
 			statValues.hp = statValues.hpMax;
 			statValues.mana = statValues.manaMax;
 
-			mob.spellbook.spells.forEach(function(s, i) {
+			mob.spellbook.spells.forEach(function (s, i) {
 				s.dmgMult = dmgMult;
 				s.statType = preferStat;
 				s.element = elementType;
@@ -197,7 +197,7 @@ define([
 				});*/
 			}, this);
 
-			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function(s) {
+			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {
 				mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]);
 			});
 		}
