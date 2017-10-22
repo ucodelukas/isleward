@@ -7,7 +7,7 @@ define([
 		name: `Beware Lord Squash`,
 		description: `Lord Squash haunts the south-western shore. Stop him in the name of the Pumpkin Sailor.`,
 		distance: -1,
-		cron: '* * * * *',
+		cron: '0 */4 * * *',
 
 		events: {
 
