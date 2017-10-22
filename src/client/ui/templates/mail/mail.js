@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/mail/template',
 	'css!ui/templates/mail/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -18,13 +18,13 @@ define([
 
 		item: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onSetMailItem', this.onSetItem.bind(this));
 
 			this.find('.btnSend').on('click', this.onSendClick.bind(this));
 		},
 
-		onSendClick: function() {
+		onSendClick: function () {
 			if (!this.item)
 				return;
 
@@ -46,7 +46,7 @@ define([
 				callback: this.onSend.bind(this)
 			});
 		},
-		onSend: function(res) {
+		onSend: function (res) {
 			if (res.length > 0) {
 				events.emit('onGetAnnouncement', {
 					msg: res,
@@ -59,7 +59,7 @@ define([
 			this.hide();
 		},
 
-		onSetItem: function(msg) {
+		onSetItem: function (msg) {
 			this.toggle();
 			this.item = msg.item;
 
@@ -83,18 +83,18 @@ define([
 				.find('.icon')
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
-
 			if (item.quantity) {
 				var quantityText = item.quantity;
 				el.find('.quantity').html(item.quantity);
 			}
 		},
 
-		toggle: function() {
+		toggle: function () {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
 				this.show();
+				this.find('input').focus();
 			} else
 				this.hide();
 		}
