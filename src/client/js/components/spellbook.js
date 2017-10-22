@@ -2,7 +2,7 @@ define([
 	'js/system/client',
 	'js/rendering/renderer',
 	'js/system/events'
-], function(
+], function (
 	client,
 	renderer,
 	events
@@ -10,7 +10,7 @@ define([
 	var scale = 40;
 
 	var objects = null;
-	require(['js/objects/objects'], function(o) {
+	require(['js/objects/objects'], function (o) {
 		objects = o;
 	});
 
@@ -32,7 +32,7 @@ define([
 
 		shiftDown: false,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.targetSprite = renderer.buildObject({
 				sheetName: 'ui',
 				layerName: 'effects',
@@ -59,10 +59,10 @@ define([
 			this.obj.on('onKeyUp', this.onKeyUp.bind(this));
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.removeSpells) {
-				blueprint.removeSpells.forEach(function(spellId) {
-					this.spells.spliceWhere(function(s) {
+				blueprint.removeSpells.forEach(function (spellId) {
+					this.spells.spliceWhere(function (s) {
 						return (s.id == spellId);
 					});
 				}, this);
@@ -71,8 +71,8 @@ define([
 			}
 
 			if (blueprint.getSpells) {
-				blueprint.getSpells.forEach(function(s) {
-					var existIndex = this.spells.firstIndex(function(spell) {
+				blueprint.getSpells.forEach(function (s) {
+					var existIndex = this.spells.firstIndex(function (spell) {
 						return (spell.id == s.id);
 					});
 
@@ -91,7 +91,7 @@ define([
 			}
 		},
 
-		getSpell: function(number) {
+		getSpell: function (number) {
 			var spellNumber = -1;
 
 			if (number == 1) {
@@ -111,11 +111,11 @@ define([
 			return spell;
 		},
 
-		onMobHover: function(target) {
+		onMobHover: function (target) {
 			this.hoverTarget = target;
 		},
 
-		onMouseDown: function(e, target) {
+		onMouseDown: function (e, target) {
 			this.target = target || this.hoverTarget;
 
 			if (this.target) {
@@ -140,16 +140,16 @@ define([
 			events.emit('onSetTarget', this.target, e);
 		},
 
-		tabTarget: function() {
+		tabTarget: function () {
 			var closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
 
 			this.target = closest;
-			this.targetSprite.visible = !!this.target;	
+			this.targetSprite.visible = !!this.target;
 
 			events.emit('onSetTarget', this.target, null);
 		},
 
-		build: function(destroy) {
+		build: function (destroy) {
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -166,12 +166,11 @@ define([
 			});
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'b') {
 				this.build();
 				return;
-			}
-			else if (key == 'n') {
+			} else if (key == 'n') {
 				this.build(true);
 				return;
 			}
@@ -199,10 +198,10 @@ define([
 
 			var hoverTile = this.obj.mouseMover.hoverTile;
 			var target = hoverTile;
-			if ((!spell.targetGround) && (this.target))
-				target = this.target.id;
-			if ((spell.autoTargetFollower) && (target.id == null))
+			if ((spell.autoTargetFollower) && (!this.target))
 				target = null;
+			else if ((!spell.targetGround) && (this.target))
+				target = this.target.id;
 
 			if (this.shiftDown)
 				this.target = oldTarget;
@@ -221,19 +220,19 @@ define([
 			});
 		},
 
-		onKeyUp: function(key) {
+		onKeyUp: function (key) {
 			if (key == 'shift') {
 				this.shiftDown = false;
 				return;
 			}
 		},
 
-		onDeath: function() {
+		onDeath: function () {
 			this.target = null;
 			this.targetSprite.visible = false;
 		},
 
-		update: function() {
+		update: function () {
 			if ((this.target) && (this.target.destroyed)) {
 				this.target = null;
 				this.targetSprite.visible = false;
@@ -265,7 +264,7 @@ define([
 			this.targetSprite.y = this.target.y * scale;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			if (this.targetSprite) {
 				renderer.destroyObject({
 					layerName: 'effects',
@@ -274,7 +273,7 @@ define([
 			}
 		},
 
-		render: function() {
+		render: function () {
 			if (this.reticleCd > 0)
 				this.reticleCd--;
 			else {

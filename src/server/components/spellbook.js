@@ -405,6 +405,8 @@ define([
 			return cds;
 		},
 		update: function () {
+			var didCast = false;
+
 			this.spells.forEach(function (s, i) {
 				s.updateBase();
 				if (s.update)
@@ -424,7 +426,7 @@ define([
 
 				var spell = this.spells[a.spell];
 				if (this.cast(a, true))
-					return true;
+					didCast = true;
 			}
 
 			var callbacks = this.callbacks;
@@ -451,6 +453,8 @@ define([
 					cLen--;
 				}
 			}
+
+			return didCast;
 		},
 
 		registerCallback: function (sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {

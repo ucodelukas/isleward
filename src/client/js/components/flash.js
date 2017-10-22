@@ -1,6 +1,6 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
 	return {
@@ -20,12 +20,10 @@ define([
 
 		oldTexture: null,
 
-		init: function() {
+		init: function () {
 			//Destroy self
 			if (!this.obj.sprite)
 				return true;
-
-			console.log(this.animation);
 
 			this.oldTexture = this.obj.sprite.texture;
 
@@ -38,7 +36,7 @@ define([
 			this.maxState = ((Math.abs(this.lum) / this.lumDir) + (Math.abs(this.lum) / (this.lumDir))) / 5;
 		},
 
-		getColor: function() {
+		getColor: function () {
 			var hex = String(this.color).replace(/[^0-9a-f]/gi, '');
 			if (hex.length < 6)
 				hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
@@ -54,7 +52,7 @@ define([
 			return rgb.replace('#', '0x');
 		},
 
-		update: function() {
+		update: function () {
 			this.state++;
 			if (this.state >= this.maxState) {
 				this.state = 0;
@@ -77,7 +75,7 @@ define([
 				this.destroyed = true;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			this.obj.sprite.texture = this.oldTexture;
 		}
 	};

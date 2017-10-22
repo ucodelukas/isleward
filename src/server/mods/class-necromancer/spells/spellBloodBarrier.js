@@ -1,7 +1,7 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'bloodBarrier',
@@ -19,8 +19,9 @@ define([
 
 		needLos: true,
 		autoTargetFollower: true,
+		targetFriendly: true,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 			var target = action.target;
 
@@ -35,7 +36,7 @@ define([
 
 			return true;
 		},
-		explode: function(target) {
+		explode: function (target) {
 			if ((this.obj.destroyed) || (target.destroyed))
 				return;
 
@@ -45,7 +46,7 @@ define([
 			};
 			this.obj.stats.takeDamage(damage, 0, this.obj);
 
-			amount  = amount * this.shieldMultiplier;
+			amount = amount * this.shieldMultiplier;
 			var heal = {
 				amount: amount
 			};
@@ -54,7 +55,8 @@ define([
 			target.spellbook.spells[0].cd = 0;
 			target.effects.addEffect({
 				type: 'frenzy',
-				ttl: this.frenzyDuration
+				ttl: this.frenzyDuration,
+				newCd: target.player ? 2 : 0
 			});
 		}
 	};

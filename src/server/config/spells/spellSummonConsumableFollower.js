@@ -113,10 +113,6 @@ define([
 								col: 4
 							}]
 						});
-
-						if (this.explodes) {
-							console.log(123);
-						}
 					} else {
 						m.mob.update = (this.walkCd == 0) ? m.mob.realUpdate : null;
 					}

@@ -1,7 +1,7 @@
 define([
 	'config/animations',
 	'config/loginRewards'
-], function(
+], function (
 	animations,
 	loginRewards
 ) {
@@ -71,7 +71,7 @@ define([
 
 		dead: false,
 
-		init: function(blueprint, isTransfer) {
+		init: function (blueprint, isTransfer) {
 			this.syncer = this.obj.instance.syncer;
 
 			var values = (blueprint || {}).values || {};
@@ -90,14 +90,14 @@ define([
 				delete blueprint.stats;
 		},
 
-		resetHp: function() {
+		resetHp: function () {
 			var values = this.values;
 			values.hp = values.hpMax;
 
 			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 		},
 
-		update: function() {
+		update: function () {
 			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
@@ -153,7 +153,7 @@ define([
 			}
 		},
 
-		addStat: function(stat, value) {
+		addStat: function (stat, value) {
 			this.values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax'].indexOf(stat) == -1);
@@ -171,21 +171,21 @@ define([
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
 			} else if (stat == 'allAttributes') {
-				['int', 'str', 'dex'].forEach(function(s) {
+				['int', 'str', 'dex'].forEach(function (s) {
 					this.values[s] += value;
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
 			}
 		},
 
-		calcXpMax: function() {
+		calcXpMax: function () {
 			var level = this.values.level;
 			this.values.xpMax = ~~(level * 10 * Math.pow(level, 1.75));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
 
-		getXp: function(amount) {
+		getXp: function (amount) {
 			var obj = this.obj;
 			var values = this.values;
 
@@ -226,7 +226,7 @@ define([
 
 			if (didLevelUp) {
 				var cellContents = obj.instance.physics.getCell(obj.x, obj.y);
-				cellContents.forEach(function(c) {
+				cellContents.forEach(function (c) {
 					c.fireEvent('onCellPlayerLevelUp', obj);
 				});
 
@@ -242,7 +242,7 @@ define([
 			});
 		},
 
-		kill: function(target) {
+		kill: function (target) {
 			var level = target.stats.values.level;
 
 			//Who should get xp?
@@ -260,7 +260,7 @@ define([
 				// Remember, maybe one of the aggro-ees might be a mob too
 				var party = a.obj.social ? a.obj.social.party : null;
 				if (party) {
-					var partySize = aggroList.filter(function(f) {
+					var partySize = aggroList.filter(function (f) {
 						return ((a.damage > 0) && (party.indexOf(f.obj.serverId) > -1));
 					}).length;
 					partySize--;
@@ -282,12 +282,11 @@ define([
 					a.obj.stats.getXp(amount, this.obj);
 				}
 
-
 				a.obj.fireEvent('afterKillMob', target);
 			}
 		},
 
-		die: function(source) {
+		die: function (source) {
 			this.values.hp = this.values.hpMax;
 			this.values.mana = this.values.manaMax;
 
@@ -306,7 +305,7 @@ define([
 				source: source.name
 			}, [this.obj.serverId]);
 		},
-		takeDamage: function(damage, threatMult, source) {
+		takeDamage: function (damage, threatMult, source) {
 			source.fireEvent('beforeDealDamage', damage, this.obj);
 			this.obj.fireEvent('beforeTakeDamage', damage, source);
 
@@ -403,7 +402,7 @@ define([
 									continue;
 
 								if ((a.social) && (a.social.party)) {
-									a.social.party.forEach(function(p) {
+									a.social.party.forEach(function (p) {
 										if (done.some(d => d == p))
 											return;
 
@@ -429,7 +428,7 @@ define([
 			source.fireEvent('afterDealDamage', damage, this.obj);
 		},
 
-		getHp: function(heal, source) {
+		getHp: function (heal, source) {
 			var amount = heal.amount;
 			if (amount == 0)
 				return;
@@ -474,7 +473,7 @@ define([
 			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 		},
 
-		save: function() {
+		save: function () {
 			if (this.sessionDuration) {
 				this.stats.played = ~~(this.stats.played + this.sessionDuration);
 				delete this.sessionDuration;
@@ -487,7 +486,7 @@ define([
 			};
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var values = this.values;
 
 			if (!self) {
@@ -513,7 +512,7 @@ define([
 			};
 		},
 
-		onLogin: function() {
+		onLogin: function () {
 			var stats = this.stats;
 
 			var scheduler = require('misc/scheduler');
@@ -547,8 +546,7 @@ define([
 				var mail = this.obj.instance.mail;
 				var rewards = loginRewards.generate(stats.loginStreak);
 				mail.sendMail(this.obj.name, rewards);
-			}
-			else
+			} else
 				this.obj.instance.mail.getMail(this.obj.name);
 
 			stats.lastLogin = time;
