@@ -49,7 +49,7 @@ define([
 			} else {
 				generators.forEach(g => g.generate(item, blueprint));
 				if (blueprint.spellName)
-					g8.generate(item, blueprint);
+					g9.generate(item, blueprint);
 			}
 
 			if (blueprint.noSalvage)
