@@ -1,6 +1,6 @@
 define([
 	'config/herbs'
-], function(
+], function (
 	herbs
 ) {
 	return {
@@ -12,9 +12,9 @@ define([
 		physics: null,
 		map: null,
 
-		cdMax: 2,
+		cdMax: 50,
 
-		init: function(instance) {
+		init: function (instance) {
 			this.objects = instance.objects;
 			this.syncer = instance.syncer;
 			this.zone = instance.zone;
@@ -22,7 +22,7 @@ define([
 			this.map = instance.map;
 		},
 
-		register: function(name, blueprint) {
+		register: function (name, blueprint) {
 			var exists = this.nodes.find(n => (n.blueprint.name == name));
 			if (exists) {
 				if (!exists.blueprint.positions)
@@ -58,7 +58,7 @@ define([
 			});
 		},
 
-		spawn: function(node) {
+		spawn: function (node) {
 			var blueprint = node.blueprint;
 
 			//Get an accessible position
@@ -162,7 +162,7 @@ define([
 			return true;
 		},
 
-		update: function() {
+		update: function () {
 			var nodes = this.nodes;
 			var nLen = nodes.length;
 
