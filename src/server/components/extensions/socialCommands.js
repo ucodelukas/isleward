@@ -157,6 +157,10 @@ define([
 			});
 		},
 
+		isInChannel: function (character, channel) {
+			return character.auth.customChannels.some(c => (c == channel));
+		},
+
 		getItem: function (config) {
 			if (config.slot == 'set') {
 				configSlots.slots.forEach(function (s) {
@@ -277,9 +281,17 @@ define([
 			obj.spellbook.calcDps();
 		},
 
-		//custom channels
-		isInChannel: function (character, channel) {
-			return character.auth.customChannels.some(c => (c == channel));
+		completeQuests: function () {
+			var obj = this.obj;
+			var quests = obj.quests;
+
+			quests.quests.forEach(function (q) {
+				q.isReady = true;
+				q.complete();
+			}, this);
+
+			quests.quests = [];
+			obj.instance.questBuilder.obtain(obj);
 		}
 	};
 });

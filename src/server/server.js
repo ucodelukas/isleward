@@ -14,8 +14,6 @@ define([
 			app.use(function (req, res, next) {
 				if ((req.url.indexOf('/server') != 0) && (req.url.indexOf('/mods') != 0))
 					req.url = '/client/' + req.url;
-				else if (req.url.indexOf('/server') == 0)
-					req.url = req.url.substr(7);
 
 				next();
 			});
