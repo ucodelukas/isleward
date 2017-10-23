@@ -215,7 +215,7 @@ define([
 
 		stashItem: function (id) {
 			var item = this.findItem(id);
-			if ((!item) || (item.quest) || (item.noSalvage))
+			if ((!item) || (item.quest) || (item.noStash))
 				return;
 
 			delete item.pos;
@@ -225,7 +225,7 @@ define([
 				return;
 
 			var clonedItem = extend(true, {}, item);
-			this.destroyItem(id);
+			this.destroyItem(id, null, true);
 			stash.deposit(clonedItem);
 		},
 

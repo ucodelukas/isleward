@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/stash/template',
 	'css!ui/templates/stash/styles',
 	'html!ui/templates/inventory/templateItem'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -23,14 +23,14 @@ define([
 
 		modal: true,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetStashItems', this.onGetStashItems.bind(this));
 			this.onEvent('onDestroyStashItems', this.onDestroyStashItems.bind(this));
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
-		build: function() {
+		build: function () {
 			var container = this.el.find('.grid')
 				.empty();
 
@@ -52,18 +52,20 @@ define([
 				var itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = 'items';
-				if (item.material)
-					spritesheet = 'materials';
-				else if (item.quest)
-					spritesheet = 'questItems';
+				var spritesheet = item.spritesheet || '../../../images/items.png';
+				if (!item.spritesheet) {
+					if (item.material)
+						spritesheet = '../../../images/materials.png';
+					else if (item.quest)
+						spritesheet = '../../../images/questItems.png';
+				}
 
 				itemEl
 					.data('item', item)
 					.on('mousemove', this.onHover.bind(this, itemEl, item))
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(../../../images/' + spritesheet + '.png) ' + imgX + 'px ' + imgY + 'px')
+					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
 
 				if (item.quantity)
@@ -83,7 +85,7 @@ define([
 			}
 		},
 
-		showContext: function(item, e) {
+		showContext: function (item, e) {
 			events.emit('onContextMenu', [{
 				text: 'withdraw',
 				callback: this.withdraw.bind(this, item)
@@ -93,11 +95,11 @@ define([
 			return false;
 		},
 
-		hideTooltip: function() {
+		hideTooltip: function () {
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
-		onHover: function(el, item, e) {
+		onHover: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
 			else
@@ -118,14 +120,14 @@ define([
 
 			var compare = null;
 			if (this.shiftDown) {
-				compare = window.player.inventory.items.find(function(i) {
+				compare = window.player.inventory.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
 				});
 			}
 
 			events.emit('onShowItemTooltip', item, ttPos, compare);
 		},
-		onClick: function(el, item) {
+		onClick: function (el, item) {
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -137,11 +139,11 @@ define([
 			});
 		},
 
-		onGetStashItems: function(items) {
+		onGetStashItems: function (items) {
 			this.items = items;
 
 			//Sort by slot
-			this.items.sort(function(a, b) {
+			this.items.sort(function (a, b) {
 				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot != null) && (a.slot == b.slot))) {
 					if (a.type == b.type) {
 						if (a.name < b.name)
@@ -178,8 +180,8 @@ define([
 			if (this.shown)
 				this.build();
 		},
-		onDestroyStashItems: function(itemIds) {
-			itemIds.forEach(function(id) {
+		onDestroyStashItems: function (itemIds) {
+			itemIds.forEach(function (id) {
 				var item = this.items.find(i => i.id == id);
 				if (item == this.hoverItem) {
 					this.hideTooltip();
@@ -192,7 +194,7 @@ define([
 				this.build();
 		},
 
-		toggle: function() {
+		toggle: function () {
 			if ((!this.shown) && (!window.player.stash.active))
 				return;
 
@@ -201,7 +203,7 @@ define([
 			if (this.shown) {
 				this.show();
 				events.emit('onShowOverlay', this.el);
-				this.build();				
+				this.build();
 			} else {
 				this.hide();
 				events.emit('onHideOverlay', this.el);
@@ -209,15 +211,15 @@ define([
 			}
 		},
 
-		onOpenStash: function() {
+		onOpenStash: function () {
 			this.build();
 		},
 
-		beforeDestroy: function() {
+		beforeDestroy: function () {
 			events.emit('onHideOverlay', this.el);
 		},
 
-		withdraw: function(item) {
+		withdraw: function (item) {
 			if (!item)
 				return;
 
@@ -232,7 +234,7 @@ define([
 			});
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == ' ')
 				this.toggle();
 			else if (key == 'shift') {
@@ -242,7 +244,7 @@ define([
 			} else if ((key == 'esc') && (this.shown))
 				this.toggle();
 		},
-		onKeyUp: function(key) {
+		onKeyUp: function (key) {
 			if (key == 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
