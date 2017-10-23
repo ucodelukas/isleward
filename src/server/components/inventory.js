@@ -214,6 +214,7 @@ define([
 			spellbook.removeSpellById(item.runeSlot);
 			delete item.eq;
 			delete item.runeSlot;
+			this.setItemPosition(itemId);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
