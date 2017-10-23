@@ -52,6 +52,9 @@ define([
 					g9.generate(item, blueprint);
 			}
 
+			if (blueprint.spritesheet)
+				item.spritesheet = blueprint.spritesheet;
+
 			if (blueprint.noSalvage)
 				item.noSalvage = true;
 
