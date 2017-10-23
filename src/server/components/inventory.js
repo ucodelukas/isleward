@@ -57,7 +57,11 @@ define([
 			this.hookItemEvents(items);
 
 			for (var i = 0; i < iLen; i++) {
-				this.getItem(items[i], true);
+				var item = items[i];
+				var pos = item.pos;
+
+				var newItem = this.getItem(item, true);
+				newItem.pos = pos;
 			}
 
 			if ((this.obj.player) && (!isTransfer))
