@@ -30,6 +30,7 @@ define([
 				layerName: 'mobs',
 				cell: character.cell,
 				sheetName: character.sheetName,
+				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
 				zoneName: character.zoneName || 'tutorial',
