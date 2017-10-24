@@ -52,6 +52,7 @@ define([
 						}],
 						spritesheet: `server/mods/event-halloween/images/items.png`,
 						sprite: [3, 0],
+						noSpell: true,
 						noDrop: true,
 						noDestroy: true,
 						noSalvage: true
@@ -61,6 +62,7 @@ define([
 						spritesheet: `server/mods/event-halloween/images/items.png`,
 						material: true,
 						sprite: [3, 3],
+						noSpell: true,
 						quantity: [30, 60]
 					}]
 				},
