@@ -125,6 +125,7 @@ define([
 								}],
 								spritesheet: `server/mods/event-halloween/images/items.png`,
 								sprite: [3, 0],
+								noSpell: true,
 								noDrop: true,
 								noDestroy: true,
 								noSalvage: true
@@ -133,6 +134,7 @@ define([
 								name: 'Candy Corn',
 								spritesheet: `server/mods/event-halloween/images/items.png`,
 								material: true,
+								noSpell: true,
 								sprite: [3, 3],
 								quantity: [1, 5]
 							}]
