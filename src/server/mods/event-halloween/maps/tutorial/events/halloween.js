@@ -117,7 +117,7 @@ define([
 							rolls: 2,
 							chance: 100,
 							blueprints: [{
-								chance: 4.5,
+								chance: 3,
 								name: 'Summon Pumpkin Skeleton',
 								type: 'mtx',
 								effects: [{
