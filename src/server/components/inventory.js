@@ -765,6 +765,9 @@ define([
 					if (!item.quest)
 						item = generator.generate(drop);
 
+					if (!item.slot)
+						delete item.level;
+
 					this.getItem(item, true);
 				}
 			}
