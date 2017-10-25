@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -8,8 +8,8 @@ define([
 
 		items: [],
 
-		init: function(blueprint) {
-			this.items.forEach(function(i) {
+		init: function (blueprint) {
+			this.items.forEach(function (i) {
 				if ((i.stats) && (i.stats.hpMax)) {
 					i.stats.vit = i.stats.hpMax;
 					delete i.stats.hpMax;
@@ -18,10 +18,10 @@ define([
 
 			events.emit('onGetItems', this.items);
 		},
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.destroyItems)
 				events.emit('onDestroyItems', blueprint.destroyItems);
-			
+
 			if (blueprint.getItems) {
 				var items = this.items;
 				var newItems = blueprint.getItems || [];
@@ -36,19 +36,13 @@ define([
 						delete nItem.stats.hpMax;
 					}
 
-					var findItem = items.find(function(item) {
+					var findItem = items.find(function (item) {
 						return (item.id == nId);
 					});
 					if (findItem) {
-						[
-							'eq',
-							'stats',
-							'power',
-							'pos'
-						].forEach(function(s) {
-							if (!nItem[s])
-								delete findItem[s];
-						});
+						for (var p in findItem) {
+							delete findItem[p];
+						}
 
 						$.extend(true, findItem, nItem);
 
