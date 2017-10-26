@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 		radius: 2,
 		pushback: 4,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 
 			var radius = this.radius;
@@ -51,7 +51,7 @@ define([
 							continue;
 						}
 
-						if (!m.aggro)
+						if ((!m.aggro) || (!m.effects))
 							continue;
 
 						var isPlayer = !!this.obj.player;
@@ -132,7 +132,7 @@ define([
 			return true;
 		},
 
-		endEffect: function(target, targetPos, targetEffect) {
+		endEffect: function (target, targetPos, targetEffect) {
 			target.effects.removeEffect(targetEffect, true);
 
 			target.x = targetPos.x;

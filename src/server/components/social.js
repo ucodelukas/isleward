@@ -298,12 +298,14 @@ define([
 					party = null;
 				}
 
-				player.socket.emit('events', {
-					onGetParty: [party],
-					onGetMessages: [{
-						messages: messages
-					}]
-				});
+				if (player.socket) {
+					player.socket.emit('events', {
+						onGetParty: [party],
+						onGetMessages: [{
+							messages: messages
+						}]
+					});
+				}
 			}, this);
 
 			this.obj.socket.emit('events', {
