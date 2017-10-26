@@ -292,13 +292,15 @@ define([
 						message: 'your group has been disbanded'
 					});
 
-					player.social.isPartyLeader = false;
-					player.social.party = null;
-					player.social.updatePartyOnThread();
+					if (player) {
+						player.social.isPartyLeader = false;
+						player.social.party = null;
+						player.social.updatePartyOnThread();
+					}
 					party = null;
 				}
 
-				if (player.socket) {
+				if (player) {
 					player.socket.emit('events', {
 						onGetParty: [party],
 						onGetMessages: [{
