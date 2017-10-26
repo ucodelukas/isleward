@@ -285,6 +285,7 @@ module.exports = {
 		'thaumaturge yala': {
 			level: 30,
 			walkDistance: 0,
+			faction: 'akarei',
 
 			deathRep: -15,
 

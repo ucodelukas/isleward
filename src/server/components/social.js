@@ -292,22 +292,24 @@ define([
 						message: 'your group has been disbanded'
 					});
 
-					if (player) {
-						player.social.isPartyLeader = false;
-						player.social.party = null;
-						player.social.updatePartyOnThread();
-					}
+					player.social.isPartyLeader = false;
+					player.social.party = null;
+					player.social.updatePartyOnThread();
 					party = null;
 				}
 
-				if (player) {
-					player.socket.emit('events', {
-						onGetParty: [party],
-						onGetMessages: [{
-							messages: messages
-						}]
-					});
+				if (!player) {
+					console.log('no player');
+					console.log(this.party);
+					console.log(this.obj.name);
 				}
+
+				player.socket.emit('events', {
+					onGetParty: [party],
+					onGetMessages: [{
+						messages: messages
+					}]
+				});
 			}, this);
 
 			this.obj.socket.emit('events', {
