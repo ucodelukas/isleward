@@ -29,8 +29,13 @@ define([
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
+			this.el.find('.btnPatreon').on('click', this.patreon.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
+		},
+
+		patreon: function() {
+			window.open('http://patreon.com/bigbadwaffle', '_blank');
 		},
 
 		charSelect: function() {

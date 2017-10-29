@@ -285,6 +285,7 @@ module.exports = {
 		'thaumaturge yala': {
 			level: 30,
 			walkDistance: 0,
+			faction: 'akarei',
 
 			deathRep: -15,
 
@@ -320,7 +321,7 @@ module.exports = {
 		redwall: {
 			components: {
 				cpnBlocker: {
-					init: function() {
+					init: function () {
 						this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
 					}
 				}
@@ -329,7 +330,7 @@ module.exports = {
 		bigportal: {
 			components: {
 				cpnAttackAnimation: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'attackAnimation',
 							spriteSheet: 'animBigObjects',
@@ -347,7 +348,7 @@ module.exports = {
 		pinktile: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -399,7 +400,7 @@ module.exports = {
 		walltrigger: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -447,12 +448,12 @@ module.exports = {
 					}
 				},
 				cpnTrigger: {
-					init: function() {
+					init: function () {
 						this.obj.instance.triggerPuzzle = {
 							activated: []
 						};
 					},
-					collisionEnter: function(o) {
+					collisionEnter: function (o) {
 						if (!o.player)
 							return;
 
@@ -508,11 +509,11 @@ module.exports = {
 							}
 						});
 					},
-					activate: function() {
+					activate: function () {
 						var syncer = this.obj.instance.syncer;
 						var physics = this.obj.instance.physics;
 						var walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
-						walls.forEach(function(w) {
+						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);
 
@@ -533,7 +534,7 @@ module.exports = {
 		gas: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -590,7 +591,7 @@ module.exports = {
 		bubbles: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {

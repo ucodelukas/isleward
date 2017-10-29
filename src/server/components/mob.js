@@ -1,6 +1,6 @@
 define([
 	'items/generator'
-], function(
+], function (
 	itemGenerator
 ) {
 	var abs = Math.abs.bind(Math);
@@ -19,14 +19,14 @@ define([
 
 		walkDistance: 1,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
 			this.originX = this.obj.x;
 			this.originY = this.obj.y;
 		},
 
-		update: function() {
+		update: function () {
 			var target = null;
 			if (this.obj.aggro)
 				target = this.obj.aggro.getHighest();
@@ -79,7 +79,7 @@ define([
 				});
 			}
 		},
-		fight: function(target) {
+		fight: function (target) {
 			if (this.target != target) {
 				this.obj.clearQueue();
 				this.target = target;

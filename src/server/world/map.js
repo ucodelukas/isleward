@@ -4,14 +4,16 @@ define([
 	'world/spawners',
 	'world/resourceSpawner',
 	'config/zoneBase',
-	'world/randomMap'
-], function(
+	'world/randomMap',
+	'misc/events'
+], function (
 	objects,
 	physics,
 	spawners,
 	resourceSpawner,
 	globalZone,
-	randomMap
+	randomMap,
+	events
 ) {
 	var mapFile = null;
 	var mapscale = 38;
@@ -55,7 +57,7 @@ define([
 
 		zone: null,
 
-		init: function(args) {
+		init: function (args) {
 			this.name = args.name;
 
 			try {
@@ -75,10 +77,12 @@ define([
 			try {
 				dialogues = require('../config/maps/' + this.name + '/dialogues');
 			} catch (e) {}
+			events.emit('onBeforeGetDialogue', this.name, dialogues);
 			if (dialogues)
 				this.zone.dialogues = dialogues;
 
 			this.zone = extend(true, {}, globalZone, this.zone);
+			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var resources = this.zone.resources || {};
 			for (var r in resources) {
@@ -98,10 +102,10 @@ define([
 			if (mapFile.properties.spawn) {
 				this.spawn = JSON.parse(mapFile.properties.spawn);
 				if (!this.spawn.push)
-					this.spawn = [ this.spawn ];
+					this.spawn = [this.spawn];
 			}
 		},
-		create: function() {
+		create: function () {
 			this.getMapFile();
 
 			this.clientMap = {
@@ -115,7 +119,7 @@ define([
 				hiddenRooms: this.hiddenRooms
 			};
 		},
-		getMapFile: function() {
+		getMapFile: function () {
 			this.build();
 
 			randomMap = extend(true, {}, randomMap);
@@ -159,7 +163,7 @@ define([
 
 			randomMap.templates
 				.filter(r => r.properties.mapping)
-				.forEach(function(m) {
+				.forEach(function (m) {
 					var x = m.x;
 					var y = m.y;
 					var w = m.width;
@@ -183,7 +187,7 @@ define([
 			console.log('(M ' + this.name + '): Ready');
 		},
 
-		build: function() {
+		build: function () {
 			this.size.w = mapFile.width;
 			this.size.h = mapFile.height;
 
@@ -204,7 +208,7 @@ define([
 
 			//Rooms need to be ahead of exits
 			mapFile.layers.rooms = (mapFile.layers.rooms || [])
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					if ((a.exit) && (!b.exit))
 						return 1;
 					else
@@ -218,6 +222,15 @@ define([
 					continue;
 
 				var data = layer.data || layer.objects;
+				var firstItem = data[0];
+				if ((firstItem) && (firstItem.width != null)) {
+					var info = {
+						map: this.name,
+						layer: layerName,
+						objects: data
+					};
+					events.emit('onAfterGetLayerObjects', info);
+				}
 
 				var len = data.length;
 				for (var j = 0; j < len; j++) {
@@ -225,13 +238,25 @@ define([
 
 					if ((cell.gid) || (cell.id))
 						builders.object(layerName, cell, j);
-					else
-						builders.tile(layerName, cell, j);
+					else {
+						var y = ~~(j / this.size.w);
+						var x = j - (y * this.size.w);
+
+						var info = {
+							map: this.name,
+							layer: layerName,
+							cell: cell,
+							x: x,
+							y: y
+						};
+						events.emit('onBeforeBuildLayerTile', info);
+						builders.tile(layerName, info.cell, j);
+					}
 				}
 			}
 		},
 		builders: {
-			getCellInfo: function(cell) {
+			getCellInfo: function (cell) {
 				var flipX = null;
 
 				if ((cell ^ 0x80000000) > 0) {
@@ -257,7 +282,7 @@ define([
 					flipX: flipX
 				};
 			},
-			tile: function(layerName, cell, i) {
+			tile: function (layerName, cell, i) {
 				var y = ~~(i / this.size.w);
 				var x = i - (y * this.size.w);
 
@@ -281,8 +306,7 @@ define([
 					if (this.oldLayers[layerName])
 						this.oldLayers[layerName][x][y] = cell;
 					layer[x][y] = (layer[x][y] == null) ? cell : layer[x][y] + ',' + cell;
-				}
-				else if (layerName == 'hiddenWalls')
+				} else if (layerName == 'hiddenWalls')
 					this.hiddenWalls[x][y] = cell;
 				else if (layerName == 'hiddenTiles')
 					this.hiddenTiles[x][y] = cell;
@@ -290,11 +314,11 @@ define([
 				if (layerName.indexOf('walls') > -1)
 					this.collisionMap[x][y] = 1;
 				else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
-					if ((cell == 6) || (cell == 7) || (cell == 54) || (cell == 55) || (cell == 62) || (cell == 63) || (cell == 154))
+					if ((cell == 6) || (cell == 7) || (cell == 54) || (cell == 55) || (cell == 62) || (cell == 63) || (cell == 154) || (cell == 189) || (cell == 190))
 						this.collisionMap[x][y] = 1;
 				}
 			},
-			object: function(layerName, cell, i) {
+			object: function (layerName, cell, i) {
 				var clientObj = (layerName == 'clientObjects');
 				var cellInfo = this.builders.getCellInfo(cell.gid);
 
@@ -334,7 +358,7 @@ define([
 
 				if (layerName == 'rooms') {
 					if (blueprint.properties.exit) {
-						var room = this.rooms.find(function(r) {
+						var room = this.rooms.find(function (r) {
 							return (!(
 								(blueprint.x + blueprint.width < r.x) ||
 								(blueprint.y + blueprint.height < r.y) ||
@@ -357,7 +381,7 @@ define([
 					if (!mapFile.properties.isRandom)
 						spawners.register(blueprint, mapFile.properties.spawnCd);
 					else {
-						var room = this.rooms.find(function(r) {
+						var room = this.rooms.find(function (r) {
 							return (!(
 								(blueprint.x < r.x) ||
 								(blueprint.y < r.y) ||
@@ -374,7 +398,7 @@ define([
 			}
 		},
 
-		getSpawnPos: function(obj) {
+		getSpawnPos: function (obj) {
 			var stats = obj.components.find(c => (c.type == 'stats'));
 			var level = stats.values.level;
 

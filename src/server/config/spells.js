@@ -1,5 +1,5 @@
 define([
-	'misc/events'
+	'../misc/events'
 ], function(
 	events
 ) {
@@ -44,8 +44,8 @@ define([
 		animation: 'hitStaff',
 		particles: {
 			color: {
-				start: ['fcfcfc', '48edff'],
-				end: ['48edff', 'fcfcfc']
+				start: ['51fc9a', '48edff'],
+				end: ['48edff', '44cb95']
 			},
 			scale: {
 				start: {
@@ -67,7 +67,7 @@ define([
 			},
 			randomScale: true,
 			randomColor: true,
-			chance: 0.9
+			frequency: 0.2
 		}
 	}, {
 		name: 'Fireblast',

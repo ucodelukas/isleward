@@ -18,6 +18,9 @@ define([
 		},
 
 		update: function() {
+			if (this.obj.moveAnimation)
+				this.obj.pather.clearPath();
+
 			if (input.isKeyDown('esc')) {
 				client.request({
 					cpn: 'player',
@@ -72,6 +75,9 @@ define([
 			this.addQueue(newX, newY);
 		},
 		addQueue: function(x, y) {
+			if (this.obj.moveAnimation)
+				return;
+
 			this.obj.dirty = true;
 
 			this.obj.pather.add(x, y);

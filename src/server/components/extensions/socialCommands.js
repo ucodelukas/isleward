@@ -3,25 +3,46 @@ define([
 	'world/atlas',
 	'items/generator',
 	'misc/random',
-	'items/config/slots'
-], function(
+	'items/config/slots',
+	'security/io',
+	'config/factions'
+], function (
 	roles,
 	atlas,
 	generator,
 	random,
-	configSlots
+	configSlots,
+	io,
+	factions
 ) {
+	var commandRoles = {
+		join: 0,
+		leave: 0,
+		getItem: 10,
+		getGold: 10,
+		setLevel: 10,
+		godMode: 10
+	};
+
+	var localCommands = [
+		'join',
+		'leave'
+	];
+
 	return {
+		customChannels: [],
 		roleLevel: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
+			if (this.customChannels) {
+				this.customChannels = this.customChannels
+					.filter((c, i) => (this.customChannels.indexOf(c) == i));
+			}
+
 			this.roleLevel = roles.getRoleLevel(this.obj);
 		},
 
-		onBeforeChat: function(msg) {
-			if (this.roleLevel < 10)
-				return;
-
+		onBeforeChat: function (msg) {
 			var messageText = msg.message;
 			if (messageText[0] != '/')
 				return;
@@ -31,30 +52,118 @@ define([
 			actionName = Object.keys(this).find(a => (a.toLowerCase() == actionName));
 			if (!actionName)
 				return;
+			else if (this.roleLevel < commandRoles[actionName])
+				return;
+
+			msg.ignore = true;
 
 			var config = {};
 			if ((messageText.length == 1) && (messageText[0].indexOf('=') == -1))
 				config = messageText[0];
 			else {
-				messageText.forEach(function(m) {
+				messageText.forEach(function (m) {
 					m = m.split('=');
 					config[m[0]] = m[1];
 				});
 			}
 
-			msg.ignore = true;
-
-			atlas.performAction(this.obj, {
-				cpn: 'social',
-				method: actionName,
-				data: config
-			});
+			if (localCommands.indexOf(actionName) > -1) {
+				this[actionName].call(this, config);
+			} else {
+				atlas.performAction(this.obj, {
+					cpn: 'social',
+					method: actionName,
+					data: config
+				});
+			}
 		},
 
 		//actions
-		getItem: function(config) {
+		join: function (value) {
+			var obj = this.obj;
+
+			var channels = obj.auth.customChannels;
+			if (!channels.some(c => (c == value)))
+				channels.push(value);
+			else
+				return;
+
+			channels.push(value);
+
+			var charname = obj.auth.charname;
+			io.set({
+				ent: charname,
+				field: 'customChannels',
+				value: JSON.stringify(channels)
+			});
+
+			obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'q0',
+						message: 'joined channel: ' + value,
+						type: 'info'
+					}]
+				}]
+			});
+
+			obj.socket.emit('event', {
+				event: 'onJoinChannel',
+				data: value
+			});
+		},
+
+		leave: function (value) {
+			var obj = this.obj;
+
+			var channels = obj.auth.customChannels;
+			if (!channels.some(c => (c == value))) {
+				obj.socket.emit('events', {
+					onGetMessages: [{
+						messages: [{
+							class: 'q0',
+							message: 'you are not currently in that channel',
+							type: 'info'
+						}]
+					}]
+				});
+
+				return;
+			}
+
+			var channels = obj.auth.customChannels;
+			channels.spliceWhere(c => (c == value));
+
+			var charname = obj.auth.charname;
+			io.set({
+				ent: charname,
+				field: 'customChannels',
+				value: JSON.stringify(channels)
+			});
+
+			obj.socket.emit('event', {
+				event: 'onLeaveChannel',
+				data: value
+			});
+
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'q0',
+						message: 'left channel: ' + value,
+						type: 'info'
+					}]
+				}]
+			});
+		},
+
+		isInChannel: function (character, channel) {
+			return character.auth.customChannels.some(c => (c == channel));
+		},
+
+		getItem: function (config) {
 			if (config.slot == 'set') {
-				configSlots.slots.forEach(function(s) {
+				configSlots.slots.forEach(function (s) {
 					if (s == 'tool')
 						return;
 
@@ -94,11 +203,11 @@ define([
 				item.noSalvage = true;
 			}
 
-			factions.forEach(function(f) {
+			factions.forEach(function (f) {
 				if (f == '')
 					return;
 
-				var faction = require('./config/factions/' + f);
+				var faction = factions.getFaction(f);
 				faction.uniqueStat.generate(item);
 
 				item.factions = [];
@@ -111,12 +220,12 @@ define([
 			this.obj.inventory.getItem(item);
 		},
 
-		getGold: function(amount) {
+		getGold: function (amount) {
 			this.obj.trade.gold += ~~amount;
 			this.obj.syncer.set(true, 'trade', 'gold', this.obj.trade.gold);
 		},
 
-		setLevel: function(level) {
+		setLevel: function (level) {
 			var obj = this.obj;
 			var syncer = obj.syncer;
 
@@ -146,7 +255,7 @@ define([
 			stats.calcXpMax();
 		},
 
-		godMode: function() {
+		godMode: function () {
 			var obj = this.obj;
 
 			var statValues = obj.stats.values;
@@ -170,6 +279,19 @@ define([
 			}
 
 			obj.spellbook.calcDps();
+		},
+
+		completeQuests: function () {
+			var obj = this.obj;
+			var quests = obj.quests;
+
+			quests.quests.forEach(function (q) {
+				q.isReady = true;
+				q.complete();
+			}, this);
+
+			quests.quests = [];
+			obj.instance.questBuilder.obtain(obj);
 		}
 	};
 });

@@ -1,38 +1,60 @@
 define([
 	'misc/fileLister',
-	'misc/events'
-], function(
+	'misc/events',
+	'util'
+], function (
 	fileLister,
-	events
+	events,
+	util
 ) {
+	var cbDone = cbDone;
+
 	return {
-		init: function() {
+		waiting: {},
+
+		init: function (_cbDone) {
+			cbDone = _cbDone;
 			var modList = fileLister.getFolderList('mods');
 
-			modList.forEach(function(m) {
-				var mod = null;
-				try {
-					mod = require('mods/' + m + '/index');
-				}
-				catch (e) {}
-
-				if (mod) {
-					mod.events = events;
-					mod.folderName = 'server/mods/' + m;
-					mod.relativeFolderName = 'mods/' + m;
-
-					(mod.extraScripts || []).forEach(function(e) {
-						try {
-							var script = require('mods/' + m + '/' + e);
-							script.folderName = mod.folderName;
-							script.relativeFolderName = mod.relativeFolderName;
-						}
-						catch (e) {}
-					}, this);
-
-					mod.init();
-				}
+			modList.forEach(function (m) {
+				this.waiting[m] = 0;
+				require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
 			}, this);
+		},
+
+		onGetMod: function (name, mod) {
+			mod.events = events;
+			mod.folderName = 'server/mods/' + name;
+			mod.relativeFolderName = 'mods/' + name;
+
+			var list = (mod.extraScripts || []);
+			var lLen = list.length;
+			this.waiting[name] = lLen;
+
+			for (var i = 0; i < lLen; i++) {
+				require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));;
+			}
+
+			if (this.waiting[name] == 0) {
+				mod.init();
+				delete this.waiting[name];
+
+				if (Object.keys(this.waiting).length == 0)
+					cbDone();
+			}
+		},
+
+		onGetExtra: function (name, mod, extra) {
+			extra.folderName = 'server/mods/' + name;
+
+			this.waiting[name]--;
+			if (this.waiting[name] == 0) {
+				mod.init();
+				delete this.waiting[name];
+
+				if (Object.keys(this.waiting).length == 0)
+					cbDone();
+			}
 		}
 	};
 });

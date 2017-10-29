@@ -41,7 +41,7 @@ module.exports = {
 	descTimer: null,
 
 	events: {
-		afterGiveRewards: function(events) {
+		afterGiveRewards: function (events) {
 			var event = events.getEvent('Fishing Tournament');
 			event.descBase = 'The tournament has ended.';
 			event.descLeaderboard = null;
@@ -50,7 +50,7 @@ module.exports = {
 			events.setEventDescription('Fishing Tournament', this.description);
 		},
 
-		beforeSetDescription: function(events) {
+		beforeSetDescription: function (events) {
 			var event = events.getEvent('Fishing Tournament');
 
 			event.description = event.descBase;
@@ -62,7 +62,7 @@ module.exports = {
 	},
 
 	helpers: {
-		updateRewards: function(event, anglerNayla) {
+		updateRewards: function (event, anglerNayla) {
 			event.ranks = {};
 			event.rewards = {};
 			event.weights = {};
@@ -72,7 +72,7 @@ module.exports = {
 				.sort((a, b) => (b.stats.weight - a.stats.weight));
 
 			var fish = [];
-			tempFish.forEach(function(t) {
+			tempFish.forEach(function (t) {
 				if (!fish.some(f => (f.owner == t.owner)))
 					fish.push(t);
 			});
@@ -104,13 +104,13 @@ module.exports = {
 
 				var rewardQty = rewardCounts[rank] || consolationQty;
 
-				event.rewards[f.owner] = [ extend(true, { 
+				event.rewards[f.owner] = [extend(true, {
 					quantity: rewardQty
-				}, tpl) ];
+				}, tpl)];
 			}
 		},
 
-		updateDescription: function(event, events) {
+		updateDescription: function (event, events) {
 			var ranks = event.ranks;
 			var weights = event.weights;
 
@@ -124,13 +124,13 @@ module.exports = {
 			events.setEventDescription('Fishing Tournament');
 		},
 
-		updateWinText: function(event, events) {
+		updateWinText: function (event, events) {
 			var ranks = event.ranks;
 
 			var winText = `Angler Nayla: `;
 			var winners = Object.keys(ranks).filter(r => (ranks[r] == 1));
 			var wLen = winners.length;
-			winners.forEach(function(w, i) {
+			winners.forEach(function (w, i) {
 				winText += ((wLen > 1) && (i == wLen - 1)) ? `and ${w} ` : `${w} `;
 			});
 
@@ -139,14 +139,14 @@ module.exports = {
 			events.setWinText('Fishing Tournament', winText);
 		},
 
-		giveFish: function(source, target) {
+		giveFish: function (source, target) {
 			var srcInventory = source.inventory;
 			var tgtInventory = target.inventory;
 
 			srcInventory.items
 				.filter(i => (i.name.indexOf('Ancient Carp') > -1))
 				.sort((a, b) => (b.stats.weight - a.stats.weight))
-				.forEach(function(f, i) {
+				.forEach(function (f, i) {
 					if (i == 0) {
 						f.owner = source.name;
 						tgtInventory.getItem(extend(true, {}, f));
@@ -156,7 +156,7 @@ module.exports = {
 				});
 		},
 
-		getRank: function(event, playerName) {
+		getRank: function (event, playerName) {
 			var ranks = event.ranks;
 			if (!event.ranks)
 				return -1;
@@ -176,7 +176,7 @@ module.exports = {
 			id: 'anglerNayla',
 			hpMult: 1,
 			pos: {
-				x: 95,
+				x: 134,
 				y: 31
 			},
 			dialogue: {
@@ -339,7 +339,7 @@ module.exports = {
 		endMark: 3428,
 		auto: true,
 		events: {
-			beforeGatherResource: function(gatherResult, gatherer) {
+			beforeGatherResource: function (gatherResult, gatherer) {
 				if (gatherResult.nodeType != 'fish')
 					return;
 
@@ -347,16 +347,16 @@ module.exports = {
 				if (!hasCompRod)
 					return;
 
-				gatherResult.items.forEach(function(g) {
+				gatherResult.items.forEach(function (g) {
 					extend(true, g, {
 						name: 'Ancient Carp',
 						sprite: [11, 4],
 						noDrop: true
 					});
-				});			
+				});
 			},
 
-			beforeEnterPool: function(gatherResult, gatherer) {
+			beforeEnterPool: function (gatherResult, gatherer) {
 				if (gatherResult.nodeName == 'Sun Carp')
 					gatherResult.nodeName = 'Ancient Carp';
 			}
@@ -370,7 +370,7 @@ module.exports = {
 				'1': {
 					'1.4': {
 						msg: `I'd like to hand in some fish.`,
-						prereq: function(obj) {
+						prereq: function (obj) {
 							var fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
 							return !!fishies;
 						},
@@ -382,7 +382,7 @@ module.exports = {
 						msg: ``,
 						options: [1.1, 1.2, 1.3, 1.4]
 					}],
-					method: function(obj) {
+					method: function (obj) {
 						var eventConfig = this.instance.events.getEvent('Fishing Tournament');
 						if (!eventConfig)
 							return;

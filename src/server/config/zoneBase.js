@@ -1,12 +1,12 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		objects: {
 			default: {
-				
+
 			}
 		},
 		mobs: {
@@ -25,14 +25,14 @@ define([
 					dmgMult: 1,
 
 					drops: {
-						chance: 35,
+						chance: 40,
 						rolls: 1
 					}
 				},
 
 				rare: {
 					count: 1,
-					chance: 1,
+					chance: 0.4,
 
 					hpMult: 1.5,
 					dmgMult: 1.5,

@@ -2101,7 +2101,7 @@
                  "y":224
                 }, 
                 {
-                 "gid":777,
+                 "gid":793,
                  "height":24,
                  "id":870,
                  "name":"|bigPortal",
@@ -2309,7 +2309,7 @@
                  "y":320
                 }, 
                 {
-                 "gid":697,
+                 "gid":713,
                  "height":24,
                  "id":886,
                  "name":"|bigGem",
@@ -2321,7 +2321,7 @@
                  "y":72
                 }, 
                 {
-                 "gid":698,
+                 "gid":714,
                  "height":24,
                  "id":889,
                  "name":"|bigGem",
@@ -2333,7 +2333,7 @@
                  "y":184
                 }, 
                 {
-                 "gid":700,
+                 "gid":716,
                  "height":24,
                  "id":890,
                  "name":"|bigGem",
@@ -2345,7 +2345,7 @@
                  "y":16
                 }, 
                 {
-                 "gid":701,
+                 "gid":717,
                  "height":24,
                  "id":896,
                  "name":"|bigGem",
@@ -2363,7 +2363,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2403,7 +2403,7 @@
                  "name":"exit|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2423,7 +2423,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2443,7 +2443,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2463,7 +2463,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2523,7 +2523,7 @@
                  "name":"|portalEntry",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":30,\"y\":16}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":71,\"y\":16}}"
                     },
                  "propertytypes":
                     {
@@ -2542,7 +2542,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":921,
+ "nextobjectid":922,
  "orientation":"orthogonal",
  "properties":
     {
@@ -2758,12 +2758,12 @@
          "columns":8,
          "firstgid":529,
          "image":"..\/..\/..\/..\/client\/images\/objects.png",
-         "imageheight":160,
+         "imageheight":176,
          "imagewidth":64,
          "margin":0,
          "name":"objects",
          "spacing":0,
-         "tilecount":160,
+         "tilecount":176,
          "tileheight":8,
          "tiles":
             {
@@ -2776,7 +2776,7 @@
         }, 
         {
          "columns":8,
-         "firstgid":689,
+         "firstgid":705,
          "image":"..\/..\/..\/..\/client\/images\/bigObjects.png",
          "imageheight":240,
          "imagewidth":192,
@@ -2789,7 +2789,7 @@
         }, 
         {
          "columns":8,
-         "firstgid":769,
+         "firstgid":785,
          "image":"..\/..\/..\/..\/client\/images\/animBigObjects.png",
          "imageheight":240,
          "imagewidth":192,

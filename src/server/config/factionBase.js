@@ -1,6 +1,13 @@
+//Friendly to Honored
+// 4h
+//Honored to Revered
+// 12h
+//Revered to Exalted
+// 48h
+
 define([
 
-], function(
+], function (
 
 ) {
 	return {

@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/createCharacter/template',
 	'css!ui/templates/createCharacter/styles',
 	'ui/factory'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -18,10 +18,11 @@ define([
 		classSprites: null,
 		class: 'wizard',
 		costume: 0,
+		skinId: null,
 
 		prophecies: [],
 
-		postRender: function() {
+		postRender: function () {
 			this.getSkins();
 
 			uiFactory.build('tooltips');
@@ -38,20 +39,20 @@ define([
 				.on('mouseleave', this.onProphecyUnhover.bind(this));
 		},
 
-		getSkins: function() {
+		getSkins: function () {
 			this.el.addClass('disabled');
 
 			client.request({
 				cpn: 'auth',
 				method: 'getSkins',
 				data: {
-					
+
 				},
 				callback: this.onGetSkins.bind(this)
 			});
 		},
 
-		onGetSkins: function(result) {
+		onGetSkins: function (result) {
 			this.el.removeClass('disabled');
 
 			this.classSprites = result;
@@ -63,7 +64,7 @@ define([
 			});
 		},
 
-		onProphecyHover: function(e) {
+		onProphecyHover: function (e) {
 			var el = $(e.currentTarget);
 
 			var pos = {
@@ -77,33 +78,32 @@ define([
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
 
-		onProphecyUnhover: function(e) {
+		onProphecyUnhover: function (e) {
 			var el = $(e.currentTarget);
 			events.emit('onHideTooltip', el[0]);
 		},
 
-		onProphecyClick: function(e) {
+		onProphecyClick: function (e) {
 			var el = $(e.currentTarget);
 			var pName = el.attr('prophecy');
 
 			if (el.hasClass('active')) {
-				this.prophecies.spliceWhere(function(p) {
+				this.prophecies.spliceWhere(function (p) {
 					return (p == pName);
 				});
 				el.removeClass('active');
-			}
-			else {
+			} else {
 				this.prophecies.push(pName);
 				el.addClass('active');
 			}
 		},
 
-		clear: function() {
+		clear: function () {
 			this.prophecies = [];
 			this.find('.prophecy').removeClass('active');
 		},
 
-		back: function() {
+		back: function () {
 			this.clear();
 
 			this.el.remove();
@@ -111,22 +111,22 @@ define([
 			uiFactory.build('characters', {});
 		},
 
-		create: function() {
+		create: function () {
 			this.el.addClass('disabled');
-			
+
 			client.request({
 				cpn: 'auth',
 				method: 'createCharacter',
 				data: {
 					name: this.find('.txtName').val(),
 					class: this.class,
-					costume: this.costume,
+					skinId: this.skinId,
 					prophecies: this.prophecies
 				},
 				callback: this.onCreate.bind(this)
 			});
 		},
-		onCreate: function(result) {
+		onCreate: function (result) {
 			this.el.removeClass('disabled');
 			this.clear();
 
@@ -137,7 +137,7 @@ define([
 				this.el.find('.message').html(result);
 		},
 
-		changeClass: function(e) {
+		changeClass: function (e) {
 			var el = $(e.target);
 			var classes = Object.keys(this.classSprites);
 			var nextIndex = (classes.indexOf(el.html()) + 1) % classes.length;
@@ -154,25 +154,26 @@ define([
 			});
 		},
 
-		changeCostume: function(e) {
+		changeCostume: function (e) {
 			var el = $(e.target);
 
 			var spriteList = this.classSprites[this.class];
 
 			this.costume = (this.costume + 1) % spriteList.length;
+			this.skinId = spriteList[this.costume].id;
 
 			el.html((this.costume + 1) + '/' + spriteList.length);
 
 			this.setSprite();
 		},
 
-		setSprite: function() {
+		setSprite: function () {
 			var classSprite = this.classSprites[this.class][this.costume];
 			var costume = classSprite.sprite.split(',');
-			var spirteX = -costume[0] * 32;
-			var spriteY = -costume[1] * 32;
+			var spirteX = -costume[0] * 8;
+			var spriteY = -costume[1] * 8;
 
-			var spritesheet = classSprite.spritesheet || '../../../images/charas.png';
+			var spritesheet = classSprite.spritesheet || '../../../images/characters.png';
 
 			this.find('.sprite')
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px');

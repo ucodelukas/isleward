@@ -16,7 +16,8 @@ define([
 			login: null,
 			leaderboard: null,
 			customMap: null,
-			mail: null
+			mail: null,
+			customChannels: null
 		},
 
 		init: function(cbReady) {

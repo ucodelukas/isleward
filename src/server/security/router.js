@@ -1,13 +1,13 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
-		allowedCpn: function(msg) {
+		allowedCpn: function (msg) {
 			var allowed = {
 				player: ['performAction', 'queueAction', 'move'],
-				auth: ['login', 'register', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkins', 'createCharacter'],
+				auth: ['login', 'register', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkins', 'createCharacter', 'getCustomChannels'],
 				social: ['chat', 'getInvite', 'acceptInvite', 'declineInvite', 'removeFromParty', 'leaveParty']
 			};
 
@@ -22,17 +22,17 @@ define([
 				dialogue: ['talk'],
 				gatherer: ['gather'],
 				quests: ['complete'],
-				inventory: ['moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', ''],
+				inventory: ['activateMtx', 'moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem'],
 				equipment: ['equip', 'unequip'],
 				stash: ['withdraw'],
-				trade: ['buySell' ],
+				trade: ['buySell'],
 				door: ['lock', 'unlock']
 			};
 
 			return ((secondaryAllowed[msg.data.cpn]) && (secondaryAllowed[msg.data.cpn].indexOf(msg.data.method) > -1));
 		},
 
-		allowedGlobal: function(msg) {
+		allowedGlobal: function (msg) {
 			var allowed = {
 				clientConfig: ['getResourcesList'],
 				leaderboard: ['requestList'],

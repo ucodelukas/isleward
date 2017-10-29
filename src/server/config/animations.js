@@ -3,7 +3,10 @@ define([
 ], function(
 	events
 ) {
-	var animations = {
+	return {
+		init: function() {
+			events.emit('onBeforeGetAnimations', this);
+		},
 		classes: {
 			wizard: {
 				'2': {
@@ -312,8 +315,4 @@ define([
 			}
 		}
 	};
-
-	events.emit('onBeforeGetAnimations', animations);
-
-	return animations;
 });

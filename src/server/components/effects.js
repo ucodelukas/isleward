@@ -1,6 +1,6 @@
 define([
 	'config/effects/effectTemplate'
-], function(
+], function (
 	effectTemplate
 ) {
 	return {
@@ -9,7 +9,7 @@ define([
 		effects: [],
 		nextId: 0,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var effects = blueprint.effects || [];
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -23,7 +23,7 @@ define([
 			delete blueprint.effects;
 		},
 
-		transfer: function() {
+		transfer: function () {
 			var transferEffects = this.effects;
 			this.effects = [];
 
@@ -32,7 +32,7 @@ define([
 			});
 		},
 
-		save: function() {
+		save: function () {
 			var e = {
 				type: 'effects',
 				effects: this.effects
@@ -43,7 +43,7 @@ define([
 			return e;
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var e = {
 				type: 'effects'
 			};
@@ -59,16 +59,16 @@ define([
 			return e;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			if (this.obj.instance)
 				this.events.beforeRezone.call(this);
 		},
 
-		die: function() {
+		die: function () {
 			this.events.beforeRezone.call(this, true);
 		},
 
-		reset: function() {
+		reset: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -79,7 +79,7 @@ define([
 			}
 		},
 
-		reapply: function() {
+		reapply: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -91,7 +91,7 @@ define([
 		},
 
 		events: {
-			beforeRezone: function(forceDestroy) {
+			beforeRezone: function (forceDestroy) {
 				var effects = this.effects;
 				var eLen = effects.length;
 				for (var i = 0; i < eLen; i++) {
@@ -114,10 +114,18 @@ define([
 			}
 		},
 
-		addEffect: function(options) {
+		addEffect: function (options) {
 			var exists = this.effects.find(e => e.type == options.type);
 			if (exists) {
 				exists.ttl += options.ttl;
+
+				for (var p in options) {
+					if (p == 'ttl')
+						continue;
+
+					exists[p] = options[p];
+				}
+
 				return exists;
 			}
 
@@ -158,7 +166,7 @@ define([
 			return builtEffect;
 		},
 
-		syncRemove: function(id, type, noMsg) {
+		syncRemove: function (id, type, noMsg) {
 			if ((noMsg) || (!type))
 				return;
 
@@ -175,7 +183,7 @@ define([
 			this.obj.syncer.setArray(false, 'effects', 'removeEffects', type);
 		},
 
-		removeEffect: function(checkEffect, noMsg) {
+		removeEffect: function (checkEffect, noMsg) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -187,7 +195,7 @@ define([
 				}
 			}
 		},
-		removeEffectByName: function(effectName, noMsg) {
+		removeEffectByName: function (effectName, noMsg) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -200,11 +208,16 @@ define([
 			}
 		},
 
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
 				var e = effects[i];
+				if (!e) {
+					console.log('NO EFFECT');
+					console.log(this.obj.name, event);
+				}
+
 				if (e.ttl <= 0)
 					continue;
 				var events = e.events;
@@ -219,7 +232,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {

@@ -24,13 +24,13 @@ define([
 		'2': [{
 			name: 'Rare Essence',
 			sprite: [0, 4]
-		}, {
-			name: 'Rare Essence',
-			sprite: [0, 4]
 		}], 
 		'3': [{
 			name: 'Cerulean Pearl',
 			sprite: [11, 9]
+		}, {
+			name: 'Epic Essence',
+			sprite: [0, 5]
 		}],
 		'4': [{
 			name: 'Legendary Essence',

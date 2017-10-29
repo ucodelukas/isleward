@@ -1,13 +1,13 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var max = Math.max.bind(Math);
 	var mathRandom = Math.random.bind(Math);
 
 	return {
-		getDamage: function(config) {
+		getDamage: function (config) {
 			var srcValues = config.source.stats.values;
 			var tgtValues = config.target.stats.values;
 
@@ -17,7 +17,7 @@ define([
 				if (!(statType instanceof Array))
 					statType = [statType];
 				var dmg = 0;
-				statType.forEach(function(s) {
+				statType.forEach(function (s) {
 					statValue += srcValues[s];
 				});
 			}

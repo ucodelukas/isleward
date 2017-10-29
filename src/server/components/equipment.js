@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -9,18 +9,18 @@ define([
 		eq: {},
 		doAutoEq: true,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 
 		},
 
-		transfer: function() {
+		transfer: function () {
 			if (this.eqTransfer) {
 				this.eq = this.eqTransfer;
 				delete this.eqTransfer;
 			}
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			return {
 				type: 'equipment',
 				eq: {},
@@ -28,7 +28,7 @@ define([
 			};
 		},
 
-		autoEquip: function(itemId) {
+		autoEquip: function (itemId) {
 			if (!this.doAutoEq)
 				return;
 
@@ -52,7 +52,7 @@ define([
 			}
 		},
 
-		equip: function(itemId) {
+		equip: function (itemId) {
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
@@ -83,6 +83,9 @@ define([
 
 				return;
 			}
+
+			delete item.pos;
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
 			var spellId = null;
 			var currentEqId = this.eq[item.slot];
@@ -115,11 +118,15 @@ define([
 					var result = item;
 					if (item.effects) {
 						result = extend(true, {}, item);
-						result.effects = result.effects.map(e => ({factionId: e.factionId, text: e.text, properties: e.properties }));
+						result.effects = result.effects.map(e => ({
+							factionId: e.factionId,
+							text: e.text,
+							properties: e.properties
+						}));
 						var reputation = this.obj.reputation;
 
 						if (result.factions) {
-							result.factions = result.factions.map(function(f) {
+							result.factions = result.factions.map(function (f) {
 								var faction = reputation.getBlueprint(f.id);
 								var factionTier = reputation.getTier(f.id);
 
@@ -143,7 +150,7 @@ define([
 
 			this.obj.fireEvent('afterEquipItem', item);
 		},
-		unequip: function(itemId) {
+		unequip: function (itemId) {
 			var item = itemId;
 
 			if (item.id == null)
@@ -164,6 +171,8 @@ define([
 			delete item.eq;
 			delete this.eq[item.slot];
 
+			this.obj.inventory.setItemPosition(itemId);
+
 			if (item.spell) {
 				item.eq = true;
 				this.obj.inventory.unlearnAbility(itemId, item.runeSlot);
@@ -172,11 +181,15 @@ define([
 					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 				else {
 					var result = extend(true, {}, item);
-					result.effects = result.effects.map(e => ({factionId: e.factionId, text: e.text, properties: e.properties }));
+					result.effects = result.effects.map(e => ({
+						factionId: e.factionId,
+						text: e.text,
+						properties: e.properties
+					}));
 					var reputation = this.obj.reputation;
 
 					if (result.factions) {
-						result.factions = result.factions.map(function(f) {
+						result.factions = result.factions.map(function (f) {
 							var faction = reputation.getBlueprint(f.id);
 							var factionTier = reputation.getTier(f.id);
 
@@ -201,18 +214,18 @@ define([
 
 			this.obj.fireEvent('afterUnequipItem', item);
 		},
-		unequipAll: function() {
+		unequipAll: function () {
 			var eq = this.eq;
-			Object.keys(this.eq).forEach(function(slot) {
+			Object.keys(this.eq).forEach(function (slot) {
 				this.unequip(eq[slot]);
 			}, this);
 		},
 
-		unequipFactionGear: function(factionId, tier) {
+		unequipFactionGear: function (factionId, tier) {
 			var inventory = this.obj.inventory;
 
 			var eq = this.eq;
-			Object.keys(this.eq).forEach(function(slot) {
+			Object.keys(this.eq).forEach(function (slot) {
 				var itemId = eq[slot];
 				var item = inventory.findItem(itemId);
 

@@ -16,7 +16,7 @@ module.exports = {
 	},
 	objects: {
 		'sun carp school': {
-			max: 6,
+			max: 8,
 			type: 'fish',
 			quantity: [6, 12]
 		},
@@ -42,7 +42,7 @@ module.exports = {
 		'estuary entrance': {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -96,7 +96,7 @@ module.exports = {
 		default: {
 			regular: {
 				drops: {
-					chance: 35,
+					chance: 40,
 					rolls: 1
 				}
 			}
@@ -129,7 +129,7 @@ module.exports = {
 			level: 2,
 			regular: {
 				drops: {
-					chance: 75,
+					chance: 55,
 					rolls: 1
 				}
 			},
@@ -145,7 +145,7 @@ module.exports = {
 			level: 3,
 			regular: {
 				drops: {
-					chance: 65,
+					chance: 50,
 					rolls: 1
 				}
 			},
@@ -158,10 +158,10 @@ module.exports = {
 			}
 		},
 		elk: {
-			level: 5,
+			level: 4,
 			regular: {
 				drops: {
-					chance: 55,
+					chance: 50,
 					rolls: 1
 				}
 			},
@@ -173,17 +173,20 @@ module.exports = {
 				sprite: [0, 2]
 			}
 		},
-		crab: {
-			faction: 'gaekatla',
-			deathRep: -3,
-			level: 7,
-
+		flamingo: {
+			level: 5,
 			regular: {
 				drops: {
 					chance: 45,
 					rolls: 1
 				}
-			},
+			}
+		},
+		crab: {
+			faction: 'gaekatla',
+			deathRep: -3,
+			level: 6,
+
 			rare: {
 				name: 'Squiggles'
 			},
@@ -195,7 +198,7 @@ module.exports = {
 		'titan crab': {
 			faction: 'gaekatla',
 			deathRep: -5,
-			level: 8,
+			level: 7,
 			rare: {
 				name: 'The Pincer King'
 			}
@@ -213,18 +216,16 @@ module.exports = {
 						min: 3,
 						max: 5
 					},
-					forceItems: [
-						{
-							name: 'Flimsy Fishing Rod',
-							type: 'Fishing Rod',
-							slot: 'tool',
-							quality: 0,
-							worth: 5,
-							sprite: [11, 0],
-							infinite: true,
-							noSalvage: true
-						}
-					],
+					forceItems: [{
+						name: 'Flimsy Fishing Rod',
+						type: 'Fishing Rod',
+						slot: 'tool',
+						quality: 0,
+						worth: 5,
+						sprite: [11, 0],
+						infinite: true,
+						noSalvage: true
+					}],
 					level: {
 						min: 1,
 						max: 5
@@ -268,4 +269,4 @@ module.exports = {
 			}
 		}
 	}
-}; 
+};

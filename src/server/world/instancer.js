@@ -11,7 +11,8 @@ define([
 	'world/customMap',
 	'events/events',
 	'misc/scheduler',
-	'misc/mail'
+	'misc/mail',
+	'config/herbs'
 ], function(
 	map,
 	syncer,
@@ -25,7 +26,8 @@ define([
 	customMap,
 	events,
 	scheduler,
-	mail
+	mail,
+	herbs
 ) {
 	return {
 		instances: [],
@@ -38,7 +40,7 @@ define([
 			this.zoneId = args.zoneId;
 
 			spellCallbacks.init();
-
+			herbs.init();
 			map.init(args);
 
 			if (!map.instanced) {
@@ -55,6 +57,8 @@ define([
 					map: map,
 					scheduler: scheduler
 				};
+
+				this.instances.push(fakeInstance);
 
 				spawners.init(fakeInstance);
 				scheduler.init();

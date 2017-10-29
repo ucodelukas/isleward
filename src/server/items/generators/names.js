@@ -1,6 +1,6 @@
 define([
-	'items/config/prefixes',
-	'items/config/suffixes'
+	'../config/prefixes',
+	'../config/suffixes'
 ], function(
 	prefixes,
 	suffixes

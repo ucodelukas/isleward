@@ -1,7 +1,7 @@
 define([
 	'world/atlas',
 	'config/roles'
-], function(
+], function (
 	atlas,
 	roles
 ) {
@@ -12,18 +12,28 @@ define([
 		partyLeaderId: null,
 		party: null,
 
-		init: function() {
+		customChannels: null,
+
+		init: function (blueprint) {
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return {
 				type: 'social',
-				party: this.party
+				party: this.party,
+				customChannels: this.customChannels
 			};
 		},
 
-		sendMessage: function(msg) {
+		save: function () {
+			return {
+				type: 'social',
+				customChannels: this.customChannels
+			};
+		},
+
+		sendMessage: function (msg) {
 			this.obj.socket.emit('event', {
 				event: 'onGetMessages',
 				data: {
@@ -36,7 +46,7 @@ define([
 			});
 		},
 
-		sendPartyMessage: function(msg) {
+		sendPartyMessage: function (msg) {
 			if (!this.party) {
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
@@ -54,7 +64,7 @@ define([
 			var charname = this.obj.auth.charname;
 			var message = msg.data.message.substr(1);
 
-			this.party.forEach(function(p) {
+			this.party.forEach(function (p) {
 				var player = cons.players.find(c => c.id == p);
 
 				player.socket.emit('events', {
@@ -69,7 +79,54 @@ define([
 			}, this);
 		},
 
-		chat: function(msg) {
+		sendCustomChannelMessage: function (msg) {
+			var pList = cons.players;
+			var pLen = pList.length;
+			var origMessage = msg.data.message.substr(1);
+
+			var channel = origMessage.split(' ')[0];
+			var message = origMessage.substr(channel.length);
+
+			if ((!channel) || (!message)) {
+				this.obj.socket.emit('events', {
+					onGetMessages: [{
+						messages: [{
+							class: 'q0',
+							message: 'syntax: $channel message',
+							type: 'info'
+						}]
+					}]
+				});
+				return;
+			} else if (!this.isInChannel(this.obj, channel)) {
+				this.obj.socket.emit('events', {
+					onGetMessages: [{
+						messages: [{
+							class: 'q0',
+							message: 'you are not currently in channel: ' + channel,
+							type: 'info'
+						}]
+					}]
+				});
+				return;
+			} else if (pLen > 0) {
+				for (var i = 0; i < pLen; i++) {
+					if (this.isInChannel(pList[i], channel)) {
+						pList[i].socket.emit('events', {
+							onGetMessages: [{
+								messages: [{
+									class: 'q0',
+									message: '[' + channel + '] ' + this.obj.auth.charname + ': ' + message,
+									type: channel.trim()
+								}]
+							}]
+						});
+					}
+				}
+			}
+		},
+
+		chat: function (msg) {
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
 				return;
@@ -125,12 +182,14 @@ define([
 						}]
 					}
 				});
+			} else if (messageString[0] == '$') {
+				this.sendCustomChannelMessage(msg);
 			} else if (messageString[0] == '%') {
 				this.sendPartyMessage(msg);
 			} else {
 				var prefix = roles.getRoleMessagePrefix(this.obj) || '';
 
-				io.sockets.emit('event', {
+				global.io.sockets.emit('event', {
 					event: 'onGetMessages',
 					data: {
 						messages: [{
@@ -144,7 +203,7 @@ define([
 			}
 		},
 
-		dc: function() {
+		dc: function () {
 			if (!this.party)
 				return;
 
@@ -152,7 +211,7 @@ define([
 		},
 
 		//This gets called on the target player
-		getInvite: function(msg) {
+		getInvite: function (msg) {
 			if (this.party)
 				return;
 
@@ -176,7 +235,7 @@ define([
 		},
 
 		//This gets called on the player that initiated the invite
-		acceptInvite: function(msg) {
+		acceptInvite: function (msg) {
 			var sourceId = msg.data.sourceId;
 			var source = cons.players.find(c => c.id == sourceId);
 			if (!source)
@@ -194,7 +253,7 @@ define([
 
 			this.updatePartyOnThread();
 
-			this.party.forEach(function(p) {
+			this.party.forEach(function (p) {
 				var player = cons.players.find(c => c.id == p);
 				player.social.party = this.party;
 				player.social.updatePartyOnThread();
@@ -211,7 +270,7 @@ define([
 					});
 			}, this);
 		},
-		declineInvite: function(msg) {
+		declineInvite: function (msg) {
 			var targetId = msg.data.targetId;
 			var target = cons.players.find(c => c.id == targetId);
 			if (!target)
@@ -221,12 +280,12 @@ define([
 		},
 
 		//Gets called on the player that requested to leave
-		leaveParty: function(msg) {
+		leaveParty: function (msg) {
 			var name = this.obj.name;
 
 			this.party.spliceWhere(p => p == this.obj.id);
 
-			this.party.forEach(function(p) {
+			this.party.forEach(function (p) {
 				var player = cons.players.find(c => c.id == p);
 
 				var messages = [{
@@ -244,6 +303,12 @@ define([
 					player.social.party = null;
 					player.social.updatePartyOnThread();
 					party = null;
+				}
+
+				if (!player) {
+					console.log('no player');
+					console.log(this.party);
+					console.log(this.obj.name);
 				}
 
 				player.socket.emit('events', {
@@ -269,7 +334,7 @@ define([
 			if ((this.isPartyLeader) && (this.party.length >= 2)) {
 				var newLeader = cons.players.find(c => c.id == this.party[0]).social;
 				newLeader.isPartyLeader = true;
-				this.party.forEach(function(p) {
+				this.party.forEach(function (p) {
 					var msg = newLeader.obj.name + ' is now the party leader';
 					if (p == newLeader.obj.id)
 						msg = 'you are now the party leader';
@@ -290,7 +355,7 @@ define([
 		},
 
 		//Gets called on the player that requested the removal
-		removeFromParty: function(msg) {
+		removeFromParty: function (msg) {
 			if (!this.isPartyLeader) {
 				this.sendMessage('you are not the party leader');
 				return;
@@ -302,7 +367,7 @@ define([
 
 			this.party.spliceWhere(p => p == target.id);
 
-			this.party.forEach(function(p) {
+			this.party.forEach(function (p) {
 				cons.players.find(c => c.id == p)
 					.socket.emit('events', {
 						onGetParty: [this.party],
@@ -338,7 +403,7 @@ define([
 			}
 		},
 
-		updatePartyOnThread: function() {
+		updatePartyOnThread: function () {
 			atlas.updateObject(this.obj, {
 				components: [{
 					type: 'social',

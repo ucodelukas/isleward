@@ -1,7 +1,7 @@
 define([
 	'items/generators/quality',
 	'misc/events'
-], function(
+], function (
 	qualityGenerator,
 	events
 ) {
@@ -14,13 +14,13 @@ define([
 		gatheringTtlMax: 7,
 		defaultTtlMax: 7,
 
-		simplify: function() {
+		simplify: function () {
 			return {
 				type: 'gatherer'
 			};
 		},
 
-		gather: function() {
+		gather: function () {
 			if (this.gathering != null)
 				return;
 
@@ -46,7 +46,7 @@ define([
 			this.gatheringTtl = this.gatheringTtlMax;
 		},
 
-		update: function() {
+		update: function () {
 			var gathering = this.gathering;
 			if (!gathering)
 				return;
@@ -55,7 +55,7 @@ define([
 
 			if (this.gatheringTtl > 0) {
 				if ((this.gatheringTtl == this.gatheringTtlMax) && (gathering.width)) {
-					['x', 'y', 'width', 'height'].forEach(function(p) {
+					['x', 'y', 'width', 'height'].forEach(function (p) {
 						this.obj.syncer.set(false, 'gatherer', p, gathering[p]);
 					}, this);
 				}
@@ -71,7 +71,9 @@ define([
 			}
 
 			var resourceNode = gathering.resourceNode;
-			var gatherResult = extend(true, {}, {
+			var gatherResult = extend(true, {
+				obj: gathering
+			}, {
 				nodeType: resourceNode.nodeType,
 				blueprint: resourceNode.blueprint,
 				xp: resourceNode.xp,
@@ -105,7 +107,7 @@ define([
 					return;
 				}
 
-				gatherResult.items.forEach(function(g) {
+				gatherResult.items.forEach(function (g) {
 					delete g.quantity;
 
 					qualityGenerator.generate(g, {
@@ -146,9 +148,19 @@ define([
 				}
 			}
 
-			gatherResult.items.forEach(function(i) {
-				delete i.pos;
-				this.obj.inventory.getItem(i);
+			var blueprint = gatherResult.blueprint;
+
+			gatherResult.items.forEach(function (item, i) {
+				delete item.pos;
+
+				if (i == 0) {
+					if (blueprint.itemName)
+						item.name = blueprint.itemName;
+					if (blueprint.itemAmount)
+						item.quantity = ~~(Math.random() * blueprint.itemAmount[1]) + blueprint.itemAmount[0];
+				}
+
+				this.obj.inventory.getItem(item);
 			}, this);
 
 			if (!gatherResult.noChangeAmount)
@@ -179,7 +191,7 @@ define([
 			this.gathering = null;
 		},
 
-		enter: function(node) {
+		enter: function (node) {
 			var gatherResult = extend(true, {
 				nodeName: node.name
 			});
@@ -220,16 +232,16 @@ define([
 			this.nodes.push(node);
 		},
 
-		exit: function(node) {
+		exit: function (node) {
 			this.nodes.spliceWhere(n => (n == node));
 		},
 
 		events: {
-			beforeMove: function() {
+			beforeMove: function () {
 				if (!this.gathering)
 					return;
 
-				['x', 'y', 'width', 'height'].forEach(function(p) {
+				['x', 'y', 'width', 'height'].forEach(function (p) {
 					this.obj.syncer.delete(false, 'gatherer', p);
 				}, this);
 
@@ -242,7 +254,7 @@ define([
 				this.gathering = null;
 			},
 
-			afterEquipItem: function(item) {
+			afterEquipItem: function (item) {
 				var nodes = this.nodes;
 				var nLen = nodes.length;
 
@@ -283,7 +295,7 @@ define([
 				}
 			},
 
-			afterUnequipItem: function(item) {
+			afterUnequipItem: function (item) {
 				this.events.afterEquipItem.call(this, item);
 			}
 		}

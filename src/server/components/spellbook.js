@@ -4,7 +4,7 @@ define([
 	'./../config/spells',
 	'./../config/spellsConfig',
 	'misc/events'
-], function(
+], function (
 	spellTemplate,
 	animations,
 	playerSpells,
@@ -25,12 +25,12 @@ define([
 
 		callbacks: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.objects = this.obj.instance.objects;
 			this.physics = this.obj.instance.physics;
 
 			var spells = blueprint.spells || [];
-			spells.forEach(function(s) {
+			spells.forEach(function (s) {
 				this.addSpell(s);
 			}, this);
 
@@ -39,24 +39,24 @@ define([
 			delete blueprint.spells;
 		},
 
-		transfer: function() {
+		transfer: function () {
 			var spells = this.spells;
 			this.spells = [];
 
-			spells.forEach(function(s) {
+			spells.forEach(function (s) {
 				this.addSpell(s);
 			}, this);
 		},
 
-		die: function() {
+		die: function () {
 			this.auto = [];
 
-			this.spells.forEach(function(s) {
+			this.spells.forEach(function (s) {
 				s.die();
 			});
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return null;
 
@@ -75,7 +75,7 @@ define([
 			return s;
 		},
 
-		addSpell: function(options, spellId) {
+		addSpell: function (options, spellId) {
 			if (!options.type) {
 				options = {
 					type: options
@@ -101,7 +101,7 @@ define([
 
 			if (builtSpell.animation) {
 				var animation = null;
-				var sheetName = this.obj.sheetName;
+				var sheetName = this.obj.sheetName || '../../../images/characters.png';
 				var animationName = builtSpell.animation;
 
 				if (sheetName == 'mobs')
@@ -127,7 +127,7 @@ define([
 
 			builtSpell.id = (options.id == null) ? spellId : options.id;
 			this.spells.push(builtSpell);
-			this.spells.sort(function(a, b) {
+			this.spells.sort(function (a, b) {
 				return (a.id - b.id);
 			});
 
@@ -141,7 +141,7 @@ define([
 			return builtSpell.id;
 		},
 
-		addSpellFromRune: function(runeSpell, spellId) {
+		addSpellFromRune: function (runeSpell, spellId) {
 			var name = runeSpell.name.toLowerCase();
 			var playerSpell = playerSpells.find(s => s.name.toLowerCase() == name);
 			var playerSpellConfig = playerSpellsConfig[name];
@@ -192,11 +192,11 @@ define([
 			return this.addSpell(builtSpell, spellId);
 		},
 
-		calcDps: function() {
+		calcDps: function () {
 			this.spells.forEach(s => s.calcDps());
 		},
 
-		removeSpellById: function(id) {
+		removeSpellById: function (id) {
 			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
 			if (exists) {
@@ -207,7 +207,7 @@ define([
 			}
 		},
 
-		queueAuto: function(action) {
+		queueAuto: function (action) {
 			if (!action.auto)
 				return true;
 
@@ -222,9 +222,9 @@ define([
 			} else
 				exists.target = action.target;
 		},
-		getRandomSpell: function(target) {
+		getRandomSpell: function (target) {
 			var valid = [];
-			this.spells.forEach(function(s, i) {
+			this.spells.forEach(function (s, i) {
 				if (s.canCast(target))
 					valid.push(i);
 			});
@@ -234,7 +234,7 @@ define([
 			else
 				return null;
 		},
-		cast: function(action, isAuto) {
+		cast: function (action, isAuto) {
 			if (action.spell == null) {
 				this.auto = [];
 				return true;
@@ -257,7 +257,7 @@ define([
 			}
 
 			if (!spell.targetGround) {
-				if (action.target == null) {
+				if ((action.target == null) || (!action.target.player)) {
 					if (spell.autoTargetFollower) {
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
 						if (action.target)
@@ -367,14 +367,14 @@ define([
 			return success;
 		},
 
-		getClosestRange: function(spellNum) {
+		getClosestRange: function (spellNum) {
 			if (spellNum)
 				return this.spells[spellNum].range;
 			else
 				return this.closestRange;
 		},
 
-		getFurthestRange: function(spellNum) {
+		getFurthestRange: function (spellNum) {
 			if (spellNum)
 				return this.spells[spellNum].range;
 			else {
@@ -393,7 +393,7 @@ define([
 			}
 		},
 
-		getCooldowns: function() {
+		getCooldowns: function () {
 			var cds = [];
 			this.spells.forEach(
 				s => cds.push({
@@ -404,8 +404,10 @@ define([
 
 			return cds;
 		},
-		update: function() {
-			this.spells.forEach(function(s, i) {
+		update: function () {
+			var didCast = false;
+
+			this.spells.forEach(function (s, i) {
 				s.updateBase();
 				if (s.update)
 					s.update();
@@ -424,7 +426,7 @@ define([
 
 				var spell = this.spells[a.spell];
 				if (this.cast(a, true))
-					return true;
+					didCast = true;
 			}
 
 			var callbacks = this.callbacks;
@@ -451,9 +453,11 @@ define([
 					cLen--;
 				}
 			}
+
+			return didCast;
 		},
 
-		registerCallback: function(sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {
+		registerCallback: function (sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {
 			var obj = {
 				sourceId: sourceId,
 				targetId: targetId,
@@ -467,7 +471,7 @@ define([
 
 			return obj;
 		},
-		unregisterCallback: function(sourceId, target) {
+		unregisterCallback: function (sourceId, target) {
 			var callbacks = this.callbacks;
 			var cLen = callbacks.length;
 			for (var i = 0; i < cLen; i++) {
@@ -490,7 +494,7 @@ define([
 			}
 		},
 
-		sendAnnouncement: function(msg, global) {
+		sendAnnouncement: function (msg, global) {
 			process.send({
 				method: 'events',
 				data: {
@@ -504,7 +508,7 @@ define([
 			});
 		},
 
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var spells = this.spells;
 			var sLen = spells.length;
 			for (var i = 0; i < sLen; i++) {
@@ -525,7 +529,7 @@ define([
 		},
 
 		events: {
-			beforeRezone: function() {
+			beforeRezone: function () {
 				var callbacks = this.callbacks;
 				var cLen = callbacks.length;
 				for (var i = 0; i < cLen; i++) {

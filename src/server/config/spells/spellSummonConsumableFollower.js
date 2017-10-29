@@ -1,6 +1,6 @@
 define([
 	'world/mobBuilder'
-], function(
+], function (
 	mobBuilder
 ) {
 	return {
@@ -19,7 +19,9 @@ define([
 		walkCd: 0,
 		walkCdMax: 5,
 
-		cast: function(action) {
+		explodes: false,
+
+		cast: function (action) {
 			var obj = this.obj;
 			var target = {
 				x: 0,
@@ -41,14 +43,14 @@ define([
 				blueprint: {
 					x: target.x,
 					y: target.y,
-					cell: 60,
-					sheetName: 'mobs',
-					name: 'Slimy Offspring',
+					cell: this.cell || 60,
+					sheetName: this.sheetName || 'mobs',
+					name: this.name || 'Slimy Offspring',
 					properties: {
-						
+
 					},
 					extraProperties: {
-						
+
 					}
 				}
 			});
@@ -74,11 +76,11 @@ define([
 			return true;
 		},
 
-		getFollowerAggro: function(mob) {
+		getFollowerAggro: function (mob) {
 			return this.obj;
 		},
 
-		update: function() {
+		update: function () {
 			var obj = this.obj;
 			var x = obj.x;
 			var y = obj.y;
@@ -95,8 +97,7 @@ define([
 					minions.splice(i, 1);
 					i--;
 					mLen--;
-				}
-				else {
+				} else {
 					if ((Math.abs(x - m.x) <= 1) && (Math.abs(y - m.y) <= 1)) {
 						m.destroyed = true;
 						this.obj.stats.getHp({
@@ -112,15 +113,14 @@ define([
 								col: 4
 							}]
 						});
-					}
-					else {
-						m.mob.update = (this.walkCd == 0) ? m.mob.realUpdate: null;
+					} else {
+						m.mob.update = (this.walkCd == 0) ? m.mob.realUpdate : null;
 					}
 				}
 			}
 		},
 
-		onAfterSimplify: function(simple) {
+		onAfterSimplify: function (simple) {
 			delete simple.minions;
 		}
 	};

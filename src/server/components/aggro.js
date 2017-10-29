@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -14,7 +14,7 @@ define([
 		list: [],
 		ignoreList: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
 			blueprint = blueprint || {};
@@ -36,19 +36,19 @@ define([
 		},
 
 		events: {
-			beforeRezone: function() {
+			beforeRezone: function () {
 				this.die();
 			}
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			return {
 				type: 'aggro',
 				faction: this.faction
 			};
 		},
 
-		move: function() {
+		move: function () {
 			var result = {
 				success: true
 			};
@@ -68,7 +68,7 @@ define([
 
 					var lThreat = l.obj.aggro.getHighest();
 					if (lThreat) {
-						l.obj.aggro.list.forEach(function(a) {
+						l.obj.aggro.list.forEach(function (a) {
 							a.obj.aggro.unIgnore(lThreat);
 						});
 					}
@@ -121,13 +121,20 @@ define([
 			}
 		},
 
-		canAttack: function(target) {
+		canAttack: function (target) {
 			var obj = this.obj;
-
 			if (target == obj)
 				return false;
-			else if ((target.player) && (obj.player))
-				return ((obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
+			else if ((target.player) && (obj.player)) {
+				var hasButcher = (obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher'));
+
+				if ((!target.social.party) || (!obj.social.party))
+					return hasButcher;
+				else if (target.social.partyLeaderId != obj.social.partyLeaderId)
+					return hasButcher;
+				else
+					return false;
+			}
 			else if ((target.follower) && (target.follower.master.player) && (obj.player))
 				return false;
 			else if (obj.player)
@@ -136,7 +143,7 @@ define([
 				return true;
 		},
 
-		willAutoAttack: function(target) {
+		willAutoAttack: function (target) {
 			if (this.obj == target)
 				return false;
 
@@ -156,16 +163,16 @@ define([
 			return (rep.getTier(faction) < 3);
 		},
 
-		ignore: function(obj) {
+		ignore: function (obj) {
 			this.ignoreList.spliceWhere(o => o == obj);
 			this.ignoreList.push(obj);
 		},
 
-		unIgnore: function(obj) {
+		unIgnore: function (obj) {
 			this.ignoreList.spliceWhere(o => o == obj);
 		},
 
-		tryEngage: function(obj, amount, threatMult) {
+		tryEngage: function (obj, amount, threatMult) {
 			//Don't aggro yourself, stupid
 			if (obj == this.obj)
 				return;
@@ -202,7 +209,7 @@ define([
 			return true;
 		},
 
-		getFirstAttacker: function() {
+		getFirstAttacker: function () {
 			var first = this.list.find(l => ((l.obj.player) && (l.damage > 0)));
 			if (first)
 				return first.obj;
@@ -210,7 +217,7 @@ define([
 				return null;
 		},
 
-		die: function() {
+		die: function () {
 			var list = this.list;
 			var lLen = list.length;
 
@@ -228,7 +235,7 @@ define([
 
 			this.list = [];
 		},
-		unAggro: function(obj, amount) {
+		unAggro: function (obj, amount) {
 			var oId = obj.id;
 			var list = this.list;
 			var lLen = list.length;
@@ -261,13 +268,13 @@ define([
 				this.obj.stats.resetHp();
 		},
 
-		sortThreat: function() {
-			this.list.sort(function(a, b) {
+		sortThreat: function () {
+			this.list.sort(function (a, b) {
 				return (b.threat - a.threat);
 			});
 		},
 
-		getHighest: function() {
+		getHighest: function () {
 			if (this.list.length == 0)
 				return null;
 
@@ -308,7 +315,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var list = this.list;
 			var lLen = list.length;
 

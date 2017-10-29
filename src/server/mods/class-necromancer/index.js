@@ -1,10 +1,10 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
-		name: 'Necormancer Class',
+		name: 'Necromancer Class',
 
 		extraScripts: [
 			'spells/spellHarvestLife',
@@ -12,7 +12,7 @@ define([
 			'spells/spellBloodBarrier'
 		],
 
-		init: function() {
+		init: function () {
 			this.events.on('onBeforeGetClasses', this.beforeGetClasses.bind(this));
 			this.events.on('onBeforeGetSkins', this.beforeGetSkins.bind(this));
 			this.events.on('onBeforeGetItemTypes', this.beforeGetItemTypes.bind(this));
@@ -23,7 +23,7 @@ define([
 			this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
 		},
 
-		beforeGetAnimations: function(animations) {
+		beforeGetAnimations: function (animations) {
 			var spritesheet = `${this.folderName}/images/inGameSprite.png`;
 
 			animations.mobs[spritesheet] = {
@@ -78,13 +78,13 @@ define([
 			};
 		},
 
-		beforeGetResourceList: function(list) {
+		beforeGetResourceList: function (list) {
 			list.push(`${this.folderName}/images/inGameSprite.png`);
 			list.push(`${this.folderName}/images/abilityIcons.png`);
 			list.push(`${this.folderName}/images/mobs.png`);
 		},
 
-		beforeGetClasses: function(classes) {
+		beforeGetClasses: function (classes) {
 			classes.spells.necromancer = ['summon skeleton', 'blood barrier'];
 			classes.stats.necromancer = {
 				values: {
@@ -101,7 +101,7 @@ define([
 			};
 		},
 
-		beforeGetSpellTemplate: function(spell) {
+		beforeGetSpellTemplate: function (spell) {
 			if (spell.type == 'HarvestLife')
 				spell.template = require(`${this.relativeFolderName}/spells/spellHarvestLife`);
 			else if (spell.type == 'SummonSkeleton')
@@ -110,18 +110,18 @@ define([
 				spell.template = require(`${this.relativeFolderName}/spells/spellBloodBarrier`);
 		},
 
-		beforeGetSkins: function(skins) {
+		beforeGetSkins: function (skins) {
 			skins['necromancer 1'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
 				class: 'necromancer',
-				spritesheet: `${this.folderName}/images/classSprite.png`,
+				spritesheet: `${this.folderName}/images/inGameSprite.png`,
 				default: true
 			};
 		},
 
-		beforeGetItemTypes: function(types) {
-			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function(s, i) {
+		beforeGetItemTypes: function (types) {
+			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
 				types.twoHanded[s] = {
 					sprite: [i, 0],
 					spellName: 'harvest life',
@@ -130,7 +130,7 @@ define([
 			}, this);
 		},
 
-		beforeGetSpellsConfig: function(spells) {
+		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
@@ -173,7 +173,7 @@ define([
 			};
 		},
 
-		beforeGetSpellsInfo: function(spells) {
+		beforeGetSpellsInfo: function (spells) {
 			spells.push({
 				name: 'Harvest Life',
 				description: 'Absorbs the life-force of your enemies.',
