@@ -68,6 +68,7 @@ define([
 
 			obj.addComponent('social', character.components.find(c => c.type == 'social'));
 			obj.social.init();
+			obj.social.party = null;
 			obj.addComponent('aggro', {
 				faction: 'players'
 			});
