@@ -20,6 +20,7 @@ define([
 		needLos: true,
 		autoTargetFollower: true,
 		targetFriendly: true,
+		noTargetSelf: true,
 
 		cast: function (action) {
 			var obj = this.obj;

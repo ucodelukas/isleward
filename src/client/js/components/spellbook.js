@@ -206,6 +206,9 @@ define([
 			if (this.shiftDown)
 				this.target = oldTarget;
 
+			if ((target == this.obj) && (spell.noTargetSelf))
+				return;
+
 			client.request({
 				cpn: 'player',
 				method: 'queueAction',
