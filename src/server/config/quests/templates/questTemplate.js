@@ -62,7 +62,7 @@ define([
 				obj.inventory.getItem(r);
 			});
 
-			obj.syncer.setArray(true, 'quests', 'completeQuests', id);
+			obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
 			obj.stats.getXp(this.xp || 10);
 		},
