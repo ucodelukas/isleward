@@ -90,9 +90,9 @@ define([
 				else if ((endTile.x != x) || (endTile.y != y))
 					return false;
 				else {
-					//Don't spawn in rooms
+					//Don't spawn in rooms or on objects/other resources
 					var cell = this.physics.getCell(x, y);
-					if (cell.some(c => c.notice))
+					if (cell.length > 0)
 						return false;
 					else {
 						blueprint.x = x;
