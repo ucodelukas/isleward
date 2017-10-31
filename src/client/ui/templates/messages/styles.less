@@ -79,6 +79,7 @@
 		max-height: 320px;
 
 		.list-message {
+			display: none;
 			width: 100%;
 			padding: 5px 10px;
 			color: white;
@@ -129,6 +130,11 @@
 				color: @blueA;
 			}
 		}
+
+		&.rep .rep { display: block; }
+		&.chat .chat { display: block; }
+		&.info .info { display: block; }
+		&.loot .loot { display: block; }
 	}
 
 	.el.message {

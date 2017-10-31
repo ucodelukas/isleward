@@ -5,7 +5,7 @@ define([
 	'css!ui/templates/messages/styles',
 	'js/input',
 	'js/system/client'
-], function(
+], function (
 	events,
 	template,
 	tplTab,
@@ -26,7 +26,7 @@ define([
 
 		hoverFilter: false,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
 			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
@@ -38,60 +38,63 @@ define([
 				.on('blur', this.toggle.bind(this, false, true));
 
 			this
-				.find('.filter')
-					.on('mouseover', this.onFilterHover.bind(this, true))
-					.on('mouseleave', this.onFilterHover.bind(this, false))
-					.on('click', this.onClickFilter.bind(this));
+				.find('.filter:not(.channel)')
+				.on('mouseover', this.onFilterHover.bind(this, true))
+				.on('mouseleave', this.onFilterHover.bind(this, false))
+				.on('click', this.onClickFilter.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 		},
 
-		onGetCustomChatChannels: function(channels) {
-			channels.forEach(function(c) {
+		onGetCustomChatChannels: function (channels) {
+			channels.forEach(function (c) {
 				this.onJoinChannel(c);
 			}, this);
 		},
 
-		onJoinChannel: function(channel) {
+		onJoinChannel: function (channel) {
 			var container = this.find('.filters');
 			var newFilter = $(tplTab)
 				.appendTo(container)
+				.addClass('channel')
 				.attr('filter', channel.trim())
 				.html(channel.trim())
 				.on('mouseover', this.onFilterHover.bind(this, true))
 				.on('mouseleave', this.onFilterHover.bind(this, false))
 				.on('click', this.onClickFilter.bind(this));
 		},
-		
-		onLeaveChannel: function(channel) {
+
+		onLeaveChannel: function (channel) {
 			this.find('.filters [filter="' + channel + '"]').remove();
 		},
 
-		onFilterHover: function(hover) {
+		onFilterHover: function (hover) {
 			this.hoverFilter = hover;
 		},
 
-		onClickFilter: function(e) {
+		onClickFilter: function (e) {
 			var el = $(e.currentTarget);
 			el.toggleClass('active');
-		
+
 			var filter = el.attr('filter');
-		
 			var method = (el.hasClass('active') ? 'show' : 'hide');
-		
-			this.find('.list')
-				.toggleClass(filter)
-				.find('.' + filter)[method]();
-		
-			this.find('.el.message').focus();
+
+			if (method == 'show')
+				this.find('.list').addClass(filter);
+			else
+				this.find('.list').removeClass(filter);
+
+			if (el.hasClass('channel')) {
+				this.find('.list .' + filter)[method]();
+			}
 		},
 
-		onKeyDown: function(key, state) {
+		onKeyDown: function (key, state) {
 			if (key == 'enter')
 				this.toggle(true);
 		},
 
-		onDoWhisper: function(charName) {
+		onDoWhisper: function (charName) {
 			this.toggle(true);
 			var toName = charName;
 			if (charName.indexOf(' ') > -1)
@@ -100,14 +103,14 @@ define([
 			this.find('input').val('@' + toName + ' ');
 		},
 
-		onGetMessages: function(e) {
+		onGetMessages: function (e) {
 			var messages = e.messages;
 			if (!messages.length)
 				messages = [messages];
 
 			var container = this.find('.list');
 
-			messages.forEach(function(m) {
+			messages.forEach(function (m) {
 				var message = m.message;
 				if (m.item) {
 					var source = message.split(':')[0] + ': ';
@@ -128,6 +131,14 @@ define([
 						.on('mouseleave', this.hideItemTooltip.bind(this));
 				}
 
+				if (m.type) {
+					var isChannel = (['info', 'chat', 'loot', 'rep'].indexOf(m.type) == -1);
+					if (isChannel) {
+						if (this.find('.filter[filter="' + m.type + '"]').hasClass('active'))
+							el.show();
+					}
+				}
+
 				this.messages.push({
 					ttl: this.maxTtl,
 					el: el
@@ -137,7 +148,7 @@ define([
 			container.scrollTop(9999999);
 		},
 
-		hideItemTooltip: function() {
+		hideItemTooltip: function () {
 			if (this.dragEl) {
 				this.hoverCell = null;
 				return;
@@ -146,7 +157,7 @@ define([
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
-		showItemTooltip: function(el, item, e) {
+		showItemTooltip: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
 			else
@@ -166,7 +177,7 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, null, true);
 		},
 
-		update: function() {
+		update: function () {
 			return;
 			var maxTtl = this.maxTtl;
 
@@ -182,7 +193,7 @@ define([
 			}
 		},
 
-		toggle: function(show, isFake) {
+		toggle: function (show, isFake) {
 			if ((isFake) && (this.hoverFilter))
 				return;
 
@@ -201,7 +212,7 @@ define([
 			}
 		},
 
-		sendChat: function(e) {
+		sendChat: function (e) {
 			if (e.which == 27)
 				this.toggle(false);
 
