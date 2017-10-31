@@ -877,6 +877,26 @@
                  "width":8,
                  "x":912,
                  "y":456
+                }, 
+                {
+                 "gid":690,
+                 "height":8,
+                 "id":709,
+                 "name":"wardrobe",
+                 "properties":
+                    {
+                     "cpnWardrobe":"{}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnWardrobe":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":920,
+                 "y":376
                 }],
          "opacity":1,
          "properties":
@@ -2064,7 +2084,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":709,
+ "nextobjectid":710,
  "orientation":"orthogonal",
  "properties":
     {
