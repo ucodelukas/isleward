@@ -36,15 +36,25 @@ define([
 			list.forEach(function (l) {
 				var html = '<div class="skinName">' + l.name + '</div>';
 
-				$(html)
-					.appendTo(container)
-					.on('click', this.setPreview.bind(this, l));
+				var el = $(html)
+					.appendTo(container);
+
+				el.on('click', this.setPreview.bind(this, l, el));
+
+				if (l.id == window.player.skinId) {
+					el.addClass('current');
+					this.setPreview(l, el);
+				}
 			}, this);
 
 			this.show();
 		},
 
-		setPreview: function (skin) {
+		setPreview: function (skin, el) {
+			this.find('.active').removeClass('active');
+
+			el.addClass('active');
+
 			this.skin = skin;
 
 			var costume = skin.sprite.split(',');

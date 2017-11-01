@@ -100,6 +100,20 @@ define([
 			var syncer = obj.syncer;
 			syncer.set(false, null, 'cell', obj.cell);
 			syncer.set(false, null, 'sheetName', obj.sheetName);
+
+			var oSyncer = this.obj.instance.syncer;
+
+			oSyncer.queue('onCloseWardrobe', null, [obj.serverId]);
+
+			oSyncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
 		},
 
 		onGetSkins: function (obj, skins) {
