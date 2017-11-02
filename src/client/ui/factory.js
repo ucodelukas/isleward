@@ -1,21 +1,21 @@
 define([
 	'ui/uiBase',
 	'js/system/events'
-], function(
+], function (
 	uiBase,
 	events
 ) {
 	return {
 		uis: [],
 		root: '',
-		init: function(root) {
+		init: function (root) {
 			if (root)
 				this.root = root + '/';
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
 			events.on('onKeyDown', this.onKeyDown.bind(this));
 		},
-		onEnterGame: function() {
+		onEnterGame: function () {
 			events.clearQueue();
 
 			[
@@ -27,7 +27,7 @@ define([
 				'spells',
 				'messages',
 				'online',
-				'options', 
+				'options',
 				'context',
 				'party',
 				'help',
@@ -48,13 +48,14 @@ define([
 				'death',
 				'leaderboard',
 				'reputation',
-				'mail'
-			].forEach(function(u) {
+				'mail',
+				'wardrobe'
+			].forEach(function (u) {
 				this.build(u);
 			}, this);
 		},
 
-		build: function(type, options) {
+		build: function (type, options) {
 			//Don't make doubles?
 			var className = 'ui' + type[0].toUpperCase() + type.substr(1);
 			var el = $('.' + className);
@@ -64,10 +65,10 @@ define([
 			this.getTemplate(type, options);
 			$(window).on('resize', this.onResize.bind(this));
 		},
-		getTemplate: function(type, options) {
+		getTemplate: function (type, options) {
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
-		onGetTemplate: function(options, template) {
+		onGetTemplate: function (options, template) {
 			var ui = _.create(uiBase, template);
 			ui.setOptions(options);
 			ui.render();
@@ -75,8 +76,8 @@ define([
 
 			this.uis.push(ui);
 		},
-		onResize: function() {
-			this.uis.forEach(function(ui) {
+		onResize: function () {
+			this.uis.forEach(function (ui) {
 				if (ui.centered)
 					ui.center();
 				else if ((ui.centeredX) || (ui.centeredY))
@@ -84,9 +85,9 @@ define([
 			}, this);
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'esc') {
-				this.uis.forEach(function(u) {
+				this.uis.forEach(function (u) {
 					if (!u.modal)
 						return;
 
@@ -97,7 +98,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var uis = this.uis;
 			var uLen = uis.length;
 			for (var i = 0; i < uLen; i++) {

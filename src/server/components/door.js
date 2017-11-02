@@ -1,7 +1,7 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'door',
@@ -13,7 +13,7 @@ define([
 		openSprite: 157,
 		closedSprite: 156,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.locked = blueprint.locked;
 			this.key = blueprint.key;
 
@@ -46,7 +46,7 @@ define([
 			}]);
 		},
 
-		exitArea: function(obj) {
+		exitArea: function (obj) {
 			if (!obj.player)
 				return;
 
@@ -60,7 +60,7 @@ define([
 			});
 		},
 
-		enterArea: function(obj) {
+		enterArea: function (obj) {
 			if (!obj.player)
 				return;
 
@@ -75,8 +75,7 @@ define([
 						msg = `You don't have the key to unlock this door`;
 					}
 				}
-			}
-			else
+			} else
 				msg = 'Press U to close this door';
 
 			if (canAction) {
@@ -96,8 +95,8 @@ define([
 			}, [obj.serverId]);
 		},
 
-		unlock: function(msg) {
-			if (!msg.sourceId)
+		unlock: function (msg) {
+			if (msg.sourceId == null)
 				return;
 
 			var obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
@@ -123,8 +122,7 @@ define([
 
 				this.closed = false;
 				this.enterArea(obj);
-			}
-			else {
+			} else {
 				thisObj.cell = this.closedSprite;
 				syncO.cell = this.closedSprite;
 				this.obj.instance.physics.setCollision(thisObj.x, thisObj.y, true);

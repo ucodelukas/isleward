@@ -828,7 +828,7 @@
                  "visible":true,
                  "width":8,
                  "x":704,
-                 "y":328
+                 "y":352
                 }],
          "opacity":1,
          "properties":
@@ -913,6 +913,26 @@
                  "width":8,
                  "x":912,
                  "y":1016
+                }, 
+                {
+                 "gid":690,
+                 "height":8,
+                 "id":709,
+                 "name":"wardrobe",
+                 "properties":
+                    {
+                     "cpnWardrobe":"{}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnWardrobe":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":704,
+                 "y":320
                 }],
          "opacity":1,
          "properties":

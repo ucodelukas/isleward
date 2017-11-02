@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 		oSelf: {
 			components: []
 		},
-		reset: function() {
+		reset: function () {
 			this.o = {
 				components: []
 			};
@@ -20,7 +20,7 @@ define([
 				components: []
 			};
 		},
-		get: function(self) {
+		get: function (self) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -37,7 +37,7 @@ define([
 
 			return o;
 		},
-		set: function(self, cpnType, property, value) {
+		set: function (self, cpnType, property, value) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -57,7 +57,7 @@ define([
 				o[property] = value;
 			}
 		},
-		setObject: function(self, cpnType, object, property, value) {
+		setObject: function (self, cpnType, object, property, value) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -78,7 +78,7 @@ define([
 
 			obj[property] = value;
 		},
-		setArray: function(self, cpnType, property, value) {
+		setArray: function (self, cpnType, property, value) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -97,7 +97,7 @@ define([
 			cpn[property].push(value);
 		},
 
-		setSelfArray: function(self, property, value) {
+		setSelfArray: function (self, property, value) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -108,7 +108,7 @@ define([
 			o[property].push(value);
 		},
 
-		delete: function(self, cpnType, property) {
+		delete: function (self, cpnType, property) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
