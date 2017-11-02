@@ -100,6 +100,7 @@ define([
 			var syncer = obj.syncer;
 			syncer.set(false, null, 'cell', obj.cell);
 			syncer.set(false, null, 'sheetName', obj.sheetName);
+			syncer.set(false, null, 'skinId', obj.skinId);
 
 			var oSyncer = this.obj.instance.syncer;
 
