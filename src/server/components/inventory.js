@@ -180,6 +180,8 @@ define([
 
 			item.eq = true;
 			item.runeSlot = runeSlot;
+			delete item.pos;
+
 			spellbook.addSpellFromRune(item.spell, runeSlot);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
