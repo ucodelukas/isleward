@@ -8,9 +8,9 @@
 */
 
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		qualities: [
@@ -23,7 +23,7 @@ define([
 
 		magicFindMult: 7,
 
-		generate: function(item, blueprint) {
+		generate: function (item, blueprint) {
 			if (blueprint.quality != null) {
 				item.quality = ~~blueprint.quality;
 				return;
@@ -48,7 +48,7 @@ define([
 						if (qualities[i] < 0)
 							qualities[i] = 0;
 					}
-					
+
 					break;
 				}
 			}

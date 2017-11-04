@@ -1,6 +1,5 @@
 define([
-	'mtx/mtx',
-
+	'mtx/mtx'
 ], function (
 	mtx
 ) {
