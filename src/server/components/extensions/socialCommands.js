@@ -189,6 +189,9 @@ define([
 			if (config.sprite)
 				config.sprite = config.sprite.split('_');
 
+			var spritesheet = config.spritesheet;
+			delete config.spritesheet;
+
 			var factions = (config.factions || '').split(',');
 			delete config.factions;
 
@@ -216,6 +219,9 @@ define([
 					tier: 3
 				});
 			});
+
+			if (spritesheet)
+				item.spritesheet = spritesheet;
 
 			this.obj.inventory.getItem(item);
 		},
