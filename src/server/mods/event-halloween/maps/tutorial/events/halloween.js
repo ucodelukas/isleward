@@ -143,15 +143,7 @@ define([
 				},
 
 				beforeCompleteAutoquest: function (quest, character) {
-					quest.rewards.push({
-						name: 'Haunted Coin',
-						quantity: 1,
-						quality: 3,
-						sprite: [2, 0],
-						noDrop: true,
-						noSalvage: true,
-						spritesheet: `server/mods/event-halloween/images/items.png`
-					});
+
 				}
 			}
 		}]
