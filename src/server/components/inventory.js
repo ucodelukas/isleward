@@ -49,6 +49,7 @@ define([
 				} else if (item.quantity == NaN)
 					item.quantity = 1;
 				else if (item.name == 'Haunted Coin') {
+					item.quantity *= 2;
 					item = extend(true, item, {
 						name: 'Candy Corn',
 						spritesheet: `server/mods/event-halloween/images/items.png`,
