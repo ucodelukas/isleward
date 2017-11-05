@@ -21,7 +21,8 @@ define([
 		getItem: 10,
 		getGold: 10,
 		setLevel: 10,
-		godMode: 10
+		godMode: 10,
+		clearInventory: 10
 	};
 
 	var localCommands = [
@@ -159,6 +160,15 @@ define([
 
 		isInChannel: function (character, channel) {
 			return character.auth.customChannels.some(c => (c == channel));
+		},
+
+		clearInventory: function () {
+			var inventory = this.obj.inventory;
+
+			inventory.items
+				.filter(i => !i.eq)
+				.map(i => i.id)
+				.forEach(i => inventory.destroyItem(i, null, true));
 		},
 
 		getItem: function (config) {

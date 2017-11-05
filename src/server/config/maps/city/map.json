@@ -1191,14 +1191,6 @@
                  "height":8,
                  "id":775,
                  "name":"|greencandle",
-                 "properties":
-                    {
-                     "cpnAggro":"{ \"faction\": 1}"
-                    },
-                 "propertytypes":
-                    {
-                     "cpnAggro":"string"
-                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2657,7 +2649,6 @@
      "spawn":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
  "tileheight":8,
  "tilesets":[
         {
@@ -2894,6 +2885,6 @@
         }],
  "tilewidth":8,
  "type":"map",
- "version":1,
+ "version":"2017.05.26",
  "width":240
 }

@@ -28,7 +28,7 @@ module.exports = {
 	'disciple of flabbers': [{
 		msg: '*woofs in reverence*'
 	}],
-	'priest': [{
+	priest: [{
 		msg: 'peace be with you'
 	}, {
 		msg: 'walk in the light'

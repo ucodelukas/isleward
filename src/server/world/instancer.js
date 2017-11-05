@@ -12,7 +12,8 @@ define([
 	'events/events',
 	'misc/scheduler',
 	'misc/mail',
-	'config/herbs'
+	'config/herbs',
+	'misc/events'
 ], function (
 	map,
 	syncer,
@@ -27,7 +28,8 @@ define([
 	events,
 	scheduler,
 	mail,
-	herbs
+	herbs,
+	eventEmitter
 ) {
 	return {
 		instances: [],
@@ -55,7 +57,8 @@ define([
 					zone: map.zone,
 					mail: mail,
 					map: map,
-					scheduler: scheduler
+					scheduler: scheduler,
+					eventEmitter: eventEmitter
 				};
 
 				this.instances.push(fakeInstance);
@@ -474,7 +477,8 @@ define([
 					events: extend(true, {}, events),
 					scheduler: extend(true, {}, scheduler),
 					mail: extend(true, {}, mail),
-					map: newMap
+					map: newMap,
+					eventEmitter: extend(true, {}, eventEmitter)
 				};
 
 				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));

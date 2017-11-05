@@ -69,7 +69,7 @@ define([
 
 			if (this.closed) {
 				if (this.locked) {
-					var key = obj.inventory.items.find(i => (i.keyId == this.key));
+					var key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
 					if (!key) {
 						canAction = false;
 						msg = `You don't have the key to unlock this door`;
@@ -110,7 +110,7 @@ define([
 			var syncO = thisObj.syncer.o;
 
 			if (this.locked) {
-				var key = obj.inventory.items.find(i => (i.keyId == this.key));
+				var key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
 				if (!key)
 					return;
 			}
