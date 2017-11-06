@@ -38,7 +38,7 @@ define([
 
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
-				if (item.pos >= this.inventorySize)
+				if ((item.pos >= this.inventorySize) || (item.eq))
 					delete item.pos;
 
 				//Hacks for old items
