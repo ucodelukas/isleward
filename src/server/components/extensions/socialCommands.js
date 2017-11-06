@@ -49,7 +49,8 @@ define([
 
 			messageText = messageText.substr(1).split(' ');
 			var actionName = messageText.splice(0, 1)[0].toLowerCase();
-			actionName = Object.keys(this).find(a => (a.toLowerCase() == actionName));
+			actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() == actionName));
+
 			if (!actionName)
 				return;
 			else if (this.roleLevel < commandRoles[actionName])
