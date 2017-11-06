@@ -81,6 +81,9 @@ define([
 
 		//actions
 		join: function (value) {
+			if (typeof (value) != 'string')
+				return;
+
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
@@ -115,6 +118,9 @@ define([
 		},
 
 		leave: function (value) {
+			if (typeof (value) != 'string')
+				return;
+
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
