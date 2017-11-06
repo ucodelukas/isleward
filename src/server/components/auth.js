@@ -170,7 +170,9 @@ define([
 		},
 
 		onGetCustomChannels: function (data, character, result) {
-			this.customChannels = JSON.parse(result || '[]');
+			this.customChannels = JSON
+				.parse(result || '[]')
+				.filter(c => (typeof (c) == 'string'));
 
 			this.getStash(data, character);
 		},
