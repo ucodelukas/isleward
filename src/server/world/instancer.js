@@ -107,10 +107,10 @@ define([
 
 		nonInstanced: {
 			tick: function () {
-				objects.update();
-				spawners.update();
-				resourceSpawner.update();
 				events.update();
+				objects.update();
+				resourceSpawner.update();
+				spawners.update();
 				syncer.update();
 				scheduler.update();
 

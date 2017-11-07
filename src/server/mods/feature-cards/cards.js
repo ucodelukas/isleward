@@ -6,15 +6,21 @@ define([
 	var config = {
 		'Runecrafter\'s Toil': {
 			chance: 0.5,
-			reward: 'Random Rune',
+			reward: 'Rune',
 			setSize: 3,
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
 			chance: 0.025,
-			reward: 'Random Level 15 Legendary Weapon',
+			reward: 'Level 15 Legendary Weapon',
 			setSize: 12,
 			zone: 'sewer'
+		},
+		'The Other Heirloom': {
+			chance: 40,
+			reward: 'Perfect Level 10 Ring',
+			setSize: 9,
+			mobName: 'flamingo'
 		}
 	};
 
@@ -46,11 +52,14 @@ define([
 					else if ((!rqrLevel.push) && (mobLevel != rqrLevel))
 						return;
 				}
+				var mobName = card.mobName;
+				if ((mobName) && (mob.name.toLowerCase() != mobName.toLowerCase()))
+					return;
 
-				var rolls = card.rolls;
-				for (var i = 0; i < rolls; i++) {
-					pool.push(c);
-				}
+				if (Math.random() >= card.chance)
+					return;
+
+				pool.push(c);
 			}, this);
 
 			if (pool.length == 0)
@@ -81,18 +90,27 @@ define([
 		},
 
 		rewards: {
-			'Random Rune': function () {
+			'Rune': function () {
 				return itemGenerator.generate({
 					spell: true
 				});
 			},
 
-			'Random Level 15 Legendary Weapon': function () {
+			'Level 15 Legendary Weapon': function () {
 				return itemGenerator.generate({
 					level: 15,
 					quality: 4,
 					noSpell: true,
 					slot: 'twoHanded'
+				});
+			},
+
+			'Perfect Level 10 Ring': function () {
+				return itemGenerator.generate({
+					level: 10,
+					noSpell: true,
+					perfection: 1,
+					slot: 'finger'
 				});
 			}
 		}

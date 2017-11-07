@@ -82,7 +82,6 @@ define([
 				this.zone.dialogues = dialogues;
 
 			this.zone = extend(true, {}, globalZone, this.zone);
-			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var resources = this.zone.resources || {};
 			for (var r in resources) {

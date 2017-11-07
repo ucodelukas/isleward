@@ -1,4 +1,5 @@
 module.exports = {
+	name: 'tutorial',
 	level: 2,
 	resources: {
 		Moonbell: {

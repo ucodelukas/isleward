@@ -91,6 +91,7 @@ define([
 					continue;
 
 				c.event = this.startEvent(c);
+				this.updateEvent(c.event);
 			}
 		},
 

@@ -1,15 +1,19 @@
 define([
 	'config/animations',
 	'items/generator',
-	'combat/combat'
+	'combat/combat',
+	'misc/events'
 ], function (
 	animations,
 	itemGenerator,
-	combat
+	combat,
+	events
 ) {
 	return {
-		build: function (mob, blueprint, scaleDrops, type) {
+		build: function (mob, blueprint, scaleDrops, type, zoneName) {
 			var typeDefinition = blueprint[type] || blueprint;
+
+			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), typeDefinition);
 
 			var drops = typeDefinition.drops;
 
