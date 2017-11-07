@@ -19,7 +19,7 @@ define([
 		'The Other Heirloom': {
 			chance: 40,
 			reward: 'Perfect Level 10 Ring',
-			setSize: 9,
+			setSize: 3,
 			mobName: 'flamingo'
 		}
 	};

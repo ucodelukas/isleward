@@ -278,8 +278,10 @@ define([
 			if (statBlueprint.generator) {
 				var level = item.originalLevel || item.level;
 				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
-			} else
+			} else if (!blueprint.perfection)
 				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
+			else
+				value = statBlueprint.min + ((statBlueprint.max - statBlueprint.min) * blueprint.perfection);
 
 			if (blueprint.statCount) {
 				if (result) {

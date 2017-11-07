@@ -11,9 +11,9 @@ define([
 ) {
 	return {
 		build: function (mob, blueprint, scaleDrops, type, zoneName) {
-			var typeDefinition = blueprint[type] || blueprint;
+			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
 
-			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), typeDefinition);
+			var typeDefinition = blueprint[type] || blueprint;
 
 			var drops = typeDefinition.drops;
 
