@@ -39,8 +39,6 @@ define([
 		onGetCardSetReward: function (set, obj) {
 			var reward = cards.getReward(set);
 
-			console.log(reward);
-
 			obj.inventory.getItem(reward);
 		}
 	};

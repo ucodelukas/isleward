@@ -1,23 +1,25 @@
 define([
-	'items/generator'
+	'items/generator',
+	'misc/events'
 ], function (
-	itemGenerator
+	itemGenerator,
+	events
 ) {
 	var config = {
 		'Runecrafter\'s Toil': {
-			chance: 0.5,
+			chance: 0.05,
 			reward: 'Rune',
 			setSize: 3,
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
-			chance: 0.025,
+			chance: 0.0025,
 			reward: 'Level 15 Legendary Weapon',
 			setSize: 12,
 			zone: 'sewer'
 		},
 		'The Other Heirloom': {
-			chance: 40,
+			chance: 0.04,
 			reward: 'Perfect Level 10 Ring',
 			setSize: 3,
 			mobName: 'flamingo'
@@ -42,8 +44,11 @@ define([
 
 			var mobLevel = mob.stats.values.level;
 
-			Object.keys(config).forEach(function (c) {
-				var card = config[c];
+			var configs = extend(true, {}, config);
+			events.emit('onBeforeGetCardsConfig', configs);
+
+			Object.keys(configs).forEach(function (c) {
+				var card = configs[c];
 
 				var rqrLevel = card.mobLevel;
 				if (rqrLevel) {
@@ -53,8 +58,12 @@ define([
 						return;
 				}
 				var mobName = card.mobName;
-				if ((mobName) && (mob.name.toLowerCase() != mobName.toLowerCase()))
-					return;
+				if (mobName) {
+					if ((mobName.toLowerCase) && (mob.name.toLowerCase() != mobName.toLowerCase()))
+						return;
+					else if ((mobName.push) && (!mobName.some(m => (m.toLowerCase() == mob.name.toLowerCase()))))
+						return;
+				}
 
 				if (Math.random() >= card.chance)
 					return;
@@ -66,7 +75,7 @@ define([
 				return;
 
 			var pickName = pool[~~(Math.random() * pool.length)];
-			var pick = config[pickName];
+			var pick = configs[pickName];
 
 			var card = {
 				name: pickName,
@@ -84,9 +93,18 @@ define([
 		},
 
 		getReward: function (set) {
-			var reward = config[set].reward;
+			var configs = extend(true, {}, config);
+			events.emit('onBeforeGetCardsConfig', configs);
 
-			return this.rewards[reward]();
+			var reward = configs[set].reward;
+			var msg = {
+				reward: reward,
+				handler: this.rewards[reward]
+			};
+
+			events.emit('onBeforeGetCardReward', msg);
+
+			return msg.handler();
 		},
 
 		rewards: {
