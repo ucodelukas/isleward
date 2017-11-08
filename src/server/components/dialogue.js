@@ -21,7 +21,7 @@ define([
 		},
 
 		talk: function(msg) {
-			if (msg == null)
+			if (!msg)
 			    return false;
 			
 			var target = msg.target;
