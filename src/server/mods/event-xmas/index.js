@@ -11,17 +11,6 @@ define([
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
 		},
 
-		onBeforeGetCardsConfig: function (config) {
-			extend(true, config, {
-				'Cheer and Spear': {
-					chance: 40,
-					reward: 'Rare Festive Spear',
-					setSize: 1,
-					mobName: ['frost crab', 'rude holf']
-				}
-			});
-		},
-
 		onBeforeGetCardReward: function (msg) {
 			if (msg.reward == 'Rare Festive Spear') {
 				msg.handler = function (card) {

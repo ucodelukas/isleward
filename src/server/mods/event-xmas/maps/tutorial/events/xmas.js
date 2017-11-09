@@ -27,6 +27,17 @@ define([
 						if (override)
 							extend(true, blueprint, override);
 					} catch (e) {}
+				},
+
+				onBeforeGetCardsConfig: function (config) {
+					extend(true, config, {
+						'Cheer and Spear': {
+							chance: 40,
+							reward: 'Rare Festive Spear',
+							setSize: 1,
+							mobName: ['frost crab', 'rude holf']
+						}
+					});
 				}
 			}
 		}]
