@@ -4,6 +4,16 @@ define([
 
 ) {
 	return {
+		resources: {
+			'Festive Gift': {
+				type: 'herb',
+				max: 40
+			},
+			'Giant Gift': {
+				type: 'herb',
+				max: 20
+			}
+		},
 		mobs: {
 			elk: {
 				rare: {

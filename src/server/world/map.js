@@ -65,6 +65,7 @@ define([
 			} catch (e) {
 				this.zone = globalZone;
 			}
+			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var chats = null;
 			try {
