@@ -216,6 +216,7 @@ define([
 
 				//Maybe the effect killed us?
 				if (!e) {
+					i--;
 					eLen--;
 					continue;
 				}
