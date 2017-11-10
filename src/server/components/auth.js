@@ -55,6 +55,9 @@ define([
 			//Don't save modified stat values
 			var stats = simple.components.find(c => c.type == 'stats');
 			stats.values = extend(true, {}, stats.values);
+			//Don't save party
+			var social = simple.components.find(c => c.type == 'social');
+			delete social.party;
 
 			var statKeys = Object.keys(stats.values);
 			var sLen = statKeys.length;

@@ -13,7 +13,7 @@ define([
 	'misc/scheduler',
 	'misc/mail',
 	'config/herbs'
-], function(
+], function (
 	map,
 	syncer,
 	objects,
@@ -36,7 +36,7 @@ define([
 
 		lastTime: 0,
 
-		init: function(args) {
+		init: function (args) {
 			this.zoneId = args.zoneId;
 
 			spellCallbacks.init();
@@ -103,7 +103,7 @@ define([
 		},
 
 		nonInstanced: {
-			tick: function() {
+			tick: function () {
 				objects.update();
 				spawners.update();
 				resourceSpawner.update();
@@ -114,7 +114,7 @@ define([
 				setTimeout(this.tick.bind(this), this.speed);
 			},
 
-			addObject: function(msg) {
+			addObject: function (msg) {
 				var obj = msg.obj;
 				obj.serverId = obj.id;
 				delete obj.id;
@@ -140,14 +140,14 @@ define([
 					questBuilder.obtain(o);
 				}
 			},
-			onAddObject: function(obj) {
+			onAddObject: function (obj) {
 				if (obj.player)
 					obj.stats.onLogin();
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
 			},
-			updateObject: function(msg) {
+			updateObject: function (msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
@@ -171,7 +171,7 @@ define([
 				}
 			},
 
-			queueAction: function(msg) {
+			queueAction: function (msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
@@ -179,10 +179,10 @@ define([
 				obj.queue(msg.action);
 			},
 
-			performAction: function(msg) {
+			performAction: function (msg) {
 				var obj = null;
 				var targetId = msg.action.targetId;
-				if (!targetId) 
+				if (!targetId)
 					obj = objects.find(o => o.serverId == msg.id);
 				else {
 					obj = objects.find(o => o.id == targetId);
@@ -196,11 +196,11 @@ define([
 
 				if (!obj)
 					return;
-				
+
 				obj.performAction(msg.action);
 			},
 
-			removeObject: function(msg) {
+			removeObject: function (msg) {
 				var obj = msg.obj;
 				obj = objects.find(o => o.serverId == obj.id);
 				if (!obj) {
@@ -216,12 +216,12 @@ define([
 
 				obj.destroyed = true;
 			},
-			onRemoveObject: function(obj) {
+			onRemoveObject: function (obj) {
 
 			}
 		},
 		instanced: {
-			tick: function() {
+			tick: function () {
 				if (map.mapFile.properties.isRandom) {
 					if (this.ttlGen <= 0) {
 						if (!map.oldMap)
@@ -279,7 +279,7 @@ define([
 				setTimeout(this.tick.bind(this), this.speed);
 			},
 
-			addObject: function(msg) {
+			addObject: function (msg) {
 				var obj = msg.obj;
 				var instanceId = msg.instanceId;
 
@@ -354,7 +354,7 @@ define([
 				} else
 					obj = this.instanced.createInstance.call(this, obj, msg.transfer);
 			},
-			onAddObject: function(keepPos, obj) {
+			onAddObject: function (keepPos, obj) {
 				if (!keepPos) {
 					var spawnPos = obj.instance.map.getSpawnPos(obj);
 
@@ -370,7 +370,7 @@ define([
 
 				obj.fireEvent('afterMove');
 			},
-			updateObject: function(msg) {
+			updateObject: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -401,7 +401,7 @@ define([
 				}
 			},
 
-			performAction: function(msg) {
+			performAction: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -416,7 +416,7 @@ define([
 				obj.performAction(msg.action);
 			},
 
-			queueAction: function(msg) {
+			queueAction: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -429,7 +429,7 @@ define([
 					obj.queue(msg.action);
 			},
 
-			removeObject: function(msg) {
+			removeObject: function (msg) {
 				var obj = msg.obj;
 				var instanceId = msg.instanceId;
 
@@ -448,11 +448,11 @@ define([
 
 				obj.destroyed = true;
 			},
-			onRemoveObject: function(obj) {
+			onRemoveObject: function (obj) {
 
 			},
 
-			createInstance: function(objToAdd, transfer) {
+			createInstance: function (objToAdd, transfer) {
 				var newMap = {
 					name: map.name,
 					spawn: extend(true, [], map.spawn),
@@ -486,11 +486,10 @@ define([
 				if (map.custom) {
 					instance.customMap = extend(true, {}, customMap);
 					instance.customMap.load(instance, objToAdd, onDone);
-				}
-				else
+				} else
 					onDone();
 			},
-			onCreateInstance: function(instance, objToAdd, transfer) {
+			onCreateInstance: function (instance, objToAdd, transfer) {
 				objToAdd.instance = instance;
 				objToAdd.instanceId = instance.id;
 
@@ -511,7 +510,7 @@ define([
 
 					obj.x = spawnPos.x;
 					obj.y = spawnPos.y;
-					
+
 					instance.questBuilder.obtain(obj);
 					obj.instance.spawners.scale(obj.stats.values.level);
 				}
