@@ -86,7 +86,8 @@ define([
 			if (item.quantity) {
 				var quantityText = item.quantity;
 				el.find('.quantity').html(item.quantity);
-			}
+			} else
+				el.find('.quantity').html('');
 		},
 
 		toggle: function () {
