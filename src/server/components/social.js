@@ -26,13 +26,6 @@ define([
 			};
 		},
 
-		save: function () {
-			return {
-				type: 'social',
-				customChannels: this.customChannels
-			};
-		},
-
 		sendMessage: function (msg) {
 			this.obj.socket.emit('event', {
 				event: 'onGetMessages',
