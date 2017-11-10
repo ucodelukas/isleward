@@ -213,9 +213,12 @@ define([
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
 				var e = effects[i];
+
+				//Maybe the effect killed us?
 				if (!e) {
-					console.log('NO EFFECT');
-					console.log(this.obj.name, event);
+					i--;
+					eLen--;
+					continue;
 				}
 
 				if (e.ttl <= 0)
