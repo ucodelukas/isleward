@@ -120,6 +120,18 @@ define([
 		},
 
 		chat: function (msg) {
+			if (!msg.data.message)
+				return;
+
+			msg.data.message = msg.data.message
+				.split('<')
+				.join('')
+				.split('>')
+				.join('');
+
+			if (!msg.data.message)
+				return;
+
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
 				return;
