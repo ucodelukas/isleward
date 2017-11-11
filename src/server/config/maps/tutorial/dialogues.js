@@ -198,6 +198,10 @@ module.exports = {
 			options: {
 				'1.1': {
 					msg: `I want to hand some cards.`,
+					prereq: function (obj) {
+						var fullSet = obj.inventory.items.find(i => ((i.setSize) && (i.setSize <= i.quantity)));
+						return !!fullSet;
+					},
 					goto: 'tradeCards'
 				}
 			}

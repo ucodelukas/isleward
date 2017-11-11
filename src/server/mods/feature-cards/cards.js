@@ -13,9 +13,9 @@ define([
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
-			chance: 0.0025,
+			chance: 20.0025,
 			reward: 'Level 15 Legendary Weapon',
-			setSize: 12,
+			setSize: 2,
 			zone: 'sewer'
 		},
 		'The Other Heirloom': {

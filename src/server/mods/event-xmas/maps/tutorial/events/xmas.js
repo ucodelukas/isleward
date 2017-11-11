@@ -18,6 +18,21 @@ define([
 		},
 
 		phases: [{
+			type: 'spawnMob',
+			mobs: {
+				name: 'Father Giftybags',
+				attackable: false,
+				level: 20,
+				cell: 2,
+				sheetName: 'server/mods/event-xmas/images/mobs.png',
+				id: 'giftyBags',
+				hpMult: 1,
+				pos: {
+					x: 111,
+					y: 54
+				}
+			}
+		}, {
 			type: 'hookEvents',
 			events: {
 				onBeforeBuildMob: function (zone, mobName, blueprint) {

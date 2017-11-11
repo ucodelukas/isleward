@@ -81,6 +81,7 @@ define([
 						}
 
 						this.event.objects.push(mob);
+						console.log(mob);
 
 						if (l.dialogue) {
 							mob.addComponent('dialogue', {

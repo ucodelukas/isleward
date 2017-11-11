@@ -394,6 +394,11 @@ module.exports = {
 				name: 'The Pincer King'
 			}
 		},
+		'mud crab': {
+			faction: 'gaekatla',
+			deathRep: -5,
+			level: 9
+		},
 		hermit: {
 			level: 10,
 			walkDistance: 0,

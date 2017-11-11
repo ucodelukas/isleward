@@ -32,7 +32,7 @@ define([
 
 				rare: {
 					count: 1,
-					chance: 110.4,
+					chance: 0.4,
 
 					hpMult: 1.5,
 					dmgMult: 1.5,
