@@ -5,6 +5,7 @@ define([
 	'security/connections',
 	'leaderboard/leaderboard',
 	'config/skins',
+	'config/roles',
 	'misc/profanities'
 ], function (
 	bcrypt,
@@ -13,6 +14,7 @@ define([
 	connections,
 	leaderboard,
 	skins,
+	roles,
 	profanities
 ) {
 	return {
@@ -209,7 +211,8 @@ define([
 
 		onGetSkins: function (msg, result) {
 			this.skins = JSON.parse(result || '[]');
-			var skinList = skins.getSkinList(this.skins);
+			var list = [...this.skins, ...roles.getSkins(this.username)];
+			var skinList = skins.getSkinList(list);
 
 			msg.callback(skinList);
 		},

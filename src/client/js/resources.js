@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	var resources = {
@@ -19,7 +19,7 @@ define([
 			'abilityIcons',
 			'uiIcons',
 			'items',
-			'materials', 
+			'materials',
 			'questItems',
 			'auras',
 			'sprites',
@@ -27,16 +27,17 @@ define([
 			'animMob',
 			'animBoss',
 			'white',
-			'ray'
+			'ray',
+			'images/skins/0001.png'
 		],
 		sprites: {},
 		ready: false,
-		init: function(list) {
-			list.forEach(function(l) {
+		init: function (list) {
+			list.forEach(function (l) {
 				this.spriteNames.push(l);
 			}, this);
 
-			this.spriteNames.forEach(function(s) {
+			this.spriteNames.forEach(function (s) {
 				var sprite = {
 					image: (new Image()),
 					ready: false
@@ -47,7 +48,7 @@ define([
 				this.sprites[s] = sprite;
 			}, this);
 		},
-		onSprite: function(sprite) {
+		onSprite: function (sprite) {
 			sprite.ready = true;
 
 			var readyCount = 0;
@@ -59,9 +60,9 @@ define([
 			if (readyCount == this.spriteNames.length)
 				this.onReady();
 		},
-		onReady: function() {
+		onReady: function () {
 			this.ready = true;
-			
+
 			events.emit('onResourcesLoaded');
 		}
 	};

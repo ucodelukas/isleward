@@ -57,6 +57,42 @@ define([
 			name: 'Skin: Gaekatlan Druid',
 			sprite: [0, 4],
 			class: 'cleric'
+		},
+
+		'1.1': {
+			name: 'blebby',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [0, 0],
+			class: 'wizard',
+			default: true
+		},
+		'1.2': {
+			name: 'blebby',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [1, 0],
+			class: 'cleric',
+			default: true
+		},
+		'1.3': {
+			name: 'blebby',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [2, 0],
+			class: 'thief',
+			default: true
+		},
+		'1.4': {
+			name: 'blebby',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [3, 0],
+			class: 'warrior',
+			default: true
+		},
+		'1.5': {
+			name: 'blebby',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [4, 0],
+			class: 'necromancer',
+			default: true
 		}
 	};
 

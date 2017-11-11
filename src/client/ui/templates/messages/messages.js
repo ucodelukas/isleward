@@ -226,10 +226,10 @@ define([
 
 			var textbox = this.find('input');
 			var val = textbox.val()
-				.split('<')
-				.join('')
-				.split('>')
-				.join('');
+			/*.split('<')
+			.join('')
+			.split('>')
+			.join('');*/
 
 			textbox.blur();
 
