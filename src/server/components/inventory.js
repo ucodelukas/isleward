@@ -48,14 +48,11 @@ define([
 					item.spell.properties.range = item.range;
 				} else if (item.quantity == NaN)
 					item.quantity = 1;
-				else if (item.name == 'Haunted Coin') {
-					item.quantity *= 2;
-					item = extend(true, item, {
-						name: 'Candy Corn',
-						spritesheet: `server/mods/event-halloween/images/items.png`,
-						material: true,
-						sprite: [3, 3]
-					});
+				else if (item.name == 'Candy Corn') {
+					items.splice(i, 1);
+					i--;
+					iLen--;
+					continue;
 				}
 
 				while (item.name.indexOf(`''`) > -1) {

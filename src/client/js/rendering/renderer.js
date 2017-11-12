@@ -212,9 +212,6 @@ define([
 
                     alpha = Math.min(Math.max(0.1, alpha), 0.8);
 
-                    //Hack for halloween
-                    tile = 2;
-
                     if (Math.random() < 0.35) {
                         tile = {
                             '2': 7,
