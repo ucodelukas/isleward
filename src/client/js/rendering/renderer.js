@@ -190,8 +190,6 @@ define([
                     var tile = 5;
                     if (j < 7)
                         tile = 5;
-                    //else if (j > 26)
-                    //	tile = 3;
                     else if (alpha < -0.2)
                         tile = 3;
                     else if (alpha < 0.2)
@@ -213,7 +211,7 @@ define([
                     alpha = Math.min(Math.max(0.05, alpha), 0.55);
 
                     //Hack for xmas
-                    tile = 184;
+                    //tile = 184;
 
                     if (Math.random() < 0.35) {
                         tile = {
