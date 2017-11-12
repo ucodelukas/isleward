@@ -1,12 +1,12 @@
 define([
 	'misc/events'
-], function(
+], function (
 	events
 ) {
 	return {
 		cbList: {},
 
-		init: function() {
+		init: function () {
 			for (var eventName in this.events) {
 				var eventCb = this.events[eventName];
 
@@ -15,7 +15,7 @@ define([
 			}
 		},
 
-		destroy: function() {
+		destroy: function () {
 			for (var e in this.cbList) {
 				events.off(e, this.cbList[e]);
 			}

@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/tooltipItem/template',
 	'html!ui/templates/tooltipItem/templateTooltip',
 	'js/misc/statTranslations'
-], function(
+], function (
 	events,
 	styles,
 	template,
@@ -31,14 +31,14 @@ define([
 		tooltip: null,
 		item: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.tooltip = this.el.find('.tooltip');
 
 			this.onEvent('onShowItemTooltip', this.onShowItemTooltip.bind(this));
 			this.onEvent('onHideItemTooltip', this.onHideItemTooltip.bind(this));
 		},
 
-		onHideItemTooltip: function(item) {
+		onHideItemTooltip: function (item) {
 			if (this.item != item)
 				return;
 
@@ -46,7 +46,7 @@ define([
 			this.tooltip.hide();
 		},
 
-		onShowItemTooltip: function(item, pos, compare, bottomAlign, shiftDown) {
+		onShowItemTooltip: function (item, pos, compare, bottomAlign, shiftDown) {
 			this.item = item;
 
 			var tempStats = $.extend(true, {}, item.stats);
@@ -72,7 +72,7 @@ define([
 			}
 
 			stats = Object.keys(tempStats)
-				.map(function(s) {
+				.map(function (s) {
 					var statName = statTranslations.translate(s);
 					var value = tempStats[s];
 
@@ -95,7 +95,7 @@ define([
 
 					return row;
 				}, this)
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					return (a.length - b.length);
 				})
 				.join('');
@@ -178,7 +178,7 @@ define([
 			if ((item.effects) && (item.type != 'mtx')) {
 				var htmlEffects = '';
 
-				item.effects.forEach(function(e, i) {
+				item.effects.forEach(function (e, i) {
 					htmlEffects += e.text;
 					if (i < item.effects.length - 1)
 						htmlEffects += '<br />';
@@ -187,13 +187,23 @@ define([
 				this.find('.effects')
 					.html(htmlEffects)
 					.show();
+			} else if (item.description) {
+				this.find('.effects')
+					.html(item.description)
+					.show();
 			} else
 				this.find('.effects').hide();
+
+			if (item.type == 'Reward Card') {
+				this.find('.spellName')
+					.html('Set Size: ' + item.setSize)
+					.show();
+			}
 
 			if (item.factions) {
 				var htmlFactions = '';
 
-				item.factions.forEach(function(f, i) {
+				item.factions.forEach(function (f, i) {
 					var htmlF = f.name + ': ' + f.tierName;
 					if (f.noEquip)
 						htmlF = '<font class="color-red">' + htmlF + '</font>';
@@ -228,7 +238,7 @@ define([
 			events.emit('onBuiltItemTooltip', this.tooltip);
 		},
 
-		showWorth: function(canAfford) {
+		showWorth: function (canAfford) {
 			this.tooltip.find('.worth').show();
 
 			if (!canAfford)

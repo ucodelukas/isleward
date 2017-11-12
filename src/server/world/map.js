@@ -65,6 +65,7 @@ define([
 			} catch (e) {
 				this.zone = globalZone;
 			}
+			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var chats = null;
 			try {
@@ -82,7 +83,6 @@ define([
 				this.zone.dialogues = dialogues;
 
 			this.zone = extend(true, {}, globalZone, this.zone);
-			events.emit('onAfterGetZone', this.name, this.zone);
 
 			var resources = this.zone.resources || {};
 			for (var r in resources) {

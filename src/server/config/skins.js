@@ -122,6 +122,7 @@ define([
 					result[l.class] = [];
 
 				result[l.class].push({
+					name: l.name,
 					id: l.id,
 					sprite: l.sprite[0] + ',' + l.sprite[1],
 					spritesheet: l.spritesheet

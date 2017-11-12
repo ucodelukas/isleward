@@ -41,7 +41,7 @@ define([
 		name: `Soul's Moor`,
 		description: `The Pumpkin Sailor has returned to the shores of the living.`,
 		distance: -1,
-		cron: '* * * * *',
+		cron: '0 0 2-31 10 *',
 
 		events: {
 

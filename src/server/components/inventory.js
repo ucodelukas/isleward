@@ -5,7 +5,8 @@ define([
 	'objects/objects',
 	'config/classes',
 	'mtx/mtx',
-	'config/factions'
+	'config/factions',
+	'misc/events'
 ], function (
 	generator,
 	salvager,
@@ -13,7 +14,8 @@ define([
 	objects,
 	classes,
 	mtx,
-	factions
+	factions,
+	events
 ) {
 	return {
 		type: 'inventory',
@@ -36,6 +38,8 @@ define([
 
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+				if ((item.pos >= this.inventorySize) || (item.eq))
+					delete item.pos;
 
 				//Hacks for old items
 				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
@@ -489,6 +493,8 @@ define([
 		},
 
 		getItem: function (item, hideMessage) {
+			events.emit('onBeforeGetItem', item, this.obj);
+
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
 
@@ -504,7 +510,7 @@ define([
 
 			//Material?
 			var exists = false;
-			if (((item.material) || (item.quest)) && (!item.noStack) || (item.quantity)) {
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack)) {
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;
@@ -775,6 +781,7 @@ define([
 			}
 
 			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
 				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);

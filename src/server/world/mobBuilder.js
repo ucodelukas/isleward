@@ -1,14 +1,18 @@
 define([
 	'config/animations',
 	'items/generator',
-	'combat/combat'
+	'combat/combat',
+	'misc/events'
 ], function (
 	animations,
 	itemGenerator,
-	combat
+	combat,
+	events
 ) {
 	return {
-		build: function (mob, blueprint, scaleDrops, type) {
+		build: function (mob, blueprint, scaleDrops, type, zoneName) {
+			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
+
 			var typeDefinition = blueprint[type] || blueprint;
 
 			var drops = typeDefinition.drops;
@@ -30,6 +34,11 @@ define([
 
 					mob.baseName = mob.name;
 					mob.name = typeDefinition.name || mob.baseName;
+
+					if (typeDefinition.sheetName) {
+						mob.sheetName = typeDefinition.sheetName;
+						mob.cell = typeDefinition.cell;
+					}
 				}
 			}
 

@@ -210,10 +210,10 @@ define([
                     else if (tile == 53)
                         alpha *= 2;
 
-                    alpha = Math.min(Math.max(0.1, alpha), 0.8);
+                    alpha = Math.min(Math.max(0.05, alpha), 0.55);
 
-                    //Hack for halloween
-                    tile = 2;
+                    //Hack for xmas
+                    tile = 184;
 
                     if (Math.random() < 0.35) {
                         tile = {
@@ -221,7 +221,8 @@ define([
                             '5': 6,
                             '3': 0,
                             '4': 1,
-                            '53': 54
+                            '53': 54,
+                            '184': 185
                         }[tile];
                     }
 

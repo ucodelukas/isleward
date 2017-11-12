@@ -1,7 +1,7 @@
 define([
 	'world/mobBuilder',
 	'config/animations'
-], function(
+], function (
 	mobBuilder,
 	animations
 ) {
@@ -17,7 +17,7 @@ define([
 		list: [],
 		mobTypes: {},
 
-		init: function(msg) {
+		init: function (msg) {
 			this.objects = msg.objects;
 			this.syncer = msg.syncer;
 			this.zone = msg.zone;
@@ -26,12 +26,12 @@ define([
 			}, mobBuilder);
 		},
 
-		reset: function() {
+		reset: function () {
 			this.list = [];
 			this.mobTypes = {};
 		},
 
-		register: function(blueprint, cdMax) {
+		register: function (blueprint, cdMax) {
 			var spawner = extend(true, {
 				cdMax: cdMax || 171,
 				blueprint: blueprint,
@@ -52,7 +52,7 @@ define([
 			spawner.zonePrint = extend(true, {}, this.zone.mobs.default, this.zone.mobs[name] || {});
 		},
 
-		spawn: function(spawner) {
+		spawn: function (spawner) {
 			if (spawner.amountLeft == 0)
 				return;
 
@@ -93,7 +93,7 @@ define([
 			return obj;
 		},
 
-		update: function() {
+		update: function () {
 			var list = this.list;
 			var lLen = list.length;
 
@@ -133,9 +133,9 @@ define([
 			}
 		},
 
-		scale: function(level) {
+		scale: function (level) {
 			level += (this.zone.addLevel || 0);
-			this.list.forEach(function(l) {
+			this.list.forEach(function (l) {
 				if (!l.zonePrint)
 					return;
 
@@ -149,7 +149,7 @@ define([
 			}, this);
 		},
 
-		setupMob: function(mob, blueprint, scaleDrops) {
+		setupMob: function (mob, blueprint, scaleDrops) {
 			var type = 'regular';
 			if (blueprint.isChampion)
 				type = 'champion'
@@ -169,10 +169,10 @@ define([
 
 			this.setupObj(mob, blueprint);
 
-			this.mobBuilder.build(mob, blueprint, scaleDrops, type);
+			this.mobBuilder.build(mob, blueprint, scaleDrops, type, this.zone.name);
 		},
 
-		setupObj: function(obj, blueprint) {
+		setupObj: function (obj, blueprint) {
 			var cpns = blueprint.components;
 			if (!cpns)
 				return;

@@ -106,5 +106,173 @@ module.exports = {
 				targetName: 'hermit'
 			}]
 		}
+	},
+	/*estrid: {
+		'1': {
+			msg: [{
+				msg: `Is there anything I can help you with today?`,
+				options: [1.1, 1.2, 1.3, 1.4, 1.5]
+			}],
+			options: {
+				'1.1': {
+					msg: `How long have you been working here?`,
+					goto: 2
+				},
+				'1.2': {
+					msg: `Why do you sell equipment instead of potions?`,
+					goto: 3
+				},
+				'1.3': {
+					msg: `I'd like to browse your wares.`,
+					goto: 'tradeBuy'
+				},
+				'1.4': {
+					msg: `I have some items to sell`,
+					goto: 'tradeSell'
+				},
+				'1.5': {
+					msg: `I want to buy something back`,
+					goto: 'tradeBuyback'
+				}
+			}
+		},
+		'2': {
+			msg: `I haven't been working here long, but I was born and raised here by my mother. She ran the shop before me.`,
+			options: {
+				'2.1': {
+					msg: `Where is your mother now?`,
+					goto: '2-1'
+				},
+				'2.2': {
+					msg: `I'd like to ask something else.`,
+					goto: 1
+				}
+			}
+		},
+		'2-1': {
+			msg: `A few months ago, she...took ill. She's been bedridden upstairs ever since.`,
+			options: {
+				'2-1.1': {
+					msg: `I'd like to ask something else.`,
+					goto: 1
+				}
+			}
+		},
+		'3': {
+			msg: `The developer hasn't added alchemy or potions yet. Hopefully he'll do that soon.`,
+			options: {
+				'3.1': {
+					msg: `I'd like to ask something else.`,
+					goto: 1
+				}
+			}
+		},
+		tradeBuy: {
+			cpn: 'trade',
+			method: 'startBuy',
+			args: [{
+				targetName: 'estrid'
+			}]
+		},
+		tradeSell: {
+			cpn: 'trade',
+			method: 'startSell',
+			args: [{
+				targetName: 'estrid'
+			}]
+		},
+		tradeBuyback: {
+			cpn: 'trade',
+			method: 'startBuyback',
+			args: [{
+				targetName: 'estrid'
+			}]
+		}
+	},*/
+	vikar: {
+		'1': {
+			msg: [{
+				msg: `Is there anything I can help you with today?`,
+				options: [1.1]
+			}],
+			options: {
+				'1.1': {
+					msg: `I want to hand some cards.`,
+					prereq: function (obj) {
+						var fullSet = obj.inventory.items.find(i => ((i.setSize) && (i.setSize <= i.quantity)));
+						return !!fullSet;
+					},
+					goto: 'tradeCards'
+				}
+			}
+		},
+		tradeCards: {
+			msg: [{
+				msg: ``,
+				options: []
+			}],
+			method: function (obj) {
+				var inventory = obj.inventory;
+				var items = inventory.items;
+
+				var sets = items.filter(function (i) {
+					return (
+						(i.type == 'Reward Card') &&
+						(i.quantity >= i.setSize)
+					);
+				});
+
+				if (sets.length == 0)
+					return `Sorry, you don't have any completed sets.`;
+
+				sets.forEach(function (s) {
+					obj.instance.eventEmitter.emit('onGetCardSetReward', s.name, obj);
+					inventory.destroyItem(s.id, s.setSize);
+				});
+			}
+		}
+	},
+	priest: {
+		'1': {
+			msg: [{
+				msg: `Is there anything I can help you with today?`,
+				options: [1.1, 1.2, 1.3]
+			}],
+			options: {
+				'1.1': {
+					msg: `I'd like to browse your wares.`,
+					goto: 'tradeBuy'
+				},
+				'1.2': {
+					msg: `I have some items to sell`,
+					goto: 'tradeSell'
+				},
+				'1.3': {
+					msg: `I want to buy something back`,
+					goto: 'tradeBuyback'
+				}
+			}
+		},
+		tradeBuy: {
+			cpn: 'trade',
+			method: 'startBuy',
+			args: [{
+				targetName: 'priest'
+			}]
+		},
+		tradeSell: {
+			cpn: 'trade',
+			method: 'startSell',
+			args: [{
+				targetName: 'priest'
+			}]
+		},
+		tradeBuyback: {
+			cpn: 'trade',
+			method: 'startBuyback',
+			args: [{
+				targetName: 'priest'
+			}]
+		}
 	}
 };
