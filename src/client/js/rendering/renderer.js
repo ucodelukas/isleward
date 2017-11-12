@@ -208,10 +208,23 @@ define([
                     else if (tile == 53)
                         alpha *= 2;
 
-                    alpha = Math.min(Math.max(0.05, alpha), 0.55);
+                    alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
                     //Hack for xmas
-                    //tile = 184;
+                    tile = 3;
+                    var min = Math.min(
+                        (i + j),
+                        (w - i + j),
+                        (i + h - j),
+                        (w - i + h - j)
+                    );
+                    var tree = false;
+                    var val = min + (Math.random() * 10);
+                    if (val < 23) {
+                        if (val < 18)
+                            tree = true;
+                        tile = 184;
+                    }
 
                     if (Math.random() < 0.35) {
                         tile = {
@@ -238,6 +251,25 @@ define([
                     }
 
                     container.addChild(tile);
+
+                    if (tree) {
+                        var s = [216, 216, 217, 217, 217, 217, 217, 218, 219, 219, 219][~~(Math.random() * 11)];
+                        s += 192;
+                        tile = new pixi.Sprite(this.getTexture('sprites', s));
+
+                        tile.alpha = 0.7 + (Math.random() * 0.3);
+                        tile.position.x = i * scale;
+                        tile.position.y = j * scale;
+                        tile.width = scale;
+                        tile.height = scale;
+
+                        if (Math.random() < 0.5) {
+                            tile.position.x += scale;
+                            tile.scale.x = -scaleMult;
+                        }
+
+                        container.addChild(tile);
+                    }
                 }
             }
         },
