@@ -178,6 +178,58 @@ module.exports = {
 				}
 			}
 		},
+		fountain: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['48edff', '3fa7dd'],
+									end: ['3a71ba', '42548d']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 2,
+									max: 5
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.8,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -10,
+									y: -21,
+									w: 20,
+									h: 8
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		alchgreenpot: {
 			components: {
 				cpnParticles: {
