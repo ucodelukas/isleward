@@ -28,8 +28,8 @@ define([
 				id: 'giftyBags',
 				hpMult: 1,
 				pos: {
-					x: 111,
-					y: 54
+					x: 107,
+					y: 44
 				}
 			}
 		}, {

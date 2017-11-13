@@ -20,7 +20,7 @@ if (!Array.prototype.shuffle) {
 	Object.defineProperty(Array.prototype, 'shuffle', {
 		enumerable: false,
 		writable: false,
-		value: function() {
+		value: function () {
 			for (var j, x, i = this.length; i; j = Math.floor(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
 			return this;
 		}
@@ -36,7 +36,7 @@ if (!Array.prototype.random) {
 	Object.defineProperty(Array.prototype, 'random', {
 		enumerable: false,
 		writable: false,
-		value: function() {
+		value: function () {
 			return this[Math.floor(Math.random() * this.length)];
 		}
 	});
@@ -45,7 +45,7 @@ if (!Array.prototype.random) {
  * @module Pixi Particles
  * @namespace PIXI.particles
  */
-(function() {
+(function () {
 
 	"use strict";
 
@@ -83,7 +83,7 @@ if (!Array.prototype.random) {
  *  @module Pixi Particles
  *  @namespace PIXI.particles
  */
-(function(PIXI, undefined) {
+(function (PIXI, undefined) {
 
 	"use strict";
 
@@ -111,7 +111,7 @@ if (!Array.prototype.random) {
 		empty = ParticleUtils.EMPTY_TEXTURE = Texture.EMPTY;
 		//prevent any events from being used on the empty texture, as well as destruction of it
 		//v4 of Pixi does this, but doing it again won't hurt
-		empty.on = empty.destroy = empty.once = empty.emit = function() {};
+		empty.on = empty.destroy = empty.once = empty.emit = function () {};
 	} else {
 		var canvas = document.createElement("canvas");
 		canvas.width = canvas.height = 1;
@@ -120,7 +120,7 @@ if (!Array.prototype.random) {
 		//safe to render
 		empty.baseTexture.hasLoaded = false;
 		//prevent any events from being used on the empty texture, as well as destruction of it
-		empty.on = empty.destroy = empty.once = empty.emit = function() {};
+		empty.on = empty.destroy = empty.once = empty.emit = function () {};
 	}
 
 	/**
@@ -130,7 +130,7 @@ if (!Array.prototype.random) {
 	 * @param {PIXI.Point} p The point to rotate around 0,0.
 	 * @static
 	 */
-	ParticleUtils.rotatePoint = function(angle, p) {
+	ParticleUtils.rotatePoint = function (angle, p) {
 		if (!angle) return;
 		angle *= DEG_TO_RADS;
 		var s = Math.sin(angle);
@@ -150,7 +150,7 @@ if (!Array.prototype.random) {
 	 * @return {uint} The color in the form of 0xRRGGBB
 	 * @static
 	 */
-	ParticleUtils.combineRGBComponents = function(r, g, b /*, a*/ ) {
+	ParticleUtils.combineRGBComponents = function (r, g, b /*, a*/ ) {
 		return /*a << 24 |*/ r << 16 | g << 8 | b;
 	};
 
@@ -160,7 +160,7 @@ if (!Array.prototype.random) {
 	 * @static
 	 * @param {PIXI.Point} point The point to normalize
 	 */
-	ParticleUtils.normalize = function(point) {
+	ParticleUtils.normalize = function (point) {
 		if ((point.x != 0) || (point.y != 0)) {
 			var oneOverLen = 1 / ParticleUtils.length(point);
 			point.x *= oneOverLen;
@@ -175,7 +175,7 @@ if (!Array.prototype.random) {
 	 * @param {PIXI.Point} point The point to scaleBy
 	 * @param value {Number} The value to scale by.
 	 */
-	ParticleUtils.scaleBy = function(point, value) {
+	ParticleUtils.scaleBy = function (point, value) {
 		point.x *= value;
 		point.y *= value;
 	};
@@ -187,7 +187,7 @@ if (!Array.prototype.random) {
 	 * @param {PIXI.Point} point The point to measure length
 	 * @return The length of this point.
 	 */
-	ParticleUtils.length = function(point) {
+	ParticleUtils.length = function (point) {
 		return Math.sqrt(point.x * point.x + point.y * point.y);
 	};
 
@@ -201,7 +201,7 @@ if (!Array.prototype.random) {
 	 * @return The array of numeric color values.
 	 * @static
 	 */
-	ParticleUtils.hexToRGB = function(color, output) {
+	ParticleUtils.hexToRGB = function (color, output) {
 		if (output)
 			output.length = 0;
 		else
@@ -233,7 +233,7 @@ if (!Array.prototype.random) {
 	 *                    a given point in time (0-1 inclusive).
 	 * @static
 	 */
-	ParticleUtils.generateEase = function(segments) {
+	ParticleUtils.generateEase = function (segments) {
 		var qty = segments.length;
 		var oneOverQty = 1 / qty;
 		/*
@@ -242,7 +242,7 @@ if (!Array.prototype.random) {
 		 * @return {Number} The percentage of the change, 0-1 inclusive (unless your
 		 *                  ease goes outside those bounds).
 		 */
-		var simpleEase = function(time) {
+		var simpleEase = function (time) {
 			var t, s;
 			var i = (qty * time) | 0; //do a quick floor operation
 			t = (time - (i * oneOverQty)) * qty;
@@ -259,7 +259,7 @@ if (!Array.prototype.random) {
 	 * @return {int} The blend mode as specified in the PIXI.blendModes enumeration.
 	 * @static
 	 */
-	ParticleUtils.getBlendMode = function(name) {
+	ParticleUtils.getBlendMode = function (name) {
 		if (!name) return BLEND_MODES.NORMAL;
 		name = name.toUpperCase();
 		while (name.indexOf(" ") >= 0)
@@ -274,7 +274,7 @@ if (!Array.prototype.random) {
  *  @module Pixi Particles
  *  @namespace PIXI.particles
  */
-(function(PIXI, undefined) {
+(function (PIXI, undefined) {
 
 	"use strict";
 
@@ -288,7 +288,7 @@ if (!Array.prototype.random) {
 	 * @constructor
 	 * @param {Emitter} emitter The emitter that controls this particle.
 	 */
-	var Particle = function(emitter) {
+	var Particle = function (emitter) {
 		//start off the sprite with a blank texture, since we are going to replace it
 		//later when the particle is initialized. Pixi v2 requires a texture, v3 supplies a
 		//blank texture for us.
@@ -311,6 +311,7 @@ if (!Array.prototype.random) {
 		 * @property {PIXI.Point} velocity
 		 */
 		this.velocity = new PIXI.Point();
+		this.direction = emitter.direction;
 		/**
 		 * The maximum lifetime of this particle, in seconds.
 		 * @property {Number} maxLife
@@ -500,7 +501,7 @@ if (!Array.prototype.random) {
 	 * @method Particle_init
 	 * @private
 	 */
-	p.init = p.Particle_init = function() {
+	p.init = p.Particle_init = function () {
 		//reset the age
 		this.age = 0;
 		//set up the velocity based on the start speed and rotation
@@ -558,7 +559,7 @@ if (!Array.prototype.random) {
 	 * @method applyArt
 	 * @param {PIXI.Texture} art The texture to set.
 	 */
-	p.applyArt = function(art) {
+	p.applyArt = function (art) {
 		if (useAPI3) {
 			//remove warning on PIXI 3
 			this.texture = art || ParticleUtils.EMPTY_TEXTURE;
@@ -583,7 +584,7 @@ if (!Array.prototype.random) {
 	 *                   properties. A value of -1 means the particle died of old age instead.
 	 * @private
 	 */
-	p.update = p.Particle_update = function(delta) {
+	p.update = p.Particle_update = function (delta) {
 		//increase age
 		this.age += delta;
 		//recycle particle if it is too old
@@ -627,8 +628,20 @@ if (!Array.prototype.random) {
 				this.velocity.y += this.acceleration.y * delta;
 			}
 			//adjust position based on velocity
-			this.rawPosition.x += this.velocity.x * delta;
-			this.rawPosition.y += this.velocity.y * delta;
+			var dir = this.direction;
+			if (dir) {
+				var dx = dir.x;
+				var dy = dir.y;
+				var vx = this.velocity.x;
+				var vy = this.velocity.y;
+				if ((vy > 0) && (dy < 0))
+					vy *= -1;
+				this.rawPosition.x += dx * vx * delta;
+				this.rawPosition.y += dy * vy * delta;
+			} else {
+				this.rawPosition.x += this.velocity.x * delta;
+				this.rawPosition.y += this.velocity.y * delta;
+			}
 
 			this.position.x = ~~(this.rawPosition.x / 2) * 2;
 			this.position.y = ~~(this.rawPosition.y / 2) * 2;
@@ -657,7 +670,7 @@ if (!Array.prototype.random) {
 	 * and telling the emitter to recycle it.
 	 * @method kill
 	 */
-	p.kill = function() {
+	p.kill = function () {
 		this.emitter.recycle(this);
 	};
 
@@ -666,7 +679,7 @@ if (!Array.prototype.random) {
 	 * Destroys the particle, removing references and preventing future use.
 	 * @method destroy
 	 */
-	p.destroy = function() {
+	p.destroy = function () {
 		if (this.parent)
 			this.parent.removeChild(this);
 		if (this.Sprite_Destroy)
@@ -685,7 +698,7 @@ if (!Array.prototype.random) {
 	 *                     Texture.fromImage().
 	 * @return {Array} The art, after any needed modifications.
 	 */
-	Particle.parseArt = function(art) {
+	Particle.parseArt = function (art) {
 		//convert any strings to Textures.
 		var i;
 		for (i = art.length; i >= 0; --i) {
@@ -715,7 +728,7 @@ if (!Array.prototype.random) {
 	 * @param  {Object} extraData The extra data from the particle config.
 	 * @return {Object} The parsed extra data.
 	 */
-	Particle.parseData = function(extraData) {
+	Particle.parseData = function (extraData) {
 		return extraData;
 	};
 
@@ -727,7 +740,7 @@ if (!Array.prototype.random) {
  *  @module Pixi Particles
  *  @namespace PIXI.particles
  */
-(function(PIXI, undefined) {
+(function (PIXI, undefined) {
 
 	"use strict";
 
@@ -748,7 +761,7 @@ if (!Array.prototype.random) {
 	 * @param {Boolean} [config.emit=true] If config.emit is explicitly passed as false, the Emitter
 	 *                                     will start disabled.
 	 */
-	var Emitter = function(particleParent, particleImages, config) {
+	var Emitter = function (particleParent, particleImages, config) {
 		this.chance = config.chance || null;
 		this.allowRotation = config.allowRotation || false;
 		this.randomColor = config.randomColor || false;
@@ -1095,10 +1108,10 @@ if (!Array.prototype.random) {
 	 * @property {Number} frequency
 	 */
 	Object.defineProperty(p, "frequency", {
-		get: function() {
+		get: function () {
 			return this._frequency;
 		},
-		set: function(value) {
+		set: function (value) {
 			//do some error checking to prevent infinite loops
 			if (typeof value == "number" && value > 0)
 				this._frequency = value;
@@ -1114,10 +1127,10 @@ if (!Array.prototype.random) {
 	 * @property {Function} particleConstructor
 	 */
 	Object.defineProperty(p, "particleConstructor", {
-		get: function() {
+		get: function () {
 			return this._particleConstructor;
 		},
-		set: function(value) {
+		set: function (value) {
 			if (value != this._particleConstructor) {
 				this._particleConstructor = value;
 				//clean up existing particles
@@ -1139,10 +1152,10 @@ if (!Array.prototype.random) {
 	 * @property {PIXI.DisplayObjectContainer} parent
 	 */
 	Object.defineProperty(p, "parent", {
-		get: function() {
+		get: function () {
 			return this._parent;
 		},
-		set: function(value) {
+		set: function (value) {
 			//if our previous parent was a ParticleContainer, then we need to remove
 			//pooled particles from it
 			if (this._parentIsPC) {
@@ -1163,7 +1176,7 @@ if (!Array.prototype.random) {
 	 * @param {Array|PIXI.Texture} art A texture or array of textures to use for the particles.
 	 * @param {Object} config A configuration object containing settings for the emitter.
 	 */
-	p.init = function(art, config) {
+	p.init = function (art, config) {
 		if (!art || !config)
 			return;
 		//clean up any existing particles
@@ -1213,7 +1226,7 @@ if (!Array.prototype.random) {
 			if (!this.randomColor)
 				this.startColor = ParticleUtils.hexToRGB(config.color.start);
 			else {
-				this.startColor = config.color.start.map(function(s) {
+				this.startColor = config.color.start.map(function (s) {
 					return ParticleUtils.hexToRGB(s);
 				});
 			}
@@ -1222,7 +1235,7 @@ if (!Array.prototype.random) {
 				if (!this.randomColor)
 					this.endColor = ParticleUtils.hexToRGB(config.color.end);
 				else {
-					this.endColor = config.color.end.map(function(e) {
+					this.endColor = config.color.end.map(function (e) {
 						return ParticleUtils.hexToRGB(e);
 					});
 				}
@@ -1269,41 +1282,42 @@ if (!Array.prototype.random) {
 		var spawnCircle;
 		//determine the spawn function to use
 		switch (config.spawnType) {
-			case "rect":
-				this.spawnType = "rect";
-				this._spawnFunc = this._spawnRect;
-				var spawnRect = config.spawnRect;
-				this.spawnRect = new PIXI.Rectangle(spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
-				break;
-			case "circle":
-				this.spawnType = "circle";
-				this._spawnFunc = this._spawnCircle;
-				spawnCircle = config.spawnCircle;
-				this.spawnCircle = new PIXI.Circle(spawnCircle.x, spawnCircle.y, spawnCircle.r);
-				break;
-			case "ring":
-				this.spawnType = "ring";
-				this._spawnFunc = this._spawnRing;
-				spawnCircle = config.spawnCircle;
-				this.spawnCircle = new PIXI.Circle(spawnCircle.x, spawnCircle.y, spawnCircle.r);
-				this.spawnCircle.minRadius = spawnCircle.minR;
-				break;
-			case "burst":
-				this.spawnType = "burst";
-				this._spawnFunc = this._spawnBurst;
-				this.particlesPerWave = config.particlesPerWave;
-				this.particleSpacing = config.particleSpacing;
-				this.angleStart = config.angleStart ? config.angleStart : 0;
-				break;
-			case "point":
-				this.spawnType = "point";
-				this._spawnFunc = this._spawnPoint;
-				break;
-			default:
-				this.spawnType = "point";
-				this._spawnFunc = this._spawnPoint;
-				break;
+		case "rect":
+			this.spawnType = "rect";
+			this._spawnFunc = this._spawnRect;
+			var spawnRect = config.spawnRect;
+			this.spawnRect = new PIXI.Rectangle(spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
+			break;
+		case "circle":
+			this.spawnType = "circle";
+			this._spawnFunc = this._spawnCircle;
+			spawnCircle = config.spawnCircle;
+			this.spawnCircle = new PIXI.Circle(spawnCircle.x, spawnCircle.y, spawnCircle.r);
+			break;
+		case "ring":
+			this.spawnType = "ring";
+			this._spawnFunc = this._spawnRing;
+			spawnCircle = config.spawnCircle;
+			this.spawnCircle = new PIXI.Circle(spawnCircle.x, spawnCircle.y, spawnCircle.r);
+			this.spawnCircle.minRadius = spawnCircle.minR;
+			break;
+		case "burst":
+			this.spawnType = "burst";
+			this._spawnFunc = this._spawnBurst;
+			this.particlesPerWave = config.particlesPerWave;
+			this.particleSpacing = config.particleSpacing;
+			this.angleStart = config.angleStart ? config.angleStart : 0;
+			break;
+		case "point":
+			this.spawnType = "point";
+			this._spawnFunc = this._spawnPoint;
+			break;
+		default:
+			this.spawnType = "point";
+			this._spawnFunc = this._spawnPoint;
+			break;
 		}
+		this.direction = config.direction;
 		//set the spawning frequency
 		this.frequency = config.frequency;
 		//set the emitter lifetime
@@ -1329,7 +1343,7 @@ if (!Array.prototype.random) {
 	 * @method recycle
 	 * @param {Particle} particle The particle to recycle.
 	 */
-	p.recycle = function(particle) {
+	p.recycle = function (particle) {
 		if (particle.next)
 			particle.next.prev = particle.prev;
 		if (particle.prev)
@@ -1359,7 +1373,7 @@ if (!Array.prototype.random) {
 	 * @method rotate
 	 * @param {Number} newRot The new rotation, in degrees.
 	 */
-	p.rotate = function(newRot) {
+	p.rotate = function (newRot) {
 		if (this.rotation == newRot) return;
 		//caclulate the difference in rotation for rotating spawnPos
 		var diff = newRot - this.rotation;
@@ -1376,7 +1390,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} x The new x value of the spawn position for the emitter.
 	 * @param {Number} y The new y value of the spawn position for the emitter.
 	 */
-	p.updateSpawnPos = function(x, y) {
+	p.updateSpawnPos = function (x, y) {
 		this._posChanged = true;
 		this.spawnPos.x = x;
 		this.spawnPos.y = y;
@@ -1389,7 +1403,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} x The new x value of the emitter's owner.
 	 * @param {Number} y The new y value of the emitter's owner.
 	 */
-	p.updateOwnerPos = function(x, y) {
+	p.updateOwnerPos = function (x, y) {
 		this._posChanged = true;
 		this.ownerPos.x = x;
 		this.ownerPos.y = y;
@@ -1401,7 +1415,7 @@ if (!Array.prototype.random) {
 	 * that was not normal movement.
 	 * @method resetPositionTracking
 	 */
-	p.resetPositionTracking = function() {
+	p.resetPositionTracking = function () {
 		this._prevPosIsValid = false;
 	};
 
@@ -1411,10 +1425,10 @@ if (!Array.prototype.random) {
 	 * @property {Boolean} emit
 	 */
 	Object.defineProperty(p, "emit", {
-		get: function() {
+		get: function () {
 			return this._emit;
 		},
-		set: function(value) {
+		set: function (value) {
 			this._emit = !!value;
 			this._emitterLife = this.emitterLifetime;
 		}
@@ -1425,7 +1439,7 @@ if (!Array.prototype.random) {
 	 * @method update
 	 * @param {Number} delta Time elapsed since the previous frame, in __seconds__.
 	 */
-	p.update = function(delta) {
+	p.update = function (delta) {
 		var r = [];
 		//if we don't have a parent to add particles to, then don't do anything.
 		//this also works as a isDestroyed check
@@ -1636,7 +1650,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} emitPosY The emitter's y position
 	 * @param {int} i The particle number in the current wave. Not used for this function.
 	 */
-	p._spawnPoint = function(p, emitPosX, emitPosY, i) {
+	p._spawnPoint = function (p, emitPosX, emitPosY, i) {
 		//set the initial rotation/direction of the particle based on
 		//starting particle angle and rotation of emitter
 		if (this.minStartRotation == this.maxStartRotation)
@@ -1657,7 +1671,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} emitPosY The emitter's y position
 	 * @param {int} i The particle number in the current wave. Not used for this function.
 	 */
-	p._spawnRect = function(p, emitPosX, emitPosY, i) {
+	p._spawnRect = function (p, emitPosX, emitPosY, i) {
 		//set the initial rotation/direction of the particle based on starting
 		//particle angle and rotation of emitter
 		if (this.minStartRotation == this.maxStartRotation)
@@ -1682,7 +1696,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} emitPosY The emitter's y position
 	 * @param {int} i The particle number in the current wave. Not used for this function.
 	 */
-	p._spawnCircle = function(p, emitPosX, emitPosY, i) {
+	p._spawnCircle = function (p, emitPosX, emitPosY, i) {
 		//set the initial rotation/direction of the particle based on starting
 		//particle angle and rotation of emitter
 		if (this.minStartRotation == this.maxStartRotation)
@@ -1715,7 +1729,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} emitPosY The emitter's y position
 	 * @param {int} i The particle number in the current wave. Not used for this function.
 	 */
-	p._spawnRing = function(p, emitPosX, emitPosY, i) {
+	p._spawnRing = function (p, emitPosX, emitPosY, i) {
 		var spawnCircle = this.spawnCircle;
 		//set the initial rotation/direction of the particle based on starting
 		//particle angle and rotation of emitter
@@ -1755,7 +1769,7 @@ if (!Array.prototype.random) {
 	 * @param {Number} emitPosY The emitter's y position
 	 * @param {int} i The particle number in the current wave.
 	 */
-	p._spawnBurst = function(p, emitPosX, emitPosY, i) {
+	p._spawnBurst = function (p, emitPosX, emitPosY, i) {
 		//set the initial rotation/direction of the particle based on spawn
 		//angle and rotation of emitter
 		if (this.particleSpacing === 0)
@@ -1771,7 +1785,7 @@ if (!Array.prototype.random) {
 	 * Kills all active particles immediately.
 	 * @method cleanup
 	 */
-	p.cleanup = function() {
+	p.cleanup = function () {
 		var particle, next;
 		for (particle = this._activeParticlesFirst; particle; particle = next) {
 			next = particle.next;
@@ -1787,7 +1801,7 @@ if (!Array.prototype.random) {
 	 * Destroys the emitter and all of its particles.
 	 * @method destroy
 	 */
-	p.destroy = function() {
+	p.destroy = function () {
 		//puts all active particles in the pool, and removes them from the particle parent
 		this.cleanup();
 		//wipe the pool clean
@@ -1805,7 +1819,7 @@ if (!Array.prototype.random) {
 
 }(PIXI));
 
-(function(undefined) {
+(function (undefined) {
 
 	// Check for window, fallback to global
 	var global = typeof window !== 'undefined' ? window : GLOBAL;
@@ -1818,7 +1832,7 @@ if (!Array.prototype.random) {
 	//  Get classes from the PIXI.particles namespace
 	Object.defineProperties(global.cloudkid, {
 		AnimatedParticle: {
-			get: function() {
+			get: function () {
 				if (true) {
 					console.warn("cloudkid namespace is deprecated, please use PIXI.particles");
 				}
@@ -1826,7 +1840,7 @@ if (!Array.prototype.random) {
 			}
 		},
 		Emitter: {
-			get: function() {
+			get: function () {
 				if (true) {
 					console.warn("cloudkid namespace is deprecated, please use PIXI.particles");
 				}
@@ -1834,7 +1848,7 @@ if (!Array.prototype.random) {
 			}
 		},
 		Particle: {
-			get: function() {
+			get: function () {
 				if (true) {
 					console.warn("cloudkid namespace is deprecated, please use PIXI.particles");
 				}
@@ -1842,7 +1856,7 @@ if (!Array.prototype.random) {
 			}
 		},
 		ParticleUtils: {
-			get: function() {
+			get: function () {
 				if (true) {
 					console.warn("cloudkid namespace is deprecated, please use PIXI.particles");
 				}
@@ -1850,7 +1864,7 @@ if (!Array.prototype.random) {
 			}
 		},
 		PathParticle: {
-			get: function() {
+			get: function () {
 				if (true) {
 					console.warn("cloudkid namespace is deprecated, please use PIXI.particles");
 				}

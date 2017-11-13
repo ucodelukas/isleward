@@ -4,12 +4,67 @@ define([
 	itemGenerator
 ) {
 	return {
+		mapFile: null,
+		mapW: null,
+		mapH: null,
+
+		mapOffset: {
+			x: 79,
+			y: 40
+		},
+
 		init: function () {
+			this.mapFile = require.nodeRequire('../../../mods/event-xmas/maps/tutorial/map');
+			this.mapW = this.mapFile.width;
+			this.mapH = this.mapFile.height;
+
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
 			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
+			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
+		},
+
+		onAfterGetLayerObjects: function (info) {
+			if (info.map != 'tutorial')
+				return;
+
+			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
+			if (layer) {
+				var offset = this.mapOffset;
+				var mapScale = this.mapFile.tilesets[0].tileheight;
+
+				layer.objects.forEach(function (l) {
+					var newO = extend(true, {}, l);
+					newO.x += (offset.x * mapScale);
+					newO.y += (offset.y * mapScale);
+
+					info.objects.push(newO);
+				}, this);
+			}
+		},
+
+		onBeforeBuildLayerTile: function (info) {
+			if (info.map != 'tutorial')
+				return;
+
+			var offset = this.mapOffset;
+
+			var x = info.x;
+			var y = info.y;
+
+			if ((x - offset.x < 0) || (y - offset.y < 0) || (x - offset.x >= this.mapW) || (y - offset.y >= this.mapH))
+				return;
+
+			var i = ((y - offset.y) * this.mapW) + (x - offset.x);
+			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
+			if (layer) {
+				var cell = layer.data[i];
+				if (cell)
+					info.cell = layer.data[i];
+			}
 		},
 
 		onAfterGetZone: function (zone, config) {
