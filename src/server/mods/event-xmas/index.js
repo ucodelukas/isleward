@@ -18,6 +18,7 @@ define([
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
+			this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
@@ -25,6 +26,13 @@ define([
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
 			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
 			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
+			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
+		},
+
+		onBeforeGetFactions: function (mappings) {
+			extend(true, mappings, {
+				fatherGiftybags: `${this.relativeFolderName}/factions/fatherGiftybags`
+			});
 		},
 
 		onAfterGetLayerObjects: function (info) {
@@ -81,18 +89,18 @@ define([
 				'Festive Gift': {
 					sheetName: 'objects',
 					cell: 166,
-					itemSprite: [7, 3],
-					itemName: 'Candy Corn',
-					itemSheet: `bigObjects`,
-					itemAmount: [1, 1]
+					itemSprite: [3, 0],
+					itemName: 'Snowflake',
+					itemSheet: `${this.folderName}/images/items.png`,
+					itemAmount: [1, 2]
 				},
 				'Giant Gift': {
 					sheetName: 'bigObjects',
 					cell: 14,
-					itemSprite: [3, 3],
-					itemName: 'Candy Corn',
+					itemSprite: [3, 0],
+					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [2, 3]
+					itemAmount: [3, 6]
 				}
 			});
 		},
@@ -122,6 +130,15 @@ define([
 				return;
 
 			list.push(this.relativeFolderName + '/maps/tutorial/events/xmas.js');
+		},
+
+		onBeforeGetDialogue: function (zone, config) {
+			try {
+				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
+				extend(true, config, modDialogue);
+			} catch (e) {
+
+			}
 		}
 	};
 });

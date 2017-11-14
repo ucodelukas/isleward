@@ -7,11 +7,11 @@ define([
 		resources: {
 			'Festive Gift': {
 				type: 'herb',
-				max: 4
+				max: 40
 			},
 			'Giant Gift': {
 				type: 'herb',
-				max: 1
+				max: 10
 			}
 		},
 		mobs: {
@@ -33,6 +33,25 @@ define([
 			}
 		},
 		objects: {
+			shopfather: {
+				properties: {
+					cpnNotice: {
+						actions: {
+							enter: {
+								cpn: 'dialogue',
+								method: 'talk',
+								args: [{
+									targetName: 'father giftybags'
+								}]
+							},
+							exit: {
+								cpn: 'dialogue',
+								method: 'stopTalk'
+							}
+						}
+					}
+				}
+			},
 			snow: {
 				components: {
 					cpnParticles: {

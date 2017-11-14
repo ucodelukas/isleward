@@ -49,6 +49,8 @@ define([
 
 			Object.keys(configs).forEach(function (c) {
 				var card = configs[c];
+				if (!card.chance)
+					return;
 
 				var rqrLevel = card.mobLevel;
 				if (rqrLevel) {
