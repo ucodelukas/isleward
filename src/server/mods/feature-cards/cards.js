@@ -13,7 +13,7 @@ define([
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
-			chance: 20.0025,
+			chance: 0.0025,
 			reward: 'Level 15 Legendary Weapon',
 			setSize: 2,
 			zone: 'sewer'
@@ -81,13 +81,13 @@ define([
 
 			var card = {
 				name: pickName,
-				spritesheet: `${this.folderName}/images/items.png`,
+				spritesheet: pick.spritesheet || `${this.folderName}/images/items.png`,
 				type: 'Reward Card',
 				description: 'Reward: ' + pick.reward,
 				noSalvage: true,
-				sprite: [0, 0],
+				sprite: pick.sprite || [0, 0],
 				quantity: 1,
-				quality: 1,
+				quality: pick.quality || 1,
 				setSize: pick.setSize
 			};
 

@@ -134,7 +134,10 @@ define([
 							chance: 40,
 							reward: 'Rare Festive Spear',
 							setSize: 1,
-							mobName: ['frost crab', 'rude holf']
+							mobName: ['frost crab', 'rude holf'],
+							spritesheet: `server/mods/event-xmas/images/items.png`,
+							sprite: [0, 1],
+							quality: 2
 						},
 						'Smoop Smoop': {
 							reward: 'Rare Festive Spear',
@@ -155,13 +158,13 @@ define([
 
 					gatherResult.items.push({
 						name: 'Smoop Smoop',
-						spritesheet: `server/mods/feature-cards/images/items.png`,
+						spritesheet: `server/mods/event-xmas/images/items.png`,
 						type: 'Reward Card',
 						description: 'Reward: Smeggy Steve Figurine',
 						noSalvage: true,
-						sprite: [0, 0],
+						sprite: [0, 1],
 						quantity: 1,
-						quality: 1,
+						quality: 2,
 						setSize: 5
 					});
 				}

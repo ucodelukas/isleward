@@ -7,11 +7,11 @@ define([
 		resources: {
 			'Festive Gift': {
 				type: 'herb',
-				max: 40
+				max: 4
 			},
 			'Giant Gift': {
 				type: 'herb',
-				max: 10
+				max: 1
 			}
 		},
 		mobs: {
