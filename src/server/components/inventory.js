@@ -27,6 +27,13 @@ define([
 
 		init: function (blueprint, isTransfer) {
 			var items = blueprint.items || [];
+			items.push({
+				name: 'Wooden Totem',
+				quantity: 1,
+				quality: 0,
+				material: true,
+				sprite: [1, 8]
+			});
 			var iLen = items.length;
 
 			//Spells should be sorted so they're EQ'd in the right order
@@ -34,6 +41,14 @@ define([
 				var aId = (a.spellId != null) ? ~~a.spellId : 9999;
 				var bId = (b.spellId != null) ? ~~b.spellId : 9999;
 				return (aId - bId);
+			});
+
+			items.push({
+				name: 'Wooden Totem',
+				quantity: 1,
+				quality: 0,
+				material: true,
+				sprite: [1, 8]
 			});
 
 			for (var i = 0; i < iLen; i++) {

@@ -3,17 +3,25 @@
 .uiSmithing {
 	display: none;
 	background-color: @blackB;
-	border: 5px solid #c0c3cf;
-	padding: 10px;
+	border: 5px solid @blackB;
+	text-align: center;
 
-	.top {
-		margin-bottom: 20px;
+	> .heading {
+			color: @blueA;
+			width: 100%;
+			height: 36px;
+			background-color: @blackB;
 
-		.heading {
-			color: @orange;
-			text-align: center;
-			padding-bottom: 10px;
+			.heading-text {
+				padding-top: 8px;
+				margin: auto;
+			}
 		}
+
+	.bottom {
+		height: 125px;
+		background-color: @blackC;
+		padding: 10px;
 	}
 
 	.col {
@@ -125,11 +133,11 @@
 
 		&:first-child {
 			.heading {
-				width: 160px;
+				width: 190px;
 			}
 
 			.content {
-				width: 160px;
+				width: 190px;
 				background-color: transparent;
 
 				.col-btn {
@@ -138,16 +146,29 @@
 				    color: #f2f5f5;
 				    text-align: center;
 				    padding-top: 10px;
-				    background-color: @blackD;
+				    background-color: @blackB;
 				    margin-bottom: 10px;
 				    cursor: pointer;
 
 				    &.selected {
-				    	color: @blueB;
+				    	color: @orange;
 				    }
 
 				    &:hover {
-				    	background-color: @blackC;
+				    	background-color: @blackA;
+				    }
+
+				    &.col-half {
+				    	width: calc((100% - 10px) / 2);
+				    	float: left;
+
+				    	&:first-child {
+							margin-right: 10px;
+				    	}
+				    }
+
+				    &:not(.col-half) {
+						clear: both;
 				    }
 				}
 			}

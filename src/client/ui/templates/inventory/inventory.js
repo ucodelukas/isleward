@@ -275,7 +275,7 @@ define([
 					callback: this.performItemAction.bind(this, item, 'equip')
 				},
 				augment: {
-					text: 'augment',
+					text: 'craft',
 					callback: this.openAugmentUi.bind(this, item)
 				},
 				mail: {

@@ -17,7 +17,8 @@ define([
 		mobs: {
 			elk: {
 				rare: {
-					count: 10,
+					chance: 5,
+					count: 1,
 					sheetName: 'server/mods/event-xmas/images/mobs.png',
 					cell: 0,
 					name: 'Rude Holf'
@@ -25,7 +26,8 @@ define([
 			},
 			'titan crab': {
 				rare: {
-					count: 10,
+					chance: 5,
+					count: 1,
 					sheetName: 'server/mods/event-xmas/images/mobs.png',
 					cell: 1,
 					name: 'Frost Crab'
