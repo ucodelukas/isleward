@@ -10,7 +10,7 @@ define([
 
 		mapOffset: {
 			x: 79,
-			y: 40
+			y: 32
 		},
 
 		init: function () {

@@ -29,7 +29,7 @@ define([
 				hpMult: 1,
 				pos: {
 					x: 106,
-					y: 45
+					y: 46
 				},
 				dialogue: {
 					auto: true,
