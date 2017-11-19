@@ -487,7 +487,6 @@ module.exports = {
 		},
 		guard: {
 			level: 50,
-			deathRep: -15,
 
 			walkDistance: 0,
 
@@ -497,7 +496,6 @@ module.exports = {
 		},
 		estrid: {
 			level: 25,
-			deathRep: -7,
 			walkDistance: 5,
 
 			rare: {
@@ -534,7 +532,6 @@ module.exports = {
 		pig: {
 			attackable: false,
 			level: 3,
-			grantReputation: null,
 			rare: {
 				count: 0
 			}
@@ -542,7 +539,6 @@ module.exports = {
 		goat: {
 			attackable: false,
 			level: 3,
-			grantReputation: null,
 			rare: {
 				count: 0
 			}
@@ -550,14 +546,12 @@ module.exports = {
 		cow: {
 			attackable: false,
 			level: 3,
-			grantReputation: null,
 			rare: {
 				count: 0
 			}
 		},
 		'priest': {
 			level: 50,
-			deathRep: -15,
 			walkDistance: 0,
 			rare: {
 				count: 0

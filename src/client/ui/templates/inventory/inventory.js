@@ -270,6 +270,10 @@ define([
 					text: 'activate',
 					callback: this.performItemAction.bind(this, item, 'activateMtx')
 				},
+				use: {
+					text: 'use',
+					callback: this.performItemAction.bind(this, item, 'useItem')
+				},
 				equip: {
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
@@ -299,6 +303,8 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type == 'mtx')
 				config.push(menuItems.activate);
+			else if ((item.type == 'toy') || (item.type == 'consumable'))
+				config.push(menuItems.use);
 			else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)

@@ -96,7 +96,7 @@ define([
 									rotation: 90,
 									randomScale: true,
 									randomSpeed: true,
-									chance: 0.04,
+									chance: 0.03,
 									randomColor: true,
 									spawnType: 'rect',
 									direction: {

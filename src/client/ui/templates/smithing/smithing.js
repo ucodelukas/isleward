@@ -5,7 +5,7 @@ define([
 	'css!ui/templates/smithing/styles',
 	'html!/ui/templates/smithing/templateItem',
 	'js/misc/statTranslations'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -27,7 +27,7 @@ define([
 
 		action: 'augment',
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onShowSmithing', this.toggle.bind(this));
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 
@@ -42,7 +42,7 @@ define([
 			this.find('.col-btn').on('click', this.clickAction.bind(this));
 		},
 
-		clickAction: function(e) {
+		clickAction: function (e) {
 			var el = $(e.currentTarget);
 			this.find('.col-btn').removeClass('selected');
 
@@ -56,7 +56,7 @@ define([
 				this.getMaterials(this.item);
 		},
 
-		smith: function() {
+		smith: function () {
 			this.setDisabled(true);
 
 			client.request({
@@ -74,7 +74,7 @@ define([
 			});
 		},
 
-		onSmith: function(item, result) {
+		onSmith: function (item, result) {
 			this.setDisabled(false);
 
 			var msg = {
@@ -85,12 +85,19 @@ define([
 			};
 			if (this.action == 'scour')
 				msg.msg = 'Item Scouring Succeeded';
+			else if (this.action == 'reroll')
+				msg.msg = 'Item Reroll Succeeded';
+			else if (this.action == 'relevel')
+				msg.msg = 'Item Relevel Succeeded';
+			else if (this.action == 'reslot')
+				msg.msg = 'Item Reslot Succeeded';
+
 			if (!result.success) {
 				msg.msg = 'Item Enhancement Failed';
 				msg.type = 'failure';
 			}
 
-			result.addStatMsgs.forEach(function(a) {
+			result.addStatMsgs.forEach(function (a) {
 				msg.msg += '<br /> ' + ((a.value > 0) ? '+' : '') + a.value + ' ' + statTranslations.translate(a.stat);
 			});
 
@@ -103,11 +110,11 @@ define([
 		},
 
 		//Something needs to listen to events or they'll be queued
-		hackMethod: function() {
+		hackMethod: function () {
 
 		},
 
-		openInventory: function() {
+		openInventory: function () {
 			this.eventCloseInv = this.onEvent('onHideInventory', this.onHideInventory.bind(this));
 			this.eventClickInv = this.onEvent('beforeInventoryClickItem', this.onHideInventory.bind(this));
 
@@ -115,7 +122,7 @@ define([
 			this.el.hide();
 		},
 
-		onHideInventory: function(msg) {
+		onHideInventory: function (msg) {
 			if (msg)
 				msg.success = false;
 
@@ -123,8 +130,7 @@ define([
 				this.offEvent(this.eventCloseInv);
 				this.offEvent(this.eventClickInv);
 				return;
-			}
-			else if ((!msg.item.slot) || (msg.item.noAugment)) {
+			} else if ((!msg.item.slot) || (msg.item.noAugment)) {
 				var msg = {
 					msg: 'Incorrect Item Type',
 					type: 'failure',
@@ -134,8 +140,7 @@ define([
 				events.emit('onGetAnnouncement', msg);
 
 				return;
-			}
-			else if (msg.item.eq) {
+			} else if (msg.item.eq) {
 				var msg = {
 					msg: 'Cannot augment equipped items',
 					type: 'failure',
@@ -164,7 +169,7 @@ define([
 			this.getMaterials(msg.item);
 		},
 
-		getMaterials: function(item) {
+		getMaterials: function (item) {
 			this.setDisabled(true);
 
 			client.request({
@@ -182,7 +187,7 @@ define([
 			});
 		},
 
-		onGetMaterials: function(item, result) {
+		onGetMaterials: function (item, result) {
 			this.find('.item').remove();
 			this.drawItem(this.find('.item-picker'), item);
 
@@ -192,14 +197,13 @@ define([
 
 			var material = result.materials[0];
 			if (material) {
-				var hasMaterials = window.player.inventory.items.find(function(i) {
+				var hasMaterials = window.player.inventory.items.find(function (i) {
 					return (i.name == material.name);
 				});
 				if (hasMaterials) {
 					material.quantityText = hasMaterials.quantity + '/' + material.quantity;
 					hasMaterials = hasMaterials.quantity >= material.quantity;
-				}
-				else {
+				} else {
 					if (!material.quantityText)
 						material.quantityText = '';
 					material.quantityText += '0/' + material.quantity;
@@ -216,7 +220,7 @@ define([
 			this.setDisabled(false);
 		},
 
-		drawItem: function(container, item, redQuantity) {
+		drawItem: function (container, item, redQuantity) {
 			container.find('.icon').hide();
 
 			var imgX = -item.sprite[0] * 64;
@@ -246,7 +250,7 @@ define([
 			}
 		},
 
-		onHover: function(el, item, e) {
+		onHover: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
 			else
@@ -265,17 +269,17 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos);
 		},
 
-		hideTooltip: function(el, item, e) {
+		hideTooltip: function (el, item, e) {
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
 
-		beforeHide: function() {
+		beforeHide: function () {
 			this.offEvent(this.eventCloseInv);
 			this.offEvent(this.eventClickInv);
 		},
 
-		toggle: function() {
+		toggle: function () {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
@@ -291,7 +295,7 @@ define([
 				//events.emit('onHideOverlay', this.el);
 			}
 		},
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'm')
 				this.toggle();
 		}

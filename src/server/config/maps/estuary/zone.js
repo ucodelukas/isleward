@@ -53,9 +53,6 @@ module.exports = {
 		"m'ogresh": {
 			level: 12,
 			isChampion: true,
-			grantReputation: {
-				gaekatla: 15
-			},
 			spells: [{
 				type: 'melee',
 				range: 2,
@@ -67,7 +64,7 @@ module.exports = {
 		'exit': {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {

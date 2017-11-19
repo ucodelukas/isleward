@@ -27,13 +27,6 @@ define([
 
 		init: function (blueprint, isTransfer) {
 			var items = blueprint.items || [];
-			items.push({
-				name: 'Wooden Totem',
-				quantity: 1,
-				quality: 0,
-				material: true,
-				sprite: [1, 8]
-			});
 			var iLen = items.length;
 
 			//Spells should be sorted so they're EQ'd in the right order
@@ -41,14 +34,6 @@ define([
 				var aId = (a.spellId != null) ? ~~a.spellId : 9999;
 				var bId = (b.spellId != null) ? ~~b.spellId : 9999;
 				return (aId - bId);
-			});
-
-			items.push({
-				name: 'Wooden Totem',
-				quantity: 1,
-				quality: 0,
-				material: true,
-				sprite: [1, 8]
 			});
 
 			for (var i = 0; i < iLen; i++) {
@@ -217,6 +202,18 @@ define([
 			item.active = !item.active;
 
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		useItem: function (itemId) {
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+
+			var result = {};
+			events.emit('onBeforeUseItem', this.obj, item, result);
+
+			if (item.type == 'consumable')
+				this.destroyItem(itemId, 1);
 		},
 
 		unlearnAbility: function (itemId) {
@@ -732,7 +729,7 @@ define([
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
 
-					var useItem = null;
+					/*var useItem = null;
 					if (Math.random() < generator.spellChance) {
 						useItem = instancedItems
 							.filter(item => item.ability);
@@ -752,13 +749,10 @@ define([
 
 					//Spells don't have stats
 					if (useItem.stats)
-						delete useItem.stats.armor;
+						delete useItem.stats.armor;*/
 
 					var itemBlueprint = {
-						level: useItem.level,
-						slot: useItem.slot,
-						type: useItem.type,
-						spell: !!useItem.ability,
+						level: this.obj.stats.values.level,
 						magicFind: magicFind,
 						bonusMagicFind: bonusMagicFind
 					};

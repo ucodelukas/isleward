@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -44,6 +44,21 @@ define([
 			trinket: 0,
 			twoHanded: 0,
 			tool: 0
+		},
+
+		getRandomSlot: function (exclude) {
+			var chances = [];
+			for (var c in this.chance) {
+				if (c == exclude)
+					continue;
+
+				var rolls = this.chance[c];
+				for (var i = 0; i < rolls; i++) {
+					chances.push(c);
+				}
+			}
+
+			return chances[~~(Math.random() * chances.length)];
 		}
 	};
 });

@@ -36,82 +36,90 @@ define([
 					config: {
 						'1': {
 							msg: [{
-								msg: `Hi there, are you here to compete?`,
-								options: [1.1, 1.2, 1.3]
+								msg: `Soul's greeting to you.`,
+								options: [1.1, 1.2]
 							}],
 							options: {
 								'1.1': {
-									msg: `What's happening here?`,
-									goto: 2
+									msg: `Who are you?`,
+									goto: '2'
 								},
 								'1.2': {
-									msg: `Could I please have a Competition Rod?`,
-									goto: 5
-								},
-								'1.3': {
-									msg: `I would like to trade some Angler's Marks.`,
-									goto: 'tradeBuy'
+									msg: `I found some snowflakes for you.`,
+									prereq: function (obj) {
+										var snowflakes = obj.inventory.items.find(i => (i.name == 'Snowflake'));
+										return ((!!snowflakes) && (snowflakes.quantity >= 1));
+									},
+									goto: 'giveSnowflakes'
 								}
 							}
 						},
-						'2': {
-							msg: `Why, the Grand Fishing Tournament, of course! Anglers come from all over to compete in this esteemed event.`,
-							options: {
-								'2.1': {
-									msg: `How does it work?`,
-									goto: 3
-								}
-							}
-						},
-						'3': {
-							msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the biggest one, you win!`,
-							options: {
-								'3.1': {
-									msg: `What are the prizes?`,
-									goto: 4
-								}
-							}
-						},
-						'4': {
-							msg: `The top three participants will win Angler's Marks that can be exchanged for Fishing Rods and Cerulean Pearls.`,
-							options: {
-								'4.1': {
-									msg: `I would like to ask something else.`,
-									goto: 1
-								}
-							}
-						},
-						'5': {
+						giveSnowflakes: {
 							msg: [{
-								msg: ``,
-								options: [1.1, 1.2, 1.3, 1.4]
+								msg: `Ho, Ho, Holla at me!`,
+								options: [1.1]
 							}],
-							cpn: 'dialogue',
-							method: 'getItem',
-							args: [{
-								item: {
-									name: 'Competition Rod',
-									slot: 'tool',
-									sprite: [11, 1],
-									type: 'Fishing Rod',
+							method: function (obj) {
+								var inventory = obj.inventory;
+
+								//while (true) {
+								var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+								if ((!snowflakes) || (snowflakes.quantity < 1))
+									return;
+								obj.reputation.getReputation('fatherGiftybags', 100);
+
+								var chances = {
+									'Bottomless Eggnog': 1,
+									'Sprig of Mistletoe': 1,
+									'Merrywinter Play Script': 1
+								};
+
+								var rewards = [{
+									name: 'Bottomless Eggnog',
+									type: 'toy',
+									sprite: [1, 1],
+									spritesheet: `server/mods/event-xmas/images/items.png`,
+									dscription: 'Makes you merry, makes you shine.',
 									worth: 0,
 									noSalvage: true,
-									noAugment: true,
-									stats: {
-										catchSpeed: 50,
-										catchChance: 25
+									noAugment: true
+								}, {
+									name: 'Sprig of Mistletoe',
+									type: 'consumable',
+									sprite: [3, 1],
+									spritesheet: `server/mods/event-xmas/images/items.png`,
+									description: `Blows a kiss to your one true love...or whoever's closest`,
+									worth: 0,
+									quantity: 1,
+									noSalvage: true,
+									noAugment: true
+								}, {
+									name: 'Merrywinter Play Script',
+									type: 'consumable',
+									sprite: [2, 1],
+									spritesheet: `server/mods/event-xmas/images/items.png`,
+									description: 'Recites a line from the Merrywinter play',
+									quantity: 1,
+									worth: 0,
+									noSalvage: true,
+									noAugment: true
+								}];
+
+								var pool = [];
+								Object.keys(chances).forEach(function (c) {
+									for (var i = 0; i < chances[c]; i++) {
+										pool.push(c);
 									}
-								},
-								successMsg: 'May it cast true.',
-								existsMsg: 'Oh, it seems that you already have one.'
-							}]
-						},
-						tradeBuy: {
-							cpn: 'trade',
-							method: 'startBuy',
-							args: [{
-								targetName: 'angler nayla'
-							}]
+								});
+
+								var pick = pool[~~(Math.random() * pool.length)];
+								var blueprint = rewards.find(r => (r.name == pick));
+
+								inventory.getItem(extend(true, {}, blueprint));
+
+								inventory.destroyItem(snowflakes.id, 1);
+								//}
+							}
 						}
 					}
 				}

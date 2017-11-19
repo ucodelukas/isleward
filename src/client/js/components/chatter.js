@@ -1,6 +1,6 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
 	var scale = 40;
@@ -10,21 +10,21 @@ define([
 
 		cd: 0,
 		cdMax: 150,
+		color: 0xffffff,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if ((blueprint) && (blueprint.msg))
 				this.extend(blueprint);
 		},
 
-		update: function() {
+		update: function () {
 			var chatSprite = this.obj.chatSprite;
 			if (!chatSprite)
 				return;
 
 			if (this.cd > 0) {
 				this.cd--;
-			}
-			else if (this.cd == 0) {
+			} else if (this.cd == 0) {
 				renderer.destroyObject({
 					sprite: chatSprite
 				});
@@ -32,7 +32,7 @@ define([
 			}
 		},
 
-		extend: function(serverMsg) {
+		extend: function (serverMsg) {
 			var msg = serverMsg.msg + '\n\'';
 
 			var obj = this.obj;
@@ -43,7 +43,7 @@ define([
 				});
 			}
 
-			var color = null;
+			var color = this.color;
 			if (msg[0] == '*')
 				color = 0xffeb38;
 
@@ -59,7 +59,7 @@ define([
 			this.cd = this.cdMax;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			var chatSprite = this.obj.chatSprite;
 			if (!chatSprite)
 				return;

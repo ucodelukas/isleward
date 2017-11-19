@@ -1,9 +1,15 @@
 define([
-	'./generators/stats',
-	'./salvager'
+	'items/generators/stats',
+	'items/salvager',
+	'items/config/currencies',
+	'items/config/slots',
+	'items/generator'
 ], function (
 	generatorStats,
-	salvager
+	salvager,
+	configCurrencies,
+	configSlots,
+	generator
 ) {
 	return {
 		enchant: function (obj, item, msg) {
@@ -36,11 +42,27 @@ define([
 			});
 
 			if (msg.action == 'reroll') {
-				var statCount = Object.keys(item.stats).length;
+				delete msg.addStatMsgs;
+				if (item.stats.lvlRequire) {
+					item.level += item.stats.lvlRequire;
+					delete item.originalLevel;
+				}
+
 				item.stats = {};
-				generatorStats.generate(item, {
-					statCount: statCount
-				}, result);
+				generatorStats.generate(item, {}, result);
+			} else if (msg.action == 'relevel') {
+				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
+				item.level = Math.max(1, item.level + offset);
+			} else if (msg.action == 'reslot') {
+				var newItem = generator.generate({
+					slot: configSlots.getRandomSlot(item.slot),
+					level: item.level,
+					quality: item.quality,
+					stats: Object.keys(item.stats)
+				});
+
+				delete item.stats;
+				extend(true, item, newItem);
 			} else {
 				var newPower = (item.power || 0) + 1;
 				item.power = newPower;
@@ -101,13 +123,13 @@ define([
 					result = [];
 			} else if (action == 'reroll') {
 				successChance = 100;
-				result = [{
-					name: 'Wooden Totem',
-					quantity: 1,
-					quality: 0,
-					material: true,
-					sprite: [1, 8]
-				}];
+				result = [configCurrencies.currencies['Unstable Totem']];
+			} else if (action == 'relevel') {
+				successChance = 100;
+				result = [configCurrencies.currencies['Ascendant Totem']];
+			} else if (action == 'reslot') {
+				successChance = 100;
+				result = [configCurrencies.currencies["Gambler's Totem"]];
 			}
 
 			return {

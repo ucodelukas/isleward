@@ -27,6 +27,50 @@ define([
 			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
 			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
+			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
+		},
+
+		onBeforeUseItem: function (obj, item, result) {
+			var handler = {
+				'Merrywinter Play Script': function (obj, result) {
+					var lines = [
+
+					];
+
+					obj.syncer.set(false, 'chatter', 'color', 0x48edff);
+					obj.syncer.set(false, 'chatter', 'msg', lines[~~(Math.random() * lines.length)]);
+				},
+				'Sprig of Mistletoe': function (obj, result) {
+					var ox = obj.x;
+					var oy = obj.y;
+
+					var objects = obj.instance.objects.objects.filter(o => (((o.mob) || (o.player)) && (o.name) && (o != obj)));
+					var closestDistance = 999;
+					var closest = null;
+					var oLen = objects.length;
+					for (var i = 0; i < oLen; i++) {
+						var m = objects[i];
+						var distance = Math.max(Math.abs(ox - m.x), Math.abs(oy - m.y));
+						if (distance < closestDistance) {
+							closestDistance = distance;
+							closest = m;
+						}
+					}
+
+					if (!closest)
+						return;
+
+					var prefix = (closest.mob) ? 'the' : '';
+
+					obj.syncer.set(false, 'chatter', 'color', 0xfc66f7);
+					obj.syncer.set(false, 'chatter', 'msg', `<Smooches ${prefix} ${closest.name}>`);
+				}
+			}[item.name];
+
+			if (!handler)
+				return;
+
+			handler(obj);
 		},
 
 		onBeforeGetFactions: function (mappings) {
@@ -92,7 +136,7 @@ define([
 					itemSprite: [3, 0],
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [1, 2]
+					itemAmount: [11, 21]
 				},
 				'Giant Gift': {
 					sheetName: 'bigObjects',
@@ -100,7 +144,7 @@ define([
 					itemSprite: [3, 0],
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [3, 6]
+					itemAmount: [31, 61]
 				}
 			});
 		},
@@ -113,6 +157,7 @@ define([
 						level: 10,
 						noSpell: true,
 						slot: 'twoHanded',
+						type: 'spear',
 						quality: 2,
 						spritesheet: `server/mods/event-xmas/images/items.png`,
 						sprite: [0, 0]

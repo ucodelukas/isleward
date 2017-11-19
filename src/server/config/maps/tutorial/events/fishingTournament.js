@@ -177,7 +177,7 @@ module.exports = {
 			hpMult: 1,
 			pos: {
 				x: 134,
-				y: 31
+				y: 101
 			},
 			dialogue: {
 				auto: true,
