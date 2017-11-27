@@ -57,7 +57,7 @@ define([
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
-							level: '10',
+							level: 10,
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
@@ -81,7 +81,7 @@ define([
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
-							level: '10',
+							level: 10,
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
@@ -106,7 +106,7 @@ define([
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
-							level: '10',
+							level: 10,
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
@@ -130,7 +130,7 @@ define([
 							sprite: [0, 0],
 							slot: 'finger',
 							type: 'Ring',
-							level: '10',
+							level: 10,
 							quality: 3,
 							worth: {
 								currency: `Candy Corn`,
