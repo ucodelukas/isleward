@@ -1,7 +1,9 @@
 define([
-	'config/effects/effectTemplate'
+	'config/effects/effectTemplate',
+	'misc/events'
 ], function (
-	effectTemplate
+	effectTemplate,
+	events
 ) {
 	return {
 		type: 'effects',
@@ -132,7 +134,13 @@ define([
 			var typeTemplate = null;
 			if (options.type) {
 				var type = options.type[0].toUpperCase() + options.type.substr(1);
-				typeTemplate = require('config/effects/effect' + type + '.js');
+				var result = {
+					type: type,
+					url: 'config/effects/effect' + type + '.js'
+				};
+				events.emit('onBeforeGetEffect', result);
+
+				typeTemplate = require(result.url);
 			}
 
 			var builtEffect = extend(true, {}, effectTemplate, typeTemplate);

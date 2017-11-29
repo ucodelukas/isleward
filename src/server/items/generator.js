@@ -20,8 +20,8 @@ define([
 	var currencyGenerators = [g10];
 
 	var generator = {
-		spellChance: 0.025,
-		currencyChance: 0.075,
+		spellChance: 0.02,
+		currencyChance: 0.05,
 
 		generate: function (blueprint) {
 			var isSpell = false;

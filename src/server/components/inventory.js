@@ -209,6 +209,26 @@ define([
 			if (!item)
 				return;
 
+			if (item.cdMax) {
+				if (item.cd) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'That item is on cooldown'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					return;
+				}
+
+				item.cd = item.cdMax;
+			}
+
 			var result = {};
 			events.emit('onBeforeUseItem', this.obj, item, result);
 
@@ -919,6 +939,20 @@ define([
 						return item;
 					})
 			};
+		},
+
+		update: function () {
+			var items = this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+				if (!item.cd)
+					continue;
+
+				item.cd--;
+
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			}
 		}
 	};
 });

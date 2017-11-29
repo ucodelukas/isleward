@@ -43,7 +43,7 @@ define([
 								cpn: 'dialogue',
 								method: 'talk',
 								args: [{
-									targetName: 'father giftybags'
+									targetName: 'the winter man'
 								}]
 							},
 							exit: {

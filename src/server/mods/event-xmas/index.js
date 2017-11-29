@@ -28,11 +28,17 @@ define([
 			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
+			this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
+		},
+
+		onBeforeGetEffect: function (result) {
+			if (result.type.toLowerCase() == 'merry')
+				result.url = `${this.relativeFolderName}/effects/effectMerry.js`
 		},
 
 		onBeforeUseItem: function (obj, item, result) {
 			var handler = {
-				'Merrywinter Play Script': function (obj, result) {
+				'Merrywinter Play Script': function (obj, item, result) {
 					var lines = [
 
 					];
@@ -40,7 +46,7 @@ define([
 					obj.syncer.set(false, 'chatter', 'color', 0x48edff);
 					obj.syncer.set(false, 'chatter', 'msg', lines[~~(Math.random() * lines.length)]);
 				},
-				'Sprig of Mistletoe': function (obj, result) {
+				'Sprig of Mistletoe': function (obj, item, result) {
 					var ox = obj.x;
 					var oy = obj.y;
 
@@ -64,18 +70,25 @@ define([
 
 					obj.syncer.set(false, 'chatter', 'color', 0xfc66f7);
 					obj.syncer.set(false, 'chatter', 'msg', `<Smooches ${prefix} ${closest.name}>`);
+				},
+				'Bottomless Eggnog': function (obj, item, result) {
+					obj.effects.addEffect({
+						type: 'merry',
+						ttl: 514
+					});
+
 				}
 			}[item.name];
 
 			if (!handler)
 				return;
 
-			handler(obj);
+			handler(obj, item, result);
 		},
 
 		onBeforeGetFactions: function (mappings) {
 			extend(true, mappings, {
-				fatherGiftybags: `${this.relativeFolderName}/factions/fatherGiftybags`
+				theWinterMan: `${this.relativeFolderName}/factions/theWinterMan`
 			});
 		},
 

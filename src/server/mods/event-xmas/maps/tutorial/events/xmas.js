@@ -1,11 +1,31 @@
+/*
+A visitor, welcome!
+	Who are you?
+		I am the place where snow began, for I am the Winter Man.
+			What are you doing here?
+				I came in the night to bring the cold, have you not heard the story told?
+					Could you tell it to me?
+						On the shortest night each year, the Man of Winter lends an ear
+						To wishes mouthed in quiet ire; injustices or things required
+						He'll send them gifts in the strangest places; fishing lines or fireplaces
+						For the Winter Man has come to give, to the poor and lonely and those who grieve
+
+						And when the snows have come to pass, the Winter Man only one thing asks
+						That should you sense someone desire, you'll assist as they require
+						Then when winter comes around again, keep an eye out for your icy friend
+						For he is the place where cold began at the start of time; the Winter Man
+I found some special snowflakes for you.
+
+*/
+
 define([
 
 ], function (
 
 ) {
 	return {
-		name: `Xmas Thang`,
-		description: `All be happy, there be snow.`,
+		name: `Merrywinter`,
+		description: `The Winter Man has returned to the isles, bringing gifts, games and snow.`,
 		distance: -1,
 		cron: '* * * * *',
 
@@ -20,7 +40,7 @@ define([
 		phases: [{
 			type: 'spawnMob',
 			mobs: {
-				name: 'Father Giftybags',
+				name: 'The Winter Man',
 				attackable: false,
 				level: 20,
 				cell: 2,
@@ -36,7 +56,7 @@ define([
 					config: {
 						'1': {
 							msg: [{
-								msg: `Soul's greeting to you.`,
+								msg: `Why, hello!`,
 								options: [1.1, 1.2]
 							}],
 							options: {
@@ -48,7 +68,7 @@ define([
 									msg: `I found some snowflakes for you.`,
 									prereq: function (obj) {
 										var snowflakes = obj.inventory.items.find(i => (i.name == 'Snowflake'));
-										return ((!!snowflakes) && (snowflakes.quantity >= 1));
+										return ((!!snowflakes) && (snowflakes.quantity >= 40));
 									},
 									goto: 'giveSnowflakes'
 								}
@@ -62,63 +82,64 @@ define([
 							method: function (obj) {
 								var inventory = obj.inventory;
 
-								//while (true) {
-								var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
-								if ((!snowflakes) || (snowflakes.quantity < 1))
-									return;
-								obj.reputation.getReputation('fatherGiftybags', 100);
+								while (true) {
+									var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+									if ((!snowflakes) || (snowflakes.quantity < 40))
+										return;
+									obj.reputation.getReputation('theWinterMan', 100);
 
-								var chances = {
-									'Bottomless Eggnog': 1,
-									'Sprig of Mistletoe': 1,
-									'Merrywinter Play Script': 1
-								};
+									var chances = {
+										'Bottomless Eggnog': 1,
+										'Sprig of Mistletoe': 1,
+										'Merrywinter Play Script': 1
+									};
 
-								var rewards = [{
-									name: 'Bottomless Eggnog',
-									type: 'toy',
-									sprite: [1, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									dscription: 'Makes you merry, makes you shine.',
-									worth: 0,
-									noSalvage: true,
-									noAugment: true
-								}, {
-									name: 'Sprig of Mistletoe',
-									type: 'consumable',
-									sprite: [3, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									description: `Blows a kiss to your one true love...or whoever's closest`,
-									worth: 0,
-									quantity: 1,
-									noSalvage: true,
-									noAugment: true
-								}, {
-									name: 'Merrywinter Play Script',
-									type: 'consumable',
-									sprite: [2, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									description: 'Recites a line from the Merrywinter play',
-									quantity: 1,
-									worth: 0,
-									noSalvage: true,
-									noAugment: true
-								}];
+									var rewards = [{
+										name: 'Bottomless Eggnog',
+										type: 'toy',
+										sprite: [1, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: 'Makes you merry, makes you shine.',
+										worth: 0,
+										cdMax: 1714,
+										noSalvage: true,
+										noAugment: true
+									}, {
+										name: 'Sprig of Mistletoe',
+										type: 'consumable',
+										sprite: [3, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: `Blows a kiss to your one true love...or whoever's closest`,
+										worth: 0,
+										quantity: 1,
+										noSalvage: true,
+										noAugment: true
+									}, {
+										name: 'Merrywinter Play Script',
+										type: 'consumable',
+										sprite: [2, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: 'Recites a line from the Merrywinter play',
+										quantity: 1,
+										worth: 0,
+										noSalvage: true,
+										noAugment: true
+									}];
 
-								var pool = [];
-								Object.keys(chances).forEach(function (c) {
-									for (var i = 0; i < chances[c]; i++) {
-										pool.push(c);
-									}
-								});
+									var pool = [];
+									Object.keys(chances).forEach(function (c) {
+										for (var i = 0; i < chances[c]; i++) {
+											pool.push(c);
+										}
+									});
 
-								var pick = pool[~~(Math.random() * pool.length)];
-								var blueprint = rewards.find(r => (r.name == pick));
+									var pick = pool[~~(Math.random() * pool.length)];
+									var blueprint = rewards.find(r => (r.name == pick));
 
-								inventory.getItem(extend(true, {}, blueprint));
+									inventory.getItem(extend(true, {}, blueprint));
 
-								inventory.destroyItem(snowflakes.id, 1);
-								//}
+									inventory.destroyItem(snowflakes.id, 40);
+								}
 							}
 						}
 					}
@@ -159,7 +180,7 @@ define([
 					if ((!itemName) || (itemName.toLowerCase() != 'snowflake'))
 						return;
 
-					gatherer.reputation.getReputation('fatherGiftybags', 40);
+					gatherer.reputation.getReputation('theWinterMan', 40);
 
 					if (Math.random() >= 10.1)
 						return;

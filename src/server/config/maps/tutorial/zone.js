@@ -451,6 +451,12 @@ module.exports = {
 			deathRep: -5,
 			level: 9
 		},
+		penguin: {
+			level: 8,
+			rare: {
+				name: 'Tuckle'
+			}
+		},
 		hermit: {
 			level: 10,
 			walkDistance: 0,

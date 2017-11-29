@@ -79,16 +79,6 @@ define([
 			obj.addComponent('stash', {
 				items: character.stash
 			});
-			obj.addComponent('effects', blueprintEffects);
-
-			var prophecies = character.components.find(c => c.type == 'prophecies');
-			if (prophecies)
-				obj.addComponent('prophecies', prophecies);
-
-			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
-			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
-			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
-			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 
 			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
 			if (blueprintEffects.effects) {
@@ -100,11 +90,22 @@ define([
 						return false;
 					else {
 						e.ttl = Math.max(~~(remaining / 350), 1);
+						console.log(e.ttl);
 						delete e.expire;
 						return true;
 					}
 				});
 			}
+			obj.addComponent('effects', blueprintEffects);
+
+			var prophecies = character.components.find(c => c.type == 'prophecies');
+			if (prophecies)
+				obj.addComponent('prophecies', prophecies);
+
+			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
+			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
+			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
+			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;

@@ -222,6 +222,12 @@ define([
 			if ((shiftDown) || (!compare))
 				this.tooltip.find('.info').hide();
 
+			if (item.cd) {
+				this.tooltip.find('.info')
+					.html('cooldown: ' + item.cd)
+					.show();
+			}
+
 			this.tooltip
 				.show();
 
