@@ -82,6 +82,9 @@ define([
 			//Calculate and store the ttl for effects
 			var time = +new Date;
 			simple.components.find(e => e.type == 'effects').effects.forEach(function (e) {
+				if (e.expire)
+					return;
+
 				e.expire = time + (e.ttl * 350);
 			});
 

@@ -22,6 +22,7 @@ define([
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
+			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
 			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
 			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
 			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
@@ -29,6 +30,15 @@ define([
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
 			this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
+		},
+
+		onBeforeGetSkins: function (skins) {
+			skins['bearded wizard'] = {
+				name: 'Bearded Wizard',
+				sprite: [0, 0],
+				class: 'wizard',
+				spritesheet: `${this.folderName}/images/skins.png`
+			};
 		},
 
 		onBeforeGetEffect: function (result) {
@@ -181,6 +191,7 @@ define([
 
 		onBeforeGetResourceList: function (list) {
 			list.push(`${this.folderName}/images/mobs.png`);
+			list.push(`${this.folderName}/images/skins.png`);
 		},
 
 		onBeforeGetEventList: function (zone, list) {

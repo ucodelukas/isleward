@@ -79,8 +79,13 @@ define([
 		save: function () {
 			return {
 				type: 'merry',
+				expire: this.expire,
 				ttl: this.ttl
 			};
+		},
+
+		destroy: function () {
+			this.particles.destroyed = true;
 		},
 
 		events: {

@@ -84,14 +84,12 @@ define([
 			if (blueprintEffects.effects) {
 				//Calculate ttl of effects
 				var time = +new Date;
-				blueprintEffects.effects.filter(function (e) {
+				blueprintEffects.effects = blueprintEffects.effects.filter(function (e) {
 					var remaining = e.expire - time;
 					if (remaining < 0)
 						return false;
 					else {
 						e.ttl = Math.max(~~(remaining / 350), 1);
-						console.log(e.ttl);
-						delete e.expire;
 						return true;
 					}
 				});

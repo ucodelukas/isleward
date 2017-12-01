@@ -949,7 +949,7 @@ define([
 				if (!item.cd)
 					continue;
 
-				item.cd--;
+				item.cd = 0; //--;
 
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 			}
