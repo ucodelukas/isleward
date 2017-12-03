@@ -17,6 +17,8 @@ define([
 		'sprintChance',
 		'dmgPercent',
 		'xpIncrease',
+		'attackSpeed',
+		'castSpeed',
 		'catchChance',
 		'catchSpeed',
 		'fishRarity',

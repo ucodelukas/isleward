@@ -346,11 +346,18 @@ define([
 			success = spell.cast(action);
 
 			if (success) {
-				this.obj.stats.values.mana -= spell.manaCost;
+				var stats = this.obj.stats.values;
+				stats.mana -= spell.manaCost;
 				var cd = {
 					cd: spell.cdMax
 				};
+
+				var isAttack = (spell.type == 'melee');
+				if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
+					cd.cd = 1;
+
 				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
 				spell.cd = cd.cd;
 
 				if (this.obj.player) {

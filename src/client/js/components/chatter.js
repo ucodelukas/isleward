@@ -34,6 +34,7 @@ define([
 
 		extend: function (serverMsg) {
 			var msg = serverMsg.msg + '\n\'';
+			this.msg = msg;
 
 			var obj = this.obj;
 
@@ -47,12 +48,14 @@ define([
 			if (msg[0] == '*')
 				color = 0xffeb38;
 
+			var yOffset = (msg.split('\r\n').length - 1);
+
 			obj.chatSprite = renderer.buildText({
 				layerName: 'effects',
 				text: msg,
 				color: color,
 				x: (obj.x * scale) + (scale / 2),
-				y: (obj.y * scale) - (scale * 0.8)
+				y: (obj.y * scale) - (scale * 0.8) - (yOffset * scale * 0.8)
 			});
 			obj.chatSprite.visible = true;
 

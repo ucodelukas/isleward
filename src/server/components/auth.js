@@ -88,8 +88,6 @@ define([
 				e.expire = time + (e.ttl * 350);
 			});
 
-			console.log(simple.components.find(e => e.type == 'effects'));
-
 			var callback = null;
 			if (extensionObj) {
 				callback = extensionObj.callback;

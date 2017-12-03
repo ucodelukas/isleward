@@ -1,10 +1,12 @@
 define([
-
-], function(
-
+	'misc/events'
+], function (
+	events
 ) {
 	return {
-		init: function(hideMessage) {
+		rewards: [],
+
+		init: function (hideMessage) {
 			if (!this.build())
 				return false;
 
@@ -23,7 +25,7 @@ define([
 			return true;
 		},
 
-		ready: function() {
+		ready: function () {
 			this.isReady = true;
 
 			if (this.oReady)
@@ -40,7 +42,7 @@ define([
 			this.obj.syncer.setArray(true, 'quests', 'updateQuests', this.simplify(true));
 		},
 
-		complete: function() {
+		complete: function () {
 			if (this.oComplete)
 				this.oComplete();
 
@@ -54,14 +56,20 @@ define([
 
 			this.obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
+			events.emit('onCompleteQuest', this);
+
+			this.rewards.forEach(function (r) {
+				this.obj.inventory.getItem(r);
+			}, this);
+
 			this.obj.stats.getXp(this.xp || 10);
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var values = {};
 			for (var p in this) {
 				var value = this[p];
-				if ((typeof(value) == 'function') || (p == 'obj'))
+				if ((typeof (value) == 'function') || (p == 'obj'))
 					continue;
 
 				values[p] = value;

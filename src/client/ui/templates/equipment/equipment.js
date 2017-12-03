@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/equipment/template',
 	'css!ui/templates/equipment/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -24,7 +24,7 @@ define([
 		hoverCompare: null,
 		shiftDown: false,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 
@@ -36,7 +36,7 @@ define([
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
-		toggle: function(show) {
+		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
@@ -52,7 +52,7 @@ define([
 			this.onHoverItem(null, null, null);
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'j')
 				this.toggle();
 			else if (key == 'shift') {
@@ -61,7 +61,7 @@ define([
 					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 			}
 		},
-		onKeyUp: function(key) {
+		onKeyUp: function (key) {
 			if (key == 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
@@ -69,7 +69,7 @@ define([
 			}
 		},
 
-		onTabClick: function(e) {
+		onTabClick: function (e) {
 			this.find('.tab.selected').removeClass('selected');
 
 			$(e.currentTarget).addClass('selected');
@@ -77,7 +77,7 @@ define([
 			this.onGetStats(this.stats);
 		},
 
-		onGetItems: function(items) {
+		onGetItems: function (items) {
 			items = items || this.items;
 			this.items = items;
 
@@ -92,20 +92,20 @@ define([
 				.removeData('item')
 				.addClass('empty show-default-icon')
 				.find('.icon')
-					.off()
-					.css('background-image', '')
-					.css('background-position', '')
-					.on('click', this.buildSlot.bind(this));
+				.off()
+				.css('background-image', '')
+				.css('background-position', '')
+				.on('click', this.buildSlot.bind(this));
 
 			items
-				.filter(function(item) {
+				.filter(function (item) {
 					var runeSlot = item.runeSlot;
 					if ((runeSlot != null) && (item.slot))
 						skipSpellId = runeSlot;
 
 					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
 				}, this)
-				.forEach(function(item) {
+				.forEach(function (item) {
 					var imgX = -item.sprite[0] * 64;
 					var imgY = -item.sprite[1] * 64;
 
@@ -124,15 +124,15 @@ define([
 						.data('item', item)
 						.removeClass('empty show-default-icon')
 						.find('.icon')
-							.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
-							.off()
-							.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
-							.on('mouseleave', this.onHoverItem.bind(this, null, null))
-							.on('click', this.buildSlot.bind(this, elSlot));
+						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
+						.off()
+						.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
+						.on('mouseleave', this.onHoverItem.bind(this, null, null))
+						.on('click', this.buildSlot.bind(this, elSlot));
 				}, this);
 		},
 
-		buildSlot: function(el) {
+		buildSlot: function (el) {
 			if (el.currentTarget)
 				el = $(el.currentTarget).parent();
 
@@ -146,7 +146,7 @@ define([
 			this.hoverCompare = el.data('item');
 
 			var items = this.items
-				.filter(function(item) {
+				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
 					else
@@ -162,7 +162,7 @@ define([
 				items.splice(1, 0, this.hoverCompare);
 
 			items
-				.forEach(function(item) {
+				.forEach(function (item) {
 					var sprite = item.sprite || [7, 0];
 
 					var spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
@@ -187,7 +187,7 @@ define([
 				container.hide();
 		},
 
-		equipItem: function(item, slot) {
+		equipItem: function (item, slot) {
 			if (item == this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
@@ -212,8 +212,7 @@ define([
 					if (!this.hoverCompare) {
 						this.find('.itemList').hide();
 						return;
-					}
-					else {
+					} else {
 						method = 'unlearnAbility';
 						data.itemId = this.hoverCompare.id;
 					}
@@ -233,7 +232,7 @@ define([
 			this.find('.itemList').hide();
 		},
 
-		onHoverItem: function(el, item, compare, e) {
+		onHoverItem: function (el, item, compare, e) {
 			if (el) {
 				this.hoverItem = item;
 				this.hoverEl = el;
@@ -253,7 +252,7 @@ define([
 			}
 		},
 
-		onGetStats: function(stats) {
+		onGetStats: function (stats) {
 			if (stats)
 				this.stats = stats;
 
@@ -297,7 +296,10 @@ define([
 					'physical increase': stats.elementPhysicalPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
 					gap2: '',
-					'damage increase': stats.dmgPercent + '%'
+					'damage increase': stats.dmgPercent + '%',
+					gap3: '',
+					'attack speed': (100 + stats.attackSpeed) + '%',
+					'cast speed': (100 + stats.castSpeed) + '%',
 				},
 				defense: {
 					armor: stats.armor,

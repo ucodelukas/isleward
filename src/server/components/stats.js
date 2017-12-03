@@ -30,6 +30,9 @@ define([
 			armor: 0,
 			dmgPercent: 0,
 
+			attackSpeed: 0,
+			castSpeed: 0,
+
 			elementArcanePercent: 0,
 			elementFrostPercent: 0,
 			elementFirePercent: 0,

@@ -22,7 +22,8 @@ define([
 		getGold: 10,
 		setLevel: 10,
 		godMode: 10,
-		clearInventory: 10
+		clearInventory: 10,
+		completeQuests: 10
 	};
 
 	var localCommands = [
