@@ -25,9 +25,9 @@ define([
 			mobName: 'flamingo'
 		},
 		'Benthic Incantation': {
-			chance: 0.05,
+			chance: 990.05,
 			reward: `Princess Morgawsa's Trident`,
-			setSize: 7,
+			setSize: 1,
 			zone: 'estuary'
 		}
 	};
@@ -151,6 +151,8 @@ define([
 					spritesheet: '../../../images/legendaryItems.png',
 					type: 'Trident',
 					spellName: 'magic missile',
+					description: `Summoned from the ancient depths of the ocean by the Benthic Incantation.`,
+					stats: ['elementFrostPercent', 'elementFrostPercent', 'elementFrostPercent'],
 					effects: [{
 						type: 'freezeOnHit',
 						rolls: {

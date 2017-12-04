@@ -54,6 +54,12 @@ define([
 					item.spell.properties.range = item.range;
 				} else if (item.quantity == NaN)
 					item.quantity = 1;
+				else if ((item.effects) && (Object.keys(item.effects[0]).length == 0)) {
+					items.splice(i, 1);
+					i--;
+					iLen--;
+					continue;
+				}
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
@@ -655,6 +661,13 @@ define([
 						var mtxModule = require(mtxUrl);
 
 						e.events = mtxModule.events;
+					} else if (e.type) {
+						var effectUrl = itemEffects.get(e.type);
+						var effectModule = require(effectUrl);
+
+						e.text = effectModule.events.onGetText(item);
+
+						e.events = effectModule.events;
 					}
 				});
 			}
@@ -917,7 +930,8 @@ define([
 								text: e.text,
 								properties: e.properties,
 								mtx: e.mtx,
-								name: e.name
+								type: e.type,
+								rolls: e.rolls
 							}));
 						}
 

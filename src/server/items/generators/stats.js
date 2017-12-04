@@ -109,6 +109,46 @@ define([
 				generator: 'elementResist'
 			},
 
+			dmgPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementArcanePercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementFrostPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementFirePercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementHolyPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementPhysicalPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementPoisonPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			allAttributes: {
+				generator: 'mainStat',
+				ignore: true
+			},
+
 			armor: {
 				generator: 'armor',
 				ignore: true

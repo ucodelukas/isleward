@@ -5,11 +5,11 @@ define([
 ) {
 	return {
 		type: 'slowed',
-		chance: 0.3,
+		chance: 0.7,
 
 		events: {
 			beforeMove: function (targetPos) {
-				if (Math.random() < this.chance)
+				if (Math.random() >= this.chance)
 					return;
 
 				targetPos.success = false;
@@ -19,7 +19,7 @@ define([
 				if (!damage)
 					return;
 
-				if (Math.random() < this.chance)
+				if (Math.random() >= this.chance)
 					return;
 
 				damage.failed = true;

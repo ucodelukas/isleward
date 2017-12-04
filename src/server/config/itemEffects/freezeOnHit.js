@@ -5,6 +5,12 @@ define([
 ) {
 	return {
 		events: {
+			onGetText: function (item) {
+				var rolls = item.effects.find(e => (e.type == 'freezeOnHit')).rolls;
+
+				return `${rolls.chance}% chance on hit to freeze target for ${rolls.duration} ticks`;
+			},
+
 			afterDealDamage: function (item, damage, target) {
 				var rolls = item.effects.find(e => (e.type == 'freezeOnHit')).rolls;
 
