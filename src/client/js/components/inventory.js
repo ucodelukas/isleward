@@ -19,8 +19,12 @@ define([
 			events.emit('onGetItems', this.items);
 		},
 		extend: function (blueprint) {
-			if (blueprint.destroyItems)
+			var rerender = false;
+
+			if (blueprint.destroyItems) {
+				rerender = true;
 				events.emit('onDestroyItems', blueprint.destroyItems);
+			}
 
 			if (blueprint.getItems) {
 				var items = this.items;
@@ -40,6 +44,8 @@ define([
 						return (item.id == nId);
 					});
 					if (findItem) {
+						rerender = (findItem.pos != nItem.pos);
+
 						for (var p in findItem) {
 							delete findItem[p];
 						}
@@ -49,13 +55,15 @@ define([
 						newItems.splice(i, 1);
 						i--;
 						nLen--;
-					} else
+					} else {
+						rerender = true;
 						nItem.isNew = true;
+					}
 				}
 
 				this.items.push.apply(this.items, blueprint.getItems || []);
 
-				events.emit('onGetItems', this.items);
+				events.emit('onGetItems', this.items, rerender);
 			}
 		}
 	};

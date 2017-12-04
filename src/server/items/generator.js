@@ -8,13 +8,12 @@ define([
 	'items/generators/worth',
 	'items/generators/quantity',
 	'items/generators/spellbook',
-	'items/generators/currency'
+	'items/generators/currency',
+	'items/generators/effects'
 ], function (
-	g1, g2, g3, g4, g5, g6, g7, g8,
-	g9,
-	g10
+	g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11
 ) {
-	var generators = [].slice.apply(arguments, [0, 7]);
+	var generators = [g1, g2, g3, g4, g5, g6, g11, g7];
 	var materialGenerators = [g6, g8];
 	var spellGenerators = [g1, g9];
 	var currencyGenerators = [g10];

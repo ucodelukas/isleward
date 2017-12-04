@@ -23,6 +23,12 @@ define([
 			reward: 'Perfect Level 10 Ring',
 			setSize: 3,
 			mobName: 'flamingo'
+		},
+		'Benthic Incantation': {
+			chance: 0.05,
+			reward: `Princess Morgawsa's Trident`,
+			setSize: 7,
+			zone: 'estuary'
 		}
 	};
 
@@ -131,6 +137,27 @@ define([
 					noSpell: true,
 					perfection: 1,
 					slot: 'finger'
+				});
+			},
+
+			"Princess Morgawsa's Trident": function () {
+				return itemGenerator.generate({
+					name: `Princess Morgawsa's Trident`,
+					level: [10, 15],
+					quality: 4,
+					noSpell: true,
+					slot: 'twoHanded',
+					sprite: [0, 0],
+					spritesheet: '../../../images/legendaryItems.png',
+					type: 'Trident',
+					spellName: 'magic missile',
+					effects: [{
+						type: 'freezeOnHit',
+						rolls: {
+							i_chance: [2, 5],
+							i_duration: [2, 4]
+						}
+					}]
 				});
 			}
 		}

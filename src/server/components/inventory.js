@@ -6,7 +6,8 @@ define([
 	'config/classes',
 	'mtx/mtx',
 	'config/factions',
-	'misc/events'
+	'misc/events',
+	'items/itemEffects'
 ], function (
 	generator,
 	salvager,
@@ -15,7 +16,8 @@ define([
 	classes,
 	mtx,
 	factions,
-	events
+	events,
+	itemEffects
 ) {
 	return {
 		type: 'inventory',
@@ -93,15 +95,16 @@ define([
 							var mtxModule = require(mtxUrl);
 
 							e.events = mtxModule.events;
-							return;
+						} else if (e.factionId) {
+							var faction = factions.getFaction(e.factionId);
+							var statGenerator = faction.uniqueStat;
+							statGenerator.generate(item);
+						} else {
+							var effectUrl = itemEffects.get(e.type);
+							var effectModule = require(effectUrl);
+
+							e.events = effectModule.events;
 						}
-
-						if (!e.factionId)
-							return;
-
-						var faction = factions.getFaction(e.factionId);
-						var statGenerator = faction.uniqueStat;
-						statGenerator.generate(item);
 					});
 				}
 
@@ -913,7 +916,8 @@ define([
 								factionId: e.factionId,
 								text: e.text,
 								properties: e.properties,
-								mtx: e.mtx
+								mtx: e.mtx,
+								name: e.name
 							}));
 						}
 

@@ -393,19 +393,17 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
 		},
 
-		onGetItems: function (items) {
+		onGetItems: function (items, rerender) {
 			this.items = items;
 
-			if (this.shown)
+			if ((this.shown) && (rerender))
 				this.build();
 		},
 		onDestroyItems: function (itemIds) {
 			itemIds.forEach(function (id) {
 				var item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) {
-					//this.hoverItem = null;
+				if (item == this.hoverItem)
 					this.hideTooltip();
-				}
 
 				this.items.spliceWhere(i => i.id == id);
 			}, this);
