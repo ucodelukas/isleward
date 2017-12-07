@@ -1,6 +1,6 @@
 define([
 	'../../misc/events'
-], function(
+], function (
 	events
 ) {
 	var types = {
@@ -192,6 +192,10 @@ define([
 		}
 	}
 
-	events.emit('onBeforeGetItemTypes', types);
-	return types;
+	return {
+		types: types,
+		init: function () {
+			events.emit('onBeforeGetItemTypes', types);
+		}
+	};
 });

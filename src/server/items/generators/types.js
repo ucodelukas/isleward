@@ -7,8 +7,8 @@ define([
 ) {
 	return {
 		generate: function(item, blueprint) {
-			var type = blueprint.type || _.randomKey(configTypes[item.slot]);
-			var typeBlueprint = configTypes[item.slot][type] || {};
+			var type = blueprint.type || _.randomKey(configTypes.types[item.slot]);
+			var typeBlueprint = configTypes.types[item.slot][type] || {};
 
 			if (!typeBlueprint)
 				return;

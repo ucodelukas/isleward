@@ -143,8 +143,8 @@ define([
 
 		addSpellFromRune: function (runeSpell, spellId) {
 			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig[name];
+			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
+			var playerSpellConfig = playerSpellsConfig.spells[name];
 
 			if (!playerSpell)
 				return -1;

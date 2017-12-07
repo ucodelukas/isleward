@@ -14,12 +14,12 @@ define([
 			var spellName = blueprint.spellName;
 
 			if (!spellName) {
-				var spellList = Object.keys(spellsConfig).filter(s => ((!spellsConfig[s].auto) && (!s.noDrop)));
+				var spellList = Object.keys(spellsConfig.spells).filter(s => ((!spellsConfig.spells[s].auto) && (!s.noDrop)));
 				spellName = spellList[~~(Math.random() * spellList.length)];
 			}
 
-			var spell = spellsConfig[spellName];
-			var spellAesthetic = spells.find(s => s.name.toLowerCase() == spellName);
+			var spell = spellsConfig.spells[spellName];
+			var spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName);
 
 			if (!item.slot) {
 				var sprite = [10, 0];
