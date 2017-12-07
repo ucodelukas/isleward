@@ -69,7 +69,7 @@ define([
 									prereq: function (obj) {
 										return true;
 										var snowflakes = obj.inventory.items.find(i => (i.name == 'Snowflake'));
-										return ((!!snowflakes) && (snowflakes.quantity >= 40));
+										return ((!!snowflakes) && (snowflakes.quantity >= 15));
 									},
 									goto: 'giveSnowflakes'
 								},
@@ -117,71 +117,71 @@ define([
 							method: function (obj) {
 								var inventory = obj.inventory;
 
-								//while (true) {
-								var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
-								//if ((!snowflakes) || (snowflakes.quantity < 40))
-								//	return;
-								obj.reputation.getReputation('theWinterMan', 100);
+								while (true) {
+									var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+									if ((!snowflakes) || (snowflakes.quantity < 15))
+										return;
+									obj.reputation.getReputation('theWinterMan', 100);
 
-								var chances = {
-									'Bottomless Eggnog': 1,
-									'Sprig of Mistletoe': 30,
-									'Merrywinter Play Script': 8,
-									'Unique Snowflake': 15
-								};
+									var chances = {
+										'Bottomless Eggnog': 3,
+										'Sprig of Mistletoe': 50,
+										'Merrywinter Play Script': 20,
+										'Unique Snowflake': 27
+									};
 
-								var rewards = [{
-									name: 'Bottomless Eggnog',
-									type: 'toy',
-									sprite: [1, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									description: 'Makes you merry, makes you shine.',
-									worth: 0,
-									cdMax: 1714,
-									noSalvage: true,
-									noAugment: true
-								}, {
-									name: 'Sprig of Mistletoe',
-									type: 'consumable',
-									sprite: [3, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									description: `Blows a kiss to your one true love...or whoever's closest`,
-									worth: 0,
-									quantity: 1,
-									noSalvage: true,
-									noAugment: true
-								}, {
-									name: 'Merrywinter Play Script',
-									type: 'consumable',
-									sprite: [2, 1],
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									description: 'Recites a line from the Merrywinter play',
-									quantity: 1,
-									worth: 0,
-									noSalvage: true,
-									noAugment: true
-								}, {
-									name: 'Unique Snowflake',
-									spritesheet: `server/mods/event-xmas/images/items.png`,
-									material: true,
-									sprite: [1, 2],
-									quantity: 1
-								}];
+									var rewards = [{
+										name: 'Bottomless Eggnog',
+										type: 'toy',
+										sprite: [1, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: 'Makes you merry, makes you shine.',
+										worth: 0,
+										cdMax: 1714,
+										noSalvage: true,
+										noAugment: true
+									}, {
+										name: 'Sprig of Mistletoe',
+										type: 'consumable',
+										sprite: [3, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: `Blows a kiss to your one true love...or whoever's closest`,
+										worth: 0,
+										quantity: 1,
+										noSalvage: true,
+										noAugment: true
+									}, {
+										name: 'Merrywinter Play Script',
+										type: 'consumable',
+										sprite: [2, 1],
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										description: 'Recites a line from the Merrywinter play',
+										quantity: 1,
+										worth: 0,
+										noSalvage: true,
+										noAugment: true
+									}, {
+										name: 'Unique Snowflake',
+										spritesheet: `server/mods/event-xmas/images/items.png`,
+										material: true,
+										sprite: [1, 2],
+										quantity: 1
+									}];
 
-								var pool = [];
-								Object.keys(chances).forEach(function (c) {
-									for (var i = 0; i < chances[c]; i++) {
-										pool.push(c);
-									}
-								});
+									var pool = [];
+									Object.keys(chances).forEach(function (c) {
+										for (var i = 0; i < chances[c]; i++) {
+											pool.push(c);
+										}
+									});
 
-								var pick = pool[~~(Math.random() * pool.length)];
-								var blueprint = rewards.find(r => (r.name == pick));
+									var pick = pool[~~(Math.random() * pool.length)];
+									var blueprint = rewards.find(r => (r.name == pick));
 
-								inventory.getItem(extend(true, {}, blueprint));
+									inventory.getItem(extend(true, {}, blueprint));
 
-								//inventory.destroyItem(snowflakes.id, 40);
-								//}
+									inventory.destroyItem(snowflakes.id, 15);
+								}
 							}
 						},
 						tradeBuy: {
@@ -204,7 +204,7 @@ define([
 						infinite: true,
 						worth: {
 							currency: `Unique Snowflake`,
-							amount: 1
+							amount: 15
 						},
 						factions: [{
 							id: 'theWinterMan',
@@ -220,7 +220,7 @@ define([
 						quality: 3,
 						worth: {
 							currency: `Unique Snowflake`,
-							amount: 1
+							amount: 4
 						},
 						stats: {
 							magicFind: 35,
@@ -282,10 +282,6 @@ define([
 							spritesheet: `server/mods/event-xmas/images/items.png`,
 							sprite: [0, 1],
 							quality: 2
-						},
-						'Smoop Smoop': {
-							reward: 'Rare Festive Spear',
-							setSize: 5
 						}
 					});
 				},
@@ -297,7 +293,7 @@ define([
 
 					gatherer.reputation.getReputation('theWinterMan', 40);
 
-					if (Math.random() >= 10.1)
+					if (Math.random() >= 0)
 						return;
 
 					gatherResult.items.push({

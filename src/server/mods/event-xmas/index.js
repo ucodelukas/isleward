@@ -247,7 +247,7 @@ define([
 					itemSprite: [3, 0],
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [11, 21]
+					itemAmount: [1, 2]
 				},
 				'Giant Gift': {
 					sheetName: 'bigObjects',
@@ -255,7 +255,7 @@ define([
 					itemSprite: [3, 0],
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
-					itemAmount: [31, 61]
+					itemAmount: [3, 6]
 				}
 			});
 		},
