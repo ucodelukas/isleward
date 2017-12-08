@@ -25,10 +25,16 @@ define([
 			mobName: 'flamingo'
 		},
 		'Benthic Incantation': {
-			chance: 990.05,
+			chance: 0.05,
 			reward: `Princess Morgawsa's Trident`,
-			setSize: 1,
+			setSize: 7,
 			zone: 'estuary'
+		},
+		'Fangs of Fury': {
+			chance: 0.075,
+			reward: `Steelclaw's Bite`,
+			setSize: 1,
+			mobName: 'steelclaw'
 		}
 	};
 
@@ -159,6 +165,31 @@ define([
 							i_chance: [2, 5],
 							i_duration: [2, 4]
 						}
+					}]
+				});
+			},
+
+			"Steelclaw's Bite": function () {
+				return itemGenerator.generate({
+					name: `Steelclaw's Bite`,
+					level: [7, 10],
+					quality: 4,
+					noSpell: true,
+					slot: 'twoHanded',
+					sprite: [1, 0],
+					spritesheet: '../../../images/legendaryItems.png',
+					type: 'Curved Dagger',
+					spellName: 'double slash',
+					description: `The blade seems to be made of some kind of bone and steel alloy.`,
+					stats: ['dex', 'dex', 'addCritMultiplier', 'addCritMultiplier'],
+					effects: [{
+						type: 'damageSelf',
+						rolls: {
+							i_percentage: [2, 5]
+						}
+					}, {
+						type: 'alwaysCrit',
+						rolls: {}
 					}]
 				});
 			}

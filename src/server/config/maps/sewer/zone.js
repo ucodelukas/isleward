@@ -28,7 +28,7 @@ module.exports = {
 			level: 12,
 
 			rare: {
-				count: 0
+				name: 'Steelclaw'
 			}
 		}
 	},
@@ -74,7 +74,7 @@ module.exports = {
 		greencandle: {
 			components: {
 				cpnLight: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'light',
 							blueprint: {
@@ -95,7 +95,7 @@ module.exports = {
 		alchgreenpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -147,7 +147,7 @@ module.exports = {
 		alchredpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
