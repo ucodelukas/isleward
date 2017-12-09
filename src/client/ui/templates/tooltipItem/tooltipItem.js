@@ -103,7 +103,7 @@ define([
 				.join('');
 
 			var name = item.name;
-			if (item.quantity)
+			if (item.quantity > 1)
 				name += ' x' + item.quantity;
 
 			var html = tplTooltip
@@ -227,6 +227,10 @@ define([
 			if (item.cd) {
 				this.tooltip.find('.info')
 					.html('cooldown: ' + item.cd)
+					.show();
+			} else if (item.uses) {
+				this.tooltip.find('.info')
+					.html('uses: ' + item.uses)
 					.show();
 			}
 

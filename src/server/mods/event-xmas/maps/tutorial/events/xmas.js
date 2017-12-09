@@ -65,11 +65,7 @@ define([
 									goto: '2'
 								},
 								'1.2': {
-									msg: `I found some snowflakes for you.`,
-									prereq: function (obj) {
-										var snowflakes = obj.inventory.items.find(i => (i.name == 'Snowflake'));
-										return ((!!snowflakes) && (snowflakes.quantity >= 15));
-									},
+									msg: `I would like to give you some snowflakes.`,
 									goto: 'giveSnowflakes'
 								},
 								'1.3': {
@@ -116,8 +112,12 @@ define([
 							method: function (obj) {
 								var inventory = obj.inventory;
 
+								var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+								if ((!snowflakes) || (snowflakes.quantity < 15))
+									return 'Sorry, please come back when you have at least fifteen.'
+
 								while (true) {
-									var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+									snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
 									if ((!snowflakes) || (snowflakes.quantity < 15))
 										return;
 									obj.reputation.getReputation('theWinterMan', 100);
@@ -148,7 +148,8 @@ define([
 										worth: 0,
 										quantity: 1,
 										noSalvage: true,
-										noAugment: true
+										noAugment: true,
+										uses: 5
 									}, {
 										name: 'Merrywinter Play Script',
 										type: 'consumable',

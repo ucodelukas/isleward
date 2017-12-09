@@ -126,7 +126,7 @@ define([
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
 
-				if (item.quantity)
+				if (item.quantity > 1)
 					itemEl.find('.quantity').html(item.quantity);
 				else if (item.eq)
 					itemEl.find('.quantity').html('EQ');
@@ -332,7 +332,7 @@ define([
 					config.push(menuItems.destroy);
 			}
 
-			if ((!item.noDrop) && (!item.quest) && (!item.noSalvage))
+			if ((!item.noDrop) && (!item.quest))
 				config.push(menuItems.mail);
 
 			if (config.length > 0)
@@ -456,6 +456,9 @@ define([
 			var cpn = 'inventory';
 			if (action == 'equip')
 				cpn = 'equipment';
+
+			if (action == 'useItem')
+				this.hide();
 
 			client.request({
 				cpn: 'player',

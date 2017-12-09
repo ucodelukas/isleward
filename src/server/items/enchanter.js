@@ -1,11 +1,15 @@
 define([
 	'items/generators/stats',
+	'items/generators/slots',
+	'items/generators/types',
 	'items/salvager',
 	'items/config/currencies',
 	'items/config/slots',
 	'items/generator'
 ], function (
 	generatorStats,
+	generatorSlots,
+	generatorTypes,
 	salvager,
 	configCurrencies,
 	configSlots,
@@ -48,8 +52,16 @@ define([
 					delete item.originalLevel;
 				}
 
+				delete item.power;
+
 				item.stats = {};
-				generatorStats.generate(item, {}, result);
+				var bpt = {
+					slot: item.slot,
+					type: item.type
+				};
+				generatorSlots.generate(item, bpt);
+				generatorTypes.generate(item, bpt);
+				generatorStats.generate(item, bpt, result);
 			} else if (msg.action == 'relevel') {
 				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
 				item.level = Math.max(1, item.level + offset);

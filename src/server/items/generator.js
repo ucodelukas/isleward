@@ -20,7 +20,7 @@ define([
 
 	var generator = {
 		spellChance: 0.02,
-		currencyChance: 0.05,
+		currencyChance: 0.025,
 
 		generate: function (blueprint) {
 			var isSpell = false;
@@ -68,6 +68,9 @@ define([
 
 			if (blueprint.noSalvage)
 				item.noSalvage = true;
+
+			if (blueprint.uses)
+				item.uses = blueprint.uses;
 
 			return item;
 		},

@@ -241,8 +241,14 @@ define([
 			var result = {};
 			events.emit('onBeforeUseItem', this.obj, item, result);
 
-			if (item.type == 'consumable')
+			if (item.type == 'consumable') {
+				if (item.uses) {
+					item.uses--;
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					return;
+				}
 				this.destroyItem(itemId, 1);
+			}
 		},
 
 		unlearnAbility: function (itemId) {
@@ -555,9 +561,14 @@ define([
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;
-					if (!existItem.quantity)
-						existItem.quantity = 1;
-					existItem.quantity += (item.quantity || 1);
+					if (existItem.uses)
+						existItem.uses += (item.uses || 1);
+					else {
+						if (!existItem.quantity)
+							existItem.quantity = 1;
+
+						existItem.quantity += (item.quantity || 1);
+					}
 					item = existItem;
 				}
 			}

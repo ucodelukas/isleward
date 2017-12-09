@@ -1,12 +1,12 @@
 define([
 	'../config/types',
 	'../config/armorMaterials'
-], function(
+], function (
 	configTypes,
 	armorMaterials
 ) {
 	return {
-		generate: function(item, blueprint) {
+		generate: function (item, blueprint) {
 			var type = blueprint.type || _.randomKey(configTypes.types[item.slot]);
 			var typeBlueprint = configTypes.types[item.slot][type] || {};
 

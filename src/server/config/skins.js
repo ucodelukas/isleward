@@ -63,36 +63,31 @@ define([
 			name: 'Sorcerer',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [0, 0],
-			class: 'wizard',
-			default: true
+			class: 'wizard'
 		},
 		'1.2': {
 			name: 'Diviner',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [1, 0],
-			class: 'cleric',
-			default: true
+			class: 'cleric'
 		},
 		'1.3': {
 			name: 'Cutthroat',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [2, 0],
-			class: 'thief',
-			default: true
+			class: 'thief'
 		},
 		'1.4': {
 			name: 'Man of War',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [3, 0],
-			class: 'warrior',
-			default: true
+			class: 'warrior'
 		},
 		'1.5': {
 			name: 'Occultist',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [4, 0],
-			class: 'necromancer',
-			default: true
+			class: 'necromancer'
 		}
 	};
 

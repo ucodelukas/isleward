@@ -7,7 +7,7 @@ define([
 ) {
 	var config = {
 		'Runecrafter\'s Toil': {
-			chance: 0.05,
+			chance: 0.025,
 			reward: 'Rune',
 			setSize: 3,
 			mobLevel: [3, 100]
@@ -19,13 +19,13 @@ define([
 			zone: 'sewer'
 		},
 		'The Other Heirloom': {
-			chance: 0.04,
+			chance: 0.02,
 			reward: 'Perfect Level 10 Ring',
 			setSize: 3,
 			mobName: 'flamingo'
 		},
 		'Benthic Incantation': {
-			chance: 0.05,
+			chance: 0.035,
 			reward: `Princess Morgawsa's Trident`,
 			setSize: 7,
 			zone: 'estuary'

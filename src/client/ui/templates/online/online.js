@@ -90,8 +90,10 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.list')
-				.empty();
+			var container = this.el.find('.list');
+			container
+				.children(':not(.heading)')
+				.remove();
 
 			this.onlineList.forEach(function (l) {
 				var html = templateListItem
