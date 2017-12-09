@@ -493,6 +493,7 @@ module.exports = {
 		},
 		guard: {
 			level: 50,
+			attackable: false,
 
 			walkDistance: 0,
 
@@ -502,6 +503,7 @@ module.exports = {
 		},
 		estrid: {
 			level: 25,
+			attackable: false,
 			walkDistance: 5,
 
 			rare: {
@@ -526,7 +528,8 @@ module.exports = {
 			}
 		},
 		vikar: {
-			walkDistance: 0
+			walkDistance: 0,
+			attackable: false,
 		},
 		rodriguez: {
 			attackable: false,
@@ -558,6 +561,7 @@ module.exports = {
 		},
 		'priest': {
 			level: 50,
+			attackable: false,
 			walkDistance: 0,
 			rare: {
 				count: 0
