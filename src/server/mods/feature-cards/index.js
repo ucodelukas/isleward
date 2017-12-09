@@ -22,7 +22,7 @@ define([
 			if (!looter.player)
 				return;
 
-			var res = cards.getCard(dropper);
+			var res = cards.getCard(looter, dropper);
 			if (!res)
 				return;
 

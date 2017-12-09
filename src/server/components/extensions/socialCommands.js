@@ -23,7 +23,8 @@ define([
 		setLevel: 10,
 		godMode: 10,
 		clearInventory: 10,
-		completeQuests: 10
+		completeQuests: 10,
+		getReputation: 10
 	};
 
 	var localCommands = [
@@ -284,7 +285,8 @@ define([
 				hpMax: 10000000,
 				hp: 10000000,
 				manaMax: 10000000,
-				mana: 10000000
+				mana: 10000000,
+				sprintChance: 100
 			};
 
 			var syncer = obj.syncer;
@@ -310,6 +312,10 @@ define([
 
 			quests.quests = [];
 			obj.instance.questBuilder.obtain(obj);
+		},
+
+		getReputation: function (faction) {
+			this.obj.reputation.getReputation(faction, 50000);
 		}
 	};
 });

@@ -8,7 +8,7 @@ define([
 			onGetText: function (item) {
 				var rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
 
-				return `you take ${rolls.percentage} of the damage you deal`;
+				return `you take ${rolls.percentage}% of the damage you deal`;
 			},
 
 			afterDealDamage: function (item, damage, target) {
@@ -17,7 +17,8 @@ define([
 				var amount = (damage.amount / 100) * rolls.percentage;
 
 				this.stats.takeDamage({
-					amount: amount
+					amount: amount,
+					noEvents: true
 				}, 1, this);
 			}
 		}

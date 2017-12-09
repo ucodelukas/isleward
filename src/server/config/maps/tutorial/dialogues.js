@@ -229,6 +229,8 @@ module.exports = {
 					obj.instance.eventEmitter.emit('onGetCardSetReward', s.name, obj);
 					inventory.destroyItem(s.id, s.setSize);
 				});
+
+				return `Thank you.`;
 			}
 		}
 	},

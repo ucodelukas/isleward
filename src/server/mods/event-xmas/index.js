@@ -265,11 +265,12 @@ define([
 				msg.handler = function (card) {
 					return itemGenerator.generate({
 						name: 'Festive Spear',
-						level: 10,
+						level: [5, 15],
 						noSpell: true,
 						slot: 'twoHanded',
 						type: 'spear',
 						quality: 2,
+						stats: ['attackSpeed|10'],
 						spritesheet: `server/mods/event-xmas/images/items.png`,
 						sprite: [0, 0]
 					});

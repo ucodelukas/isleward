@@ -33,7 +33,7 @@ define([
 		'Fangs of Fury': {
 			chance: 0.075,
 			reward: `Steelclaw's Bite`,
-			setSize: 1,
+			setSize: 10,
 			mobName: 'steelclaw'
 		}
 	};
@@ -51,7 +51,7 @@ define([
 			card.setSize = template.setSize;
 		},
 
-		getCard: function (mob) {
+		getCard: function (looter, mob) {
 			var pool = [];
 
 			var mobLevel = mob.stats.values.level;
@@ -78,6 +78,9 @@ define([
 					else if ((mobName.push) && (!mobName.some(m => (m.toLowerCase() == mob.name.toLowerCase()))))
 						return;
 				}
+
+				if ((card.zone) && (looter.zoneName != card.zone))
+					return;
 
 				if (Math.random() >= card.chance)
 					return;
@@ -185,7 +188,7 @@ define([
 					effects: [{
 						type: 'damageSelf',
 						rolls: {
-							i_percentage: [2, 5]
+							i_percentage: [8, 22]
 						}
 					}, {
 						type: 'alwaysCrit',

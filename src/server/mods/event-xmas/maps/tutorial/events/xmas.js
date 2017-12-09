@@ -67,7 +67,6 @@ define([
 								'1.2': {
 									msg: `I found some snowflakes for you.`,
 									prereq: function (obj) {
-										return true;
 										var snowflakes = obj.inventory.items.find(i => (i.name == 'Snowflake'));
 										return ((!!snowflakes) && (snowflakes.quantity >= 15));
 									},
@@ -111,7 +110,7 @@ define([
 						},
 						giveSnowflakes: {
 							msg: [{
-								msg: `Ho, Ho, Holla at me!`,
+								msg: `Why, thank you!`,
 								options: [1.1]
 							}],
 							method: function (obj) {
@@ -277,7 +276,7 @@ define([
 						'Cheer and Spear': {
 							chance: 40,
 							reward: 'Rare Festive Spear',
-							setSize: 1,
+							setSize: 3,
 							mobName: ['frost crab', 'rude holf'],
 							spritesheet: `server/mods/event-xmas/images/items.png`,
 							sprite: [0, 1],

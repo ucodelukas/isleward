@@ -428,7 +428,8 @@ define([
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 			}
 
-			source.fireEvent('afterDealDamage', damage, this.obj);
+			if (!damage.noEvents)
+				source.fireEvent('afterDealDamage', damage, this.obj);
 		},
 
 		getHp: function (heal, source) {

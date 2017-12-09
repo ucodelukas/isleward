@@ -44,10 +44,12 @@ define([
 						return (item.id == nId);
 					});
 					if (findItem) {
-						rerender = (
-							(findItem.pos != nItem.pos) ||
-							(findItem.eq != nItem.eq)
-						);
+						if (!rerender) {
+							rerender = (
+								(findItem.pos != nItem.pos) ||
+								(findItem.eq != nItem.eq)
+							);
+						}
 
 						for (var p in findItem) {
 							delete findItem[p];

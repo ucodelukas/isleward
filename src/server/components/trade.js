@@ -216,6 +216,11 @@ define([
 
 				delete clonedItem.infinite;
 
+				if (clonedItem.generate) {
+					clonedItem = generator.generate(clonedItem);
+					delete clonedItem.generate;
+				}
+
 				this.obj.inventory.getItem(clonedItem);
 			} else {
 				this.obj.auth.saveSkin(item.id);

@@ -576,6 +576,31 @@ module.exports = {
 								id: 'gaekatla',
 								tier: 7
 							}]
+						}, {
+							worth: 100,
+							infinite: true,
+							generate: true,
+							name: `Cowl of Obscurity`,
+							level: [4, 13],
+							quality: 4,
+							noSpell: true,
+							slot: 'head',
+							sprite: [2, 0],
+							spritesheet: '../../../images/legendaryItems.png',
+							type: 'Silk Cowl',
+							description: `Imbued with the powers of Gaekatla herself.`,
+							stats: ['hpMax', 'hpMax', 'int', 'int'],
+							effects: [{
+								type: 'healOnCrit',
+								rolls: {
+									i_chance: [20, 60],
+									i_percentage: [3, 7]
+								}
+							}],
+							factions: [{
+								id: 'gaekatla',
+								tier: 7
+							}]
 						}]
 					},
 					faction: {

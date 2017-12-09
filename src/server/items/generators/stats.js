@@ -149,6 +149,10 @@ define([
 				ignore: true
 			},
 
+			attackSpeed: {
+				ignore: true
+			},
+
 			armor: {
 				generator: 'armor',
 				ignore: true
@@ -306,6 +310,13 @@ define([
 			var statOptions = extend(true, {}, this.stats, this.slots[item.slot] || {});
 			var statBlueprint = null;
 
+			var value = null;
+			if ((stat) && (stat.indexOf('|') > -1)) {
+				var split = stat.split('|');
+				stat = split[0];
+				value = split[1];
+			}
+
 			if (!stat) {
 				var options = Object.keys(statOptions).filter(s => !statOptions[s].ignore);
 				stat = options[~~(Math.random() * options.length)];
@@ -313,15 +324,15 @@ define([
 			} else
 				statBlueprint = statOptions[stat];
 
-			var value = null;
-
-			if (statBlueprint.generator) {
-				var level = item.originalLevel || item.level;
-				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
-			} else if (!blueprint.perfection)
-				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
-			else
-				value = statBlueprint.min + ((statBlueprint.max - statBlueprint.min) * blueprint.perfection);
+			if (!value) {
+				if (statBlueprint.generator) {
+					var level = item.originalLevel || item.level;
+					value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
+				} else if (!blueprint.perfection)
+					value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
+				else
+					value = statBlueprint.min + ((statBlueprint.max - statBlueprint.min) * blueprint.perfection);
+			}
 
 			if ((result) && (result.addStatMsgs)) {
 				result.addStatMsgs.push({
