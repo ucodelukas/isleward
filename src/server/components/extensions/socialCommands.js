@@ -87,6 +87,10 @@ define([
 			if (typeof (value) != 'string')
 				return;
 
+			value = value.split(' ').join('');
+			if (value.lengh == 0)
+				return;
+
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
