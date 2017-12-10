@@ -2,7 +2,7 @@ define([
 	'js/system/events',
 	'html!ui/templates/target/template',
 	'css!ui/templates/target/styles'
-], function(
+], function (
 	events,
 	template,
 	styles
@@ -15,12 +15,12 @@ define([
 		lastMana: null,
 		lastLevel: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onSetTarget', this.onSetTarget.bind(this));
 			this.onEvent('onDeath', this.onSetTarget.bind(this, null));
 		},
 
-		onContextMenu: function(e) {
+		onContextMenu: function (e) {
 			var target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
@@ -41,11 +41,11 @@ define([
 			return false;
 		},
 
-		onTalk: function() {
+		onTalk: function () {
 			window.player.dialogue.talk(this.target);
 		},
 
-		onSetTarget: function(target, e) {
+		onSetTarget: function (target, e) {
 			this.target = target;
 
 			if (!this.target) {
@@ -71,16 +71,16 @@ define([
 				this.onContextMenu(e);
 		},
 
-		buildBar: function(barIndex, value, max) {
+		buildBar: function (barIndex, value, max) {
 			var box = this.el.find('.statBox').eq(barIndex);
 
 			var w = ~~((value / max) * 100);
 			box.find('[class^="stat"]').css('width', w + '%');
 
-			box.find('.text').html(Math.ceil(value) + '/' + Math.ceil(max));
+			box.find('.text').html(Math.floor(value) + '/' + Math.floor(max));
 		},
 
-		update: function() {
+		update: function () {
 			var target = this.target;
 
 			if (!target)

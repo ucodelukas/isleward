@@ -38,7 +38,7 @@ define([
 				if (mob.aggro.faction != window.player.aggro.faction)
 					html += '<br />aggressive';
 			}
-			html += '<br />hp: ' + Math.ceil(mob.stats.values.hp) + '/' + Math.ceil(mob.stats.values.hpMax);
+			html += '<br />hp: ' + Math.floor(mob.stats.values.hp) + '/' + Math.floor(mob.stats.values.hpMax);
 
 			this.el.show();
 			this.el.html(html);
