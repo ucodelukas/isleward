@@ -95,7 +95,8 @@ define([
 				});
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
-			}
+			} else if (['o', 'j', 'h', 'i'].indexOf(key) > -1)
+				$('.uiOverlay').hide();
 		},
 
 		update: function () {

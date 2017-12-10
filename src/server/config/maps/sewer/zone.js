@@ -11,7 +11,7 @@ module.exports = {
 		'rat': {
 			faction: 'flolgard',
 			grantRep: {
-				fjolgard: 4
+				fjolgard: 6
 			},
 			level: 10,
 
@@ -23,7 +23,7 @@ module.exports = {
 		'stinktooth': {
 			faction: 'flolgard',
 			grantRep: {
-				fjolgard: 10
+				fjolgard: 15
 			},
 			level: 12,
 

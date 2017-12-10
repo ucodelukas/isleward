@@ -32,9 +32,8 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'o') {
+			if (key == 'o')
 				this.toggle();
-			}
 		},
 
 		toggle: function () {

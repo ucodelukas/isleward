@@ -7,7 +7,7 @@ module.exports = {
 		default: {
 			faction: 2,
 			grantRep: {
-				gaekatla: 3
+				gaekatla: 15
 			},
 
 			regular: {
@@ -53,6 +53,9 @@ module.exports = {
 		"m'ogresh": {
 			level: 12,
 			isChampion: true,
+			grantRep: {
+				gaekatla: 120
+			},
 			spells: [{
 				type: 'melee',
 				range: 2,
