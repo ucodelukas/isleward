@@ -248,7 +248,7 @@ define([
 
 			spells.push({
 				name: 'Blood Barrier',
-				description: 'Sacrifice some life force to granting an ally a protective barrier and increased attack speed.',
+				description: 'Sacrifice some life force to grant an ally a protective barrier and increased attack speed.',
 				type: 'bloodBarrier',
 				icon: [2, 0],
 				animation: 'magic',

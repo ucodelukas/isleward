@@ -213,7 +213,7 @@ define([
 		}, {
 			name: 'Smokebomb',
 			type: 'smokeBomb',
-			description: 'Envelops the thief in a cloud of poisonous smoke, dealing damage to enemies every tick until it dissipates.',
+			description: 'Envelops the caster in a cloud of poisonous smoke, dealing damage to enemies every tick until it dissipates.',
 			animation: 'raiseHands',
 			icon: [2, 1],
 			particles: {
@@ -289,7 +289,7 @@ define([
 			}*/
 		, {
 			name: 'Crystal Spikes',
-			description: 'Jagged Crystals break ground at your target destination',
+			description: 'Jagged crystals break through the ground at your target destination',
 			type: 'warnBlast',
 			animation: 'raiseHands',
 			icon: [0, 7],
