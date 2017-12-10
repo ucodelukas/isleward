@@ -2,12 +2,14 @@ define([
 	'js/system/events',
 	'js/system/client',
 	'html!ui/templates/leaderboard/template',
-	'css!ui/templates/leaderboard/styles'
-], function(
+	'css!ui/templates/leaderboard/styles',
+	'js/system/globals'
+], function (
 	events,
 	client,
 	template,
-	styles
+	styles,
+	globals
 ) {
 	return {
 		tpl: template,
@@ -23,7 +25,7 @@ define([
 		pageSize: 10,
 		maxOffset: 0,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onShowLeaderboard', this.toggle.bind(this, true));
 
 			this.find('.prophecy[prophecy]').on('click', this.onProphecyClick.bind(this));
@@ -36,7 +38,7 @@ define([
 			this.find('.buttons .btn').on('click', this.onPage.bind(this));
 		},
 
-		onPage: function(e) {
+		onPage: function (e) {
 			var el = $(e.currentTarget);
 			var offset = ~~el.attr('offset');
 
@@ -49,47 +51,46 @@ define([
 			this.onGetList(this.records, true);
 		},
 
-		onMine: function() {
+		onMine: function () {
 			var prophecies = window.player.prophecies;
 			prophecies = prophecies ? prophecies.list : [];
 
-			prophecies.forEach(function(p) {
+			prophecies.forEach(function (p) {
 				this.onProphecyClick({
 					currentTarget: this.find('.prophecy[prophecy="' + p + '"]')
 				});
 			}, this);
 		},
 
-		onNone: function() {
+		onNone: function () {
 			this.find('.prophecy[prophecy]').removeClass('selected');
 			this.prophecyFilter = [];
 		},
 
-		onRefresh: function() {
+		onRefresh: function () {
 			this.getList();
 		},
 
-		onProphecyClick: function(e) {
+		onProphecyClick: function (e) {
 			var el = $(e.currentTarget);
 
 			el.toggleClass('selected');
 
 			var prophecyName = el.attr('prophecy');
 
-			var exists = this.prophecyFilter.some(function(p) {
+			var exists = this.prophecyFilter.some(function (p) {
 				return (p == prophecyName);
 			}, this);
 
 			if (exists) {
-				this.prophecyFilter.spliceWhere(function(p) {
+				this.prophecyFilter.spliceWhere(function (p) {
 					return (p == prophecyName);
 				}, this);
-			}
-			else
+			} else
 				this.prophecyFilter.push(prophecyName);
 		},
 
-		getList: function() {
+		getList: function () {
 			if (!this.prophecyFilter) {
 				var prophecies = window.player.prophecies;
 				this.prophecyFilter = prophecies ? prophecies.list : [];
@@ -106,11 +107,11 @@ define([
 			});
 		},
 
-		onGetList: function(result, keepOffset) {
+		onGetList: function (result, keepOffset) {
 			if (!keepOffset) {
 				this.offset = 0;
 
-				var foundIndex = result.firstIndex(function(r) {
+				var foundIndex = result.firstIndex(function (r) {
 					return (r.name == window.player.name);
 				}, this);
 				if (foundIndex != -1)
@@ -135,6 +136,14 @@ define([
 
 				if (r.name == window.player.name)
 					el.addClass('self');
+				else {
+					var online = globals.onlineList.some(function (o) {
+						return (o.name == r.name);
+					});
+					if (online)
+						el.addClass('online');
+				}
+
 				if (r.dead)
 					el.addClass('disabled');
 			}
@@ -142,24 +151,24 @@ define([
 			this.updatePaging();
 		},
 
-		updatePaging: function() {
+		updatePaging: function () {
 			this.find('.buttons .btn').removeClass('disabled');
 
 			if (this.offset == 0)
 				this.find('.btn-first, .btn-prev').addClass('disabled');
-			
+
 			if (this.offset >= this.maxOffset)
 				this.find('.btn-next, .btn-last').addClass('disabled');
 		},
 
-		toggle: function() {
+		toggle: function () {
 			var shown = !this.el.is(':visible');
 
 			if (shown) {
 				this.find('.prophecy[prophecy]').removeClass('selected');
 				var prophecies = window.player.prophecies;
 				prophecies = prophecies ? prophecies.list : [];
-				prophecies.forEach(function(p) {
+				prophecies.forEach(function (p) {
 					this.find('.prophecy[prophecy="' + p + '"]').addClass('selected');
 				}, this);
 
@@ -167,8 +176,7 @@ define([
 
 				this.getList();
 				this.show();
-			}
-			else
+			} else
 				this.hide();
 		}
 	};
