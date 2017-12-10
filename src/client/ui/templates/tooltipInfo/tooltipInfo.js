@@ -2,7 +2,7 @@ define([
 	'js/system/events',
 	'html!ui/templates/tooltipInfo/template',
 	'css!ui/templates/tooltipInfo/styles'
-], function(
+], function (
 	events,
 	template,
 	styles
@@ -14,11 +14,11 @@ define([
 		lastHpMax: null,
 		mob: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onMobHover', this.onMobHover.bind(this));
 		},
 
-		onMobHover: function(mob) {
+		onMobHover: function (mob) {
 			this.mob = mob;
 
 			if (!mob) {
@@ -38,13 +38,13 @@ define([
 				if (mob.aggro.faction != window.player.aggro.faction)
 					html += '<br />aggressive';
 			}
-			html += '<br />hp: ' + ~~mob.stats.values.hp + '/' + ~~mob.stats.values.hpMax;
+			html += '<br />hp: ' + Math.ceil(mob.stats.values.hp) + '/' + Math.ceil(mob.stats.values.hpMax);
 
 			this.el.show();
 			this.el.html(html);
 		},
 
-		update: function() {
+		update: function () {
 			var mob = this.mob;
 			if (!mob)
 				return;
@@ -52,10 +52,9 @@ define([
 			if (mob.destroyed) {
 				this.mob = null;
 				this.el.hide();
-			}
-			else {
+			} else {
 				var values = mob.stats.values;
-				if (values.hp != this.lastHp) 
+				if (values.hp != this.lastHp)
 					this.onMobHover(mob);
 				else if (values.hpMax != this.lastHpMax)
 					this.onMobHover(mob);
