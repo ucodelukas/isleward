@@ -376,6 +376,26 @@ define([
 			if (!profanities.isClean(data.name)) {
 				msg.callback(messages.login.invalid);
 				return;
+			} else {
+				var name = data.name;
+
+				if (name.indexOf('  ') > -1) {
+					msg.callback(messages.login.invalid);
+					return;
+				}
+
+				var nLen = name.length;
+				for (var i = 0; i < nLen; i++) {
+					var char = name[i].toLowerCase();
+					var valid = [
+						'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+					];
+
+					if (valid.indexOf(char) == -1) {
+						msg.callback(messages.login.invalid);
+						return;
+					}
+				}
 			}
 
 			io.get({
