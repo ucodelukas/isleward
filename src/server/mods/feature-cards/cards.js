@@ -25,13 +25,13 @@ define([
 			mobName: 'flamingo'
 		},
 		'Benthic Incantation': {
-			chance: 0.035,
+			chance: 0.015,
 			reward: `Princess Morgawsa's Trident`,
-			setSize: 7,
+			setSize: 12,
 			zone: 'estuary'
 		},
 		'Fangs of Fury': {
-			chance: 0.075,
+			chance: 0.045,
 			reward: `Steelclaw's Bite`,
 			setSize: 10,
 			mobName: 'steelclaw'

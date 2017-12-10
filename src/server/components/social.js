@@ -26,6 +26,12 @@ define([
 			};
 		},
 
+		save: function () {
+			return {
+				type: 'social'
+			};
+		},
+
 		sendMessage: function (msg) {
 			this.obj.socket.emit('event', {
 				event: 'onGetMessages',

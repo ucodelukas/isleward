@@ -180,7 +180,18 @@ define([
 		onGetCustomChannels: function (data, character, result) {
 			this.customChannels = JSON
 				.parse(result || '[]')
-				.filter(c => (typeof (c) == 'string'));
+				.map(c => c.split(' ').join(''))
+				.filter(c => (typeof (c) == 'string'))
+				.filter(c => (c.length > 0));
+
+			this.customChannels = this.customChannels
+				.filter((c, i) => (this.customChannels.indexOf(c) == i));
+
+			console.log(this.customChannels);
+
+			var social = character.components.find(c => (c.type == 'social'));
+			if (social)
+				social.customChannels = this.customChannels;
 
 			this.getStash(data, character);
 		},
