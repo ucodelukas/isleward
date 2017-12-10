@@ -136,11 +136,11 @@ define([
 				statMult: 0.1,
 				element: 'physical',
 				auto: true,
-				cdMax: 7,
+				cdMax: 6,
 				manaCost: 0,
 				range: 1,
 				random: {
-					damage: [2, 4],
+					damage: [2.2, 4.1],
 					healPercent: [5, 15]
 				}
 			};
