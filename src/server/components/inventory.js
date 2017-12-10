@@ -236,6 +236,12 @@ define([
 				}
 
 				item.cd = item.cdMax;
+
+				//Find similar items and put them on cooldown too
+				this.items.forEach(function (i) {
+					if ((i.name == item.name) && (i.cdMax == item.cdMax))
+						i.cd = i.cdMax;
+				});
 			}
 
 			var result = {};
