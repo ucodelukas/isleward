@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
 	'js/rendering/renderer'
-], function(
+], function (
 	events,
 	renderer
 ) {
@@ -48,7 +48,7 @@ define([
 
 		enabled: true,
 
-		init: function() {
+		init: function () {
 			$(window).on('keydown', this.events.keyboard.keyDown.bind(this));
 			$(window).on('keyup', this.events.keyboard.keyUp.bind(this));
 			events.on('onSceneMove', this.events.mouse.mouseMove.bind(this));
@@ -59,7 +59,7 @@ define([
 				.on('mousemove', this.events.mouse.mouseMove.bind(this));
 		},
 
-		resetKeys: function() {
+		resetKeys: function () {
 			for (var k in this.keys) {
 				events.emit('onKeyUp', k);
 			}
@@ -67,7 +67,7 @@ define([
 			this.keys = {};
 		},
 
-		getMapping: function(charCode) {
+		getMapping: function (charCode) {
 			if (charCode >= 97)
 				return (charCode - 96).toString();
 
@@ -78,7 +78,7 @@ define([
 
 		},
 
-		isKeyDown: function(key, noConsume) {
+		isKeyDown: function (key, noConsume) {
 			var down = this.keys[key];
 			if (down != null) {
 				if (noConsume)
@@ -90,7 +90,7 @@ define([
 			} else
 				return false;
 		},
-		getAxis: function(name) {
+		getAxis: function (name) {
 			var axis = this.axes[name];
 			if (!axis)
 				return 0;
@@ -116,7 +116,7 @@ define([
 
 		events: {
 			keyboard: {
-				keyDown: function(e) {
+				keyDown: function (e) {
 					if (!this.enabled)
 						return;
 
@@ -138,9 +138,8 @@ define([
 						return false;
 					else if (e.key == 'F11')
 						events.emit('onToggleFullscreen');
-
 				},
-				keyUp: function(e) {
+				keyUp: function (e) {
 					if (!this.enabled)
 						return;
 
@@ -155,7 +154,7 @@ define([
 				}
 			},
 			mouse: {
-				mouseDown: function(e) {
+				mouseDown: function (e) {
 					var el = $(e.target);
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
@@ -167,7 +166,7 @@ define([
 
 					events.emit('mouseDown', this.mouse);
 				},
-				mouseUp: function(e) {
+				mouseUp: function (e) {
 					var el = $(e.target);
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
@@ -178,7 +177,7 @@ define([
 
 					events.emit('mouseUp', this.mouse);
 				},
-				mouseMove: function(e) {
+				mouseMove: function (e) {
 					if (e)
 						this.mouseRaw = e;
 					else

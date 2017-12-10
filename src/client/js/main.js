@@ -21,7 +21,7 @@ define([
 	'ui/templates/tooltips/tooltips',
 	'ui/templates/reputation/reputation',
 	'ui/templates/death/death'
-], function(
+], function (
 	client,
 	uiFactory,
 	renderer,
@@ -35,11 +35,11 @@ define([
 	return {
 		hasFocus: true,
 
-		init: function() {
+		init: function () {
 			client.init(this.onClientReady.bind(this));
 		},
 
-		onClientReady: function() {
+		onClientReady: function () {
 			client.request({
 				module: 'clientConfig',
 				method: 'getResourcesList',
@@ -47,16 +47,16 @@ define([
 			});
 		},
 
-		onGetResourceList: function(list) {
+		onGetResourceList: function (list) {
 			resources.init(list);
 
 			events.on('onResourcesLoaded', this.start.bind(this));
 		},
 
-		start: function() {
+		start: function () {
 			window.onfocus = this.onFocus.bind(this, true);
 			window.onblur = this.onFocus.bind(this, false);
-			$(window).on('contextmenu', function(e) {
+			$(window).on('contextmenu', function (e) {
 				e.preventDefault();
 				return false;
 			});
@@ -74,7 +74,7 @@ define([
 			this.render();
 		},
 
-		onFocus: function(hasFocus) {
+		onFocus: function (hasFocus) {
 			//Hack: Later we might want to make it not render when out of focus
 			this.hasFocus = true;
 
@@ -82,14 +82,14 @@ define([
 				input.resetKeys();
 		},
 
-		render: function() {
+		render: function () {
 			numbers.render();
 
 			renderer.render();
 
 			requestAnimationFrame(this.render.bind(this));
 		},
-		update: function() {
+		update: function () {
 			objects.update();
 			renderer.update();
 			uiFactory.update();
