@@ -91,11 +91,25 @@ define([
 			this.find('[slot]')
 				.removeData('item')
 				.addClass('empty show-default-icon')
+				.find('.info')
+				.html('')
+				.parent()
 				.find('.icon')
 				.off()
 				.css('background-image', '')
 				.css('background-position', '')
 				.on('click', this.buildSlot.bind(this));
+
+			this.find('[slot]').toArray().forEach(function (el) {
+				el = $(el);
+				var slot = el.attr('slot');
+				var newItems = window.player.inventory.items.some(function (i) {
+					return ((i.slot == slot) && (i.isNew));
+				});
+
+				if (newItems)
+					el.find('.info').html('new');
+			});
 
 			items
 				.filter(function (item) {
@@ -181,6 +195,8 @@ define([
 
 					if (item == this.hoverCompare)
 						el.find('.icon').addClass('eq');
+					else if (item.isNew)
+						el.find('.icon').addClass('new');
 				}, this);
 
 			if (items.length == 0)
@@ -188,6 +204,12 @@ define([
 		},
 
 		equipItem: function (item, slot) {
+			var isNew = window.player.inventory.items.some(function (i) {
+				return ((i.slot == slot) && (i.isNew));
+			});
+			if (!isNew)
+				this.find('[slot="' + slot + '"] .info').html('');
+
 			if (item == this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
@@ -236,6 +258,11 @@ define([
 			if (el) {
 				this.hoverItem = item;
 				this.hoverEl = el;
+
+				if ((item.isNew) && (!item.eq)) {
+					delete item.isNew;
+					el.find('.icon').removeClass('new');
+				}
 
 				var ttPos = null;
 				if (e) {
