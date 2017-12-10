@@ -291,8 +291,10 @@ define([
 
 			var success = true;
 			if (spell.cd > 0) {
-				if ((!isAuto) && (!spell.isAuto))
-					this.sendAnnouncement('Spell is on cooldown');
+				if ((!isAuto) && (!spell.isAuto)) {
+					var type = (spell.auto) ? 'Weapon' : 'Spell';
+					this.sendAnnouncement(`${type} is on cooldown`);
+				}
 				success = false;
 			} else if (spell.manaCost > this.obj.stats.values.mana) {
 				if (!isAuto)
