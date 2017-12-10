@@ -221,6 +221,8 @@ define([
 
 				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
 				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
 
 				syncO.level = values.level;
 
