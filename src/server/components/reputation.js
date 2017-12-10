@@ -205,7 +205,8 @@ define([
 			var l = this.list.find(l => (l.id == factionId));
 			var faction = {
 				id: factionId,
-				rep: l.rep
+				rep: l.rep,
+				tier: l.tier
 			};
 
 			if (full) {

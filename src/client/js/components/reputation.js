@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -9,18 +9,21 @@ define([
 		list: [],
 		factions: [],
 
-		init: function() {
+		init: function () {
 			events.emit('onGetReputations', this.list);
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.modifyRep) {
-				blueprint.modifyRep.forEach(function(m) {
+				blueprint.modifyRep.forEach(function (m) {
 					var exists = this.list.find(l => (l.id == m.id));
 					if (!exists)
 						this.list.push(m);
-					else
-						exists.rep = m.rep;
+					else {
+						for (var p in m) {
+							exists[p] = m[p];
+						}
+					}
 				}, this);
 
 				delete blueprint.modifyRep;

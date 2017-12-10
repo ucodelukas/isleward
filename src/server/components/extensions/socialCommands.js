@@ -24,7 +24,8 @@ define([
 		godMode: 10,
 		clearInventory: 10,
 		completeQuests: 10,
-		getReputation: 10
+		getReputation: 10,
+		loseReputation: 10
 	};
 
 	var localCommands = [
@@ -319,7 +320,17 @@ define([
 		},
 
 		getReputation: function (faction) {
+			if (typeof (faction) != 'string')
+				return;
+
 			this.obj.reputation.getReputation(faction, 50000);
+		},
+
+		loseReputation: function (faction) {
+			if (typeof (faction) != 'string')
+				return;
+
+			this.obj.reputation.getReputation(faction, -50000);
 		}
 	};
 });
