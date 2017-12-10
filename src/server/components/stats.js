@@ -375,6 +375,13 @@ define([
 						if (deathEvent.permadeath) {
 							this.obj.auth.permadie();
 
+							this.obj.instance.syncer.queue('onGetMessages', {
+								messages: {
+									class: 'color-red',
+									message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
+								}
+							});
+
 							this.syncer.queue('onPermadeath', {
 								source: killSource.name
 							}, [this.obj.serverId]);
