@@ -187,8 +187,6 @@ define([
 			this.customChannels = this.customChannels
 				.filter((c, i) => (this.customChannels.indexOf(c) == i));
 
-			console.log(this.customChannels);
-
 			var social = character.components.find(c => (c.type == 'social'));
 			if (social)
 				social.customChannels = this.customChannels;

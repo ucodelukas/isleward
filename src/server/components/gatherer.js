@@ -51,6 +51,13 @@ define([
 			if (!gathering)
 				return;
 
+			if (gathering.destroyed) {
+				this.gathering = null;
+				this.gatheringTtl = 0;
+				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+				return;
+			}
+
 			var isFish = (gathering.resourceNode.nodeType == 'fish');
 
 			if (this.gatheringTtl > 0) {
