@@ -28,7 +28,7 @@ define([
 						if (roll == 0)
 							this.slotName = 'Magic Armor'
 						else
-							this.slotName = 'Magic Accessory';
+							this.slotNames = 'Magic Accessory';
 
 						this.slot = ([
 							[
@@ -53,6 +53,7 @@ define([
 					this.name = 'Purveyor of Rarities';
 					this.description = 'Loot 1x ' + this.slotName;
 				} else {
+					this.name = 'Purveyor of Artefacts';
 					this.slot = slotNames[~~(Math.random() * slotNames.length)];
 					this.slotName = this.slot[0].toUpperCase() + this.slot.substr(1);
 					this.description = 'Loot 1x ' + this.slotName + ' slot item';

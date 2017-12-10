@@ -31,7 +31,7 @@ define([
 			zone: 'estuary'
 		},
 		'Fangs of Fury': {
-			chance: 0.045,
+			chance: 0.1,
 			reward: `Steelclaw's Bite`,
 			setSize: 10,
 			mobName: 'steelclaw'

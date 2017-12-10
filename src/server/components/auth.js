@@ -180,8 +180,8 @@ define([
 		onGetCustomChannels: function (data, character, result) {
 			this.customChannels = JSON
 				.parse(result || '[]')
-				.map(c => c.split(' ').join(''))
 				.filter(c => (typeof (c) == 'string'))
+				.map(c => c.split(' ').join(''))
 				.filter(c => (c.length > 0));
 
 			this.customChannels = this.customChannels

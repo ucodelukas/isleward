@@ -124,6 +124,7 @@ define([
 			};
 
 			var obj = this.objects.buildObjects([objBlueprint]);
+			delete obj.ttl;
 
 			if (blueprint.type == 'herb') {
 				this.syncer.queue('onGetObject', {
