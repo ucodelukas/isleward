@@ -55,7 +55,7 @@ module.exports = {
 			}
 		},
 		'2-2': {
-			msg: `It's on the south-west part of the island. Just don't let your tongue slip about my location.`,
+			msg: `It's on the northern part of the island. Just don't let your tongue slip about my location.`,
 			options: {
 				'2-2.1': {
 					msg: `I'd like to ask something else`,

@@ -28,7 +28,7 @@ define([
 				}
 			}
 
-			if (!this.type)
+			if (['herb', 'fish'].indexOf(this.type) == -1)
 				this.type = 'herb';
 
 			this.typeName = (this.type == 'herb') ? 'herbs' : 'fish';

@@ -426,8 +426,6 @@ module.exports = {
 			}
 		},
 		crab: {
-			faction: 'gaekatla',
-			deathRep: -3,
 			level: 6,
 
 			rare: {
@@ -439,16 +437,12 @@ module.exports = {
 			}
 		},
 		'titan crab': {
-			faction: 'gaekatla',
-			deathRep: -5,
 			level: 7,
 			rare: {
 				name: 'The Pincer King'
 			}
 		},
 		'mud crab': {
-			faction: 'gaekatla',
-			deathRep: -5,
 			level: 9
 		},
 		penguin: {

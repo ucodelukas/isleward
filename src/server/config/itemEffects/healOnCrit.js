@@ -21,7 +21,7 @@ define([
 				if (percentage)
 					text += `${percentage}% of damage dealt`;
 				else
-					text += `${amount} health`;
+					text += `${amount || '?'} health`;
 
 				return text;
 			},

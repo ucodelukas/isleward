@@ -1,11 +1,13 @@
 define([
 	'items/generator',
 	'config/skins',
-	'config/factions'
+	'config/factions',
+	'items/itemEffects'
 ], function (
 	generator,
 	skins,
-	factions
+	factions,
+	itemEffects
 ) {
 	return {
 		baseItems: [],
@@ -53,11 +55,22 @@ define([
 						item.name = item.type;
 
 						item.effects = item.effects
-							.map(e => ({
-								factionId: e.factionId,
-								text: e.text,
-								properties: e.properties
-							}));
+							.map(function (e) {
+								if (e.factionId) {
+									return {
+										factionId: e.factionId,
+										text: e.text,
+										properties: e.properties
+									};
+								} else {
+									var effectUrl = itemEffects.get(e.type);
+									var effectModule = require(effectUrl);
+
+									return {
+										text: effectModule.events.onGetText(item)
+									};
+								}
+							});
 					}
 
 					if (item.factions) {

@@ -106,13 +106,17 @@ define([
 			if (item.quantity > 1)
 				name += ' x' + item.quantity;
 
+			var level = null;
+			if (item.level)
+				level = item.level.push ? item.level[0] + ' - ' + item.level[1] : item.level;
+
 			var html = tplTooltip
 				.replace('$NAME$', name)
 				.replace('$QUALITY$', item.quality)
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
 				.replace('$STATS$', stats)
-				.replace('$LEVEL$', item.level);
+				.replace('$LEVEL$', level);
 			if (item.power)
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
