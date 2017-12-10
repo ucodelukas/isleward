@@ -524,6 +524,9 @@ module.exports = {
 		vikar: {
 			walkDistance: 0,
 			attackable: false,
+			rare: {
+				count: 0
+			}
 		},
 		rodriguez: {
 			attackable: false,
