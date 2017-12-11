@@ -120,6 +120,9 @@ define([
 									snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
 									if ((!snowflakes) || (snowflakes.quantity < 15))
 										return;
+									else if ((!inventory.hasSpace()) && (snowflakes.quantity != 15))
+										return `Sorry, it seems you don't have enough space to accept my gifts.`;
+
 									obj.reputation.getReputation('theWinterMan', 100);
 
 									var chances = {

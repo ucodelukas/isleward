@@ -545,6 +545,14 @@ define([
 			return obj;
 		},
 
+		hasSpace: function () {
+			if (this.inventorySize != -1) {
+				var nonEqItems = items.filter(f => !f.eq).length;
+				return (nonEqItems < this.inventorySize);
+			} else
+				return true;
+		},
+
 		getItem: function (item, hideMessage) {
 			events.emit('onBeforeGetItem', item, this.obj);
 
@@ -583,9 +591,8 @@ define([
 				var items = this.items;
 				var iLen = items.length;
 
-				if (this.inventorySize != -1) {
-					var nonEqItems = items.filter(f => !f.eq).length;
-					if ((nonEqItems >= this.inventorySize) && (!hideMessage)) {
+				if (!this.hasSpace()) {
+					if (!hideMessage) {
 						this.obj.instance.syncer.queue('onGetMessages', {
 							id: this.obj.id,
 							messages: [{
@@ -594,9 +601,9 @@ define([
 								type: 'info'
 							}]
 						}, [this.obj.serverId]);
-
-						return false;
 					}
+
+					return false;
 				}
 
 				for (var i = 0; i < iLen; i++) {
