@@ -54,12 +54,13 @@ define([
 		doSave: function (extensionObj) {
 			var simple = this.obj.getSimple(true, true);
 			simple.components.spliceWhere(c => c.type == 'stash');
-			//Don't save modified stat values
+
 			var stats = simple.components.find(c => c.type == 'stats');
 			stats.values = extend(true, {}, stats.values);
-			//Don't save party
+
 			var social = simple.components.find(c => c.type == 'social');
 			delete social.party;
+			delete social.customChannelsl
 
 			var statKeys = Object.keys(stats.values);
 			var sLen = statKeys.length;
