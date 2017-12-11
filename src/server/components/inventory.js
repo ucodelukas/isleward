@@ -547,7 +547,7 @@ define([
 
 		hasSpace: function () {
 			if (this.inventorySize != -1) {
-				var nonEqItems = items.filter(f => !f.eq).length;
+				var nonEqItems = this.items.filter(f => !f.eq).length;
 				return (nonEqItems < this.inventorySize);
 			} else
 				return true;
