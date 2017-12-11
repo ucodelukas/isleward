@@ -2811,25 +2811,6 @@
                  "y":1088
                 }, 
                 {
-                 "height":40,
-                 "id":698,
-                 "name":"sun carp school",
-                 "properties":
-                    {
-                     "resource":"Sun Carp"
-                    },
-                 "propertytypes":
-                    {
-                     "resource":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":568,
-                 "y":1112
-                }, 
-                {
                  "height":16,
                  "id":711,
                  "name":"",
@@ -3306,6 +3287,7 @@
      "spawn":"string"
     },
  "renderorder":"right-down",
+ "tiledversion":"1.0.3",
  "tileheight":8,
  "tilesets":[
         {
@@ -3539,6 +3521,6 @@
         }],
  "tilewidth":8,
  "type":"map",
- "version":"2017.05.26",
+ "version":1,
  "width":160
 }
