@@ -147,6 +147,8 @@ define([
 				if (obj.player)
 					obj.stats.onLogin();
 
+				//obj.stats.rescale(3);
+
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
 			},

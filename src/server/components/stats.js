@@ -5,61 +5,64 @@ define([
 	animations,
 	loginRewards
 ) {
+	var baseStats = {
+		mana: 10,
+		manaMax: 10,
+		vit: 0,
+		hp: 5,
+		hpMax: 5,
+		xpTotal: 0,
+		xp: 0,
+		xpMax: 0,
+		level: 1,
+		str: 0,
+		int: 0,
+		dex: 0,
+		magicFind: 0,
+		regenHp: 0,
+		regenMana: 10,
+		addCritChance: 0,
+		addCritMultiplier: 0,
+		critChance: 5,
+		critMultiplier: 150,
+		armor: 0,
+		dmgPercent: 0,
+
+		attackSpeed: 0,
+		castSpeed: 0,
+
+		elementArcanePercent: 0,
+		elementFrostPercent: 0,
+		elementFirePercent: 0,
+		elementHolyPercent: 0,
+		elementPhysicalPercent: 0,
+		elementPoisonPercent: 0,
+
+		elementArcaneResist: 0,
+		elementFrostResist: 0,
+		elementFireResist: 0,
+		elementHolyResist: 0,
+		elementPhysicalResist: 0,
+		elementPoisonResist: 0,
+
+		elementAllResist: 0,
+
+		sprintChance: 0,
+
+		xpIncrease: 0,
+
+		//fishing stats
+		catchChance: 0,
+		catchSpeed: 0,
+		fishRarity: 0,
+		fishWeight: 0,
+		fishItems: 0
+	};
+
 	return {
 		type: 'stats',
 
-		values: {
-			mana: 10,
-			manaMax: 10,
-			hp: 5,
-			hpMax: 5,
-			xpTotal: 0,
-			xp: 0,
-			xpMax: 0,
-			level: 1,
-			str: 0,
-			int: 0,
-			dex: 0,
-			magicFind: 0,
-			regenHp: 0,
-			regenMana: 10,
-			addCritChance: 0,
-			addCritMultiplier: 0,
-			critChance: 5,
-			critMultiplier: 150,
-			armor: 0,
-			dmgPercent: 0,
-
-			attackSpeed: 0,
-			castSpeed: 0,
-
-			elementArcanePercent: 0,
-			elementFrostPercent: 0,
-			elementFirePercent: 0,
-			elementHolyPercent: 0,
-			elementPhysicalPercent: 0,
-			elementPoisonPercent: 0,
-
-			elementArcaneResist: 0,
-			elementFrostResist: 0,
-			elementFireResist: 0,
-			elementHolyResist: 0,
-			elementPhysicalResist: 0,
-			elementPoisonResist: 0,
-
-			elementAllResist: 0,
-
-			sprintChance: 0,
-
-			xpIncrease: 0,
-
-			//fishing stats
-			catchChance: 0,
-			catchSpeed: 0,
-			fishRarity: 0,
-			fishWeight: 0,
-			fishItems: 0
-		},
+		values: baseStats,
 
 		vitScale: 10,
 
@@ -563,6 +566,27 @@ define([
 				this.obj.instance.mail.getMail(this.obj.name);
 
 			stats.lastLogin = time;
+		},
+
+		rescale: function (level, isMob) {
+			var oldValues = this.values;
+			var newValues = extend(true, {}, baseStats);
+			this.values = newValues;
+
+			newValues.level = level;
+			newValues.hpMax = 10 + (level * 40);
+			if (isMob)
+				newValues.hpMax = 10 + (level * 120);
+			newValues.hp = newValues.hpMax;
+
+			var addStats = this.obj.equipment.rescale(level);
+			for (var p in addStats) {
+				var statName = p;
+				if (statName == 'hpMax')
+					statName = 'vit';
+
+				this.addStat(statName, addStats[p]);
+			}
 		}
 	};
 });

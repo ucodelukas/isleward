@@ -138,6 +138,7 @@ define([
 						noSpell: true,
 						level: level,
 						slot: slot,
+						quality: 4,
 						forceStats: [preferStat]
 					});
 					delete item.spell;
@@ -193,17 +194,6 @@ define([
 				s.element = elementType;
 				s.manaCost = 0;
 
-				/*var damage = combat.getDamage({
-					source: mob,
-					target: mob,
-					damage: (s.damage || s.healing) * (s.dmgMult || 1),
-					cd: s.cdMax,
-					element: s.element,
-					statType: s.statType,
-					statMult: s.statMult,
-					noMitigate: false,
-					noCrit: true
-				});*/
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {

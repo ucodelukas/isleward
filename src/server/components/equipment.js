@@ -1,7 +1,7 @@
 define([
-
+	'items/generators/stats'
 ], function (
-
+	generatorStats
 ) {
 	return {
 		type: 'equipment',
@@ -250,6 +250,31 @@ define([
 					}, [this.obj.serverId]);
 				}
 			}, this);
+		},
+
+		rescale: function (level) {
+			var items = this.obj.inventory.items;
+
+			var stats = {};
+
+			var eq = this.eq;
+			for (var p in eq) {
+				var item = items.find(i => (i.id == eq[p]));
+				if ((!item.slot) || (item.slot == 'tool'))
+					continue;
+
+				var item = items.find(i => (i.id == eq[p]));
+				var nItemStats = generatorStats.rescale(item, level);
+
+				for (var s in nItemStats) {
+					if (!stats[s])
+						stats[s] = 0;
+
+					stats[s] += nItemStats[s];
+				}
+			}
+
+			return stats;
 		}
 	};
 });
