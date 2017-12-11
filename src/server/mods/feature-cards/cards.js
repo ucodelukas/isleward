@@ -144,6 +144,8 @@ define([
 				return itemGenerator.generate({
 					level: 10,
 					noSpell: true,
+					//Always be at least magic
+					bonusMagicFind: 286,
 					perfection: 1,
 					slot: 'finger'
 				});

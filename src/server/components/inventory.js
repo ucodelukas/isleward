@@ -561,20 +561,15 @@ define([
 			//Store the quantity to send to the player
 			var quantity = item.quantity;
 
-			//Material?
 			var exists = false;
-			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack)) {
-				var existItem = this.items.find(i => i.name == item.name);
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
+				var existItem = this.items.find(i => (i.name == item.name));
 				if (existItem) {
 					exists = true;
-					if (existItem.uses)
-						existItem.uses += (item.uses || 1);
-					else {
-						if (!existItem.quantity)
-							existItem.quantity = 1;
+					if (!existItem.quantity)
+						existItem.quantity = 1;
 
-						existItem.quantity += (item.quantity || 1);
-					}
+					existItem.quantity += (item.quantity || 1);
 					item = existItem;
 				}
 			}
