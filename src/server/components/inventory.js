@@ -963,6 +963,9 @@ define([
 								if (factionTier < f.tier)
 									noEquip = true;
 
+								if (!faction)
+									console.log(f);
+
 								return {
 									id: f.id,
 									name: faction.name,

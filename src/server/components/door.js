@@ -106,6 +106,8 @@ define([
 			var thisObj = this.obj;
 			if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
 				return;
+			else if ((thisObj.x == obj.x) && (thisObj.y == obj.y))
+				return;
 
 			var syncO = thisObj.syncer.o;
 
