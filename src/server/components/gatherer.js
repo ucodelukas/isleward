@@ -54,7 +54,9 @@ define([
 			if (gathering.destroyed) {
 				this.gathering = null;
 				this.gatheringTtl = 0;
+				this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+				this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 				return;
 			}
 
