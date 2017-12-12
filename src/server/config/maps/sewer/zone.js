@@ -28,7 +28,7 @@ module.exports = {
 			level: 12,
 
 			rare: {
-				chance: 2,
+				chance: 4,
 				name: 'Steelclaw'
 			}
 		}

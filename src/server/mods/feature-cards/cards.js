@@ -13,9 +13,9 @@ define([
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
-			chance: 0.0025,
+			chance: 0.015,
 			reward: 'Level 15 Legendary Weapon',
-			setSize: 2,
+			setSize: 6,
 			zone: 'sewer'
 		},
 		'The Other Heirloom': {
@@ -31,9 +31,9 @@ define([
 			zone: 'estuary'
 		},
 		'Fangs of Fury': {
-			chance: 0.1,
+			chance: 0.2,
 			reward: `Steelclaw's Bite`,
-			setSize: 10,
+			setSize: 20,
 			mobName: 'steelclaw'
 		}
 	};
