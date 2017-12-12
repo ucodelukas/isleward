@@ -1272,7 +1272,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"msg\":\"Fjogard\"}"
+                     "cpnNotice":"{\"msg\":\"Fjolgard\"}"
                     },
                  "propertytypes":
                     {
@@ -3287,7 +3287,6 @@
      "spawn":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
  "tileheight":8,
  "tilesets":[
         {
@@ -3521,6 +3520,6 @@
         }],
  "tilewidth":8,
  "type":"map",
- "version":1,
+ "version":"2017.05.26",
  "width":160
 }

@@ -57,7 +57,9 @@ define([
 				item.stats = {};
 				var bpt = {
 					slot: item.slot,
-					type: item.type
+					type: item.type,
+					sprite: item.sprite,
+					spritesheet: item.spritesheet
 				};
 				generatorSlots.generate(item, bpt);
 				generatorTypes.generate(item, bpt);
