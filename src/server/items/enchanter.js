@@ -64,6 +64,8 @@ define([
 				generatorStats.generate(item, bpt, result);
 			} else if (msg.action == 'relevel') {
 				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
+				if (item.level == 1)
+					offset = Math.abs(offset);
 				item.level = Math.max(1, item.level + offset);
 			} else if (msg.action == 'reslot') {
 				var newItem = generator.generate({
