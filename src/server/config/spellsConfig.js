@@ -156,7 +156,10 @@ define([
 			random: {
 				damage: [9.3, 18.6],
 				i_delay: [4, 8]
-			}
+			},
+			negativeStats: [
+				'i_delay'
+			]
 		}
 		/*,
 				'chain lightning': {

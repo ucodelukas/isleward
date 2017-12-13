@@ -51,7 +51,9 @@ define([
 			var propertyPerfection = [];
 
 			var randomProperties = spell.random || {};
+			var negativeStats = spell.negativeStats || [];
 			for (var r in randomProperties) {
+				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
 				var roll = random.norm(0, 1);
 				if (spellQuality == 'basic')
@@ -73,8 +75,10 @@ define([
 
 				if (roll <= 0.5)
 					propertyPerfection.push(0);
+				else if (negativeStat)
+					propertyPerfection.push(1 - roll);
 				else
-					propertyPerfection.push(roll / 1);
+					propertyPerfection.push(roll)
 			}
 
 			if (blueprint.spellProperties) {
@@ -90,6 +94,7 @@ define([
 			}
 
 			var perfection = ~~(propertyPerfection.reduce((p, n) => p += n, 0) / propertyPerfection.length * 4);
+			console.log(item.spell.name, perfection);
 			if (!item.slot)
 				item.quality = perfection;
 			else
