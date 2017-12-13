@@ -18,11 +18,11 @@ define([
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
 
-		simplify: function () {
+		simplify: function (self) {
 			return {
 				type: 'social',
 				party: this.party,
-				customChannels: this.customChannels
+				customChannels: self ? this.customChannels : null
 			};
 		},
 
