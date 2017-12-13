@@ -93,8 +93,8 @@ define([
 				item.spell.properties.range = item.range;
 			}
 
-			var perfection = ~~(propertyPerfection.reduce((p, n) => p += n, 0) / propertyPerfection.length * 4);
-			console.log(item.spell.name, perfection);
+			var per = propertyPerfection.reduce((p, n) => p + n, 0);
+			var perfection = ~~((per / propertyPerfection.length) * 4);
 			if (!item.slot)
 				item.quality = perfection;
 			else
