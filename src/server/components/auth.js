@@ -158,6 +158,7 @@ define([
 			}
 
 			var character = JSON.parse(result || '{}');
+
 			//Hack for old characters
 			if (!character.skinId) {
 				character.skinId = character.class + ' 1';
