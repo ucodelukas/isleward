@@ -134,12 +134,13 @@ define([
 					return hasButcher;
 				else
 					return false;
-			}
-			else if ((target.follower) && (target.follower.master.player) && (obj.player))
+			} else if ((target.follower) && (target.follower.master.player) && (obj.player))
 				return false;
 			else if (obj.player)
 				return true;
 			else if (target.aggro.faction != obj.aggro.faction)
+				return true;
+			else if (!!target.player == !!obj.player)
 				return true;
 		},
 

@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -24,7 +24,7 @@ define([
 
 		radius: 1,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 
 			var physics = obj.instance.physics;
@@ -58,8 +58,7 @@ define([
 					if ((attackTemplate) && (~~attackTemplate[count] > 0)) {
 						this.queueCallback(this.spawnWarning.bind(this, i, j), ~~attackTemplate[count] * 350);
 						continue;
-					}
-					else
+					} else
 						this.spawnWarning(i, j);
 				}
 			}
@@ -69,7 +68,7 @@ define([
 			return true;
 		},
 
-		spawnWarning: function(x, y) {
+		spawnWarning: function (x, y) {
 			var obj = this.obj;
 			var syncer = obj.instance.syncer;
 
@@ -89,7 +88,7 @@ define([
 			this.queueCallback(this.onWarningOver.bind(this, x, y), this.delay * 350);
 		},
 
-		onWarningOver: function(x, y) {
+		onWarningOver: function (x, y) {
 			var obj = this.obj;
 
 			var physics = obj.instance.physics;
@@ -120,7 +119,7 @@ define([
 					continue;
 				} else if (!m.aggro)
 					continue;
-				else if ((!m.aggro.canAttack(this.obj)) && (!!this.obj.player == !!m.player))
+				else if (!m.aggro.canAttack(this.obj))
 					continue;
 
 				var damage = this.getDamage(m);
