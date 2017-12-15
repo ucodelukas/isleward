@@ -317,7 +317,7 @@ define([
 				value = split[1];
 			}
 
-			if (!stat) {
+			if ((!stat) || (!statOptions[stat])) {
 				var options = Object.keys(statOptions).filter(s => !statOptions[s].ignore);
 				stat = options[~~(Math.random() * options.length)];
 				statBlueprint = statOptions[stat];
