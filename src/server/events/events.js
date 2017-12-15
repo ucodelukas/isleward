@@ -288,8 +288,13 @@ define([
 				var event = configs[i].event;
 				if (!event)
 					continue;
-				else if (event.participators.some(p => (p == obj)))
+
+				var exists = event.participators.find(p => (p.name == obj.name));
+				if (exists) {
+					event.participators.spliceWhere(p => (p == exists));
+					event.participators.push(obj);
 					continue;
+				}
 
 				var distance = event.config.distance;
 				if (distance == -1) {
