@@ -59,7 +59,7 @@ define([
 					i--;
 					iLen--;
 					continue;
-				} else if ((item.slot) && (item.spell))
+				} else if ((item.slot != 'twoHanded') && (item.spell) && (!item.ability))
 					delete item.spell;
 
 				while (item.name.indexOf(`''`) > -1) {
