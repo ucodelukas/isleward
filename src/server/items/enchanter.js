@@ -78,6 +78,8 @@ define([
 				});
 
 				delete item.stats;
+				delete item.spell;
+
 				extend(true, item, newItem);
 			} else {
 				var newPower = (item.power || 0) + 1;
