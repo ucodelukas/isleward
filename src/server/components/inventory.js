@@ -59,7 +59,8 @@ define([
 					i--;
 					iLen--;
 					continue;
-				}
+				} else if ((item.slot) && (item.spell))
+					delete item.spell;
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
