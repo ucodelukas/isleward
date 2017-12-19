@@ -44,8 +44,13 @@ define([
 			for (var i = 0; i < cLen; i++) {
 				var c = contents[i];
 
-				var damage = this.getDamage(c);
-				this.applyDamage(c, damage);
+				if (!c) {
+					console.log('NO SMOKEBOMB TARGET');
+					console.log(this.obj.name, this.obj.x, this.obj.y);
+				} else {
+					var damage = this.getDamage(c);
+					this.applyDamage(c, damage);
+				}
 			}
 		}
 	};
