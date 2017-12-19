@@ -23,11 +23,14 @@ define([
 		},
 
 		onGetPortrait: function(portrait) {
-			var x = (['warrior', 'cleric', 'wizard', 'thief'].indexOf(portrait) * -64);
+			var spritesheet = portrait.spritesheet || '../../../images/portraitIcons.png';
+
+			var x = portrait.x * -64;
+			var y = portrait.y * -64;
 
 			this.find('.portrait')
 				.css({
-					background: 'url("../../../images/portraitIcons.png") ' + x + 'px 0px',
+					background: 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px',
 					visibility: 'visible'
 				});
 		},

@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -36,7 +36,11 @@ define([
 			'102': 0.9,
 			'152': 0.9,
 			'153': 1,
-			'163': 0.9
+			'163': 0.9,
+			//snow
+			'176': 0.55,
+			'184': 0.55,
+			'185': 0.55
 		},
 		objects: {
 			default: 0.9,
@@ -73,32 +77,44 @@ define([
 		},
 
 		tilesNoFlip: [
-
+			171, 179 //Stairs
 		],
 		wallsNoFlip: [
-			156, 158, 162, 163, 167, 168,			//Ledges
-			189										//Wall Sign
+			156, 158, 162, 163, 167, 168, //Ledges
+			189, //Wall Sign
+			195, 196, 197, 198, 199, 200, 201, 202, 203, //Stone Ledges
+			204, 205, 206, 207, 214, 215, 220, 221, 222, 223 //Ship Edges
 		],
 		objectsNoFlip: [
-			96, 101, 								//Clotheslines
-			103, 110, 118, 126,						//Table Sides
-			120, 122								//Wall-mounted plants
+			96, 101, //Clotheslines
+			103, 110, 118, 126, //Table Sides
+			120, 122, 140, //Wall-mounted plants
+			140, 143, //Ship oars
+			141, 142 //Ship Cannons
 		],
 
-		map: function(tile) {
+		getSheetNum: function (tile) {
+			if (tile < 192)
+				return 0;
+			else if (tile < 448)
+				return 1;
+			else
+				return 2;
+		},
+
+		map: function (tile) {
 			var sheetNum;
 
 			if (tile < 192)
 				sheetNum = 0;
-			else if (tile < 384) {
+			else if (tile < 448) {
 				tile -= 192;
 				sheetNum = 1;
-			}
-			else {
-				tile -= 384;
+			} else {
+				tile -= 448;
 				sheetNum = 2;
 			}
-			
+
 			var tilesheet = [this.tiles, this.walls, this.objects][sheetNum];
 
 			var alpha = (tilesheet[tile] || tilesheet.default);
@@ -110,20 +126,19 @@ define([
 			return alpha;
 		},
 
-		canFlip: function(tile) {
+		canFlip: function (tile) {
 			var sheetNum;
 
 			if (tile < 192)
 				sheetNum = 0;
-			else if (tile < 384) {
+			else if (tile < 448) {
 				tile -= 192;
 				sheetNum = 1;
-			}
-			else {
-				tile -= 384;
+			} else {
+				tile -= 448;
 				sheetNum = 2;
 			}
-			
+
 			var tilesheet = [this.tilesNoFlip, this.wallsNoFlip, this.objectsNoFlip][sheetNum];
 			return (tilesheet.indexOf(tile) == -1);
 		}

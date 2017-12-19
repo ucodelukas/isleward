@@ -4,7 +4,7 @@ define([
 	'./../config/spells',
 	'./../config/spellsConfig',
 	'misc/events'
-], function(
+], function (
 	spellTemplate,
 	animations,
 	playerSpells,
@@ -25,12 +25,12 @@ define([
 
 		callbacks: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.objects = this.obj.instance.objects;
 			this.physics = this.obj.instance.physics;
 
 			var spells = blueprint.spells || [];
-			spells.forEach(function(s) {
+			spells.forEach(function (s) {
 				this.addSpell(s);
 			}, this);
 
@@ -39,24 +39,24 @@ define([
 			delete blueprint.spells;
 		},
 
-		transfer: function() {
+		transfer: function () {
 			var spells = this.spells;
 			this.spells = [];
 
-			spells.forEach(function(s) {
+			spells.forEach(function (s) {
 				this.addSpell(s);
 			}, this);
 		},
 
-		die: function() {
+		die: function () {
 			this.auto = [];
 
-			this.spells.forEach(function(s) {
+			this.spells.forEach(function (s) {
 				s.die();
 			});
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return null;
 
@@ -75,7 +75,7 @@ define([
 			return s;
 		},
 
-		addSpell: function(options, spellId) {
+		addSpell: function (options, spellId) {
 			if (!options.type) {
 				options = {
 					type: options
@@ -101,21 +101,22 @@ define([
 
 			if (builtSpell.animation) {
 				var animation = null;
-				var sheetName = this.obj.sheetName;
+				var sheetName = this.obj.sheetName || '../../../images/characters.png';
 				var animationName = builtSpell.animation;
 
-				if (sheetName == 'characters')
-					animation = animations.classes[this.obj.class];
-				else if (sheetName == 'mobs')
+				if (sheetName == 'mobs')
 					animation = animations.mobs;
 				else if (sheetName == 'bosses')
 					animation = animations.bosses;
+				else if (sheetName.indexOf('/') > -1)
+					animation = animations.mobs[sheetName];
+				else
+					animation = animations.classes[this.obj.class];
 
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
 					builtSpell.animation.name = animationName;
-				}
-				else
+				} else
 					builtSpell.animation = null;
 			}
 
@@ -124,28 +125,26 @@ define([
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 
-			var id = [0, 1, 2].find(function(s) {
-				return (!this.spells.some(f => (f.id == s)));
-			}, this);
-			builtSpell.id = (spellId == null) ? id : spellId;
-
-			if (spellId == null)
-				this.spells.push(builtSpell);
-			else
-				this.spells.splice(spellId, 0, builtSpell);
+			builtSpell.id = (options.id == null) ? spellId : options.id;
+			this.spells.push(builtSpell);
+			this.spells.sort(function (a, b) {
+				return (a.id - b.id);
+			});
 
 			builtSpell.calcDps(null, true);
+			if (builtSpell.init)
+				builtSpell.init();
 
-			if (this.obj.player) 
+			if (this.obj.player)
 				this.obj.syncer.setArray(true, 'spellbook', 'getSpells', builtSpell.simplify());
 
 			return builtSpell.id;
 		},
 
-		addSpellFromRune: function(runeSpell, spellId) {
+		addSpellFromRune: function (runeSpell, spellId) {
 			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig[name];
+			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
+			var playerSpellConfig = playerSpellsConfig.spells[name];
 
 			if (!playerSpell)
 				return -1;
@@ -154,7 +153,7 @@ define([
 				runeSpell.rolls = {};
 
 			runeSpell.values = {};
-			
+
 			var builtSpell = extend(true, {
 				values: {}
 			}, playerSpell, playerSpellConfig);
@@ -170,8 +169,7 @@ define([
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
-				}
-				else
+				} else
 					val = ~~(val * 10) / 10;
 
 				builtSpell[r] = val;
@@ -194,19 +192,22 @@ define([
 			return this.addSpell(builtSpell, spellId);
 		},
 
-		calcDps: function() {
+		calcDps: function () {
 			this.spells.forEach(s => s.calcDps());
 		},
 
-		removeSpellById: function(id) {
-			this.spells.spliceWhere(s => (s.id == id));
+		removeSpellById: function (id) {
+			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
-			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+			if (exists) {
+				exists.unlearn && exists.unlearn();
 
-			this.auto.spliceWhere(a => a.spell == id);
+				this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
+				this.auto.spliceWhere(a => a.spell == id);
+			}
 		},
 
-		queueAuto: function(action) {
+		queueAuto: function (action) {
 			if (!action.auto)
 				return true;
 
@@ -218,23 +219,22 @@ define([
 				});
 
 				return true;
-			}
-			else
+			} else
 				exists.target = action.target;
 		},
-		getRandomSpell: function(target) {
+		getRandomSpell: function (target) {
 			var valid = [];
-			this.spells.forEach(function(s, i) {
+			this.spells.forEach(function (s, i) {
 				if (s.canCast(target))
 					valid.push(i);
 			});
-			
+
 			if (valid.length > 0)
 				return valid[~~(Math.random() * valid.length)]
-			else 
+			else
 				return null;
 		},
-		cast: function(action, isAuto) {
+		cast: function (action, isAuto) {
 			if (action.spell == null) {
 				this.auto = [];
 				return true;
@@ -251,17 +251,20 @@ define([
 						x: this.obj.x,
 						y: this.obj.y
 					};
-				}
-				else if (spell.spellType == 'buff') {
+				} else if (spell.spellType == 'buff') {
 					action.target = this.obj;
 				}
 			}
 
 			if (!spell.targetGround) {
-				if (action.target == null) {
-					console.log('NO TARGET');
-					console.log(action);
-					return false;
+				if ((action.target == null) || (!action.target.player)) {
+					if (spell.autoTargetFollower) {
+						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
+						if (action.target)
+							action.target = action.target.minions[0];
+						else
+							return false;
+					}
 				}
 
 				//Did we pass in the target id?
@@ -271,9 +274,13 @@ define([
 						return false;
 				}
 
-				if ((action.target.aggro) && (!this.obj.aggro.willAttack(action.target)) && (spell.spellType != 'buff')) {
-					if ((this.obj.player) && (action.target.player))
+				if (spell.spellType == 'buff') {
+					if (this.obj.aggro.faction != action.target.aggro.faction)
 						return;
+				} else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
+					if (this.obj.player)
+						this.sendAnnouncement("You don't feel like attacking that target");
+					return;
 				}
 			}
 
@@ -284,8 +291,10 @@ define([
 
 			var success = true;
 			if (spell.cd > 0) {
-				if ((!isAuto) && (!spell.isAuto))
-					this.sendAnnouncement('Spell is on cooldown');
+				if ((!isAuto) && (!spell.isAuto)) {
+					var type = (spell.auto) ? 'Weapon' : 'Spell';
+					this.sendAnnouncement(`${type} is on cooldown`);
+				}
 				success = false;
 			} else if (spell.manaCost > this.obj.stats.values.mana) {
 				if (!isAuto)
@@ -339,8 +348,19 @@ define([
 			success = spell.cast(action);
 
 			if (success) {
-				this.obj.stats.values.mana -= spell.manaCost;
-				spell.cd = spell.cdMax;
+				var stats = this.obj.stats.values;
+				stats.mana -= spell.manaCost;
+				var cd = {
+					cd: spell.cdMax
+				};
+
+				var isAttack = (spell.type == 'melee');
+				if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
+					cd.cd = 1;
+
+				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
+				spell.cd = cd.cd;
 
 				if (this.obj.player) {
 					var syncer = this.obj.syncer;
@@ -356,14 +376,14 @@ define([
 			return success;
 		},
 
-		getClosestRange: function(spellNum) {
+		getClosestRange: function (spellNum) {
 			if (spellNum)
 				return this.spells[spellNum].range;
 			else
 				return this.closestRange;
 		},
 
-		getFurthestRange: function(spellNum) {
+		getFurthestRange: function (spellNum) {
 			if (spellNum)
 				return this.spells[spellNum].range;
 			else {
@@ -375,14 +395,14 @@ define([
 					if ((spell.range > furthest) && (spell.canCast()))
 						furthest = spell.range;
 				}
-				if (furthest == 0) 
+				if (furthest == 0)
 					furthest = this.furthestRange;
-				
+
 				return furthest;
 			}
 		},
 
-		getCooldowns: function() {
+		getCooldowns: function () {
 			var cds = [];
 			this.spells.forEach(
 				s => cds.push({
@@ -393,8 +413,10 @@ define([
 
 			return cds;
 		},
-		update: function() {
-			this.spells.forEach(function(s, i) {
+		update: function () {
+			var didCast = false;
+
+			this.spells.forEach(function (s, i) {
 				s.updateBase();
 				if (s.update)
 					s.update();
@@ -413,7 +435,7 @@ define([
 
 				var spell = this.spells[a.spell];
 				if (this.cast(a, true))
-					return true;
+					didCast = true;
 			}
 
 			var callbacks = this.callbacks;
@@ -440,9 +462,11 @@ define([
 					cLen--;
 				}
 			}
+
+			return didCast;
 		},
 
-		registerCallback: function(sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {
+		registerCallback: function (sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {
 			var obj = {
 				sourceId: sourceId,
 				targetId: targetId,
@@ -456,7 +480,7 @@ define([
 
 			return obj;
 		},
-		unregisterCallback: function(sourceId, target) {
+		unregisterCallback: function (sourceId, target) {
 			var callbacks = this.callbacks;
 			var cLen = callbacks.length;
 			for (var i = 0; i < cLen; i++) {
@@ -479,7 +503,7 @@ define([
 			}
 		},
 
-		sendAnnouncement: function(msg, global) {
+		sendAnnouncement: function (msg, global) {
 			process.send({
 				method: 'events',
 				data: {
@@ -493,8 +517,28 @@ define([
 			});
 		},
 
+		fireEvent: function (event, args) {
+			var spells = this.spells;
+			var sLen = spells.length;
+			for (var i = 0; i < sLen; i++) {
+				var s = spells[i];
+
+				var events = s.events;
+				if (events) {
+					var callback = events[event];
+					if (!callback)
+						continue;
+
+					callback.apply(s, args);
+				}
+
+				if (s.castEvent == event)
+					s.cast();
+			}
+		},
+
 		events: {
-			beforeRezone: function() {
+			beforeRezone: function () {
 				var callbacks = this.callbacks;
 				var cLen = callbacks.length;
 				for (var i = 0; i < cLen; i++) {

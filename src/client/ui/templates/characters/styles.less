@@ -65,10 +65,13 @@
 			padding: 16px 0 0 120px;
 
 			.sprite {
-				width: 32px;
-				height: 32px;
-				zoom: 4;
+				width: 8px;
+				height: 8px;
+				transform: scale(16);
+				transform-origin: 0% 0%;
 				image-rendering: pixelated;
+				image-rendering: optimizeSpeed;
+				image-rendering: crisp-edges;
 				display: none;
 			}
 		}
@@ -86,14 +89,14 @@
 			}
 
 			.name {
-				width: 60%;
+				width: 47%;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
 
 			.class {
-				width: 40%;
+				width: 53%;
 				text-align: right;
 				color: darken(@white, 25%);
 			}

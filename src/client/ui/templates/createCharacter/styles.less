@@ -66,10 +66,13 @@
 			margin-bottom: @boxPadding;
 
 			.sprite {
-				width: 32px;
-				height: 32px;
-				zoom: 4;
+				width: 8px;
+				height: 8px;
+				transform: scale(16);
+				transform-origin: 0% 0%;
+				image-rendering: optimizeSpeed;
 				image-rendering: pixelated;
+				image-rendering: crisp-edges;
 				background: url('../../../images/charas.png') -64px 0px;
 			}
 		}

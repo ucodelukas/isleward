@@ -1,12 +1,12 @@
 define([
 	'js/rendering/effects',
-	'js/renderer'
-], function(
+	'js/rendering/renderer'
+], function (
 	effects,
 	renderer
 ) {
 	var scale = 40;
-	
+
 	return {
 		type: 'attackAnimation',
 
@@ -29,8 +29,11 @@ define([
 
 		sprite: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			effects.register(this);
+
+			if ((this.hideSprite) && (this.obj.sprite))
+				this.obj.sprite.visible = false;
 
 			this.flipped = (Math.random() < 0.5);
 
@@ -39,17 +42,18 @@ define([
 			var cell = (this.row * 8) + this.col + this.frame;
 
 			this.sprite = renderer.buildObject({
-				sheetName: this.spriteSheet,
+				sheetName: this.spritesheet || this.spriteSheet,
 				cell: cell,
-				x: this.obj.x,
+				x: this.obj.x + (this.flipped ? 1 : 0),
 				y: this.obj.y,
 				offsetX: this.obj.offsetX,
 				offsetY: this.obj.offsetY,
 				flipX: this.flipped
 			});
+			this.sprite.alpha = 1;
 		},
 
-		renderManual: function() {
+		renderManual: function () {
 			if (this.frameDelayCd > 0)
 				this.frameDelayCd--;
 			else {
@@ -60,38 +64,43 @@ define([
 					if (this.loopCounter == this.loop) {
 						if (this.destroyObject)
 							this.obj.destroyed = true;
-						else
+						else {
+							if (this.hideSprite)
+								this.obj.sprite.visible = true;
+
 							this.destroyed = true;
+						}
 						return;
-					}
-					else
+					} else
 						this.frame = 0;
 				}
 			}
 
-			this.sprite.x = this.obj.x * scale;
-			this.sprite.y = this.obj.y * scale;
+			if (((!this.hideSprite) || (this.loop > 0)) && (this.sprite)) {
+				this.sprite.x = this.obj.x * scale;
+				this.sprite.y = this.obj.y * scale;
+			}
 
 			var cell = (this.row * 8) + this.col + this.frame;
 
 			renderer.setSprite({
-				sheetName: this.spriteSheet,
+				sheetName: this.spritesheet || this.spriteSheet,
 				cell: cell,
 				flipX: this.flipped,
 				sprite: this.sprite
 			});
 
-			if (this.flipped)
-				this.sprite.x += scale;
+			if ((!this.hideSprite) || (this.loop > 0)) {
+				if (this.flipped)
+					this.sprite.x += scale;
+			}
 		},
 
-		destroyManual: function() {
+		destroyManual: function () {
 			renderer.destroyObject({
 				layerName: this.spriteSheet,
 				sprite: this.sprite
 			});
-
-			effects.unregister(this);
-		}	
+		}
 	};
 });

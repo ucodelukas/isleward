@@ -4,10 +4,12 @@ var components = [
 	'player',
 	'pather',
 	'attackAnimation',
+	'lightningEffect',
 	'moveAnimation',
 	'bumpAnimation',
 	'animation',
 	'light',
+	'lightPatch',
 	'projectile',
 	'particles',
 	'explosion',
@@ -18,6 +20,7 @@ var components = [
 	'effects',
 	'aggro',
 	'quests',
+	'events',
 	'resourceNode',
 	'gatherer',
 	'stash',
@@ -27,7 +30,8 @@ var components = [
 	'trade',
 	'prophecies',
 	'reputation',
-	'serverActions'
+	'serverActions',
+	'social'
 ].map(function(c) {
 	return 'js/components/' + c;
 });
@@ -41,6 +45,9 @@ define(components, function() {
 
 	return {
 		getTemplate: function(type) {
+			if (type == 'lightpatch')
+				type = 'lightPatch';
+			
 			return templates[type];
 		}
 	};

@@ -9,15 +9,21 @@ define([
 		states: {},
 		sourceStates: {},
 
+		trigger: null,
+
 		init: function(blueprint) {
 			this.states = blueprint.config;
 		},
 
+		destroy: function() {
+			if (this.trigger)
+				this.trigger.destroyed = true;
+		},
+
 		talk: function(msg) {
 			var target = msg.target;
-			var targetName = (msg.targetName || '').toLowerCase();
 
-			if ((target == null) && (!targetName))
+			if ((target == null) && (!msg.targetName))
 				return false;
 
 			if ((target != null) && (target.id == null)) {
@@ -25,8 +31,8 @@ define([
 				if (!target)
 					return false;
 			}
-			else if (targetName != null) {
-				target = this.obj.instance.objects.objects.find(o => o.name.toLowerCase() == targetName);
+			else if (msg.targetName != null) {
+				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
 				if (!target)
 					return false;	
 			}
@@ -60,7 +66,7 @@ define([
 				if (!config)
 					return false;
 
-				var goto = config.options[state].goto;
+				var goto = (config.options[state] || {}).goto;
 				if (goto instanceof Array) {
 					var gotos = [];
 					goto.forEach(function(g) {
@@ -79,24 +85,44 @@ define([
 			this.sourceStates[sourceObj.id] = state;
 
 			if (!this.states) {
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log('NO DIALOGUE STATES?!?!??!');
-				console.log(this.obj);				
+				console.log(sourceObj.name, this.obj.name, state);			
 				return null;
 			}
 			var stateConfig = this.states[state];
 			if (!stateConfig)
 				return null;
 
+			var useMsg = stateConfig.msg;
+
 			if (stateConfig.cpn) {
 				var cpn = sourceObj[stateConfig.cpn];
-				cpn[stateConfig.method].apply(cpn, stateConfig.args);
-				return;
+				var newArgs = extend(true, [], stateConfig.args);
+				newArgs.push(this.obj);
+				var result = cpn[stateConfig.method].apply(cpn, newArgs);
+
+				if (stateConfig.goto) {
+					if (result)
+						return this.getState(sourceObj, stateConfig.goto.success);
+					else
+						return this.getState(sourceObj, stateConfig.goto.failure);
+				}
+				else {
+					if (result) {
+						useMsg = extend(true, [], useMsg);
+						useMsg[0].msg = result;
+					} else
+						return null;
+				}
+			}
+			else if (stateConfig.method) {
+				var methodResult = stateConfig.method.call(this.obj, sourceObj);
+				if (methodResult) {
+					useMsg = extend(true, [], useMsg);
+					useMsg[0].msg = methodResult;
+				}
+
+				if (!useMsg)
+					return;
 			}
 
 			var result = {
@@ -106,9 +132,9 @@ define([
 				options: []
 			};
 
-			if (stateConfig.msg instanceof Array) {
+			if (useMsg instanceof Array) {
 				var msgs = [];
-				stateConfig.msg.forEach(function(m, i) {
+				useMsg.forEach(function(m, i) {
 					var rolls = (m.chance * 100) || 100;
 					for (var j = 0; j < rolls; j++) {
 						msgs.push({
@@ -121,10 +147,10 @@ define([
 				var pick = msgs[~~(Math.random() * msgs.length)];
 
 				result.msg = pick.msg.msg;
-				result.options = stateConfig.msg[pick.index].options;
+				result.options = useMsg[pick.index].options;
 			}
 			else {
-				result.msg = stateConfig.msg;
+				result.msg = useMsg;
 				result.options = stateConfig.options;
 			}
 
@@ -135,16 +161,25 @@ define([
 				result.options = Object.keys(result.options);
 			}
 
-			result.options = result.options.map(function(o) {
-				var gotoState = this.states[(o + '').split('.')[0]];
-				if (!gotoState.options[o])
-					return null;
+			result.options = result.options
+				.map(function(o) {
+					var gotoState = this.states[(o + '').split('.')[0]];
+					var picked = gotoState.options[o];
 
-				return {
-					id: o,
-					msg: gotoState.options[o].msg
-				};
-			}, this);
+					if (!picked)
+						return null;
+					else if (picked.prereq) {
+						var doesConform = picked.prereq(sourceObj);
+						if (!doesConform)
+							return null;
+					}
+
+					return {
+						id: o,
+						msg: picked.msg
+					};
+				}, this)
+				.filter(o => !!o);
 
 			result.options.push({
 				msg: 'Goodbye',
@@ -158,6 +193,26 @@ define([
 			return {
 				type: 'dialogue'
 			};
+		},
+
+		//These don't belong here, but I can't figure out where to put them right now
+		//They are actions that can be performed while chatting with someone
+		teleport: function(msg) {
+			this.obj.syncer.set(true, 'dialogue', 'state', null);	
+
+			var portal = extend(true, {}, require('./components/portal'), msg);
+			portal.collisionEnter(this.obj);
+		},
+
+		getItem: function(msg, source) {
+			var inventory = this.obj.inventory;
+			var exists = inventory.items.find(i => (i.name == msg.item.name));
+			if (!exists) {
+				inventory.getItem(msg.item);
+				return msg.successMsg || false;
+			}
+			else
+				return msg.existsMsg || false;
 		}
 	};
 });

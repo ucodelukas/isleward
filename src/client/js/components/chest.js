@@ -4,18 +4,28 @@ define([
 
 ) {
 	var colors = [
-		'f2f5f5',
+		'929398',
 		'3fa7dd',
+		'faac45',
 		'a24eff',
-		'ff6942'
+		'ffeb38'
 	];
 
 	var chances = [
+		0.0075,
 		0.02,
-		0.05,
-		0.1,
-		0.17
+		0.04,
+		0.08,
+		0.095
 	];
+
+	var indices = {
+		'50': 0,
+		'51': 1,
+		'128': 2,
+		'52': 3,
+		'53': 4
+	};
 
 	return {
 		type: 'chest',
@@ -35,23 +45,32 @@ define([
 				}
 			}
 
-			var color = colors[this.obj.cell - 50];
+			var index = indices[this.obj.cell];
+
+			var color = colors[index];
 
 			this.obj.addComponent('particles', {
-				chance: chances[this.obj.cell - 50],
+				chance: chances[index],
 				blueprint: {
 					color: {
-						start: colors[this.obj.cell - 50]
+						start: colors[index]
 					},
 					alpha: {
 						start: 0.75,
 						end: 0.2
 					},
 					lifetime: {
-						start: 1,
-						end: 4
+						min: 1,
+						max: 4
 					},
-					chance: chances[this.obj.cell - 50]
+					chance: chances[index],
+					spawnType: 'rect',
+					spawnRect: {
+						x: -4,
+						y: -4,
+						w: 8,
+						h: 8
+					}
 				}
 			});
 		},

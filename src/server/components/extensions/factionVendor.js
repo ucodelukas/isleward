@@ -1,22 +1,30 @@
 define([
 	'items/generator',
-	'config/skins'
-], function(
+	'config/skins',
+	'config/factions',
+	'items/itemEffects'
+], function (
 	generator,
-	skins
+	skins,
+	factions,
+	itemEffects
 ) {
 	return {
-		items: {},
+		baseItems: [],
+
 		cdMax: 10,
 
 		blueprint: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
+			this.baseItems = this.items;
+			this.items = {};
+
 			this.faction = blueprint.faction;
 			this.blueprint = blueprint;
 		},
 
-		getItems: function(requestedBy) {
+		getItems: function (requestedBy) {
 			var name = requestedBy.name;
 			var requestLevel = requestedBy.stats.values.level;
 
@@ -30,13 +38,13 @@ define([
 
 				this.items[name] = list;
 				this.regenList(list);
-			} else if ((list.level != requestLevel) || (Math.random() < 2))
+			} else if (list.level != requestLevel)
 				this.regenList(list);
 
 			var reputation = requestedBy.reputation;
 
 			var result = list.items
-				.map(function(i) {
+				.map(function (i) {
 					var item = extend(true, {}, i);
 
 					if (item.effects) {
@@ -47,15 +55,26 @@ define([
 						item.name = item.type;
 
 						item.effects = item.effects
-							.map(e => ({
-								factionId: e.factionId,
-								text: e.text,
-								properties: e.properties
-							}));
+							.map(function (e) {
+								if (e.factionId) {
+									return {
+										factionId: e.factionId,
+										text: e.text,
+										properties: e.properties
+									};
+								} else {
+									var effectUrl = itemEffects.get(e.type);
+									var effectModule = require(effectUrl);
+
+									return {
+										text: effectModule.events.onGetText(item)
+									};
+								}
+							});
 					}
 
 					if (item.factions) {
-						item.factions = item.factions.map(function(f) {
+						item.factions = item.factions.map(function (f) {
 							var faction = reputation.getBlueprint(f.id);
 							var factionTier = reputation.getTier(f.id);
 
@@ -78,13 +97,13 @@ define([
 			return result;
 		},
 
-		regenList: function(list) {
+		regenList: function (list) {
 			var blueprint = this.blueprint;
 
 			list.items = null;
 			list.items = [];
 
-			var faction = require('./config/factions/' + blueprint.faction.id);
+			var faction = factions.getFaction(blueprint.faction.id);
 			var statGenerator = faction.uniqueStat;
 
 			var itemCount = blueprint.items.min + ~~(Math.random() * (blueprint.items.max - blueprint.items.min));
@@ -103,7 +122,7 @@ define([
 				item.worth = Math.pow(item.level, 1.5) + (Math.pow((randomQuality + 1), 2) * 10)
 
 				var id = 0;
-				list.items.forEach(function(checkItem) {
+				list.items.forEach(function (checkItem) {
 					if (checkItem.id >= id)
 						id = checkItem.id + 1;
 				});
@@ -118,6 +137,12 @@ define([
 				item.factions[0].tier = blueprint.faction.tier;
 
 				list.items.push(item);
+			}
+
+			var baseItems = this.baseItems;
+			var bLen = baseItems.length;
+			for (var i = 0; i < bLen; i++) {
+				list.items.push(baseItems[i]);
 			}
 
 			var extra = blueprint.items.extra;
@@ -137,18 +162,19 @@ define([
 				}
 
 				list.items.push(item);
+
 			}
 		},
 
-		canBuy: function(itemId, requestedBy, action) {
+		canBuy: function (itemId, requestedBy, action) {
 			var item = null;
 			if (action == 'buy')
 				item = this.findItem(itemId, requestedBy.name);
 			else if (action == 'buyback')
 				item = this.findBuyback(itemId, requestedBy.name);
-			
+
 			var result = true;
-			if (item.faction)
+			if (item.factions)
 				result = requestedBy.reputation.canEquipItem(item);
 
 			if (!result) {
@@ -165,7 +191,7 @@ define([
 			return result;
 		},
 
-		findItem: function(itemId, sourceName) {
+		findItem: function (itemId, sourceName) {
 			var list = this.items[sourceName];
 			if (!list)
 				return null;
@@ -173,7 +199,7 @@ define([
 			return list.items.find(i => i.id == itemId);
 		},
 
-		removeItem: function(itemId, sourceName) {
+		removeItem: function (itemId, sourceName) {
 			var list = this.items[sourceName];
 			if (!sourceName)
 				return null;

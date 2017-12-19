@@ -5,17 +5,15 @@ define([
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
 	'html!ui/templates/inventory/templateTooltip',
-	'js/input',
-	'js/rendering/spriteShader'
-], function(
+	'js/input'
+], function (
 	events,
 	client,
 	template,
 	styles,
 	tplItem,
 	tplTooltip,
-	input,
-	spriteShader
+	input
 ) {
 	var qualityColors = [{
 		r: 252,
@@ -47,6 +45,7 @@ define([
 		items: [],
 
 		shiftDown: false,
+		ctrlDown: false,
 
 		dragItem: null,
 		dragEl: null,
@@ -55,7 +54,7 @@ define([
 		modal: true,
 		oldSpellsZIndex: 0,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 			this.onEvent('onDestroyItems', this.onDestroyItems.bind(this));
 			this.onEvent('onShowInventory', this.toggle.bind(this));
@@ -68,12 +67,12 @@ define([
 				.on('mouseleave', this.onMouseDown.bind(this, null, null, false));
 		},
 
-		build: function() {
+		build: function () {
 			var container = this.el.find('.grid')
 				.empty();
 
 			var items = this.items
-				.filter(function(item) {
+				.filter(function (item) {
 					return !item.eq;
 				});
 
@@ -82,22 +81,9 @@ define([
 			var rendered = [];
 
 			for (var i = 0; i < iLen; i++) {
-				var item = items.find(function(item) {
+				var item = items.find(function (item) {
 					return ((item.pos != null) && (item.pos == i));
 				});
-				if (!item) {
-					item = items.find(function(item) {
-						if ((item.pos != null) && (i < item.pos) && (item.pos < iLen))
-							return false;
-
-						return (!rendered.some(function(r) {
-							return (r == item);
-						}));
-					});
-					if (item)
-						rendered.push(item);
-				} else
-					rendered.push(item);
 
 				if (!item) {
 					var itemEl = $(tplItem)
@@ -111,6 +97,8 @@ define([
 						.remove();
 
 					continue;
+				} else {
+					rendered.push(item);
 				}
 
 				var imgX = -item.sprite[0] * 64;
@@ -119,26 +107,30 @@ define([
 				var itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = item.spritesheet || 'items';
-				if (item.material)
-					spritesheet = 'materials';
-				else if (item.quest)
-					spritesheet = 'questItems';
+				var spritesheet = item.spritesheet || '../../../images/items.png';
+				if (!item.spritesheet) {
+					if (item.material)
+						spritesheet = '../../../images/materials.png';
+					else if (item.quest)
+						spritesheet = '../../../images/questItems.png';
+				}
 
 				itemEl
 					.data('item', item)
-					//.on('click', this.onClick.bind(this, itemEl, item))
+					.on('click', this.onClick.bind(this, item))
 					.on('mousedown', this.onMouseDown.bind(this, itemEl, item, true))
 					.on('mouseup', this.onMouseDown.bind(this, null, null, false))
 					.on('mousemove', this.onHover.bind(this, itemEl, item))
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(../../../images/' + spritesheet + '.png) ' + imgX + 'px ' + imgY + 'px')
+					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
 
-				if (item.quantity)
+				if (item.quantity > 1)
 					itemEl.find('.quantity').html(item.quantity);
 				else if (item.eq)
+					itemEl.find('.quantity').html('EQ');
+				else if (item.active)
 					itemEl.find('.quantity').html('EQ');
 
 				if (item.eq)
@@ -150,7 +142,30 @@ define([
 			}
 		},
 
-		onMouseDown: function(el, item, down, e) {
+		onClick: function (item) {
+			var msg = {
+				item: item,
+				success: true
+			};
+			events.emit('beforeInventoryClickItem', msg);
+
+			if (!msg.success)
+				return;
+
+			if (!this.ctrlDown)
+				return;
+
+			client.request({
+				cpn: 'social',
+				method: 'chat',
+				data: {
+					message: '{' + item.name + '}',
+					item: item
+				}
+			});
+		},
+
+		onMouseDown: function (el, item, down, e) {
 			if (e.button != 0)
 				return;
 
@@ -179,7 +194,7 @@ define([
 						pos: this.dragItem.index()
 					}];
 
-					this.items.find(function(i) {
+					this.items.find(function (i) {
 						return (i.id == this.dragItem.data('item').id)
 					}, this).pos = this.dragItem.index();
 
@@ -190,7 +205,7 @@ define([
 							pos: this.hoverCell.index()
 						});
 
-						this.items.find(function(i) {
+						this.items.find(function (i) {
 							return (i.id == hoverCellItem.id)
 						}, this).pos = this.hoverCell.index();
 					}
@@ -216,7 +231,7 @@ define([
 			}
 		},
 
-		onMouseMove: function(e) {
+		onMouseMove: function (e) {
 			if (!this.dragEl)
 				return;
 
@@ -229,7 +244,7 @@ define([
 			});
 		},
 
-		showContext: function(item, e) {
+		showContext: function (item, e) {
 			var menuItems = {
 				drop: {
 					text: 'drop',
@@ -251,13 +266,25 @@ define([
 					text: 'learn',
 					callback: this.performItemAction.bind(this, item, 'learnAbility')
 				},
+				activate: {
+					text: 'activate',
+					callback: this.performItemAction.bind(this, item, 'activateMtx')
+				},
+				use: {
+					text: 'use',
+					callback: this.performItemAction.bind(this, item, 'useItem')
+				},
 				equip: {
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
 				},
 				augment: {
-					text: 'augment',
+					text: 'craft',
 					callback: this.openAugmentUi.bind(this, item)
+				},
+				mail: {
+					text: 'mail',
+					callback: this.openMailUi.bind(this, item)
 				},
 				divider: '----------'
 			};
@@ -267,10 +294,17 @@ define([
 				menuItems.equip.text = 'unequip';
 			}
 
+			if (item.active)
+				menuItems.activate.text = 'deactivate';
+
 			var config = [];
 
 			if (item.ability)
 				config.push(menuItems.learn);
+			else if (item.type == 'mtx')
+				config.push(menuItems.activate);
+			else if ((item.type == 'toy') || (item.type == 'consumable'))
+				config.push(menuItems.use);
 			else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
@@ -282,17 +316,24 @@ define([
 				}
 			}
 
-			if ((!item.quest) && (!item.eq)) {
-				if ((window.player.stash.active) && (!item.noSalvage))
-					config.push(menuItems.stash);
+			if ((!item.eq) && (!item.active)) {
+				if (!item.quest) {
+					if ((window.player.stash.active) && (!item.noStash))
+						config.push(menuItems.stash);
 
-				config.push(menuItems.drop);
+					if (!item.noDrop)
+						config.push(menuItems.drop);
 
-				if ((!item.material) && (!item.noSalvage))
-					config.push(menuItems.salvage);
+					if ((!item.material) && (!item.noSalvage))
+						config.push(menuItems.salvage);
+				}
 
-				config.push(menuItems.destroy);
+				if (!item.noDestroy)
+					config.push(menuItems.destroy);
 			}
+
+			if ((!item.noDrop) && (!item.quest))
+				config.push(menuItems.mail);
 
 			if (config.length > 0)
 				events.emit('onContextMenu', config, e);
@@ -301,7 +342,7 @@ define([
 			return false;
 		},
 
-		hideTooltip: function() {
+		hideTooltip: function () {
 			if (this.dragEl) {
 				this.hoverCell = null;
 				return;
@@ -310,7 +351,7 @@ define([
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
-		onHover: function(el, item, e) {
+		onHover: function (el, item, e) {
 			if (this.dragEl) {
 				this.hoverCell = el;
 				this.find('.hover').removeClass('hover');
@@ -344,7 +385,7 @@ define([
 
 			var compare = null;
 			if (item.slot) {
-				compare = this.items.find(function(i) {
+				compare = this.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
 				});
 			}
@@ -352,43 +393,17 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
 		},
 
-		onGetItems: function(items) {
+		onGetItems: function (items, rerender) {
 			this.items = items;
 
-			this.items.forEach(function(item) {
-				var prefix = -1;
-				['quest', 'material', 'ability'].forEach(function(p, i) {
-					if (item[p])
-						prefix += 1 + i;
-				});
-				if (prefix == -1)
-					prefix = 3 + item.slot + item.type;
-
-				item.sortName = prefix + item.name + item.level + item.id;
-
-				if ((item == this.hoverItem))
-					this.onHover(null, item);
-			}, this);
-
-			this.items.sort(function(a, b) {
-				if (a.sortName < b.sortName)
-					return -1;
-				else if (a.sortName > b.sortName)
-					return 1;
-				else
-					return 0;
-			});
-
-			if (this.shown)
+			if ((this.shown) && (rerender))
 				this.build();
 		},
-		onDestroyItems: function(itemIds) {
-			itemIds.forEach(function(id) {
+		onDestroyItems: function (itemIds) {
+			itemIds.forEach(function (id) {
 				var item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) {
-					//this.hoverItem = null;
+				if (item == this.hoverItem)
 					this.hideTooltip();
-				}
 
 				this.items.spliceWhere(i => i.id == id);
 			}, this);
@@ -397,7 +412,7 @@ define([
 				this.build();
 		},
 
-		toggle: function(show) {
+		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
@@ -412,25 +427,27 @@ define([
 			this.hideTooltip();
 		},
 
-		beforeDestroy: function() {
+		beforeDestroy: function () {
 			this.el.parent().css('background-color', 'transparent');
 			this.el.parent().removeClass('blocking');
 		},
 
-		beforeHide: function() {
+		beforeHide: function () {
 			if (this.oldSpellsZIndex) {
 				$('.uiSpells').css('z-index', this.oldSpellsZIndex);
 				this.oldSpellsZIndex = null;
 			}
 		},
 
-		performItemAction: function(item, action) {
+		performItemAction: function (item, action) {
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quast) || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > window.player.stats.values.level)))
 				return;
-			if (item.factions) {
-				if (item.factions.some(function(f) {
+			else if ((action == 'activateMtx') && (item.type != 'mtx'))
+				return;
+			if ((item.factions) && (action == 'equip')) {
+				if (item.factions.some(function (f) {
 						return f.noEquip;
 					}))
 					return;
@@ -439,6 +456,9 @@ define([
 			var cpn = 'inventory';
 			if (action == 'equip')
 				cpn = 'equipment';
+
+			if (action == 'useItem')
+				this.hide();
 
 			client.request({
 				cpn: 'player',
@@ -451,27 +471,35 @@ define([
 			});
 		},
 
-		openAugmentUi: function(item) {
+		openAugmentUi: function (item) {
 			events.emit('onSetSmithItem', {
 				item: item
 			});
 		},
 
-		onKeyDown: function(key) {
+		openMailUi: function (item) {
+			events.emit('onSetMailItem', {
+				item: item
+			});
+		},
+
+		onKeyDown: function (key) {
 			if (key == 'i')
 				this.toggle();
 			else if (key == 'shift') {
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHover();
-			}
+			} else if (key == 'ctrl')
+				this.ctrlDown = true;
 		},
-		onKeyUp: function(key) {
+		onKeyUp: function (key) {
 			if (key == 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHover();
-			}
+			} else if (key == 'ctrl')
+				this.ctrlDown = false;
 		}
 	};
 });

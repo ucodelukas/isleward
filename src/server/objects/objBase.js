@@ -1,6 +1,6 @@
 define([
 	'components/components'
-], function(
+], function (
 	components
 ) {
 	return {
@@ -8,7 +8,7 @@ define([
 
 		actionQueue: [],
 
-		addComponent: function(type, blueprint, isTransfer) {
+		addComponent: function (type, blueprint, isTransfer) {
 			var cpn = this[type];
 			if (!cpn) {
 				var template = components.components[type];
@@ -36,7 +36,15 @@ define([
 			return cpn;
 		},
 
-		extendComponent: function(ext, type, blueprint) {
+		removeComponent: function (type) {
+			var cpn = this[type];
+			if (!cpn)
+				return;
+
+			cpn.destroyed = true;
+		},
+
+		extendComponent: function (ext, type, blueprint) {
 			var template = require('./components/extensions/' + type);
 			var cpn = this[ext];
 
@@ -48,14 +56,21 @@ define([
 			return cpn;
 		},
 
-		update: function() {
+		update: function () {
 			var usedTurn = false;
 
 			var components = this.components;
 			var len = components.length;
 			for (var i = 0; i < len; i++) {
 				var c = components[i];
-				if (c.update) {
+
+				if (c.destroyed) {
+					this.syncer.setSelfArray(false, 'removeComponents', c.type);
+					this.components.spliceWhere(f => (f == c));
+					delete this[c.type];
+					len--;
+					i--;
+				} else if (c.update) {
 					if (c.update())
 						usedTurn = true;
 				}
@@ -65,7 +80,7 @@ define([
 				this.performQueue();
 			}
 		},
-		getSimple: function(self, isSave) {
+		getSimple: function (self, isSave) {
 			var s = this.simplify(null, self, isSave);
 			if (this.instance)
 				s.zoneId = this.instance.zoneId;
@@ -82,19 +97,21 @@ define([
 
 			return s;
 		},
-		simplify: function(o, self, isSave) {
+		simplify: function (o, self, isSave) {
 			var result = {};
 			if (!o) {
 				result.components = [];
 				o = this;
 			}
 
+			var syncTypes = ['portrait'];
+
 			for (var p in o) {
 				var value = o[p];
 				if (value == null)
 					continue;
 
-				var type = typeof(value);
+				var type = typeof (value);
 
 				//build component
 				if (type == 'object') {
@@ -113,19 +130,29 @@ define([
 							else
 								component = value.simplify(self);
 
+							if (value.destroyed) {
+								if (!component) {
+									component = {
+										type: value.type
+									};
+								}
+
+								component.destroyed = true;
+							}
+
 							if (component)
 								result.components.push(component);
 						}
+					} else if (syncTypes.indexOf(p) > -1) {
+						result[p] = value;
 					}
-				} else if (type == 'function') {
-
-				} else
+				} else if (type != 'function')
 					result[p] = value;
 			}
 
 			return result;
 		},
-		sendEvent: function(event, data) {
+		sendEvent: function (event, data) {
 			process.send({
 				method: 'event',
 				id: this.serverId,
@@ -136,7 +163,7 @@ define([
 			});
 		},
 
-		queue: function(action) {
+		queue: function (action) {
 			if (action.list) {
 				var type = action.action;
 				var data = action.data;
@@ -158,13 +185,13 @@ define([
 			else
 				this.actionQueue.push(action);
 		},
-		dequeue: function() {
+		dequeue: function () {
 			if (this.actionQueue.length == 0)
 				return null;
 
 			return this.actionQueue.splice(0, 1)[0];
 		},
-		clearQueue: function() {
+		clearQueue: function () {
 			if (this.serverId != null) {
 				this.instance.syncer.queue('onClearQueue', {
 					id: this.id
@@ -174,7 +201,7 @@ define([
 			this.actionQueue = [];
 		},
 
-		performAction: function(action) {
+		performAction: function (action) {
 			if (action.instanceModule) {
 				/*action.data.obj = this;
 				this.instance[action.instanceModule][action.method](action.data);
@@ -189,7 +216,7 @@ define([
 			cpn[action.method](action.data);
 		},
 
-		performQueue: function() {
+		performQueue: function () {
 			var q = this.dequeue();
 			if (!q) {
 				return;
@@ -198,7 +225,8 @@ define([
 			if (q.action == 'move') {
 				if ((this.actionQueue[0]) && (this.actionQueue[0].action == 'move')) {
 					var sprintChance = this.stats.values.sprintChance || 0;
-					if (~~(Math.random() * 100) < sprintChance) {
+					var physics = this.instance.physics;
+					if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
 						q = this.dequeue();
 						q.isDouble = true;
 					}
@@ -215,29 +243,31 @@ define([
 					this.performQueue();
 			}
 		},
-		performMove: function(action) {
+		performMove: function (action) {
 			var data = action.data;
 			var physics = this.instance.physics;
 
-			if (physics.isTileBlocking(data.x, data.y))
-				return false;
-
-			data.success = true;
-			this.fireEvent('beforeMove', data);
-			if (data.success == false) {
-				action.priority = true;
-				this.queue(action);
-				return true;
-			}
-
-			if (!action.isDouble) {
-				var deltaX = Math.abs(this.x - data.x);
-				var deltaY = Math.abs(this.y - data.y);
-				if (
-					((deltaX > 1) || (deltaY > 1)) ||
-					((deltaX == 0) && (deltaY == 0))
-				)
+			if (!action.force) {
+				if (physics.isTileBlocking(data.x, data.y))
 					return false;
+
+				data.success = true;
+				this.fireEvent('beforeMove', data);
+				if (data.success == false) {
+					action.priority = true;
+					this.queue(action);
+					return true;
+				}
+
+				if (!action.isDouble) {
+					var deltaX = Math.abs(this.x - data.x);
+					var deltaY = Math.abs(this.y - data.y);
+					if (
+						((deltaX > 1) || (deltaY > 1)) ||
+						((deltaX == 0) && (deltaY == 0))
+					)
+						return false;
+				}
 			}
 
 			//Don't allow mob overlap during combat
@@ -263,10 +293,12 @@ define([
 			if (this.aggro)
 				this.aggro.move();
 
+			this.fireEvent('afterMove');
+
 			return true;
 		},
 
-		collisionEnter: function(obj) {
+		collisionEnter: function (obj) {
 			var components = this.components;
 			var cLen = components.length;
 			for (var i = 0; i < cLen; i++) {
@@ -277,7 +309,7 @@ define([
 				}
 			}
 		},
-		collisionExit: function(obj) {
+		collisionExit: function (obj) {
 			var components = this.components;
 			var cLen = components.length;
 			for (var i = 0; i < cLen; i++) {
@@ -287,7 +319,7 @@ define([
 			}
 		},
 
-		fireEvent: function(event) {
+		fireEvent: function (event) {
 			var args = [].slice.call(arguments, 1);
 
 			var components = this.components;
@@ -313,9 +345,11 @@ define([
 				this.prophecies.fireEvent(event, args);
 			if (this.inventory)
 				this.inventory.fireEvent(event, args);
+			if (this.spellbook)
+				this.spellbook.fireEvent(event, args);
 		},
 
-		destroy: function() {
+		destroy: function () {
 			var components = this.components;
 			var len = components.length;
 			for (var i = 0; i < len; i++) {
@@ -323,6 +357,8 @@ define([
 				if (c.destroy)
 					c.destroy();
 			}
+
+			components = null;
 		}
 	};
 });

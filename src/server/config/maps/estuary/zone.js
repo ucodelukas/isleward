@@ -7,18 +7,19 @@ module.exports = {
 		default: {
 			faction: 2,
 			grantRep: {
-				gaekatla: 3
+				gaekatla: 15
 			},
 
 			regular: {
-				dmgMult: 8,
+				hpMult: 1.5,
+				dmgMult: 2,
 
 				drops: {
 					chance: 45,
 					rolls: 1,
-					magicFind: 70
+					magicFind: 500
 				}
-			}	
+			}
 		},
 		'giant gull': {
 			level: 6,
@@ -52,8 +53,8 @@ module.exports = {
 		"m'ogresh": {
 			level: 12,
 			isChampion: true,
-			grantReputation: {
-				gaekatla: 15
+			grantRep: {
+				gaekatla: 120
 			},
 			spells: [{
 				type: 'melee',
@@ -66,7 +67,7 @@ module.exports = {
 		'exit': {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {

@@ -1,34 +1,57 @@
 define([
-
-], function(
-
+	'./statsFishingRod'
+], function (
+	statsFishingRod
 ) {
 	return {
 		generators: {
-			hpMax: function(item, blueprint) {
-				var max = ((item.level * 15) + item.level) / 10;
+			hpMax: function (item, level, blueprint, perfection) {
+				var max = ((level * 15) + level) / 10;
 
-				return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
+				else
+					return max * perfection * (blueprint.statMult.hpMax || 1);
 			},
-			mainStat: function(item, blueprint) {
-				var min = ((item.level * 6.05) - ((item.level - 1) * 1.2)) / 10;
-				var max = ((item.level * 14.9) + ((item.level - 1) * 31.49)) / 10;
+			mainStat: function (item, level, blueprint, perfection) {
+				var min = ((level * 6.05) - ((level - 1) * 1.2)) / 10;
+				var max = ((level * 14.9) + ((level - 1) * 31.49)) / 10;
 
-				return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
+				if (perfection == null)
+					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
+				else
+					return (min + ((max - min) * perfection)) * (blueprint.statMult.mainStat || 1);
 			},
-			armor: function(item, blueprint) {
-				var min = (item.level * 20);
-				var max = (item.level * 51.2);
+			armor: function (item, level, blueprint, perfection) {
+				var min = (level * 20);
+				var max = (level * 51.2);
 
-				return random.norm(min, max) * blueprint.statMult.armor;
+				if (perfection == null)
+					return random.norm(min, max) * blueprint.statMult.armor;
+				else
+					return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 			},
-			elementResist: function(item, blueprint) {
-				return random.norm(1, 7.5) * (blueprint.statMult.elementResist || 1);
+			elementResist: function (item, level, blueprint, perfection) {
+				if (perfection == null)
+					return random.norm(1, 7.5) * (blueprint.statMult.elementResist || 1);
+				else
+					return (1 + (6.5 * perfection)) * (blueprint.statMult.elementResist || 1);
 			},
-			regenHp: function(item, blueprint) {
-				var max = (((10 + (item.level * 200)) / 20) / 2) / 10;
+			regenHp: function (item, level, blueprint, perfection) {
+				var max = (((10 + (level * 200)) / 20) / 2) / 10;
 
-				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
+				else
+					return max * perfection * (blueprint.statMult.regenHp || 1);
+			},
+			lvlRequire: function (item, level, blueprint, perfection) {
+				var max = ~~(level / 2);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
+				else
+					return max * perfection * (blueprint.statMult.lvlRequire || 1);
 			}
 		},
 
@@ -48,6 +71,10 @@ define([
 			regenMana: {
 				min: 1,
 				max: 7
+			},
+
+			lvlRequire: {
+				generator: 'lvlRequire'
 			},
 
 			str: {
@@ -82,6 +109,50 @@ define([
 				generator: 'elementResist'
 			},
 
+			dmgPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementArcanePercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementFrostPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementFirePercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementHolyPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementPhysicalPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			elementPoisonPercent: {
+				min: 1,
+				max: 5,
+				ignore: true
+			},
+			allAttributes: {
+				generator: 'mainStat',
+				ignore: true
+			},
+
+			attackSpeed: {
+				ignore: true
+			},
+
 			armor: {
 				generator: 'armor',
 				ignore: true
@@ -90,6 +161,10 @@ define([
 			addCritChance: {
 				min: 1,
 				max: 90
+			},
+			addCritMultiplier: {
+				min: 5,
+				max: 50
 			},
 
 			magicFind: {
@@ -181,7 +256,12 @@ define([
 		},
 		mainStatChance: 0.7,
 
-		generate: function(item, blueprint, result) {
+		generate: function (item, blueprint, result) {
+			if (item.slot == 'tool') {
+				statsFishingRod.generate(item, blueprint, result);
+				return;
+			}
+
 			if (!blueprint.statCount)
 				item.stats = {};
 
@@ -209,7 +289,7 @@ define([
 				var addStats = Math.min(statCount, blueprint.stats.length);
 				for (var i = 0; i < addStats; i++) {
 					var choice = useStats[~~(Math.random() * useStats.length)];
-					useStats.spliceWhere(s => s == choice);
+					useStats.spliceFirstWhere(s => s == choice);
 					this.buildStat(item, blueprint, choice, result);
 					statCount--;
 				}
@@ -226,27 +306,39 @@ define([
 			}
 		},
 
-		buildStat: function(item, blueprint, stat, result) {
+		buildStat: function (item, blueprint, stat, result) {
 			var statOptions = extend(true, {}, this.stats, this.slots[item.slot] || {});
 			var statBlueprint = null;
 
-			if (!stat) {
+			var value = null;
+			if ((stat) && (stat.indexOf('|') > -1)) {
+				var split = stat.split('|');
+				stat = split[0];
+				value = split[1];
+			}
+
+			if ((!stat) || (!statOptions[stat])) {
 				var options = Object.keys(statOptions).filter(s => !statOptions[s].ignore);
 				stat = options[~~(Math.random() * options.length)];
 				statBlueprint = statOptions[stat];
 			} else
 				statBlueprint = statOptions[stat];
 
-			var value = null;
+			if (!value) {
+				if (statBlueprint.generator) {
+					var level = item.originalLevel || item.level;
+					value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
+				} else if (!blueprint.perfection)
+					value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
+				else
+					value = statBlueprint.min + ((statBlueprint.max - statBlueprint.min) * blueprint.perfection);
+			}
 
-			if (statBlueprint.generator) {
-				value = Math.ceil(this.generators[statBlueprint.generator](item, blueprint, statBlueprint));
-			} else
-				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
-
-			if (blueprint.statCount) {
-				if (result)
-					result.addStatMsgs.push('+' + value + ' ' + stat);
+			if ((result) && (result.addStatMsgs)) {
+				result.addStatMsgs.push({
+					stat: stat,
+					value: value
+				});
 
 				if (!item.enchantedStats)
 					item.enchantedStats = {};
@@ -254,6 +346,15 @@ define([
 					item.enchantedStats[stat] += value;
 				else
 					item.enchantedStats[stat] = value;
+			}
+
+			if (stat == 'lvlRequire') {
+				if (!item.originalLevel)
+					item.originalLevel = item.level;
+
+				item.level -= value;
+				if (item.level < 1)
+					item.level = 1;
 			}
 
 			if (item.stats[stat])

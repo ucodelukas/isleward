@@ -1,7 +1,9 @@
 define([
-	'config/effects/effectTemplate'
-], function(
-	effectTemplate
+	'config/effects/effectTemplate',
+	'misc/events'
+], function (
+	effectTemplate,
+	events
 ) {
 	return {
 		type: 'effects',
@@ -9,7 +11,7 @@ define([
 		effects: [],
 		nextId: 0,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var effects = blueprint.effects || [];
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -23,7 +25,7 @@ define([
 			delete blueprint.effects;
 		},
 
-		transfer: function() {
+		transfer: function () {
 			var transferEffects = this.effects;
 			this.effects = [];
 
@@ -32,7 +34,7 @@ define([
 			});
 		},
 
-		save: function() {
+		save: function () {
 			var e = {
 				type: 'effects',
 				effects: this.effects
@@ -43,7 +45,7 @@ define([
 			return e;
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var e = {
 				type: 'effects'
 			};
@@ -59,16 +61,16 @@ define([
 			return e;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			if (this.obj.instance)
 				this.events.beforeRezone.call(this);
 		},
 
-		die: function() {
+		die: function () {
 			this.events.beforeRezone.call(this, true);
 		},
 
-		reset: function() {
+		reset: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -79,7 +81,7 @@ define([
 			}
 		},
 
-		reapply: function() {
+		reapply: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -91,7 +93,7 @@ define([
 		},
 
 		events: {
-			beforeRezone: function(forceDestroy) {
+			beforeRezone: function (forceDestroy) {
 				var effects = this.effects;
 				var eLen = effects.length;
 				for (var i = 0; i < eLen; i++) {
@@ -114,17 +116,31 @@ define([
 			}
 		},
 
-		addEffect: function(options) {
+		addEffect: function (options) {
 			var exists = this.effects.find(e => e.type == options.type);
 			if (exists) {
 				exists.ttl += options.ttl;
+
+				for (var p in options) {
+					if (p == 'ttl')
+						continue;
+
+					exists[p] = options[p];
+				}
+
 				return exists;
 			}
 
 			var typeTemplate = null;
 			if (options.type) {
 				var type = options.type[0].toUpperCase() + options.type.substr(1);
-				typeTemplate = require('config/effects/effect' + type + '.js');
+				var result = {
+					type: type,
+					url: 'config/effects/effect' + type + '.js'
+				};
+				events.emit('onBeforeGetEffect', result);
+
+				typeTemplate = require(result.url);
 			}
 
 			var builtEffect = extend(true, {}, effectTemplate, typeTemplate);
@@ -158,7 +174,7 @@ define([
 			return builtEffect;
 		},
 
-		syncRemove: function(id, type, noMsg) {
+		syncRemove: function (id, type, noMsg) {
 			if ((noMsg) || (!type))
 				return;
 
@@ -175,7 +191,7 @@ define([
 			this.obj.syncer.setArray(false, 'effects', 'removeEffects', type);
 		},
 
-		removeEffect: function(checkEffect, noMsg) {
+		removeEffect: function (checkEffect, noMsg) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -187,7 +203,7 @@ define([
 				}
 			}
 		},
-		removeEffectByName: function(effectName, noMsg) {
+		removeEffectByName: function (effectName, noMsg) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
@@ -200,11 +216,19 @@ define([
 			}
 		},
 
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {
 				var e = effects[i];
+
+				//Maybe the effect killed us?
+				if (!e) {
+					i--;
+					eLen--;
+					continue;
+				}
+
 				if (e.ttl <= 0)
 					continue;
 				var events = e.events;
@@ -219,7 +243,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var effects = this.effects;
 			var eLen = effects.length;
 			for (var i = 0; i < eLen; i++) {

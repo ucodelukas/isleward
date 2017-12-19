@@ -1,7 +1,9 @@
 define([
-	'config/factionBase'
-], function(
-	factionBase
+	'config/factionBase',
+	'config/factions'
+], function (
+	factionBase,
+	factions
 ) {
 	return {
 		type: 'reputation',
@@ -10,12 +12,14 @@ define([
 
 		factions: {},
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var list = ((blueprint || {}).list || []);
 			delete blueprint.list;
 
-			list.forEach(function(l) {
-				this.getBlueprint(l.id);
+			list.forEach(function (l) {
+				var bpt = this.getBlueprint(l.id);
+				if (!bpt)
+					return;
 
 				this.list.push({
 					id: l.id,
@@ -27,13 +31,13 @@ define([
 			}, this);
 		},
 
-		getBlueprint: function(factionId) {
+		getBlueprint: function (factionId) {
 			if (this.factions[factionId])
 				return this.factions[factionId];
 
 			var factionBlueprint = null;
 			try {
-				factionBlueprint = require('config/factions/' + factionId);
+				factionBlueprint = factions.getFaction(factionId);
 			} catch (e) {}
 
 			if (factionBlueprint == null)
@@ -46,7 +50,7 @@ define([
 			return factionBlueprint;
 		},
 
-		getTier: function(factionId) {
+		getTier: function (factionId) {
 			var faction = this.list.find(l => l.id == factionId);
 			if (!faction)
 				return 3;
@@ -54,7 +58,7 @@ define([
 				return faction.tier;
 		},
 
-		canEquipItem: function(item) {
+		canEquipItem: function (item) {
 			var factions = item.factions;
 			var fLen = factions.length;
 			for (var i = 0; i < fLen; i++) {
@@ -66,7 +70,7 @@ define([
 			return true;
 		},
 
-		calculateTier: function(factionId) {
+		calculateTier: function (factionId) {
 			var blueprint = this.getBlueprint(factionId);
 
 			var faction = this.list.find(l => l.id == factionId);
@@ -81,6 +85,8 @@ define([
 
 				if (t.rep > rep)
 					break;
+				else if (i == tLen - 1)
+					tier = i;
 			}
 
 			if (tier < 0)
@@ -91,7 +97,7 @@ define([
 			return tier;
 		},
 
-		getReputation: function(factionId, gain) {
+		getReputation: function (factionId, gain) {
 			var fullSync = (this.factions[factionId] == null);
 			var blueprint = this.getBlueprint(factionId);
 
@@ -131,7 +137,7 @@ define([
 			this.syncFaction(factionId, fullSync);
 		},
 
-		sendMessage: function(tierName, factionName) {
+		sendMessage: function (tierName, factionName) {
 			this.obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
@@ -169,19 +175,19 @@ define([
 			this.syncFaction(factionId, fullSync);
 		},
 
-		save: function() {
+		save: function () {
 			return {
 				type: 'reputation',
 				list: this.list
 			};
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return null;
 
 			var sendList = this.list
-				.map(function(l) {
+				.map(function (l) {
 					var result = {};
 					var blueprint = this.getBlueprint(l.id);
 					extend(true, result, l, blueprint);
@@ -195,11 +201,12 @@ define([
 			};
 		},
 
-		syncFaction: function(factionId, full) {
+		syncFaction: function (factionId, full) {
 			var l = this.list.find(l => (l.id == factionId));
 			var faction = {
 				id: factionId,
-				rep: l.rep
+				rep: l.rep,
+				tier: l.tier
 			};
 
 			if (full) {
@@ -211,7 +218,7 @@ define([
 		},
 
 		events: {
-			afterKillMob: function(mob) {
+			afterKillMob: function (mob) {
 				if (!mob.mob)
 					return;
 

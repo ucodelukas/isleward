@@ -1,20 +1,20 @@
 define([
-	'items/config/types',
-	'items/config/armorMaterials'
-], function(
+	'../config/types',
+	'../config/armorMaterials'
+], function (
 	configTypes,
 	armorMaterials
 ) {
 	return {
-		generate: function(item, blueprint) {
-			var type = blueprint.type || _.randomKey(configTypes[item.slot]);
-			var typeBlueprint = configTypes[item.slot][type];
+		generate: function (item, blueprint) {
+			var type = blueprint.type || _.randomKey(configTypes.types[item.slot]);
+			var typeBlueprint = configTypes.types[item.slot][type] || {};
 
 			if (!typeBlueprint)
 				return;
 
 			item.type = type;
-			item.sprite = typeBlueprint.sprite;
+			item.sprite = blueprint.sprite || typeBlueprint.sprite;
 			if (typeBlueprint.spritesheet)
 				item.spritesheet = typeBlueprint.spritesheet;
 
@@ -26,11 +26,6 @@ define([
 
 			if ((typeBlueprint.material) && (blueprint.statMult.armor))
 				blueprint.statMult.armor *= armorMaterials[typeBlueprint.material].statMult.armor;
-
-			if (item.slot == 'tool') {
-				blueprint.noStats = true;
-				blueprint.noName = true;
-			}
 		}
 	}
 });

@@ -2,7 +2,7 @@ define([
 	'world/atlas',
 	'config/classes',
 	'config/roles'
-], function(
+], function (
 	atlas,
 	classes,
 	roles
@@ -14,7 +14,7 @@ define([
 		cdSave: 1000,
 		cdSaveMax: 1000,
 
-		update: function() {
+		update: function () {
 			if (this.cdSave > 0)
 				this.cdSave--;
 			else {
@@ -23,16 +23,17 @@ define([
 			}
 		},
 
-		spawn: function(character) {
+		spawn: function (character, cb) {
 			var obj = this.obj;
+
 			extend(true, obj, {
-				sheetName: classes.getSpritesheet(character.class),
 				layerName: 'mobs',
 				cell: character.cell,
-				previewSpritesheet: character.previewSpritesheet,
+				sheetName: character.sheetName,
+				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
-				zoneName: character.zoneName || 'tutorial-cove',
+				zoneName: character.zoneName || 'tutorial',
 				x: character.x,
 				y: character.y,
 				account: character.account,
@@ -57,65 +58,74 @@ define([
 			}
 			stats.vitScale = blueprintStats.vitScale;
 
-			stats.stats.logins++;
+			obj.portrait = classes.portraits[character.class];
 
-			//obj.addComponent('spellbook', { spells: extend(true, [], classes.spells[obj.class]) });
 			obj.addComponent('spellbook');
 
 			obj.addComponent('dialogue');
 			obj.addComponent('trade', character.components.find(c => c.type == 'trade'));
 			obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
 
-			obj.addComponent('social');
+			var social = character.components.find(c => c.type == 'social');
+			if (social)
+				delete social.party;
+			obj.addComponent('social', social);
+			obj.social.init();
+			obj.social.party = null;
 			obj.addComponent('aggro', {
-				faction: 1
+				faction: 'players'
 			});
 			obj.addComponent('gatherer');
 			obj.addComponent('stash', {
 				items: character.stash
 			});
-			obj.addComponent('effects', blueprintEffects);
-			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
-			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
-			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
-
-			var prophecies = character.components.find(c => c.type == 'prophecies');
-			if (prophecies)
-				obj.addComponent('prophecies', prophecies);
 
 			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
 			if (blueprintEffects.effects) {
 				//Calculate ttl of effects
 				var time = +new Date;
-				blueprintEffects.effects.filter(function(e) {
+				blueprintEffects.effects = blueprintEffects.effects.filter(function (e) {
 					var remaining = e.expire - time;
 					if (remaining < 0)
 						return false;
 					else {
 						e.ttl = Math.max(~~(remaining / 350), 1);
-						delete e.expire;
 						return true;
 					}
 				});
 			}
+			obj.addComponent('effects', blueprintEffects);
+
+			var prophecies = character.components.find(c => c.type == 'prophecies');
+			if (prophecies)
+				obj.addComponent('prophecies', prophecies);
+
+			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
+			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
+			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
+			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;
 
-			atlas.addObject(obj, true);
+			stats.stats.logins++;
+
+			atlas.addObject(this.obj, true);
 
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
 						class: 'q3',
-						message: obj.name + ' has come online'
+						message: this.obj.name + ' has come online'
 					}]
 				}],
 				onGetConnectedPlayer: [cons.getCharacterList()]
 			});
+
+			cb();
 		},
 
-		broadcastSelf: function() {
+		broadcastSelf: function () {
 			var obj = this.obj;
 
 			var self = {
@@ -131,17 +141,17 @@ define([
 			});
 		},
 
-		hasSeen: function(id) {
+		hasSeen: function (id) {
 			return (this.seen.indexOf(id) > -1);
 		},
-		see: function(id) {
+		see: function (id) {
 			this.seen.push(id);
 		},
-		unsee: function(id) {
+		unsee: function (id) {
 			this.seen.spliceWhere(s => s == id);
 		},
 
-		die: function(source, permadeath) {
+		die: function (source, permadeath) {
 			this.obj.clearQueue();
 
 			var physics = this.obj.instance.physics;
@@ -149,8 +159,21 @@ define([
 			physics.removeObject(this.obj, this.obj.x, this.obj.y);
 
 			if (!permadeath) {
-				this.obj.x = this.obj.spawn.x;
-				this.obj.y = this.obj.spawn.y;
+				var level = this.obj.stats.values.level;
+				var spawns = this.obj.spawn;
+				var spawnPos = spawns.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
+				if ((spawnPos.length == 0) || (!source.name))
+					spawnPos = spawns[0];
+				else if (source.name) {
+					var sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() == source.name.toLowerCase())));
+					if (sourceSpawnPos)
+						spawnPos = sourceSpawnPos;
+					else
+						spawnPos = spawnPos[0];
+				}
+
+				this.obj.x = spawnPos.x;
+				this.obj.y = spawnPos.y;
 
 				var syncer = this.obj.syncer;
 				syncer.o.x = this.obj.x;
@@ -159,9 +182,10 @@ define([
 				physics.addObject(this.obj, this.obj.x, this.obj.y);
 
 				this.obj.stats.die(source);
-			}
-			else
+			} else
 				this.obj.stats.dead = true;
+
+			this.obj.fireEvent('onAfterDeath', source);
 
 			this.obj.aggro.die();
 			this.obj.spellbook.die();
@@ -170,23 +194,23 @@ define([
 			this.obj.aggro.move();
 		},
 
-		move: function(msg) {
+		move: function (msg) {
 			atlas.queueAction(this.obj, {
 				action: 'move',
 				data: msg.data
 			});
 		},
-		moveList: function(msg) {
+		moveList: function (msg) {
 			atlas.queueAction(this.obj, {
 				action: 'move',
 				list: true,
 				data: msg.data
 			});
 		},
-		queueAction: function(msg) {
+		queueAction: function (msg) {
 			atlas.queueAction(this.obj, msg.data);
 		},
-		performAction: function(msg) {
+		performAction: function (msg) {
 			if (msg.callback)
 				msg.data.data.callbackId = atlas.registerCallback(msg.callback);
 

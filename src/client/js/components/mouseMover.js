@@ -1,6 +1,6 @@
 define([
 	'js/system/events',
-	'js/renderer',
+	'js/rendering/renderer',
 	'js/system/client',
 	'js/input',
 	'js/objects/objects'
@@ -35,8 +35,6 @@ define([
 				layerName: 'effects',
 				x: 0,
 				y: 0,
-				w: scale,
-				h: scale,
 				sheetName: 'ui', 
 				cell: 7
 			});

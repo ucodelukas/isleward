@@ -95,6 +95,18 @@ define([
 			var key = keys[keyIndex];
 
 			return key;
+		},
+		getDeepProperty: function(obj, path) {
+			var o = obj;
+			var pLen = path.length;
+
+			for (var i = 0; i < pLen; i++) {
+				o = o[path[i]];
+				if (!o)
+					return null;
+			}
+
+			return o;
 		}
 	};
 });

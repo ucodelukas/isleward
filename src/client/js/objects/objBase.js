@@ -1,8 +1,8 @@
 define([
 	'js/components/components',
-	'js/renderer',
+	'js/rendering/renderer',
 	'js/system/events'
-], function(
+], function (
 	components,
 	renderer,
 	events
@@ -15,10 +15,10 @@ define([
 		offsetX: 0,
 		offsetY: 0,
 		eventCallbacks: {},
-		
-		addComponent: function(type, options) {
+
+		addComponent: function (type, options) {
 			var c = this[type];
-			
+
 			if ((!c) || (options.new)) {
 				var template = components.getTemplate(type);
 				if (!template)
@@ -39,8 +39,7 @@ define([
 				this.components.push(c);
 
 				return c;
-			}
-			else {
+			} else {
 				if (c.extend)
 					c.extend(options);
 
@@ -48,21 +47,19 @@ define([
 			}
 		},
 
-		render: function() {
-			return;
-			if (this.sheetName)
-				canvas.renderObject(this);
+		removeComponent: function (type) {
+			var cpn = this[type];
+			if (!cpn)
+				return;
 
-			var components = this.components;
-			var len = components.length;
-			for (var i = 0; i < len; i++) {
-				var c = components[i];
-				if (c.render)
-					c.render();
-			}
+			this.components.spliceWhere(function (c) {
+				return (c == cpn);
+			});
+
+			delete this[type];
 		},
 
-		update: function() {
+		update: function () {
 			var components = this.components;
 			var len = components.length;
 			for (var i = 0; i < len; i++) {
@@ -73,7 +70,7 @@ define([
 				if (c.destroyed) {
 					if (c.destroy)
 						c.destroy();
-					
+
 					components.splice(i, 1);
 					i--;
 					len--;
@@ -82,12 +79,12 @@ define([
 			}
 		},
 
-		on: function(event, callback) {
+		on: function (event, callback) {
 			var list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
 			list.push(events.on(event, callback));
 		},
 
-		setSpritePosition: function() {
+		setSpritePosition: function () {
 			if (!this.sprite)
 				return;
 
@@ -109,14 +106,16 @@ define([
 
 			this.sprite.scale.x = (this.flipX ? -scaleMult : scaleMult);
 
-			['nameSprite', 'chatSprite'].forEach(function(s, i) {
+			['nameSprite', 'chatSprite'].forEach(function (s, i) {
 				var sprite = this[s];
 				if (!sprite)
 					return;
 
 				var yAdd = scale;
-				if (i == 1)
+				if (i == 1) {
 					yAdd *= -0.8;
+					yAdd -= (this.chatter.msg.split('\r\n').length - 1) * scale * 0.8;
+				}
 
 				sprite.x = (this.x * scale) + (scale / 2) - (sprite.width / 2);
 				sprite.y = (this.y * scale) + yAdd;
@@ -126,7 +125,7 @@ define([
 				this.stats.updateHpSprite();
 		},
 
-		destroy: function() {
+		destroy: function () {
 			if (this.sprite)
 				renderer.destroyObject(this);
 			if (this.nameSprite)
@@ -148,12 +147,12 @@ define([
 			this.offEvents();
 		},
 
-		offEvents: function() {
+		offEvents: function () {
 			if (this.pather)
 				this.pather.onDeath();
 
 			for (var e in this.eventCallbacks) {
-				this.eventCallbacks[e].forEach(function(c) {
+				this.eventCallbacks[e].forEach(function (c) {
 					events.off(e, c);
 				}, this);
 			}

@@ -1,25 +1,25 @@
 define([
 	'config/spells',
 	'config/spellsConfig'
-], function(
+], function (
 	spells,
 	spellsConfig
 ) {
 	var maxQuality = 5;
 
 	return {
-		generate: function(item, blueprint) {
+		generate: function (item, blueprint) {
 			blueprint = blueprint || {};
 			var spellQuality = blueprint ? blueprint.spellQuality : '';
 			var spellName = blueprint.spellName;
-			
+
 			if (!spellName) {
-				var spellList = Object.keys(spellsConfig).filter(s => !spellsConfig[s].auto);
+				var spellList = Object.keys(spellsConfig.spells).filter(s => ((!spellsConfig.spells[s].auto) && (!s.noDrop)));
 				spellName = spellList[~~(Math.random() * spellList.length)];
 			}
 
-			var spell = spellsConfig[spellName];
-			var spellAesthetic = spells.find(s => s.name.toLowerCase() == spellName);
+			var spell = spellsConfig.spells[spellName];
+			var spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName);
 
 			if (!item.slot) {
 				var sprite = [10, 0];
@@ -31,13 +31,14 @@ define([
 				else if (statType instanceof Array) {
 					if ((statType.indexOf('dex') > -1) && (statType.indexOf('int') > -1))
 						sprite = [10, 3];
+					else if ((statType.indexOf('str') > -1) && (statType.indexOf('int') > -1))
+						sprite = [10, 4];
 				}
 
 				item.name = 'Rune of ' + spellAesthetic.name;
 				item.ability = true;
 				item.sprite = sprite;
-			}
-			else if (spellQuality == 'mid')
+			} else if (spellQuality == 'mid')
 				item.stats = {};
 
 			item.spell = {
@@ -50,7 +51,9 @@ define([
 			var propertyPerfection = [];
 
 			var randomProperties = spell.random || {};
+			var negativeStats = spell.negativeStats || [];
 			for (var r in randomProperties) {
+				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
 				var roll = random.norm(0, 1);
 				if (spellQuality == 'basic')
@@ -65,16 +68,17 @@ define([
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
-				}
-				else
+				} else
 					val = ~~(val * 10) / 10;
 
 				item.spell.values[r] = val;
 
 				if (roll <= 0.5)
 					propertyPerfection.push(0);
+				else if (negativeStat)
+					propertyPerfection.push(1 - roll);
 				else
-					propertyPerfection.push(roll / 1);
+					propertyPerfection.push(roll)
 			}
 
 			if (blueprint.spellProperties) {
@@ -84,8 +88,14 @@ define([
 				}
 			}
 
-			var perfection = ~~(propertyPerfection.reduce((p, n) => p += n, 0) / propertyPerfection.length * 4);
-			if (!item.slot)	
+			if (item.range) {
+				item.spell.properties = item.spell.properties || {};
+				item.spell.properties.range = item.range;
+			}
+
+			var per = propertyPerfection.reduce((p, n) => p + n, 0);
+			var perfection = ~~((per / propertyPerfection.length) * 4);
+			if (!item.slot)
 				item.quality = perfection;
 			else
 				item.spell.quality = perfection

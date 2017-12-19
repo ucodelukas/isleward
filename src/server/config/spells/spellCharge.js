@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -16,12 +16,15 @@ define([
 		stunDuration: 15,
 		needLos: true,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 			var target = action.target;
 
-			var dx = target.x - obj.x;
-			var dy = target.y - obj.y;
+			var x = obj.x;
+			var y = obj.y;
+
+			var dx = target.x - x;
+			var dy = target.y - y;
 
 			//We need to stop just short of the target
 			var offsetX = 0;
@@ -39,8 +42,8 @@ define([
 
 			var physics = obj.instance.physics;
 			//Check where we should land
-			if (physics.isTileBlocking(targetPos.x - offsetX, targetPos.y - offsetY)) {
-				if (physics.isTileBlocking(targetPos.x - offsetX, targetPos.y)) {
+			if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y - offsetY)) {
+				if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y)) {
 					targetPos.y -= offsetY;
 				} else {
 					targetPos.x -= offsetX;
@@ -89,7 +92,7 @@ define([
 
 			return true;
 		},
-		reachDestination: function(target, targetPos, targetEffect, selfEffect) {
+		reachDestination: function (target, targetPos, targetEffect, selfEffect) {
 			if (this.obj.destroyed)
 				return;
 
@@ -113,6 +116,13 @@ define([
 
 			var damage = this.getDamage(target);
 			target.stats.takeDamage(damage, this.threatMult, obj);
+		},
+
+		isTileValid: function (physics, fromX, fromY, toX, toY) {
+			if (physics.isTileBlocking(toX, toY))
+				return false;
+			else
+				return physics.hasLos(fromX, fromY, toX, toY);
 		}
 	};
 });

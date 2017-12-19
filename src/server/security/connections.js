@@ -1,14 +1,12 @@
 define([
-	'objects/objects',
-	'world/atlas'
-], function(
-	objects,
-	atlas
+	'objects/objects'
+], function (
+	objects
 ) {
 	return {
 		players: [],
 
-		onHandshake: function(socket) {
+		onHandshake: function (socket) {
 			var p = objects.build();
 			p.socket = socket;
 			p.addComponent('auth');
@@ -16,7 +14,7 @@ define([
 
 			this.players.push(p);
 		},
-		onDisconnect: function(socket) {
+		onDisconnect: function (socket) {
 			var player = this.players.find(p => p.socket.id == socket.id);
 
 			if (!player)
@@ -29,12 +27,10 @@ define([
 					player.social.dc();
 				sessionDuration = ~~(((+new Date) - player.player.sessionStart) / 1000);
 				atlas.updateObject(player, {
-					components: [
-						{
-							type: 'stats',
-							sessionDuration: sessionDuration
-						}
-					]
+					components: [{
+						type: 'stats',
+						sessionDuration: sessionDuration
+					}]
 				});
 				atlas.removeObject(player);
 			}
@@ -47,13 +43,13 @@ define([
 							message: player.name + ' has gone offline'
 						}]
 					}],
-					onGetDisconnectedPlayer: [player.id]
+					onGetDisconnectedPlayer: [player.name]
 				});
 			}
 
 			this.players.spliceWhere(p => p.socket.id == socket.id);
 		},
-		route: function(socket, msg) {
+		route: function (socket, msg) {
 			var player = null;
 
 			if (msg.id != null) {
@@ -62,8 +58,7 @@ define([
 				if (!msg.data)
 					msg.data = {};
 				msg.data.sourceId = source.id;
-			}
-			else
+			} else
 				player = this.players.find(p => p.socket.id == socket.id);
 
 			if (!player)
@@ -76,7 +71,7 @@ define([
 			if (cpn[msg.method])
 				cpn[msg.method](msg);
 		},
-		unzone: function(msg) {
+		unzone: function (msg) {
 			var socket = msg.socket;
 			var player = this.players.find(p => p.socket.id == socket.id);
 
@@ -88,9 +83,9 @@ define([
 			atlas.removeObject(player, true);
 
 			var keys = Object.keys(player);
-			keys.forEach(function(k) {
+			keys.forEach(function (k) {
 				var val = player[k];
-				if ((val != null) && (typeof(val) == 'object') && (val.type)) {
+				if ((val != null) && (typeof (val) == 'object') && (val.type)) {
 					var type = val.type;
 					if ((type != 'player') && (type != 'auth') && (type != 'syncer')) {
 						delete player[k];
@@ -105,14 +100,14 @@ define([
 						message: player.name + ' has gone offline'
 					}]
 				}],
-				onGetDisconnectedPlayer: [player.id]
+				onGetDisconnectedPlayer: [player.name]
 			});
 
 			//If we don't do this, the atlas will try to remove it from the thread
 			player.zoneName = null;
 			player.name = null;
 		},
-		logOut: function(exclude) {
+		logOut: function (exclude) {
 			var players = this.players;
 			var pLen = players.length;
 			for (var i = 0; i < pLen; i++) {
@@ -126,7 +121,7 @@ define([
 			}
 		},
 
-		getCharacterList: function(msg) {
+		getCharacterList: function (msg) {
 			var result = [];
 			var players = this.players;
 			var pLen = players.length;

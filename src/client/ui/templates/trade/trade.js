@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/trade/template',
 	'css!ui/templates/trade/styles',
 	'html!ui/templates/inventory/templateItem'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -18,11 +18,23 @@ define([
 
 		modal: true,
 
-		postRender: function() {
+		list: null,
+		action: null,
+
+		postRender: function () {
 			this.onEvent('onGetTradeList', this.onGetTradeList.bind(this));
+			this.onEvent('onCloseTrade', this.hide.bind(this));
 		},
 
-		onGetTradeList: function(itemList, action) {
+		onGetTradeList: function (itemList, action) {
+			itemList = itemList || this.itemList;
+			action = action || this.action;
+
+			this.itemList = itemList;
+			this.action = action;
+
+			this.find('.heading-text').html(action);
+
 			var uiInventory = $('.uiInventory').data('ui');
 
 			var container = this.el.find('.grid')
@@ -30,54 +42,49 @@ define([
 
 			var buyItems = itemList.items;
 
-			buyItems.forEach(function(item) {
-				var prefix = -1;
-				['quest', 'material', 'ability'].forEach(function(p, i) {
-					if (item[p])
-						prefix += 1 + i;
-				});
-				if (prefix == -1)
-					prefix = 3 + item.slot + item.type;
-
-				item.sortName = prefix + item.name + item.level + item.id;
-
+			buyItems.forEach(function (item) {
 				if ((item == this.hoverItem))
 					this.onHover(null, item);
 			}, this);
 
-			buyItems.sort(function(a, b) {
-				if (a.sortName < b.sortName)
-					return -1;
-				else if (a.sortName > b.sortName)
-					return 1;
-				else
-					return 0;
-			});
-
-			var iLen = buyItems.length;
+			var iLen = Math.max(buyItems.length, 50);
 			for (var i = 0; i < iLen; i++) {
-				var item = $.extend(true, {}, buyItems[i]);
-				item.worth = ~~(itemList.markup * item.worth);
+				var item = buyItems[i];
+
+				if (action == 'sell') {
+					item = buyItems.find(function (b) {
+						return (b.pos == i);
+					});
+				}
+
+				if (!item) {
+					$(tplItem).appendTo(container);
+
+					continue;
+				}
+
+				item = $.extend(true, {}, item);
 
 				var size = 64;
 				var offset = 0;
 
-				var spritesheet = item.spritesheet || 'items';
+				var itemEl = $(tplItem)
+					.appendTo(container);
+
+				var spritesheet = item.spritesheet || '../../../images/items.png';
 				if (item.material)
-					spritesheet = 'materials';
+					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
-					spritesheet = 'questItems';
+					spritesheet = '../../../images/questItems.png';
 				else if (item.type == 'skin') {
-					offset = 13.5;
-					size = 32;
-					spritesheet = 'charas';
+					offset = 4;
+					size = 8;
+					if (!item.spritesheet)
+						spritesheet = '../../../images/characters.png';
 				}
 
 				var imgX = (-item.sprite[0] * size) + offset;
-				var imgY = (-item.sprite[1] * size) + offset + 4;
-
-				var itemEl = $(tplItem)
-					.appendTo(container);
+				var imgY = (-item.sprite[1] * size) + offset;
 
 				itemEl
 					.data('item', item)
@@ -85,7 +92,8 @@ define([
 					.on('mousemove', this.onHover.bind(this, itemEl, item, action))
 					.on('mouseleave', uiInventory.hideTooltip.bind(uiInventory, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(../../../images/' + spritesheet + '.png) ' + imgX + 'px ' + imgY + 'px');
+					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
+					.addClass(item.type);
 
 				if (item.quantity)
 					itemEl.find('.quantity').html(item.quantity);
@@ -93,9 +101,28 @@ define([
 					itemEl.find('.quantity').html('EQ');
 
 				if (action == 'buy') {
-					if (item.worth > window.player.trade.gold)
+					var noAfford = false;
+					if (item.worth.currency) {
+						var currencyItems = window.player.inventory.items.find(function (i) {
+							return (i.name == item.worth.currency);
+						});
+						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
+					} else
+						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold)
+
+					if ((!noAfford) && (item.factions)) {
+						noAfford = item.factions.some(function (f) {
+							return f.noEquip;
+						});
+					}
+					if (noAfford)
 						$('<div class="no-afford"></div>').appendTo(itemEl);
 				}
+
+				if (item.worth.currency)
+					item.worthText = item.worth.amount + 'x ' + item.worth.currency;
+				else
+					item.worthText = ~~(itemList.markup * item.worth);
 
 				if (item.eq)
 					itemEl.addClass('eq');
@@ -110,7 +137,7 @@ define([
 			events.emit('onShowOverlay', this.el);
 		},
 
-		onClick: function(el, item, action, e) {
+		onClick: function (el, item, action, e) {
 			el.addClass('disabled');
 
 			client.request({
@@ -131,19 +158,30 @@ define([
 			uiInventory.hideTooltip(el, item, e);
 		},
 
-		onHover: function(el, item, action, e) {
+		onHover: function (el, item, action, e) {
 			var uiInventory = $('.uiInventory').data('ui');
 			uiInventory.onHover(el, item, e);
 
 			var canAfford = true;
-			if (action == 'buy')
-				canAfford = item.worth <= window.player.trade.gold;
+			if (action == 'buy') {
+				if (item.worth.currency) {
+					var currencyItems = window.player.inventory.items.find(function (i) {
+						return (i.name == item.worth.currency);
+					});
+					canAfford = ((currencyItems) && (currencyItems.quantity >= item.worth.amount));
+				} else
+					canAfford = (item.worth * this.itemList.markup <= window.player.trade.gold)
+			}
 
 			var uiTooltipItem = $('.uiTooltipItem').data('ui');
 			uiTooltipItem.showWorth(canAfford);
 		},
 
-		onServerRespond: function(el) {
+		beforeHide: function () {
+			events.emit('onHideOverlay', this.el);
+		},
+
+		onServerRespond: function (el) {
 			el.removeClass('disabled');
 		}
 	};

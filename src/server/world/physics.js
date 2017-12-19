@@ -1,6 +1,6 @@
 define([
 	'misc/pathfinder'
-], function(
+], function (
 	pathfinder
 ) {
 	var sqrt = Math.sqrt.bind(Math);
@@ -15,7 +15,7 @@ define([
 		width: 0,
 		height: 0,
 
-		init: function(collisionMap) {
+		init: function (collisionMap) {
 			this.collisionMap = collisionMap;
 
 			this.width = collisionMap.length;
@@ -28,7 +28,7 @@ define([
 			});
 		},
 
-		addRegion: function(obj) {
+		addRegion: function (obj) {
 			var lowX = obj.x;
 			var lowY = obj.y;
 			var highX = lowX + obj.width;
@@ -38,14 +38,58 @@ define([
 			for (var i = lowX; i < highX; i++) {
 				var row = cells[i];
 				for (var j = lowY; j < highY; j++) {
-					if (!row[j])
+					var cell = row[j];
+
+					if (!cell)
 						continue;
-					row[j].push(obj);
+
+					var cLen = cell.length;
+					for (var k = 0; k < cLen; k++) {
+						var c = cell[k];
+
+						c.collisionEnter(obj);
+						obj.collisionEnter(c);
+					}
+
+					cell.push(obj);
+				}
+			}
+		},
+		removeRegion: function (obj) {
+			var oId = obj.id;
+
+			var lowX = obj.x;
+			var lowY = obj.y;
+			var highX = lowX + obj.width;
+			var highY = lowY + obj.height;
+			var cells = this.cells;
+
+			for (var i = lowX; i < highX; i++) {
+				var row = cells[i];
+				for (var j = lowY; j < highY; j++) {
+					var cell = row[j];
+
+					if (!cell)
+						continue;
+
+					var cLen = cell.length;
+					for (var k = 0; k < cLen; k++) {
+						var c = cell[k];
+
+						if (c.id != oId) {
+							c.collisionExit(obj);
+							obj.collisionExit(c);
+						} else {
+							cell.splice(k, 1);
+							k--;
+							cLen--;
+						}
+					}
 				}
 			}
 		},
 
-		addObject: function(obj, x, y, fromX, fromY) {
+		addObject: function (obj, x, y, fromX, fromY) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -77,7 +121,7 @@ define([
 			cell.push(obj);
 			return true;
 		},
-		removeObject: function(obj, x, y, toX, toY) {
+		removeObject: function (obj, x, y, toX, toY) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -112,7 +156,7 @@ define([
 			}
 		},
 
-		isValid: function(x, y) {
+		isValid: function (x, y) {
 			var row = this.cells[x];
 
 			if ((!row) || (row.length <= y) || (!this.graph.grid[x][y]))
@@ -121,7 +165,7 @@ define([
 				return true;
 		},
 
-		getCell: function(x, y) {
+		getCell: function (x, y) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -134,7 +178,7 @@ define([
 
 			return cell;
 		},
-		getArea: function(x1, y1, x2, y2, filter) {
+		getArea: function (x1, y1, x2, y2, filter) {
 			var width = this.width;
 			var height = this.height;
 
@@ -152,7 +196,7 @@ define([
 				y1 = 0;
 			if (y2 >= height)
 				y2 = height - 1;
-			
+
 			var cells = this.cells;
 			var grid = this.graph.grid;
 
@@ -181,7 +225,7 @@ define([
 			return result;
 		},
 
-		getOpenCellInArea: function(x1, y1, x2, y2) {
+		getOpenCellInArea: function (x1, y1, x2, y2) {
 			var width = this.width;
 			var height = this.height;
 
@@ -203,7 +247,6 @@ define([
 			var cells = this.cells;
 			var grid = this.graph.grid;
 
-			var result = [];
 			for (var i = x1; i <= x2; i++) {
 				var row = cells[i];
 				var gridRow = grid[i];
@@ -217,14 +260,23 @@ define([
 							x: i,
 							y: j
 						};
+					} else {
+						//If the only contents are notices, we can still use it
+						var allNotices = !cell.some(c => !c.notice);
+						if (allNotices) {
+							return {
+								x: i,
+								y: j
+							};
+						}
 					}
 				}
 			}
 
-			return result;
+			return null;
 		},
 
-		getPath: function(from, to) {
+		getPath: function (from, to) {
 			var graph = this.graph;
 			var grid = graph.grid;
 
@@ -259,7 +311,7 @@ define([
 
 			return path;
 		},
-		isTileBlocking: function(x, y) {
+		isTileBlocking: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
@@ -270,9 +322,9 @@ define([
 			if (node)
 				return node.isWall();
 			else
-				return false;
+				return true;
 		},
-		isCellOpen: function(x, y) {
+		isCellOpen: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
@@ -286,7 +338,7 @@ define([
 
 			return true;
 		},
-		hasLos: function(fromX, fromY, toX, toY) {
+		hasLos: function (fromX, fromY, toX, toY) {
 			if ((fromX < 0) || (fromY < 0) || (fromX >= this.width) | (fromY >= this.height) || (toX < 0) || (toY < 0) || (toX >= this.width) | (toY >= this.height))
 				return false;
 
@@ -327,7 +379,7 @@ define([
 			return true;
 		},
 
-		getClosestPos: function(fromX, fromY, toX, toY, target) {
+		getClosestPos: function (fromX, fromY, toX, toY, target) {
 			var tried = {};
 
 			var hasLos = this.hasLos.bind(this, toX, toY);
@@ -353,8 +405,7 @@ define([
 					incX = -1;
 					lowX = x2;
 					highX = x1 - 1;
-				}
-				else {
+				} else {
 					incX = 1;
 					lowX = x1;
 					highX = x2 + 1;
@@ -364,8 +415,7 @@ define([
 					incY = -1;
 					lowY = y2;
 					highY = y1 - 1;
-				}
-				else {
+				} else {
 					incY = 1;
 					lowY = y1;
 					highY = y2 + 1;
@@ -399,12 +449,14 @@ define([
 						var cell = cellRow[j];
 						var cLen = cell.length;
 						var blocking = false;
-						for (var k = 0; k < cLen; k++) {
-							var aggro = cell[k].aggro;
-							if (aggro) {
-								blocking = aggro.list.some(a => a.obj == target);
-								if (blocking)
-									break;
+						if (target) {
+							for (var k = 0; k < cLen; k++) {
+								var aggro = cell[k].aggro;
+								if (aggro) {
+									blocking = aggro.list.some(a => a.obj == target);
+									if (blocking)
+										break;
+								}
 							}
 						}
 						if (blocking)
@@ -421,7 +473,7 @@ define([
 			}
 		},
 
-		mobsCollide: function(x, y, obj) {
+		mobsCollide: function (x, y, obj) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
@@ -445,12 +497,11 @@ define([
 			return false;
 		},
 
-		setCollision: function(x, y, collides) {
+		setCollision: function (x, y, collides) {
 			var grid = this.graph.grid;
 			if (!grid[x][y]) {
-				grid[x][y] = new pathfinder.astar.GridNode(x, y, collides ? 0 : 1);
-			}
-			else {
+				grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
+			} else {
 				grid[x][y].weight = collides ? 0 : 1;
 				pathfinder.astar.cleanNode(grid[x][y]);
 			}

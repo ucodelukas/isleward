@@ -1,9 +1,12 @@
 define([
-
+	'misc/events'
 ], function(
-
+	events
 ) {
 	return {
+		init: function() {
+			events.emit('onBeforeGetAnimations', this);
+		},
 		classes: {
 			wizard: {
 				'2': {

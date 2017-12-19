@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -8,8 +8,8 @@ define([
 
 		items: [],
 
-		init: function(blueprint) {
-			this.items.forEach(function(i) {
+		init: function (blueprint) {
+			this.items.forEach(function (i) {
 				if ((i.stats) && (i.stats.hpMax)) {
 					i.stats.vit = i.stats.hpMax;
 					delete i.stats.hpMax;
@@ -18,10 +18,14 @@ define([
 
 			events.emit('onGetItems', this.items);
 		},
-		extend: function(blueprint) {
-			if (blueprint.destroyItems)
+		extend: function (blueprint) {
+			var rerender = false;
+
+			if (blueprint.destroyItems) {
+				rerender = true;
 				events.emit('onDestroyItems', blueprint.destroyItems);
-			
+			}
+
 			if (blueprint.getItems) {
 				var items = this.items;
 				var newItems = blueprint.getItems || [];
@@ -36,28 +40,35 @@ define([
 						delete nItem.stats.hpMax;
 					}
 
-					var findItem = items.find(function(item) {
+					var findItem = items.find(function (item) {
 						return (item.id == nId);
 					});
 					if (findItem) {
-						if (!nItem.eq)
-							delete findItem.eq;
-						if (nItem.stats)
-							delete findItem.stats;
-						if (!nItem.power)
-							delete findItem.power;
+						if (!rerender) {
+							rerender = (
+								(findItem.pos != nItem.pos) ||
+								(findItem.eq != nItem.eq)
+							);
+						}
+
+						for (var p in findItem) {
+							delete findItem[p];
+						}
+
 						$.extend(true, findItem, nItem);
 
 						newItems.splice(i, 1);
 						i--;
 						nLen--;
-					} else
+					} else {
+						rerender = true;
 						nItem.isNew = true;
+					}
 				}
 
 				this.items.push.apply(this.items, blueprint.getItems || []);
 
-				events.emit('onGetItems', this.items);
+				events.emit('onGetItems', this.items, rerender);
 			}
 		}
 	};

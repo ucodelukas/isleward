@@ -1,5 +1,5 @@
 define([
-	'security/io'
+	'../security/io'
 ], function(
 	io
 ) {
@@ -60,15 +60,22 @@ define([
 					field: 'leaderboard',
 					value: JSON.stringify(list)
 				});
-			}
-			else
+			} else
 				this.parseList(result);
 
-			this.loaded = true;
+				this.loaded = true;
 		},
 
 		parseList: function(result) {
 			this.list = JSON.parse(result).list;
+
+			if (!(this.list instanceof Array))
+				this.list = [];
+			
+			this.list.forEach(function(l) {
+				if (l.name.indexOf(`'`) > -1)
+					l.name = l.name.split(`'`).join('');
+			});
 
 			var doSave = false;
 
@@ -111,11 +118,10 @@ define([
 			if (exists) {
 				if (exists.level != level) {
 					exists.level = level;
-					
+
 					this.save();
 				}
-			}
-			else {
+			} else {
 				this.list.push({
 					name: name,
 					level: level,
@@ -152,12 +158,14 @@ define([
 			if (!this.loaded)
 				return;
 
+			var value = JSON.stringify({
+				list: this.list
+			});
+
 			io.set({
 				ent: 'list',
 				field: 'leaderboard',
-				value: JSON.stringify({
-					list: this.list
-				})
+				value: value
 			});
 		}
 	};

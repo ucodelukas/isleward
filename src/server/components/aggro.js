@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -14,7 +14,7 @@ define([
 		list: [],
 		ignoreList: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
 			blueprint = blueprint || {};
@@ -36,19 +36,19 @@ define([
 		},
 
 		events: {
-			beforeRezone: function() {
+			beforeRezone: function () {
 				this.die();
 			}
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			return {
 				type: 'aggro',
 				faction: this.faction
 			};
 		},
 
-		move: function() {
+		move: function () {
 			var result = {
 				success: true
 			};
@@ -68,7 +68,7 @@ define([
 
 					var lThreat = l.obj.aggro.getHighest();
 					if (lThreat) {
-						l.obj.aggro.list.forEach(function(a) {
+						l.obj.aggro.list.forEach(function (a) {
 							a.obj.aggro.unIgnore(lThreat);
 						});
 					}
@@ -80,7 +80,10 @@ define([
 			} else {
 				var lLen = list.length;
 				for (var i = 0; i < lLen; i++) {
-					list[i].obj.aggro.unIgnore(obj);
+					var targetAggro = list[i].obj.aggro;
+					//Maybe the aggro component has been removed?
+					if (targetAggro)
+						targetAggro.unIgnore(obj);
 				}
 			}
 
@@ -90,7 +93,7 @@ define([
 			//find mobs in range
 			var range = this.range;
 			var faction = this.faction;
-			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (c.aggro) && (c.aggro.willAttack(obj)))));
+			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
 			if (inRange.length == 0)
 				return;
@@ -118,16 +121,36 @@ define([
 			}
 		},
 
-		willAttack: function(target) {
+		canAttack: function (target) {
+			var obj = this.obj;
+			if (target == obj)
+				return false;
+			else if ((target.player) && (obj.player)) {
+				var hasButcher = (obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher'));
+
+				if ((!target.social.party) || (!obj.social.party))
+					return hasButcher;
+				else if (target.social.partyLeaderId != obj.social.partyLeaderId)
+					return hasButcher;
+				else
+					return false;
+			} else if ((target.follower) && (target.follower.master.player) && (obj.player))
+				return false;
+			else if (obj.player)
+				return true;
+			else if (target.aggro.faction != obj.aggro.faction)
+				return true;
+			else if (!!target.player == !!obj.player)
+				return true;
+		},
+
+		willAutoAttack: function (target) {
 			if (this.obj == target)
 				return false;
 
 			var faction = target.aggro.faction;
 			if (faction == null)
 				return false;
-
-			if ((target.player) && (this.obj.player))
-				return ((this.obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher')));
 
 			var rep = this.obj.reputation;
 			if (!rep) {
@@ -141,16 +164,20 @@ define([
 			return (rep.getTier(faction) < 3);
 		},
 
-		ignore: function(obj) {
+		ignore: function (obj) {
 			this.ignoreList.spliceWhere(o => o == obj);
 			this.ignoreList.push(obj);
 		},
 
-		unIgnore: function(obj) {
+		unIgnore: function (obj) {
 			this.ignoreList.spliceWhere(o => o == obj);
 		},
 
-		tryEngage: function(obj, amount, threatMult) {
+		tryEngage: function (obj, amount, threatMult) {
+			//Don't aggro yourself, stupid
+			if (obj == this.obj)
+				return;
+
 			var result = {
 				success: true
 			};
@@ -183,7 +210,7 @@ define([
 			return true;
 		},
 
-		getFirstAttacker: function() {
+		getFirstAttacker: function () {
 			var first = this.list.find(l => ((l.obj.player) && (l.damage > 0)));
 			if (first)
 				return first.obj;
@@ -191,7 +218,7 @@ define([
 				return null;
 		},
 
-		die: function() {
+		die: function () {
 			var list = this.list;
 			var lLen = list.length;
 
@@ -201,12 +228,15 @@ define([
 					console.log('aggro obj empty???');
 					continue;
 				}
-				l.obj.aggro.unAggro(this.obj);
+				//Maybe the aggro component was removed?
+				var targetAggro = l.obj.aggro;
+				if (targetAggro)
+					targetAggro.unAggro(this.obj);
 			}
 
 			this.list = [];
 		},
-		unAggro: function(obj, amount) {
+		unAggro: function (obj, amount) {
 			var oId = obj.id;
 			var list = this.list;
 			var lLen = list.length;
@@ -235,17 +265,17 @@ define([
 			if (this.obj.spellbook)
 				this.obj.spellbook.unregisterCallback(obj.id, true);
 
-			if ((this.list.length == 0) && (this.obj.mob))
+			if ((this.list.length == 0) && (this.obj.mob) && (!this.obj.follower))
 				this.obj.stats.resetHp();
 		},
 
-		sortThreat: function() {
-			this.list.sort(function(a, b) {
+		sortThreat: function () {
+			this.list.sort(function (a, b) {
 				return (b.threat - a.threat);
 			});
 		},
 
-		getHighest: function() {
+		getHighest: function () {
 			if (this.list.length == 0)
 				return null;
 
@@ -286,14 +316,14 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var list = this.list;
 			var lLen = list.length;
 
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
 				if (l.obj.destroyed) {
-					list.splice(i, 1);
+					this.unAggro(l.obj);
 					i--;
 					lLen--;
 				}

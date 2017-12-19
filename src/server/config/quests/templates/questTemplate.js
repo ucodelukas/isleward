@@ -1,11 +1,15 @@
 define([
-
-], function(
-
+	'misc/events'
+], function (
+	events
 ) {
 	return {
-		init: function(hideMessage) {
-			this.build();
+		rewards: [],
+
+		init: function (hideMessage) {
+			if (!this.build())
+				return false;
+
 			this.obj.syncer.setArray(true, 'quests', 'obtainQuests', this.simplify(true));
 
 			if (!hideMessage) {
@@ -17,9 +21,11 @@ define([
 					}]
 				}, [this.obj.serverId]);
 			}
+
+			return true;
 		},
 
-		ready: function() {
+		ready: function () {
 			this.isReady = true;
 
 			if (this.oReady)
@@ -36,28 +42,38 @@ define([
 			this.obj.syncer.setArray(true, 'quests', 'updateQuests', this.simplify(true));
 		},
 
-		complete: function() {
+		complete: function () {
 			if (this.oComplete)
 				this.oComplete();
 
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
+			var obj = this.obj;
+
+			events.emitNoSticky('beforeCompleteAutoquest', this, obj);
+
+			obj.instance.syncer.queue('onGetMessages', {
+				id: obj.id,
 				messages: [{
 					class: 'q0',
 					message: 'quest completed (' + this.name + ')'
 				}]
-			}, [this.obj.serverId]);
+			}, [obj.serverId]);
 
-			this.obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
+			obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
+
+			events.emit('onCompleteQuest', this);
+
+			this.rewards.forEach(function (r) {
+				this.obj.inventory.getItem(r);
+			}, this);
 
 			this.obj.stats.getXp(this.xp || 10);
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var values = {};
 			for (var p in this) {
 				var value = this[p];
-				if ((typeof(value) == 'function') || (p == 'obj'))
+				if ((typeof (value) == 'function') || (p == 'obj'))
 					continue;
 
 				values[p] = value;

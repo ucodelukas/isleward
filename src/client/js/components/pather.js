@@ -1,5 +1,5 @@
 define([
-	'js/renderer',
+	'js/rendering/renderer',
 	'js/system/events'
 ], function(
 	renderer,
@@ -7,13 +7,15 @@ define([
 ) {
 	var scale = 40;
 	var scaleMult = 5;
+	var round = Math.round.bind(Math);
 
 	return {
 		type: 'pather',
 
 		path: [],
 
-		pathColor: 'rgba(255, 255, 255, 0.5)',
+		pathColor: '0x48edff',
+		pathAlpha: 0.2,
 
 		pathPos: {
 			x: 0,
@@ -27,11 +29,11 @@ define([
 			events.on('onDeath', this.onDeath.bind(this));
 			events.on('onClearQueue', this.onDeath.bind(this));
 
-			this.pathPos.x = this.obj.x;
-			this.pathPos.y = this.obj.y;
+			this.pathPos.x = round(this.obj.x);
+			this.pathPos.y = round(this.obj.y);
 		},
 
-		onDeath: function() {
+		clearPath: function() {
 			this.path.forEach(function(p) {
 				renderer.destroyObject({
 					layerName: 'effects',
@@ -40,8 +42,13 @@ define([
 			});		
 
 			this.path = [];
-			this.pathPos.x = this.obj.x;
-			this.pathPos.y = this.obj.y;
+		},
+
+		onDeath: function() {
+			this.clearPath();
+			
+			this.pathPos.x = round(this.obj.x);
+			this.pathPos.y = round(this.obj.y);
 		},
 
 		add: function(x, y) {
@@ -50,7 +57,8 @@ define([
 				y: y,
 				sprite: renderer.buildRectangle({
 					layerName: 'effects',
-					alpha: 0.2,
+					color: this.pathColor,
+					alpha: this.pathAlpha,
 					x: (x * scale) + scaleMult,
 					y: (y * scale) + scaleMult,
 					w: scale - (scaleMult * 2),
@@ -64,8 +72,8 @@ define([
 			var y = this.obj.y;
 
 			if (this.path.length == 0) {
-				this.pathPos.x = x;
-				this.pathPos.y = y;
+				this.pathPos.x = round(x);
+				this.pathPos.y = round(y);
 			}
 
 			if ((x == this.lastX) && (y == this.lastY))
@@ -93,8 +101,8 @@ define([
 		setPath: function(path) {
 			this.path = this.path.concat(path);
 
-			this.pathPos.x = path[path.length - 1].x;
-			this.pathPos.y = path[path.length - 1].y;
+			this.pathPos.x = round(path[path.length - 1].x);
+			this.pathPos.y = round(path[path.length - 1].y);
 		}
 	};
 });

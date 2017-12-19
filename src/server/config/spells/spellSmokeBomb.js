@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var cpnSmokePatch = {
@@ -8,24 +8,21 @@ define([
 
 		contents: [],
 
-		applyDamage: function(o, amount) {
+		applyDamage: function (o, amount) {
 			o.stats.takeDamage(amount, 1, this.caster);
 		},
 
-		collisionEnter: function(o) {
+		collisionEnter: function (o) {
 			if (!o.aggro)
 				return;
 
-			var isPlayer = !!this.caster.player;
-			var isTargetPlayer = !!o.player;
-
-			if ((!this.caster.aggro.willAttack(o)) && (isPlayer == isTargetPlayer))
+			if (!this.caster.aggro.canAttack(o))
 				return;
 
 			this.contents.push(o);
 		},
 
-		collisionExit: function(o) {
+		collisionExit: function (o) {
 			var contents = this.contents;
 			var cLen = contents.length;
 			for (var i = 0; i < cLen; i++) {
@@ -36,7 +33,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			if (this.caster.destroyed)
 				return;
 
@@ -47,8 +44,13 @@ define([
 			for (var i = 0; i < cLen; i++) {
 				var c = contents[i];
 
-				var damage = this.getDamage(c);
-				this.applyDamage(c, damage);
+				if (!c) {
+					console.log('NO SMOKEBOMB TARGET');
+					console.log(this.obj.name, this.obj.x, this.obj.y);
+				} else {
+					var damage = this.getDamage(c);
+					this.applyDamage(c, damage);
+				}
 			}
 		}
 	};
@@ -65,72 +67,102 @@ define([
 		radius: 1,
 		targetGround: true,
 
-		cast: function(action) {
+		update: function () {
+			var selfCast = this.selfCast;
+
+			if (!selfCast)
+				return;
+
+			if ((selfCast !== true) && (Math.random() >= selfCast))
+				return;
+
+			if (this.canCast()) {
+				this.cd = this.cdMax;
+				this.cast();
+			}
+		},
+
+		cast: function (action) {
 			var obj = this.obj;
 
 			var radius = this.radius;
 
-			var x = obj.x;
-			var y = obj.y;
+			var repeat = this.repeat || 1;
 
-			var objects = this.obj.instance.objects;
-			var patches = [];
+			for (var r = 0; r < repeat; r++) {
+				var x = obj.x;
+				var y = obj.y;
 
-			var physics = this.obj.instance.physics;
-
-			for (var i = x - radius; i <= x + radius; i++) {
-				var dx = Math.abs(x - i);
-				for (var j = y - radius; j <= y + radius; j++) {
-					var distance = dx + Math.abs(j - y);
-
-					if (distance > radius + 1)
-						continue;
-
-					if (!physics.hasLos(x, y, i, j))
-						continue;
-
-					var patch = objects.buildObjects([{
-						x: i,
-						y: j,
-						properties: {
-							cpnHealPatch: cpnSmokePatch,
-							cpnParticles: {
-								simplify: function() {
-									return {
-										type: 'particles',
-										blueprint: this.blueprint
-									};
-								},
-								blueprint: this.particles
-							}
-						},
-						extraProperties: {
-							smokePatch: {
-								caster: obj,
-								statType: this.statType,
-								getDamage: this.getDamage.bind(this)
-							}
-						}
-					}]);
-
-					patches.push(patch);
+				if (this.randomPos) {
+					var range = this.range;
+					while ((x == obj.x) && (y == obj.y)) {
+						x = obj.x + ~~(Math.random() * range * 2) - range;
+						y = obj.y + ~~(Math.random() * range * 2) - range;
+					}
 				}
+
+				var objects = this.obj.instance.objects;
+				var patches = [];
+
+				var physics = this.obj.instance.physics;
+
+				for (var i = x - radius; i <= x + radius; i++) {
+					var dx = Math.abs(x - i);
+					for (var j = y - radius; j <= y + radius; j++) {
+						var distance = dx + Math.abs(j - y);
+
+						if (distance > radius + 1)
+							continue;
+
+						if (!physics.hasLos(x, y, i, j))
+							continue;
+
+						var patch = objects.buildObjects([{
+							x: i,
+							y: j,
+							properties: {
+								cpnHealPatch: cpnSmokePatch,
+								cpnParticles: {
+									simplify: function () {
+										return {
+											type: 'particles',
+											blueprint: this.blueprint
+										};
+									},
+									blueprint: this.particles
+								}
+							},
+							extraProperties: {
+								smokePatch: {
+									caster: obj,
+									statType: this.statType,
+									getDamage: this.getDamage.bind(this)
+								}
+							}
+						}]);
+
+						patches.push(patch);
+					}
+				}
+
+				if (!this.castEvent) {
+					this.sendBump({
+						x: x,
+						y: y - 1
+					});
+				}
+
+				this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 			}
-
-			this.sendBump({
-				x: x,
-				y: y - 1
-			});
-
-			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 
 			return true;
 		},
-		endEffect: function(patches) {
+		endEffect: function (patches) {
 			var pLen = patches.length;
 			for (var i = 0; i < pLen; i++) {
 				patches[i].destroyed = true;
 			}
+			patches = null;
 		}
 	};
 });

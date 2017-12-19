@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
 	'js/objects/objects',
-	'js/renderer'
+	'js/rendering/renderer'
 ], function(
 	events,
 	objects,
@@ -24,20 +24,28 @@ define([
 
 			var addY = msg.event ? scale : -(scale * 0.75);
 
-			var ttl = 30 * (msg.crit ? 1 : 1);
+			var ttl = 35;
 
 			var numberObj = {
 				obj: target,
 				amount: msg.amount,
-				x: (target.x * scale) + ~~(Math.random() * scale - (scale / 2)),
-				y: (target.y * scale) + addY,
+				x: (target.x * scale),
+				y: (target.y * scale) + scale - (scale / 4),
 				ttl: ttl,
 				ttlMax: ttl,
 				event: msg.event,
 				text: msg.text,
 				crit: msg.crit,
 				heal: msg.heal
-			};
+			};	
+
+			if (numberObj.event) {
+				numberObj.y += (scale / 2);
+			}
+			else if (numberObj.heal)
+				numberObj.x -= scale;
+			else
+				numberObj.x += scale;
 
 			var text = numberObj.text;
 			if (!numberObj.event)
@@ -74,9 +82,9 @@ define([
 				}
 
 				if (l.event)
-					l.y += 0.75;
+					l.y += 1;
 				else
-					l.y -= 0.75;
+					l.y -= 1;
 
 				var alpha = l.ttl / l.ttlMax;
 

@@ -2,7 +2,7 @@ define([
 	'js/system/events',
 	'html!ui/templates/options/template',
 	'css!ui/templates/options/styles',
-	'js/renderer',
+	'js/rendering/renderer',
 	'ui/factory',
 	'js/objects/objects',
 	'js/system/client'
@@ -29,8 +29,13 @@ define([
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
+			this.el.find('.btnPatreon').on('click', this.patreon.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
+		},
+
+		patreon: function() {
+			window.open('http://patreon.com/bigbadwaffle', '_blank');
 		},
 
 		charSelect: function() {
@@ -59,9 +64,9 @@ define([
 		onResize: function() {
 			var isFullscreen = (window.innerHeight == screen.height);
 			if (isFullscreen)
-				this.el.find('.btnScreen').html('Fullscreen');
-			else
 				this.el.find('.btnScreen').html('Windowed');
+			else
+				this.el.find('.btnScreen').html('Fullscreen');
 		},
 
 		toggle: function() {

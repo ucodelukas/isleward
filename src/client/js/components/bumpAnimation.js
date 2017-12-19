@@ -1,6 +1,6 @@
 define([
 	'js/rendering/effects'
-], function(
+], function (
 	effects
 ) {
 	return {
@@ -18,13 +18,17 @@ define([
 		duration: 3,
 		durationCounter: 0,
 
-		init: function(blueprint) {
+		infinite: false,
+
+		init: function (blueprint) {
 			//Only allow one bumper at a time
-			if (this.obj.components.filter(function(c) { c.type == this.type }) > 1)
+			if (this.obj.components.filter(function (c) {
+					c.type == this.type
+				}) > 1)
 				return true;
 		},
 
-		update: function() {
+		update: function () {
 			var deltaX = this.deltaX;
 			if (deltaX < 0)
 				this.obj.flipX = true;
@@ -33,8 +37,7 @@ define([
 
 			if (this.updateCd > 0) {
 				this.updateCd--;
-			}
-			else {
+			} else {
 				this.obj.offsetX += (this.deltaX * this.direction * this.speed);
 				this.obj.offsetY += (this.deltaY * this.direction * this.speed);
 
@@ -44,7 +47,7 @@ define([
 				if (this.durationCounter == this.duration) {
 					this.durationCounter = 0;
 					this.direction *= -1;
-					if (this.direction == 1)
+					if ((this.direction == 1) && (!this.infinite))
 						this.destroyed = true;
 					else
 						this.obj.dirty = true;
@@ -54,7 +57,7 @@ define([
 			this.obj.setSpritePosition();
 		},
 
-		destroy: function() {
+		destroy: function () {
 			this.obj.offsetX = 0;
 			this.obj.offsetY = 0;
 

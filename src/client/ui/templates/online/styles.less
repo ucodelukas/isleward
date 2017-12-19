@@ -2,44 +2,84 @@
 
 .uiOnline {
 	display: none;
-
-	width: 400px;
-	height: 400px;
-	background-color: @gray;
-	padding: 32px;
-	border: 4px solid @lightGray;
+	background-color: @blackB;
+	border: 5px solid @blackB;
 	text-align: center;
-	
-	.list {
+	width: 450px;
+	height: 400px;
+
+	> .heading {
+		color: @blueA;
 		width: 100%;
-		height: 100%;
-		overflow-y: auto;
-		background-color: @darkGray;
+		height: 36px;
+		background-color: @blackB;
 
-		.onlineUser {
-			color: @white;
-			height: 24px;
-			cursor: pointer;
+		.heading-text {
+			padding-top: 8px;
+			margin: auto;
+		}
+	}
 
-			> div {
-				float: left;
-				padding: 4px;
-				
-				&:nth-child(1) {
-					width: 10%;
-				}
+	.bottom {
+		height: calc(100% - 35px);
+		background-color: @blackC;
+		padding: 10px;
 
-				&:nth-child(2) {
-					width: 60%;
-				}
+		.list {
+			width: 100%;
+			height: 100%;
+			overflow-y: auto;
+			background-color: @darkGray;
 
-				&:nth-child(3) {	
-					width: 30%;
+
+			.heading {
+				height: 24px;
+				color: @white;
+
+				> div {
+					float: left;
+					padding: 4px;
+					
+					&:nth-child(1) {
+						width: 10%;
+					}
+
+					&:nth-child(2) {
+						width: 55%;
+					}
+
+					&:nth-child(3) {	
+						width: 35%;
+					}
 				}
 			}
 
-			&:hover {
-				background-color: lighten(@darkGray, 25%);
+
+			.onlineUser {
+				color: @grayC;
+				height: 24px;
+				cursor: pointer;
+
+				> div {
+					float: left;
+					padding: 4px;
+					
+					&:nth-child(1) {
+						width: 10%;
+					}
+
+					&:nth-child(2) {
+						width: 55%;
+					}
+
+					&:nth-child(3) {	
+						width: 35%;
+					}
+				}
+
+				&:hover {
+					background-color: lighten(@darkGray, 25%);
+				}
 			}
 		}
 	}

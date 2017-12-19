@@ -23,7 +23,19 @@ define([
 
 			var cache = {};
 
-			if (pLen > 0) {
+			if (pLen == 0) {
+				for (var i = 0; i < oLen; i++) {
+					var o = oList[i];
+					if (!o.destroyed) 
+						continue;
+
+					objects.removeObject(o);
+
+					oLen--;
+					i--;
+				}
+			}
+			else if (pLen > 0) {
 				var queueFunction = this.queue.bind(this, 'onGetObject');
 
 				for (var i = 0; i < oLen; i++) {
@@ -73,6 +85,9 @@ define([
 								toList.push(p.serverId);
 								sendTo = true;
 							}
+
+							if (destroyed)
+								p.player.unsee(oId);
 						}
 						else if (!destroyed) {
 							var cached = null;

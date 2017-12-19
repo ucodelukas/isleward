@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 		radius: 2,
 		pushback: 4,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 
 			var radius = this.radius;
@@ -32,6 +32,7 @@ define([
 						y: j,
 						components: [{
 							type: 'particles',
+							ttl: 10,
 							blueprint: this.particles
 						}]
 					};
@@ -50,13 +51,13 @@ define([
 							continue;
 						}
 
-						if (!m.aggro)
+						if ((!m.aggro) || (!m.effects))
 							continue;
 
 						var isPlayer = !!this.obj.player;
 						var isTargetPlayer = !!m.player;
 
-						if ((!this.obj.aggro.willAttack(m)) && (isPlayer == isTargetPlayer))
+						if ((!this.obj.aggro.canAttack(m)) && (isPlayer == isTargetPlayer))
 							continue;
 
 						var targetEffect = m.effects.addEffect({
@@ -131,7 +132,7 @@ define([
 			return true;
 		},
 
-		endEffect: function(target, targetPos, targetEffect) {
+		endEffect: function (target, targetPos, targetEffect) {
 			target.effects.removeEffect(targetEffect, true);
 
 			target.x = targetPos.x;

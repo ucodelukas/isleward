@@ -1,9 +1,13 @@
 define([
-	
-], function(
-	
+	'misc/events'
+], function (
+	events
 ) {
 	return {
+		init: function () {
+			events.emit('onBeforeGetHerbConfig', this);
+		},
+
 		Moonbell: {
 			sheetName: 'tiles',
 			cell: 50,
@@ -18,6 +22,12 @@ define([
 			sheetName: 'tiles',
 			cell: 51,
 			itemSprite: [1, 0]
+		},
+		'Sun Carp': {
+			sheetName: 'objects',
+			itemSprite: [11, 2],
+			baseWeight: 3,
+			ttl: 30
 		}
 	};
 });

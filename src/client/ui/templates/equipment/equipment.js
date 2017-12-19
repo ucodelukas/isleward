@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/equipment/template',
 	'css!ui/templates/equipment/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -24,7 +24,7 @@ define([
 		hoverCompare: null,
 		shiftDown: false,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 
@@ -36,7 +36,7 @@ define([
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
-		toggle: function(show) {
+		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
@@ -52,7 +52,7 @@ define([
 			this.onHoverItem(null, null, null);
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'j')
 				this.toggle();
 			else if (key == 'shift') {
@@ -61,7 +61,7 @@ define([
 					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 			}
 		},
-		onKeyUp: function(key) {
+		onKeyUp: function (key) {
 			if (key == 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
@@ -69,7 +69,7 @@ define([
 			}
 		},
 
-		onTabClick: function(e) {
+		onTabClick: function (e) {
 			this.find('.tab.selected').removeClass('selected');
 
 			$(e.currentTarget).addClass('selected');
@@ -77,7 +77,7 @@ define([
 			this.onGetStats(this.stats);
 		},
 
-		onGetItems: function(items) {
+		onGetItems: function (items) {
 			items = items || this.items;
 			this.items = items;
 
@@ -90,30 +90,45 @@ define([
 
 			this.find('[slot]')
 				.removeData('item')
-				.addClass('empty')
+				.addClass('empty show-default-icon')
+				.find('.info')
+				.html('')
+				.parent()
 				.find('.icon')
-					.off()
-					.css('background', '')
-					.on('click', this.buildSlot.bind(this));
+				.off()
+				.css('background-image', '')
+				.css('background-position', '')
+				.on('click', this.buildSlot.bind(this));
+
+			this.find('[slot]').toArray().forEach(function (el) {
+				el = $(el);
+				var slot = el.attr('slot');
+				var newItems = window.player.inventory.items.some(function (i) {
+					return ((i.slot == slot) && (i.isNew));
+				});
+
+				if (newItems)
+					el.find('.info').html('new');
+			});
 
 			items
-				.filter(function(item) {
-					var spellId = item.spellId;
-					if ((spellId != null) && (item.slot))
-						skipSpellId = spellId;
+				.filter(function (item) {
+					var runeSlot = item.runeSlot;
+					if ((runeSlot != null) && (item.slot))
+						skipSpellId = runeSlot;
 
-					return ((item.eq) && ((item.slot) || (item.spellId != null)));
+					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
 				}, this)
-				.forEach(function(item) {
+				.forEach(function (item) {
 					var imgX = -item.sprite[0] * 64;
 					var imgY = -item.sprite[1] * 64;
 
 					var slot = item.slot;
 					if (!slot) {
-						var spellId = item.spellId;
-						if (spellId > skipSpellId)
-							spellId--;
-						slot = 'rune-' + spellId;
+						var runeSlot = item.runeSlot;
+						if (runeSlot > skipSpellId)
+							runeSlot--;
+						slot = 'rune-' + runeSlot;
 					}
 
 					var spritesheet = item.spritesheet || '../../../images/items.png';
@@ -121,17 +136,17 @@ define([
 					var elSlot = this.find('[slot="' + slot + '"]');
 					elSlot
 						.data('item', item)
-						.removeClass('empty')
+						.removeClass('empty show-default-icon')
 						.find('.icon')
-							.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
-							.off()
-							.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
-							.on('mouseleave', this.onHoverItem.bind(this, null, null))
-							.on('click', this.buildSlot.bind(this, elSlot));
+						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
+						.off()
+						.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
+						.on('mouseleave', this.onHoverItem.bind(this, null, null))
+						.on('click', this.buildSlot.bind(this, elSlot));
 				}, this);
 		},
 
-		buildSlot: function(el) {
+		buildSlot: function (el) {
 			if (el.currentTarget)
 				el = $(el.currentTarget).parent();
 
@@ -145,7 +160,7 @@ define([
 			this.hoverCompare = el.data('item');
 
 			var items = this.items
-				.filter(function(item) {
+				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
 					else
@@ -161,7 +176,7 @@ define([
 				items.splice(1, 0, this.hoverCompare);
 
 			items
-				.forEach(function(item) {
+				.forEach(function (item) {
 					var sprite = item.sprite || [7, 0];
 
 					var spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
@@ -176,17 +191,25 @@ define([
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.on('mousemove', this.onHoverItem.bind(this, el, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.equipItem.bind(this, item));
+						.on('click', this.equipItem.bind(this, item, slot));
 
 					if (item == this.hoverCompare)
 						el.find('.icon').addClass('eq');
+					else if (item.isNew)
+						el.find('.icon').addClass('new');
 				}, this);
 
 			if (items.length == 0)
 				container.hide();
 		},
 
-		equipItem: function(item) {
+		equipItem: function (item, slot) {
+			var isNew = window.player.inventory.items.some(function (i) {
+				return ((i.slot == slot) && (i.isNew));
+			});
+			if (!isNew)
+				this.find('[slot="' + slot + '"] .info').html('');
+
 			if (item == this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
@@ -203,17 +226,18 @@ define([
 				cpn = 'inventory';
 				method = 'learnAbility';
 				data = {
-					id: item.id,
-					replaceId: this.hoverCompare ? this.hoverCompare.id : null
+					itemId: item.id,
+					slot: ~~slot.replace('rune-', '') + 1
 				};
 
 				if (item.empty) {
 					if (!this.hoverCompare) {
 						this.find('.itemList').hide();
 						return;
+					} else {
+						method = 'unlearnAbility';
+						data.itemId = this.hoverCompare.id;
 					}
-					else
-						data = this.hoverCompare.id;
 				}
 			}
 
@@ -230,10 +254,15 @@ define([
 			this.find('.itemList').hide();
 		},
 
-		onHoverItem: function(el, item, compare, e) {
+		onHoverItem: function (el, item, compare, e) {
 			if (el) {
 				this.hoverItem = item;
 				this.hoverEl = el;
+
+				if ((item.isNew) && (!item.eq)) {
+					delete item.isNew;
+					el.find('.icon').removeClass('new');
+				}
 
 				var ttPos = null;
 				if (e) {
@@ -250,7 +279,7 @@ define([
 			}
 		},
 
-		onGetStats: function(stats) {
+		onGetStats: function (stats) {
 			if (stats)
 				this.stats = stats;
 
@@ -285,6 +314,7 @@ define([
 				},
 				offense: {
 					'crit chance': (~~(stats.critChance * 10) / 10) + '%',
+					'crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
 					gap1: '',
 					'arcane increase': stats.elementArcanePercent + '%',
 					'fire increase': stats.elementFirePercent + '%',
@@ -293,7 +323,10 @@ define([
 					'physical increase': stats.elementPhysicalPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
 					gap2: '',
-					'damage increase': stats.dmgPercent + '%'
+					'damage increase': stats.dmgPercent + '%',
+					gap3: '',
+					'attack speed': (100 + stats.attackSpeed) + '%',
+					'cast speed': (100 + stats.castSpeed) + '%',
 				},
 				defense: {
 					armor: stats.armor,

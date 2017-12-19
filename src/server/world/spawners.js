@@ -1,7 +1,9 @@
 define([
-	'world/mobBuilder'
-], function(
-	mobBuilder
+	'world/mobBuilder',
+	'config/animations'
+], function (
+	mobBuilder,
+	animations
 ) {
 	var cSpawner = {
 		cd: -1,
@@ -15,7 +17,7 @@ define([
 		list: [],
 		mobTypes: {},
 
-		init: function(msg) {
+		init: function (msg) {
 			this.objects = msg.objects;
 			this.syncer = msg.syncer;
 			this.zone = msg.zone;
@@ -24,14 +26,14 @@ define([
 			}, mobBuilder);
 		},
 
-		reset: function() {
+		reset: function () {
 			this.list = [];
 			this.mobTypes = {};
 		},
 
-		register: function(blueprint, cdMax) {
+		register: function (blueprint, cdMax) {
 			var spawner = extend(true, {
-				cdMax: cdMax || 50,
+				cdMax: cdMax || 171,
 				blueprint: blueprint,
 				amountLeft: blueprint.amount || -1
 			});
@@ -50,22 +52,40 @@ define([
 			spawner.zonePrint = extend(true, {}, this.zone.mobs.default, this.zone.mobs[name] || {});
 		},
 
-		spawn: function(spawner) {
+		spawn: function (spawner) {
 			if (spawner.amountLeft == 0)
 				return;
 
 			var blueprint = spawner.blueprint;
 			var obj = this.objects.buildObjects([blueprint]);
 
-			this.syncer.queue('onGetObject', {
-				x: obj.x,
-				y: obj.y,
-				components: [{
-					type: 'attackAnimation',
-					row: 0,
-					col: 4
-				}]
-			});
+			var customSpawn = false;
+
+			var sheetName = blueprint.sheetName;
+			if ((sheetName) && (blueprint.sheetName.indexOf('/'))) {
+				var spawnAnimation = _.getDeepProperty(animations, ['mobs', sheetName, blueprint.cell, 'spawn']);
+				if (spawnAnimation) {
+					customSpawn = true;
+
+					this.syncer.queue('onGetObject', {
+						id: obj.id,
+						performLast: true,
+						components: [spawnAnimation]
+					});
+				}
+			}
+
+			if (!customSpawn) {
+				this.syncer.queue('onGetObject', {
+					x: obj.x,
+					y: obj.y,
+					components: [{
+						type: 'attackAnimation',
+						row: 0,
+						col: 4
+					}]
+				});
+			}
 
 			if (spawner.amountLeft != -1)
 				spawner.amountLeft--;
@@ -73,7 +93,7 @@ define([
 			return obj;
 		},
 
-		update: function() {
+		update: function () {
 			var list = this.list;
 			var lLen = list.length;
 
@@ -96,7 +116,7 @@ define([
 					if (!mob)
 						continue;
 
-					var name = l.blueprint.name.toLowerCase();
+					var name = (l.blueprint.objZoneName || l.blueprint.name).toLowerCase();
 
 					if ((l.blueprint.sheetName == 'mobs') || (l.blueprint.sheetName == 'bosses'))
 						this.setupMob(mob, l.zonePrint, l.blueprint.scaleDrops);
@@ -105,14 +125,17 @@ define([
 						this.setupObj(mob, blueprint);
 					}
 
+					if (l.blueprint.objZoneName)
+						mob.objZoneName = l.blueprint.objZoneName;
+
 					l.mob = mob;
 				}
 			}
 		},
 
-		scale: function(level) {
+		scale: function (level) {
 			level += (this.zone.addLevel || 0);
-			this.list.forEach(function(l) {
+			this.list.forEach(function (l) {
 				if (!l.zonePrint)
 					return;
 
@@ -126,7 +149,7 @@ define([
 			}, this);
 		},
 
-		setupMob: function(mob, blueprint, scaleDrops) {
+		setupMob: function (mob, blueprint, scaleDrops) {
 			var type = 'regular';
 			if (blueprint.isChampion)
 				type = 'champion'
@@ -144,10 +167,12 @@ define([
 				}
 			}
 
-			this.mobBuilder.build(mob, blueprint, scaleDrops, type);
+			this.setupObj(mob, blueprint);
+
+			this.mobBuilder.build(mob, blueprint, scaleDrops, type, this.zone.name);
 		},
 
-		setupObj: function(obj, blueprint) {
+		setupObj: function (obj, blueprint) {
 			var cpns = blueprint.components;
 			if (!cpns)
 				return;

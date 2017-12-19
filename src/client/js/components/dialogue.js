@@ -1,9 +1,11 @@
 define([
 	'js/system/client',
-	'js/system/events'
+	'js/system/events',
+	'ui/factory'
 ], function(
 	client,
-	events
+	events,
+	factory
 ) {
 	return {
 		type: 'dialogue',

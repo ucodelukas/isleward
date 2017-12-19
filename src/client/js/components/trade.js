@@ -40,12 +40,18 @@ define([
 				delete blueprint.removeItems;
 			}
 
+			if (blueprint.redraw)
+				redraw = true;
+
 			for (var p in blueprint) {
 				this[p] = blueprint[p];
 			}
 
 			if (redraw)
 				events.emit('onGetTradeList', this.itemList, this.action);
+
+			if (blueprint.closeTrade)
+				events.emit('onCloseTrade');
 		}
 	};
 });

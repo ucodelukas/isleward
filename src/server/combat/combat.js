@@ -1,24 +1,26 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var max = Math.max.bind(Math);
 	var mathRandom = Math.random.bind(Math);
 
 	return {
-		getDamage: function(config) {
+		getDamage: function (config) {
 			var srcValues = config.source.stats.values;
 			var tgtValues = config.target.stats.values;
 
 			var statValue = 0;
-			var statType = config.statType;
-			if (!(statType instanceof Array))
-				statType = [statType];
-			var dmg = 0;
-			statType.forEach(function(s) {
-				statValue += srcValues[s];
-			});
+			if (config.statType) {
+				var statType = config.statType;
+				if (!(statType instanceof Array))
+					statType = [statType];
+				var dmg = 0;
+				statType.forEach(function (s) {
+					statValue += srcValues[s];
+				});
+			}
 
 			statValue = max(1, statValue);
 
@@ -30,8 +32,10 @@ define([
 				resist += (tgtValues[elementName + 'Resist'] || 0);
 			}
 
+			var statMult = config.statMult || 1;
+
 			var dps = (
-				(config.statMult * statValue * config.damage) *
+				(statMult * statValue * config.damage) *
 				max((0.5 + (dmgPercent / 100)), 0.5)
 			);
 
@@ -44,9 +48,12 @@ define([
 				);
 			}
 
-			var cd = config.source.mob ? 1 : config.cd;
+			var amount = dps;
 
-			var amount = dps * cd * 0.3;
+			if ((config.source.mob) || (config.cd)) {
+				var cd = config.source.mob ? 1 : config.cd;
+				amount *= cd * 0.3;
+			}
 
 			var isCrit = false;
 			if (!config.noCrit) {
@@ -54,7 +61,7 @@ define([
 				var roll = mathRandom() * 100;
 				if ((roll < critChance) || (config.crit)) {
 					isCrit = true;
-					amount *= 1.5;
+					amount *= (srcValues.critMultiplier / 100);
 				}
 			}
 

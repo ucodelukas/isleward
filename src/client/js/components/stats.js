@@ -1,6 +1,6 @@
 define([
 	'js/system/events',
-	'js/renderer'
+	'js/rendering/renderer'
 ], function(
 	events,
 	renderer
@@ -11,6 +11,9 @@ define([
 		type: 'stats',
 
 		values: null,
+
+		hpSprite: null,
+		hpSpriteInner: null,
 
 		init: function(blueprint) {
 			if (this.obj.self)
@@ -28,19 +31,19 @@ define([
 
 			this.hpSprite = renderer.buildRectangle({
 				layerName: 'effects',
-				x: 0,
-				y: 0,
-				w: 0,
-				h: 0,
+				x: obj.x * scale,
+				y: obj.y * scale,
+				w: 1,
+				h: 1,
 				color: 0x802343
 			});
 
-			renderer.buildRectangle({
+			this.hpSpriteInner = renderer.buildRectangle({
 				x: 0,
 				y: 0,
-				w: 0,
-				h: 0,
-				parent: this.hpSprite,
+				w: 1,
+				h: 1,
+				layerName: 'effects',
 				color: 0xd43346
 			});
 
@@ -66,7 +69,7 @@ define([
 			});
 
 			renderer.moveRectangle({
-				sprite: this.hpSprite.children[0],
+				sprite: this.hpSpriteInner,
 				x: x + 4,
 				y: y,
 				w: (this.values.hp / this.values.hpMax) * (scale - 8),
@@ -74,6 +77,7 @@ define([
 			});
 
 			this.hpSprite.visible = (this.values.hp < this.values.hpMax);
+			this.hpSpriteInner.visible = this.hpSprite.visible;
 		},
 
 		extend: function(blueprint) {
@@ -98,6 +102,11 @@ define([
 		destroy: function() {
 			renderer.destroyObject({
 				sprite: this.hpSprite,
+				layerName: 'effects'
+			});
+
+			renderer.destroyObject({
+				sprite: this.hpSpriteInner,
 				layerName: 'effects'
 			});
 		}

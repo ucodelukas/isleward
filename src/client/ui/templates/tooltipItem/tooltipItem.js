@@ -2,13 +2,30 @@ define([
 	'js/system/events',
 	'css!ui/templates/tooltipItem/styles',
 	'html!ui/templates/tooltipItem/template',
-	'html!ui/templates/tooltipItem/templateTooltip'
-], function(
+	'html!ui/templates/tooltipItem/templateTooltip',
+	'js/misc/statTranslations'
+], function (
 	events,
 	styles,
 	template,
-	tplTooltip
+	tplTooltip,
+	statTranslations
 ) {
+	var percentageStats = [
+		'addCritChance',
+		'addCritMultiplier',
+		'sprintChance',
+		'dmgPercent',
+		'xpIncrease',
+		'attackSpeed',
+		'castSpeed',
+		'catchChance',
+		'catchSpeed',
+		'fishRarity',
+		'fishWeight',
+		'fishItems'
+	];
+
 	return {
 		tpl: template,
 		type: 'tooltipItem',
@@ -16,14 +33,14 @@ define([
 		tooltip: null,
 		item: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.tooltip = this.el.find('.tooltip');
-			
+
 			this.onEvent('onShowItemTooltip', this.onShowItemTooltip.bind(this));
 			this.onEvent('onHideItemTooltip', this.onHideItemTooltip.bind(this));
 		},
 
-		onHideItemTooltip: function(item) {
+		onHideItemTooltip: function (item) {
 			if (this.item != item)
 				return;
 
@@ -31,7 +48,7 @@ define([
 			this.tooltip.hide();
 		},
 
-		onShowItemTooltip: function(item, pos, compare, bottomAlign, shiftDown) {
+		onShowItemTooltip: function (item, pos, compare, bottomAlign, shiftDown) {
 			this.item = item;
 
 			var tempStats = $.extend(true, {}, item.stats);
@@ -45,8 +62,7 @@ define([
 								tempStats[s] = '+' + delta;
 							else if (delta < 0)
 								tempStats[s] = delta;
-						}
-						else
+						} else
 							tempStats[s] = '+' + tempStats[s];
 					}
 					for (var s in compareStats) {
@@ -58,11 +74,11 @@ define([
 			}
 
 			stats = Object.keys(tempStats)
-				.map(function(s) {
-					var statName = this.mapStat(s);
+				.map(function (s) {
+					var statName = statTranslations.translate(s);
 					var value = tempStats[s];
 
-					if (['addCritChance', 'sprintChance', 'dmgPercent', 'xpIncrease'].indexOf(s) > -1)
+					if (percentageStats.indexOf(s) > -1)
 						value += '%';
 					else if ((s.indexOf('element') == 0) && (s.indexOf('Resist') == -1))
 						value += '%';
@@ -81,14 +97,18 @@ define([
 
 					return row;
 				}, this)
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					return (a.length - b.length);
 				})
 				.join('');
 
 			var name = item.name;
-			if (item.quantity)
+			if (item.quantity > 1)
 				name += ' x' + item.quantity;
+
+			var level = null;
+			if (item.level)
+				level = item.level.push ? item.level[0] + ' - ' + item.level[1] : item.level;
 
 			var html = tplTooltip
 				.replace('$NAME$', name)
@@ -96,7 +116,7 @@ define([
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
 				.replace('$STATS$', stats)
-				.replace('$LEVEL$', item.level);
+				.replace('$LEVEL$', level);
 			if (item.power)
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
@@ -117,6 +137,14 @@ define([
 			else
 				this.tooltip.find('.level').show();
 
+			if ((!item.type) || (item.type == item.name))
+				this.tooltip.find('.type').hide();
+			else {
+				this.tooltip.find('.type')
+					.html(item.type)
+					.show();
+			}
+
 			if (item.power)
 				this.tooltip.find('.power').show();
 
@@ -131,14 +159,12 @@ define([
 					this.tooltip.find('.material').show();
 				else if (item.quest)
 					this.tooltip.find('.quest').show();
-			} 
-			else if (item.eq) 
+			} else if (item.eq)
 				this.tooltip.find('.info').hide();
 
 			if (!item.ability) {
 				this.tooltip.find('.damage').hide();
-			}
-			else
+			} else
 				this.tooltip.find('.info').hide();
 
 			if (item.spell) {
@@ -146,20 +172,19 @@ define([
 					.html('<br />' + item.spell.name)
 					.addClass('q' + item.spell.quality)
 					.show();
-				this.tooltip.find('.damage')	
+				this.tooltip.find('.damage')
 					.show();
 				if (item.ability)
 					this.tooltip.find('.spellName').hide();
-			}
-			else
-				this.tooltip.find('.spellName').hide();	
+			} else
+				this.tooltip.find('.spellName').hide();
 
-			this.tooltip.find('.worth').html(item.worth ? ('<br />value: ' + item.worth) : '');
+			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
-			if (item.effects) {
+			if ((item.effects) && (item.type != 'mtx')) {
 				var htmlEffects = '';
 
-				item.effects.forEach(function(e, i) {
+				item.effects.forEach(function (e, i) {
 					htmlEffects += e.text;
 					if (i < item.effects.length - 1)
 						htmlEffects += '<br />';
@@ -168,14 +193,23 @@ define([
 				this.find('.effects')
 					.html(htmlEffects)
 					.show();
-			}
-			else
+			} else if (item.description) {
+				this.find('.effects')
+					.html(item.description)
+					.show();
+			} else
 				this.find('.effects').hide();
+
+			if (item.type == 'Reward Card') {
+				this.find('.spellName')
+					.html('Set Size: ' + item.setSize)
+					.show();
+			}
 
 			if (item.factions) {
 				var htmlFactions = '';
 
-				item.factions.forEach(function(f, i) {
+				item.factions.forEach(function (f, i) {
 					var htmlF = f.name + ': ' + f.tierName;
 					if (f.noEquip)
 						htmlF = '<font class="color-red">' + htmlF + '</font>';
@@ -188,12 +222,21 @@ define([
 				this.find('.faction')
 					.html(htmlFactions)
 					.show();
-			}
-			else
+			} else
 				this.find('.faction').hide();
 
 			if ((shiftDown) || (!compare))
 				this.tooltip.find('.info').hide();
+
+			if (item.cd) {
+				this.tooltip.find('.info')
+					.html('cooldown: ' + item.cd)
+					.show();
+			} else if (item.uses) {
+				this.tooltip.find('.info')
+					.html('uses: ' + item.uses)
+					.show();
+			}
 
 			this.tooltip
 				.show();
@@ -211,49 +254,11 @@ define([
 			events.emit('onBuiltItemTooltip', this.tooltip);
 		},
 
-		showWorth: function(canAfford) {
+		showWorth: function (canAfford) {
 			this.tooltip.find('.worth').show();
 
 			if (!canAfford)
 				this.tooltip.find('.worth').addClass('no-afford');
-		},
-
-		mapStat: function(stat) {
-			return {
-				'vit': 'vitality',
-				'hpMax': 'vitality',
-				'regenHp': 'health regeneration',
-				'manaMax': 'maximum mana',
-				'regenMana': 'mana regeneration',
-				'str': 'strength',
-				'int': 'intellect',
-				'dex': 'dexterity',
-				'armor': 'armor',
-				'addCritChance': 'increased crit chance',
-				'magicFind': 'magic find',
-				'sprintChance': 'sprint chance',
-				'dmgPercent': 'to all damage',
-				'allAttributes': 'to all attributes',
-				'xpIncrease': 'additional xp per kill',
-
-				'elementArcanePercent': 'increased arcane damage',
-				'elementFrostPercent': 'increased frost damage',
-				'elementFirePercent': 'increased fire damage',
-				'elementHolyPercent': 'increased holy damage',
-				'elementPhysicalPercent': 'increased physical damage',
-				'elementPoisonPercent': 'increased poison damage',
-
-				'elementArcaneResist': 'arcane resistance',
-				'elementFrostResist': 'frost resistance',
-				'elementFireResist': 'fire resistance',
-				'elementHolyResist': 'holy resistance',
-				'elementPhysicalResist': 'physical resistance',
-				'elementPoisonResist': 'poison resistance',
-				'elementAllResist': 'all resistance',
-
-				//This stat is used for gambling when you can't see the stats
-				'stats': 'stats'
-			}[stat];
 		}
 	};
 });

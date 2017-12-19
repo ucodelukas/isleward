@@ -1,6 +1,6 @@
 define([
 	'items/generators/slots'
-], function(
+], function (
 	slots
 ) {
 	return {
@@ -13,16 +13,27 @@ define([
 		mobName: null,
 		item: null,
 
-		build: function() {
+		build: function () {
 			if ((!this.mobName) || (!this.item)) {
 				var mobTypes = this.obj.instance.spawners.zone.mobs;
 				var mobCounts = this.obj.instance.spawners.mobTypes;
-				var keys = Object.keys(mobTypes).filter(function(m) {
-					return ((m != 'default') && (mobTypes[m].questItem));
-				});
+				var keys = Object.keys(mobTypes).filter(function (m) {
+					var mobBlueprint = mobTypes[m];
+
+					return (
+						(m != 'default') &&
+						(mobBlueprint.questItem) &&
+						(mobBlueprint.level <= (this.obj.stats.values.level * 1.35))
+					);
+				}, this);
+
+				//No level appropriate mobs found
+				if (keys.length == 0)
+					return false;
+
 				this.mobType = keys[~~(Math.random() * keys.length)];
 				var needMax = 8;
-				this.mobName = this.mobType.replace(/\w\S*/g, function(txt) {
+				this.mobName = this.mobType.replace(/\w\S*/g, function (txt) {
 					return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 				});
 
@@ -33,16 +44,19 @@ define([
 
 			this.name = this.item.name + ' Gatherer';
 			this.description = 'Loot ' + this.have + '/' + this.need + ' ' + this.item.name + ' from ' + this.mobName;
+
+			return true;
 		},
 
-		oComplete: function() {
+		oComplete: function () {
 			var inventory = this.obj.inventory;
 			var item = inventory.items.find((i => i.name == this.item.name).bind(this));
-			this.obj.inventory.destroyItem(item.id, this.need);
+			if (item)
+				this.obj.inventory.destroyItem(item.id, this.need);
 		},
 
 		events: {
-			beforeTargetDeath: function(target, dropItems) {
+			beforeTargetDeath: function (target, dropItems) {
 				if ((this.obj.zoneName != this.zoneName) || (target.name.toLowerCase() != this.mobType) || (this.have >= this.need))
 					return;
 
@@ -60,7 +74,7 @@ define([
 				});
 			},
 
-			afterLootMobItem: function(item) {
+			afterLootMobItem: function (item) {
 				if ((this.obj.zoneName != this.zoneName) || (item.name.toLowerCase() != this.item.name.toLowerCase()))
 					return;
 
@@ -72,7 +86,7 @@ define([
 				this.obj.syncer.setArray(true, 'quests', 'updateQuests', this.simplify(true));
 			},
 
-			afterDestroyItem: function(item, quantity) {
+			afterDestroyItem: function (item, quantity) {
 				if (item.name.toLowerCase() != this.item.name.toLowerCase())
 					return;
 

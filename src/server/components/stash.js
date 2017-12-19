@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -10,7 +10,7 @@ define([
 		items: [],
 		changed: false,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var items = blueprint.items || [];
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
@@ -22,10 +22,10 @@ define([
 			this.blueprint = blueprint;
 		},
 
-		getItem: function(item) {
+		getItem: function (item) {
 			//Material?
 			var exists = false;
-			if ((item.material) || (item.quest)) {
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;
@@ -59,7 +59,7 @@ define([
 				this.items.push(item);
 		},
 
-		deposit: function(item) {
+		deposit: function (item) {
 			if (!this.active)
 				return;
 
@@ -70,10 +70,22 @@ define([
 			this.changed = true;
 		},
 
-		withdraw: function(id) {
+		destroyItem: function (id) {
+			var item = this.items.find(i => i.id == id);
+			if (!item)
+				return;
+
+			this.items.spliceWhere(i => i == item);
+
+			this.obj.syncer.setArray(true, 'stash', 'destroyItems', id);
+
+			this.changed = true;
+		},
+
+		withdraw: function (id) {
 			if (!this.active)
 				return;
-			
+
 			var item = this.items.find(i => i.id == id);
 			if (!item)
 				return;
@@ -86,12 +98,12 @@ define([
 			this.changed = true;
 		},
 
-		setActive: function(active) {
+		setActive: function (active) {
 			this.active = active;
 			this.obj.syncer.set(true, 'stash', 'active', this.active);
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return null;
 

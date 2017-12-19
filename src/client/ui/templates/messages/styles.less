@@ -14,6 +14,8 @@
 	pointer-events: none;
 
 	&.typing {
+		pointer-events: all;
+
 		.el.message {
 			display: block;
 		}
@@ -77,10 +79,17 @@
 		max-height: 320px;
 
 		.list-message {
+			display: none;
 			width: 100%;
 			padding: 5px 10px;
 			color: white;
 			filter:
+				drop-shadow(0px -2px 0px @blackD)
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD)
+				drop-shadow(-2px 0px 0px @blackD);
+
+			-moz-filter:
 				drop-shadow(0px -2px 0px @blackD)
 				drop-shadow(0px 2px 0px @blackD)
 				drop-shadow(2px 0px 0px @blackD)
@@ -120,25 +129,12 @@
 			&.color-cyan {
 				color: @blueA;
 			}
-
-			display: none;
 		}
 
-		&.rep .list-message.rep {
-			display: block;
-		}
-
-		&.chat .list-message.chat {
-			display: block;
-		}
-
-		&.info .list-message.info {
-			display: block;
-		}
-
-		&.loot .list-message.loot {
-			display: block;
-		}
+		&.rep .rep { display: block; }
+		&.chat .chat { display: block; }
+		&.info .info { display: block; }
+		&.loot .loot { display: block; }
 	}
 
 	.el.message {

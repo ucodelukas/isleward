@@ -3,13 +3,21 @@ define([
 	'items/salvager',
 	'items/enchanter',
 	'objects/objects',
-	'config/classes'
-], function(
+	'config/classes',
+	'mtx/mtx',
+	'config/factions',
+	'misc/events',
+	'items/itemEffects'
+], function (
 	generator,
 	salvager,
 	enchanter,
 	objects,
-	classes
+	classes,
+	mtx,
+	factions,
+	events,
+	itemEffects
 ) {
 	return {
 		type: 'inventory',
@@ -19,12 +27,12 @@ define([
 
 		blueprint: null,
 
-		init: function(blueprint, isTransfer) {
+		init: function (blueprint, isTransfer) {
 			var items = blueprint.items || [];
 			var iLen = items.length;
 
 			//Spells should be sorted so they're EQ'd in the right order
-			items.sort(function(a, b) {
+			items.sort(function (a, b) {
 				var aId = (a.spellId != null) ? ~~a.spellId : 9999;
 				var bId = (b.spellId != null) ? ~~b.spellId : 9999;
 				return (aId - bId);
@@ -32,50 +40,108 @@ define([
 
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+				if ((item.pos >= this.inventorySize) || (item.eq))
+					delete item.pos;
 
-				if ((item.spell) && (!item.spell.rolls))
+				//Hacks for old items
+				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
+					items.splice(i, 1);
+					i--;
+					iLen--;
 					continue;
+				} else if ((item.spell) && (item.type == 'Spear')) {
+					item.spell.properties = item.spell.properties || {};
+					item.spell.properties.range = item.range;
+				} else if (item.quantity == NaN)
+					item.quantity = 1;
+				else if ((item.effects) && (Object.keys(item.effects[0]).length == 0)) {
+					items.splice(i, 1);
+					i--;
+					iLen--;
+					continue;
+				} else if ((item.slot != 'twoHanded') && (item.spell) && (!item.ability))
+					delete item.spell;
 
-				if (item.effects) {
-					item.effects.forEach(function(e) {
-						var faction = require('config/factions/' + e.factionId);
-						var statGenerator = faction.uniqueStat;
-						statGenerator.generate(item);
-					});
+				while (item.name.indexOf(`''`) > -1) {
+					item.name = item.name.replace(`''`, `'`);
 				}
-
-				this.getItem(items[i], true);
 			}
 
-			if ((this.obj.player) && (!isTransfer)) {
+			this.hookItemEvents(items);
+
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+				var pos = item.pos;
+
+				var newItem = this.getItem(item, true);
+				newItem.pos = pos;
+			}
+
+			if ((this.obj.player) && (!isTransfer))
 				this.getDefaultAbilities();
-
-				/*this.getItem(generator.generate({
-					spell: true,
-					spellName: 'arcane barrier'
-				}));*/
-
-				/*for (var i = 0; i < 10; i++) {
-					var item = generator.generate({
-						slot: 'twoHanded',
-						quality: 4,
-						level: 1
-					});
-
-					this.getItem(item);
-				}*/
-			}
 
 			delete blueprint.items;
 
 			this.blueprint = blueprint;
 		},
 
+		transfer: function () {
+			this.hookItemEvents();
+		},
+
+		hookItemEvents: function (items) {
+			var items = items || this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+
+				if (item.effects) {
+					item.effects.forEach(function (e) {
+						if (e.mtx) {
+							var mtxUrl = mtx.get(e.mtx);
+							var mtxModule = require(mtxUrl);
+
+							e.events = mtxModule.events;
+						} else if (e.factionId) {
+							var faction = factions.getFaction(e.factionId);
+							var statGenerator = faction.uniqueStat;
+							statGenerator.generate(item);
+						} else {
+							var effectUrl = itemEffects.get(e.type);
+							var effectModule = require(effectUrl);
+
+							e.events = effectModule.events;
+						}
+					});
+				}
+
+				if ((item.pos == null) && (!item.eq)) {
+					var pos = i;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fj => (fj.pos == j))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
+					var pos = item.pos;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				}
+			}
+		},
+
 		//Client Actions
 
-		enchantItem: function(msg) {
+		enchantItem: function (msg) {
 			var item = this.findItem(msg.itemId);
-			if ((!item) || (!item.slot) || (item.eq) || ((msg.action == 'scour') && (item.power == 0))) {
+			if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action == 'scour') && (item.power == 0))) {
 				this.resolveCallback(msg);
 				return;
 			}
@@ -83,7 +149,7 @@ define([
 			enchanter.enchant(this.obj, item, msg);
 		},
 
-		getEnchantMaterials: function(msg) {
+		getEnchantMaterials: function (msg) {
 			var result = [];
 			var item = this.findItem(msg.itemId);
 			if ((item) && (item.slot))
@@ -92,60 +158,129 @@ define([
 			this.resolveCallback(msg, result);
 		},
 
-		learnAbility: function(id, forceLearn) {
-			var replaceId = null;
-			var newSpellId = id.spellId;
-			if (id.id != null) {
-				replaceId = id.replaceId;
-				id = id.id;
+		learnAbility: function (itemId, runeSlot) {
+			if (itemId.itemId != null) {
+				var msg = itemId;
+				itemId = msg.itemId;
+				runeSlot = msg.slot;
 			}
 
-			var item = this.findItem(id);
-			if ((!item) || (!item.spell) || ((item.spellId == null) && (item.eq) && (!forceLearn))) {
-				if (item)
-					item.eq = false;
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
 				return;
 			}
 
 			var spellbook = this.obj.spellbook;
 
-			if ((item.eq) && (!forceLearn)) {
-				delete item.eq;
-				spellbook.removeSpellById(item.spellId);
-				delete item.spellId;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				return;
+			if (item.slot == 'twoHanded')
+				runeSlot = 0;
+			else if (runeSlot == null) {
+				if (!this.items.some(i => (i.runeSlot == 2)))
+					runeSlot = 2;
+				else
+					runeSlot = 1;
 			}
 
-			if (replaceId != null) {
-				var replaceItem = this.findItem(replaceId);
-				if (replaceItem) {
-					delete replaceItem.eq;
-					spellbook.removeSpellById(replaceItem.spellId);
-					newSpellId = replaceItem.spellId;
-					delete replaceItem.spellId;
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', replaceItem);
-				}
-			}
-			
-			if (spellbook.spells.length >= 3) {
-				if (item.slot)
-					item.spellId = -1;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				return;
+			var currentEq = this.items.find(i => (i.runeSlot == runeSlot));
+			if (currentEq) {
+				spellbook.removeSpellById(runeSlot);
+				delete currentEq.eq;
+				delete currentEq.runeSlot;
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', currentEq);
 			}
 
-			item.spellId = spellbook.addSpellFromRune(item.spell, newSpellId);
-			if (item.spellId != -1)
-				item.eq = true;
-			else
-				delete item.spell;
+			item.eq = true;
+			item.runeSlot = runeSlot;
+			delete item.pos;
+
+			spellbook.addSpellFromRune(item.spell, runeSlot);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
-		stashItem: function(id) {
+		activateMtx: function (itemId) {
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (item.type != 'mtx') {
+				delete item.active;
+				return;
+			}
+
+			item.active = !item.active;
+
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		useItem: function (itemId) {
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+
+			if (item.cdMax) {
+				if (item.cd) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'That item is on cooldown'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					return;
+				}
+
+				item.cd = item.cdMax;
+
+				//Find similar items and put them on cooldown too
+				this.items.forEach(function (i) {
+					if ((i.name == item.name) && (i.cdMax == item.cdMax))
+						i.cd = i.cdMax;
+				});
+			}
+
+			var result = {};
+			events.emit('onBeforeUseItem', this.obj, item, result);
+
+			if (item.type == 'consumable') {
+				if (item.uses) {
+					item.uses--;
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					return;
+				}
+				this.destroyItem(itemId, 1);
+			}
+		},
+
+		unlearnAbility: function (itemId) {
+			if (itemId.itemId != null)
+				itemId = itemId.itemId;
+
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+			else if (!item.spell) {
+				item.eq = false;
+				return;
+			}
+
+			var spellbook = this.obj.spellbook;
+			spellbook.removeSpellById(item.runeSlot);
+			delete item.eq;
+			delete item.runeSlot;
+			this.setItemPosition(itemId);
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		stashItem: function (id) {
 			var item = this.findItem(id);
-			if ((!item) || (item.quest) || (item.noSalvage))
+			if ((!item) || (item.quest) || (item.noStash))
 				return;
 
 			delete item.pos;
@@ -154,11 +289,12 @@ define([
 			if (!stash.active)
 				return;
 
-			this.destroyItem(id);
-			stash.deposit(item);
+			var clonedItem = extend(true, {}, item);
+			this.destroyItem(id, null, true);
+			stash.deposit(clonedItem);
 		},
 
-		salvageItem: function(id) {
+		salvageItem: function (id) {
 			var item = this.findItem(id);
 			if ((!item) || (item.material) || (item.quest) || (item.noSalvage) || (item.eq))
 				return;
@@ -190,9 +326,9 @@ define([
 			this.destroyItem(id);
 		},
 
-		destroyItem: function(id, amount) {
+		destroyItem: function (id, amount, force) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || ((item.noDestroy) && (!force)))
 				return;
 
 			amount = amount || item.quantity;
@@ -220,9 +356,9 @@ define([
 			return item;
 		},
 
-		dropItem: function(id) {
+		dropItem: function (id) {
 			var item = this.findItem(id);
-			if (!item)
+			if ((!item) || (item.noDrop))
 				return;
 
 			delete item.pos;
@@ -244,8 +380,8 @@ define([
 			this.createBag(dropCell.x, dropCell.y, [item]);
 		},
 
-		moveItem: function(msgs) {
-			msgs.forEach(function(m) {
+		moveItem: function (msgs) {
+			msgs.forEach(function (m) {
 				var item = this.findItem(m.id);
 				if (!item)
 					return;
@@ -254,9 +390,52 @@ define([
 			}, this);
 		},
 
+		mailItem: function (msg) {
+			var item = this.findItem(msg.itemId);
+			if (!item) {
+				this.resolveCallback(msg);
+				return;
+			}
+
+			delete item.pos;
+
+			var io = require('security/io');
+			io.get({
+				ent: msg.recipient,
+				field: 'character',
+				callback: this.onCheckCharExists.bind(this, msg, item)
+			});
+		},
+		onCheckCharExists: function (msg, item, res) {
+			if (!res) {
+				this.resolveCallback(msg, 'Recipient does not exist');
+				return;
+			}
+
+			this.obj.instance.mail.sendMail(msg.recipient, [extend(true, {}, item)]);
+
+			this.destroyItem(item.id);
+
+			this.resolveCallback(msg);
+		},
+
 		//Helpers
 
-		resolveCallback: function(msg, result) {
+		setItemPosition: function (id) {
+			var item = this.findItem(id);
+			if (!item)
+				return;
+
+			var iSize = this.inventorySize;
+			for (var i = 0; i < iSize; i++) {
+				if (!this.items.some(j => (j.pos == i))) {
+					item.pos = i;
+					break;
+				}
+			}
+		},
+
+		resolveCallback: function (msg, result) {
 			var callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
 			result = result || [];
 
@@ -273,15 +452,15 @@ define([
 			});
 		},
 
-		findItem: function(id) {
+		findItem: function (id) {
 			if (id == null)
 				return null;
 
 			return this.items.find(i => i.id == id);
 		},
 
-		getDefaultAbilities: function() {
-			var hasWeapon = this.items.some(function(i) {
+		getDefaultAbilities: function () {
+			var hasWeapon = this.items.some(function (i) {
 				return (
 					(i.spell) &&
 					(i.spell.rolls) &&
@@ -302,28 +481,28 @@ define([
 				this.getItem(item);
 			}
 
-			var hasSpell = this.items.some(function(i) {
-				return (
-					(i.spell) &&
-					(i.spell.rolls) &&
-					((i.spell.rolls.damage != null) || (i.spell.rolls.healing != null)) &&
-					(i.slot != 'twoHanded')
-				);
-			});
-
-			if (!hasSpell) {
-				var item = generator.generate({
-					spell: true,
-					spellQuality: 'basic',
-					spellName: classes.spells[this.obj.class][0]
+			classes.spells[this.obj.class].forEach(function (spellName) {
+				var hasSpell = this.items.some(function (i) {
+					return (
+						(i.spell) &&
+						(i.spell.name.toLowerCase() == spellName)
+					);
 				});
-				item.eq = true;
-				item.noSalvage = true;
-				this.getItem(item);
-			}
+
+				if (!hasSpell) {
+					var item = generator.generate({
+						spell: true,
+						spellQuality: 'basic',
+						spellName: spellName
+					});
+					item.eq = true;
+					item.noSalvage = true;
+					this.getItem(item);
+				}
+			}, this);
 		},
 
-		createBag: function(x, y, items, ownerId) {
+		createBag: function (x, y, items, ownerId) {
 			if (ownerId == null)
 				ownerId = -1;
 
@@ -340,8 +519,10 @@ define([
 
 			if (topQuality == 0)
 				bagCell = 50;
-			else if (topQuality < 3)
+			else if (topQuality == 1)
 				bagCell = 51;
+			else if (topQuality == 2)
+				bagCell = 128;
 			else if (topQuality == 3)
 				bagCell = 52;
 			else
@@ -365,7 +546,17 @@ define([
 			return obj;
 		},
 
-		getItem: function(item, hideMessage) {
+		hasSpace: function () {
+			if (this.inventorySize != -1) {
+				var nonEqItems = this.items.filter(f => !f.eq).length;
+				return (nonEqItems < this.inventorySize);
+			} else
+				return true;
+		},
+
+		getItem: function (item, hideMessage) {
+			events.emit('onBeforeGetItem', item, this.obj);
+
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
 
@@ -376,18 +567,24 @@ define([
 			if (this.obj.player)
 				delete item.fromMob;
 
-			//Material?
+			//Store the quantity to send to the player
+			var quantity = item.quantity;
+
 			var exists = false;
-			if ((item.material) || (item.quest)) {
-				var existItem = this.items.find(i => i.name == item.name);
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
+				var existItem = this.items.find(i => (i.name == item.name));
 				if (existItem) {
 					exists = true;
 					if (!existItem.quantity)
 						existItem.quantity = 1;
-					existItem.quantity += item.quantity;
+
+					existItem.quantity += (item.quantity || 1);
 					item = existItem;
 				}
 			}
+
+			if (!exists)
+				delete item.pos;
 
 			//Get next id
 			if (!exists) {
@@ -395,17 +592,17 @@ define([
 				var items = this.items;
 				var iLen = items.length;
 
-				var nonEqItems = items.filter(f => !f.eq).length;
-
-				if ((nonEqItems >= this.inventorySize) && (!hideMessage)) {
-					this.obj.instance.syncer.queue('onGetMessages', {
-						id: this.obj.id,
-						messages: [{
-							class: 'q0',
-							message: 'you bags are too full to loot any more items',
-							type: 'info'
-						}]
-					}, [this.obj.serverId]);
+				if (!this.hasSpace()) {
+					if (!hideMessage) {
+						this.obj.instance.syncer.queue('onGetMessages', {
+							id: this.obj.id,
+							messages: [{
+								class: 'q0',
+								message: 'you bags are too full to loot any more items',
+								type: 'info'
+							}]
+						}, [this.obj.serverId]);
+					}
 
 					return false;
 				}
@@ -437,11 +634,14 @@ define([
 				var messages = [];
 
 				var msg = item.name;
-				if (item.quantity)
-					msg += ' x' + item.quantity;
+				if (quantity)
+					msg += ' x' + quantity;
+				else if ((item.stats) && (item.stats.weight))
+					msg += ` ${item.stats.weight}lb`;
 				messages.push({
 					class: 'q' + item.quality,
-					message: 'loot (' + msg + ')',
+					message: 'loot: {' + msg + '}',
+					item: item,
 					type: 'loot'
 				});
 
@@ -474,51 +674,65 @@ define([
 				}
 			}
 
+			if (item.effects) {
+				item.effects.forEach(function (e) {
+					if (e.mtx) {
+						var mtxUrl = mtx.get(e.mtx);
+						var mtxModule = require(mtxUrl);
+
+						e.events = mtxModule.events;
+					} else if (e.type) {
+						var effectUrl = itemEffects.get(e.type);
+						var effectModule = require(effectUrl);
+
+						e.text = effectModule.events.onGetText(item);
+
+						e.events = effectModule.events;
+					}
+				});
+			}
+
 			if (!exists)
 				this.items.push(item);
 
 			if (item.eq) {
 				if (item.ability)
-					this.learnAbility(item.id, true);
+					this.learnAbility(item.id, item.runeSlot);
 				else
 					this.obj.equipment.equip(item.id);
 			} else {
-				var didEq = false;
-				//if ((item.slot) && (this.obj.equipment)) {
-				//	didEq = this.obj.equipment.autoEquip(item.id);
-				//}
-				if (!didEq) {
-					if (!item.effects)
-						this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-					else {
-						var result = extend(true, {}, item);
-						result.effects = result.effects.map(e => ({
-							factionId: e.factionId,
-							text: e.text,
-							properties: e.properties
-						}));
-						var reputation = this.obj.reputation;
+				if (!item.effects)
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+				else {
+					var result = extend(true, {}, item);
+					result.effects = result.effects.map(e => ({
+						factionId: e.factionId,
+						text: e.text,
+						properties: e.properties
+					}));
 
-						if (result.factions) {
-							result.factions = result.factions.map(function(f) {
-								var faction = reputation.getBlueprint(f.id);
-								var factionTier = reputation.getTier(f.id);
+					var reputation = this.obj.reputation;
 
-								var noEquip = null;
-								if (factionTier < f.tier)
-									noEquip = true;
+					//Don't do this check if we don't have a reputation cpn. That means this is most likely a bag
+					if ((reputation) && (result.factions)) {
+						result.factions = result.factions.map(function (f) {
+							var faction = reputation.getBlueprint(f.id);
+							var factionTier = reputation.getTier(f.id);
 
-								return {
-									name: faction.name,
-									tier: f.tier,
-									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-									noEquip: noEquip
-								};
-							}, this);
-						}
+							var noEquip = null;
+							if (factionTier < f.tier)
+								noEquip = true;
 
-						this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
+							return {
+								name: faction.name,
+								tier: f.tier,
+								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+								noEquip: noEquip
+							};
+						}, this);
 					}
+
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
 				}
 			}
 
@@ -530,7 +744,7 @@ define([
 			return item;
 		},
 
-		dropBag: function(ownerId, killSource) {
+		dropBag: function (ownerId, killSource) {
 			if (!this.blueprint)
 				return;
 
@@ -541,11 +755,11 @@ define([
 
 			//Get player's spells' statTypes
 			var stats = [];
-			playerObject.spellbook.spells.forEach(function(s) {
+			playerObject.spellbook.spells.forEach(function (s) {
 				var spellStatType = s.statType;
 				if (!(spellStatType instanceof Array))
 					spellStatType = [spellStatType];
-				spellStatType.forEach(function(ss) {
+				spellStatType.forEach(function (ss) {
 					if (stats.indexOf(ss) == -1)
 						stats.push(ss);
 				});
@@ -560,31 +774,18 @@ define([
 
 			var blueprint = this.blueprint;
 
-			if (blueprint.noRandom) {
-				this.items = [];
-				var blueprints = blueprint.blueprints;
-				for (var i = 0; i < blueprints.length; i++) {
-					var drop = blueprints[i];
-					drop.level = drop.level || level;
-					drop.magicFind = magicFind;
+			var savedItems = extend(true, [], this.items);
+			var instancedItems = extend(true, [], this.items);
+			this.items = [];
 
-					this.getItem(generator.generate(drop), true);
-				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
-
-				if (this.items.length > 0)
-					this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-			} else {
-				var instancedItems = extend(true, [], this.items);
-				var useItems = [];
-
-				var magicFind = (blueprint.magicFind || 0) + killSource.stats.values.magicFind;
+			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
+				var magicFind = (blueprint.magicFind || 0);
+				var bonusMagicFind = killSource.stats.values.magicFind;
 				for (var i = 0; i < blueprint.rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
 
-					var useItem = null;
+					/*var useItem = null;
 					if (Math.random() < generator.spellChance) {
 						useItem = instancedItems
 							.filter(item => item.ability);
@@ -604,30 +805,56 @@ define([
 
 					//Spells don't have stats
 					if (useItem.stats)
-						delete useItem.stats.armor;
+						delete useItem.stats.armor;*/
 
 					var itemBlueprint = {
-						level: useItem.level,
-						slot: useItem.slot,
-						type: useItem.type,
-						spell: !!useItem.ability,
-						stats: useItem.stats ? Object.keys(useItem.stats) : null,
-						magicFind: magicFind
+						level: this.obj.stats.values.level,
+						magicFind: magicFind,
+						bonusMagicFind: bonusMagicFind
 					};
 
 					useItem = generator.generate(itemBlueprint);
 
-					useItems.push(useItem);
+					this.getItem(useItem);
 				}
-
-				killSource.fireEvent('beforeTargetDeath', this.obj, useItems);
-
-				if (useItems.length > 0)
-					this.createBag(this.obj.x, this.obj.y, useItems, ownerId);
 			}
+
+			if (blueprint.noRandom) {
+				var blueprints = blueprint.blueprints;
+				for (var i = 0; i < blueprints.length; i++) {
+					var drop = blueprints[i];
+					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
+						continue;
+					else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+						continue;
+					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance)) {
+						continue;
+					}
+
+					drop.level = drop.level || this.obj.stats.values.level;
+					drop.magicFind = magicFind;
+
+					var item = drop;
+					if (!item.quest)
+						item = generator.generate(drop);
+
+					if (!item.slot)
+						delete item.level;
+
+					this.getItem(item, true);
+				}
+			}
+
+			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
+
+			if (this.items.length > 0)
+				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
+
+			this.items = savedItems;
 		},
 
-		giveItems: function(obj, hideMessage) {
+		giveItems: function (obj, hideMessage) {
 			var objInventory = obj.inventory;
 
 			var messages = [];
@@ -648,7 +875,7 @@ define([
 			return true;
 		},
 
-		rollItems: function(party) {
+		rollItems: function (party) {
 			var items = this.items;
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
@@ -667,11 +894,15 @@ define([
 			this.items = [];
 		},
 
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var items = this.items;
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+
+				if ((!item.eq) && (!item.active))
+					continue;
+
 				var effects = item.effects;
 				if (!effects)
 					continue;
@@ -684,24 +915,24 @@ define([
 					if (!effectEvent)
 						continue;
 
-					effectEvent.call(this.obj, item, args[0]);
+					effectEvent.apply(this.obj, [item, ...args]);
 				}
 			}
 		},
 
-		clear: function() {
+		clear: function () {
 			delete this.items;
 			this.items = [];
 		},
 
-		save: function() {
+		save: function () {
 			return {
 				type: 'inventory',
 				items: this.items
 			};
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return null;
 
@@ -710,39 +941,59 @@ define([
 			return {
 				type: 'inventory',
 				items: this.items
-					.map(function(i) {
-						if (!i.effects)
-							return i;
-						else {
-							var item = extend(true, {}, i);
+					.map(function (i) {
+						var item = extend(true, {}, i);
+
+						if (item.effects) {
 							item.effects = item.effects.map(e => ({
 								factionId: e.factionId,
 								text: e.text,
-								properties: e.properties
+								properties: e.properties,
+								mtx: e.mtx,
+								type: e.type,
+								rolls: e.rolls
 							}));
-							if (item.factions) {
-								item.factions = item.factions.map(function(f) {
-									var faction = reputation.getBlueprint(f.id);
-									var factionTier = reputation.getTier(f.id);
-
-									var noEquip = null;
-									if (factionTier < f.tier)
-										noEquip = true;
-
-									return {
-										id: f.id,
-										name: faction.name,
-										tier: f.tier,
-										tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-										noEquip: noEquip
-									};
-								}, this);
-							}
-
-							return item;
 						}
+
+						if (item.factions) {
+							item.factions = item.factions.map(function (f) {
+								var faction = reputation.getBlueprint(f.id);
+								var factionTier = reputation.getTier(f.id);
+
+								var noEquip = null;
+								if (factionTier < f.tier)
+									noEquip = true;
+
+								if (!faction)
+									console.log(f);
+
+								return {
+									id: f.id,
+									name: faction.name,
+									tier: f.tier,
+									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+									noEquip: noEquip
+								};
+							}, this);
+						}
+
+						return item;
 					})
 			};
+		},
+
+		update: function () {
+			var items = this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+				if (!item.cd)
+					continue;
+
+				item.cd--;
+
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			}
 		}
 	};
 });

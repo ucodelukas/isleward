@@ -11,12 +11,21 @@ define([
 
 		syncer: null,
 
+		maxLevel: 0,
+
+		contents: [],
+
 		init: function(blueprint) {
 			this.msg = blueprint.msg;
 			this.actions = blueprint.actions || {};
 			this.announce = blueprint.announce;
+			this.maxLevel = blueprint.maxLevel || 0;
 
 			this.syncer = this.obj.instance.syncer;
+		},
+
+		destroy: function() {
+			this.contents.forEach(c => this.collisionExit(c));
 		},
 
 		callAction: function(obj, actionName) {
@@ -43,6 +52,10 @@ define([
 		collisionEnter: function(obj) {
 			if (!obj.player)
 				return;
+			else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+				return;
+
+			this.contents.push(obj);
 
 			this.callAction(obj, 'enter');
 
@@ -64,9 +77,15 @@ define([
 			}, [obj.serverId]);
 		},
 
-		collisionExit: function(obj) {
-			if (!obj.player)
-				return;
+		collisionExit: function(obj, force) {
+			if (!force) {
+				if (!obj.player)
+					return;
+				else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+					return;
+			}
+
+			this.contents.spliceWhere(c => (c == obj));
 
 			this.callAction(obj, 'exit');
 
@@ -76,6 +95,13 @@ define([
 			this.syncer.queue('onRemoveDialogue', {
 				src: this.obj.id
 			}, [obj.serverId]);
+		},
+
+		events: {
+			onCellPlayerLevelUp: function(obj) {
+				if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+					this.collisionExit(obj, true);
+			}
 		}
 	};
 });

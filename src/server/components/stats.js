@@ -1,7 +1,9 @@
 define([
-
-], function(
-
+	'config/animations',
+	'config/loginRewards'
+], function (
+	animations,
+	loginRewards
 ) {
 	return {
 		type: 'stats',
@@ -22,9 +24,14 @@ define([
 			regenHp: 0,
 			regenMana: 10,
 			addCritChance: 0,
+			addCritMultiplier: 0,
 			critChance: 5,
+			critMultiplier: 150,
 			armor: 0,
 			dmgPercent: 0,
+
+			attackSpeed: 0,
+			castSpeed: 0,
 
 			elementArcanePercent: 0,
 			elementFrostPercent: 0,
@@ -44,7 +51,14 @@ define([
 
 			sprintChance: 0,
 
-			xpIncrease: 0
+			xpIncrease: 0,
+
+			//fishing stats
+			catchChance: 0,
+			catchSpeed: 0,
+			fishRarity: 0,
+			fishWeight: 0,
+			fishItems: 0
 		},
 
 		vitScale: 10,
@@ -53,12 +67,14 @@ define([
 
 		stats: {
 			logins: 0,
-			played: 0
+			played: 0,
+			lastLogin: null,
+			loginStreak: 0
 		},
 
 		dead: false,
 
-		init: function(blueprint) {
+		init: function (blueprint, isTransfer) {
 			this.syncer = this.obj.instance.syncer;
 
 			var values = (blueprint || {}).values || {};
@@ -66,18 +82,26 @@ define([
 				this.values[v] = values[v];
 			}
 
+			var stats = (blueprint || {}).stats || {};
+			for (var v in stats) {
+				this.stats[v] = stats[v];
+			}
+
 			this.calcXpMax();
+
+			if (blueprint)
+				delete blueprint.stats;
 		},
 
-		resetHp: function() {
+		resetHp: function () {
 			var values = this.values;
 			values.hp = values.hpMax;
 
 			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 		},
 
-		update: function() {
-			if ((this.obj.mob) || (this.dead))
+		update: function () {
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
 			var regen = {
@@ -89,6 +113,11 @@ define([
 
 			var values = this.values;
 			var isInCombat = (this.obj.aggro.list.length > 0);
+			if (this.obj.follower) {
+				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
+				if (isInCombat)
+					return;
+			}
 
 			var regenHp = 0;
 			var regenMana = 0;
@@ -127,7 +156,7 @@ define([
 			}
 		},
 
-		addStat: function(stat, value) {
+		addStat: function (stat, value) {
 			this.values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax'].indexOf(stat) == -1);
@@ -137,64 +166,79 @@ define([
 			if (stat == 'addCritChance') {
 				this.values.critChance += (0.05 * value);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
+			} else if (stat == 'addCritMultiplier') {
+				this.values.critMultiplier += value;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
+				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
 			} else if (stat == 'allAttributes') {
-				['int', 'str', 'dex'].forEach(function(s) {
+				['int', 'str', 'dex'].forEach(function (s) {
 					this.values[s] += value;
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
 			}
 		},
 
-		calcXpMax: function() {
+		calcXpMax: function () {
 			var level = this.values.level;
 			this.values.xpMax = ~~(level * 10 * Math.pow(level, 1.75));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
 
-		getXp: function(amount) {
-			amount = ~~(amount * (1 + (this.values.xpIncrease / 100)));
+		getXp: function (amount) {
+			var obj = this.obj;
+			var values = this.values;
 
-			this.values.xpTotal = ~~(this.values.xpTotal + amount);
-			this.values.xp = ~~(this.values.xp + amount);
+			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
+
+			values.xpTotal = ~~(values.xpTotal + amount);
+			values.xp = ~~(values.xp + amount);
 
 			this.syncer.queue('onGetDamage', {
-				id: this.obj.id,
+				id: obj.id,
 				event: true,
 				text: '+' + amount + ' xp'
 			});
 
 			var syncO = {};
-
 			var didLevelUp = false;
-			while (this.values.xp >= this.values.xpMax) {
-				didLevelUp = true;
-				this.values.xp -= this.values.xpMax;
-				this.values.level++;
 
-				this.values.hpMax += 40;
+			while (values.xp >= values.xpMax) {
+				didLevelUp = true;
+				values.xp -= values.xpMax;
+				values.level++;
+
+				values.hpMax += 40;
 
 				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
+					id: obj.id,
 					event: true,
 					text: 'level up'
 				});
 
-				this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
+				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
 
-				syncO.level = this.values.level;
+				syncO.level = values.level;
 
 				this.calcXpMax();
 			}
 
-			if (didLevelUp)
-				this.obj.auth.doSave();
+			if (didLevelUp) {
+				var cellContents = obj.instance.physics.getCell(obj.x, obj.y);
+				cellContents.forEach(function (c) {
+					c.fireEvent('onCellPlayerLevelUp', obj);
+				});
 
-			this.obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
+				obj.auth.doSave();
+			}
+
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
 
 			process.send({
 				method: 'object',
@@ -203,9 +247,8 @@ define([
 			});
 		},
 
-		kill: function(target) {
+		kill: function (target) {
 			var level = target.stats.values.level;
-			var inc = level * 10;
 
 			//Who should get xp?
 			var aggroList = target.aggro.list;
@@ -217,30 +260,38 @@ define([
 				if (dmg <= 0)
 					continue;
 
-				var get = inc;
+				var mult = 1;
 				//How many party members contributed
 				// Remember, maybe one of the aggro-ees might be a mob too
 				var party = a.obj.social ? a.obj.social.party : null;
 				if (party) {
-					var mult = aggroList.filter(function(f) {
+					var partySize = aggroList.filter(function (f) {
 						return ((a.damage > 0) && (party.indexOf(f.obj.serverId) > -1));
 					}).length;
-					mult--;
-					get *= (1 + (mult * 0.1));
-					get = ~~get;
+					partySize--;
+					mult = (1 + (partySize * 0.1));
 				}
 
-				if (a.obj.stats)
-					a.obj.stats.getXp(inc);
-				
-	
+				if ((a.obj.stats) && (!a.obj.follower)) {
+					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
+					//Mobs that are farther then 10 levels from you, give no xp
+					//We don't currently do this for quests/herb gathering
+					var sourceLevel = a.obj.stats.values.level;
+					var levelDelta = level - sourceLevel;
+					var amount = level * 10 * mult;
+					if (Math.abs(levelDelta) <= 10)
+						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult);
+					else
+						amount = 0;
+
+					a.obj.stats.getXp(amount, this.obj);
+				}
+
 				a.obj.fireEvent('afterKillMob', target);
 			}
-
-			target.fireEvent('afterDeath');
 		},
 
-		die: function(source) {
+		die: function (source) {
 			this.values.hp = this.values.hpMax;
 			this.values.mana = this.values.manaMax;
 
@@ -259,7 +310,7 @@ define([
 				source: source.name
 			}, [this.obj.serverId]);
 		},
-		takeDamage: function(damage, threatMult, source) {
+		takeDamage: function (damage, threatMult, source) {
 			source.fireEvent('beforeDealDamage', damage, this.obj);
 			this.obj.fireEvent('beforeTakeDamage', damage, source);
 
@@ -277,12 +328,16 @@ define([
 				amount = this.values.hp;
 
 			this.values.hp -= amount;
-
 			var recipients = [];
 			if (this.obj.serverId != null)
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
 				recipients.push(source.serverId);
+			if ((source.follower) && (source.follower.master.serverId))
+				recipients.push(source.follower.master.serverId);
+			if ((this.obj.follower) && (this.obj.follower.master.serverId))
+				recipients.push(this.obj.follower.master.serverId);
+
 			if (recipients.length > 0) {
 				this.syncer.queue('onGetDamage', {
 					id: this.obj.id,
@@ -305,28 +360,49 @@ define([
 				if (death.success) {
 					var deathEvent = {};
 
-					if (source.player)
-						source.stats.kill(this.obj);
-					else
-						this.obj.fireEvent('afterDeath', deathEvent);
+					var killSource = source;
+
+					if (source.follower)
+						killSource = source.follower.master;
+
+					if (killSource.player)
+						killSource.stats.kill(this.obj);
+
+					this.obj.fireEvent('afterDeath', deathEvent);
 
 					if (this.obj.player) {
 						this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 						if (deathEvent.permadeath) {
 							this.obj.auth.permadie();
 
+							this.obj.instance.syncer.queue('onGetMessages', {
+								messages: {
+									class: 'color-red',
+									message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
+								}
+							});
+
 							this.syncer.queue('onPermadeath', {
-								source: source.name
+								source: killSource.name
 							}, [this.obj.serverId]);
 						} else
 							this.values.hp = 0;
 
-						this.obj.player.die(source, deathEvent.permadeath);
+						this.obj.player.die(killSource, deathEvent.permadeath);
 					} else {
 						this.obj.effects.die();
 						if (this.obj.spellbook)
 							this.obj.spellbook.die();
 						this.obj.destroyed = true;
+
+						var deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
+						if (deathAnimation) {
+							this.obj.instance.syncer.queue('onGetObject', {
+								x: this.obj.x,
+								y: this.obj.y,
+								components: [deathAnimation]
+							});
+						}
 
 						if (this.obj.inventory) {
 							var aggroList = this.obj.aggro.list;
@@ -338,18 +414,18 @@ define([
 									continue;
 
 								if ((a.social) && (a.social.party)) {
-									a.social.party.forEach(function(p) {
+									a.social.party.forEach(function (p) {
 										if (done.some(d => d == p))
 											return;
 
-										this.obj.inventory.dropBag(p, source);
+										this.obj.inventory.dropBag(p, killSource);
 										done.push(p);
 									}, this);
 								} else {
 									if (a.serverId == null)
 										continue;
 
-									this.obj.inventory.dropBag(a.serverId, source);
+									this.obj.inventory.dropBag(a.serverId, killSource);
 									done.push(a.serverId);
 								}
 							}
@@ -361,17 +437,21 @@ define([
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 			}
 
-			source.fireEvent('afterDealDamage', damage, this.obj);
+			if (!damage.noEvents)
+				source.fireEvent('afterDealDamage', damage, this.obj);
 		},
 
-		getHp: function(heal, source) {
+		getHp: function (heal, source) {
+			var amount = heal.amount;
+			if (amount == 0)
+				return;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
 			if (values.hp >= hpMax)
 				return;
 
-			var amount = heal.amount;
 			if (hpMax - values.hp < amount)
 				amount = hpMax - values.hp;
 
@@ -406,7 +486,7 @@ define([
 			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 		},
 
-		save: function() {
+		save: function () {
 			if (this.sessionDuration) {
 				this.stats.played = ~~(this.stats.played + this.sessionDuration);
 				delete this.sessionDuration;
@@ -419,7 +499,7 @@ define([
 			};
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var values = this.values;
 
 			if (!self) {
@@ -443,6 +523,46 @@ define([
 				stats: this.stats,
 				vitScale: this.vitScale
 			};
+		},
+
+		onLogin: function () {
+			var stats = this.stats;
+
+			var scheduler = require('misc/scheduler');
+			var time = scheduler.getTime();
+			var lastLogin = stats.lastLogin;
+			if ((!lastLogin) || (lastLogin.day != time.day)) {
+				var daysSkipped = 1;
+				if (lastLogin) {
+					if (time.day > lastLogin.day)
+						daysSkipped = time.day - lastLogin.day;
+					else {
+						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
+						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
+
+						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
+							daysSkipped += scheduler.daysInMonth(i);
+						}
+					}
+				}
+
+				if (daysSkipped == 1) {
+					stats.loginStreak++;
+					if (stats.loginStreak > 21)
+						stats.loginStreak = 21;
+				} else {
+					stats.loginStreak -= (daysSkipped - 1);
+					if (stats.loginStreak < 1)
+						stats.loginStreak = 1;
+				}
+
+				var mail = this.obj.instance.mail;
+				var rewards = loginRewards.generate(stats.loginStreak);
+				mail.sendMail(this.obj.name, rewards);
+			} else
+				this.obj.instance.mail.getMail(this.obj.name);
+
+			stats.lastLogin = time;
 		}
 	};
 });

@@ -5,7 +5,7 @@
 	z-index: 2;
 	border: 5px solid @blackB;
 	text-align: center;
-	width: 458px;
+	width: 474px;
 	height: 534px;
 
 	> .heading {
@@ -72,18 +72,59 @@
 				margin-bottom: 8px;
 				cursor: pointer;
 				padding: 8px;
+				position: relative;
 
 				&:last-child {
 					margin-bottom: 0px;
+				}
+
+				&.show-default-icon {
+					.icon {
+						opacity: 0.5;
+						background-image: url('../../../images/uiIcons.png') !important;
+					}
+
+					&[slot="head"] 		.icon { background-position: -0px -448px; }
+					&[slot="neck"] 		.icon { background-position: -64px -448px; }
+					&[slot="chest"] 	.icon { background-position: -128px -448px; }
+					&[slot="hands"] 	.icon { background-position: -192px -448px; }
+					&[slot="finger"] 	.icon { background-position: -256px -448px; }
+					&[slot="waist"] 	.icon { background-position: -320px -448px; }
+					&[slot="legs"] 		.icon { background-position: -384px -448px; }
+					&[slot="feet"] 		.icon { background-position: -448px -448px; }
+					&[slot="trinket"] 	.icon { background-position: -448px -384px; }
+					&[slot="twoHanded"] .icon { background-position: -384px -384px; }
+					&[slot="tool"] 		.icon { background-position: -256px -384px; }
+					&[slot^="rune"] 	.icon { background-position: -320px -384px; }
 				}
 
 				.icon {
 					height: 100%;
 				}
 
+				.info {
+					left: 6px;
+					bottom: 3px;
+					position: absolute;
+					color: @white;
+					filter:
+						drop-shadow(0px -2px 0px @blackD) 
+						drop-shadow(0px 2px 0px @blackD)
+						drop-shadow(2px 0px 0px @blackD) 
+						drop-shadow(-2px 0px 0px @blackD);
+
+					-moz-filter: 
+						drop-shadow(0px -2px 0px @blackD) 
+						drop-shadow(0px 2px 0px @blackD)
+						drop-shadow(2px 0px 0px @blackD) 
+						drop-shadow(-2px 0px 0px @blackD);
+
+				}
+
 				&:hover {
 					.icon {
 						filter: brightness(160%);
+						-moz-filter: brightness(160%);
 					}
 
 					&.empty {
@@ -111,6 +152,12 @@
 						drop-shadow(2px 0px 0px @blackD) 
 						drop-shadow(-2px 0px 0px @blackD);
 
+					-moz-filter:
+						drop-shadow(0px -2px 0px @blackD) 
+						drop-shadow(0px 2px 0px @blackD)
+						drop-shadow(2px 0px 0px @blackD) 
+						drop-shadow(-2px 0px 0px @blackD);
+
 					&.blueText > font {
 						color: @blue;
 					}
@@ -130,7 +177,6 @@
 			.runes {
 				width: 100%;
 				height: 80px;
-				padding-left: calc((100% - (80px * 2) - 8px) / 2);
 
 				.slot {
 					float: left;
@@ -168,6 +214,33 @@
 							position: absolute;
 							color: @white;
 							filter:
+								drop-shadow(0px -2px 0px @blackD) 
+								drop-shadow(0px 2px 0px @blackD)
+								drop-shadow(2px 0px 0px @blackD) 
+								drop-shadow(-2px 0px 0px @blackD);
+
+							-moz-filter:
+								drop-shadow(0px -2px 0px @blackD) 
+								drop-shadow(0px 2px 0px @blackD)
+								drop-shadow(2px 0px 0px @blackD) 
+								drop-shadow(-2px 0px 0px @blackD);
+						}				
+					}
+
+					&.new {
+						&:before {
+							content: 'new';
+							left: -2px;
+							bottom: -3px;
+							position: absolute;
+							color: @white;
+							filter:
+								drop-shadow(0px -2px 0px @blackD) 
+								drop-shadow(0px 2px 0px @blackD)
+								drop-shadow(2px 0px 0px @blackD) 
+								drop-shadow(-2px 0px 0px @blackD);
+
+							-moz-filter:
 								drop-shadow(0px -2px 0px @blackD) 
 								drop-shadow(0px 2px 0px @blackD)
 								drop-shadow(2px 0px 0px @blackD) 

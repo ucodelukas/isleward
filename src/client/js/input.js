@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
-	'js/renderer'
-], function(
+	'js/rendering/renderer'
+], function (
 	events,
 	renderer
 ) {
@@ -22,12 +22,19 @@ define([
 			'9': 'tab',
 			'13': 'enter',
 			'16': 'shift',
+			'17': 'ctrl',
 			'27': 'esc',
 			'37': 'left',
 			'38': 'up',
 			'39': 'right',
 			'40': 'down',
-			'46': 'del'
+			'46': 'del',
+
+			//hacks for mac cmd key
+			'17': 'ctrl',
+			'224': 'ctrl',
+			'91': 'ctrl',
+			'93': 'ctrl'
 		},
 
 		mouse: {
@@ -41,7 +48,7 @@ define([
 
 		enabled: true,
 
-		init: function() {
+		init: function () {
 			$(window).on('keydown', this.events.keyboard.keyDown.bind(this));
 			$(window).on('keyup', this.events.keyboard.keyUp.bind(this));
 			events.on('onSceneMove', this.events.mouse.mouseMove.bind(this));
@@ -52,11 +59,15 @@ define([
 				.on('mousemove', this.events.mouse.mouseMove.bind(this));
 		},
 
-		resetKeys: function() {
+		resetKeys: function () {
+			for (var k in this.keys) {
+				events.emit('onKeyUp', k);
+			}
+
 			this.keys = {};
 		},
 
-		getMapping: function(charCode) {
+		getMapping: function (charCode) {
 			if (charCode >= 97)
 				return (charCode - 96).toString();
 
@@ -67,7 +78,7 @@ define([
 
 		},
 
-		isKeyDown: function(key, noConsume) {
+		isKeyDown: function (key, noConsume) {
 			var down = this.keys[key];
 			if (down != null) {
 				if (noConsume)
@@ -79,7 +90,7 @@ define([
 			} else
 				return false;
 		},
-		getAxis: function(name) {
+		getAxis: function (name) {
 			var axis = this.axes[name];
 			if (!axis)
 				return 0;
@@ -105,7 +116,7 @@ define([
 
 		events: {
 			keyboard: {
-				keyDown: function(e) {
+				keyDown: function (e) {
 					if (!this.enabled)
 						return;
 
@@ -127,9 +138,8 @@ define([
 						return false;
 					else if (e.key == 'F11')
 						events.emit('onToggleFullscreen');
-
 				},
-				keyUp: function(e) {
+				keyUp: function (e) {
 					if (!this.enabled)
 						return;
 
@@ -144,7 +154,7 @@ define([
 				}
 			},
 			mouse: {
-				mouseDown: function(e) {
+				mouseDown: function (e) {
 					var el = $(e.target);
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
@@ -156,7 +166,7 @@ define([
 
 					events.emit('mouseDown', this.mouse);
 				},
-				mouseUp: function(e) {
+				mouseUp: function (e) {
 					var el = $(e.target);
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
@@ -167,7 +177,7 @@ define([
 
 					events.emit('mouseUp', this.mouse);
 				},
-				mouseMove: function(e) {
+				mouseMove: function (e) {
 					if (e)
 						this.mouseRaw = e;
 					else
@@ -183,7 +193,7 @@ define([
 					this.mouse.x = e.offsetX + (renderer.pos.x);
 					this.mouse.y = e.offsetY + (renderer.pos.y);
 
-					events.emit('mouseMove', this.mouse);
+					//events.emit('mouseMove', this.mouse);
 				}
 			}
 		}

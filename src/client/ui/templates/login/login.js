@@ -4,8 +4,8 @@ define([
 	'ui/factory',
 	'html!ui/templates/login/template',
 	'css!ui/templates/login/styles',
-	'js/renderer'
-], function(
+	'js/rendering/renderer'
+], function (
 	events,
 	client,
 	uiFactory,
@@ -16,13 +16,19 @@ define([
 	return {
 		tpl: template,
 		centered: true,
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onHandshake', this.onHandshake.bind(this));
 
 			this.on('.btnLogin', 'click', this.onLoginClick.bind(this));
 			this.on('.btnRegister', 'click', this.onRegisterClick.bind(this));
 
-			this.find('.right .buttons .button').on('click', this.redirect.bind(this));
+			this.find('.extra, .version')
+				.appendTo($('<div class="uiLoginExtra"></div>')
+					.appendTo('.ui-container'));
+
+			$('.uiLoginExtra').find('.button').on('click', this.redirect.bind(this));
+
+			$('.news, .version').on('click', this.redirect.bind(this));
 
 			this.find('input')
 				.on('keyup', this.onKeyDown.bind(this))
@@ -31,20 +37,23 @@ define([
 			renderer.buildTitleScreen();
 		},
 
-		redirect: function(e) {
+		redirect: function (e) {
 			var location = $(e.target).attr('location');
 			window.open(location, '_blank');
 		},
 
-		onKeyDown: function(e) {
+		onKeyDown: function (e) {
 			if (e.keyCode == 13)
 				this.onLoginClick();
 		},
-		onHandshake: function() {
+		onHandshake: function () {
 			this.show();
 		},
 
-		onLoginClick: function() {
+		onLoginClick: function () {
+			if (this.el.hasClass('disabled'))
+				return;
+
 			this.el.addClass('disabled');
 
 			client.request({
@@ -57,18 +66,19 @@ define([
 				callback: this.onLogin.bind(this)
 			});
 		},
-		onLogin: function(res) {
+		onLogin: function (res) {
 			this.el.removeClass('disabled');
 
 			if (!res) {
 				uiFactory.build('characters', {});
 
+				$('.uiLoginExtra').remove();
 				this.el.remove();
 			} else
 				this.el.find('.message').html(res);
 		},
 
-		onRegisterClick: function() {
+		onRegisterClick: function () {
 			this.el.addClass('disabled');
 
 			client.request({

@@ -8,8 +8,13 @@ define([
 	'config/spells/spellCallbacks',
 	'config/quests/questBuilder',
 	'world/randomMap',
-	'world/customMap'
-], function(
+	'world/customMap',
+	'events/events',
+	'misc/scheduler',
+	'misc/mail',
+	'config/herbs',
+	'misc/events'
+], function (
 	map,
 	syncer,
 	objects,
@@ -19,7 +24,12 @@ define([
 	spellCallbacks,
 	questBuilder,
 	randomMap,
-	customMap
+	customMap,
+	events,
+	scheduler,
+	mail,
+	herbs,
+	eventEmitter
 ) {
 	return {
 		instances: [],
@@ -28,47 +38,38 @@ define([
 
 		lastTime: 0,
 
-		init: function(args) {
+		init: function (args) {
 			this.zoneId = args.zoneId;
 
 			spellCallbacks.init();
-
+			herbs.init();
 			map.init(args);
 
 			if (!map.instanced) {
-				spawners.init({
-					objects: objects,
-					syncer: syncer,
-					zone: map.zone
-				});
-
-				map.create();
-				map.clientMap.zoneId = this.zoneId;
-
-				resourceSpawner.init({
-					objects: objects,
-					syncer: syncer,
-					zone: map.zone,
-					physics: physics,
-					map: map
-				});
-
-				syncer.init({
-					objects: objects
-				});
-
-				objects.init({
+				var fakeInstance = {
 					objects: objects,
 					syncer: syncer,
 					physics: physics,
 					zoneId: this.zoneId,
 					spawners: spawners,
-					questBuilder: questBuilder
-				});
+					questBuilder: questBuilder,
+					events: events,
+					zone: map.zone,
+					mail: mail,
+					map: map,
+					scheduler: scheduler,
+					eventEmitter: eventEmitter
+				};
 
-				questBuilder.init({
-					spawners: spawners
-				});
+				this.instances.push(fakeInstance);
+
+				spawners.init(fakeInstance);
+				scheduler.init();
+
+				map.create();
+				map.clientMap.zoneId = this.zoneId;
+
+				[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
 				this.addObject = this.nonInstanced.addObject.bind(this);
 				this.onAddObject = this.nonInstanced.onAddObject.bind(this);
@@ -105,34 +106,33 @@ define([
 		},
 
 		nonInstanced: {
-			tick: function() {
+			tick: function () {
+				events.update();
 				objects.update();
-				spawners.update();
 				resourceSpawner.update();
-
+				spawners.update();
 				syncer.update();
+				scheduler.update();
 
 				setTimeout(this.tick.bind(this), this.speed);
 			},
 
-			addObject: function(msg) {
+			addObject: function (msg) {
 				var obj = msg.obj;
 				obj.serverId = obj.id;
 				delete obj.id;
 
-				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y))) {
+				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
 					msg.keepPos = false;
-				}
+
+				var spawnPos = map.getSpawnPos(obj);
 
 				if ((!msg.keepPos) || (obj.x == null)) {
-					obj.x = map.spawn.x;
-					obj.y = map.spawn.y;
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
-				obj.spawn = {
-					x: map.spawn.x,
-					y: map.spawn.y
-				};
+				obj.spawn = map.spawn;
 
 				syncer.queue('onGetMap', map.clientMap, [obj.serverId]);
 
@@ -140,15 +140,17 @@ define([
 					objects.addObject(obj, this.onAddObject.bind(this));
 				else {
 					var o = objects.transferObject(obj);
-					if (o.zoneName != 'tutorial-cove')
-						questBuilder.obtain(o);
+					questBuilder.obtain(o);
 				}
 			},
-			onAddObject: function(obj) {
-				if (obj.zoneName != 'tutorial-cove')
-					questBuilder.obtain(obj);
+			onAddObject: function (obj) {
+				if (obj.player)
+					obj.stats.onLogin();
+
+				questBuilder.obtain(obj);
+				obj.fireEvent('afterMove');
 			},
-			updateObject: function(msg) {
+			updateObject: function (msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
@@ -172,7 +174,7 @@ define([
 				}
 			},
 
-			queueAction: function(msg) {
+			queueAction: function (msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
@@ -180,10 +182,10 @@ define([
 				obj.queue(msg.action);
 			},
 
-			performAction: function(msg) {
+			performAction: function (msg) {
 				var obj = null;
 				var targetId = msg.action.targetId;
-				if (!targetId) 
+				if (!targetId)
 					obj = objects.find(o => o.serverId == msg.id);
 				else {
 					obj = objects.find(o => o.id == targetId);
@@ -197,11 +199,11 @@ define([
 
 				if (!obj)
 					return;
-				
+
 				obj.performAction(msg.action);
 			},
 
-			removeObject: function(msg) {
+			removeObject: function (msg) {
 				var obj = msg.obj;
 				obj = objects.find(o => o.serverId == obj.id);
 				if (!obj) {
@@ -217,12 +219,12 @@ define([
 
 				obj.destroyed = true;
 			},
-			onRemoveObject: function(obj) {
+			onRemoveObject: function (obj) {
 
 			}
 		},
 		instanced: {
-			tick: function() {
+			tick: function () {
 				if (map.mapFile.properties.isRandom) {
 					if (this.ttlGen <= 0) {
 						if (!map.oldMap)
@@ -251,6 +253,7 @@ define([
 					instance.objects.update();
 					instance.spawners.update();
 					instance.resourceSpawner.update();
+					instance.scheduler.update();
 
 					instance.syncer.update();
 
@@ -279,7 +282,7 @@ define([
 				setTimeout(this.tick.bind(this), this.speed);
 			},
 
-			addObject: function(msg) {
+			addObject: function (msg) {
 				var obj = msg.obj;
 				var instanceId = msg.instanceId;
 
@@ -314,31 +317,32 @@ define([
 						msg.keepPos = false;
 				}
 
+				var spawnPos = map.getSpawnPos(obj);
+
+				if (exists)
+					spawnPos = exists.map.getSpawnPos(obj);
+
 				if ((!msg.keepPos) || (obj.x == null)) {
-					obj.x = map.spawn.x;
-					obj.y = map.spawn.y;
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
-				obj.spawn = {
-					x: map.spawn.x,
-					y: map.spawn.y
-				};
+				obj.spawn = map.spawn;
 
 				if (exists) {
 					//Keep track of what the connection id is (sent from the server)
 					obj.serverId = obj.id;
 					delete obj.id;
 
-					obj.spawn = {
-						x: exists.map.spawn.x,
-						y: exists.map.spawn.y
-					};
+					var spawnPos = exists.map.getSpawnPos(obj);
+
+					obj.spawn = exists.map.spawn;
 
 					exists.syncer.queue('onGetMap', exists.map.clientMap, [obj.serverId]);
 
-					if (!msg.transfer) {
+					if (!msg.transfer)
 						exists.objects.addObject(obj, this.onAddObject.bind(this, msg.keepPos));
-					} else {
+					else {
 						var newObj = exists.objects.transferObject(obj);
 						this.onAddObject(false, newObj);
 					}
@@ -353,18 +357,23 @@ define([
 				} else
 					obj = this.instanced.createInstance.call(this, obj, msg.transfer);
 			},
-			onAddObject: function(keepPos, obj) {
+			onAddObject: function (keepPos, obj) {
 				if (!keepPos) {
-					obj.x = obj.instance.map.spawn.x;
-					obj.y = obj.instance.map.spawn.y;
+					var spawnPos = obj.instance.map.getSpawnPos(obj);
+
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
 				}
 
 				obj.instance.spawners.scale(obj.stats.values.level);
+				obj.instance.questBuilder.obtain(obj);
 
-				if (obj.zoneName != 'tutorial-cove')
-					obj.instance.questBuilder.obtain(obj);
+				if (obj.player)
+					obj.stats.onLogin();
+
+				obj.fireEvent('afterMove');
 			},
-			updateObject: function(msg) {
+			updateObject: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -373,10 +382,8 @@ define([
 					return;
 
 				var obj = exists.objects.find(o => o.serverId == id);
-				if (!obj) {
-					console.log('OBJECT NOT FOUND!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-					console.log(msg);
-				}
+				if (!obj)
+					return;
 
 				var msgObj = msg.obj;
 
@@ -397,7 +404,7 @@ define([
 				}
 			},
 
-			performAction: function(msg) {
+			performAction: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -412,7 +419,7 @@ define([
 				obj.performAction(msg.action);
 			},
 
-			queueAction: function(msg) {
+			queueAction: function (msg) {
 				var id = msg.id;
 				var instanceId = msg.instanceId;
 
@@ -425,7 +432,7 @@ define([
 					obj.queue(msg.action);
 			},
 
-			removeObject: function(msg) {
+			removeObject: function (msg) {
 				var obj = msg.obj;
 				var instanceId = msg.instanceId;
 
@@ -444,11 +451,18 @@ define([
 
 				obj.destroyed = true;
 			},
-			onRemoveObject: function(obj) {
+			onRemoveObject: function (obj) {
 
 			},
 
-			createInstance: function(objToAdd, transfer) {
+			createInstance: function (objToAdd, transfer) {
+				var newMap = {
+					name: map.name,
+					spawn: extend(true, [], map.spawn),
+					clientMap: extend(true, {}, map.clientMap)
+				};
+				newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
+
 				var instance = {
 					id: objToAdd.name + '_' + (+new Date),
 					objects: extend(true, {}, objects),
@@ -460,18 +474,14 @@ define([
 					zone: map.zone,
 					closeTtl: null,
 					questBuilder: extend(true, {}, questBuilder),
-					map: {
-						spawn: extend(true, {}, map.spawn),
-						clientMap: extend(true, {}, map.clientMap)
-					}
+					events: extend(true, {}, events),
+					scheduler: extend(true, {}, scheduler),
+					mail: extend(true, {}, mail),
+					map: newMap,
+					eventEmitter: extend(true, {}, eventEmitter)
 				};
 
-				instance.objects.init(instance);
-				instance.spawners.init(instance);
-				instance.syncer.init(instance);
-				instance.resourceSpawner.init(instance);
-
-				instance.questBuilder.init(instance);
+				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));
 
 				this.instances.push(instance);
 
@@ -480,11 +490,10 @@ define([
 				if (map.custom) {
 					instance.customMap = extend(true, {}, customMap);
 					instance.customMap.load(instance, objToAdd, onDone);
-				}
-				else
+				} else
 					onDone();
 			},
-			onCreateInstance: function(instance, objToAdd, transfer) {
+			onCreateInstance: function (instance, objToAdd, transfer) {
 				objToAdd.instance = instance;
 				objToAdd.instanceId = instance.id;
 
@@ -500,11 +509,13 @@ define([
 					obj = instance.objects.addObject(objToAdd, this.onAddObject.bind(this, false));
 				else {
 					obj = instance.objects.transferObject(objToAdd);
-					obj.x = instance.map.spawn.x;
-					obj.y = instance.map.spawn.y;
-					if (obj.zoneName != 'tutorial-cove')
-						instance.questBuilder.obtain(obj);
 
+					var spawnPos = instance.map.getSpawnPos(obj);
+
+					obj.x = spawnPos.x;
+					obj.y = spawnPos.y;
+
+					instance.questBuilder.obtain(obj);
 					obj.instance.spawners.scale(obj.stats.values.level);
 				}
 

@@ -1,12 +1,11 @@
-
 define([
 
-], function(
+], function (
 
 ) {
 	return {
 		type: 'melee',
-		
+
 		cdMax: 5,
 		manaCost: 0,
 		range: 1,
@@ -16,7 +15,12 @@ define([
 		col: 4,
 		row: 1,
 
-		cast: function(action) {
+		init: function () {
+			if (this.range > 1)
+				this.needLos = true;
+		},
+
+		cast: function (action) {
 			var target = action.target;
 
 			var row = this.row;
@@ -38,10 +42,10 @@ define([
 
 			return true;
 		},
-		explode: function(target) {
+		explode: function (target) {
 			if ((this.obj.destroyed) || (target.destroyed))
 				return;
-			
+
 			var damage = this.getDamage(target);
 			target.stats.takeDamage(damage, this.threatMult, this.obj);
 		}

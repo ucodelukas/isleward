@@ -1,13 +1,12 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return [
-		'tutorial-cove',
-		'tutorial',
+		'cave',
 		'estuary',
-		'city',
-		'sewer'
+		'sewer',
+		'tutorial'
 	];
 });

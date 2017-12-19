@@ -1,6 +1,6 @@
 define([
 	'items/generator'
-], function(
+], function (
 	itemGenerator
 ) {
 	var abs = Math.abs.bind(Math);
@@ -19,22 +19,22 @@ define([
 
 		walkDistance: 1,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
 			this.originX = this.obj.x;
 			this.originY = this.obj.y;
 		},
 
-		update: function() {
+		update: function () {
 			var target = null;
 			if (this.obj.aggro)
 				target = this.obj.aggro.getHighest();
 			var goHome = false;
-			if (target) {
+			if ((target) && (target != this.obj) && ((!this.obj.follower) || (this.obj.follower.master != target))) {
 				this.fight(target);
 				return;
-			} else if (this.target) {
+			} else if ((!target) && (this.target)) {
 				this.target = null;
 				this.obj.clearQueue();
 				goHome = true;
@@ -47,7 +47,7 @@ define([
 				return;
 
 			var walkDistance = this.walkDistance;
-			if (walkDistance <= 0)
+			if ((!goHome) && (walkDistance <= 0))
 				return;
 
 			var obj = this.obj;
@@ -79,7 +79,7 @@ define([
 				});
 			}
 		},
-		fight: function(target) {
+		fight: function (target) {
 			if (this.target != target) {
 				this.obj.clearQueue();
 				this.target = target;
@@ -105,7 +105,7 @@ define([
 				if (!doesCollide) {
 					hasLos = this.physics.hasLos(x, y, tx, ty);
 					if (hasLos) {
-						if (rnd() < 0.65) {
+						if (((obj.follower) && (obj.follower.master.player)) || (rnd() < 0.65)) {
 							var spell = obj.spellbook.getRandomSpell(target);
 							var success = obj.spellbook.cast({
 								spell: spell,

@@ -1,9 +1,11 @@
 define([
 	'config/spells/spellCallbacks',
-	'combat/combat'
-], function(
+	'combat/combat',
+	'misc/events'
+], function (
 	spellCallbacks,
-	combat
+	combat,
+	events
 ) {
 	return {
 		cd: 0,
@@ -16,7 +18,7 @@ define([
 
 		pendingAttacks: [],
 
-		castBase: function() {
+		castBase: function () {
 			if (this.cd > 0)
 				return false;
 			else if (this.manaCost > this.obj.stats.values.mana)
@@ -25,7 +27,7 @@ define([
 				return true;
 		},
 
-		canCast: function(target) {
+		canCast: function (target) {
 			if (this.cd > 0)
 				return false;
 			else if (this.manaCost > this.obj.stats.values.mana)
@@ -44,13 +46,13 @@ define([
 			}
 		},
 
-		updateBase: function() {
+		updateBase: function () {
 			if (this.cd > 0)
 				this.cd--;
 		},
 
-		calcDps: function(target, noSync) {
-			if (!this.values)
+		calcDps: function (target, noSync) {
+			if ((!this.values) || (this.spellType == 'buff'))
 				return;
 
 			if ((!this.damage) && (!this.healing))
@@ -75,13 +77,13 @@ define([
 				}).amount;
 
 				var critChance = this.obj.stats.values.critChance;
+				var critMultiplier = this.obj.stats.values.critMultiplier;
 
-				dmg = ((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * 1.5);
+				dmg = ((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100));
 
 				if (this.damage) {
 					this.values.dmg = ~~(dmg * 10) / 10 + '/tick';
-				}
-				else
+				} else
 					this.values.heal = ~~(dmg * 10) / 10 + '/tick';
 
 				if (!noSync)
@@ -89,11 +91,11 @@ define([
 			}
 		},
 
-		sendAnimation: function(blueprint) {
+		sendAnimation: function (blueprint) {
 			this.obj.instance.syncer.queue('onGetObject', blueprint);
 		},
 
-		sendBump: function(target) {
+		sendBump: function (target) {
 			var x = this.obj.x;
 			var y = this.obj.y;
 
@@ -132,11 +134,11 @@ define([
 			});
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var values = {};
 			for (var p in this) {
 				var value = this[p];
-				if ((typeof(value) == 'function') || (p == 'obj'))
+				if ((typeof (value) == 'function') || (p == 'obj'))
 					continue;
 
 				values[p] = value;
@@ -147,11 +149,14 @@ define([
 			if (this.values)
 				values.values = this.values;
 
+			if (this.onAfterSimplify)
+				this.onAfterSimplify(values);
+
 			return values;
 		},
 
-		getDamage: function(target, noMitigate) {
-			var damage = combat.getDamage({
+		getDamage: function (target, noMitigate) {
+			var damage = {
 				source: this.obj,
 				target: target,
 				damage: (this.damage || this.healing) * (this.dmgMult || 1),
@@ -160,16 +165,20 @@ define([
 				statType: this.statType,
 				statMult: this.statMult,
 				noMitigate: noMitigate
-			});
+			};
+
+			this.obj.fireEvent('onBeforeCalculateDamage', damage);
+
+			var damage = combat.getDamage(damage);
 
 			return damage;
 		},
 
-		queueCallback: function(callback, delay, destroyCallback, target, destroyOnRezone) {
+		queueCallback: function (callback, delay, destroyCallback, target, destroyOnRezone) {
 			return this.obj.spellbook.registerCallback(this.obj.id, callback, delay, destroyCallback, target ? target.id : null, destroyOnRezone);
 		},
 
-		die: function() {
+		die: function () {
 			this.obj.spellbook.unregisterCallback(this.obj.id);
 		}
 	};

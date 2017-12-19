@@ -2,12 +2,14 @@ define([
 	'../misc/fileLister',
 	'child_process',
 	'objects/objects',
-	'config/maps/mapList'
+	'config/maps/mapList',
+	'security/connections'
 ], function(
 	fileLister,
 	childProcess,
 	objects,
-	mapList
+	mapList,
+	connections
 ) {
 	return {
 		nextId: 0,
@@ -27,7 +29,7 @@ define([
 				instanceId = -1;
 
 			if (!thread) {
-				thread = this.getThreadFromName('tutorial-cove');
+				thread = this.getThreadFromName('tutorial');
 				obj.zoneName = thread.name;
 			}
 
@@ -103,7 +105,6 @@ define([
 			if (!callback)
 				return;
 
-
 			callback.callback(msg.result);
 		},
 
@@ -160,6 +161,20 @@ define([
 			object: function(thread, message) {
 				objects.updateObject(message);
 			},
+			callDifferentThread: function(thread, message) {
+				var obj = connections.players.find(p => (p.name == message.playerName));
+				if (!obj)
+					return;
+				var thread = this.getThreadFromName(obj.zoneName);
+				if (!thread)
+					return;
+
+				thread.worker.send({
+					module: message.data.module,
+					method: message.data.method,
+					args: message.data.args
+				});
+			},
 			rezone: function(thread, message) {
 				var obj = message.args.obj;
 				obj.destroyed = false;
@@ -172,7 +187,7 @@ define([
 				var thread = this.getThreadFromName(obj.zoneName);
 
 				if (!thread) {
-					thread = this.getThreadFromName('tutorial-cove');
+					thread = this.getThreadFromName('tutorial');
 					obj.zoneName = thread.name;
 					serverObj.zoneName = thread.name;
 				}

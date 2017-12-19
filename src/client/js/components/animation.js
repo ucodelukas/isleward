@@ -1,5 +1,5 @@
 define([
-	'js/renderer'
+	'js/rendering/renderer'
 ], function(
 	renderer
 ) {
@@ -45,7 +45,7 @@ define([
 			renderer.setSprite({
 				sprite: this.obj.sprite,
 				cell: (this.row * 8) + this.col + this.frame,
-				sheetName: this.sheet
+				sheetName: this.spritesheet || this.sheet
 			});
 		},
 

@@ -1,6 +1,6 @@
 define([
-	'misc/events'
-], function(
+	'../misc/events'
+], function (
 	events
 ) {
 	var spells = {
@@ -156,23 +156,29 @@ define([
 			random: {
 				damage: [9.3, 18.6],
 				i_delay: [4, 8]
-			}
-		},
-		'arcane barrier': {
-			statType: 'int',
-			statMult: 0.454,
-			element: 'holy',
-			cdMax: 10,
-			manaCost: 10,
-			range: 9,
-			radius: 3,
-			random: {
-				healing: [0.7, 1.3],
-				i_duration: [7, 13]
-			}
+			},
+			negativeStats: [
+				'i_delay'
+			]
 		}
+		/*,
+				'chain lightning': {
+					statType: 'int',
+					statMult: 0.454,
+					element: 'holy',
+					cdMax: 5,
+					manaCost: 0,
+					range: 9,
+					random: {
+						damage: [9.3, 18.6]
+					}
+				}*/
 	};
 
-	events.emit('onBeforeGetSpellsConfig', spells);
-	return spells;
+	return {
+		spells: spells,
+		init: function () {
+			events.emit('onBeforeGetSpellsConfig', spells);
+		}
+	};
 });
