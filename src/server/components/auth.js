@@ -5,6 +5,7 @@ define([
 	'security/connections',
 	'leaderboard/leaderboard',
 	'config/skins',
+	'config/roles',
 	'misc/profanities'
 ], function (
 	bcrypt,
@@ -13,6 +14,7 @@ define([
 	connections,
 	leaderboard,
 	skins,
+	roles,
 	profanities
 ) {
 	return {
@@ -52,9 +54,13 @@ define([
 		doSave: function (extensionObj) {
 			var simple = this.obj.getSimple(true, true);
 			simple.components.spliceWhere(c => c.type == 'stash');
-			//Don't save modified stat values
+
 			var stats = simple.components.find(c => c.type == 'stats');
 			stats.values = extend(true, {}, stats.values);
+
+			var social = simple.components.find(c => c.type == 'social');
+			delete social.party;
+			delete social.customChannelsl
 
 			var statKeys = Object.keys(stats.values);
 			var sLen = statKeys.length;
@@ -77,6 +83,9 @@ define([
 			//Calculate and store the ttl for effects
 			var time = +new Date;
 			simple.components.find(e => e.type == 'effects').effects.forEach(function (e) {
+				if (e.expire)
+					return;
+
 				e.expire = time + (e.ttl * 350);
 			});
 
@@ -149,6 +158,7 @@ define([
 			}
 
 			var character = JSON.parse(result || '{}');
+
 			//Hack for old characters
 			if (!character.skinId) {
 				character.skinId = character.class + ' 1';
@@ -170,7 +180,18 @@ define([
 		},
 
 		onGetCustomChannels: function (data, character, result) {
-			this.customChannels = JSON.parse(result || '[]');
+			this.customChannels = JSON
+				.parse(result || '[]')
+				.filter(c => (typeof (c) == 'string'))
+				.map(c => c.split(' ').join(''))
+				.filter(c => (c.length > 0));
+
+			this.customChannels = this.customChannels
+				.filter((c, i) => (this.customChannels.indexOf(c) == i));
+
+			var social = character.components.find(c => (c.type == 'social'));
+			if (social)
+				social.customChannels = this.customChannels;
 
 			this.getStash(data, character);
 		},
@@ -204,7 +225,8 @@ define([
 
 		onGetSkins: function (msg, result) {
 			this.skins = JSON.parse(result || '[]');
-			var skinList = skins.getSkinList(this.skins);
+			var list = [...this.skins, ...roles.getSkins(this.username)];
+			var skinList = skins.getSkinList(list);
 
 			msg.callback(skinList);
 		},
@@ -356,6 +378,26 @@ define([
 			if (!profanities.isClean(data.name)) {
 				msg.callback(messages.login.invalid);
 				return;
+			} else {
+				var name = data.name;
+
+				if (name.indexOf('  ') > -1) {
+					msg.callback(messages.login.invalid);
+					return;
+				}
+
+				var nLen = name.length;
+				for (var i = 0; i < nLen; i++) {
+					var char = name[i].toLowerCase();
+					var valid = [
+						'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+					];
+
+					if (valid.indexOf(char) == -1) {
+						msg.callback(messages.login.invalid);
+						return;
+					}
+				}
 			}
 
 			io.get({

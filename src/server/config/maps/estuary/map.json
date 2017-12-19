@@ -1103,7 +1103,7 @@
                  "name":"exit",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":126,\"y\":17}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":126,\"y\":87}}"
                     },
                  "propertytypes":
                     {
@@ -1123,7 +1123,7 @@
                  "name":"exit",
                  "properties":
                     {
-                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":126,\"y\":17}}"
+                     "cpnPortal":"{\"zone\":\"tutorial\",\"pos\":{\"x\":126,\"y\":87}}"
                     },
                  "propertytypes":
                     {
@@ -1183,7 +1183,6 @@
      "spawnCd":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
  "tileheight":8,
  "tilesets":[
         {
@@ -1425,6 +1424,6 @@
         }],
  "tilewidth":8,
  "type":"map",
- "version":1,
+ "version":"2017.05.26",
  "width":100
 }

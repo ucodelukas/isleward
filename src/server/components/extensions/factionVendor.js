@@ -1,11 +1,13 @@
 define([
 	'items/generator',
 	'config/skins',
-	'config/factions'
-], function(
+	'config/factions',
+	'items/itemEffects'
+], function (
 	generator,
 	skins,
-	factions
+	factions,
+	itemEffects
 ) {
 	return {
 		baseItems: [],
@@ -14,7 +16,7 @@ define([
 
 		blueprint: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.baseItems = this.items;
 			this.items = {};
 
@@ -22,7 +24,7 @@ define([
 			this.blueprint = blueprint;
 		},
 
-		getItems: function(requestedBy) {
+		getItems: function (requestedBy) {
 			var name = requestedBy.name;
 			var requestLevel = requestedBy.stats.values.level;
 
@@ -42,7 +44,7 @@ define([
 			var reputation = requestedBy.reputation;
 
 			var result = list.items
-				.map(function(i) {
+				.map(function (i) {
 					var item = extend(true, {}, i);
 
 					if (item.effects) {
@@ -53,15 +55,26 @@ define([
 						item.name = item.type;
 
 						item.effects = item.effects
-							.map(e => ({
-								factionId: e.factionId,
-								text: e.text,
-								properties: e.properties
-							}));
+							.map(function (e) {
+								if (e.factionId) {
+									return {
+										factionId: e.factionId,
+										text: e.text,
+										properties: e.properties
+									};
+								} else {
+									var effectUrl = itemEffects.get(e.type);
+									var effectModule = require(effectUrl);
+
+									return {
+										text: effectModule.events.onGetText(item)
+									};
+								}
+							});
 					}
 
 					if (item.factions) {
-						item.factions = item.factions.map(function(f) {
+						item.factions = item.factions.map(function (f) {
 							var faction = reputation.getBlueprint(f.id);
 							var factionTier = reputation.getTier(f.id);
 
@@ -84,7 +97,7 @@ define([
 			return result;
 		},
 
-		regenList: function(list) {
+		regenList: function (list) {
 			var blueprint = this.blueprint;
 
 			list.items = null;
@@ -109,7 +122,7 @@ define([
 				item.worth = Math.pow(item.level, 1.5) + (Math.pow((randomQuality + 1), 2) * 10)
 
 				var id = 0;
-				list.items.forEach(function(checkItem) {
+				list.items.forEach(function (checkItem) {
 					if (checkItem.id >= id)
 						id = checkItem.id + 1;
 				});
@@ -153,7 +166,7 @@ define([
 			}
 		},
 
-		canBuy: function(itemId, requestedBy, action) {
+		canBuy: function (itemId, requestedBy, action) {
 			var item = null;
 			if (action == 'buy')
 				item = this.findItem(itemId, requestedBy.name);
@@ -178,7 +191,7 @@ define([
 			return result;
 		},
 
-		findItem: function(itemId, sourceName) {
+		findItem: function (itemId, sourceName) {
 			var list = this.items[sourceName];
 			if (!list)
 				return null;
@@ -186,7 +199,7 @@ define([
 			return list.items.find(i => i.id == itemId);
 		},
 
-		removeItem: function(itemId, sourceName) {
+		removeItem: function (itemId, sourceName) {
 			var list = this.items[sourceName];
 			if (!sourceName)
 				return null;

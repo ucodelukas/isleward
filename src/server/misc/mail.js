@@ -1,17 +1,17 @@
 define([
 	'security/io'
-], function(
+], function (
 	io
 ) {
 	return {
 		queue: {},
 		busy: {},
 
-		init: function(instance) {
+		init: function (instance) {
 			this.instance = instance;
 		},
 
-		getMail: function(playerName) {
+		getMail: function (playerName) {
 			var player = this.instance.objects.objects.find(o => (o.name == playerName));
 			if (!player) {
 				process.send({
@@ -20,7 +20,7 @@ define([
 					data: {
 						module: 'mail',
 						method: 'getMail',
-						args: [ playerName ]
+						args: [playerName]
 					}
 				});
 
@@ -34,7 +34,7 @@ define([
 				callback: this.onGetMail.bind(this, player)
 			});
 		},
-		onGetMail: function(player, result) {
+		onGetMail: function (player, result) {
 			if (result == 'null')
 				result = null;
 			else if (result) {
@@ -51,7 +51,7 @@ define([
 			var inventory = player.inventory;
 			var stash = player.stash;
 
-			result.forEach(function(r) {
+			result.forEach(function (r) {
 				if (r.removeAll) {
 					for (var i = 0; i < inventory.items.length; i++) {
 						var item = inventory.items[i];
@@ -94,7 +94,7 @@ define([
 			});
 		},
 
-		processQueue: function(playerName) {
+		processQueue: function (playerName) {
 			delete this.busy[playerName];
 			var queue = this.queue[playerName];
 			if (!queue)
@@ -104,13 +104,13 @@ define([
 			this.sendMail(playerName, queue);
 		},
 
-		sendMail: function(playerName, items) {
+		sendMail: function (playerName, items) {
 			if (this.busy[playerName]) {
 				var queue = this.queue[playerName];
 				if (!queue) {
 					queue = this.queue[playerName] = [];
 				}
-				items.forEach(function(i) {
+				items.forEach(function (i) {
 					queue.push(extend(true, {}, i));
 				});
 
@@ -132,17 +132,17 @@ define([
 				callback: this.doSendMail.bind(this, playerName, items)
 			});
 		},
-		doSendMail: function(playerName, items, result) {
+		doSendMail: function (playerName, items, result) {
 			if (result == 'null')
 				result = null;
 
 			result = JSON.parse(result || '[]');
 
-			items.forEach(function(i) {
+			items.forEach(function (i) {
 				result.push(i);
 			});
 
-			var itemString = JSON.stringify(items).split(`'`).join('`');
+			var itemString = JSON.stringify(result).split(`'`).join('`');
 
 			io.set({
 				ent: playerName,

@@ -17,7 +17,9 @@ define([
 			delete blueprint.list;
 
 			list.forEach(function (l) {
-				this.getBlueprint(l.id);
+				var bpt = this.getBlueprint(l.id);
+				if (!bpt)
+					return;
 
 				this.list.push({
 					id: l.id,
@@ -36,9 +38,7 @@ define([
 			var factionBlueprint = null;
 			try {
 				factionBlueprint = factions.getFaction(factionId);
-			} catch (e) {
-				console.log(e);
-			}
+			} catch (e) {}
 
 			if (factionBlueprint == null)
 				return;
@@ -205,7 +205,8 @@ define([
 			var l = this.list.find(l => (l.id == factionId));
 			var faction = {
 				id: factionId,
-				rep: l.rep
+				rep: l.rep,
+				tier: l.tier
 			};
 
 			if (full) {

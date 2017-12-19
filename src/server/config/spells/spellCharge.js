@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -16,7 +16,7 @@ define([
 		stunDuration: 15,
 		needLos: true,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 			var target = action.target;
 
@@ -92,7 +92,7 @@ define([
 
 			return true;
 		},
-		reachDestination: function(target, targetPos, targetEffect, selfEffect) {
+		reachDestination: function (target, targetPos, targetEffect, selfEffect) {
 			if (this.obj.destroyed)
 				return;
 
@@ -118,7 +118,7 @@ define([
 			target.stats.takeDamage(damage, this.threatMult, obj);
 		},
 
-		isTileValid: function(physics, fromX, fromY, toX, toY) {
+		isTileValid: function (physics, fromX, fromY, toX, toY) {
 			if (physics.isTileBlocking(toX, toY))
 				return false;
 			else

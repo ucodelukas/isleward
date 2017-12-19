@@ -1,8 +1,8 @@
 module.exports = {
 	name: 'Fishing Tournament',
-	description: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
+	description: `Catch the heaviest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '50 18 * * *',
+	cron: '0 19 * * *',
 
 	notifications: [{
 		mark: 0,
@@ -36,7 +36,7 @@ module.exports = {
 	duration: 4285,
 	prizeTime: 3428,
 
-	descBase: `Catch the biggest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
+	descBase: `Catch the heaviest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	descLeaderboard: null,
 	descTimer: null,
 
@@ -177,7 +177,7 @@ module.exports = {
 			hpMult: 1,
 			pos: {
 				x: 134,
-				y: 31
+				y: 101
 			},
 			dialogue: {
 				auto: true,
@@ -212,7 +212,7 @@ module.exports = {
 						}
 					},
 					'3': {
-						msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the biggest one, you win!`,
+						msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the heaviest one, you win!`,
 						options: {
 							'3.1': {
 								msg: `What are the prizes?`,

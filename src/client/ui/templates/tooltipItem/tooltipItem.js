@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/tooltipItem/template',
 	'html!ui/templates/tooltipItem/templateTooltip',
 	'js/misc/statTranslations'
-], function(
+], function (
 	events,
 	styles,
 	template,
@@ -17,6 +17,8 @@ define([
 		'sprintChance',
 		'dmgPercent',
 		'xpIncrease',
+		'attackSpeed',
+		'castSpeed',
 		'catchChance',
 		'catchSpeed',
 		'fishRarity',
@@ -31,14 +33,14 @@ define([
 		tooltip: null,
 		item: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.tooltip = this.el.find('.tooltip');
 
 			this.onEvent('onShowItemTooltip', this.onShowItemTooltip.bind(this));
 			this.onEvent('onHideItemTooltip', this.onHideItemTooltip.bind(this));
 		},
 
-		onHideItemTooltip: function(item) {
+		onHideItemTooltip: function (item) {
 			if (this.item != item)
 				return;
 
@@ -46,7 +48,7 @@ define([
 			this.tooltip.hide();
 		},
 
-		onShowItemTooltip: function(item, pos, compare, bottomAlign, shiftDown) {
+		onShowItemTooltip: function (item, pos, compare, bottomAlign, shiftDown) {
 			this.item = item;
 
 			var tempStats = $.extend(true, {}, item.stats);
@@ -72,7 +74,7 @@ define([
 			}
 
 			stats = Object.keys(tempStats)
-				.map(function(s) {
+				.map(function (s) {
 					var statName = statTranslations.translate(s);
 					var value = tempStats[s];
 
@@ -95,14 +97,18 @@ define([
 
 					return row;
 				}, this)
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					return (a.length - b.length);
 				})
 				.join('');
 
 			var name = item.name;
-			if (item.quantity)
+			if (item.quantity > 1)
 				name += ' x' + item.quantity;
+
+			var level = null;
+			if (item.level)
+				level = item.level.push ? item.level[0] + ' - ' + item.level[1] : item.level;
 
 			var html = tplTooltip
 				.replace('$NAME$', name)
@@ -110,7 +116,7 @@ define([
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
 				.replace('$STATS$', stats)
-				.replace('$LEVEL$', item.level);
+				.replace('$LEVEL$', level);
 			if (item.power)
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
@@ -178,7 +184,7 @@ define([
 			if ((item.effects) && (item.type != 'mtx')) {
 				var htmlEffects = '';
 
-				item.effects.forEach(function(e, i) {
+				item.effects.forEach(function (e, i) {
 					htmlEffects += e.text;
 					if (i < item.effects.length - 1)
 						htmlEffects += '<br />';
@@ -187,13 +193,23 @@ define([
 				this.find('.effects')
 					.html(htmlEffects)
 					.show();
+			} else if (item.description) {
+				this.find('.effects')
+					.html(item.description)
+					.show();
 			} else
 				this.find('.effects').hide();
+
+			if (item.type == 'Reward Card') {
+				this.find('.spellName')
+					.html('Set Size: ' + item.setSize)
+					.show();
+			}
 
 			if (item.factions) {
 				var htmlFactions = '';
 
-				item.factions.forEach(function(f, i) {
+				item.factions.forEach(function (f, i) {
 					var htmlF = f.name + ': ' + f.tierName;
 					if (f.noEquip)
 						htmlF = '<font class="color-red">' + htmlF + '</font>';
@@ -212,6 +228,16 @@ define([
 			if ((shiftDown) || (!compare))
 				this.tooltip.find('.info').hide();
 
+			if (item.cd) {
+				this.tooltip.find('.info')
+					.html('cooldown: ' + item.cd)
+					.show();
+			} else if (item.uses) {
+				this.tooltip.find('.info')
+					.html('uses: ' + item.uses)
+					.show();
+			}
+
 			this.tooltip
 				.show();
 
@@ -228,7 +254,7 @@ define([
 			events.emit('onBuiltItemTooltip', this.tooltip);
 		},
 
-		showWorth: function(canAfford) {
+		showWorth: function (canAfford) {
 			this.tooltip.find('.worth').show();
 
 			if (!canAfford)

@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var cpnSmokePatch = {
@@ -8,24 +8,21 @@ define([
 
 		contents: [],
 
-		applyDamage: function(o, amount) {
+		applyDamage: function (o, amount) {
 			o.stats.takeDamage(amount, 1, this.caster);
 		},
 
-		collisionEnter: function(o) {
+		collisionEnter: function (o) {
 			if (!o.aggro)
 				return;
 
-			var isPlayer = !!this.caster.player;
-			var isTargetPlayer = !!o.player;
-
-			if ((!this.caster.aggro.canAttack(o)) && (isPlayer == isTargetPlayer))
+			if (!this.caster.aggro.canAttack(o))
 				return;
 
 			this.contents.push(o);
 		},
 
-		collisionExit: function(o) {
+		collisionExit: function (o) {
 			var contents = this.contents;
 			var cLen = contents.length;
 			for (var i = 0; i < cLen; i++) {
@@ -36,7 +33,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			if (this.caster.destroyed)
 				return;
 
@@ -47,8 +44,13 @@ define([
 			for (var i = 0; i < cLen; i++) {
 				var c = contents[i];
 
-				var damage = this.getDamage(c);
-				this.applyDamage(c, damage);
+				if (!c) {
+					console.log('NO SMOKEBOMB TARGET');
+					console.log(this.obj.name, this.obj.x, this.obj.y);
+				} else {
+					var damage = this.getDamage(c);
+					this.applyDamage(c, damage);
+				}
 			}
 		}
 	};
@@ -65,7 +67,7 @@ define([
 		radius: 1,
 		targetGround: true,
 
-		update: function() {
+		update: function () {
 			var selfCast = this.selfCast;
 
 			if (!selfCast)
@@ -80,7 +82,7 @@ define([
 			}
 		},
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 
 			var radius = this.radius;
@@ -121,7 +123,7 @@ define([
 							properties: {
 								cpnHealPatch: cpnSmokePatch,
 								cpnParticles: {
-									simplify: function() {
+									simplify: function () {
 										return {
 											type: 'particles',
 											blueprint: this.blueprint
@@ -155,7 +157,7 @@ define([
 
 			return true;
 		},
-		endEffect: function(patches) {
+		endEffect: function (patches) {
 			var pLen = patches.length;
 			for (var i = 0; i < pLen; i++) {
 				patches[i].destroyed = true;

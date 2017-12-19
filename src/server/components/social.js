@@ -18,18 +18,11 @@ define([
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
 
-		simplify: function () {
+		simplify: function (self) {
 			return {
 				type: 'social',
 				party: this.party,
-				customChannels: this.customChannels
-			};
-		},
-
-		save: function () {
-			return {
-				type: 'social',
-				customChannels: this.customChannels
+				customChannels: self ? this.customChannels : null
 			};
 		},
 
@@ -127,6 +120,18 @@ define([
 		},
 
 		chat: function (msg) {
+			if (!msg.data.message)
+				return;
+
+			msg.data.message = msg.data.message
+				.split('<')
+				.join('')
+				.split('>')
+				.join('');
+
+			if (!msg.data.message)
+				return;
+
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
 				return;

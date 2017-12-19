@@ -66,8 +66,12 @@ define([
 			obj.addComponent('trade', character.components.find(c => c.type == 'trade'));
 			obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
 
-			obj.addComponent('social', character.components.find(c => c.type == 'social'));
+			var social = character.components.find(c => c.type == 'social');
+			if (social)
+				delete social.party;
+			obj.addComponent('social', social);
 			obj.social.init();
+			obj.social.party = null;
 			obj.addComponent('aggro', {
 				faction: 'players'
 			});
@@ -75,6 +79,21 @@ define([
 			obj.addComponent('stash', {
 				items: character.stash
 			});
+
+			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
+			if (blueprintEffects.effects) {
+				//Calculate ttl of effects
+				var time = +new Date;
+				blueprintEffects.effects = blueprintEffects.effects.filter(function (e) {
+					var remaining = e.expire - time;
+					if (remaining < 0)
+						return false;
+					else {
+						e.ttl = Math.max(~~(remaining / 350), 1);
+						return true;
+					}
+				});
+			}
 			obj.addComponent('effects', blueprintEffects);
 
 			var prophecies = character.components.find(c => c.type == 'prophecies');
@@ -85,22 +104,6 @@ define([
 			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
 			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
 			obj.addComponent('events', character.components.find(c => c.type == 'events'));
-
-			var blueprintEffects = character.components.find(c => c.type == 'effects') || {};
-			if (blueprintEffects.effects) {
-				//Calculate ttl of effects
-				var time = +new Date;
-				blueprintEffects.effects.filter(function (e) {
-					var remaining = e.expire - time;
-					if (remaining < 0)
-						return false;
-					else {
-						e.ttl = Math.max(~~(remaining / 350), 1);
-						delete e.expire;
-						return true;
-					}
-				});
-			}
 
 			obj.xp = stats.values.xp;
 			obj.level = stats.values.level;

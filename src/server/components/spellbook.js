@@ -143,8 +143,8 @@ define([
 
 		addSpellFromRune: function (runeSpell, spellId) {
 			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig[name];
+			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
+			var playerSpellConfig = playerSpellsConfig.spells[name];
 
 			if (!playerSpell)
 				return -1;
@@ -291,8 +291,10 @@ define([
 
 			var success = true;
 			if (spell.cd > 0) {
-				if ((!isAuto) && (!spell.isAuto))
-					this.sendAnnouncement('Spell is on cooldown');
+				if ((!isAuto) && (!spell.isAuto)) {
+					var type = (spell.auto) ? 'Weapon' : 'Spell';
+					this.sendAnnouncement(`${type} is on cooldown`);
+				}
 				success = false;
 			} else if (spell.manaCost > this.obj.stats.values.mana) {
 				if (!isAuto)
@@ -346,11 +348,18 @@ define([
 			success = spell.cast(action);
 
 			if (success) {
-				this.obj.stats.values.mana -= spell.manaCost;
+				var stats = this.obj.stats.values;
+				stats.mana -= spell.manaCost;
 				var cd = {
 					cd: spell.cdMax
 				};
+
+				var isAttack = (spell.type == 'melee');
+				if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
+					cd.cd = 1;
+
 				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
 				spell.cd = cd.cd;
 
 				if (this.obj.player) {

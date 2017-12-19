@@ -9,29 +9,37 @@ global.io = true;
 var instancer = null;
 
 requirejs([
-	'extend', 
-	'misc/helpers', 
-	'components/components', 
-	'world/instancer', 
-	'security/io', 
-	'misc/mods', 
-	'mtx/mtx', 
-	'config/animations', 
+	'extend',
+	'misc/helpers',
+	'components/components',
+	'world/instancer',
+	'security/io',
+	'misc/mods',
+	'mtx/mtx',
+	'config/animations',
 	'config/skins',
-	'config/factions'
-], function(
-	extend, 
-	helpers, 
-	components, 
-	_instancer, 
-	io, 
-	mods, 
+	'config/factions',
+	'config/classes',
+	'config/spellsConfig',
+	'config/spells',
+	'items/config/types'
+], function (
+	extend,
+	helpers,
+	components,
+	_instancer,
+	io,
+	mods,
 	mtx,
 	animations,
 	skins,
-	factions
+	factions,
+	classes,
+	spellsConfig,
+	spells,
+	itemTypes
 ) {
-	var onDbReady = function() {
+	var onDbReady = function () {
 		global.extend = extend;
 		global._ = helpers;
 		global.instancer = _instancer;
@@ -41,20 +49,24 @@ requirejs([
 
 		components.init(onCpnsReady);
 
-		setInterval(function() {
+		setInterval(function () {
 			global.gc();
 		}, 60000);
 	};
 
-	var onCpnsReady = function() {
+	var onCpnsReady = function () {
 		mods.init(onModsReady);
 	};
 
-	var onModsReady = function() {
+	var onModsReady = function () {
 		factions.init();
 		skins.init();
 		mtx.init();
 		animations.init();
+		classes.init();
+		spellsConfig.init();
+		spells.init();
+		itemTypes.init();
 
 		process.send({
 			method: 'onReady'

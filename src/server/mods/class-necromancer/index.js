@@ -136,11 +136,11 @@ define([
 				statMult: 0.1,
 				element: 'physical',
 				auto: true,
-				cdMax: 7,
+				cdMax: 6,
 				manaCost: 0,
 				range: 1,
 				random: {
-					damage: [2, 4],
+					damage: [2.2, 4.1],
 					healPercent: [5, 15]
 				}
 			};
@@ -248,7 +248,7 @@ define([
 
 			spells.push({
 				name: 'Blood Barrier',
-				description: 'Sacrifice some life force to granting an ally a protective barrier and increased attack speed.',
+				description: 'Sacrifice some life force to grant an ally a protective barrier and increased attack speed.',
 				type: 'bloodBarrier',
 				icon: [2, 0],
 				animation: 'magic',

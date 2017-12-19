@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -14,11 +14,14 @@ define([
 					name: 'Key to the world',
 					sprite: [12, 0],
 					keyId: 'world'
-				}]
+				}],
+				skins: [
+					'1.1', '1.2', '1.3', '1.4', '1.5', 'bearded wizard'
+				]
 			}
 		},
 
-		onBeforePlayerEnterGame: function(obj, blueprint) {
+		onBeforePlayerEnterGame: function (obj, blueprint) {
 			var account = obj.account;
 			var config = this.accounts[account] || {};
 			if (config.items) {
@@ -30,12 +33,11 @@ define([
 					});
 
 					return;
-				}
-				else if (!blueprintInventory.items)
+				} else if (!blueprintInventory.items)
 					blueprintInventory.items = [];
 
 				var items = blueprintInventory.items;
-				config.items.forEach(function(item) {
+				config.items.forEach(function (item) {
 					var hasItem = items.find(i => (i.name == item.name));
 					if (hasItem)
 						return;
@@ -45,14 +47,14 @@ define([
 			}
 		},
 
-		getRoleLevel: function(player) {
+		getRoleLevel: function (player) {
 			var account = player.account;
 			var level = this.accounts[account] ? this.accounts[account].level : 0;
 
 			return level;
 		},
 
-		isRoleLevel: function(player, requireLevel, message) {
+		isRoleLevel: function (player, requireLevel, message) {
 			var account = player.account;
 			var level = this.accounts[account] ? this.accounts[account].level : 0;
 
@@ -64,17 +66,21 @@ define([
 			return success;
 		},
 
-		getRoleMessageStyle: function(player) {
+		getRoleMessageStyle: function (player) {
 			var account = player.account;
 			return this.accounts[account] ? this.accounts[account].messageStyle : null;
 		},
 
-		getRoleMessagePrefix: function(player) {
+		getRoleMessagePrefix: function (player) {
 			var account = player.account;
 			return this.accounts[account] ? this.accounts[account].messagePrefix : null;
 		},
 
-		sendMessage: function(player, msg) {
+		getSkins: function (account) {
+			return this.accounts[account] ? this.accounts[account].skins : [];
+		},
+
+		sendMessage: function (player, msg) {
 			msg = 'Only certain roles can ' + msg + ' at the moment';
 
 			player.instance.syncer.queue('onGetMessages', {

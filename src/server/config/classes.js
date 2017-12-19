@@ -1,6 +1,6 @@
 define([
 	'../misc/events'
-], function(
+], function (
 	events
 ) {
 	var classes = {
@@ -61,12 +61,14 @@ define([
 			warrior: 'Axe'
 		},
 
-		getSpritesheet: function(className) {
+		getSpritesheet: function (className) {
 			return this.stats[className].spritesheet || 'characters';
+		},
+
+		init: function () {
+			events.emit('onBeforeGetClasses', classes);
 		}
 	};
-
-	events.emit('onBeforeGetClasses', classes);
 
 	return classes;
 });

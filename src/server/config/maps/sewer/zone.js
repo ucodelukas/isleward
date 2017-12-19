@@ -11,7 +11,7 @@ module.exports = {
 		'rat': {
 			faction: 'flolgard',
 			grantRep: {
-				fjolgard: 4
+				fjolgard: 6
 			},
 			level: 10,
 
@@ -23,12 +23,13 @@ module.exports = {
 		'stinktooth': {
 			faction: 'flolgard',
 			grantRep: {
-				fjolgard: 10
+				fjolgard: 15
 			},
 			level: 12,
 
 			rare: {
-				count: 0
+				chance: 4,
+				name: 'Steelclaw'
 			}
 		}
 	},
@@ -74,7 +75,7 @@ module.exports = {
 		greencandle: {
 			components: {
 				cpnLight: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'light',
 							blueprint: {
@@ -95,7 +96,7 @@ module.exports = {
 		alchgreenpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -147,7 +148,7 @@ module.exports = {
 		alchredpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {

@@ -1,14 +1,18 @@
 define([
 	'config/animations',
 	'items/generator',
-	'combat/combat'
+	'combat/combat',
+	'misc/events'
 ], function (
 	animations,
 	itemGenerator,
-	combat
+	combat,
+	events
 ) {
 	return {
-		build: function (mob, blueprint, scaleDrops, type) {
+		build: function (mob, blueprint, scaleDrops, type, zoneName) {
+			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
+
 			var typeDefinition = blueprint[type] || blueprint;
 
 			var drops = typeDefinition.drops;
@@ -30,6 +34,11 @@ define([
 
 					mob.baseName = mob.name;
 					mob.name = typeDefinition.name || mob.baseName;
+
+					if (typeDefinition.sheetName) {
+						mob.sheetName = typeDefinition.sheetName;
+						mob.cell = typeDefinition.cell;
+					}
 				}
 			}
 
@@ -160,7 +169,7 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				hpMult *= [0.005, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
+				hpMult *= [0.0077, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
 				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
 			}
 

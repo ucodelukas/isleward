@@ -58,13 +58,15 @@ define([
 				}]
 			}, [obj.serverId]);
 
-			this.rewards.forEach(function (r) {
-				obj.inventory.getItem(r);
-			});
-
 			obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
-			obj.stats.getXp(this.xp || 10);
+			events.emit('onCompleteQuest', this);
+
+			this.rewards.forEach(function (r) {
+				this.obj.inventory.getItem(r);
+			}, this);
+
+			this.obj.stats.getXp(this.xp || 10);
 		},
 
 		simplify: function (self) {

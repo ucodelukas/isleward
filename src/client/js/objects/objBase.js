@@ -112,8 +112,10 @@ define([
 					return;
 
 				var yAdd = scale;
-				if (i == 1)
+				if (i == 1) {
 					yAdd *= -0.8;
+					yAdd -= (this.chatter.msg.split('\r\n').length - 1) * scale * 0.8;
+				}
 
 				sprite.x = (this.x * scale) + (scale / 2) - (sprite.width / 2);
 				sprite.y = (this.y * scale) + yAdd;

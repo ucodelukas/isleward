@@ -126,7 +126,7 @@ define([
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
 
-				if (item.quantity)
+				if (item.quantity > 1)
 					itemEl.find('.quantity').html(item.quantity);
 				else if (item.eq)
 					itemEl.find('.quantity').html('EQ');
@@ -270,12 +270,16 @@ define([
 					text: 'activate',
 					callback: this.performItemAction.bind(this, item, 'activateMtx')
 				},
+				use: {
+					text: 'use',
+					callback: this.performItemAction.bind(this, item, 'useItem')
+				},
 				equip: {
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
 				},
 				augment: {
-					text: 'augment',
+					text: 'craft',
 					callback: this.openAugmentUi.bind(this, item)
 				},
 				mail: {
@@ -299,6 +303,8 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type == 'mtx')
 				config.push(menuItems.activate);
+			else if ((item.type == 'toy') || (item.type == 'consumable'))
+				config.push(menuItems.use);
 			else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
@@ -326,7 +332,7 @@ define([
 					config.push(menuItems.destroy);
 			}
 
-			if ((!item.noDrop) && (!item.quest) && (!item.noSalvage))
+			if ((!item.noDrop) && (!item.quest))
 				config.push(menuItems.mail);
 
 			if (config.length > 0)
@@ -387,19 +393,17 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
 		},
 
-		onGetItems: function (items) {
+		onGetItems: function (items, rerender) {
 			this.items = items;
 
-			if (this.shown)
+			if ((this.shown) && (rerender))
 				this.build();
 		},
 		onDestroyItems: function (itemIds) {
 			itemIds.forEach(function (id) {
 				var item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) {
-					//this.hoverItem = null;
+				if (item == this.hoverItem)
 					this.hideTooltip();
-				}
 
 				this.items.spliceWhere(i => i.id == id);
 			}, this);
@@ -452,6 +456,9 @@ define([
 			var cpn = 'inventory';
 			if (action == 'equip')
 				cpn = 'equipment';
+
+			if (action == 'useItem')
+				this.hide();
 
 			client.request({
 				cpn: 'player',

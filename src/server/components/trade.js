@@ -216,6 +216,11 @@ define([
 
 				delete clonedItem.infinite;
 
+				if (clonedItem.generate) {
+					clonedItem = generator.generate(clonedItem);
+					delete clonedItem.generate;
+				}
+
 				this.obj.inventory.getItem(clonedItem);
 			} else {
 				this.obj.auth.saveSkin(item.id);
@@ -288,9 +293,36 @@ define([
 
 			this.target = target;
 
+			var reputation = this.obj.reputation;
+
+			var itemList = this.obj.inventory.items
+				.filter(i => ((i.worth > 0) && (!i.eq)));
+			itemList = extend(true, [], itemList);
+
 			this.obj.syncer.set(true, 'trade', 'sellList', {
 				markup: target.trade.markup.buy,
-				items: this.obj.inventory.items.filter(i => ((i.worth > 0) && (!i.eq)))
+				items: itemList
+					.map(function (i) {
+						if (i.factions) {
+							i.factions = i.factions.map(function (f) {
+								var faction = reputation.getBlueprint(f.id);
+								var factionTier = reputation.getTier(f.id);
+
+								var noEquip = null;
+								if (factionTier < f.tier)
+									noEquip = true;
+
+								return {
+									name: faction.name,
+									tier: f.tier,
+									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+									noEquip: noEquip
+								};
+							}, this);
+						}
+
+						return i;
+					})
 			});
 		},
 

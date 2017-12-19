@@ -78,15 +78,14 @@ define([
 
 			el
 				.data('item', item)
-				/*.on('mousemove', this.onHover.bind(this, el, item))
-				.on('mouseleave', this.hideTooltip.bind(this, el, item))*/
 				.find('.icon')
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
 			if (item.quantity) {
 				var quantityText = item.quantity;
 				el.find('.quantity').html(item.quantity);
-			}
+			} else
+				el.find('.quantity').html('');
 		},
 
 		toggle: function () {

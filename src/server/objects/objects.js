@@ -78,6 +78,9 @@ define([
 				obj.x = l.x;
 				obj.y = l.y;
 
+				if (l.ttl)
+					obj.ttl = l.ttl;
+
 				if (l.width) {
 					obj.width = l.width;
 					obj.height = l.height;
@@ -297,6 +300,12 @@ define([
 				//That's syncer's job
 				if ((o.update) && (!o.destroyed))
 					o.update();
+
+				if (o.ttl) {
+					o.ttl--;
+					if (!o.ttl)
+						o.destroyed = true;
+				}
 
 				o.fireEvent('afterTick');
 			}

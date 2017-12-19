@@ -30,6 +30,9 @@ define([
 			armor: 0,
 			dmgPercent: 0,
 
+			attackSpeed: 0,
+			castSpeed: 0,
+
 			elementArcanePercent: 0,
 			elementFrostPercent: 0,
 			elementFirePercent: 0,
@@ -218,6 +221,8 @@ define([
 
 				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
 				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
 
 				syncO.level = values.level;
 
@@ -370,6 +375,13 @@ define([
 						if (deathEvent.permadeath) {
 							this.obj.auth.permadie();
 
+							this.obj.instance.syncer.queue('onGetMessages', {
+								messages: {
+									class: 'color-red',
+									message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
+								}
+							});
+
 							this.syncer.queue('onPermadeath', {
 								source: killSource.name
 							}, [this.obj.serverId]);
@@ -425,7 +437,8 @@ define([
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 			}
 
-			source.fireEvent('afterDealDamage', damage, this.obj);
+			if (!damage.noEvents)
+				source.fireEvent('afterDealDamage', damage, this.obj);
 		},
 
 		getHp: function (heal, source) {

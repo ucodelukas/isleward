@@ -225,7 +225,8 @@ define([
 			if (q.action == 'move') {
 				if ((this.actionQueue[0]) && (this.actionQueue[0].action == 'move')) {
 					var sprintChance = this.stats.values.sprintChance || 0;
-					if (~~(Math.random() * 100) < sprintChance) {
+					var physics = this.instance.physics;
+					if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
 						q = this.dequeue();
 						q.isDouble = true;
 					}

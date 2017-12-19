@@ -8,27 +8,36 @@ define([
 	'items/generators/worth',
 	'items/generators/quantity',
 	'items/generators/spellbook',
-	'items/salvager'
+	'items/generators/currency',
+	'items/generators/effects'
 ], function (
-	g1, g2, g3, g4, g5, g6, g7, g8,
-	g9
+	g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11
 ) {
-	var generators = [].slice.apply(arguments, [0, 7]);
+	var generators = [g1, g2, g3, g4, g5, g6, g11, g7];
 	var materialGenerators = [g6, g8];
 	var spellGenerators = [g1, g9];
+	var currencyGenerators = [g10];
 
 	var generator = {
-		spellChance: 0.075,
+		spellChance: 0.02,
+		currencyChance: 0.025,
+
 		generate: function (blueprint) {
+			var isSpell = false;
+			var isCurrency = false;
+
 			var hadBlueprint = !!blueprint;
 			blueprint = blueprint || {};
 
 			var item = {};
 
 			if ((!blueprint.slot) && (!blueprint.noSpell)) {
-				var isSpell = blueprint.spell;
-				if ((!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats))))
+				isSpell = blueprint.spell;
+				if ((!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
 					isSpell = Math.random() < this.spellChance;
+					if (!isSpell)
+						isCurrency = Math.random() < this.currencyChance;
+				}
 			}
 
 			if (blueprint.isSpell)
@@ -36,7 +45,9 @@ define([
 
 			if (isSpell)
 				spellGenerators.forEach(g => g.generate(item, blueprint));
-			else if (blueprint.material) {
+			else if (isCurrency) {
+				currencyGenerators.forEach(g => g.generate(item, blueprint));
+			} else if (blueprint.material) {
 				item.material = true;
 				item.sprite = blueprint.sprite;
 				item.noDrop = blueprint.noDrop;
@@ -57,6 +68,9 @@ define([
 
 			if (blueprint.noSalvage)
 				item.noSalvage = true;
+
+			if (blueprint.uses)
+				item.uses = blueprint.uses;
 
 			return item;
 		},

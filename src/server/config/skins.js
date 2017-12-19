@@ -57,6 +57,37 @@ define([
 			name: 'Skin: Gaekatlan Druid',
 			sprite: [0, 4],
 			class: 'cleric'
+		},
+
+		'1.1': {
+			name: 'Sorcerer',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [0, 0],
+			class: 'wizard'
+		},
+		'1.2': {
+			name: 'Diviner',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [1, 0],
+			class: 'cleric'
+		},
+		'1.3': {
+			name: 'Cutthroat',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [2, 0],
+			class: 'thief'
+		},
+		'1.4': {
+			name: 'Man of War',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [3, 0],
+			class: 'warrior'
+		},
+		'1.5': {
+			name: 'Occultist',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [4, 0],
+			class: 'necromancer'
 		}
 	};
 
@@ -86,6 +117,7 @@ define([
 					result[l.class] = [];
 
 				result[l.class].push({
+					name: l.name,
 					id: l.id,
 					sprite: l.sprite[0] + ',' + l.sprite[1],
 					spritesheet: l.spritesheet

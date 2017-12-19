@@ -1,11 +1,10 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return [
 		'cave',
-		'city',
 		'estuary',
 		'sewer',
 		'tutorial'

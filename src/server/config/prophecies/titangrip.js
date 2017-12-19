@@ -1,21 +1,24 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'titangrip',
 
-		init: function() {
-			
+		init: function () {
+
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return this.type;
 		},
 
 		events: {
-			afterEquipItem: function(item) {
+			afterEquipItem: function (item) {
+				if (item.slot != 'twoHanded')
+					return;
+
 				var stats = item.stats;
 				for (var s in stats) {
 					var val = stats[s];
@@ -25,7 +28,10 @@ define([
 					this.obj.stats.addStat(s, val);
 				}
 			},
-			afterUnequipItem: function(item) {
+			afterUnequipItem: function (item) {
+				if (item.slot != 'twoHanded')
+					return;
+
 				var stats = item.stats;
 				for (var s in stats) {
 					var val = stats[s];

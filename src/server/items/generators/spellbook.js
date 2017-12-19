@@ -14,12 +14,12 @@ define([
 			var spellName = blueprint.spellName;
 
 			if (!spellName) {
-				var spellList = Object.keys(spellsConfig).filter(s => ((!spellsConfig[s].auto) && (!s.noDrop)));
+				var spellList = Object.keys(spellsConfig.spells).filter(s => ((!spellsConfig.spells[s].auto) && (!s.noDrop)));
 				spellName = spellList[~~(Math.random() * spellList.length)];
 			}
 
-			var spell = spellsConfig[spellName];
-			var spellAesthetic = spells.find(s => s.name.toLowerCase() == spellName);
+			var spell = spellsConfig.spells[spellName];
+			var spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName);
 
 			if (!item.slot) {
 				var sprite = [10, 0];
@@ -51,7 +51,9 @@ define([
 			var propertyPerfection = [];
 
 			var randomProperties = spell.random || {};
+			var negativeStats = spell.negativeStats || [];
 			for (var r in randomProperties) {
+				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
 				var roll = random.norm(0, 1);
 				if (spellQuality == 'basic')
@@ -73,8 +75,10 @@ define([
 
 				if (roll <= 0.5)
 					propertyPerfection.push(0);
+				else if (negativeStat)
+					propertyPerfection.push(1 - roll);
 				else
-					propertyPerfection.push(roll / 1);
+					propertyPerfection.push(roll)
 			}
 
 			if (blueprint.spellProperties) {
@@ -89,7 +93,8 @@ define([
 				item.spell.properties.range = item.range;
 			}
 
-			var perfection = ~~(propertyPerfection.reduce((p, n) => p += n, 0) / propertyPerfection.length * 4);
+			var per = propertyPerfection.reduce((p, n) => p + n, 0);
+			var perfection = ~~((per / propertyPerfection.length) * 4);
 			if (!item.slot)
 				item.quality = perfection;
 			else

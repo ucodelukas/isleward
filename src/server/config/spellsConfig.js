@@ -1,6 +1,6 @@
 define([
 	'../misc/events'
-], function(
+], function (
 	events
 ) {
 	var spells = {
@@ -156,21 +156,29 @@ define([
 			random: {
 				damage: [9.3, 18.6],
 				i_delay: [4, 8]
-			}
-		}/*,
-		'chain lightning': {
-			statType: 'int',
-			statMult: 0.454,
-			element: 'holy',
-			cdMax: 5,
-			manaCost: 0,
-			range: 9,
-			random: {
-				damage: [9.3, 18.6]
-			}
-		}*/
+			},
+			negativeStats: [
+				'i_delay'
+			]
+		}
+		/*,
+				'chain lightning': {
+					statType: 'int',
+					statMult: 0.454,
+					element: 'holy',
+					cdMax: 5,
+					manaCost: 0,
+					range: 9,
+					random: {
+						damage: [9.3, 18.6]
+					}
+				}*/
 	};
 
-	events.emit('onBeforeGetSpellsConfig', spells);
-	return spells;
+	return {
+		spells: spells,
+		init: function () {
+			events.emit('onBeforeGetSpellsConfig', spells);
+		}
+	};
 });

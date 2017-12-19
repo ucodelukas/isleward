@@ -7,7 +7,7 @@ module.exports = {
 		default: {
 			faction: 2,
 			grantRep: {
-				gaekatla: 3
+				gaekatla: 15
 			},
 
 			regular: {
@@ -53,8 +53,8 @@ module.exports = {
 		"m'ogresh": {
 			level: 12,
 			isChampion: true,
-			grantReputation: {
-				gaekatla: 15
+			grantRep: {
+				gaekatla: 120
 			},
 			spells: [{
 				type: 'melee',
@@ -67,7 +67,7 @@ module.exports = {
 		'exit': {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {

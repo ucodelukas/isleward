@@ -21,7 +21,11 @@ define([
 		getItem: 10,
 		getGold: 10,
 		setLevel: 10,
-		godMode: 10
+		godMode: 10,
+		clearInventory: 10,
+		completeQuests: 10,
+		getReputation: 10,
+		loseReputation: 10
 	};
 
 	var localCommands = [
@@ -50,6 +54,7 @@ define([
 			messageText = messageText.substr(1).split(' ');
 			var actionName = messageText.splice(0, 1)[0].toLowerCase();
 			actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() == actionName));
+
 			if (!actionName)
 				return;
 			else if (this.roleLevel < commandRoles[actionName])
@@ -80,6 +85,13 @@ define([
 
 		//actions
 		join: function (value) {
+			if (typeof (value) != 'string')
+				return;
+
+			value = value.split(' ').join('');
+			if (value.lengh == 0)
+				return;
+
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
@@ -114,6 +126,9 @@ define([
 		},
 
 		leave: function (value) {
+			if (typeof (value) != 'string')
+				return;
+
 			var obj = this.obj;
 
 			var channels = obj.auth.customChannels;
@@ -159,6 +174,15 @@ define([
 
 		isInChannel: function (character, channel) {
 			return character.auth.customChannels.some(c => (c == channel));
+		},
+
+		clearInventory: function () {
+			var inventory = this.obj.inventory;
+
+			inventory.items
+				.filter(i => !i.eq)
+				.map(i => i.id)
+				.forEach(i => inventory.destroyItem(i, null, true));
 		},
 
 		getItem: function (config) {
@@ -272,7 +296,8 @@ define([
 				hpMax: 10000000,
 				hp: 10000000,
 				manaMax: 10000000,
-				mana: 10000000
+				mana: 10000000,
+				sprintChance: 100
 			};
 
 			var syncer = obj.syncer;
@@ -298,6 +323,20 @@ define([
 
 			quests.quests = [];
 			obj.instance.questBuilder.obtain(obj);
+		},
+
+		getReputation: function (faction) {
+			if (typeof (faction) != 'string')
+				return;
+
+			this.obj.reputation.getReputation(faction, 50000);
+		},
+
+		loseReputation: function (faction) {
+			if (typeof (faction) != 'string')
+				return;
+
+			this.obj.reputation.getReputation(faction, -50000);
 		}
 	};
 });

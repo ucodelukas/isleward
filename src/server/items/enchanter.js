@@ -1,17 +1,27 @@
 define([
-	'./generators/stats',
-	'./salvager'
-], function(
+	'items/generators/stats',
+	'items/generators/slots',
+	'items/generators/types',
+	'items/salvager',
+	'items/config/currencies',
+	'items/config/slots',
+	'items/generator'
+], function (
 	generatorStats,
-	salvager
+	generatorSlots,
+	generatorTypes,
+	salvager,
+	configCurrencies,
+	configSlots,
+	generator
 ) {
 	return {
-		enchant: function(obj, item, msg) {
+		enchant: function (obj, item, msg) {
 			var inventory = obj.inventory;
 			var config = this.getEnchantMaterials(item, msg.action);
 
 			var success = true;
-			config.materials.forEach(function(m) {
+			config.materials.forEach(function (m) {
 				var hasMaterial = inventory.items.find(i => i.name == m.name);
 				if (hasMaterial)
 					hasMaterial = hasMaterial.quantity >= m.quantity;
@@ -30,38 +40,76 @@ define([
 			};
 			result.success = (Math.random() * 100) < config.successChance;
 
-			config.materials.forEach(function(m) {
+			config.materials.forEach(function (m) {
 				var invMaterial = inventory.items.find(i => i.name == m.name);
 				inventory.destroyItem(invMaterial.id, m.quantity);
 			});
 
-			var newPower = (item.power || 0) + 1;
-			item.power = newPower;
-
-			if ((result.success) && (msg.action != 'scour'))
-				this.addStat(item, result);
-			else if (item.enchantedStats) {
-				for (var p in item.enchantedStats) {
-					var value = item.enchantedStats[p];
-
-					if (item.stats[p]) {
-						result.addStatMsgs.push({
-							stat: p,
-							value: -value
-						});
-						item.stats[p] -= value;
-						if (item.stats[p] <= 0)
-							delete item.stats[p];
-
-						if (p == 'lvlRequire') {
-							item.level += value;
-							delete item.originalLevel;
-						}
-					}
+			if (msg.action == 'reroll') {
+				delete msg.addStatMsgs;
+				if (item.stats.lvlRequire) {
+					item.level += item.stats.lvlRequire;
+					delete item.originalLevel;
 				}
 
-				delete item.enchantedStats;
 				delete item.power;
+
+				item.stats = {};
+				var bpt = {
+					slot: item.slot,
+					type: item.type,
+					sprite: item.sprite,
+					spritesheet: item.spritesheet
+				};
+				generatorSlots.generate(item, bpt);
+				generatorTypes.generate(item, bpt);
+				generatorStats.generate(item, bpt, result);
+			} else if (msg.action == 'relevel') {
+				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
+				if (item.level == 1)
+					offset = Math.abs(offset);
+				item.level = Math.max(1, item.level + offset);
+			} else if (msg.action == 'reslot') {
+				var newItem = generator.generate({
+					slot: configSlots.getRandomSlot(item.slot),
+					level: item.level,
+					quality: item.quality,
+					stats: Object.keys(item.stats)
+				});
+
+				delete item.stats;
+				delete item.spell;
+
+				extend(true, item, newItem);
+			} else {
+				var newPower = (item.power || 0) + 1;
+				item.power = newPower;
+
+				if ((result.success) && (msg.action != 'scour'))
+					this.addStat(item, result);
+				else if (item.enchantedStats) {
+					for (var p in item.enchantedStats) {
+						var value = item.enchantedStats[p];
+
+						if (item.stats[p]) {
+							result.addStatMsgs.push({
+								stat: p,
+								value: -value
+							});
+							item.stats[p] -= value;
+							if (item.stats[p] <= 0)
+								delete item.stats[p];
+
+							if (p == 'lvlRequire') {
+								item.level += value;
+								delete item.originalLevel;
+							}
+						}
+					}
+
+					delete item.enchantedStats;
+					delete item.power;
+				}
 			}
 
 			obj.syncer.setArray(true, 'inventory', 'getItems', item);
@@ -69,13 +117,13 @@ define([
 			inventory.resolveCallback(msg, result);
 		},
 
-		addStat: function(item, result) {
+		addStat: function (item, result) {
 			generatorStats.generate(item, {
 				statCount: 1
 			}, result);
 		},
 
-		getEnchantMaterials: function(item, action) {
+		getEnchantMaterials: function (item, action) {
 			var result = salvager.salvage(item, true);
 
 			var powerLevel = item.power || 0;
@@ -91,6 +139,15 @@ define([
 				successChance = 100;
 				if (powerLevel == 0)
 					result = [];
+			} else if (action == 'reroll') {
+				successChance = 100;
+				result = [configCurrencies.currencies['Unstable Totem']];
+			} else if (action == 'relevel') {
+				successChance = 100;
+				result = [configCurrencies.currencies['Ascendant Totem']];
+			} else if (action == 'reslot') {
+				successChance = 100;
+				result = [configCurrencies.currencies["Gambler's Totem"]];
 			}
 
 			return {

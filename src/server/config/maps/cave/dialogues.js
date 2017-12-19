@@ -28,7 +28,7 @@ module.exports = {
 				},
 				'1.6': {
 					msg: `I have some crystals for you.`,
-					prereq: function(obj) {
+					prereq: function (obj) {
 						var crystals = obj.inventory.items.find(i => (i.name == 'Digested Crystal'));
 						return !!crystals;
 					},
@@ -158,7 +158,7 @@ module.exports = {
 				options: [7.1]
 			}],
 			options: {
-				
+
 			}
 		},
 		'12': {
@@ -201,21 +201,21 @@ module.exports = {
 			cpn: 'trade',
 			method: 'startBuy',
 			args: [{
-				targetName: 'cult leader'
+				targetName: 'thaumaturge yala'
 			}]
 		},
 		tradeSell: {
 			cpn: 'trade',
 			method: 'startSell',
 			args: [{
-				targetName: 'cult leader'
+				targetName: 'thaumaturge yala'
 			}]
 		},
 		tradeBuyback: {
 			cpn: 'trade',
 			method: 'startBuyback',
 			args: [{
-				targetName: 'cult leader'
+				targetName: 'thaumaturge yala'
 			}]
 		},
 		giveCrystals: {
@@ -223,7 +223,7 @@ module.exports = {
 				msg: `The Akarei thank you.`,
 				options: [1.1, 1.2, 1.3, 1.4, 1.5]
 			}],
-			method: function(obj) {
+			method: function (obj) {
 				var inventory = obj.inventory;
 
 				var crystals = inventory.items.find(i => (i.name == 'Digested Crystal'));

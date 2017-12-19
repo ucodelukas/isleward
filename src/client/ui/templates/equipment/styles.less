@@ -72,6 +72,7 @@
 				margin-bottom: 8px;
 				cursor: pointer;
 				padding: 8px;
+				position: relative;
 
 				&:last-child {
 					margin-bottom: 0px;
@@ -99,6 +100,25 @@
 
 				.icon {
 					height: 100%;
+				}
+
+				.info {
+					left: 6px;
+					bottom: 3px;
+					position: absolute;
+					color: @white;
+					filter:
+						drop-shadow(0px -2px 0px @blackD) 
+						drop-shadow(0px 2px 0px @blackD)
+						drop-shadow(2px 0px 0px @blackD) 
+						drop-shadow(-2px 0px 0px @blackD);
+
+					-moz-filter: 
+						drop-shadow(0px -2px 0px @blackD) 
+						drop-shadow(0px 2px 0px @blackD)
+						drop-shadow(2px 0px 0px @blackD) 
+						drop-shadow(-2px 0px 0px @blackD);
+
 				}
 
 				&:hover {
@@ -189,6 +209,27 @@
 					&.eq {
 						&:before {
 							content: 'eq';
+							left: -2px;
+							bottom: -3px;
+							position: absolute;
+							color: @white;
+							filter:
+								drop-shadow(0px -2px 0px @blackD) 
+								drop-shadow(0px 2px 0px @blackD)
+								drop-shadow(2px 0px 0px @blackD) 
+								drop-shadow(-2px 0px 0px @blackD);
+
+							-moz-filter:
+								drop-shadow(0px -2px 0px @blackD) 
+								drop-shadow(0px 2px 0px @blackD)
+								drop-shadow(2px 0px 0px @blackD) 
+								drop-shadow(-2px 0px 0px @blackD);
+						}				
+					}
+
+					&.new {
+						&:before {
+							content: 'new';
 							left: -2px;
 							bottom: -3px;
 							position: absolute;

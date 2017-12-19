@@ -5,7 +5,9 @@ define([
 	'objects/objects',
 	'config/classes',
 	'mtx/mtx',
-	'config/factions'
+	'config/factions',
+	'misc/events',
+	'items/itemEffects'
 ], function (
 	generator,
 	salvager,
@@ -13,7 +15,9 @@ define([
 	objects,
 	classes,
 	mtx,
-	factions
+	factions,
+	events,
+	itemEffects
 ) {
 	return {
 		type: 'inventory',
@@ -36,6 +40,8 @@ define([
 
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+				if ((item.pos >= this.inventorySize) || (item.eq))
+					delete item.pos;
 
 				//Hacks for old items
 				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
@@ -48,12 +54,13 @@ define([
 					item.spell.properties.range = item.range;
 				} else if (item.quantity == NaN)
 					item.quantity = 1;
-				else if (item.name == 'Candy Corn') {
+				else if ((item.effects) && (Object.keys(item.effects[0]).length == 0)) {
 					items.splice(i, 1);
 					i--;
 					iLen--;
 					continue;
-				}
+				} else if ((item.slot != 'twoHanded') && (item.spell) && (!item.ability))
+					delete item.spell;
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
@@ -95,15 +102,16 @@ define([
 							var mtxModule = require(mtxUrl);
 
 							e.events = mtxModule.events;
-							return;
+						} else if (e.factionId) {
+							var faction = factions.getFaction(e.factionId);
+							var statGenerator = faction.uniqueStat;
+							statGenerator.generate(item);
+						} else {
+							var effectUrl = itemEffects.get(e.type);
+							var effectModule = require(effectUrl);
+
+							e.events = effectModule.events;
 						}
-
-						if (!e.factionId)
-							return;
-
-						var faction = factions.getFaction(e.factionId);
-						var statGenerator = faction.uniqueStat;
-						statGenerator.generate(item);
 					});
 				}
 
@@ -186,6 +194,8 @@ define([
 
 			item.eq = true;
 			item.runeSlot = runeSlot;
+			delete item.pos;
+
 			spellbook.addSpellFromRune(item.spell, runeSlot);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
@@ -202,6 +212,50 @@ define([
 			item.active = !item.active;
 
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		useItem: function (itemId) {
+			var item = this.findItem(itemId);
+			if (!item)
+				return;
+
+			if (item.cdMax) {
+				if (item.cd) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'That item is on cooldown'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					return;
+				}
+
+				item.cd = item.cdMax;
+
+				//Find similar items and put them on cooldown too
+				this.items.forEach(function (i) {
+					if ((i.name == item.name) && (i.cdMax == item.cdMax))
+						i.cd = i.cdMax;
+				});
+			}
+
+			var result = {};
+			events.emit('onBeforeUseItem', this.obj, item, result);
+
+			if (item.type == 'consumable') {
+				if (item.uses) {
+					item.uses--;
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					return;
+				}
+				this.destroyItem(itemId, 1);
+			}
 		},
 
 		unlearnAbility: function (itemId) {
@@ -492,7 +546,17 @@ define([
 			return obj;
 		},
 
+		hasSpace: function () {
+			if (this.inventorySize != -1) {
+				var nonEqItems = this.items.filter(f => !f.eq).length;
+				return (nonEqItems < this.inventorySize);
+			} else
+				return true;
+		},
+
 		getItem: function (item, hideMessage) {
+			events.emit('onBeforeGetItem', item, this.obj);
+
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
 
@@ -506,14 +570,14 @@ define([
 			//Store the quantity to send to the player
 			var quantity = item.quantity;
 
-			//Material?
 			var exists = false;
-			if (((item.material) || (item.quest)) && (!item.noStack) || (item.quantity)) {
-				var existItem = this.items.find(i => i.name == item.name);
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
+				var existItem = this.items.find(i => (i.name == item.name));
 				if (existItem) {
 					exists = true;
 					if (!existItem.quantity)
 						existItem.quantity = 1;
+
 					existItem.quantity += (item.quantity || 1);
 					item = existItem;
 				}
@@ -528,9 +592,8 @@ define([
 				var items = this.items;
 				var iLen = items.length;
 
-				if (this.inventorySize != -1) {
-					var nonEqItems = items.filter(f => !f.eq).length;
-					if ((nonEqItems >= this.inventorySize) && (!hideMessage)) {
+				if (!this.hasSpace()) {
+					if (!hideMessage) {
 						this.obj.instance.syncer.queue('onGetMessages', {
 							id: this.obj.id,
 							messages: [{
@@ -539,9 +602,9 @@ define([
 								type: 'info'
 							}]
 						}, [this.obj.serverId]);
-
-						return false;
 					}
+
+					return false;
 				}
 
 				for (var i = 0; i < iLen; i++) {
@@ -618,6 +681,13 @@ define([
 						var mtxModule = require(mtxUrl);
 
 						e.events = mtxModule.events;
+					} else if (e.type) {
+						var effectUrl = itemEffects.get(e.type);
+						var effectModule = require(effectUrl);
+
+						e.text = effectModule.events.onGetText(item);
+
+						e.events = effectModule.events;
 					}
 				});
 			}
@@ -715,7 +785,7 @@ define([
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
 
-					var useItem = null;
+					/*var useItem = null;
 					if (Math.random() < generator.spellChance) {
 						useItem = instancedItems
 							.filter(item => item.ability);
@@ -735,13 +805,10 @@ define([
 
 					//Spells don't have stats
 					if (useItem.stats)
-						delete useItem.stats.armor;
+						delete useItem.stats.armor;*/
 
 					var itemBlueprint = {
-						level: useItem.level,
-						slot: useItem.slot,
-						type: useItem.type,
-						spell: !!useItem.ability,
+						level: this.obj.stats.values.level,
 						magicFind: magicFind,
 						bonusMagicFind: bonusMagicFind
 					};
@@ -779,6 +846,7 @@ define([
 			}
 
 			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
 				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
@@ -881,7 +949,9 @@ define([
 								factionId: e.factionId,
 								text: e.text,
 								properties: e.properties,
-								mtx: e.mtx
+								mtx: e.mtx,
+								type: e.type,
+								rolls: e.rolls
 							}));
 						}
 
@@ -893,6 +963,9 @@ define([
 								var noEquip = null;
 								if (factionTier < f.tier)
 									noEquip = true;
+
+								if (!faction)
+									console.log(f);
 
 								return {
 									id: f.id,
@@ -907,6 +980,20 @@ define([
 						return item;
 					})
 			};
+		},
+
+		update: function () {
+			var items = this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+				if (!item.cd)
+					continue;
+
+				item.cd--;
+
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			}
 		}
 	};
 });
