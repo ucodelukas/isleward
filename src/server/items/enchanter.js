@@ -47,6 +47,7 @@ define([
 
 			if (msg.action == 'reroll') {
 				delete msg.addStatMsgs;
+				delete item.enchantedStats;
 				if (item.stats.lvlRequire) {
 					item.level += item.stats.lvlRequire;
 					delete item.originalLevel;
@@ -63,7 +64,7 @@ define([
 				};
 				generatorSlots.generate(item, bpt);
 				generatorTypes.generate(item, bpt);
-				generatorStats.generate(item, bpt, result);
+				generatorStats.generate(item, bpt);
 			} else if (msg.action == 'relevel') {
 				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
 				if (item.level == 1)
