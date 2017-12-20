@@ -116,6 +116,65 @@
 		}
 	}
 
+	.split-box {
+		display: none;
+		background-color: fade(@blackD, 85%);
+		text-align: center;
+		position: absolute;
+		left: 0%;
+		top: 0%;
+		width: 100%;
+		height: 100%;
+
+		.inner {
+			border: 5px solid @blackB;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 200px;
+			height: 143px;
+
+			> .heading {
+				color: @blueA;
+				width: 100%;
+				height: 36px;
+				background-color: @blackB;
+
+				.heading-text {
+					padding-top: 8px;
+					margin: auto;
+				}
+			}
+
+			.bottom {
+				height: calc(100% - 36px);
+				background-color: @blackC;
+				padding: 10px;
+
+				.amount {
+					color: @white;
+					text-align: center;
+					width: 100%;
+					height: 36px;
+					padding-top: 8px;
+				}
+
+				.button {
+					width: 100%;
+					height: 36px;
+					margin-top: 5px;
+					background-color: @blueC;
+					color: @white;
+
+					&:hover {
+						background-color: @blueB;
+					}
+				}
+			}
+		}		
+	}
+
 	.tooltip {
 		display: none;
 		position: absolute;
