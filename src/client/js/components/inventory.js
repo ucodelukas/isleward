@@ -47,7 +47,8 @@ define([
 						if (!rerender) {
 							rerender = (
 								(findItem.pos != nItem.pos) ||
-								(findItem.eq != nItem.eq)
+								(findItem.eq != nItem.eq) ||
+								(findItem.quantity != nItem.quantity)
 							);
 						}
 

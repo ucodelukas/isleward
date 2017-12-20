@@ -73,7 +73,7 @@ define([
 				var item = items[i];
 				var pos = item.pos;
 
-				var newItem = this.getItem(item, true);
+				var newItem = this.getItem(item, true, true);
 				newItem.pos = pos;
 			}
 
@@ -212,6 +212,36 @@ define([
 			item.active = !item.active;
 
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		splitStack: function (msg) {
+			var item = this.findItem(msg.itemId);
+			if (!item)
+				return;
+			else if ((!item.quantity) || (item.quantity < msg.stackSize) || (msg.stackSize < 1))
+				return;
+
+			var newItem = extend(true, {}, item);
+			item.quantity -= msg.stackSize;
+			newItem.quantity = msg.stackSize;
+
+			this.getItem(newItem, true, true);
+
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		combineStacks: function (msg) {
+			var fromItem = this.findItem(msg.fromId);
+			var toItem = this.findItem(msg.toId);
+
+			if ((!fromItem) || (!toItem))
+				return;
+			else if ((!fromItem.quantity) || (!toItem.quantity))
+				return;
+
+			toItem.quantity += fromItem.quantity;
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', toItem);
+			this.destroyItem(fromItem.id);
 		},
 
 		useItem: function (itemId) {
@@ -554,7 +584,7 @@ define([
 				return true;
 		},
 
-		getItem: function (item, hideMessage) {
+		getItem: function (item, hideMessage, noStack) {
 			events.emit('onBeforeGetItem', item, this.obj);
 
 			//We need to know if a mob dropped it for quest purposes
@@ -571,7 +601,7 @@ define([
 			var quantity = item.quantity;
 
 			var exists = false;
-			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses) && (!noStack)) {
 				var existItem = this.items.find(i => (i.name == item.name));
 				if (existItem) {
 					exists = true;
