@@ -74,6 +74,9 @@ define([
 			},
 
 			lvlRequire: {
+				level: {
+					min: 2
+				},
 				generator: 'lvlRequire'
 			},
 
@@ -318,7 +321,16 @@ define([
 			}
 
 			if ((!stat) || (!statOptions[stat])) {
-				var options = Object.keys(statOptions).filter(s => !statOptions[s].ignore);
+				var options = Object.keys(statOptions).filter(function (s) {
+					var o = statOptions[s];
+					if (o.ignore)
+						return false;
+					else if ((o.level) && (o.level.min) && (item.level < o.level.min))
+						return false;
+					else
+						return true;
+				});
+
 				stat = options[~~(Math.random() * options.length)];
 				statBlueprint = statOptions[stat];
 			} else
