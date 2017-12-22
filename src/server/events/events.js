@@ -293,6 +293,7 @@ define([
 				if (exists) {
 					event.participators.spliceWhere(p => (p == exists));
 					event.participators.push(obj);
+					result.push(event);
 					continue;
 				}
 
