@@ -7,9 +7,13 @@ define([
 		resources: {
 			'Festive Gift': {
 				type: 'herb',
-				max: 4
+				max: 6
 			},
 			'Giant Gift': {
+				type: 'herb',
+				max: 2
+			},
+			'Gilded Gift': {
 				type: 'herb',
 				max: 1
 			}

@@ -256,6 +256,14 @@ define([
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
 					itemAmount: [3, 5]
+				},
+				'Gilded Gift': {
+					sheetName: 'bigObjects',
+					cell: 22,
+					itemSprite: [3, 0],
+					itemName: 'Snowflake',
+					itemSheet: `${this.folderName}/images/items.png`,
+					itemAmount: [5, 8]
 				}
 			});
 		},
