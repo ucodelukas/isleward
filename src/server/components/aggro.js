@@ -140,7 +140,7 @@ define([
 				return true;
 			else if (target.aggro.faction != obj.aggro.faction)
 				return true;
-			else if (!!target.player == !!obj.player)
+			else if (!!target.player != !!obj.player)
 				return true;
 		},
 
