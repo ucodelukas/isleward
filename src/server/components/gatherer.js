@@ -36,6 +36,24 @@ define([
 
 			if (firstNode.resourceNode.nodeType == 'fish') {
 				var rod = this.obj.equipment.eq.tool;
+				if (!rod) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'You need a fishing rod to fish'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					this.gathering = null;
+
+					return;
+				}
+
 				rod = this.obj.inventory.findItem(rod);
 
 				var statCatchSpeed = Math.min(150, this.obj.stats.values.catchSpeed);
@@ -287,10 +305,6 @@ define([
 									}]
 								}
 							});
-
-							nodes.splice(i, 1);
-							i--;
-							nLen--;
 
 							if (this.gathering == node) {
 								if (this.gathering.resourceNode.nodeType == 'fish')
