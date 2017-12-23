@@ -1,23 +1,3 @@
-/*
-A visitor, welcome!
-	Who are you?
-		I am the place where snow began, for I am the Winter Man.
-			What are you doing here?
-				I came in the night to bring the cold, have you not heard the story told?
-					Could you tell it to me?
-						On the shortest night each year, the Man of Winter lends an ear
-						To wishes mouthed in quiet ire; injustices or things required
-						He'll send them gifts in the strangest places; fishing lines or fireplaces
-						For the Winter Man has come to give, to the poor and lonely and those who grieve
-
-						And when the snows have come to pass, the Winter Man only one thing asks
-						That should you sense someone desire, you'll assist as they require
-						Then when winter comes around again, keep an eye out for your icy friend
-						For he is the place where cold began at the start of time; the Winter Man
-I found some special snowflakes for you.
-
-*/
-
 define([
 
 ], function (
@@ -285,6 +265,9 @@ define([
 							spritesheet: `server/mods/event-xmas/images/items.png`,
 							sprite: [0, 1],
 							quality: 2
+						},
+						"Wizard's Vice": {
+							reward: 'Scented Beard Oil'
 						}
 					});
 				},
@@ -296,14 +279,14 @@ define([
 
 					gatherer.reputation.getReputation('theWinterMan', 40);
 
-					if (Math.random() >= 0)
+					if ((gatherResult.name != 'Gilded Gift') || (Math.random() >= 0.05))
 						return;
 
 					gatherResult.items.push({
-						name: 'Smoop Smoop',
+						name: `Wizard's Vice`,
 						spritesheet: `server/mods/event-xmas/images/items.png`,
 						type: 'Reward Card',
-						description: 'Reward: Smeggy Steve Figurine',
+						description: `Reward: Scented Beard Oil`,
 						noSalvage: true,
 						sprite: [0, 1],
 						quantity: 1,

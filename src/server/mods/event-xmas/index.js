@@ -174,7 +174,10 @@ define([
 						type: 'merry',
 						ttl: 514
 					});
-
+				},
+				'Scented Beard Oil': function (obj, item, result) {
+					obj.syncer.set(false, 'chatter', 'color', 0xfc66f7);
+					obj.syncer.set(false, 'chatter', 'msg', `...Rubs his beard throughtfully...`);
 				}
 			}[item.name];
 
@@ -282,6 +285,20 @@ define([
 						spritesheet: `server/mods/event-xmas/images/items.png`,
 						sprite: [0, 0]
 					});
+				};
+			} else if (msg.reward == 'Scented Beard Oil') {
+				msg.handler = function (card) {
+					return {
+						name: 'Scented Beard Oil',
+						type: 'toy',
+						sprite: [3, 2],
+						spritesheet: `server/mods/event-xmas/images/items.png`,
+						description: `For some extra 'ho' in your holy vengeance.`,
+						worth: 0,
+						cdMax: 300,
+						noSalvage: true,
+						noAugment: true
+					};
 				};
 			}
 		},
