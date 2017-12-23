@@ -875,7 +875,7 @@ define([
 				}
 			}
 
-			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+			playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
 			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
