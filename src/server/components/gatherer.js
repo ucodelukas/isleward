@@ -253,9 +253,6 @@ define([
 				}
 			});
 
-			if (!success)
-				return;
-
 			this.nodes.spliceWhere(n => (n == node));
 			this.nodes.push(node);
 		},
