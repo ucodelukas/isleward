@@ -170,14 +170,15 @@ define([
 				}
 
 				this.obj.inventory.getItem(item);
+
+				if (item.material)
+					this.obj.fireEvent('afterGatherResource', gatherResult);
 			}, this);
 
 			if (!gatherResult.noChangeAmount)
 				resourceNode.gather();
 
 			this.obj.stats.getXp(gatherResult.xp);
-
-			this.obj.fireEvent('afterGatherResource', gatherResult);
 
 			if (gathering.destroyed) {
 				if (isFish) {
