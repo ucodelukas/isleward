@@ -6,7 +6,12 @@ define([
 	return {
 		generators: {
 			hpMax: function (item, level, blueprint, perfection) {
-				var max = ((level * 15) + level) / 10;
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				if (item.slot)
+					var max = ((level * 15) + level) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
@@ -14,8 +19,12 @@ define([
 					return max * perfection * (blueprint.statMult.hpMax || 1);
 			},
 			mainStat: function (item, level, blueprint, perfection) {
-				var min = ((level * 6.05) - ((level - 1) * 1.2)) / 10;
-				var max = ((level * 14.9) + ((level - 1) * 31.49)) / 10;
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var min = ((level * 6.05) - ((level - 1) * 1.2)) * div;
+				var max = ((level * 14.9) + ((level - 1) * 31.49)) * div;
 
 				if (perfection == null)
 					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
@@ -38,7 +47,11 @@ define([
 					return (1 + (6.5 * perfection)) * (blueprint.statMult.elementResist || 1);
 			},
 			regenHp: function (item, level, blueprint, perfection) {
-				var max = (((10 + (level * 200)) / 20) / 2) / 10;
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (((10 + (level * 200)) / 20) / 2) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.regenHp || 1);

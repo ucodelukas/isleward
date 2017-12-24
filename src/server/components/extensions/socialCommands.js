@@ -18,6 +18,7 @@ define([
 	var commandRoles = {
 		join: 0,
 		leave: 0,
+		unEq: 0,
 		getItem: 10,
 		getGold: 10,
 		setLevel: 10,
@@ -174,6 +175,13 @@ define([
 
 		isInChannel: function (character, channel) {
 			return character.auth.customChannels.some(c => (c == channel));
+		},
+
+		unEq: function () {
+			var eq = this.obj.equipment;
+			Object.keys(eq.eq).forEach(function (slot) {
+				eq.unequip(eq.eq[slot]);
+			});
 		},
 
 		clearInventory: function () {
