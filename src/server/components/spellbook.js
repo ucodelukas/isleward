@@ -300,6 +300,20 @@ define([
 				if (!isAuto)
 					this.sendAnnouncement('Insufficient mana to cast spell');
 				success = false;
+			} else if (spell.manaReserve) {
+				var mana = this.obj.stats.values.mana;
+				var reserve = spell.manaReserve;
+
+				if (reserve.percentage) {
+					if (!spell.active) {
+						if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
+							this.sendAnnouncement('Insufficient mana to cast spell');
+							success = false;
+						} else
+							this.obj.stats.addStat('manaReservePercent', reserve.percentage);
+					} else
+						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+				}
 			} else if (spell.range != null) {
 				//Distance Check
 				var fromX = this.obj.x;

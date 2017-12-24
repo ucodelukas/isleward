@@ -4,10 +4,10 @@ define([
 
 ) {
 	return {
-		type: 'innervation',
+		type: 'aura',
 
 		cdMax: 0,
-		manaCost: 5,
+		manaCost: 0,
 
 		duration: 10,
 
@@ -31,9 +31,21 @@ define([
 				this.updateInactive();
 		},
 
+		unlearn: function () {
+			this.updateInactive();
+		},
+
+		onAfterSimplify: function (values) {
+			delete values.effects;
+		},
+
 		updateActive: function () {
 			var o = this.obj;
-			var amount = (o.stats.values.hpMax / 100) * this.values.percentage;
+			var amount = 0;
+			if (this.name == 'Innervation')
+				amount = (o.stats.values.hpMax / 100) * this.values.regenPercentage;
+			else
+				amount = this.values.regenPercentage || this.values.chance;
 
 			var party = o.social.party || [];
 			var members = [o.serverId, ...party];
@@ -46,8 +58,12 @@ define([
 				var effect = effects[m];
 
 				var obj = objects.find(o => (o.serverId === m));
-				if (!obj)
+				if (!obj) {
+					if (effect)
+						delete effects[m];
+
 					return;
+				}
 
 				var distance = Math.max(Math.abs(o.x - obj.x), Math.abs(o.y - obj.y));
 				if (distance > range) {
@@ -63,7 +79,7 @@ define([
 					return;
 
 				effects[obj.serverId] = obj.effects.addEffect({
-					type: 'regenHp',
+					type: this.effect,
 					amount: amount,
 					caster: this.obj,
 					ttl: -1
@@ -76,18 +92,19 @@ define([
 			var effects = this.effects;
 			var objects = o.instance.objects.objects;
 
-			Object.keys(effects).forEach(function (o) {
+			Object.keys(effects).forEach(function (m) {
 				var effect = effects[m];
 				if (!effect)
 					return;
 
-				var obj = objects.find(o => (o.serverId === m));
+				var obj = objects.find(o => (o.serverId == m));
 				if (!obj) {
 					delete effects[m];
 					return;
 				}
 
 				obj.effects.removeEffect(effect);
+				delete effects[m];
 			}, this);
 		}
 	};

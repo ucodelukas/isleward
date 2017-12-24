@@ -341,10 +341,22 @@ define([
 			animation: 'raiseStaff'
 		}, {
 			name: 'Innervation',
-			description: 'Grants an aura that regenerates hp for you and your party members.',
-			type: 'innervation',
+			description: 'Grants an aura that regenerates hp for you and your allies.',
+			type: 'aura',
 			spellType: 'aura',
 			icon: [3, 3]
+		}, {
+			name: 'Tranquility',
+			description: 'Grants an aura that regenerates mana for you and your allies.',
+			type: 'aura',
+			spellType: 'aura',
+			icon: [3, 4]
+		}, {
+			name: 'Swiftness',
+			description: 'Grants an aura that grants increased movement speed to you and your allies.',
+			type: 'aura',
+			spellType: 'aura',
+			icon: [3, 5]
 		}
 	];
 

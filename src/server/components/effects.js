@@ -197,6 +197,8 @@ define([
 			for (var i = 0; i < eLen; i++) {
 				var effect = effects[i];
 				if (effect == checkEffect) {
+					if (effect.destroy)
+						effect.destroy();
 					this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
 					effects.splice(i, 1);
 					return;

@@ -100,6 +100,8 @@ define([
 				spellNumber = 1;
 			else if (number == 3)
 				spellNumber = 2;
+			else if (number == 4)
+				spellNumber = 3;
 
 			if (spellNumber == -1)
 				return;
