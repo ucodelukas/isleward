@@ -446,6 +446,10 @@ define([
 			if (amount == 0)
 				return;
 
+			var threatMult = heal.threatMult;
+			if (!heal.hasOwnProperty('threatMult'))
+				threatMult = 1;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
@@ -475,7 +479,7 @@ define([
 			}
 
 			//Add aggro to all our attackers
-			var threat = amount * 0.4;
+			var threat = amount * 0.4 * threatMult;
 			var aggroList = this.obj.aggro.list;
 			var aLen = aggroList.length;
 			for (var i = 0; i < aLen; i++) {

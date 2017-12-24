@@ -339,6 +339,12 @@ define([
 			type: 'chainLightning',
 			icon: [0, 1],
 			animation: 'raiseStaff'
+		}, {
+			name: 'Innervation',
+			description: 'Grants an aura that regenerates hp for you and your party members.',
+			type: 'innervation',
+			spellType: 'aura',
+			icon: [3, 3]
 		}
 	];
 

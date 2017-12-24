@@ -256,7 +256,7 @@ define([
 				}
 			}
 
-			if (!spell.targetGround) {
+			if ((!spell.aura) && (!spell.targetGround)) {
 				if ((action.target == null) || (!action.target.player)) {
 					if (spell.autoTargetFollower) {
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
@@ -284,7 +284,7 @@ define([
 				}
 			}
 
-			if ((!spell.targetGround) && (action.target) && (!action.target.aggro)) {
+			if ((!spell.targetGround) && (action.target) && (!action.target.aggro) && (!spell.aura)) {
 				this.sendAnnouncement("You don't feel like attacking that target");
 				return;
 			}

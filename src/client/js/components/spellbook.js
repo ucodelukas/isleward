@@ -193,7 +193,7 @@ define([
 				this.target = this.obj;
 			}
 
-			if ((!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
+			if ((!spell.aura) && (!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
 				return;
 
 			var hoverTile = this.obj.mouseMover.hoverTile;

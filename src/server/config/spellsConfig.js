@@ -160,6 +160,20 @@ define([
 			negativeStats: [
 				'i_delay'
 			]
+		},
+		'innervation': {
+			statType: ['str'],
+			statMult: 0.0205,
+			element: 'physical',
+			manaReserve: {
+				percent: true,
+				amount: 50
+			},
+			cdMax: 10,
+			auraRange: 9,
+			random: {
+				percentage: [1, 3]
+			}
 		}
 		/*,
 				'chain lightning': {
