@@ -133,7 +133,9 @@ define([
 
 					var spritesheet = item.spritesheet || '../../../images/items.png';
 
-					var elSlot = this.find('[slot="' + item.equipSlot + '"]');
+					slot = item.equipSlot || slot;
+
+					var elSlot = this.find('[slot="' + slot + '"]');
 					elSlot
 						.data('item', item)
 						.removeClass('empty show-default-icon')

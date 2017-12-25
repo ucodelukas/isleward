@@ -104,10 +104,10 @@ define([
 
 				if ((f1) && (f2))
 					slot = 'finger-1';
-				else if (!f2)
-					slot = 'finger-2';
 				else if (!f1)
 					slot = 'finger-1';
+				else if (!f2)
+					slot = 'finger-2';
 			}
 
 			var spellId = null;
@@ -198,7 +198,7 @@ define([
 			}
 
 			delete item.eq;
-			delete this.eq[item.slot];
+			delete this.eq[item.equipSlot];
 			delete item.equipSlot;
 
 			this.obj.inventory.setItemPosition(itemId);
