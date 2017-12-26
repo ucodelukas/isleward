@@ -74,8 +74,13 @@ define([
 
 			if (!slot)
 				slot = item.equipSlot || item.slot;
-			if (slot == 'twoHanded')
+			if (slot == 'twoHanded') {
+				var currentEqId = this.eq.offHand;
+				if (currentEqId != null)
+					this.unequip(currentEqId);
+
 				slot = 'mainHand';
+			}
 
 			var equipMsg = {
 				success: true,
