@@ -432,7 +432,7 @@ define([
 			if (el) {
 				if (el.hasClass('new')) {
 					el.removeClass('new');
-					el.find('.quantity').html(item.quantity || '');
+					el.find('.quantity').html((item.quantity > 1) ? item.quantity : '');
 					delete item.isNew;
 				}
 

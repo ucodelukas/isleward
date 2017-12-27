@@ -129,7 +129,6 @@ define([
 										spritesheet: `server/mods/event-xmas/images/items.png`,
 										description: `Blows a kiss to your one true love...or whoever's closest`,
 										worth: 0,
-										quantity: 1,
 										noSalvage: true,
 										noAugment: true,
 										uses: 5
