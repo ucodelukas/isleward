@@ -291,7 +291,7 @@ define([
 					else
 						amount = 0;
 
-					a.obj.stats.getXp(~~(amount * 1.5), this.obj);
+					a.obj.stats.getXp(amount, this.obj);
 				}
 
 				a.obj.fireEvent('afterKillMob', target);

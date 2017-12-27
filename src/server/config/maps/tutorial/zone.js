@@ -445,10 +445,10 @@ module.exports = {
 		'mud crab': {
 			level: 9
 		},
-		penguin: {
+		frog: {
 			level: 8,
 			rare: {
-				name: 'Tuckle'
+				name: 'horned frog'
 			}
 		},
 		hermit: {
