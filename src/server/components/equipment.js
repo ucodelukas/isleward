@@ -79,7 +79,7 @@ define([
 				if (currentEqId != null)
 					this.unequip(currentEqId);
 
-				slot = 'mainHand';
+				slot = 'oneHanded';
 			}
 
 			var equipMsg = {

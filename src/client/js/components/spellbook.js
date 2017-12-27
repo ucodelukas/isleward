@@ -81,10 +81,11 @@ define([
 						return;
 					}
 
-					if (this.spells.length - 1 >= s.id)
-						this.spells.splice(s.id, 0, s);
-					else
-						this.spells.push(s);
+					this.spells.push(s);
+
+					this.spells = this.spells.sort(function (a, b) {
+						return (a.id - b.id);
+					});
 				}, this);
 
 				events.emit('onGetSpells', this.spells);

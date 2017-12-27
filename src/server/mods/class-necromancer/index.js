@@ -122,7 +122,7 @@ define([
 
 		beforeGetItemTypes: function (types) {
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
-				types.twoHanded[s] = {
+				types.oneHanded[s] = {
 					sprite: [i, 0],
 					spellName: 'harvest life',
 					spritesheet: `${this.folderName}/images/items.png`

@@ -157,7 +157,7 @@ define([
 				sprite: [8, 4]
 			}
 		},
-		mainHand: {
+		oneHanded: {
 			'Sword': {
 				sprite: [9, 0],
 				spellName: 'slash'

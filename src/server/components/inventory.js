@@ -59,8 +59,10 @@ define([
 					i--;
 					iLen--;
 					continue;
-				} else if ((item.slot != 'twoHanded') && (item.spell) && (!item.ability))
+				} else if (((item.slot != 'twoHanded') && (item.slot != 'oneHanded')) && (item.spell) && (!item.ability))
 					delete item.spell;
+				else if (item.slot == 'mainHand')
+					item.slot = 'oneHanded';
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
@@ -175,13 +177,15 @@ define([
 
 			var spellbook = this.obj.spellbook;
 
-			if (item.slot == 'twoHanded')
+			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
 				runeSlot = 0;
 			else if (runeSlot == null) {
-				if (!this.items.some(i => (i.runeSlot == 2)))
-					runeSlot = 2;
-				else
-					runeSlot = 1;
+				for (var i = 1; i < 3; i++) {
+					if (!this.items.some(i => (i.runeSlot == i))) {
+						runeSlot = i;
+						break;
+					}
+				}
 			}
 
 			var currentEq = this.items.find(i => (i.runeSlot == runeSlot));
@@ -495,13 +499,12 @@ define([
 					(i.spell) &&
 					(i.spell.rolls) &&
 					(i.spell.rolls.damage != null) &&
-					(i.slot == 'twoHanded')
+					((i.slot == 'twoHanded') || (i.slot == 'oneHanded'))
 				);
 			});
 
 			if (!hasWeapon) {
 				var item = generator.generate({
-					slot: 'twoHanded',
 					type: classes.weapons[this.obj.class],
 					quality: 0,
 					spellQuality: 'mid'

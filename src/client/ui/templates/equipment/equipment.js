@@ -167,8 +167,8 @@ define([
 						return ((!item.slot) && (item.spell) && (!item.eq));
 					else {
 						var checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
-						if (slot == 'mainHand')
-							return ((!item.eq) && ((item.slot == 'mainHand') || (item.slot == 'twoHanded')));
+						if (slot == 'oneHanded')
+							return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
 
 						return ((item.slot == checkSlot) && (!item.eq));
 					}
