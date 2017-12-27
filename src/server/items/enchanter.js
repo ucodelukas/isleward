@@ -78,6 +78,7 @@ define([
 					stats: Object.keys(item.stats)
 				});
 
+				delete item.spritesheet;
 				delete item.stats;
 				delete item.spell;
 
