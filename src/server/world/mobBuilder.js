@@ -35,10 +35,10 @@ define([
 					mob.baseName = mob.name;
 					mob.name = typeDefinition.name || mob.baseName;
 
-					if (typeDefinition.sheetName) {
+					if (typeDefinition.sheetName)
 						mob.sheetName = typeDefinition.sheetName;
+					if (typeDefinition.cell != null)
 						mob.cell = typeDefinition.cell;
-					}
 				}
 			}
 

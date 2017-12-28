@@ -29,7 +29,8 @@ module.exports = {
 
 			rare: {
 				chance: 4,
-				name: 'Steelclaw'
+				name: 'Steelclaw',
+				cell: 59
 			}
 		}
 	},
