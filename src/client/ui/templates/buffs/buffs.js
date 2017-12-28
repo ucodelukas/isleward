@@ -3,7 +3,7 @@ define([
 	'html!ui/templates/buffs/template',
 	'css!ui/templates/buffs/styles',
 	'html!ui/templates/buffs/templateBuff'
-], function(
+], function (
 	events,
 	template,
 	styles,
@@ -11,6 +11,9 @@ define([
 ) {
 	var icons = {
 		stunned: [4, 0],
+		regenHp: [3, 1],
+		regenMana: [4, 1],
+		swiftness: [5, 1],
 		stealth: [7, 0],
 		reflectDamage: [2, 1],
 		holyVengeance: [4, 0]
@@ -21,12 +24,12 @@ define([
 
 		icons: {},
 
-		postRender: function() {			
-			this.onEvent('onGetBuff', this.onGetBuff.bind(this));	
+		postRender: function () {
+			this.onEvent('onGetBuff', this.onGetBuff.bind(this));
 			this.onEvent('onRemoveBuff', this.onRemoveBuff.bind(this));
 		},
 
-		onGetBuff: function(buff) {
+		onGetBuff: function (buff) {
 			var icon = icons[buff.type];
 			if (!icon)
 				return;
@@ -36,18 +39,19 @@ define([
 
 			var html = templateBuff;
 			var el = $(html).appendTo(this.el)
+				.find('.inner')
 				.css({
 					background: 'url(../../../images/statusIcons.png) ' + imgX + 'px ' + imgY + 'px'
 				});
 
-			this.icons[buff.id] = el;
+			this.icons[buff.id] = el.parent();
 		},
 
-		onRemoveBuff: function(buff) {
+		onRemoveBuff: function (buff) {
 			var el = this.icons[buff.id];
 			if (!el)
 				return;
-			
+
 			el.remove();
 			delete this.icons[buff.id];
 		}

@@ -53,6 +53,12 @@ define([
 		},
 
 		equip: function (itemId) {
+			var slot = null;
+			if (typeof (itemId) == 'object') {
+				slot = itemId.slot;
+				itemId = itemId.itemId;
+			}
+
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
@@ -64,6 +70,16 @@ define([
 					item.eq = false;
 					return;
 				}
+			}
+
+			if (!slot)
+				slot = item.equipSlot || item.slot;
+			if (slot == 'twoHanded') {
+				var currentEqId = this.eq.offHand;
+				if (currentEqId != null)
+					this.unequip(currentEqId);
+
+				slot = 'oneHanded';
 			}
 
 			var equipMsg = {
@@ -87,8 +103,20 @@ define([
 			delete item.pos;
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
+			if (slot == 'finger') {
+				var f1 = (this.eq['finger-1'] != null);
+				var f2 = (this.eq['finger-2'] != null);
+
+				if ((f1) && (f2))
+					slot = 'finger-1';
+				else if (!f1)
+					slot = 'finger-1';
+				else if (!f2)
+					slot = 'finger-2';
+			}
+
 			var spellId = null;
-			var currentEqId = this.eq[item.slot];
+			var currentEqId = this.eq[slot];
 			var currentEq = this.obj.inventory.findItem(currentEqId);
 			if (currentEq == item)
 				return;
@@ -107,7 +135,8 @@ define([
 			}
 
 			item.eq = true;
-			this.eq[item.slot] = itemId;
+			this.eq[slot] = itemId;
+			item.equipSlot = slot;
 
 			this.obj.spellbook.calcDps();
 
@@ -152,6 +181,11 @@ define([
 		},
 		unequip: function (itemId) {
 			var item = itemId;
+			var slot = null;
+			if (typeof (itemId) == 'object') {
+				slot = itemId.slot;
+				itemId = itemId.itemId;
+			}
 
 			if (item.id == null)
 				item = this.obj.inventory.findItem(itemId);
@@ -169,7 +203,8 @@ define([
 			}
 
 			delete item.eq;
-			delete this.eq[item.slot];
+			delete this.eq[item.equipSlot];
+			delete item.equipSlot;
 
 			this.obj.inventory.setItemPosition(itemId);
 

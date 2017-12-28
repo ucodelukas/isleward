@@ -160,6 +160,48 @@ define([
 			negativeStats: [
 				'i_delay'
 			]
+		},
+		'innervation': {
+			statType: ['str'],
+			statMult: 0.0205,
+			element: 'physical',
+			manaReserve: {
+				percentage: 0.25
+			},
+			cdMax: 10,
+			auraRange: 9,
+			effect: 'regenHp',
+			random: {
+				regenPercentage: [1, 3]
+			}
+		},
+		'tranquility': {
+			statType: ['int'],
+			statMult: 0.0205,
+			element: 'holy',
+			manaReserve: {
+				percentage: 0.25
+			},
+			cdMax: 10,
+			auraRange: 9,
+			effect: 'regenMana',
+			random: {
+				regenPercentage: [2, 5]
+			}
+		},
+		'swiftness': {
+			statType: ['dex'],
+			statMult: 0.0205,
+			element: 'fire',
+			manaReserve: {
+				percentage: 0.5
+			},
+			cdMax: 10,
+			auraRange: 9,
+			effect: 'swiftness',
+			random: {
+				chance: [5, 10]
+			}
 		}
 		/*,
 				'chain lightning': {
