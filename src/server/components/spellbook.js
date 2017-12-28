@@ -257,6 +257,16 @@ define([
 			}
 
 			if ((!spell.aura) && (!spell.targetGround)) {
+				//Did we pass in the target id?
+				if ((action.target) && (action.target.id == null)) {
+					action.target = this.objects.objects.find(o => o.id == action.target);
+					if (!action.target)
+						return false;
+				}
+
+				if ((action.target == this.obj) && (spell.noTargetSelf))
+					action.target = null;
+
 				if ((action.target == null) || (!action.target.player)) {
 					if (spell.autoTargetFollower) {
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
@@ -265,13 +275,6 @@ define([
 						else
 							return false;
 					}
-				}
-
-				//Did we pass in the target id?
-				if (action.target.id == null) {
-					action.target = this.objects.objects.find(o => o.id == action.target);
-					if (!action.target)
-						return false;
 				}
 
 				if (spell.spellType == 'buff') {
