@@ -37,7 +37,8 @@ define([
 								'hands',
 								'waist',
 								'legs',
-								'feet'
+								'feet',
+								'offHand'
 							],
 							[
 								'trinket',

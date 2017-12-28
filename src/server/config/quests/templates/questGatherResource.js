@@ -7,7 +7,7 @@ define([
 		type: 'gatherResource',
 
 		need: null,
-		type: null,
+		gatherType: null,
 		requiredQuality: 0,
 		have: 0,
 
@@ -15,9 +15,9 @@ define([
 			if (!this.need) {
 				this.need = 2 + ~~(Math.random() * 3);
 
-				this.type = ['herb', 'fish'][~~(Math.random() * 2)];
+				this.gatherType = ['herb', 'fish'][~~(Math.random() * 2)];
 
-				if (this.type == 'fish') {
+				if (this.gatherType == 'fish') {
 					this.name = 'Lure of the Sea';
 
 					var isQualityQ = (Math.random() < 0.3);
@@ -28,10 +28,10 @@ define([
 				}
 			}
 
-			if (['herb', 'fish'].indexOf(this.type) == -1)
-				this.type = 'herb';
+			if (['herb', 'fish'].indexOf(this.gatherType) == -1)
+				this.gatherType = 'herb';
 
-			this.typeName = (this.type == 'herb') ? 'herbs' : 'fish';
+			this.typeName = (this.gatherType == 'herb') ? 'herbs' : 'fish';
 
 			this.updateDescription();
 
@@ -46,14 +46,14 @@ define([
 			var action = ({
 				herb: 'Gather',
 				fish: 'Catch'
-			})[this.type];
+			})[this.gatherType];
 
 			this.description = `${action} ${this.have}/${this.need} ${typeName}`;
 		},
 
 		events: {
 			afterGatherResource: function (gatherResult) {
-				if (gatherResult.nodeType != this.type)
+				if (gatherResult.nodeType != this.gatherType)
 					return;
 				else if ((this.requiredQuality) && (gatherResult.items[0].quality != this.requiredQuality))
 					return;
