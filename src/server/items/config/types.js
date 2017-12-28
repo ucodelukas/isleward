@@ -190,6 +190,9 @@ define([
 		offHand: {
 			'Wooden Shield': {
 				sprite: [13, 0]
+			},
+			'Gilded Shield': {
+				sprite: [13, 1]
 			}
 		},
 		tool: {
