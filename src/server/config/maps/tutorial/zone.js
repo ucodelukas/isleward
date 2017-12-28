@@ -448,7 +448,7 @@ module.exports = {
 		frog: {
 			level: 8,
 			rare: {
-				name: 'horned frog'
+				name: 'The Muck Prince'
 			}
 		},
 		hermit: {
