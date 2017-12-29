@@ -2,6 +2,7 @@ define([
 	'items/generators/stats',
 	'items/generators/slots',
 	'items/generators/types',
+	'items/generators/spellbook',
 	'items/salvager',
 	'items/config/currencies',
 	'items/config/slots',
@@ -10,6 +11,7 @@ define([
 	generatorStats,
 	generatorSlots,
 	generatorTypes,
+	generatorSpells,
 	salvager,
 	configCurrencies,
 	configSlots,
@@ -83,6 +85,15 @@ define([
 				delete item.spell;
 
 				extend(true, item, newItem);
+			} else if (msg.action == 'reforge') {
+				if (!item.spell)
+					return;
+
+				var spellName = item.spell.name.toLowerCase();
+				delete item.spell;
+				generatorSpells.generate(item, {
+					spellName: spellName
+				});
 			} else {
 				var newPower = (item.power || 0) + 1;
 				item.power = newPower;
@@ -150,6 +161,9 @@ define([
 			} else if (action == 'reslot') {
 				successChance = 100;
 				result = [configCurrencies.currencies["Gambler's Totem"]];
+			} else if (action == 'reforge') {
+				successChance = 100;
+				result = [configCurrencies.currencies["Brawler's Totem"]];
 			}
 
 			return {

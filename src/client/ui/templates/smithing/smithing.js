@@ -152,12 +152,19 @@ define([
 				return;
 			}
 
+			this.find('.selected').removeClass('selected');
+			this.find('[action="augment"]').addClass('selected');
+			this.action = 'augment';
+
+			var reforge = this.find('[action="reforge"]').addClass('disabled');
+			if (msg.item.spell)
+				reforge.removeClass('disabled');
+
 			this.offEvent(this.eventClickInv);
 
 			$('.uiInventory').data('ui').toggle();
 
 			this.el.show();
-			//events.emit('onShowOverlay', this.el);
 
 			msg.success = false;
 
@@ -288,12 +295,8 @@ define([
 				this.find('.actionButton').removeClass('disabled').addClass('disabled');
 				this.find('.chance').html('');
 				this.show();
-				//this.build();
-				//events.emit('onShowOverlay', this.el);
-			} else {
+			} else
 				this.hide();
-				//events.emit('onHideOverlay', this.el);
-			}
 		},
 		onKeyDown: function (key) {
 			if (key == 'm')
