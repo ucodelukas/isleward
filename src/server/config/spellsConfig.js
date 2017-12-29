@@ -172,7 +172,7 @@ define([
 			auraRange: 9,
 			effect: 'regenHp',
 			random: {
-				regenPercentage: [0.1, 1]
+				regenPercentage: [0.1, 0.5]
 			}
 		},
 		'tranquility': {

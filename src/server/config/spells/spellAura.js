@@ -41,7 +41,11 @@ define([
 
 		updateActive: function () {
 			var o = this.obj;
-			var amount = this.values.regenPercentage || this.values.chance;
+			var amount = 0;
+			if (this.name == 'Innervation')
+				amount = ~~((o.stats.values.hpMax / 100) * this.values.regenPercentage);
+			else
+				amount = this.values.regenPercentage || this.values.chance;
 
 			var party = (o.social || {}).party || [];
 			var members = [o.serverId, ...party];
