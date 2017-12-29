@@ -200,6 +200,14 @@ define([
 			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
 			if (exists) {
+				if (exists.manaReserve) {
+					var mana = this.obj.stats.values.mana;
+					var reserve = exists.manaReserve;
+
+					if (reserve.percentage)
+						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+				}
+
 				exists.unlearn && exists.unlearn();
 
 				this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
