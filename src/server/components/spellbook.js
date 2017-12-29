@@ -258,7 +258,7 @@ define([
 
 			if ((!spell.aura) && (!spell.targetGround)) {
 				//Did we pass in the target id?
-				if ((action.target) && (action.target.id == null)) {
+				if ((action.target != null) && (action.target.id == null)) {
 					action.target = this.objects.objects.find(o => o.id == action.target);
 					if (!action.target)
 						return false;
