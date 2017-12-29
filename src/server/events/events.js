@@ -301,6 +301,14 @@ define([
 				if (distance == -1) {
 					event.participators.push(obj);
 					result.push(event);
+
+					var rList = [{
+						nameLike: 'Ancient Carp',
+						removeAll: true
+					}];
+
+					this.instance.mail.sendMail(obj.name, rList);
+
 					continue;
 				}
 

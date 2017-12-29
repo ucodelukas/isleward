@@ -476,6 +476,7 @@ define([
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
+				this.find('.split-box').hide();
 				this.show();
 				this.build();
 			} else {

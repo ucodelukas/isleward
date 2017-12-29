@@ -245,7 +245,7 @@ define([
 
 			toItem.quantity += fromItem.quantity;
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', toItem);
-			this.destroyItem(fromItem.id);
+			this.destroyItem(fromItem.id, null, true);
 		},
 
 		useItem: function (itemId) {

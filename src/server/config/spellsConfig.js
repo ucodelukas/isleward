@@ -172,7 +172,7 @@ define([
 			auraRange: 9,
 			effect: 'regenHp',
 			random: {
-				regenPercentage: [1, 3]
+				regenPercentage: [0.1, 1]
 			}
 		},
 		'tranquility': {
@@ -186,7 +186,7 @@ define([
 			auraRange: 9,
 			effect: 'regenMana',
 			random: {
-				regenPercentage: [2, 5]
+				regenPercentage: [5, 18]
 			}
 		},
 		'swiftness': {
@@ -194,7 +194,7 @@ define([
 			statMult: 0.0205,
 			element: 'fire',
 			manaReserve: {
-				percentage: 0.5
+				percentage: 0.4
 			},
 			cdMax: 10,
 			auraRange: 9,

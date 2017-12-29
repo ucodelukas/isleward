@@ -104,7 +104,13 @@ define([
 				el = $(el);
 				var slot = el.attr('slot');
 				var newItems = window.player.inventory.items.some(function (i) {
-					return ((i.equipSlot == slot) && (i.isNew));
+					var checkSlot = slot;
+					if (slot.indexOf('finger') == 0)
+						slot = 'finger';
+					else if (slot == 'oneHanded')
+						return ((['oneHanded', 'twoHanded'].indexOf(slot) > -1) && (i.isNew));
+
+					return ((i.slot == slot) && (i.isNew));
 				});
 
 				if (newItems)

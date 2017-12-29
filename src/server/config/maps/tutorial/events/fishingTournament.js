@@ -2,7 +2,8 @@ module.exports = {
 	name: 'Fishing Tournament',
 	description: `Catch the heaviest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
 	distance: -1,
-	cron: '0 19 * * *',
+	//cron: '0 19 * * *',
+	cron: '* * * * *',
 
 	notifications: [{
 		mark: 0,
