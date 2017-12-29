@@ -7,8 +7,9 @@ define([
 		name: `Merrywinter`,
 		description: `The Winter Man has returned to the isles, bringing gifts, games and snow.`,
 		distance: -1,
-		cron: '0 0 2-31 12 *',
-		disabled: true,
+		//cron: '0 0 2-31 12 *',
+		cron: '* * * * *',
+		//disabled: true,
 
 		events: {
 
