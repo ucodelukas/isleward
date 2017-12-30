@@ -77,7 +77,7 @@ define([
 					slot: configSlots.getRandomSlot(item.slot),
 					level: item.level,
 					quality: item.quality,
-					stats: Object.keys(item.stats)
+					stats: Object.keys(item.stats || {})
 				});
 
 				delete item.spritesheet;
