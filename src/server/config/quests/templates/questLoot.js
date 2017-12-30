@@ -28,7 +28,7 @@ define([
 						if (roll == 0)
 							this.slotName = 'Magic Armor'
 						else
-							this.slotNames = 'Magic Accessory';
+							this.slotName = 'Magic Accessory';
 
 						this.slot = ([
 							[
