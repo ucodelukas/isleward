@@ -50,7 +50,7 @@ define([
 			if (msg.action == 'reroll') {
 				delete msg.addStatMsgs;
 				delete item.enchantedStats;
-				if (item.stats.lvlRequire) {
+				if ((item.stats) && (item.stats.lvlRequire)) {
 					item.level += item.stats.lvlRequire;
 					delete item.originalLevel;
 				}
