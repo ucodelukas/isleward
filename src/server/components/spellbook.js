@@ -200,7 +200,7 @@ define([
 			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
 			if (exists) {
-				if (exists.manaReserve) {
+				if ((exists.manaReserve) && (exists.active)) {
 					var mana = this.obj.stats.values.mana;
 					var reserve = exists.manaReserve;
 
