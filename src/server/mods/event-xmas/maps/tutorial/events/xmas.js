@@ -95,14 +95,14 @@ define([
 								var inventory = obj.inventory;
 
 								var snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
-								if ((!snowflakes) || (snowflakes.quantity < 15))
+								if ((!snowflakes) || (snowflakes.quantity < 1))
 									return 'Sorry, please come back when you have at least fifteen.'
 
 								while (true) {
 									snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
-									if ((!snowflakes) || (snowflakes.quantity < 15))
+									if ((!snowflakes) || (snowflakes.quantity < 1))
 										return;
-									else if ((!inventory.hasSpace()) && (snowflakes.quantity != 15))
+									else if ((!inventory.hasSpace()) && (snowflakes.quantity != 1))
 										return `Sorry, it seems you don't have enough space to accept my gifts.`;
 
 									obj.reputation.getReputation('theWinterMan', 100);
@@ -111,7 +111,7 @@ define([
 										'Bottomless Eggnog': 3,
 										'Sprig of Mistletoe': 50,
 										'Merrywinter Play Script': 20,
-										'Unique Snowflake': 27
+										'Unique Snowflake': 27000
 									};
 
 									var rewards = [{
@@ -164,7 +164,7 @@ define([
 
 									inventory.getItem(extend(true, {}, blueprint));
 
-									inventory.destroyItem(snowflakes.id, 15);
+									inventory.destroyItem(snowflakes.id, 1);
 								}
 							}
 						},

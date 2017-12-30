@@ -80,6 +80,13 @@ define([
 					this.unequip(currentEqId);
 
 				slot = 'oneHanded';
+			} else if (slot == 'offHand') {
+				var currentEqId = this.eq.oneHanded;
+				if (currentEqId != null) {
+					var currentEq = this.obj.inventory.findItem(currentEqId);
+					if ((currentEq != null) && (currentEq.slot == 'twoHanded'))
+						this.unequip(currentEqId);
+				}
 			}
 
 			var equipMsg = {
