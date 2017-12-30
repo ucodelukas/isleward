@@ -119,7 +119,7 @@ define([
 					continue;
 				} else if (!m.aggro)
 					continue;
-				else if (!m.aggro.canAttack(this.obj))
+				else if (!this.obj.aggro.canAttack(this.obj))
 					continue;
 
 				var damage = this.getDamage(m);
