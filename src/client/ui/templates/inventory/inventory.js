@@ -399,7 +399,7 @@ define([
 				delta *= 10;
 			var amount = this.find('.split-box .amount');
 
-			amount.html(Math.max(1, Math.min(item.quantity, ~~amount.html() + delta)));
+			amount.html(Math.max(1, Math.min(item.quantity - 1, ~~amount.html() + delta)));
 		},
 
 		hideTooltip: function () {

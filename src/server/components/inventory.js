@@ -222,7 +222,7 @@ define([
 			var item = this.findItem(msg.itemId);
 			if (!item)
 				return;
-			else if ((!item.quantity) || (item.quantity < msg.stackSize) || (msg.stackSize < 1))
+			else if ((!item.quantity) || (item.quantity <= msg.stackSize) || (msg.stackSize < 1))
 				return;
 
 			var newItem = extend(true, {}, item);
