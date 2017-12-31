@@ -45,6 +45,7 @@ define([
 			var questClass = require('config/quests/templates/quest' + pickType);
 
 			var quest = extend(true, {}, pickQuest, questTemplate, questClass, template);
+
 			if (template)
 				quest.xp = template.xp;
 			else
