@@ -47,6 +47,7 @@ requirejs([
 				return arguments[1];
 			} catch (e) {
 				console.log(arguments);
+				throw e;
 			}
 		};
 
