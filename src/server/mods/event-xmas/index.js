@@ -18,15 +18,15 @@ define([
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
-			this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
+			//this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
-			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
+			//this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
 			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
-			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
-			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
-			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
-			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
+			//this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+			//this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+			//this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
+			//this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
 			this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
