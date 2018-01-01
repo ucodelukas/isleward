@@ -182,8 +182,17 @@ define([
 				physics.addObject(this.obj, this.obj.x, this.obj.y);
 
 				this.obj.stats.die(source);
-			} else
+			} else {
 				this.obj.stats.dead = true;
+
+				process.send({
+					method: 'object',
+					serverId: this.obj.serverId,
+					obj: {
+						permadead: true
+					}
+				});
+			}
 
 			this.obj.fireEvent('onAfterDeath', source);
 
