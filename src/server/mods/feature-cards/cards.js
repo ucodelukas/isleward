@@ -35,6 +35,11 @@ define([
 			reward: `Steelclaw's Bite`,
 			setSize: 20,
 			mobName: 'steelclaw'
+		},
+		'Tradesman\'s Pride': {
+			chance: 0.01,
+			reward: 'Five Random Totems',
+			setSize: 10
 		}
 	};
 
@@ -172,6 +177,16 @@ define([
 						}
 					}]
 				});
+			},
+
+			"Five Random Totems": function () {
+				var result = [];
+				for (var i = 0; i < 5; i++) {
+					result.push(itemGenerator.generate({
+						currency: true
+					}));
+				}
+				return result;
 			},
 
 			"Steelclaw's Bite": function () {
