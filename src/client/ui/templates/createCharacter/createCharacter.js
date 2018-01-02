@@ -128,9 +128,9 @@ define([
 		},
 		onCreate: function (result) {
 			this.el.removeClass('disabled');
-			this.clear();
 
 			if (!result) {
+				this.clear();
 				this.el.remove();
 				events.emit('onEnterGame');
 			} else

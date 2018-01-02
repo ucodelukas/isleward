@@ -175,6 +175,24 @@ define([
 				return;
 			}
 
+			var learnMsg = {
+				success: true,
+				item: item
+			};
+			this.obj.fireEvent('beforeLearnAbility', learnMsg);
+			if (!learnMsg.success) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: [{
+						class: 'q0',
+						message: learnMsg.msg || 'you cannot learn that ability',
+						type: 'info'
+					}]
+				}, [this.obj.serverId]);
+
+				return;
+			}
+
 			var spellbook = this.obj.spellbook;
 
 			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
