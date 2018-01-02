@@ -176,8 +176,8 @@ module.exports = {
 			id: 'anglerNayla',
 			hpMult: 1,
 			pos: {
-				x: 140,
-				y: 46
+				x: 134,
+				y: 101
 			},
 			dialogue: {
 				auto: true,
