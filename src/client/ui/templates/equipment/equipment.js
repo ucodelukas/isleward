@@ -359,7 +359,8 @@ define([
 					'all resist': stats.elementAllResist
 				},
 				misc: {
-					'magic find': stats.magicFind,
+					'item quality': stats.magicFind,
+					'item quantity': stats.itemQuantity + '%',
 					gap1: '',
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',

@@ -188,6 +188,11 @@ define([
 				max: 15
 			},
 
+			itemQuantity: {
+				min: 2,
+				max: 27
+			},
+
 			xpIncrease: {
 				min: 1,
 				max: 6

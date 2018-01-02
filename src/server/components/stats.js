@@ -24,6 +24,7 @@ define([
 			int: 0,
 			dex: 0,
 			magicFind: 0,
+			itemQuantity: 0,
 			regenHp: 0,
 			regenMana: 10,
 			addCritChance: 0,

@@ -833,31 +833,16 @@ define([
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var magicFind = (blueprint.magicFind || 0);
 				var bonusMagicFind = killSource.stats.values.magicFind;
-				for (var i = 0; i < blueprint.rolls; i++) {
+
+				var rolls = blueprint.rolls;
+				var itemQuantity = killSource.stats.values.itemQuantity;
+				rolls += ~~(itemQuantity / 100);
+				if ((Math.random() * 100) < (itemQuantity * 100))
+					rolls++;
+
+				for (var i = 0; i < rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
-
-					/*var useItem = null;
-					if (Math.random() < generator.spellChance) {
-						useItem = instancedItems
-							.filter(item => item.ability);
-						if (useItem.length > 0)
-							useItem = useItem[~~(Math.random() * useItem.length)];
-					}
-
-					if (!useItem) {
-						var slot = generator.pickRandomSlot();
-						var useItem = instancedItems.find(item => item.slot == slot);
-					}
-
-					if (!useItem)
-						useItem = instancedItems[~~(Math.random() * iLen)];
-					iLen--;
-					instancedItems.spliceWhere(item => item == useItem);
-
-					//Spells don't have stats
-					if (useItem.stats)
-						delete useItem.stats.armor;*/
 
 					var itemBlueprint = {
 						level: this.obj.stats.values.level,
