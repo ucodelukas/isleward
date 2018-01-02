@@ -48,7 +48,7 @@ define([
 					reward: 'Scented Beard Oil'
 				}
 			});
-		}
+		},
 
 		onBeforeGetSkins: function (skins) {
 			skins['bearded wizard'] = {
