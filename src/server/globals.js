@@ -1,12 +1,12 @@
 define([
 	'extend',
 	'security/connections',
-	'misc/helpers',	
+	'misc/helpers',
 	'items/lootRoller',
 	'world/atlas',
 	'leaderboard/leaderboard',
 	'config/clientConfig'
-], function(
+], function (
 	extend,
 	cons,
 	helpers,
@@ -16,8 +16,18 @@ define([
 	clientConfig
 ) {
 	return {
-		init: function() {
-			global.extend = extend;
+		init: function () {
+			var oldExtend = extend;
+			global.extend = function () {
+				try {
+					oldExtend.apply(null, arguments);
+					return arguments[1];
+				} catch (e) {
+					console.log(arguments);
+					throw e;
+				}
+			};
+
 			global.cons = cons;
 			global._ = helpers;
 			global.lootRoller = lootRoller;

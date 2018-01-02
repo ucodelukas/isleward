@@ -40,8 +40,7 @@ define([
 			var stats = this.caster.stats;
 
 			var contents = this.contents;
-			var cLen = contents.length;
-			for (var i = 0; i < cLen; i++) {
+			for (var i = 0; i < contents.length; i++) {
 				var c = contents[i];
 
 				if (!c) {

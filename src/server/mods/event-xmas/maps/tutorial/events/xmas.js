@@ -7,7 +7,8 @@ define([
 		name: `Merrywinter`,
 		description: `The Winter Man has returned to the isles, bringing gifts, games and snow.`,
 		distance: -1,
-		cron: '* * * * *',
+		cron: '0 0 2-31 12 *',
+		disabled: true,
 
 		events: {
 
@@ -129,7 +130,6 @@ define([
 										spritesheet: `server/mods/event-xmas/images/items.png`,
 										description: `Blows a kiss to your one true love...or whoever's closest`,
 										worth: 0,
-										quantity: 1,
 										noSalvage: true,
 										noAugment: true,
 										uses: 5
@@ -253,23 +253,6 @@ define([
 						if (override)
 							extend(true, blueprint, override);
 					} catch (e) {}
-				},
-
-				onBeforeGetCardsConfig: function (config) {
-					extend(true, config, {
-						'Cheer and Spear': {
-							chance: 40,
-							reward: 'Rare Festive Spear',
-							setSize: 3,
-							mobName: ['frost crab', 'rude holf'],
-							spritesheet: `server/mods/event-xmas/images/items.png`,
-							sprite: [0, 1],
-							quality: 2
-						},
-						"Wizard's Vice": {
-							reward: 'Scented Beard Oil'
-						}
-					});
 				},
 
 				beforeGatherResource: function (gatherResult, gatherer) {

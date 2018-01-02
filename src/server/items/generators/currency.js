@@ -13,7 +13,13 @@ define([
 
 	var generator = {
 		generate: function (item, blueprint) {
-			var pick = chances[~~(Math.random() * chances.length)];
+			var pick = null;
+
+			if (!blueprint.name)
+				pick = chances[~~(Math.random() * chances.length)];
+			else
+				pick = Object.keys(configCurrencies.currencies).find(c => (c.toLowerCase().indexOf(blueprint.name.toLowerCase()) > -1));
+
 			item.name = pick;
 
 			extend(true, item, configCurrencies.currencies[pick]);

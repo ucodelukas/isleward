@@ -54,10 +54,7 @@ define([
 						if ((!m.aggro) || (!m.effects))
 							continue;
 
-						var isPlayer = !!this.obj.player;
-						var isTargetPlayer = !!m.player;
-
-						if ((!this.obj.aggro.canAttack(m)) && (isPlayer == isTargetPlayer))
+						if (!this.obj.aggro.canAttack(m))
 							continue;
 
 						var targetEffect = m.effects.addEffect({

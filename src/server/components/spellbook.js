@@ -200,6 +200,14 @@ define([
 			var exists = this.spells.spliceFirstWhere(s => (s.id == id));
 
 			if (exists) {
+				if ((exists.manaReserve) && (exists.active)) {
+					var mana = this.obj.stats.values.mana;
+					var reserve = exists.manaReserve;
+
+					if (reserve.percentage)
+						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+				}
+
 				exists.unlearn && exists.unlearn();
 
 				this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
@@ -256,7 +264,17 @@ define([
 				}
 			}
 
-			if (!spell.targetGround) {
+			if ((!spell.aura) && (!spell.targetGround)) {
+				//Did we pass in the target id?
+				if ((action.target != null) && (action.target.id == null)) {
+					action.target = this.objects.objects.find(o => o.id == action.target);
+					if (!action.target)
+						return false;
+				}
+
+				if ((action.target == this.obj) && (spell.noTargetSelf))
+					action.target = null;
+
 				if ((action.target == null) || (!action.target.player)) {
 					if (spell.autoTargetFollower) {
 						action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
@@ -265,13 +283,6 @@ define([
 						else
 							return false;
 					}
-				}
-
-				//Did we pass in the target id?
-				if (action.target.id == null) {
-					action.target = this.objects.objects.find(o => o.id == action.target);
-					if (!action.target)
-						return false;
 				}
 
 				if (spell.spellType == 'buff') {
@@ -284,7 +295,7 @@ define([
 				}
 			}
 
-			if ((!spell.targetGround) && (action.target) && (!action.target.aggro)) {
+			if ((!spell.targetGround) && (action.target) && (!action.target.aggro) && (!spell.aura)) {
 				this.sendAnnouncement("You don't feel like attacking that target");
 				return;
 			}
@@ -300,6 +311,20 @@ define([
 				if (!isAuto)
 					this.sendAnnouncement('Insufficient mana to cast spell');
 				success = false;
+			} else if (spell.manaReserve) {
+				var mana = this.obj.stats.values.mana;
+				var reserve = spell.manaReserve;
+
+				if (reserve.percentage) {
+					if (!spell.active) {
+						if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
+							this.sendAnnouncement('Insufficient mana to cast spell');
+							success = false;
+						} else
+							this.obj.stats.addStat('manaReservePercent', reserve.percentage);
+					} else
+						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+				}
 			} else if (spell.range != null) {
 				//Distance Check
 				var fromX = this.obj.x;

@@ -1,6 +1,6 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
 	var scale = 40;
@@ -8,6 +8,9 @@ define([
 	var auras = {
 		reflectDamage: 0,
 		stealth: 1,
+		regenHp: 9,
+		regenMana: 10,
+		swiftness: 11,
 		holyVengeance: 8,
 		rare: 16
 	};
@@ -25,14 +28,14 @@ define([
 
 		effects: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var sprite = this.obj.sprite;
 
 			this.effects = this.effects
-				.filter(function(e) {
+				.filter(function (e) {
 					return (auras[e] != null);
 				}, this)
-				.map(function(e) {
+				.map(function (e) {
 					return {
 						name: e,
 						sprite: renderer.buildObject({
@@ -47,13 +50,13 @@ define([
 					}
 				}, this);
 		},
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.addEffects) {
 				blueprint.addEffects = blueprint.addEffects
-					.filter(function(e) {
+					.filter(function (e) {
 						return (auras[e] != null);
 					})
-					.map(function(e) {
+					.map(function (e) {
 						return {
 							name: e,
 							sprite: renderer.buildObject({
@@ -71,8 +74,8 @@ define([
 				this.effects.push.apply(this.effects, blueprint.addEffects || []);
 			}
 			if (blueprint.removeEffects) {
-				blueprint.removeEffects.forEach(function(r) {
-					var effect = this.effects.find(function(e) {
+				blueprint.removeEffects.forEach(function (r) {
+					var effect = this.effects.find(function (e) {
 						return (e.name == r);
 					});
 
@@ -84,14 +87,14 @@ define([
 						sprite: effect.sprite
 					});
 
-					this.effects.spliceFirstWhere(function(e) {
+					this.effects.spliceFirstWhere(function (e) {
 						return (e.name == r);
 					});
 				}, this);
 			}
 		},
 
-		update: function() {
+		update: function () {
 			this.alpha += this.alphaDir;
 			if ((this.alphaDir > 0) && (this.alpha >= this.alphaMax)) {
 				this.alpha = this.alphaMax;
@@ -112,15 +115,15 @@ define([
 				useAlpha /= (this.alphaMax - this.alphaCutoff);
 			}
 
-			this.effects.forEach(function(e) {
+			this.effects.forEach(function (e) {
 				e.sprite.alpha = useAlpha;
 				e.sprite.x = x;
 				e.sprite.y = y;
 			}, this);
 		},
 
-		destroy: function() {
-			this.effects.forEach(function(e) {
+		destroy: function () {
+			this.effects.forEach(function (e) {
 				renderer.destroyObject({
 					layerName: 'effects',
 					sprite: e.sprite

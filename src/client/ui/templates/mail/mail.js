@@ -86,6 +86,8 @@ define([
 				el.find('.quantity').html(item.quantity);
 			} else
 				el.find('.quantity').html('');
+
+			this.find('.txtRecipient').val('');
 		},
 
 		toggle: function () {

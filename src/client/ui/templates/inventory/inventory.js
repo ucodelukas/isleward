@@ -65,6 +65,10 @@ define([
 			this.find('.grid')
 				.on('mousemove', this.onMouseMove.bind(this))
 				.on('mouseleave', this.onMouseDown.bind(this, null, null, false));
+
+			this.find('.split-box .amount').on('mousewheel', this.onChangeStackAmount.bind(this));
+			this.find('.split-box').on('click', this.splitStackEnd.bind(this, true));
+			this.find('.split-box .button').on('click', this.splitStackEnd.bind(this));
 		},
 
 		build: function () {
@@ -181,6 +185,8 @@ define([
 				events.emit('onHideItemTooltip', this.hoverItem);
 				this.hoverItem = null;
 			} else if (this.dragItem) {
+				var method = 'moveItem';
+
 				if ((this.hoverCell) && (this.hoverCell[0] != this.dragItem[0])) {
 					var placeholder = $('<div></div>')
 						.insertAfter(this.dragItem);
@@ -200,14 +206,22 @@ define([
 
 					var hoverCellItem = this.hoverCell.data('item');
 					if (hoverCellItem) {
-						msgs.push({
-							id: hoverCellItem.id,
-							pos: this.hoverCell.index()
-						});
+						if (hoverCellItem.name != this.dragItem.data('item').name) {
+							msgs.push({
+								id: hoverCellItem.id,
+								pos: this.hoverCell.index()
+							});
 
-						this.items.find(function (i) {
-							return (i.id == hoverCellItem.id)
-						}, this).pos = this.hoverCell.index();
+							this.items.find(function (i) {
+								return (i.id == hoverCellItem.id)
+							}, this).pos = this.hoverCell.index();
+						} else {
+							method = 'combineStacks';
+							msgs = {
+								fromId: this.dragItem.data('item').id,
+								toId: hoverCellItem.id,
+							};
+						}
 					}
 
 					client.request({
@@ -215,7 +229,7 @@ define([
 						method: 'performAction',
 						data: {
 							cpn: 'inventory',
-							method: 'moveItem',
+							method: method,
 							data: msgs
 						}
 					});
@@ -286,6 +300,10 @@ define([
 					text: 'mail',
 					callback: this.openMailUi.bind(this, item)
 				},
+				split: {
+					text: 'split stack',
+					callback: this.splitStackStart.bind(this, item)
+				},
 				divider: '----------'
 			};
 
@@ -332,6 +350,9 @@ define([
 					config.push(menuItems.destroy);
 			}
 
+			if (item.quantity > 1)
+				config.push(menuItems.split);
+
 			if ((!item.noDrop) && (!item.quest))
 				config.push(menuItems.mail);
 
@@ -340,6 +361,45 @@ define([
 
 			e.preventDefault;
 			return false;
+		},
+
+		splitStackStart: function (item) {
+			var box = this.find('.split-box').show();
+			box.data('item', item);
+
+			box.find('.amount').html(1);
+		},
+
+		splitStackEnd: function (cancel, e) {
+			var box = this.find('.split-box');
+
+			if ((!e) || (e.target != box.find('.button')[0]))
+				return;
+
+			box.hide();
+
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'inventory',
+					method: 'splitStack',
+					data: {
+						itemId: box.data('item').id,
+						stackSize: ~~this.find('.split-box .amount').html()
+					}
+				}
+			});
+		},
+
+		onChangeStackAmount: function (e) {
+			var item = this.find('.split-box').data('item');
+			var delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
+			if (this.shiftDown)
+				delta *= 10;
+			var amount = this.find('.split-box .amount');
+
+			amount.html(Math.max(1, Math.min(item.quantity - 1, ~~amount.html() + delta)));
 		},
 
 		hideTooltip: function () {
@@ -372,7 +432,7 @@ define([
 			if (el) {
 				if (el.hasClass('new')) {
 					el.removeClass('new');
-					el.find('.quantity').html(item.quantity || '');
+					el.find('.quantity').html((item.quantity > 1) ? item.quantity : '');
 					delete item.isNew;
 				}
 
@@ -416,6 +476,7 @@ define([
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
+				this.find('.split-box').hide();
 				this.show();
 				this.build();
 			} else {

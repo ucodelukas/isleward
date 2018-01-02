@@ -1,24 +1,31 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'austere',
 
-		init: function() {
-			
+		init: function () {
+
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return this.type;
 		},
 
 		events: {
-			beforeEquipItem: function(msg) {
+			beforeEquipItem: function (msg) {
 				if (msg.item.quality > 1) {
 					msg.success = false;
-					msg.msg = 'You shun fancy equipment'
+					msg.msg = 'You shun fancy equipment';
+				}
+			},
+
+			beforeLearnAbility: function (msg) {
+				if (msg.item.quality > 1) {
+					msg.success = false;
+					msg.msg = 'You shun fancy equipment';
 				}
 			}
 		}

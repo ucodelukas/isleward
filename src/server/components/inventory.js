@@ -59,8 +59,10 @@ define([
 					i--;
 					iLen--;
 					continue;
-				} else if ((item.slot != 'twoHanded') && (item.spell) && (!item.ability))
+				} else if (((item.slot != 'twoHanded') && (item.slot != 'oneHanded')) && (item.spell) && (!item.ability))
 					delete item.spell;
+				else if (item.slot == 'mainHand')
+					item.slot = 'oneHanded';
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
@@ -73,7 +75,7 @@ define([
 				var item = items[i];
 				var pos = item.pos;
 
-				var newItem = this.getItem(item, true);
+				var newItem = this.getItem(item, true, true);
 				newItem.pos = pos;
 			}
 
@@ -173,15 +175,35 @@ define([
 				return;
 			}
 
+			var learnMsg = {
+				success: true,
+				item: item
+			};
+			this.obj.fireEvent('beforeLearnAbility', learnMsg);
+			if (!learnMsg.success) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: [{
+						class: 'q0',
+						message: learnMsg.msg || 'you cannot learn that ability',
+						type: 'info'
+					}]
+				}, [this.obj.serverId]);
+
+				return;
+			}
+
 			var spellbook = this.obj.spellbook;
 
-			if (item.slot == 'twoHanded')
+			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
 				runeSlot = 0;
 			else if (runeSlot == null) {
-				if (!this.items.some(i => (i.runeSlot == 2)))
-					runeSlot = 2;
-				else
-					runeSlot = 1;
+				for (var i = 1; i < 3; i++) {
+					if (!this.items.some(j => (j.runeSlot == i))) {
+						runeSlot = i;
+						break;
+					}
+				}
 			}
 
 			var currentEq = this.items.find(i => (i.runeSlot == runeSlot));
@@ -212,6 +234,36 @@ define([
 			item.active = !item.active;
 
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		splitStack: function (msg) {
+			var item = this.findItem(msg.itemId);
+			if (!item)
+				return;
+			else if ((!item.quantity) || (item.quantity <= msg.stackSize) || (msg.stackSize < 1))
+				return;
+
+			var newItem = extend(true, {}, item);
+			item.quantity -= msg.stackSize;
+			newItem.quantity = msg.stackSize;
+
+			this.getItem(newItem, true, true);
+
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		},
+
+		combineStacks: function (msg) {
+			var fromItem = this.findItem(msg.fromId);
+			var toItem = this.findItem(msg.toId);
+
+			if ((!fromItem) || (!toItem))
+				return;
+			else if ((!fromItem.quantity) || (!toItem.quantity))
+				return;
+
+			toItem.quantity += fromItem.quantity;
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', toItem);
+			this.destroyItem(fromItem.id, null, true);
 		},
 
 		useItem: function (itemId) {
@@ -274,7 +326,8 @@ define([
 			spellbook.removeSpellById(item.runeSlot);
 			delete item.eq;
 			delete item.runeSlot;
-			this.setItemPosition(itemId);
+			if (!item.slot)
+				this.setItemPosition(itemId);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		},
 
@@ -465,13 +518,12 @@ define([
 					(i.spell) &&
 					(i.spell.rolls) &&
 					(i.spell.rolls.damage != null) &&
-					(i.slot == 'twoHanded')
+					((i.slot == 'twoHanded') || (i.slot == 'oneHanded'))
 				);
 			});
 
 			if (!hasWeapon) {
 				var item = generator.generate({
-					slot: 'twoHanded',
 					type: classes.weapons[this.obj.class],
 					quality: 0,
 					spellQuality: 'mid'
@@ -554,7 +606,7 @@ define([
 				return true;
 		},
 
-		getItem: function (item, hideMessage) {
+		getItem: function (item, hideMessage, noStack) {
 			events.emit('onBeforeGetItem', item, this.obj);
 
 			//We need to know if a mob dropped it for quest purposes
@@ -571,7 +623,7 @@ define([
 			var quantity = item.quantity;
 
 			var exists = false;
-			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses) && (!noStack)) {
 				var existItem = this.items.find(i => (i.name == item.name));
 				if (existItem) {
 					exists = true;
@@ -781,31 +833,16 @@ define([
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var magicFind = (blueprint.magicFind || 0);
 				var bonusMagicFind = killSource.stats.values.magicFind;
-				for (var i = 0; i < blueprint.rolls; i++) {
+
+				var rolls = blueprint.rolls;
+				var itemQuantity = killSource.stats.values.itemQuantity;
+				rolls += ~~(itemQuantity / 100);
+				if ((Math.random() * 100) < (itemQuantity * 100))
+					rolls++;
+
+				for (var i = 0; i < rolls; i++) {
 					if (Math.random() * 100 >= (blueprint.chance || 35))
 						continue;
-
-					/*var useItem = null;
-					if (Math.random() < generator.spellChance) {
-						useItem = instancedItems
-							.filter(item => item.ability);
-						if (useItem.length > 0)
-							useItem = useItem[~~(Math.random() * useItem.length)];
-					}
-
-					if (!useItem) {
-						var slot = generator.pickRandomSlot();
-						var useItem = instancedItems.find(item => item.slot == slot);
-					}
-
-					if (!useItem)
-						useItem = instancedItems[~~(Math.random() * iLen)];
-					iLen--;
-					instancedItems.spliceWhere(item => item == useItem);
-
-					//Spells don't have stats
-					if (useItem.stats)
-						delete useItem.stats.armor;*/
 
 					var itemBlueprint = {
 						level: this.obj.stats.values.level,
@@ -845,7 +882,7 @@ define([
 				}
 			}
 
-			killSource.fireEvent('beforeTargetDeath', this.obj, this.items);
+			playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
 			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)

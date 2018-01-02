@@ -229,7 +229,7 @@ module.exports = {
 				var crystals = inventory.items.find(i => (i.name == 'Digested Crystal'));
 				if (!crystals)
 					return;
-				obj.reputation.getReputation('akarei', crystals.quantity * 15);
+				obj.reputation.getReputation('akarei', (crystals.quantity || 1) * 15);
 
 				inventory.destroyItem(crystals.id);
 			}

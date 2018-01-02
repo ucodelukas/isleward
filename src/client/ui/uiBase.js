@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -13,7 +13,7 @@ define([
 
 		eventCallbacks: {},
 
-		render: function() {
+		render: function () {
 			var container = '.ui-container';
 			if (this.container)
 				container += ' > ' + this.container;
@@ -21,6 +21,9 @@ define([
 			this.el = $(this.tpl)
 				.appendTo(container)
 				.data('ui', this);
+
+			this.el.on('mouseenter', this.onMouseEnter.bind(this, true));
+			this.el.on('mouseleave', this.onMouseEnter.bind(this, false));
 
 			if (this.modal)
 				this.el.addClass('modal');
@@ -37,26 +40,31 @@ define([
 
 			this.shown = this.el.is(':visible');
 		},
-		setOptions: function(options) {
+
+		onMouseEnter: function (enter) {
+			events.emit('onUiHover', enter);
+		},
+
+		setOptions: function (options) {
 			this.options = options;
 		},
-		on: function(el, event, callback) {
-			if (typeof(el) == 'string')
+		on: function (el, event, callback) {
+			if (typeof (el) == 'string')
 				el = this.find(el);
 			else
 				el = $(el);
 
-			el.on(event, function() {
+			el.on(event, function () {
 				var args = [].slice.call(arguments, 1);
 				args.splice(0, 0, event);
 
 				callback.apply(null, args);
 			});
 		},
-		find: function(selector) {
+		find: function (selector) {
 			return this.el.find(selector);
 		},
-		center: function(x, y) {
+		center: function (x, y) {
 			if (x == null)
 				x = true;
 			if (y == null)
@@ -64,7 +72,7 @@ define([
 
 			this.centeredX = x;
 			this.centeredY = y;
-			
+
 			var el = this.el;
 			var pat = el.parent();
 
@@ -77,21 +85,21 @@ define([
 			if (y)
 				el.css('top', posY);
 		},
-		show: function() {
+		show: function () {
 			if (this.modal)
 				$('.modal').hide();
 
 			this.shown = true;
 			this.el.show();
 		},
-		hide: function() {
+		hide: function () {
 			if (this.beforeHide)
 				this.beforeHide();
-			
+
 			this.shown = false;
 			this.el.hide();
 		},
-		destroy: function() {
+		destroy: function () {
 			this.offEvents();
 
 			if (this.beforeDestroy)
@@ -99,18 +107,18 @@ define([
 
 			this.el.remove();
 		},
-		val: function(selector) {
+		val: function (selector) {
 			return this.find(selector).val();
 		},
 
-		setDisabled: function(isDisabled) {
+		setDisabled: function (isDisabled) {
 			this.el.removeClass('disabled')
 
 			if (isDisabled)
 				this.el.addClass('disabled');
 		},
 
-		onEvent: function(event, callback) {
+		onEvent: function (event, callback) {
 			var list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
 			var eventCallback = events.on(event, callback);
 			list.push(eventCallback);
@@ -118,18 +126,18 @@ define([
 			return eventCallback;
 		},
 
-		offEvent: function(eventCallback) {
+		offEvent: function (eventCallback) {
 			for (var e in this.eventCallbacks) {
-				this.eventCallbacks[e].forEach(function(c) {
+				this.eventCallbacks[e].forEach(function (c) {
 					if (c == eventCallback)
 						events.off(e, c);
 				}, this);
 			}
 		},
 
-		offEvents: function() {
+		offEvents: function () {
 			for (var e in this.eventCallbacks) {
-				this.eventCallbacks[e].forEach(function(c) {
+				this.eventCallbacks[e].forEach(function (c) {
 					events.off(e, c);
 				}, this);
 			}

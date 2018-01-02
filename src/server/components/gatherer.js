@@ -36,6 +36,24 @@ define([
 
 			if (firstNode.resourceNode.nodeType == 'fish') {
 				var rod = this.obj.equipment.eq.tool;
+				if (!rod) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'You need a fishing rod to fish'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					this.gathering = null;
+
+					return;
+				}
+
 				rod = this.obj.inventory.findItem(rod);
 
 				var statCatchSpeed = Math.min(150, this.obj.stats.values.catchSpeed);
@@ -170,14 +188,15 @@ define([
 				}
 
 				this.obj.inventory.getItem(item);
+
+				if (item.material)
+					this.obj.fireEvent('afterGatherResource', gatherResult);
 			}, this);
 
 			if (!gatherResult.noChangeAmount)
 				resourceNode.gather();
 
 			this.obj.stats.getXp(gatherResult.xp);
-
-			this.obj.fireEvent('afterGatherResource', gatherResult);
 
 			if (gathering.destroyed) {
 				if (isFish) {
@@ -234,9 +253,6 @@ define([
 				}
 			});
 
-			if (!success)
-				return;
-
 			this.nodes.spliceWhere(n => (n == node));
 			this.nodes.push(node);
 		},
@@ -286,10 +302,6 @@ define([
 									}]
 								}
 							});
-
-							nodes.splice(i, 1);
-							i--;
-							nLen--;
 
 							if (this.gathering == node) {
 								if (this.gathering.resourceNode.nodeType == 'fish')

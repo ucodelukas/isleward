@@ -14,7 +14,9 @@ define([
 			'legs',
 			'feet',
 			'trinket',
+			'oneHanded',
 			'twoHanded',
+			'offHand',
 			'tool'
 		],
 
@@ -28,7 +30,9 @@ define([
 			legs: 100,
 			feet: 90,
 			trinket: 35,
+			oneHanded: 60,
 			twoHanded: 60,
+			offHand: 40,
 			tool: 0
 		},
 
@@ -42,7 +46,9 @@ define([
 			legs: 0.2,
 			feet: 0.1,
 			trinket: 0,
+			oneHanded: 0,
 			twoHanded: 0,
+			offHand: 0,
 			tool: 0
 		},
 

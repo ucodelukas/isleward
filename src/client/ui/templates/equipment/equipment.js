@@ -104,6 +104,12 @@ define([
 				el = $(el);
 				var slot = el.attr('slot');
 				var newItems = window.player.inventory.items.some(function (i) {
+					var checkSlot = slot;
+					if (slot.indexOf('finger') == 0)
+						slot = 'finger';
+					else if (slot == 'oneHanded')
+						return ((['oneHanded', 'twoHanded'].indexOf(slot) > -1) && (i.isNew));
+
 					return ((i.slot == slot) && (i.isNew));
 				});
 
@@ -132,6 +138,8 @@ define([
 					}
 
 					var spritesheet = item.spritesheet || '../../../images/items.png';
+
+					slot = item.equipSlot || slot;
 
 					var elSlot = this.find('[slot="' + slot + '"]');
 					elSlot
@@ -163,8 +171,13 @@ define([
 				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
-					else
-						return ((item.slot == slot) && (!item.eq));
+					else {
+						var checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
+						if (slot == 'oneHanded')
+							return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
+
+						return ((item.slot == checkSlot) && (!item.eq));
+					}
 				}, this);
 			items.splice(0, 0, {
 				name: 'None',
@@ -205,7 +218,7 @@ define([
 
 		equipItem: function (item, slot) {
 			var isNew = window.player.inventory.items.some(function (i) {
-				return ((i.slot == slot) && (i.isNew));
+				return ((i.equipSlot == slot) && (i.isNew));
 			});
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
@@ -239,6 +252,11 @@ define([
 						data.itemId = this.hoverCompare.id;
 					}
 				}
+			} else if (item.slot == 'finger') {
+				data = {
+					itemId: item.id,
+					slot: slot
+				};
 			}
 
 			client.request({
@@ -341,7 +359,8 @@ define([
 					'all resist': stats.elementAllResist
 				},
 				misc: {
-					'magic find': stats.magicFind,
+					'item quality': stats.magicFind,
+					'item quantity': stats.itemQuantity + '%',
 					gap1: '',
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',

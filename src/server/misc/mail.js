@@ -61,12 +61,16 @@ define([
 						}
 					}
 
-					for (var i = 0; i < stash.items.length; i++) {
-						var item = stash.items[i];
-						if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
-							stash.destroyItem(item.id);
-							i--;
+					if (stash) {
+						for (var i = 0; i < stash.items.length; i++) {
+							var item = stash.items[i];
+							if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
+								stash.destroyItem(item.id);
+								i--;
+							}
 						}
+					} else {
+						console.log(player.name + ' has no stash');
 					}
 				} else {
 					if ((r.msg) && (!sentMessages.some(s => (s == r.msg)))) {

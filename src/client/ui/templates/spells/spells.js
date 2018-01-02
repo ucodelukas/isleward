@@ -4,7 +4,7 @@ define([
 	'css!ui/templates/spells/styles',
 	'html!ui/templates/spells/templateSpell',
 	'html!ui/templates/spells/templateTooltip'
-], function(
+], function (
 	events,
 	template,
 	styles,
@@ -16,7 +16,7 @@ define([
 
 		spells: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetSpells', this.onGetSpells.bind(this));
 			this.onEvent('onGetSpellCooldowns', this.onGetSpellCooldowns.bind(this));
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
@@ -24,7 +24,7 @@ define([
 			setInterval(this.update.bind(this), 100);
 		},
 
-		onGetSpells: function(spells) {
+		onGetSpells: function (spells) {
 			this.el.empty();
 
 			this.spells = spells;
@@ -57,7 +57,7 @@ define([
 			}
 		},
 
-		onShowTooltip: function(el, spell) {
+		onShowTooltip: function (el, spell) {
 			var pos = el.offset();
 			pos = {
 				x: pos.left + 56,
@@ -66,16 +66,20 @@ define([
 
 			var cd = ~~((spell.cdMax * 350) / 1000);
 
-			var values = Object.keys(spell.values).filter(function(v) {
+			var values = Object.keys(spell.values).filter(function (v) {
 				return ((v != 'damage') && (v != 'healing'));
-			}).map(function(v) {
+			}).map(function (v) {
 				return v + ': ' + spell.values[v];
 			}).join('<br />');
+
+			var manaCost = spell.manaCost;
+			if (spell.manaReserve)
+				manaCost = ~~(spell.manaReserve.percentage * 100) + '% reserved';
 
 			var tooltip = templateTooltip
 				.replace('$NAME$', spell.name)
 				.replace('$DESCRIPTION$', spell.description)
-				.replace('$MANA$', spell.manaCost)
+				.replace('$MANA$', manaCost)
 				.replace('$CD$', cd)
 				.replace('$VALUES$', values)
 				.replace('$ELEMENT$', spell.element);
@@ -90,17 +94,17 @@ define([
 
 			events.emit('onShowTooltip', tooltip, el[0], pos, 200, false, true, this.el.css('z-index'));
 		},
-		onHideTooltip: function(el) {
+		onHideTooltip: function (el) {
 			events.emit('onHideTooltip', el[0]);
 		},
 
-		onGetSpellCooldowns: function(options) {
+		onGetSpellCooldowns: function (options) {
 			var spell = this.spells[options.spell];
 			spell.ttl = options.cd;
 			spell.ttlStart = +new Date;
 		},
 
-		onGetStats: function(stats) {
+		onGetStats: function (stats) {
 			var mana = stats.mana;
 
 			var spells = this.spells;
@@ -117,7 +121,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var spells = this.spells;
 			if (!spells)
 				return;

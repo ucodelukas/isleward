@@ -16,7 +16,7 @@ define([
 
 		events: {
 			afterEquipItem: function (item) {
-				if (item.slot != 'twoHanded')
+				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
 					return;
 
 				var stats = item.stats;
@@ -29,7 +29,7 @@ define([
 				}
 			},
 			afterUnequipItem: function (item) {
-				if (item.slot != 'twoHanded')
+				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
 					return;
 
 				var stats = item.stats;

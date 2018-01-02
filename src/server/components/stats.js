@@ -11,6 +11,9 @@ define([
 		values: {
 			mana: 10,
 			manaMax: 10,
+
+			manaReservePercent: 0,
+
 			hp: 5,
 			hpMax: 5,
 			xpTotal: 0,
@@ -21,6 +24,7 @@ define([
 			int: 0,
 			dex: 0,
 			magicFind: 0,
+			itemQuantity: 0,
 			regenHp: 0,
 			regenMana: 10,
 			addCritChance: 0,
@@ -104,6 +108,11 @@ define([
 			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
+			var values = this.values;
+
+			var manaMax = values.manaMax;
+			manaMax -= (manaMax * values.manaReservePercent);
+
 			var regen = {
 				success: true
 			};
@@ -111,7 +120,6 @@ define([
 			if (!regen.success)
 				return;
 
-			var values = this.values;
 			var isInCombat = (this.obj.aggro.list.length > 0);
 			if (this.obj.follower) {
 				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
@@ -122,7 +130,7 @@ define([
 			var regenHp = 0;
 			var regenMana = 0;
 
-			regenMana = (values.manaMax / 200) + (values.regenMana / 200);
+			regenMana = (manaMax / 200) + (values.regenMana / 200);
 
 			if (!isInCombat)
 				regenHp = values.hpMax / 100;
@@ -139,7 +147,7 @@ define([
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 			}
 
-			if (values.mana < values.manaMax) {
+			if (values.mana < manaMax) {
 				values.mana += regenMana;
 				//Show others what mana is?
 				var onlySelf = true;
@@ -148,8 +156,8 @@ define([
 				this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
 			}
 
-			if (values.mana > values.manaMax) {
-				values.mana = values.manaMax;
+			if (values.mana > manaMax) {
+				values.mana = manaMax;
 				if (this.obj.player)
 					onlySelf = false;
 				this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
@@ -446,6 +454,10 @@ define([
 			if (amount == 0)
 				return;
 
+			var threatMult = heal.threatMult;
+			if (!heal.hasOwnProperty('threatMult'))
+				threatMult = 1;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
@@ -475,7 +487,7 @@ define([
 			}
 
 			//Add aggro to all our attackers
-			var threat = amount * 0.4;
+			var threat = amount * 0.4 * threatMult;
 			var aggroList = this.obj.aggro.list;
 			var aLen = aggroList.length;
 			for (var i = 0; i < aLen; i++) {
