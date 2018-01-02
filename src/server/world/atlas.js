@@ -110,8 +110,13 @@ define([
 
 		send: function (zone, msg) {
 			var thread = this.getThreadFromId(zone);
-			if (thread)
-				thread.worker.send(msg);
+			if (thread) {
+				try {
+					thread.worker.send(msg);
+				} catch (e) {
+					console.log(msg);
+				}
+			}
 		},
 
 		getThreadFromId: function (id) {
