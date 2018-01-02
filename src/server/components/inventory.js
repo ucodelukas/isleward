@@ -199,7 +199,7 @@ define([
 				runeSlot = 0;
 			else if (runeSlot == null) {
 				for (var i = 1; i < 3; i++) {
-					if (!this.items.some(i => (i.runeSlot == i))) {
+					if (!this.items.some(j => (j.runeSlot == i))) {
 						runeSlot = i;
 						break;
 					}
