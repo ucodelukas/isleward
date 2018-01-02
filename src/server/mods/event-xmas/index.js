@@ -30,7 +30,25 @@ define([
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
 			this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
+			this.events.on('onBeforeGetCardsConfig', this.onBeforeGetCardsConfig.bind(this));
 		},
+
+		onBeforeGetCardsConfig: function (config) {
+			extend(true, config, {
+				'Cheer and Spear': {
+					chance: 40,
+					reward: 'Rare Festive Spear',
+					setSize: 3,
+					mobName: ['frost crab', 'rude holf'],
+					spritesheet: `server/mods/event-xmas/images/items.png`,
+					sprite: [0, 1],
+					quality: 2
+				},
+				"Wizard's Vice": {
+					reward: 'Scented Beard Oil'
+				}
+			});
+		}
 
 		onBeforeGetSkins: function (skins) {
 			skins['bearded wizard'] = {

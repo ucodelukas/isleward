@@ -255,23 +255,6 @@ define([
 					} catch (e) {}
 				},
 
-				onBeforeGetCardsConfig: function (config) {
-					extend(true, config, {
-						'Cheer and Spear': {
-							chance: 40,
-							reward: 'Rare Festive Spear',
-							setSize: 3,
-							mobName: ['frost crab', 'rude holf'],
-							spritesheet: `server/mods/event-xmas/images/items.png`,
-							sprite: [0, 1],
-							quality: 2
-						},
-						"Wizard's Vice": {
-							reward: 'Scented Beard Oil'
-						}
-					});
-				},
-
 				beforeGatherResource: function (gatherResult, gatherer) {
 					var itemName = gatherResult.blueprint.itemName;
 					if ((!itemName) || (itemName.toLowerCase() != 'snowflake'))

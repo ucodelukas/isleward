@@ -55,6 +55,8 @@ define([
 			if (msg.id != null) {
 				player = this.players.find(p => p.id == msg.id);
 				var source = this.players.find(p => p.socket.id == socket.id);
+				if (!source)
+					return;
 				if (!msg.data)
 					msg.data = {};
 				msg.data.sourceId = source.id;
