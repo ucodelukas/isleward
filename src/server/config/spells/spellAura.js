@@ -79,7 +79,7 @@ define([
 					return;
 
 				if (!obj.effects) {
-					console.log('No Effects ', +obj.name);
+					console.log('No Effects ', obj.name);
 					return;
 				}
 
