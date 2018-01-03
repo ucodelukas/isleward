@@ -78,6 +78,11 @@ define([
 				if (effect)
 					return;
 
+				if (!obj.effects) {
+					console.log('No Effects ', +obj.name);
+					return;
+				}
+
 				effects[obj.serverId] = obj.effects.addEffect({
 					type: this.effect,
 					amount: amount,
