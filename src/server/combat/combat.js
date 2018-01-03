@@ -25,7 +25,7 @@ define([
 			statValue = max(1, statValue);
 
 			var dmgPercent = srcValues.dmgPercent;
-			var resist = srcValues.elementAllResist;
+			var resist = tgtValues.elementAllResist;
 			if (config.element) {
 				var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 				dmgPercent += srcValues[elementName + 'Percent'];
