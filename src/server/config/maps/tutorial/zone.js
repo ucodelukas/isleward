@@ -451,6 +451,12 @@ module.exports = {
 				name: 'The Muck Prince'
 			}
 		},
+		eagle: {
+			level: 10,
+			rare: {
+				name: 'Fleshripper'
+			}
+		},
 		hermit: {
 			level: 10,
 			walkDistance: 0,
