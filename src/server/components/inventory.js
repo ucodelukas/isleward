@@ -198,7 +198,8 @@ define([
 			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
 				runeSlot = 0;
 			else if (runeSlot == null) {
-				for (var i = 1; i < 3; i++) {
+				runeSlot = 3;
+				for (var i = 1; i <= 3; i++) {
 					if (!this.items.some(j => (j.runeSlot == i))) {
 						runeSlot = i;
 						break;
@@ -211,6 +212,7 @@ define([
 				spellbook.removeSpellById(runeSlot);
 				delete currentEq.eq;
 				delete currentEq.runeSlot;
+				this.setItemPosition(currentEq.id);
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', currentEq);
 			}
 
