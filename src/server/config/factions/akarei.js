@@ -2,7 +2,7 @@ define([
 	'world/spawners',
 	'world/mobBuilder',
 	'combat/combat'
-], function(
+], function (
 	spawners,
 	mobBuilder,
 	combat
@@ -20,7 +20,7 @@ define([
 				max: 45
 			},
 
-			generate: function(item) {
+			generate: function (item) {
 				var chance = this.chance;
 				var chanceRoll = ~~(random.norm(chance.min, chance.max) * 10) / 10;
 
@@ -35,7 +35,7 @@ define([
 					result = {
 						factionId: 'akarei',
 						chance: chanceRoll,
-						text: chanceRoll + '% chance on to cast a lightning bolt when you critically hit an enemy',
+						text: chanceRoll + '% chance on crit to cast a lightning bolt',
 						events: {}
 					};
 
@@ -53,7 +53,7 @@ define([
 			},
 
 			events: {
-				beforeDealDamage: function(item, damage, target) {
+				beforeDealDamage: function (item, damage, target) {
 					if (!damage.crit)
 						return;
 
@@ -63,7 +63,7 @@ define([
 					if (roll >= effect.chance)
 						return;
 
-					var cbExplode = function(target) {
+					var cbExplode = function (target) {
 						if ((this.destroyed) || (target.destroyed))
 							return;
 
