@@ -219,6 +219,9 @@ define([
 				if (clonedItem.generate) {
 					clonedItem = generator.generate(clonedItem);
 					delete clonedItem.generate;
+
+					if (item.factions)
+						clonedItem.factions = item.factions;
 				}
 
 				this.obj.inventory.getItem(clonedItem);
