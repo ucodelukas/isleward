@@ -60,7 +60,7 @@ define([
 
 			var social = simple.components.find(c => c.type == 'social');
 			delete social.party;
-			delete social.customChannelsl
+			delete social.customChannels;
 
 			var statKeys = Object.keys(stats.values);
 			var sLen = statKeys.length;
