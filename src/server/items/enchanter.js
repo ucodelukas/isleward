@@ -73,6 +73,9 @@ define([
 					offset = Math.abs(offset);
 				item.level = Math.max(1, item.level + offset);
 			} else if (msg.action == 'reslot') {
+				if (item.effects)
+					return;
+
 				var newItem = generator.generate({
 					slot: configSlots.getRandomSlot(item.slot),
 					level: item.level,

@@ -160,6 +160,10 @@ define([
 			if (msg.item.spell)
 				reforge.removeClass('disabled');
 
+			var reslot = this.find('[action="reslot"]').addClass('disabled');
+			if (!msg.item.effects)
+				reslot.removeClass('disabled');
+
 			this.offEvent(this.eventClickInv);
 
 			$('.uiInventory').data('ui').toggle();
