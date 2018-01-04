@@ -262,6 +262,10 @@ define([
 		},
 
 		events: {
+			beforeRezone: function () {
+				this.events.beforeMove.call(this);
+			},
+
 			beforeMove: function () {
 				if (!this.gathering)
 					return;
