@@ -874,7 +874,7 @@ define([
 					drop.magicFind = magicFind;
 
 					var item = drop;
-					if (!item.quest)
+					if ((!item.quest) && (item.type != 'key'))
 						item = generator.generate(drop);
 
 					if (!item.slot)

@@ -10,12 +10,15 @@ define([
 		closed: true,
 		key: null,
 
+		destroyKey: false,
+
 		openSprite: 157,
 		closedSprite: 156,
 
 		init: function (blueprint) {
 			this.locked = blueprint.locked;
 			this.key = blueprint.key;
+			this.destroyKey = blueprint.destroyKey;
 
 			if (this.closed)
 				this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
@@ -115,6 +118,19 @@ define([
 				var key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
 				if (!key)
 					return;
+
+				if (((key.singleUse) || (this.destroyKey)) && (key.keyId != 'world')) {
+					obj.inventory.destroyItem(key.id);
+
+					obj.instance.syncer.queue('onGetMessages', {
+						id: obj.id,
+						messages: [{
+							class: 'q0',
+							message: 'The ' + key.name + ' disintegrates on use',
+							type: 'info'
+						}]
+					}, [obj.serverId]);
+				}
 			}
 
 			if (this.closed) {

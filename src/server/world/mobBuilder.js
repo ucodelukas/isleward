@@ -149,6 +149,9 @@ define([
 				drops.blueprints.forEach(function (d) {
 					var drop = extend(true, {}, d);
 					d.level = level;
+					if (drop.type == 'key')
+						return;
+
 					mob.inventory.getItem(itemGenerator.generate(drop));
 				}, this);
 			}
