@@ -453,6 +453,7 @@ module.exports = {
 		},
 		eagle: {
 			level: 10,
+			faction: 'hostile',
 			rare: {
 				name: 'Fleshripper'
 			}
@@ -562,7 +563,7 @@ module.exports = {
 				count: 0
 			}
 		},
-		'priest': {
+		priest: {
 			level: 50,
 			attackable: false,
 			walkDistance: 0,

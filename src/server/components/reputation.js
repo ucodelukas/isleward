@@ -52,10 +52,12 @@ define([
 
 		getTier: function (factionId) {
 			var faction = this.list.find(l => l.id == factionId);
-			if (!faction)
-				return 3;
-			else
-				return faction.tier;
+			if (!faction) {
+				this.discoverFaction(factionId);
+				faction = this.list.find(l => l.id == factionId);
+			}
+
+			return faction.tier;
 		},
 
 		canEquipItem: function (item) {
@@ -163,14 +165,16 @@ define([
 
 			var tier = blueprint.tiers[this.calculateTier(factionId)].name.toLowerCase();
 
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'q4',
-					message: 'you are now ' + tier + ' with ' + blueprint.name,
-					type: 'rep'
-				}]
-			}, [this.obj.serverId]);
+			if (!blueprint.noGainRep) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: [{
+						class: 'q4',
+						message: 'you are now ' + tier + ' with ' + blueprint.name,
+						type: 'rep'
+					}]
+				}, [this.obj.serverId]);
+			}
 
 			this.syncFaction(factionId, fullSync);
 		},

@@ -8,7 +8,7 @@ module.exports = {
 			deathRep: -5
 		},
 
-		'rat': {
+		rat: {
 			faction: 'flolgard',
 			grantRep: {
 				fjolgard: 6
@@ -36,7 +36,7 @@ module.exports = {
 			}
 		},
 
-		'stinktooth': {
+		stinktooth: {
 			faction: 'flolgard',
 			grantRep: {
 				fjolgard: 15
@@ -64,7 +64,39 @@ module.exports = {
 				name: 'Steelclaw',
 				cell: 59
 			}
-		}
+		},
+
+		bandit: {
+			faction: 'flolgard',
+			grantRep: {
+				fjolgard: 18
+			},
+			level: 14,
+
+			rare: {
+				count: 0
+			}
+		},
+
+		whiskers: {
+			level: 14,
+
+			rare: {
+				count: 0
+			}
+		},
+
+		'bera the blade': {
+			faction: 'flolgard',
+			grantRep: {
+				fjolgard: 25
+			},
+			level: 16,
+
+			rare: {
+				count: 0
+			}
+		},
 	},
 	objects: {
 		sewerdoor: {
