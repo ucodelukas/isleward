@@ -447,7 +447,7 @@ define([
 
 		mailItem: function (msg) {
 			var item = this.findItem(msg.itemId);
-			if (!item) {
+			if ((!item) || (item.noDrop) || (item.quest)) {
 				this.resolveCallback(msg);
 				return;
 			}
