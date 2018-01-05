@@ -839,7 +839,7 @@ define([
 				var rolls = blueprint.rolls;
 				var itemQuantity = killSource.stats.values.itemQuantity;
 				rolls += ~~(itemQuantity / 100);
-				if ((Math.random() * 100) < (itemQuantity * 100))
+				if ((Math.random() * 100) < (itemQuantity % 100))
 					rolls++;
 
 				for (var i = 0; i < rolls; i++) {
