@@ -258,6 +258,9 @@ define([
 		},
 
 		verifySkin: function (character) {
+			if (!character)
+				return;
+
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
 
