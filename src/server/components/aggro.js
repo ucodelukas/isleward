@@ -149,7 +149,7 @@ define([
 				return false;
 
 			var faction = target.aggro.faction;
-			if (faction == null)
+			if ((faction == null) || (!this.faction))
 				return false;
 
 			var rep = this.obj.reputation;

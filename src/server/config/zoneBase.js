@@ -12,7 +12,6 @@ define([
 		mobs: {
 			default: {
 				level: 1,
-				faction: 1,
 				walkDistance: 1,
 
 				spells: [{

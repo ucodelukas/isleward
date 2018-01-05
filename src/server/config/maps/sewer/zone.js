@@ -93,6 +93,22 @@ module.exports = {
 			},
 			level: 16,
 
+			regular: {
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 100,
+						type: 'key',
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1]
+					}]
+				}
+			},
+
 			rare: {
 				count: 0
 			}
