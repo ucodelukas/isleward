@@ -413,7 +413,7 @@ define([
 
 		dropItem: function (id) {
 			var item = this.findItem(id);
-			if ((!item) || (item.noDrop))
+			if ((!item) || (item.noDrop) || (item.quest))
 				return;
 
 			delete item.pos;
