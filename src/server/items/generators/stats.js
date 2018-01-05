@@ -328,7 +328,16 @@ define([
 		},
 
 		buildStat: function (item, blueprint, stat, result) {
-			var statOptions = extend(true, {}, this.stats, this.slots[item.slot] || {});
+			var slotStats = this.slots[item.slot] || {};
+			var statOptions = extend(true, {}, this.stats, slotStats || {});
+
+			for (var p in statOptions) {
+				if ((!slotStats[p]) || (slotStats[p].ignore))
+					continue;
+
+				delete statOptions[p].ignore;
+			}
+
 			var statBlueprint = null;
 
 			var value = null;
