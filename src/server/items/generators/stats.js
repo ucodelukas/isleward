@@ -166,6 +166,14 @@ define([
 			},
 
 			attackSpeed: {
+				min: 1,
+				max: 7,
+				ignore: true
+			},
+
+			castSpeed: {
+				min: 1,
+				max: 7,
 				ignore: true
 			},
 
@@ -207,6 +215,17 @@ define([
 				}
 			},
 
+			trinket: {
+				attackSpeed: {
+					min: 1,
+					max: 7
+				},
+				castSpeed: {
+					min: 1,
+					max: 7
+				}
+			},
+
 			finger: {
 				dmgPercent: {
 					min: 1,
@@ -238,6 +257,14 @@ define([
 				},
 				allAttributes: {
 					generator: 'mainStat'
+				},
+				attackSpeed: {
+					min: 1,
+					max: 7
+				},
+				castSpeed: {
+					min: 1,
+					max: 7
 				}
 			},
 
@@ -272,6 +299,14 @@ define([
 				},
 				allAttributes: {
 					generator: 'mainStat'
+				},
+				attackSpeed: {
+					min: 1,
+					max: 7
+				},
+				castSpeed: {
+					min: 1,
+					max: 7
 				}
 			}
 		},
