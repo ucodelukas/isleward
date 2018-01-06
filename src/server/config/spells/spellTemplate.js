@@ -164,6 +164,7 @@ define([
 				element: this.element,
 				statType: this.statType,
 				statMult: this.statMult,
+				isAttack: (this.type == 'melee'),
 				noMitigate: noMitigate
 			};
 

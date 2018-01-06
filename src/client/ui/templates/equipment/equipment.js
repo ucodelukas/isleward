@@ -348,6 +348,8 @@ define([
 				},
 				defense: {
 					armor: stats.armor,
+					'chance to block attacks': stats.blockAttackChance + '%',
+					'chance to block spells': stats.blockSpellChance + '%',
 					gap1: '',
 					'arcane resist': stats.elementArcaneResist,
 					'fire resist': stats.elementFireResist,

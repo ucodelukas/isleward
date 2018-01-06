@@ -65,8 +65,16 @@ define([
 				}
 			}
 
+			var blocked = false;
+			var blockChance = config.isAttack ? tgtValues.blockAttackChance : tgtValues.blockSpellChance;
+			if (Math.random() * 100 < blockChance) {
+				blocked = true;
+				amount = 0;
+			}
+
 			return {
 				amount: amount,
+				blocked: blocked,
 				crit: isCrit,
 				element: config.element
 			};

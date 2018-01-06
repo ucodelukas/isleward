@@ -34,6 +34,9 @@ define([
 			armor: 0,
 			dmgPercent: 0,
 
+			blockAttackChance: 0,
+			blockSpellChance: 0,
+
 			attackSpeed: 0,
 			castSpeed: 0,
 
@@ -347,12 +350,21 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					source: source.id,
-					crit: damage.crit,
-					amount: amount
-				}, recipients);
+				if (!damage.blocked) {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						crit: damage.crit,
+						amount: amount
+					}, recipients);
+				} else {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						event: true,
+						text: 'blocked'
+					}, recipients);
+				}
 			}
 
 			this.obj.aggro.tryEngage(source, amount, threatMult);

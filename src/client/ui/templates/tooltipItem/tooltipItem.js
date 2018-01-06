@@ -17,6 +17,8 @@ define([
 		'sprintChance',
 		'dmgPercent',
 		'xpIncrease',
+		'blockAttackChance',
+		'blockSpellChance',
 		'attackSpeed',
 		'castSpeed',
 		'itemQuantity',

@@ -182,6 +182,18 @@ define([
 				ignore: true
 			},
 
+			blockAttackChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
+			blockSpellChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
 			addCritChance: {
 				min: 1,
 				max: 90
@@ -213,6 +225,10 @@ define([
 					min: 1,
 					max: 20
 				}
+			},
+
+			offHand: {
+
 			},
 
 			trinket: {
@@ -327,8 +343,9 @@ define([
 			//If we enchant something we don't add armor
 			if (!blueprint.statMult)
 				blueprint.statMult = {};
-			if (blueprint.statMult.armor)
-				this.buildStat(item, blueprint, 'armor');
+			for (var s in blueprint.statMult) {
+				this.buildStat(item, blueprint, s);
+			}
 
 			var statCount = blueprint.statCount || (item.quality + 1);
 
