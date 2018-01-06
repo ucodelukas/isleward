@@ -145,8 +145,12 @@ define([
 		},
 
 		getCharacter: function (data) {
+			var name = data.data.name;
+			if (!this.characterList.some(c => ((c.name == name) || (c == name))))
+				return;
+
 			io.get({
-				ent: data.data.name,
+				ent: name,
 				field: 'character',
 				callback: this.onGetCharacter.bind(this, data)
 			});
