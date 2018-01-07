@@ -31,7 +31,7 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.045,
+			statMult: 0.0385,
 			element: 'fire',
 			cdMax: 15,
 			manaCost: 7,
@@ -92,7 +92,7 @@ define([
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.22,
+			statMult: 0.19,
 			element: 'physical',
 			threatMult: 3,
 			cdMax: 5,
@@ -127,7 +127,7 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 1.32,
+			statMult: 1.1395,
 			element: 'poison',
 			cdMax: 5,
 			manaCost: 6,
@@ -147,7 +147,7 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 0.025,
+			statMult: 0.021,
 			element: 'physical',
 			manaCost: 6,
 			needLos: true,
