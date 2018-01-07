@@ -18,7 +18,7 @@ define([
 		},
 		'ice spear': {
 			statType: 'int',
-			statMult: 0.49,
+			statMult: 0.29,
 			element: 'frost',
 			cdMax: 10,
 			manaCost: 5,
@@ -31,7 +31,7 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.305,
+			statMult: 0.2,
 			element: 'fire',
 			cdMax: 15,
 			manaCost: 7,
@@ -92,7 +92,7 @@ define([
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.5,
+			statMult: 0.32,
 			element: 'physical',
 			threatMult: 3,
 			cdMax: 5,
@@ -127,7 +127,7 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 0.602,
+			statMult: 0.38,
 			element: 'poison',
 			cdMax: 5,
 			manaCost: 6,
@@ -147,7 +147,7 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 0.11,
+			statMult: 0.075,
 			element: 'physical',
 			manaCost: 6,
 			needLos: true,
