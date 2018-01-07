@@ -31,7 +31,7 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.2,
+			statMult: 0.17,
 			element: 'fire',
 			cdMax: 15,
 			manaCost: 7,
