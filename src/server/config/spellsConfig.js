@@ -18,7 +18,7 @@ define([
 		},
 		'ice spear': {
 			statType: 'int',
-			statMult: 0.076,
+			statMult: 0.078,
 			element: 'frost',
 			cdMax: 10,
 			manaCost: 5,
@@ -31,10 +31,10 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.03,
+			statMult: 0.032,
 			element: 'fire',
 			cdMax: 15,
-			manaCost: 5,
+			manaCost: 7,
 			dmgMult: 1.1,
 			random: {
 				damage: [6.7, 13.3],
@@ -44,7 +44,7 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 0.378,
+			statMult: 0.37,
 			element: 'holy',
 			auto: true,
 			needLos: true,
@@ -80,7 +80,7 @@ define([
 		},*/
 		'slash': {
 			statType: 'str',
-			statMult: 0.303,
+			statMult: 0.3065,
 			element: 'physical',
 			threatMult: 4,
 			auto: true,
@@ -92,7 +92,7 @@ define([
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.151,
+			statMult: 0.15833,
 			element: 'physical',
 			threatMult: 3,
 			cdMax: 5,
@@ -116,7 +116,7 @@ define([
 		},*/
 		'double slash': {
 			statType: 'dex',
-			statMult: 0.757,
+			statMult: 0.77,
 			element: 'physical',
 			cdMax: 3,
 			useWeaponRange: true,
@@ -127,7 +127,7 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 1.817,
+			statMult: 0.19,
 			element: 'poison',
 			cdMax: 5,
 			manaCost: 6,
@@ -147,15 +147,15 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 0.0205,
+			statMult: 0.0215,
 			element: 'physical',
-			manaCost: 5,
+			manaCost: 6,
 			needLos: true,
 			cdMax: 10,
 			range: 9,
 			random: {
 				damage: [9.3, 18.6],
-				i_delay: [4, 8]
+				i_delay: [2, 4]
 			},
 			negativeStats: [
 				'i_delay'
