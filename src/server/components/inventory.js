@@ -79,7 +79,7 @@ define([
 				newItem.pos = pos;
 			}
 
-			if ((this.obj.player) && (!isTransfer))
+			if ((this.obj.player) && (!isTransfer) && (this.obj.stats.values.level == 1))
 				this.getDefaultAbilities();
 
 			delete blueprint.items;
@@ -402,9 +402,6 @@ define([
 				this.items.spliceWhere(i => i.id == id);
 				this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
 			}
-
-			if (this.obj.player)
-				this.getDefaultAbilities();
 
 			this.obj.fireEvent('afterDestroyItem', item, amount);
 
