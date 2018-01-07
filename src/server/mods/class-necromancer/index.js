@@ -133,7 +133,7 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 0.1035,
+				statMult: 0.156,
 				element: 'physical',
 				auto: true,
 				cdMax: 6,

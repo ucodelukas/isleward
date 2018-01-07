@@ -9,7 +9,7 @@ define([
 
 	spells['harvest life'] = {
 		statType: ['str', 'int'],
-		statMult: 0.106,
+		statMult: 0.156,
 		element: 'physical',
 		auto: true,
 		cdMax: 6,
@@ -71,8 +71,9 @@ define([
 				var duration = c.random.i_duration;
 				if (duration) {
 					amount *= (duration[0] + ~~((duration[1] - duration[0]) / 2));
-					amount /= c.cdMax;
 				}
+
+				amount /= c.cdMax
 
 				res.push({
 					name: s,
