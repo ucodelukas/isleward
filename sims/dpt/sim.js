@@ -69,8 +69,10 @@ define([
 
 				var amount = combat.getDamage(config).amount;
 				var duration = c.random.i_duration;
-				if (duration)
+				if (duration) {
 					amount *= (duration[0] + ~~((duration[1] - duration[0]) / 2));
+					amount /= c.cdMax;
+				}
 
 				res.push({
 					name: s,
