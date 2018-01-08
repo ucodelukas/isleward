@@ -5,13 +5,39 @@ define([
 ) {
 	return {
 		generators: {
+			dmgPercent: function (item, level, blueprint, perfection) {
+				var max = (level / 3);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
+				else
+					return max * perfection * (blueprint.statMult.dmgPercent || 1);
+			},
+
+			addCritMultiplier: function (item, level, blueprint, perfection) {
+				var max = (level * 15);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
+				else
+					return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
+			},
+
+			addCritChance: function (item, level, blueprint, perfection) {
+				var max = (level * 15);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
+				else
+					return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
+			},
+
 			hpMax: function (item, level, blueprint, perfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				if (item.slot)
-					var max = ((level * 15) + level) * div;
+				var max = (((90.5 + (Math.pow(level, 3) * 0.75)) - (30 + (Math.pow(level, 3) * 0.072))) / 10) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
@@ -23,8 +49,8 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var min = ((level * 6.05) - ((level - 1) * 1.2)) * div;
-				var max = ((level * 14.9) + ((level - 1) * 31.49)) * div;
+				var min = (0.5 + (1.84 * level)) * div;
+				var max = (6 + (0.765 * Math.pow(level, 1.83))) * div;
 
 				if (perfection == null)
 					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
@@ -33,7 +59,7 @@ define([
 			},
 			armor: function (item, level, blueprint, perfection) {
 				var min = (level * 20);
-				var max = (level * 51.2);
+				var max = (level * 50);
 
 				if (perfection == null)
 					return random.norm(min, max) * blueprint.statMult.armor;
@@ -41,10 +67,14 @@ define([
 					return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 			},
 			elementResist: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
 				if (perfection == null)
-					return random.norm(1, 7.5) * (blueprint.statMult.elementResist || 1);
+					return random.norm(1, 10) * (blueprint.statMult.elementResist || 1) * div;
 				else
-					return (1 + (6.5 * perfection)) * (blueprint.statMult.elementResist || 1);
+					return (1 + (9 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
 			},
 			regenHp: function (item, level, blueprint, perfection) {
 				var div = 1 / 11;
@@ -128,7 +158,8 @@ define([
 			dmgPercent: {
 				min: 1,
 				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'lvlRequire'
 			},
 			elementArcanePercent: {
 				min: 1,
@@ -167,13 +198,13 @@ define([
 
 			attackSpeed: {
 				min: 1,
-				max: 7,
+				max: 8.75,
 				ignore: true
 			},
 
 			castSpeed: {
 				min: 1,
-				max: 7,
+				max: 8.75,
 				ignore: true
 			},
 
@@ -234,18 +265,19 @@ define([
 			trinket: {
 				attackSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75,
 				},
 				castSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75,
 				}
 			},
 
 			finger: {
 				dmgPercent: {
 					min: 1,
-					max: 5
+					max: 5,
+					generator: 'lvlRequire'
 				},
 				elementArcanePercent: {
 					min: 1,
@@ -276,18 +308,19 @@ define([
 				},
 				attackSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75
 				},
 				castSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75
 				}
 			},
 
 			neck: {
 				dmgPercent: {
 					min: 1,
-					max: 10
+					max: 10,
+					generator: 'lvlRequire'
 				},
 				elementArcanePercent: {
 					min: 1,
@@ -318,11 +351,11 @@ define([
 				},
 				attackSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75
 				},
 				castSpeed: {
 					min: 1,
-					max: 7
+					max: 8.75
 				}
 			}
 		},

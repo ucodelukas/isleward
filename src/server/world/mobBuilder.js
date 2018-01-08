@@ -116,7 +116,7 @@ define([
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = 10 + (level * 120);
+			var hp = level * 50;
 			statValues.hpMax = hp;
 
 			statValues.level = level;

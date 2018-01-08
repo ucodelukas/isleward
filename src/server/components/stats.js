@@ -222,7 +222,7 @@ define([
 				values.xp -= values.xpMax;
 				values.level++;
 
-				values.hpMax += 40;
+				values.hpMax += 50;
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,

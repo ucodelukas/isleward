@@ -31,25 +31,25 @@ define([
 		stats: {
 			wizard: {
 				values: {
-					hpMax: 80
+					hpMax: 50
 				},
 				vitScale: 10,
 			},
 			cleric: {
 				values: {
-					hpMax: 90
+					hpMax: 60
 				},
 				vitScale: 10
 			},
 			warrior: {
 				values: {
-					hpMax: 110
+					hpMax: 70
 				},
 				vitScale: 10
 			},
 			thief: {
 				values: {
-					hpMax: 100
+					hpMax: 80
 				},
 				vitScale: 10
 			}
