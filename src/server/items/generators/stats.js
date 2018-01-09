@@ -15,7 +15,11 @@ define([
 			},
 
 			addCritMultiplier: function (item, level, blueprint, perfection) {
-				var max = (level * 15);
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (level * 15) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
@@ -24,7 +28,11 @@ define([
 			},
 
 			addCritChance: function (item, level, blueprint, perfection) {
-				var max = (level - 3) * 50;
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (level - 3) * 50 * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
@@ -72,9 +80,9 @@ define([
 					div *= 2;
 
 				if (perfection == null)
-					return random.norm(1, 10) * (blueprint.statMult.elementResist || 1) * div;
+					return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 				else
-					return (1 + (9 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
+					return (1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
 			},
 			regenHp: function (item, level, blueprint, perfection) {
 				var div = 1 / 11;
@@ -229,9 +237,7 @@ define([
 				generator: 'addCritChance',
 				level: {
 					min: 3
-				},
-				min: 1,
-				max: 90
+				}
 			},
 			addCritMultiplier: {
 				generator: 'addCritMultiplier'
