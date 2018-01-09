@@ -43,13 +43,13 @@ define([
 			},
 			warrior: {
 				values: {
-					hpMax: 70
+					hpMax: 80
 				},
 				vitScale: 10
 			},
 			thief: {
 				values: {
-					hpMax: 80
+					hpMax: 70
 				},
 				vitScale: 10
 			}

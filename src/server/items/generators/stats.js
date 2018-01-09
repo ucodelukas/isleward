@@ -6,7 +6,7 @@ define([
 	return {
 		generators: {
 			dmgPercent: function (item, level, blueprint, perfection) {
-				var max = (level / 3);
+				var max = (level / 6);
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
@@ -24,12 +24,12 @@ define([
 			},
 
 			addCritChance: function (item, level, blueprint, perfection) {
-				var max = (level * 15);
+				var max = (level - 3) * 50;
 
 				if (perfection == null)
-					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
+					return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
 				else
-					return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
+					return max * perfection * (blueprint.statMult.addCritChance || 1);
 			},
 
 			hpMax: function (item, level, blueprint, perfection) {
@@ -49,8 +49,8 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var min = (0.5 + (1.84 * level)) * div;
-				var max = (6 + (0.765 * Math.pow(level, 1.83))) * div;
+				var min = (1 + (0.00477 * Math.pow(level, 2.8))) * div;
+				var max = (3 + (0.3825 * Math.pow(level, 1.83))) * div;
 
 				if (perfection == null)
 					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
@@ -81,7 +81,7 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var max = (((10 + (level * 200)) / 20) / 2) * div;
+				var max = (3 + (0.0364 * Math.pow(level, 2.8))) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
@@ -159,7 +159,7 @@ define([
 				min: 1,
 				max: 5,
 				ignore: true,
-				generator: 'lvlRequire'
+				generator: 'dmgPercent'
 			},
 			elementArcanePercent: {
 				min: 1,
@@ -226,12 +226,15 @@ define([
 			},
 
 			addCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 3
+				},
 				min: 1,
 				max: 90
 			},
 			addCritMultiplier: {
-				min: 5,
-				max: 50
+				generator: 'addCritMultiplier'
 			},
 
 			magicFind: {
