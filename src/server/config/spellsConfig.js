@@ -6,7 +6,7 @@ define([
 	var spells = {
 		'magic missile': {
 			statType: 'int',
-			statMult: 0.4,
+			statMult: 1.35,
 			element: 'arcane',
 			auto: true,
 			cdMax: 7,
@@ -18,12 +18,11 @@ define([
 		},
 		'ice spear': {
 			statType: 'int',
-			statMult: 0.29,
+			statMult: 0.724,
 			element: 'frost',
-			cdMax: 10,
+			cdMax: 12,
 			manaCost: 5,
 			range: 9,
-			dmgMult: 0.8,
 			random: {
 				damage: [4, 8],
 				i_freezeDuration: [6, 10]
@@ -31,11 +30,10 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.17,
+			statMult: 0.3,
 			element: 'fire',
-			cdMax: 15,
+			cdMax: 6,
 			manaCost: 7,
-			dmgMult: 1.1,
 			random: {
 				damage: [6.7, 13.3],
 				i_radius: [1, 2.2],
@@ -44,7 +42,7 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 0.55,
+			statMult: 4.06,
 			element: 'holy',
 			auto: true,
 			needLos: true,
@@ -80,7 +78,7 @@ define([
 		},*/
 		'slash': {
 			statType: 'str',
-			statMult: 0.475,
+			statMult: 1.87,
 			element: 'physical',
 			threatMult: 4,
 			auto: true,
@@ -92,16 +90,15 @@ define([
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.32,
+			statMult: 0.76,
 			element: 'physical',
 			threatMult: 3,
-			cdMax: 5,
+			cdMax: 15,
 			range: 10,
 			manaCost: 5,
-			dmgMult: 0.9,
 			random: {
 				damage: [4, 8],
-				i_stunDuration: [3, 7]
+				i_stunDuration: [6, 10]
 			}
 		},
 		/*'reflect damage': {
@@ -116,7 +113,7 @@ define([
 		},*/
 		'double slash': {
 			statType: 'dex',
-			statMult: 0.75,
+			statMult: 1.44,
 			element: 'physical',
 			cdMax: 3,
 			useWeaponRange: true,
@@ -127,11 +124,10 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 0.38,
+			statMult: 0.484,
 			element: 'poison',
-			cdMax: 5,
+			cdMax: 3,
 			manaCost: 6,
-			dmgMult: 1.2,
 			random: {
 				damage: [0.3, 0.7],
 				i_radius: [1, 3],
@@ -147,15 +143,15 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 0.075,
+			statMult: 4,
 			element: 'physical',
 			manaCost: 6,
 			needLos: true,
-			cdMax: 10,
+			cdMax: 20,
 			range: 9,
 			random: {
 				damage: [9.3, 18.6],
-				i_delay: [2, 4]
+				i_delay: [1, 4]
 			},
 			negativeStats: [
 				'i_delay'

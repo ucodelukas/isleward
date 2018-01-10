@@ -135,7 +135,8 @@ define([
 
 		addStat: function (item, result) {
 			generatorStats.generate(item, {
-				statCount: 1
+				statCount: 1,
+
 			}, result);
 		},
 

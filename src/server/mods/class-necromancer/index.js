@@ -133,7 +133,7 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 0.156,
+				statMult: 0.88,
 				element: 'physical',
 				auto: true,
 				cdMax: 6,
@@ -162,13 +162,13 @@ define([
 				statType: ['str', 'int'],
 				statMult: 0.1,
 				element: 'physical',
-				cdMax: 7,
+				cdMax: 20,
 				manaCost: 5,
 				range: 9,
 				random: {
 					i_drainPercentage: [10, 50],
 					shieldMultiplier: [2, 5],
-					i_frenzyDuration: [10, 20]
+					i_frenzyDuration: [5, 15]
 				}
 			};
 		},

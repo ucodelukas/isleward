@@ -34,25 +34,15 @@ define([
 
 			var statMult = config.statMult || 1;
 
-			var dps = (
-				(statMult * statValue * config.damage) *
-				max((0.5 + (dmgPercent / 100)), 0.5)
-			);
+			var amount = config.damage * statValue * statMult;
 
 			//Don't mitigate heals
 			if (!config.noMitigate) {
-				dps = (
-					dps *
-					max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 51.2))) / 2, -0.5), 0.5) *
-					max(0.5 + max((1 - (resist / 75)) / 2, -0.5), 0.5)
+				amount = (
+					amount *
+					max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5) *
+				max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5)
 				);
-			}
-
-			var amount = dps;
-
-			if ((config.source.mob) || (config.cd)) {
-				var cd = config.source.mob ? 1 : config.cd;
-				amount *= cd * 0.3;
 			}
 
 			var isCrit = false;

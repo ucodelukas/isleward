@@ -116,7 +116,7 @@ define([
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = level * 50;
+			var hp = ~~(30 + (Math.pow(level, 3) * 0.072));
 			statValues.hpMax = hp;
 
 			statValues.level = level;
@@ -192,18 +192,6 @@ define([
 				s.statType = preferStat;
 				s.element = elementType;
 				s.manaCost = 0;
-
-				/*var damage = combat.getDamage({
-					source: mob,
-					target: mob,
-					damage: (s.damage || s.healing) * (s.dmgMult || 1),
-					cd: s.cdMax,
-					element: s.element,
-					statType: s.statType,
-					statMult: s.statMult,
-					noMitigate: false,
-					noCrit: true
-				});*/
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {
