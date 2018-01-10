@@ -55,7 +55,7 @@ define([
 			for (var r in randomProperties) {
 				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
-				var roll = random.norm(0, 1);
+				var roll = random.expNorm(0, 1);
 				if (spellQuality == 'basic')
 					roll = 0;
 				else if (spellQuality == 'mid')

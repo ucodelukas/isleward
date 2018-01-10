@@ -8,17 +8,18 @@ define([
 	var spells = config.spells;
 
 	var max = true;
+	var maxTarget = true;
 
 	spells['harvest life'] = {
 		statType: ['str', 'int'],
-		statMult: 1.6,
+		statMult: 1.34,
 		element: 'physical',
 		auto: true,
 		cdMax: 6,
 		manaCost: 0,
 		range: 1,
 		random: {
-			damage: [2.2, 4.1],
+			damage: [1.5, 5.7],
 			healPercent: [5, 15]
 		}
 	};
@@ -26,14 +27,14 @@ define([
 	var bloodBarrierMult = 1.25;
 	spells['skeleton melee'] = {
 		statType: ['str', 'int'],
-		statMult: 0.81 * bloodBarrierMult,
+		statMult: 0.46 * bloodBarrierMult,
 		element: 'physical',
 		auto: true,
 		cdMax: 5,
 		manaCost: 0,
 		range: 1,
 		random: {
-			damage: [1, 1]
+			damage: [1, 3.8]
 		}
 	};
 
@@ -62,13 +63,36 @@ define([
 		606
 	];
 
+	var hpMax = [
+		91.25,
+		96.50,
+		110.75,
+		138.50,
+		184.25,
+		252.50,
+		347.75,
+		474.50,
+		637.25,
+		840.50,
+		1088.75,
+		1386.50,
+		1738.25,
+		2148.50,
+		2621.75,
+		3162.50,
+		3775.25,
+		4464.50,
+		5234.75,
+		6090.50
+	];
+
 	return {
 		init: function () {
 			var res = [];
 
 			for (var s in spells) {
 				var c = spells[s];
-				var d = c.random.damage;
+				var d = c.random.damage || c.random.healing;
 				if (!d)
 					continue;
 
@@ -82,6 +106,8 @@ define([
 					element: c.element,
 					cd: c.cdMax,
 					damage: damage,
+					noCrit: true,
+					noMitigate: !!c.random.healing,
 
 					source: {
 						stats: {
@@ -93,17 +119,15 @@ define([
 								elementPoisonPercent: 0,
 								elementPhysicalPercent: 0,
 								elementHolyPercent: 0,
-								elementFirePercent: 0,
-								critChance: max ? 50 : 5,
-								critMultiplier: max ? 300 : 150
+								elementFirePercent: 0
 							}
 						},
 					},
 					target: {
 						stats: {
 							values: {
-								armor: level * 50,
-								elementAllResist: 0,
+								armor: maxTarget ? (level * 50) : (level * 20),
+								elementAllResist: maxTarget ? 100 : 0,
 								elementArcaneResist: 0,
 								elementFrostResist: 0,
 								elementPoisonResist: 0,
@@ -129,17 +153,22 @@ define([
 				var amount = combat.getDamage(config).amount;
 				var duration = c.random.i_duration;
 				if (duration) {
-					amount *= (duration[0] + ~~((duration[1] - duration[0]) / 2));
+					amount *= max ? duration[1] : duration[0];
 				}
 
-				amount /= c.cdMax
+				amount /= c.cdMax;
+
+				var critChance = max ? 0.5 : 0.05;
+				var critMult = max ? 3 : 1.5;
+
+				amount = (amount * (1 - critChance)) + (amount * critChance * critMult);
 
 				res.push({
 					name: s,
 					dpt: (~~(amount * 10) / 10),
 					cd: c.cdMax,
 					mana: c.manaCost || '',
-					tpk: ~~(hp[level - 1] / amount),
+					tpk: ~~((maxTarget ? hpMax : hp)[level - 1] / amount),
 					amount: amount
 				});
 			}

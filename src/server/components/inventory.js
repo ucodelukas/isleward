@@ -525,7 +525,7 @@ define([
 				var item = generator.generate({
 					type: classes.weapons[this.obj.class],
 					quality: 0,
-					spellQuality: 'mid'
+					spellQuality: 'basic'
 				});
 				item.eq = true;
 				item.noSalvage = true;

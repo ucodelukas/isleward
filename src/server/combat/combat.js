@@ -41,7 +41,7 @@ define([
 				amount = (
 					amount *
 					max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5) *
-				max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5)
+					max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5)
 				);
 			}
 
