@@ -64,13 +64,21 @@ requirejs([
 		}, 60000);
 
 		process.on('uncaughtException', function (e) {
-			io.set({
-				ent: 'error',
-				field: 'error',
-				value: e.toString()
-			});
+			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+				return;
 
-			throw e;
+			console.log(123);
+
+			io.set({
+				ent: new Date(),
+				field: 'error',
+				value: e.toString() + ' | ' + e.stack.toString(),
+				callback: function () {
+					process.send({
+						event: 'onCrashed'
+					});
+				}
+			});
 		});
 	};
 

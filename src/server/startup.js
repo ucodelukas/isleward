@@ -68,13 +68,17 @@ define([
 		},
 
 		onError: function (e) {
-			io.set({
-				ent: 'error',
-				field: 'error',
-				value: e
-			});
+			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+				return;
 
-			throw e;
+			io.set({
+				ent: new Date(),
+				field: 'error',
+				value: e.toString() + ' | ' + e.stack.toString(),
+				callback: function () {
+					process.exit();
+				}
+			});
 		}
 	};
 });

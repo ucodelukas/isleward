@@ -1,6 +1,6 @@
 define([
 	'fs'
-], function(
+], function (
 	fs
 ) {
 	return {
@@ -17,19 +17,20 @@ define([
 			leaderboard: null,
 			customMap: null,
 			mail: null,
-			customChannels: null
+			customChannels: null,
+			error: null
 		},
 
-		init: function(cbReady) {
+		init: function (cbReady) {
 			var sqlite = require('sqlite3').verbose();
 			this.exists = fs.existsSync(this.file);
 			this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
 		},
-		onDbCreated: function(cbReady) {
+		onDbCreated: function (cbReady) {
 			var db = this.db;
 			var tables = this.tables;
 			var scope = this;
-			db.serialize(function() {
+			db.serialize(function () {
 				for (var t in tables) {
 
 					db.run(`
@@ -42,12 +43,12 @@ define([
 
 			this.exists = true;
 		},
-		onTableCreated: function() {
+		onTableCreated: function () {
 
 		},
 
 		//ent, field
-		get: function(options) {
+		get: function (options) {
 			var key = options.ent;
 			var table = options.field;
 
@@ -56,7 +57,7 @@ define([
 			this.db.get(options.query, this.done.bind(this, options));
 		},
 
-		delete: function(options) {
+		delete: function (options) {
 			var key = options.ent;
 			var table = options.field;
 
@@ -66,13 +67,13 @@ define([
 		},
 
 		//ent, field, value
-		set: function(options) {
+		set: function (options) {
 			var key = options.ent;
 			var table = options.field;
 
 			this.db.get(`SELECT 1 FROM ${table} where key = '${key}'`, this.doesExist.bind(this, options));
 		},
-		doesExist: function(options, err, result) {
+		doesExist: function (options, err, result) {
 			var key = options.ent;
 			var table = options.field;
 
@@ -84,7 +85,7 @@ define([
 			this.db.run(query, this.done.bind(this, options));
 		},
 
-		done: function(options, err, result) {
+		done: function (options, err, result) {
 			result = result || {
 				value: null
 			};
