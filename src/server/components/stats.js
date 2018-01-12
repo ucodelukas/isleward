@@ -9,8 +9,8 @@ define([
 		type: 'stats',
 
 		values: {
-			mana: 10,
-			manaMax: 10,
+			mana: 20,
+			manaMax: 20,
 
 			manaReservePercent: 0,
 
@@ -26,7 +26,7 @@ define([
 			magicFind: 0,
 			itemQuantity: 0,
 			regenHp: 0,
-			regenMana: 10,
+			regenMana: 5,
 			addCritChance: 0,
 			addCritMultiplier: 0,
 			critChance: 5,
@@ -133,7 +133,7 @@ define([
 			var regenHp = 0;
 			var regenMana = 0;
 
-			regenMana = (manaMax / 200) + (values.regenMana / 200);
+			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
 				regenHp = values.hpMax / 100;

@@ -116,7 +116,7 @@ define([
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = ~~(30 + (Math.pow(level, 3) * 0.072));
+			var hp = 2 * ~~(30 + (Math.pow(level, 3) * 0.072));
 			statValues.hpMax = hp;
 
 			statValues.level = level;

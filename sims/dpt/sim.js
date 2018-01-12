@@ -7,8 +7,8 @@ define([
 ) {
 	var spells = config.spells;
 
-	var max = true;
-	var maxTarget = true;
+	var max = false;
+	var maxTarget = false;
 
 	spells['harvest life'] = {
 		statType: ['str', 'int'],

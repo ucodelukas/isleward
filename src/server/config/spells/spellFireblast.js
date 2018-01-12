@@ -62,8 +62,6 @@ define([
 							noMsg: true
 						});
 
-						var ttl = 350;
-
 						var targetPos = {
 							x: m.x,
 							y: m.y
@@ -98,6 +96,9 @@ define([
 								targetPos.y += dy;
 							}
 						}
+
+						var distance = Math.max(Math.abs(m.x - targetPos.x), Math.abs(m.y - targetPos.y));
+						var ttl = distance * 125;
 
 						m.clearQueue();
 
