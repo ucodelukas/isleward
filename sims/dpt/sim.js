@@ -7,7 +7,7 @@ define([
 ) {
 	var spells = config.spells;
 
-	var max = false;
+	var max = true;
 	var maxTarget = false;
 
 	spells['harvest life'] = {
@@ -38,7 +38,7 @@ define([
 		}
 	};
 
-	var level = 20;
+	var level = 5;
 
 	var hp = [
 		30.07,

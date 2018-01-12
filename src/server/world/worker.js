@@ -62,6 +62,16 @@ requirejs([
 		setInterval(function () {
 			global.gc();
 		}, 60000);
+
+		process.on('uncaughtException', function (e) {
+			io.set({
+				ent: 'error',
+				field: 'error',
+				value: e.toString()
+			});
+
+			throw e;
+		});
 	};
 
 	var onCpnsReady = function () {

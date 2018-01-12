@@ -41,9 +41,12 @@ define([
 				global.gc();
 			}, 60000);
 
+			process.on('uncaughtException', this.onError.bind(this));
+
 			animations.init();
 			mods.init(this.onModsLoaded.bind(this));
 		},
+
 		onModsLoaded: function () {
 			globals.init();
 			classes.init();
@@ -52,14 +55,26 @@ define([
 			itemTypes.init();
 			components.init(this.onComponentsReady.bind(this));
 		},
+
 		onComponentsReady: function () {
 			skins.init();
 			factions.init();
 			server.init(this.onServerReady.bind(this));
 		},
+
 		onServerReady: function () {
 			atlas.init();
 			leaderboard.init();
+		},
+
+		onError: function (e) {
+			io.set({
+				ent: 'error',
+				field: 'error',
+				value: e
+			});
+
+			throw e;
 		}
 	};
 });
