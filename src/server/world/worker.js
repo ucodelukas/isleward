@@ -67,7 +67,7 @@ requirejs([
 			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 				return;
 
-			console.log(123);
+			console.log('Error Logged: ' + e.toString());
 
 			io.set({
 				ent: new Date(),
