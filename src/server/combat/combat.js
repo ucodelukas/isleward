@@ -24,17 +24,18 @@ define([
 
 			statValue = max(1, statValue);
 
-			var dmgPercent = srcValues.dmgPercent;
+			var dmgPercent = 100 + srcValues.dmgPercent;
 			var resist = tgtValues.elementAllResist;
 			if (config.element) {
 				var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 				dmgPercent += srcValues[elementName + 'Percent'];
 				resist += (tgtValues[elementName + 'Resist'] || 0);
 			}
+			dmgPercent /= 100;
 
 			var statMult = config.statMult || 1;
 
-			var amount = config.damage * statValue * statMult;
+			var amount = config.damage * statValue * statMult * dmgPercent;
 
 			//Don't mitigate heals
 			if (!config.noMitigate) {
