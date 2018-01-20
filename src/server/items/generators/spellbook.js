@@ -38,7 +38,7 @@ define([
 				item.name = 'Rune of ' + spellAesthetic.name;
 				item.ability = true;
 				item.sprite = sprite;
-			} else if (spellQuality == 'mid')
+			} else if (spellQuality == 'basic')
 				item.stats = {};
 
 			item.spell = {
@@ -55,7 +55,10 @@ define([
 			for (var r in randomProperties) {
 				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
-				var roll = random.expNorm(0, 1);
+
+				var max = Math.max(20, item.level) / 20;
+
+				var roll = random.expNorm(0, max);
 				if (spellQuality == 'basic')
 					roll = 0;
 				else if (spellQuality == 'mid')
@@ -73,9 +76,7 @@ define([
 
 				item.spell.values[r] = val;
 
-				if (roll <= 0.5)
-					propertyPerfection.push(0);
-				else if (negativeStat)
+				if (negativeStat)
 					propertyPerfection.push(1 - roll);
 				else
 					propertyPerfection.push(roll)
