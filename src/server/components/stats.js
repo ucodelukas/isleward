@@ -203,6 +203,9 @@ define([
 			var obj = this.obj;
 			var values = this.values;
 
+			if (values.level == 20)
+				return;
+
 			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
 
 			values.xpTotal = ~~(values.xpTotal + amount);
@@ -221,6 +224,9 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				values.level++;
+
+				if (values.level == 20)
+					values.xp = 0;
 
 				values.hpMax += 50;
 
