@@ -56,7 +56,7 @@ define([
 				var negativeStat = (negativeStats.indexOf(r) > -1);
 				var range = randomProperties[r];
 
-				var max = Math.max(20, item.level) / 20;
+				var max = Math.min(20, item.level) / 20;
 
 				var roll = random.expNorm(0, max);
 				if (spellQuality == 'basic')

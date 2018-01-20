@@ -194,7 +194,7 @@ define([
 
 		calcXpMax: function () {
 			var level = this.values.level;
-			this.values.xpMax = ~~(level * 10 * Math.pow(level, 1.75));
+			this.values.xpMax = ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
