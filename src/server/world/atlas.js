@@ -110,13 +110,8 @@ define([
 
 		send: function (zone, msg) {
 			var thread = this.getThreadFromId(zone);
-			if (thread) {
-				try {
-					thread.worker.send(msg);
-				} catch (e) {
-					console.log(msg);
-				}
-			}
+			if (thread)
+				thread.worker.send(msg);
 		},
 
 		getThreadFromId: function (id) {
@@ -147,7 +142,10 @@ define([
 		onMessage: function (thread, message) {
 			if (message.module)
 				global[message.module][message.method](message);
-			else
+			else if (message.event == 'onCrashed') {
+				thread.worker.kill();
+				process.exit();
+			} else
 				this.thread[message.method].call(this, thread, message);
 		},
 		thread: {

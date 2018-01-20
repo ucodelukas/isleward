@@ -116,12 +116,12 @@ define([
 
 			manaMax: {
 				min: 1,
-				max: 5
+				max: 8
 			},
 
 			regenMana: {
 				min: 1,
-				max: 7
+				max: 5
 			},
 
 			lvlRequire: {

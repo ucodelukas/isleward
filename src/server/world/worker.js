@@ -62,6 +62,24 @@ requirejs([
 		setInterval(function () {
 			global.gc();
 		}, 60000);
+
+		process.on('uncaughtException', function (e) {
+			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+				return;
+
+			console.log(123);
+
+			io.set({
+				ent: new Date(),
+				field: 'error',
+				value: e.toString() + ' | ' + e.stack.toString(),
+				callback: function () {
+					process.send({
+						event: 'onCrashed'
+					});
+				}
+			});
+		});
 	};
 
 	var onCpnsReady = function () {

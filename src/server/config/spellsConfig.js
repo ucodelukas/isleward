@@ -21,7 +21,7 @@ define([
 			statMult: 0.42,
 			element: 'frost',
 			cdMax: 12,
-			manaCost: 5,
+			manaCost: 4,
 			range: 9,
 			random: {
 				damage: [4, 15.2],
@@ -33,7 +33,7 @@ define([
 			statMult: 0.25,
 			element: 'fire',
 			cdMax: 6,
-			manaCost: 7,
+			manaCost: 5,
 			random: {
 				damage: [6, 22.9],
 				i_radius: [1, 2.2],
@@ -58,7 +58,7 @@ define([
 			statMult: 0.055,
 			element: 'holy',
 			cdMax: 10,
-			manaCost: 10,
+			manaCost: 8,
 			range: 9,
 			radius: 3,
 			random: {
@@ -95,7 +95,7 @@ define([
 			threatMult: 3,
 			cdMax: 15,
 			range: 10,
-			manaCost: 5,
+			manaCost: 3,
 			random: {
 				damage: [3.5, 13.3],
 				i_stunDuration: [6, 10]
@@ -145,7 +145,7 @@ define([
 			statType: ['dex', 'int'],
 			statMult: 3.18,
 			element: 'physical',
-			manaCost: 6,
+			manaCost: 22,
 			needLos: true,
 			cdMax: 20,
 			range: 9,
@@ -182,7 +182,7 @@ define([
 			auraRange: 9,
 			effect: 'regenMana',
 			random: {
-				regenPercentage: [5, 18]
+				regenPercentage: [4, 10]
 			}
 		},
 		'swiftness': {
