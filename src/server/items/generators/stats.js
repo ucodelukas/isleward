@@ -6,12 +6,21 @@ define([
 	return {
 		generators: {
 			dmgPercent: function (item, level, blueprint, perfection) {
-				var max = (level / 6);
+				var max = (level / 2);
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
 				else
 					return max * perfection * (blueprint.statMult.dmgPercent || 1);
+			},
+
+			elementDmgPercent: function (item, level, blueprint, perfection) {
+				var max = (level / 6.7);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
+				else
+					return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
 			},
 
 			addCritMultiplier: function (item, level, blueprint, perfection) {
@@ -164,40 +173,32 @@ define([
 			},
 
 			dmgPercent: {
-				min: 1,
-				max: 5,
 				ignore: true,
 				generator: 'dmgPercent'
 			},
 			elementArcanePercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementFrostPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementFirePercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementHolyPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementPhysicalPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementPoisonPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			allAttributes: {
 				generator: 'mainStat',
@@ -283,34 +284,23 @@ define([
 			},
 
 			finger: {
-				dmgPercent: {
-					min: 1,
-					max: 5,
-					generator: 'lvlRequire'
-				},
 				elementArcanePercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementFrostPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementFirePercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementHolyPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementPhysicalPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				allAttributes: {
 					generator: 'mainStat'
@@ -327,33 +317,25 @@ define([
 
 			neck: {
 				dmgPercent: {
-					min: 1,
-					max: 10,
-					generator: 'lvlRequire'
+					generator: 'dmgPercent'
 				},
 				elementArcanePercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementFrostPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementFirePercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementHolyPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementPhysicalPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				allAttributes: {
 					generator: 'mainStat'

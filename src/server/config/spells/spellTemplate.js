@@ -78,13 +78,15 @@ define([
 
 				var critChance = this.obj.stats.values.critChance;
 				var critMultiplier = this.obj.stats.values.critMultiplier;
+				var attackSpeed = (this.obj.stats.values.attackSpeed / 100);
+				attackSpeed += 1;
 
-				dmg = ((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100));
+				dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
 
 				if (this.damage) {
-					this.values.dmg = ~~(dmg * 10) / 10 + '/tick';
+					this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
 				} else
-					this.values.heal = ~~(dmg * 10) / 10 + '/tick';
+					this.values.heal = ~~(dmg * 100) / 100 + '/tick';
 
 				if (!noSync)
 					this.obj.syncer.setArray(true, 'spellbook', 'getSpells', this.simplify());
