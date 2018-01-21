@@ -189,12 +189,19 @@ define([
 					this.values[s] += value;
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
+			} else if (stat == 'elementAllResist') {
+				['arcane', 'frost', 'fire', 'holy', 'physical', 'poison'].forEach(function (s) {
+					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
+
+					this.values[element] += value;
+					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+				}, this);
 			}
 		},
 
 		calcXpMax: function () {
 			var level = this.values.level;
-			this.values.xpMax = ~~(level * 10 * Math.pow(level, 2.2));
+			this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
@@ -228,7 +235,7 @@ define([
 				if (values.level == 20)
 					values.xp = 0;
 
-				values.hpMax += 50;
+				values.hpMax = 30 + (Math.pow(values.level, 3) * 0.072);
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,

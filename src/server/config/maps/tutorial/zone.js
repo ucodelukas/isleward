@@ -372,7 +372,7 @@ module.exports = {
 			level: 2,
 			regular: {
 				drops: {
-					chance: 55,
+					chance: 60,
 					rolls: 1
 				}
 			},
@@ -388,7 +388,7 @@ module.exports = {
 			level: 3,
 			regular: {
 				drops: {
-					chance: 50,
+					chance: 56,
 					rolls: 1
 				}
 			},

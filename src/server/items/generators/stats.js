@@ -135,7 +135,7 @@ define([
 
 			lvlRequire: {
 				level: {
-					min: 2
+					min: 5
 				},
 				generator: 'lvlRequire'
 			},
@@ -150,25 +150,52 @@ define([
 				generator: 'mainStat'
 			},
 
+			elementAllResist: {
+				level: {
+					min: 25
+				},
+				generator: 'elementResist'
+			},
 			elementArcaneResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementFrostResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementFireResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementHolyResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementPhysicalResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementPoisonResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementAllResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 
@@ -177,26 +204,44 @@ define([
 				generator: 'dmgPercent'
 			},
 			elementArcanePercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
 			elementFrostPercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
 			elementFirePercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
 			elementHolyPercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
 			elementPhysicalPercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
 			elementPoisonPercent: {
+				level: {
+					min: 10
+				},
 				ignore: true,
 				generator: 'elementDmgPercent'
 			},
@@ -237,11 +282,14 @@ define([
 			addCritChance: {
 				generator: 'addCritChance',
 				level: {
-					min: 3
+					min: 7
 				}
 			},
 			addCritMultiplier: {
-				generator: 'addCritMultiplier'
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
 			},
 
 			magicFind: {

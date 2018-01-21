@@ -13,7 +13,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 6
 			},
-			level: 10,
+			level: 11,
 
 			regular: {
 				drops: {
@@ -21,7 +21,7 @@ module.exports = {
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 8,
+						chance: 5,
 						type: 'key',
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
@@ -41,7 +41,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 15
 			},
-			level: 12,
+			level: 13,
 
 			regular: {
 				drops: {
@@ -49,7 +49,7 @@ module.exports = {
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 2.5,
+						chance: 1.5,
 						type: 'key',
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
@@ -71,7 +71,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 18
 			},
-			level: 14,
+			level: 11,
 
 			rare: {
 				count: 0
@@ -79,7 +79,7 @@ module.exports = {
 		},
 
 		whiskers: {
-			level: 14,
+			level: 13,
 
 			rare: {
 				count: 0
@@ -91,7 +91,7 @@ module.exports = {
 			grantRep: {
 				fjolgard: 25
 			},
-			level: 16,
+			level: 14,
 
 			regular: {
 				drops: {

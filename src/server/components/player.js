@@ -46,7 +46,7 @@ define([
 
 			var blueprintStats = character.components.find(c => c.type == 'stats') || {};
 			extend(true, blueprintStats, classes.stats[obj.class]);
-			blueprintStats.values.hpMax = 10 + ((blueprintStats.values.level || 1) * 40);
+			blueprintStats.values.hpMax = 30 + (Math.pow(blueprintStats.values.level || 1, 3) * 0.072);
 			if (!blueprintStats.values.hp)
 				blueprintStats.values.hp = blueprintStats.values.hpMax;
 			var stats = obj.addComponent('stats');

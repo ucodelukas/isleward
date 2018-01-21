@@ -32,6 +32,7 @@ define([
 		'elementPhysicalPercent': 'increased physical damage',
 		'elementPoisonPercent': 'increased poison damage',
 
+		'elementAllResist': 'all resistance',
 		'elementArcaneResist': 'arcane resistance',
 		'elementFrostResist': 'frost resistance',
 		'elementFireResist': 'fire resistance',

@@ -1544,12 +1544,10 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnAggro":"{ \"faction\": 1}",
                      "cpnLight":"{}"
                     },
                  "propertytypes":
                     {
-                     "cpnAggro":"string",
                      "cpnLight":"string"
                     },
                  "rotation":0,
@@ -1566,12 +1564,10 @@
                  "name":"Torch",
                  "properties":
                     {
-                     "cpnAggro":"{ \"faction\": 1}",
                      "cpnLight":"{}"
                     },
                  "propertytypes":
                     {
-                     "cpnAggro":"string",
                      "cpnLight":"string"
                     },
                  "rotation":0,
