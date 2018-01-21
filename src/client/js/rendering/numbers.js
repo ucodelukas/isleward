@@ -2,7 +2,7 @@ define([
 	'js/system/events',
 	'js/objects/objects',
 	'js/rendering/renderer'
-], function(
+], function (
 	events,
 	objects,
 	renderer
@@ -13,12 +13,14 @@ define([
 	return {
 		list: [],
 
-		init: function() {
+		init: function () {
 			events.on('onGetDamage', this.onGetDamage.bind(this));
 		},
 
-		onGetDamage: function(msg) {
-			var target = objects.objects.find(function(o) { return (o.id == msg.id); });
+		onGetDamage: function (msg) {
+			var target = objects.objects.find(function (o) {
+				return (o.id == msg.id);
+			});
 			if (!target)
 				return;
 
@@ -37,19 +39,21 @@ define([
 				text: msg.text,
 				crit: msg.crit,
 				heal: msg.heal
-			};	
+			};
 
 			if (numberObj.event) {
 				numberObj.y += (scale / 2);
-			}
-			else if (numberObj.heal)
+			} else if (numberObj.heal)
 				numberObj.x -= scale;
 			else
 				numberObj.x += scale;
 
 			var text = numberObj.text;
-			if (!numberObj.event)
-				text = (numberObj.heal ? '+' : '') + (~~(numberObj.amount * 10) / 10);
+			if (!numberObj.event) {
+				var amount = numberObj.amount;
+				var div = ((~~(amount * 10) / 10) > 0) ? 10 : 100;
+				text = (numberObj.heal ? '+' : '') + (~~(amount * div) / div);
+			}
 
 			numberObj.sprite = renderer.buildText({
 				fontSize: numberObj.crit ? 22 : 18,
@@ -62,7 +66,7 @@ define([
 			this.list.push(numberObj);
 		},
 
-		render: function() {
+		render: function () {
 			var list = this.list;
 			var lLen = list.length;
 

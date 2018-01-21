@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -15,7 +15,7 @@ define([
 
 		bounds: [0, 0, 0, 0],
 
-		generate: function(instance) {
+		generate: function (instance) {
 			this.rooms = [];
 			this.exitAreas = [];
 			this.tileMappings = {};
@@ -38,7 +38,7 @@ define([
 			}
 		},
 
-		isValidDungeon: function() {
+		isValidDungeon: function () {
 			var endRooms = this.rooms.filter(r => r.connections.length == 0);
 			var endDistanceReached = endRooms.find(r => r.distance == this.maxDistance, this);
 
@@ -48,7 +48,7 @@ define([
 			var valid = true;
 
 			endRooms
-				.forEach(function(r) {
+				.forEach(function (r) {
 					if (r.distance < this.minDistance)
 						valid = false;
 					else if (r.distance > this.maxDistance)
@@ -58,8 +58,8 @@ define([
 			return valid;
 		},
 
-		setupTemplates: function(map) {
-			this.templates.forEach(function(r, typeId) {
+		setupTemplates: function (map) {
+			this.templates.forEach(function (r, typeId) {
 				if (r.properties.mapping)
 					return;
 
@@ -77,7 +77,7 @@ define([
 								rotate: !!k
 							}, r);
 
-							flipped.exits.forEach(function(e) {
+							flipped.exits.forEach(function (e) {
 								var direction = JSON.parse(e.properties.exit);
 
 								if (flipped.flipX) {
@@ -101,7 +101,7 @@ define([
 								e.properties.exit = JSON.stringify(direction);
 							});
 
-							flipped.objects.forEach(function(o) {
+							flipped.objects.forEach(function (o) {
 								if (flipped.flipX)
 									o.x = r.x + r.width - (o.x - r.x) - 1;
 								if (flipped.flipY)
@@ -125,7 +125,7 @@ define([
 				}
 			}, this);
 
-			this.templates.forEach(function(r) {
+			this.templates.forEach(function (r) {
 				var rotate = r.rotate;
 				var w = rotate ? r.height : r.width;
 				var h = rotate ? r.width : r.height;
@@ -151,12 +151,12 @@ define([
 			});
 		},
 
-		generateMappings: function(map) {
+		generateMappings: function (map) {
 			var oldMap = map.oldMap;
 
 			this.templates
 				.filter(r => r.properties.mapping)
-				.forEach(function(m) {
+				.forEach(function (m) {
 					var x = m.x;
 					var y = m.y;
 					var w = m.width;
@@ -189,7 +189,7 @@ define([
 				}, this);
 		},
 
-		buildMap: function(instance, startRoom) {
+		buildMap: function (instance, startRoom) {
 			var w = this.bounds[2] - this.bounds[0];
 			var h = this.bounds[3] - this.bounds[1];
 
@@ -214,7 +214,7 @@ define([
 			this.spawnObjects(instance, startRoom);
 		},
 
-		fillGaps: function(instance) {
+		fillGaps: function (instance) {
 			var map = instance.map.clientMap.map;
 			var oldMap = instance.map.oldMap;
 			var w = map.length;
@@ -248,7 +248,7 @@ define([
 			}
 		},
 
-		randomizeTile: function(tile, floorTile, gapMapping) {
+		randomizeTile: function (tile, floorTile, gapMapping) {
 			var mapping = gapMapping ? this.gapMappings[tile] : this.tileMappings[tile];
 			if (!mapping)
 				return tile;
@@ -264,7 +264,7 @@ define([
 			return tile;
 		},
 
-		drawRoom: function(instance, room) {
+		drawRoom: function (instance, room) {
 			var map = instance.map.clientMap.map;
 			var template = room.template;
 			var collisionMap = instance.map.clientMap.collisionMap;
@@ -288,7 +288,7 @@ define([
 						continue;
 					} else {
 						//Remove objects from this position since it falls in another room
-						template.objects.spliceWhere(function(o) {
+						template.objects.spliceWhere(function (o) {
 							var ox = o.x - template.x + room.x;
 							var oy = o.y - template.y + room.y;
 							return ((ox == x) && (oy == y));
@@ -298,11 +298,11 @@ define([
 					var didCollide = collisionMap[x][y];
 					if (collides) {
 						if (didCollide) {
-							var isExitTile = this.exitAreas.find(function(e) {
+							var isExitTile = this.exitAreas.find(function (e) {
 								return (!((x < e.x) || (y < e.y) || (x >= e.x + e.width) || (y >= e.y + e.height)));
 							});
 							if (isExitTile) {
-								var isThisExit = template.oldExits.find(function(e) {
+								var isThisExit = template.oldExits.find(function (e) {
 									var ex = room.x + (e.x - template.x);
 									var ey = room.y + (e.y - template.y);
 									return (!((x < ex) || (y < ey) || (x >= ex + e.width) || (y >= ey + e.height)));
@@ -321,7 +321,7 @@ define([
 				}
 			}
 
-			template.oldExits.forEach(function(e) {
+			template.oldExits.forEach(function (e) {
 				this.exitAreas.push({
 					x: room.x + (e.x - template.x),
 					y: room.y + (e.y - template.y),
@@ -333,14 +333,14 @@ define([
 			room.connections.forEach(c => this.drawRoom(instance, c), this);
 		},
 
-		spawnObjects: function(instance, room) {
+		spawnObjects: function (instance, room) {
 			var template = room.template;
 			var spawners = instance.spawners;
 			var spawnCd = instance.map.mapFile.properties.spawnCd;
 
 			var collisionMap = instance.map.clientMap.collisionMap;
 
-			template.objects.forEach(function(o) {
+			template.objects.forEach(function (o) {
 				o.x = o.x - template.x + room.x;
 				o.y = o.y - template.y + room.y;
 
@@ -354,7 +354,7 @@ define([
 			room.connections.forEach(c => this.spawnObjects(instance, c), this);
 		},
 
-		buildRoom: function(template, connectTo, templateExit, connectToExit, isHallway) {
+		buildRoom: function (template, connectTo, templateExit, connectToExit, isHallway) {
 			var room = {
 				x: 0,
 				y: 0,
@@ -397,13 +397,13 @@ define([
 			return room;
 		},
 
-		setupConnection: function(fromRoom, isHallway) {
+		setupConnection: function (fromRoom, isHallway) {
 			if (fromRoom.template.exits.length == 0)
 				return true;
 
 			var fromExit = fromRoom.template.exits.splice(this.randInt(0, fromRoom.template.exits.length), 1)[0];
 			var exitDirection = JSON.parse(fromExit.properties.exit);
-			var templates = this.templates.filter(function(t) {
+			var templates = this.templates.filter(function (t) {
 				if (
 					(t.properties.mapping) ||
 					(!!t.properties.hallway != isHallway) ||
@@ -415,7 +415,7 @@ define([
 				)
 					return false;
 				else {
-					var isValid = t.exits.some(function(e) {
+					var isValid = t.exits.some(function (e) {
 						var direction = JSON.parse(e.properties.exit);
 						return ((direction[0] == -exitDirection[0]) && (direction[1] == -exitDirection[1]));
 					});
@@ -429,7 +429,7 @@ define([
 					if ((isValid) && (fromRoom.distance + 1 == this.maxDistance)) {
 						//If there is an exit available, rather use that
 						if (!t.properties.end) {
-							var endsAvailable = this.templates.filter(function(tt) {
+							var endsAvailable = this.templates.filter(function (tt) {
 								if (!tt.properties.end)
 									return false;
 								else if (!~~tt.properties.maxOccur)
@@ -454,7 +454,7 @@ define([
 
 			var template = extend(true, {}, templates[this.randInt(0, templates.length)]);
 
-			var templateExit = template.exits.filter(function(e) {
+			var templateExit = template.exits.filter(function (e) {
 				var direction = JSON.parse(e.properties.exit);
 				return ((direction[0] == -exitDirection[0]) && (direction[1] == -exitDirection[1]));
 			});
@@ -472,7 +472,7 @@ define([
 			return true;
 		},
 
-		offsetRooms: function(room) {
+		offsetRooms: function (room) {
 			var bounds = this.bounds;
 			var dx = (this.bounds[0] < 0) ? -bounds[0] : 0;
 			var dy = (this.bounds[1] < 0) ? -bounds[1] : 0;
@@ -482,21 +482,21 @@ define([
 			this.bounds = [bounds[0] + dx, bounds[1] + dy, bounds[2] + dx, bounds[3] + dy];
 		},
 
-		performOffset: function(room, dx, dy) {
+		performOffset: function (room, dx, dy) {
 			room.x += dx;
 			room.y += dy;
 
 			room.connections.forEach(c => this.performOffset(c, dx, dy), this);
 		},
 
-		updateBounds: function(room) {
+		updateBounds: function (room) {
 			this.bounds[0] = Math.min(this.bounds[0], room.x);
 			this.bounds[1] = Math.min(this.bounds[1], room.y);
 			this.bounds[2] = Math.max(this.bounds[2], room.x + room.template.width);
 			this.bounds[3] = Math.max(this.bounds[3], room.y + room.template.height);
 		},
 
-		doesCollide: function(room, ignore) {
+		doesCollide: function (room, ignore) {
 			for (var i = 0; i < this.rooms.length; i++) {
 				var r = this.rooms[i];
 				if (r == ignore)
@@ -515,7 +515,7 @@ define([
 			return false;
 		},
 
-		randInt: function(min, max) {
+		randInt: function (min, max) {
 			return ~~(Math.random() * (max - min)) + min;
 		}
 	};

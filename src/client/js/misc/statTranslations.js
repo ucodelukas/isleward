@@ -13,6 +13,8 @@ define([
 		'int': 'intellect',
 		'dex': 'dexterity',
 		'armor': 'armor',
+		'blockAttackChance': 'chance to block attacks',
+		'blockSpellChance': 'chance to block spells',
 		'addCritChance': 'increased crit chance',
 		'addCritMultiplier': 'increased crit multiplier',
 		'magicFind': 'increased item quality',

@@ -189,10 +189,20 @@ define([
 		},
 		offHand: {
 			'Wooden Shield': {
-				sprite: [13, 0]
+				sprite: [13, 0],
+				armorMult: 0.3,
+				blockAttackMult: 1
 			},
 			'Gilded Shield': {
-				sprite: [13, 1]
+				sprite: [13, 1],
+				armorMult: 0.6,
+				blockAttackMult: 0.5
+			},
+			'Brittle Tome': {
+				sprite: [13, 2]
+			},
+			'Ancient Tome': {
+				sprite: [13, 3]
 			}
 		},
 		tool: {

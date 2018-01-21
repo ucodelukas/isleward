@@ -259,15 +259,21 @@ define([
 					return true;
 				}
 
-				if (!action.isDouble) {
-					var deltaX = Math.abs(this.x - data.x);
-					var deltaY = Math.abs(this.y - data.y);
-					if (
-						((deltaX > 1) || (deltaY > 1)) ||
-						((deltaX == 0) && (deltaY == 0))
+				var maxDistance = action.isDouble ? 2 : 1;
+
+				var deltaX = Math.abs(this.x - data.x);
+				var deltaY = Math.abs(this.y - data.y);
+				if (
+					(
+						(deltaX > maxDistance) ||
+						(deltaY > maxDistance)
+					) ||
+					(
+						(deltaX == 0) &&
+						(deltaY == 0)
 					)
-						return false;
-				}
+				)
+					return false;
 			}
 
 			//Don't allow mob overlap during combat

@@ -147,7 +147,10 @@ define([
 		onMessage: function (thread, message) {
 			if (message.module)
 				global[message.module][message.method](message);
-			else
+			else if (message.event == 'onCrashed') {
+				thread.worker.kill();
+				process.exit();
+			} else
 				this.thread[message.method].call(this, thread, message);
 		},
 		thread: {

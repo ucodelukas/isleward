@@ -26,6 +26,15 @@ define([
 
 			if ((typeBlueprint.material) && (blueprint.statMult.armor))
 				blueprint.statMult.armor *= armorMaterials[typeBlueprint.material].statMult.armor;
+
+			if (typeBlueprint.armorMult)
+				blueprint.statMult.armor = typeBlueprint.armorMult;
+
+			if (typeBlueprint.blockAttackMult)
+				blueprint.statMult.blockAttackChance = typeBlueprint.blockAttackMult;
+
+			if (typeBlueprint.blockSpellMult)
+				blueprint.statMult.blockSpellChance = typeBlueprint.blockSpellMult;
 		}
 	}
 });

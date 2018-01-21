@@ -206,7 +206,7 @@ define([
 
 					var hoverCellItem = this.hoverCell.data('item');
 					if (hoverCellItem) {
-						if (hoverCellItem.name != this.dragItem.data('item').name) {
+						if ((hoverCellItem.name != this.dragItem.data('item').name) || (!hoverCellItem.quantity)) {
 							msgs.push({
 								id: hoverCellItem.id,
 								pos: this.hoverCell.index()

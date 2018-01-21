@@ -137,11 +137,13 @@ define([
 			},
 
 			'Level 15 Legendary Weapon': function () {
+				var slot = ['oneHanded', 'twoHanded'][~~(Math.random() * 2)];
+
 				return itemGenerator.generate({
 					level: 15,
 					quality: 4,
 					noSpell: true,
-					slot: 'twoHanded'
+					slot: slot
 				});
 			},
 

@@ -116,7 +116,7 @@ define([
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = 10 + (level * 120);
+			var hp = ~~(30 + (Math.pow(level, 3) * 0.072));
 			statValues.hpMax = hp;
 
 			statValues.level = level;
@@ -163,8 +163,6 @@ define([
 					spell: true
 				});
 				rune.eq = true;
-				if (i == 0)
-					rune.spell.cdMult = 5;
 				mob.inventory.getItem(rune);
 			}
 
@@ -172,8 +170,8 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				hpMult *= [0.0077, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
-				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
+				statValues.hpMax = ~~(statValues.hpMax * (level / 10));
+				//dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
 			}
 
 			if (mob.isRare) {
@@ -195,18 +193,6 @@ define([
 				s.statType = preferStat;
 				s.element = elementType;
 				s.manaCost = 0;
-
-				/*var damage = combat.getDamage({
-					source: mob,
-					target: mob,
-					damage: (s.damage || s.healing) * (s.dmgMult || 1),
-					cd: s.cdMax,
-					element: s.element,
-					statType: s.statType,
-					statMult: s.statMult,
-					noMitigate: false,
-					noCrit: true
-				});*/
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {

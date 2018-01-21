@@ -9,8 +9,8 @@ define([
 		type: 'stats',
 
 		values: {
-			mana: 10,
-			manaMax: 10,
+			mana: 20,
+			manaMax: 20,
 
 			manaReservePercent: 0,
 
@@ -26,13 +26,16 @@ define([
 			magicFind: 0,
 			itemQuantity: 0,
 			regenHp: 0,
-			regenMana: 10,
+			regenMana: 5,
 			addCritChance: 0,
 			addCritMultiplier: 0,
 			critChance: 5,
 			critMultiplier: 150,
 			armor: 0,
 			dmgPercent: 0,
+
+			blockAttackChance: 0,
+			blockSpellChance: 0,
 
 			attackSpeed: 0,
 			castSpeed: 0,
@@ -130,7 +133,7 @@ define([
 			var regenHp = 0;
 			var regenMana = 0;
 
-			regenMana = (manaMax / 200) + (values.regenMana / 200);
+			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
 				regenHp = values.hpMax / 100;
@@ -191,7 +194,7 @@ define([
 
 		calcXpMax: function () {
 			var level = this.values.level;
-			this.values.xpMax = ~~(level * 10 * Math.pow(level, 1.75));
+			this.values.xpMax = ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
@@ -199,6 +202,9 @@ define([
 		getXp: function (amount) {
 			var obj = this.obj;
 			var values = this.values;
+
+			if (values.level == 20)
+				return;
 
 			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
 
@@ -219,7 +225,10 @@ define([
 				values.xp -= values.xpMax;
 				values.level++;
 
-				values.hpMax += 40;
+				if (values.level == 20)
+					values.xp = 0;
+
+				values.hpMax += 50;
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,
@@ -347,12 +356,21 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					source: source.id,
-					crit: damage.crit,
-					amount: amount
-				}, recipients);
+				if (!damage.blocked) {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						crit: damage.crit,
+						amount: amount
+					}, recipients);
+				} else {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						event: true,
+						text: 'blocked'
+					}, recipients);
+				}
 			}
 
 			this.obj.aggro.tryEngage(source, amount, threatMult);

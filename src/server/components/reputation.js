@@ -57,7 +57,9 @@ define([
 				faction = this.list.find(l => l.id == factionId);
 			}
 
-			return faction.tier;
+			return (faction || {
+				tier: 3
+			}).tier;
 		},
 
 		canEquipItem: function (item) {
@@ -156,6 +158,9 @@ define([
 
 			var fullSync = (this.factions[factionId] == null);
 			var blueprint = this.getBlueprint(factionId);
+
+			if (!blueprint)
+				return;
 
 			this.list.push({
 				id: factionId,

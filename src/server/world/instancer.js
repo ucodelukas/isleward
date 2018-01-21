@@ -365,7 +365,6 @@ define([
 					obj.y = spawnPos.y;
 				}
 
-				obj.instance.spawners.scale(obj.stats.values.level);
 				obj.instance.questBuilder.obtain(obj);
 
 				if (obj.player)
@@ -516,7 +515,6 @@ define([
 					obj.y = spawnPos.y;
 
 					instance.questBuilder.obtain(obj);
-					obj.instance.spawners.scale(obj.stats.values.level);
 				}
 
 				process.send({

@@ -26,7 +26,8 @@ define([
 		clearInventory: 10,
 		completeQuests: 10,
 		getReputation: 10,
-		loseReputation: 10
+		loseReputation: 10,
+		setStat: 10
 	};
 
 	var localCommands = [
@@ -230,6 +231,9 @@ define([
 			var safe = config.safe;
 			delete config.safe;
 
+			var eq = config.eq;
+			delete config.eq;
+
 			var item = generator.generate(config);
 
 			if (safe) {
@@ -255,7 +259,10 @@ define([
 			if (spritesheet)
 				item.spritesheet = spritesheet;
 
-			this.obj.inventory.getItem(item);
+			var newItem = this.obj.inventory.getItem(item);
+
+			if (eq)
+				this.obj.equipment.equip(newItem.id);
 		},
 
 		getGold: function (amount) {
@@ -345,6 +352,10 @@ define([
 				return;
 
 			this.obj.reputation.getReputation(faction, -50000);
+		},
+
+		setStat: function (config) {
+			this.obj.stats.values[config.stat] = ~~config.value;
 		}
 	};
 });

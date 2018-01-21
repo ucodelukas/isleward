@@ -60,7 +60,7 @@ define([
 
 			var social = simple.components.find(c => c.type == 'social');
 			delete social.party;
-			delete social.customChannelsl
+			delete social.customChannels;
 
 			var statKeys = Object.keys(stats.values);
 			var sLen = statKeys.length;
@@ -145,8 +145,12 @@ define([
 		},
 
 		getCharacter: function (data) {
+			var name = data.data.name;
+			if (!this.characterList.some(c => ((c.name == name) || (c == name))))
+				return;
+
 			io.get({
-				ent: data.data.name,
+				ent: name,
 				field: 'character',
 				callback: this.onGetCharacter.bind(this, data)
 			});
@@ -160,9 +164,9 @@ define([
 			var character = JSON.parse(result || '{}');
 
 			//Hack for old characters
-			if (!character.skinId) {
+			if (!character.skinId)
 				character.skinId = character.class + ' 1';
-			}
+
 			character.cell = skins.getCell(character.skinId);
 			character.sheetName = skins.getSpritesheet(character.skinId);
 
@@ -207,26 +211,29 @@ define([
 		onGetStash: function (data, character, result) {
 			this.stash = JSON.parse(result || '[]');
 
-			if (this.skins != null)
+			if (this.skins != null) {
+				this.verifySkin(character);
 				data.callback(character);
-			else {
+			} else {
 				data.callback = data.callback.bind(null, character);
-				this.getSkins(data);
+				this.getSkins(data, character);
 			}
 		},
 
-		getSkins: function (msg) {
+		getSkins: function (msg, character) {
 			io.get({
 				ent: this.username,
 				field: 'skins',
-				callback: this.onGetSkins.bind(this, msg)
+				callback: this.onGetSkins.bind(this, msg, character)
 			});
 		},
 
-		onGetSkins: function (msg, result) {
+		onGetSkins: function (msg, character, result) {
 			this.skins = JSON.parse(result || '[]');
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
+
+			this.verifySkin(character);
 
 			msg.callback(skinList);
 		},
@@ -252,6 +259,21 @@ define([
 
 		onSaveSkin: function () {
 
+		},
+
+		verifySkin: function (character) {
+			if (!character)
+				return;
+
+			var list = [...this.skins, ...roles.getSkins(this.username)];
+			var skinList = skins.getSkinList(list);
+
+			if (!skinList[character.class].some(s => (s.id == character.skinId))) {
+				character.skinId = character.class + ' 1';
+
+				character.cell = skins.getCell(character.skinId);
+				character.sheetName = skins.getSpritesheet(character.skinId);
+			}
 		},
 
 		doesOwnSkin: function (skinId) {
