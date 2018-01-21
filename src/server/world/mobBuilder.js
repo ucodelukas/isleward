@@ -160,8 +160,6 @@ define([
 					spell: true
 				});
 				rune.eq = true;
-				if (i == 0)
-					rune.spell.cdMult = 5;
 				mob.inventory.getItem(rune);
 			}
 

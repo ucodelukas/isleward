@@ -230,6 +230,9 @@ define([
 			var safe = config.safe;
 			delete config.safe;
 
+			var eq = config.eq;
+			delete config.eq;
+
 			var item = generator.generate(config);
 
 			if (safe) {
@@ -255,7 +258,10 @@ define([
 			if (spritesheet)
 				item.spritesheet = spritesheet;
 
-			this.obj.inventory.getItem(item);
+			var newItem = this.obj.inventory.getItem(item);
+
+			if (eq)
+				this.obj.equipment.equip(newItem.id);
 		},
 
 		getGold: function (amount) {

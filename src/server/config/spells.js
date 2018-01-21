@@ -59,7 +59,7 @@ define([
 				},
 				lifetime: {
 					min: 1,
-					max: 4
+					max: 2
 				},
 				alpha: {
 					start: 0.8,

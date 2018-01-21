@@ -5,14 +5,14 @@ module.exports = {
 	resources: {},
 	mobs: {
 		default: {
-			faction: 2,
+			faction: 'hostile',
 			grantRep: {
 				gaekatla: 15
 			},
 
 			regular: {
-				hpMult: 1.5,
-				dmgMult: 2,
+				hpMult: 4,
+				dmgMult: 2.2,
 
 				drops: {
 					chance: 45,
@@ -22,44 +22,153 @@ module.exports = {
 			}
 		},
 		'giant gull': {
-			level: 6,
+			level: 15,
 			questItem: {
 				name: 'Gull Feather',
 				sprite: [0, 0]
 			}
 		},
 		'fanged rabbit': {
-			level: 7
+			level: 15
 		},
 		'ghastly toad': {
-			level: 8
+			level: 16
+		},
+		'overgrown beaver': {
+			level: 16
 		},
 		'huge flamingo': {
-			level: 9,
+			level: 17,
 			questItem: {
-				name: 'Gull Feather',
+				name: 'Flamingo Feather',
 				sprite: [0, 0]
 			}
 		},
-		'overgrown beaver': {
-			level: 10
-		},
 		'ironskull goat': {
-			level: 10
-		},
-		'king gator': {
-			level: 12
+			level: 18
 		},
 		"m'ogresh": {
-			level: 12,
-			isChampion: true,
+			level: 20,
 			grantRep: {
 				gaekatla: 120
+			},
+			regular: {
+				hpMult: 10,
+				dmgMult: 3,
+
+				drops: {
+					chance: 100,
+					rolls: 3,
+					magicFind: [2000, 125]
+				}
 			},
 			spells: [{
 				type: 'melee',
 				range: 2,
 				animation: 'basic'
+			}, {
+				type: 'warnBlast',
+				range: 2,
+				animation: 'basic',
+				statMult: 0.01,
+				particles: {
+					color: {
+						start: ['c0c3cf', '929398'],
+						end: ['929398', 'c0c3cf']
+					},
+					scale: {
+						start: {
+							min: 4,
+							max: 10
+						},
+						end: {
+							min: 0,
+							max: 4
+						}
+					},
+					speed: {
+						start: {
+							min: 2,
+							max: 16
+						},
+						end: {
+							min: 0,
+							max: 8
+						}
+					},
+					lifetime: {
+						min: 1,
+						max: 1
+					},
+					spawnType: 'circle',
+					spawnCircle: {
+						x: 0,
+						y: 0,
+						r: 12
+					},
+					randomScale: true,
+					randomSpeed: true,
+					chance: 0.075,
+					randomColor: true
+				}
+			}, {
+				statMult: 0.2,
+				type: 'projectile',
+				row: 5,
+				col: 4,
+				shootAll: true,
+				particles: {
+					color: {
+						start: ['a24eff', '7a3ad3'],
+						end: ['7a3ad3', '533399']
+					},
+					scale: {
+						start: {
+							min: 2,
+							max: 12
+						},
+						end: {
+							min: 0,
+							max: 6
+						}
+					},
+					lifetime: {
+						min: 2,
+						max: 4
+					},
+					alpha: {
+						start: 0.7,
+						end: 0
+					},
+					speed: {
+						start: {
+							min: 4,
+							max: 24
+						},
+						end: {
+							min: 0,
+							max: 12
+						}
+					},
+					startRotation: {
+						min: 0,
+						max: 360
+					},
+					rotationSpeed: {
+						min: 0,
+						max: 360
+					},
+					randomScale: true,
+					randomColor: true,
+					randomSpeed: true,
+					chance: 0.55,
+					spawnType: 'circle',
+					spawnCircle: {
+						x: 0,
+						y: 0,
+						r: 8
+					}
+				}
 			}]
 		}
 	},

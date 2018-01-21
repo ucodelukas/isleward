@@ -153,7 +153,7 @@ define([
 				manaCost: 5,
 				range: 9,
 				random: {
-					damage: [100, 380],
+					damagePercent: [100, 380],
 					hpPercent: [40, 60]
 				}
 			};

@@ -42,7 +42,7 @@ module.exports = {
 				range: 2,
 				selfCast: 0.2,
 				statMult: 1,
-				damage: 0.225,
+				damage: 0.325,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -119,7 +119,7 @@ module.exports = {
 				range: 2,
 				selfCast: 0.2,
 				statMult: 1,
-				damage: 0.2,
+				damage: 0.45,
 				element: 'arcane',
 				cdMax: 5,
 				particles: {
@@ -212,7 +212,7 @@ module.exports = {
 				range: 6,
 				selfCast: 0.25,
 				statMult: 1,
-				damage: 0.15,
+				damage: 0.55,
 				element: 'arcane',
 				cdMax: 8,
 				particles: {
