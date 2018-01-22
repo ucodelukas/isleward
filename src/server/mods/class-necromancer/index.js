@@ -137,7 +137,7 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 1.6,
+				statMult: 0.76,
 				element: 'physical',
 				auto: true,
 				cdMax: 6,
@@ -151,7 +151,7 @@ define([
 
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
-				statMult: 0.55,
+				statMult: 0.27,
 				element: 'physical',
 				cdMax: 7,
 				manaCost: 5,

@@ -42,7 +42,7 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 1,
+			statMult: 0.96,
 			element: 'holy',
 			auto: true,
 			needLos: true,
@@ -55,7 +55,7 @@ define([
 		},
 		'healing circle': {
 			statType: 'int',
-			statMult: 0.055,
+			statMult: 0.052,
 			element: 'holy',
 			cdMax: 10,
 			manaCost: 8,
@@ -113,7 +113,7 @@ define([
 		},*/
 		'double slash': {
 			statType: 'dex',
-			statMult: 0.93,
+			statMult: 0.88,
 			element: 'physical',
 			cdMax: 3,
 			useWeaponRange: true,
@@ -124,9 +124,9 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 0.57,
+			statMult: 0.98,
 			element: 'poison',
-			cdMax: 3,
+			cdMax: 5,
 			manaCost: 6,
 			random: {
 				damage: [0.25, 0.73],
@@ -143,7 +143,7 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 3.6,
+			statMult: 1.82,
 			element: 'physical',
 			manaCost: 22,
 			needLos: true,

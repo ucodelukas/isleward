@@ -7,12 +7,12 @@ define([
 ) {
 	var spells = config.spells;
 
-	var max = true;
-	var maxTarget = true;
+	var max = false;
+	var maxTarget = false;
 
 	spells['harvest life'] = {
 		statType: ['str', 'int'],
-		statMult: 1.6,
+		statMult: 0.76,
 		element: 'physical',
 		auto: true,
 		cdMax: 6,
@@ -27,7 +27,7 @@ define([
 	var bloodBarrierMult = 1.25;
 	spells['skeleton melee'] = {
 		statType: ['str', 'int'],
-		statMult: 0.55 * bloodBarrierMult,
+		statMult: 0.27 * bloodBarrierMult,
 		element: 'physical',
 		auto: true,
 		cdMax: 5,
@@ -146,7 +146,7 @@ define([
 				var minStat = level;
 				var maxStat = level * 5;
 
-				var mult = (stat.length == 1) ? 1 : 0.5;
+				var mult = (stat.length == 1) ? 1 : 1;
 
 				stat.forEach(s => config.source.stats.values[s] = (max ? maxStat : minStat) * mult);
 

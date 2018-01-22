@@ -138,9 +138,9 @@ define([
 			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
-				regenHp = Math.max(values.hpMax / 100, values.regenHp * 0.3);
+				regenHp = Math.max(values.hpMax / 112, values.regenHp * 0.2);
 			else
-				regenHp = values.regenHp * 0.3;
+				regenHp = values.regenHp * 0.2;
 
 			if (values.hp < values.hpMax) {
 				values.hp += regenHp;
@@ -242,7 +242,10 @@ define([
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
 					values[s] += gainStats[s];
+					obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
 				}
+
+				this.obj.spellbook.calcDps();
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,

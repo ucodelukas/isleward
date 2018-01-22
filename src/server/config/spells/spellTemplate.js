@@ -82,6 +82,12 @@ define([
 				attackSpeed += 1;
 
 				dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
+				var duration = this.values.duration;
+				if (duration) {
+					dmg *= duration;
+				}
+
+				dmg /= this.cdMax;
 
 				if (this.damage) {
 					this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
