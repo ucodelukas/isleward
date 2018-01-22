@@ -54,7 +54,7 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var max = (((90.5 + (Math.pow(level, 3) * 0.75)) - (30 + (Math.pow(level, 3) * 0.072))) / 10) * div;
+				var max = ((-0.6340155 + (13.68923 * level) - (0.34383 * Math.pow(level, 2)) + (0.06754871 * Math.pow(level, 3)) + (0.000174046 * Math.pow(level, 4)) + (0.000007675887 * Math.pow(level, 5))) / 10) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
@@ -66,8 +66,8 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var min = (1 + (0.00477 * Math.pow(level, 2.8))) * div;
-				var max = (3 + (0.3825 * Math.pow(level, 1.83))) * div;
+				var min = (level / 15) * div;
+				var max = (level * 5) * div;
 
 				if (perfection == null)
 					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
@@ -98,7 +98,7 @@ define([
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				var max = (3 + (0.0364 * Math.pow(level, 2.8))) * div;
+				var max = (-0.05426729 + (3.477385 * level) - (0.03890282 * Math.pow(level, 2)) + (0.009244822 * Math.pow(level, 3)) + (0.0001700915 * Math.pow(level, 4)) - (0.00000138085 * Math.pow(level, 5))) * div;
 
 				if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.regenHp || 1);

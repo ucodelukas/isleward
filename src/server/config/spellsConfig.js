@@ -6,7 +6,7 @@ define([
 	var spells = {
 		'magic missile': {
 			statType: 'int',
-			statMult: 0.59,
+			statMult: 0.9,
 			element: 'arcane',
 			auto: true,
 			cdMax: 7,
@@ -18,7 +18,7 @@ define([
 		},
 		'ice spear': {
 			statType: 'int',
-			statMult: 0.42,
+			statMult: 0.49,
 			element: 'frost',
 			cdMax: 12,
 			manaCost: 4,
@@ -30,7 +30,7 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.25,
+			statMult: 0.22,
 			element: 'fire',
 			cdMax: 6,
 			manaCost: 5,
@@ -42,7 +42,7 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 0.84,
+			statMult: 1,
 			element: 'holy',
 			auto: true,
 			needLos: true,
@@ -78,7 +78,7 @@ define([
 		},*/
 		'slash': {
 			statType: 'str',
-			statMult: 0.745,
+			statMult: 0.84,
 			element: 'physical',
 			threatMult: 4,
 			auto: true,
@@ -90,7 +90,7 @@ define([
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.48,
+			statMult: 0.59,
 			element: 'physical',
 			threatMult: 3,
 			cdMax: 15,
@@ -113,7 +113,7 @@ define([
 		},*/
 		'double slash': {
 			statType: 'dex',
-			statMult: 0.84,
+			statMult: 0.93,
 			element: 'physical',
 			cdMax: 3,
 			useWeaponRange: true,
@@ -124,7 +124,7 @@ define([
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 0.335,
+			statMult: 0.57,
 			element: 'poison',
 			cdMax: 3,
 			manaCost: 6,
@@ -143,7 +143,7 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 3.18,
+			statMult: 3.6,
 			element: 'physical',
 			manaCost: 22,
 			needLos: true,

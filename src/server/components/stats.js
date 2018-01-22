@@ -1,9 +1,11 @@
 define([
 	'config/animations',
-	'config/loginRewards'
+	'config/loginRewards',
+	'config/classes'
 ], function (
 	animations,
-	loginRewards
+	loginRewards,
+	classes
 ) {
 	return {
 		type: 'stats',
@@ -136,7 +138,7 @@ define([
 			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
-				regenHp = values.hpMax / 100;
+				regenHp = Math.max(values.hpMax / 100, values.regenHp * 0.3);
 			else
 				regenHp = values.regenHp * 0.3;
 
@@ -235,7 +237,12 @@ define([
 				if (values.level == 20)
 					values.xp = 0;
 
-				values.hpMax = 30 + (Math.pow(values.level, 3) * 0.072);
+				values.hpMax = values.level * 32.7;
+
+				var gainStats = classes.stats[this.obj.class].gainStats;
+				for (var s in gainStats) {
+					values[s] += gainStats[s];
+				}
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,

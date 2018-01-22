@@ -91,6 +91,10 @@ define([
 					hpMax: 95
 				},
 				vitScale: 10,
+				gainStats: {
+					int: 1,
+					str: 1
+				},
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 			classes.weapons.necromancer = 'Sickle';
@@ -133,7 +137,7 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 1.34,
+				statMult: 1.6,
 				element: 'physical',
 				auto: true,
 				cdMax: 6,
@@ -147,7 +151,7 @@ define([
 
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
-				statMult: 0.1,
+				statMult: 0.55,
 				element: 'physical',
 				cdMax: 7,
 				manaCost: 5,

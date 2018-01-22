@@ -8,11 +8,11 @@ define([
 	var spells = config.spells;
 
 	var max = true;
-	var maxTarget = false;
+	var maxTarget = true;
 
 	spells['harvest life'] = {
 		statType: ['str', 'int'],
-		statMult: 1.34,
+		statMult: 1.6,
 		element: 'physical',
 		auto: true,
 		cdMax: 6,
@@ -27,7 +27,7 @@ define([
 	var bloodBarrierMult = 1.25;
 	spells['skeleton melee'] = {
 		statType: ['str', 'int'],
-		statMult: 0.46 * bloodBarrierMult,
+		statMult: 0.55 * bloodBarrierMult,
 		element: 'physical',
 		auto: true,
 		cdMax: 5,
@@ -38,52 +38,52 @@ define([
 		}
 	};
 
-	var level = 5;
+	var level = 20;
 
 	var hp = [
-		30.07,
-		30.58,
-		31.94,
-		34.61,
-		39,
-		45.55,
-		54.70,
-		66.86,
-		82.49,
-		102,
-		125.83,
-		154.42,
-		188.18,
-		227.57,
-		273,
-		324.91,
-		383.74,
-		449.90,
-		523.85,
-		606
+		32.70,
+		65.40,
+		98.10,
+		130.80,
+		163.50,
+		196.20,
+		228.90,
+		261.60,
+		294.30,
+		327.00,
+		359.70,
+		392.40,
+		425.10,
+		457.80,
+		490.50,
+		523.20,
+		555.90,
+		588.60,
+		621.30,
+		654.00
 	];
 
 	var hpMax = [
-		91.25,
-		96.50,
-		110.75,
-		138.50,
-		184.25,
-		252.50,
-		347.75,
-		474.50,
-		637.25,
-		840.50,
-		1088.75,
-		1386.50,
-		1738.25,
-		2148.50,
-		2621.75,
-		3162.50,
-		3775.25,
-		4464.50,
-		5234.75,
-		6090.50
+		160.48,
+		324.53,
+		489.90,
+		660.79,
+		841.44,
+		1036.21,
+		1249.50,
+		1485.85,
+		1749.87,
+		2046.32,
+		2380.05,
+		2756.08,
+		3179.54,
+		3655.72,
+		4190.09,
+		4788.27,
+		5456.08,
+		6199.50,
+		7024.73,
+		7938.17
 	];
 
 	return {
@@ -143,8 +143,8 @@ define([
 				if (!stat.push)
 					stat = [stat];
 
-				var minStat = 1 + (0.00477 * Math.pow(level, 2.8));
-				var maxStat = 3 + (0.3825 * Math.pow(level, 1.83));
+				var minStat = level;
+				var maxStat = level * 5;
 
 				var mult = (stat.length == 1) ? 1 : 0.5;
 
