@@ -56,11 +56,14 @@ define([
 				}
 			}
 
-			var blocked = false;
-			var blockChance = config.isAttack ? tgtValues.blockAttackChance : tgtValues.blockSpellChance;
-			if (Math.random() * 100 < blockChance) {
-				blocked = true;
-				amount = 0;
+			//Don't mitigate heals
+			if (!config.noMitigate) {
+				var blocked = false;
+				var blockChance = config.isAttack ? tgtValues.blockAttackChance : tgtValues.blockSpellChance;
+				if (Math.random() * 100 < blockChance) {
+					blocked = true;
+					amount = 0;
+				}
 			}
 
 			return {

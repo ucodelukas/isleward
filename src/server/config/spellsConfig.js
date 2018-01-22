@@ -55,7 +55,7 @@ define([
 		},
 		'healing circle': {
 			statType: 'int',
-			statMult: 0.052,
+			statMult: 0.07,
 			element: 'holy',
 			cdMax: 10,
 			manaCost: 8,
