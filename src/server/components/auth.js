@@ -444,9 +444,11 @@ define([
 			this.obj.sheetName = skins.getSpritesheet(this.obj.skinId);
 
 			var simple = this.obj.getSimple(true);
+			var prophecies = data.prophecies || [];
+			prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) == i));
 			simple.components.push({
 				type: 'prophecies',
-				list: data.prophecies || []
+				list: prophecies
 			});
 
 			io.set({
