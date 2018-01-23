@@ -185,6 +185,16 @@ define([
 			if (!result.success)
 				return false;
 
+			//Mobs shouldn't aggro players that are too far from their home
+			var mob = this.obj.mob;
+			if (!mob)
+				mob = obj.mob;
+			if (mob) {
+				var notMob = (obj == mob) ? this.obj : obj;
+				if (!mob.canChase(notMob))
+					return false;
+			}
+
 			var oId = obj.id;
 			var list = this.list;
 

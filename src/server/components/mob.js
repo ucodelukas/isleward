@@ -37,12 +37,10 @@ define([
 
 			//Are we too far from home?
 			if ((!this.goHome) && (!obj.follower) && (target)) {
-				var distanceFromHome = Math.max(Math.abs(obj.x - this.originX), Math.abs(obj.y - this.originY));
-				if (distanceFromHome > this.maxChaseDistance) {
+				if (!this.canChase(target)) {
 					obj.clearQueue();
 					obj.aggro.unAggro(target);
-					this.target = null;
-					this.goHome = true;
+					target = obj.aggro.getHighest();
 				}
 			}
 
@@ -193,6 +191,11 @@ define([
 					y: p.y
 				}
 			});
+		},
+
+		canChase: function (obj) {
+			var distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
+			return (distanceFromHome <= this.maxChaseDistance)
 		}
 	};
 });
