@@ -443,6 +443,8 @@ define([
 			this.obj.cell = skins.getCell(this.obj.skinId);
 			this.obj.sheetName = skins.getSpritesheet(this.obj.skinId);
 
+			this.verifySkin(this.obj);
+
 			var simple = this.obj.getSimple(true);
 			var prophecies = data.prophecies || [];
 			prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) == i));
