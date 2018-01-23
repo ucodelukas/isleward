@@ -101,8 +101,10 @@ define([
                 if (l == 'tileSprites') {
                     layers[l] = new pixi.Container();
                     layers[l].layer = 'tiles';
-                } else
+                } else {
                     layers[l] = new pixi.Container();
+                    layers[l].layer = l;
+                }
 
                 this.stage.addChild(layers[l])
             }, this);
@@ -289,6 +291,11 @@ define([
         },
 
         clean: function () {
+            this.stage.removeChild(this.layers.hiders);
+            this.layers.hiders = new pixi.Container();
+            this.layers.hiders.layer = 'hiders';
+            this.stage.addChild(this.layers.hiders);
+
             var container = this.layers.tileSprites;
             this.stage.removeChild(container);
 
@@ -297,7 +304,11 @@ define([
             this.stage.addChild(container);
 
             this.stage.children.sort(function (a, b) {
-                if (a.layer == 'tiles')
+                if (a.layer == 'hiders')
+                    return 1;
+                else if (b.layer == 'hiders')
+                    return -1;
+                else if (a.layer == 'tiles')
                     return -1;
                 else if (b.layer == 'tiles')
                     return 1;

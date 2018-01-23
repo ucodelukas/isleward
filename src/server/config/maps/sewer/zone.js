@@ -21,7 +21,7 @@ module.exports = {
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 5,
+						chance: 2,
 						type: 'key',
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
@@ -49,7 +49,7 @@ module.exports = {
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 1.5,
+						chance: 0.5,
 						type: 'key',
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
@@ -67,7 +67,7 @@ module.exports = {
 		},
 
 		bandit: {
-			faction: 'flolgard',
+			faction: 'hostile',
 			grantRep: {
 				fjolgard: 18
 			},
@@ -80,6 +80,10 @@ module.exports = {
 
 		whiskers: {
 			level: 13,
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 22
+			},
 
 			rare: {
 				count: 0
@@ -87,7 +91,7 @@ module.exports = {
 		},
 
 		'bera the blade': {
-			faction: 'flolgard',
+			faction: 'hostile',
 			grantRep: {
 				fjolgard: 25
 			},
@@ -118,15 +122,7 @@ module.exports = {
 		sewerdoor: {
 			properties: {
 				cpnDoor: {
-					locked: true,
-					key: 'rustedSewer',
-					destroyKey: true
-				}
-			}
-		},
-		sewerdoor: {
-			properties: {
-				cpnDoor: {
+					autoClose: 15,
 					locked: true,
 					key: 'rustedSewer',
 					destroyKey: true
