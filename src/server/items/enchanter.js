@@ -2,6 +2,7 @@ define([
 	'items/generators/stats',
 	'items/generators/slots',
 	'items/generators/types',
+	'items/generators/spellbook',
 	'items/salvager',
 	'items/config/currencies',
 	'items/config/slots',
@@ -10,6 +11,7 @@ define([
 	generatorStats,
 	generatorSlots,
 	generatorTypes,
+	generatorSpells,
 	salvager,
 	configCurrencies,
 	configSlots,
@@ -47,7 +49,8 @@ define([
 
 			if (msg.action == 'reroll') {
 				delete msg.addStatMsgs;
-				if (item.stats.lvlRequire) {
+				delete item.enchantedStats;
+				if ((item.stats) && (item.stats.lvlRequire)) {
 					item.level += item.stats.lvlRequire;
 					delete item.originalLevel;
 				}
@@ -57,24 +60,43 @@ define([
 				item.stats = {};
 				var bpt = {
 					slot: item.slot,
-					type: item.type
+					type: item.type,
+					sprite: item.sprite,
+					spritesheet: item.spritesheet
 				};
 				generatorSlots.generate(item, bpt);
 				generatorTypes.generate(item, bpt);
-				generatorStats.generate(item, bpt, result);
+				generatorStats.generate(item, bpt);
 			} else if (msg.action == 'relevel') {
 				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
+				if (item.level == 1)
+					offset = Math.abs(offset);
 				item.level = Math.max(1, item.level + offset);
 			} else if (msg.action == 'reslot') {
+				if (item.effects)
+					return;
+
 				var newItem = generator.generate({
 					slot: configSlots.getRandomSlot(item.slot),
 					level: item.level,
 					quality: item.quality,
-					stats: Object.keys(item.stats)
+					stats: Object.keys(item.stats || {})
 				});
 
+				delete item.spritesheet;
 				delete item.stats;
+				delete item.spell;
+
 				extend(true, item, newItem);
+			} else if (msg.action == 'reforge') {
+				if (!item.spell)
+					return;
+
+				var spellName = item.spell.name.toLowerCase();
+				delete item.spell;
+				generatorSpells.generate(item, {
+					spellName: spellName
+				});
 			} else {
 				var newPower = (item.power || 0) + 1;
 				item.power = newPower;
@@ -113,7 +135,8 @@ define([
 
 		addStat: function (item, result) {
 			generatorStats.generate(item, {
-				statCount: 1
+				statCount: 1,
+
 			}, result);
 		},
 
@@ -142,6 +165,9 @@ define([
 			} else if (action == 'reslot') {
 				successChance = 100;
 				result = [configCurrencies.currencies["Gambler's Totem"]];
+			} else if (action == 'reforge') {
+				successChance = 100;
+				result = [configCurrencies.currencies["Brawler's Totem"]];
 			}
 
 			return {

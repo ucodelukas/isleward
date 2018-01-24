@@ -9,7 +9,8 @@ define([
 		customChannels: null,
 
 		init: function() {
-			events.emit('onGetCustomChatChannels', this.customChannels);
+			if (this.customChannels)
+				events.emit('onGetCustomChatChannels', this.customChannels);
 		}
 	};
 });

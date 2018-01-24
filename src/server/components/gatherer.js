@@ -36,6 +36,24 @@ define([
 
 			if (firstNode.resourceNode.nodeType == 'fish') {
 				var rod = this.obj.equipment.eq.tool;
+				if (!rod) {
+					process.send({
+						method: 'events',
+						data: {
+							'onGetAnnouncement': [{
+								obj: {
+									msg: 'You need a fishing rod to fish'
+								},
+								to: [this.obj.serverId]
+							}]
+						}
+					});
+
+					this.gathering = null;
+
+					return;
+				}
+
 				rod = this.obj.inventory.findItem(rod);
 
 				var statCatchSpeed = Math.min(150, this.obj.stats.values.catchSpeed);
@@ -54,7 +72,9 @@ define([
 			if (gathering.destroyed) {
 				this.gathering = null;
 				this.gatheringTtl = 0;
+				this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 				this.obj.syncer.set(true, 'gatherer', 'progress', 100);
+				this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 				return;
 			}
 
@@ -168,14 +188,15 @@ define([
 				}
 
 				this.obj.inventory.getItem(item);
+
+				if (item.material)
+					this.obj.fireEvent('afterGatherResource', gatherResult);
 			}, this);
 
 			if (!gatherResult.noChangeAmount)
 				resourceNode.gather();
 
 			this.obj.stats.getXp(gatherResult.xp);
-
-			this.obj.fireEvent('afterGatherResource', gatherResult);
 
 			if (gathering.destroyed) {
 				if (isFish) {
@@ -232,9 +253,6 @@ define([
 				}
 			});
 
-			if (!success)
-				return;
-
 			this.nodes.spliceWhere(n => (n == node));
 			this.nodes.push(node);
 		},
@@ -244,6 +262,10 @@ define([
 		},
 
 		events: {
+			beforeRezone: function () {
+				this.events.beforeMove.call(this);
+			},
+
 			beforeMove: function () {
 				if (!this.gathering)
 					return;
@@ -284,10 +306,6 @@ define([
 									}]
 								}
 							});
-
-							nodes.splice(i, 1);
-							i--;
-							nLen--;
 
 							if (this.gathering == node) {
 								if (this.gathering.resourceNode.nodeType == 'fish')

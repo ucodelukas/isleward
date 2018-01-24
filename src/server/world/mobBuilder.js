@@ -35,10 +35,10 @@ define([
 					mob.baseName = mob.name;
 					mob.name = typeDefinition.name || mob.baseName;
 
-					if (typeDefinition.sheetName) {
+					if (typeDefinition.sheetName)
 						mob.sheetName = typeDefinition.sheetName;
+					if (typeDefinition.cell != null)
 						mob.cell = typeDefinition.cell;
-					}
 				}
 			}
 
@@ -116,7 +116,7 @@ define([
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = 10 + (level * 120);
+			var hp = level * 32.7;
 			statValues.hpMax = hp;
 
 			statValues.level = level;
@@ -150,6 +150,9 @@ define([
 				drops.blueprints.forEach(function (d) {
 					var drop = extend(true, {}, d);
 					d.level = level;
+					if (drop.type == 'key')
+						return;
+
 					mob.inventory.getItem(itemGenerator.generate(drop));
 				}, this);
 			}
@@ -161,8 +164,6 @@ define([
 					spell: true
 				});
 				rune.eq = true;
-				if (i == 0)
-					rune.spell.cdMult = 5;
 				mob.inventory.getItem(rune);
 			}
 
@@ -170,8 +171,8 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				hpMult *= [0.005, 0.01, 0.035, 0.08, 0.16, 0.28, 0.43, 0.62, 0.8][level - 1];
-				dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
+				statValues.hpMax = ~~(statValues.hpMax * (level / 10));
+				dmgMult *= [0.3, 0.45, 0.6, 0.8, 1, 1, 1, 1, 1][level - 1];
 			}
 
 			if (mob.isRare) {
@@ -193,7 +194,6 @@ define([
 				s.statType = preferStat;
 				s.element = elementType;
 				s.manaCost = 0;
-
 			}, this);
 
 			['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {

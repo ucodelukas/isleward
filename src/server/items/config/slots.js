@@ -14,21 +14,25 @@ define([
 			'legs',
 			'feet',
 			'trinket',
+			'oneHanded',
 			'twoHanded',
+			'offHand',
 			'tool'
 		],
 
 		chance: {
-			head: 10,
-			neck: 4,
-			chest: 10,
-			hands: 10,
-			finger: 4,
-			waist: 8,
-			legs: 10,
-			feet: 10,
-			trinket: 2,
-			twoHanded: 6,
+			head: 85,
+			neck: 45,
+			chest: 100,
+			hands: 90,
+			finger: 40,
+			waist: 80,
+			legs: 100,
+			feet: 90,
+			trinket: 35,
+			oneHanded: 60,
+			twoHanded: 60,
+			offHand: 40,
 			tool: 0
 		},
 
@@ -42,7 +46,9 @@ define([
 			legs: 0.2,
 			feet: 0.1,
 			trinket: 0,
+			oneHanded: 0,
 			twoHanded: 0,
+			offHand: 0,
 			tool: 0
 		},
 

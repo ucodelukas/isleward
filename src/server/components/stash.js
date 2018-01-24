@@ -25,7 +25,7 @@ define([
 		getItem: function (item) {
 			//Material?
 			var exists = false;
-			if (((item.material) || (item.quest)) && (!item.noStack)) {
+			if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
 				var existItem = this.items.find(i => i.name == item.name);
 				if (existItem) {
 					exists = true;

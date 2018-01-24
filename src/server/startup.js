@@ -41,9 +41,12 @@ define([
 				global.gc();
 			}, 60000);
 
+			process.on('uncaughtException', this.onError.bind(this));
+
 			animations.init();
 			mods.init(this.onModsLoaded.bind(this));
 		},
+
 		onModsLoaded: function () {
 			globals.init();
 			classes.init();
@@ -52,14 +55,32 @@ define([
 			itemTypes.init();
 			components.init(this.onComponentsReady.bind(this));
 		},
+
 		onComponentsReady: function () {
 			skins.init();
 			factions.init();
 			server.init(this.onServerReady.bind(this));
 		},
+
 		onServerReady: function () {
 			atlas.init();
 			leaderboard.init();
+		},
+
+		onError: function (e) {
+			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+				return;
+
+			console.log('Error Logged: ' + e.toString());
+
+			io.set({
+				ent: new Date(),
+				field: 'error',
+				value: e.toString() + ' | ' + e.stack.toString(),
+				callback: function () {
+					process.exit();
+				}
+			});
 		}
 	};
 });

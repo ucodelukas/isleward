@@ -40,7 +40,17 @@ requirejs([
 	itemTypes
 ) {
 	var onDbReady = function () {
-		global.extend = extend;
+		var oldExtend = extend;
+		global.extend = function () {
+			try {
+				oldExtend.apply(null, arguments);
+				return arguments[1];
+			} catch (e) {
+				console.log(arguments);
+				throw e;
+			}
+		};
+
 		global._ = helpers;
 		global.instancer = _instancer;
 		require('../misc/random');
@@ -52,6 +62,24 @@ requirejs([
 		setInterval(function () {
 			global.gc();
 		}, 60000);
+
+		process.on('uncaughtException', function (e) {
+			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+				return;
+
+			console.log('Error Logged: ' + e.toString());
+
+			io.set({
+				ent: new Date(),
+				field: 'error',
+				value: e.toString() + ' | ' + e.stack.toString(),
+				callback: function () {
+					process.send({
+						event: 'onCrashed'
+					});
+				}
+			});
+		});
 	};
 
 	var onCpnsReady = function () {

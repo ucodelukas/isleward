@@ -18,18 +18,36 @@ define([
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
-			this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
+			//this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
-			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
+			//this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
 			this.events.on('onBeforeGetCardReward', this.onBeforeGetCardReward.bind(this));
 			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
-			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
-			this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
-			this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
-			this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
+			//this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+			//this.events.on('onBeforeGetHerbConfig', this.onBeforeGetHerbConfig.bind(this));
+			//this.events.on('onBeforeBuildLayerTile', this.onBeforeBuildLayerTile.bind(this));
+			//this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
 			this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
+			this.events.on('onBeforeGetCardsConfig', this.onBeforeGetCardsConfig.bind(this));
+		},
+
+		onBeforeGetCardsConfig: function (config) {
+			extend(true, config, {
+				'Cheer and Spear': {
+					chance: 40,
+					reward: 'Rare Festive Spear',
+					setSize: 3,
+					mobName: ['frost crab', 'rude holf'],
+					spritesheet: `server/mods/event-xmas/images/items.png`,
+					sprite: [0, 1],
+					quality: 2
+				},
+				"Wizard's Vice": {
+					reward: 'Scented Beard Oil'
+				}
+			});
 		},
 
 		onBeforeGetSkins: function (skins) {
@@ -174,7 +192,10 @@ define([
 						type: 'merry',
 						ttl: 514
 					});
-
+				},
+				'Scented Beard Oil': function (obj, item, result) {
+					obj.syncer.set(false, 'chatter', 'color', 0xfc66f7);
+					obj.syncer.set(false, 'chatter', 'msg', `...Rubs his beard throughtfully...`);
 				}
 			}[item.name];
 
@@ -256,6 +277,14 @@ define([
 					itemName: 'Snowflake',
 					itemSheet: `${this.folderName}/images/items.png`,
 					itemAmount: [3, 5]
+				},
+				'Gilded Gift': {
+					sheetName: 'bigObjects',
+					cell: 22,
+					itemSprite: [3, 0],
+					itemName: 'Snowflake',
+					itemSheet: `${this.folderName}/images/items.png`,
+					itemAmount: [5, 8]
 				}
 			});
 		},
@@ -274,6 +303,20 @@ define([
 						spritesheet: `server/mods/event-xmas/images/items.png`,
 						sprite: [0, 0]
 					});
+				};
+			} else if (msg.reward == 'Scented Beard Oil') {
+				msg.handler = function (card) {
+					return {
+						name: 'Scented Beard Oil',
+						type: 'toy',
+						sprite: [3, 2],
+						spritesheet: `server/mods/event-xmas/images/items.png`,
+						description: `For some extra 'ho' in your holy vengeance.`,
+						worth: 0,
+						cdMax: 300,
+						noSalvage: true,
+						noAugment: true
+					};
 				};
 			}
 		},

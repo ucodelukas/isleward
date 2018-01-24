@@ -38,8 +38,10 @@ define([
 
 		onGetCardSetReward: function (set, obj) {
 			var reward = cards.getReward(set);
+			if (!reward.push)
+				reward = [reward];
 
-			obj.inventory.getItem(reward);
+			reward.forEach(r => obj.inventory.getItem(r));
 		}
 	};
 });

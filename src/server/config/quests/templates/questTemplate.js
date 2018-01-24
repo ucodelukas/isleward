@@ -46,15 +46,19 @@ define([
 			if (this.oComplete)
 				this.oComplete();
 
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
+			var obj = this.obj;
+
+			events.emitNoSticky('beforeCompleteAutoquest', this, obj);
+
+			obj.instance.syncer.queue('onGetMessages', {
+				id: obj.id,
 				messages: [{
 					class: 'q0',
 					message: 'quest completed (' + this.name + ')'
 				}]
-			}, [this.obj.serverId]);
+			}, [obj.serverId]);
 
-			this.obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
+			obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
 			events.emit('onCompleteQuest', this);
 

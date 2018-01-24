@@ -1,13 +1,13 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
 		type: 'quests',
 		quests: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			var quests = blueprint.quests || [];
 			var qLen = quests.length;
 			for (var i = 0; i < qLen; i++) {
@@ -20,25 +20,26 @@ define([
 			this.blueprint = blueprint;
 		},
 
-		transfer: function() {
-			var blueprint = { quests: this.quests };
+		transfer: function () {
+			var blueprint = {
+				quests: this.quests
+			};
 			this.quests = [];
 			this.init(blueprint);
 		},
 
-		obtain: function(quest, hideMessage) {
+		obtain: function (quest, hideMessage) {
 			quest.active = (this.obj.zoneName == quest.zoneName);
 
 			this.quests.push(quest);
 			if (!quest.init(hideMessage)) {
 				this.quests.spliceWhere(q => (q == quest));
 				return false;
-			}
-			else
+			} else
 				return true;
 		},
 
-		complete: function(id) {
+		complete: function (id) {
 			var quest = this.quests.find(q => q.id == id);
 			if ((!quest) || (!quest.isReady))
 				return;
@@ -50,26 +51,7 @@ define([
 			this.obj.instance.questBuilder.obtain(this.obj);
 		},
 
-		/*update: function() {
-			var quests = this.quests;
-			var qLen = quests.length;
-			var completed = false;
-			for (var i = 0; i < qLen; i++) {
-				var q = quests[i];
-				if (q.isCompleted) {
-					quests.splice(i, 1);
-					q.ready();
-					completed = true;
-					qLen--;
-					i--;
-				}
-			}
-
-			if (completed)
-				questBuilder.obtain(this.obj);
-		},*/
-
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var quests = this.quests;
 			var qLen = quests.length;
 			for (var i = 0; i < qLen; i++) {
@@ -77,8 +59,7 @@ define([
 				if (!q) {
 					qLen--;
 					continue;
-				}
-				else if (q.completed)
+				} else if (q.completed)
 					continue;
 
 				var events = q.events;
@@ -93,7 +74,7 @@ define([
 			}
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return;
 

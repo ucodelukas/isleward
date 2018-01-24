@@ -225,7 +225,8 @@ define([
 			if (q.action == 'move') {
 				if ((this.actionQueue[0]) && (this.actionQueue[0].action == 'move')) {
 					var sprintChance = this.stats.values.sprintChance || 0;
-					if (~~(Math.random() * 100) < sprintChance) {
+					var physics = this.instance.physics;
+					if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
 						q = this.dequeue();
 						q.isDouble = true;
 					}
@@ -258,15 +259,21 @@ define([
 					return true;
 				}
 
-				if (!action.isDouble) {
-					var deltaX = Math.abs(this.x - data.x);
-					var deltaY = Math.abs(this.y - data.y);
-					if (
-						((deltaX > 1) || (deltaY > 1)) ||
-						((deltaX == 0) && (deltaY == 0))
+				var maxDistance = action.isDouble ? 2 : 1;
+
+				var deltaX = Math.abs(this.x - data.x);
+				var deltaY = Math.abs(this.y - data.y);
+				if (
+					(
+						(deltaX > maxDistance) ||
+						(deltaY > maxDistance)
+					) ||
+					(
+						(deltaX == 0) &&
+						(deltaY == 0)
 					)
-						return false;
-				}
+				)
+					return false;
 			}
 
 			//Don't allow mob overlap during combat

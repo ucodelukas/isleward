@@ -134,12 +134,13 @@ define([
 					return hasButcher;
 				else
 					return false;
-			}
-			else if ((target.follower) && (target.follower.master.player) && (obj.player))
+			} else if ((target.follower) && (target.follower.master.player) && (obj.player))
 				return false;
 			else if (obj.player)
 				return true;
 			else if (target.aggro.faction != obj.aggro.faction)
+				return true;
+			else if (!!target.player != !!obj.player)
 				return true;
 		},
 
@@ -148,7 +149,7 @@ define([
 				return false;
 
 			var faction = target.aggro.faction;
-			if (faction == null)
+			if ((faction == null) || (!this.faction))
 				return false;
 
 			var rep = this.obj.reputation;
@@ -183,6 +184,16 @@ define([
 			this.obj.fireEvent('beforeAggro', result);
 			if (!result.success)
 				return false;
+
+			//Mobs shouldn't aggro players that are too far from their home
+			var mob = this.obj.mob;
+			if (!mob)
+				mob = obj.mob;
+			if (mob) {
+				var notMob = (obj == mob) ? this.obj : obj;
+				if (!mob.canChase(notMob))
+					return false;
+			}
 
 			var oId = obj.id;
 			var list = this.list;

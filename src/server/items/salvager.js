@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var mappings = {
@@ -13,7 +13,7 @@ define([
 			}]
 		}],
 		slots: [{
-			list: ['neck', 'finger', 'twoHanded'],
+			list: ['neck', 'finger', 'twoHanded', 'oneHanded', 'offHand'],
 			materials: [{
 				name: 'Iron Bar',
 				chance: 100,
@@ -104,7 +104,7 @@ define([
 	};
 
 	return {
-		salvage: function(item, maxRoll) {
+		salvage: function (item, maxRoll) {
 			var result = [];
 
 			var materials = [];
@@ -116,9 +116,9 @@ define([
 				temp = temp.concat(mappings.rune);
 			}
 
-			temp.forEach(function(t) {
+			temp.forEach(function (t) {
 				var mats = t.materials;
-				mats.forEach(function(m) {
+				mats.forEach(function (m) {
 					var exists = materials.find(mf => (mf.name == m.name));
 					if (exists) {
 						exists.chance = Math.max(exists.chance, m.chance);
@@ -129,7 +129,7 @@ define([
 				});
 			});
 
-			materials.forEach(function(m) {
+			materials.forEach(function (m) {
 				var roll = Math.random() * 100;
 				if (maxRoll)
 					roll = 0;

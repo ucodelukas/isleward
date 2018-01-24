@@ -13,9 +13,9 @@ define([
 			mobLevel: [3, 100]
 		},
 		'Godly Promise': {
-			chance: 0.0025,
+			chance: 0.015,
 			reward: 'Level 15 Legendary Weapon',
-			setSize: 2,
+			setSize: 6,
 			zone: 'sewer'
 		},
 		'The Other Heirloom': {
@@ -31,10 +31,15 @@ define([
 			zone: 'estuary'
 		},
 		'Fangs of Fury': {
-			chance: 0.1,
+			chance: 0.2,
 			reward: `Steelclaw's Bite`,
-			setSize: 10,
+			setSize: 20,
 			mobName: 'steelclaw'
+		},
+		'Tradesman\'s Pride': {
+			chance: 0.01,
+			reward: 'Five Random Totems',
+			setSize: 10
 		}
 	};
 
@@ -132,11 +137,13 @@ define([
 			},
 
 			'Level 15 Legendary Weapon': function () {
+				var slot = ['oneHanded', 'twoHanded'][~~(Math.random() * 2)];
+
 				return itemGenerator.generate({
 					level: 15,
 					quality: 4,
 					noSpell: true,
-					slot: 'twoHanded'
+					slot: slot
 				});
 			},
 
@@ -144,6 +151,8 @@ define([
 				return itemGenerator.generate({
 					level: 10,
 					noSpell: true,
+					//Always be at least magic
+					bonusMagicFind: 286,
 					perfection: 1,
 					slot: 'finger'
 				});
@@ -170,6 +179,16 @@ define([
 						}
 					}]
 				});
+			},
+
+			"Five Random Totems": function () {
+				var result = [];
+				for (var i = 0; i < 5; i++) {
+					result.push(itemGenerator.generate({
+						currency: true
+					}));
+				}
+				return result;
 			},
 
 			"Steelclaw's Bite": function () {

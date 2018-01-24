@@ -59,7 +59,7 @@ define([
 				},
 				lifetime: {
 					min: 1,
-					max: 4
+					max: 2
 				},
 				alpha: {
 					start: 0.8,
@@ -339,6 +339,24 @@ define([
 			type: 'chainLightning',
 			icon: [0, 1],
 			animation: 'raiseStaff'
+		}, {
+			name: 'Innervation',
+			description: 'Grants an aura that regenerates hp for you and your allies.',
+			type: 'aura',
+			spellType: 'aura',
+			icon: [3, 3]
+		}, {
+			name: 'Tranquility',
+			description: 'Grants an aura that regenerates mana for you and your allies.',
+			type: 'aura',
+			spellType: 'aura',
+			icon: [3, 4]
+		}, {
+			name: 'Swiftness',
+			description: 'Grants an aura that grants increased movement speed to you and your allies.',
+			type: 'aura',
+			spellType: 'aura',
+			icon: [3, 5]
 		}
 	];
 

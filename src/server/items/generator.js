@@ -33,7 +33,8 @@ define([
 
 			if ((!blueprint.slot) && (!blueprint.noSpell)) {
 				isSpell = blueprint.spell;
-				if ((!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
+				isCurrency = blueprint.currency;
+				if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
 					isSpell = Math.random() < this.spellChance;
 					if (!isSpell)
 						isCurrency = Math.random() < this.currencyChance;

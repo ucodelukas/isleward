@@ -1,14 +1,18 @@
 define([
 	'config/animations',
-	'config/loginRewards'
+	'config/loginRewards',
+	'config/classes'
 ], function (
 	animations,
-	loginRewards
+	loginRewards,
+	classes
 ) {
 	var baseStats = {
-		mana: 10,
-		manaMax: 10,
-		vit: 0,
+		mana: 20,
+		manaMax: 20,
+
+		manaReservePercent: 0,
+
 		hp: 5,
 		hpMax: 5,
 		xpTotal: 0,
@@ -19,14 +23,18 @@ define([
 		int: 0,
 		dex: 0,
 		magicFind: 0,
+		itemQuantity: 0,
 		regenHp: 0,
-		regenMana: 10,
+		regenMana: 5,
 		addCritChance: 0,
 		addCritMultiplier: 0,
 		critChance: 5,
 		critMultiplier: 150,
 		armor: 0,
 		dmgPercent: 0,
+
+		blockAttackChance: 0,
+		blockSpellChance: 0,
 
 		attackSpeed: 0,
 		castSpeed: 0,
@@ -107,6 +115,11 @@ define([
 			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
 				return;
 
+			var values = this.values;
+
+			var manaMax = values.manaMax;
+			manaMax -= (manaMax * values.manaReservePercent);
+
 			var regen = {
 				success: true
 			};
@@ -114,7 +127,6 @@ define([
 			if (!regen.success)
 				return;
 
-			var values = this.values;
 			var isInCombat = (this.obj.aggro.list.length > 0);
 			if (this.obj.follower) {
 				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
@@ -125,12 +137,12 @@ define([
 			var regenHp = 0;
 			var regenMana = 0;
 
-			regenMana = (values.manaMax / 200) + (values.regenMana / 200);
+			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
-				regenHp = values.hpMax / 100;
+				regenHp = Math.max(values.hpMax / 112, values.regenHp * 0.2);
 			else
-				regenHp = values.regenHp * 0.3;
+				regenHp = values.regenHp * 0.2;
 
 			if (values.hp < values.hpMax) {
 				values.hp += regenHp;
@@ -142,7 +154,7 @@ define([
 				this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 			}
 
-			if (values.mana < values.manaMax) {
+			if (values.mana < manaMax) {
 				values.mana += regenMana;
 				//Show others what mana is?
 				var onlySelf = true;
@@ -151,8 +163,8 @@ define([
 				this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
 			}
 
-			if (values.mana > values.manaMax) {
-				values.mana = values.manaMax;
+			if (values.mana > manaMax) {
+				values.mana = manaMax;
 				if (this.obj.player)
 					onlySelf = false;
 				this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
@@ -181,12 +193,19 @@ define([
 					this.values[s] += value;
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
+			} else if (stat == 'elementAllResist') {
+				['arcane', 'frost', 'fire', 'holy', 'physical', 'poison'].forEach(function (s) {
+					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
+
+					this.values[element] += value;
+					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+				}, this);
 			}
 		},
 
 		calcXpMax: function () {
 			var level = this.values.level;
-			this.values.xpMax = ~~(level * 10 * Math.pow(level, 1.75));
+			this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
@@ -194,6 +213,9 @@ define([
 		getXp: function (amount) {
 			var obj = this.obj;
 			var values = this.values;
+
+			if (values.level == 20)
+				return;
 
 			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
 
@@ -214,7 +236,18 @@ define([
 				values.xp -= values.xpMax;
 				values.level++;
 
-				values.hpMax += 40;
+				if (values.level == 20)
+					values.xp = 0;
+
+				values.hpMax = values.level * 32.7;
+
+				var gainStats = classes.stats[this.obj.class].gainStats;
+				for (var s in gainStats) {
+					values[s] += gainStats[s];
+					obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+				}
+
+				this.obj.spellbook.calcDps();
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,
@@ -342,12 +375,21 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					source: source.id,
-					crit: damage.crit,
-					amount: amount
-				}, recipients);
+				if (!damage.blocked) {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						crit: damage.crit,
+						amount: amount
+					}, recipients);
+				} else {
+					this.syncer.queue('onGetDamage', {
+						id: this.obj.id,
+						source: source.id,
+						event: true,
+						text: 'blocked'
+					}, recipients);
+				}
 			}
 
 			this.obj.aggro.tryEngage(source, amount, threatMult);
@@ -449,6 +491,10 @@ define([
 			if (amount == 0)
 				return;
 
+			var threatMult = heal.threatMult;
+			if (!heal.hasOwnProperty('threatMult'))
+				threatMult = 1;
+
 			var values = this.values;
 			var hpMax = values.hpMax;
 
@@ -478,7 +524,7 @@ define([
 			}
 
 			//Add aggro to all our attackers
-			var threat = amount * 0.4;
+			var threat = amount * 0.4 * threatMult;
 			var aggroList = this.obj.aggro.list;
 			var aLen = aggroList.length;
 			for (var i = 0; i < aLen; i++) {

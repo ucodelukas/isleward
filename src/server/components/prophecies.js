@@ -1,24 +1,25 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'prophecies',
 
 		list: [],
 
-	init: function(blueprint) {
-		(blueprint.list || []).forEach(function(p) {
-			var template = null;
-			try {
-				var template = require('config/prophecies/' + p);
-			}
-			catch (e) {
-				console.log(e);
+		init: function (blueprint) {
+			(blueprint.list || []).forEach(function (p) {
+				var template = null;
+				try {
+					var template = require('config/prophecies/' + p);
+				} catch (e) {
+					console.log(e);
 				}
 
 				if (template == null)
+					return;
+				else if (this.list.some(l => (l.type == p)))
 					return;
 
 				var p = extend(true, {}, template);
@@ -31,20 +32,20 @@ define([
 			delete blueprint.list;
 		},
 
-	hasProphecy: function(type) {
-		return this.list.some(l => (l.type == type));
-	},
+		hasProphecy: function (type) {
+			return this.list.some(l => (l.type == type));
+		},
 
-	transfer: function() {
-		var transferList = this.list;
-		this.list = [];
+		transfer: function () {
+			var transferList = this.list;
+			this.list = [];
 
 			this.init({
 				list: transferList
 			});
 		},
 
-		fireEvent: function(event, args) {
+		fireEvent: function (event, args) {
 			var list = this.list;
 			var lLen = list.length;
 			for (var i = 0; i < lLen; i++) {
@@ -61,7 +62,7 @@ define([
 			}
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			var e = {
 				type: 'prophecies',
 			};

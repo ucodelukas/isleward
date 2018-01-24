@@ -8,193 +8,135 @@ module.exports = {
 			deathRep: -5
 		},
 
-		'rat': {
+		rat: {
 			faction: 'flolgard',
 			grantRep: {
 				fjolgard: 6
 			},
-			level: 10,
+			level: 11,
+
+			regular: {
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 2,
+						type: 'key',
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1]
+					}]
+				}
+			},
 
 			rare: {
 				count: 0
 			}
 		},
 
-		'stinktooth': {
+		stinktooth: {
 			faction: 'flolgard',
 			grantRep: {
 				fjolgard: 15
 			},
-			level: 12,
+			level: 13,
+
+			regular: {
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 0.5,
+						type: 'key',
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1]
+					}]
+				}
+			},
 
 			rare: {
-				chance: 2,
-				name: 'Steelclaw'
+				chance: 4,
+				name: 'Steelclaw',
+				cell: 59
 			}
-		}
+		},
+
+		bandit: {
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 18
+			},
+			level: 11,
+
+			rare: {
+				count: 0
+			}
+		},
+
+		whiskers: {
+			level: 13,
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 22
+			},
+
+			rare: {
+				count: 0
+			}
+		},
+
+		'bera the blade': {
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 25
+			},
+			level: 14,
+
+			regular: {
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 100,
+						type: 'key',
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1]
+					}]
+				}
+			},
+
+			rare: {
+				count: 0
+			}
+		},
 	},
 	objects: {
-		shopestrid: {
+		sewerdoor: {
 			properties: {
-				cpnNotice: {
-					actions: {
-						enter: {
-							cpn: 'dialogue',
-							method: 'talk',
-							args: [{
-								targetName: 'estrid'
-							}]
-						},
-						exit: {
-							cpn: 'dialogue',
-							method: 'stopTalk'
-						}
-					}
+				cpnDoor: {
+					autoClose: 15,
+					locked: true,
+					key: 'rustedSewer',
+					destroyKey: true
 				}
 			}
 		},
-		shoppriest: {
+		banditdoor: {
 			properties: {
-				cpnNotice: {
-					actions: {
-						enter: {
-							cpn: 'dialogue',
-							method: 'talk',
-							args: [{
-								targetName: 'priest'
-							}]
-						},
-						exit: {
-							cpn: 'dialogue',
-							method: 'stopTalk'
-						}
-					}
-				}
+				cpnDoor: {}
 			}
 		},
-		greencandle: {
-			components: {
-				cpnLight: {
-					simplify: function () {
-						return {
-							type: 'light',
-							blueprint: {
-								color: {
-									start: ['80f643'],
-									end: ['4ac441', '51fc9a', 'd07840']
-								},
-								lifetime: {
-									min: 2,
-									max: 6
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		alchgreenpot: {
-			components: {
-				cpnParticles: {
-					simplify: function () {
-						return {
-							type: 'particles',
-							blueprint: {
-								color: {
-									start: ['80f643', '80f643'],
-									end: ['4ac441', '4ac441']
-								},
-								scale: {
-									start: {
-										min: 2,
-										max: 10
-									},
-									end: {
-										min: 0,
-										max: 2
-									}
-								},
-								speed: {
-									start: {
-										min: 4,
-										max: 16
-									},
-									end: {
-										min: 2,
-										max: 8
-									}
-								},
-								lifetime: {
-									min: 1,
-									max: 4
-								},
-								randomScale: true,
-								randomSpeed: true,
-								chance: 0.1,
-								randomColor: true,
-								spawnType: 'rect',
-								spawnRect: {
-									x: -15,
-									y: -20,
-									w: 30,
-									h: 8
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		alchredpot: {
-			components: {
-				cpnParticles: {
-					simplify: function () {
-						return {
-							type: 'particles',
-							blueprint: {
-								color: {
-									start: ['ff4252', 'ff4252'],
-									end: ['a82841', 'a82841']
-								},
-								scale: {
-									start: {
-										min: 2,
-										max: 10
-									},
-									end: {
-										min: 0,
-										max: 2
-									}
-								},
-								speed: {
-									start: {
-										min: 4,
-										max: 16
-									},
-									end: {
-										min: 2,
-										max: 8
-									}
-								},
-								lifetime: {
-									min: 1,
-									max: 4
-								},
-								randomScale: true,
-								randomSpeed: true,
-								chance: 0.2,
-								randomColor: true,
-								spawnType: 'rect',
-								spawnRect: {
-									x: -15,
-									y: -28,
-									w: 30,
-									h: 8
-								}
-							}
-						}
-					}
-				}
+		vaultdoor: {
+			properties: {
+				cpnDoor: {}
 			}
 		}
 	}

@@ -29,6 +29,7 @@ define([
 			this.events.on('onBeforeGetFactions', this.onBeforeGetFactions.bind(this));
 			this.events.on('onBeforeGetSkins', this.onBeforeGetSkins.bind(this));
 			this.events.on('onBeforeGetEventList', this.onBeforeGetEventList.bind(this));
+			//this.events.on('onBeforeGetQuests', this.onBeforeGetQuests.bind(this));
 			//this.events.on('onBeforeGetDialogue', this.onBeforeGetDialogue.bind(this));
 			this.events.on('onBeforeGetResourceList', this.onBeforeGetResourceList.bind(this));
 			//this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));

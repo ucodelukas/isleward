@@ -18,6 +18,7 @@ define([
 	var commandRoles = {
 		join: 0,
 		leave: 0,
+		unEq: 0,
 		getItem: 10,
 		getGold: 10,
 		setLevel: 10,
@@ -25,7 +26,8 @@ define([
 		clearInventory: 10,
 		completeQuests: 10,
 		getReputation: 10,
-		loseReputation: 10
+		loseReputation: 10,
+		setStat: 10
 	};
 
 	var localCommands = [
@@ -176,6 +178,13 @@ define([
 			return character.auth.customChannels.some(c => (c == channel));
 		},
 
+		unEq: function () {
+			var eq = this.obj.equipment;
+			Object.keys(eq.eq).forEach(function (slot) {
+				eq.unequip(eq.eq[slot]);
+			});
+		},
+
 		clearInventory: function () {
 			var inventory = this.obj.inventory;
 
@@ -213,11 +222,17 @@ define([
 			if (config.sprite)
 				config.sprite = config.sprite.split('_');
 
+			var spritesheet = config.spritesheet;
+			delete config.spritesheet;
+
 			var factions = (config.factions || '').split(',');
 			delete config.factions;
 
 			var safe = config.safe;
 			delete config.safe;
+
+			var eq = config.eq;
+			delete config.eq;
 
 			var item = generator.generate(config);
 
@@ -241,7 +256,13 @@ define([
 				});
 			});
 
-			this.obj.inventory.getItem(item);
+			if (spritesheet)
+				item.spritesheet = spritesheet;
+
+			var newItem = this.obj.inventory.getItem(item);
+
+			if (eq)
+				this.obj.equipment.equip(newItem.id);
 		},
 
 		getGold: function (amount) {
@@ -331,6 +352,10 @@ define([
 				return;
 
 			this.obj.reputation.getReputation(faction, -50000);
+		},
+
+		setStat: function (config) {
+			this.obj.stats.values[config.stat] = ~~config.value;
 		}
 	};
 });

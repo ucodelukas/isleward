@@ -7,7 +7,7 @@ define([
 	'css!ui/templates/party/styles',
 	'html!ui/templates/party/templateInvite',
 	'html!ui/templates/party/templatePartyMember'
-], function(
+], function (
 	events,
 	client,
 	globals,
@@ -23,7 +23,7 @@ define([
 		invite: null,
 		party: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetInvite', this.onGetInvite.bind(this));
 			this.onEvent('onGetParty', this.onGetParty.bind(this));
 			this.onEvent('onPartyDisband', this.onPartyDisband.bind(this));
@@ -33,22 +33,22 @@ define([
 			this.onEvent('onGetPartyStats', this.onGetPartyStats.bind(this));
 		},
 
-		onGetConnectedPlayer: function(msg) {
+		onGetConnectedPlayer: function (msg) {
 			var party = this.party;
 			if (!party)
 				return;
 
 			if (!(msg instanceof Array))
-				msg = [ msg ];
+				msg = [msg];
 
-			msg.forEach(function(m) {
+			msg.forEach(function (m) {
 				if (party.indexOf(m.id) == -1)
 					return;
 
 				var zone = m.zone;
 				if (m.id == window.player.serverId) {
-					party.forEach(function(p) {
-						var player = globals.onlineList.find(function(o) {
+					party.forEach(function (p) {
+						var player = globals.onlineList.find(function (o) {
 							return (o.id == p)
 						});
 
@@ -70,7 +70,7 @@ define([
 			}, this);
 		},
 
-		onGetPartyStats: function(id, stats) {
+		onGetPartyStats: function (id, stats) {
 			var party = this.party;
 			if (!party)
 				return;
@@ -94,12 +94,12 @@ define([
 			}
 		},
 
-		onPartyDisband: function() {
+		onPartyDisband: function () {
 			this.find('.party .list')
 				.empty();
 		},
 
-		onGetParty: function(party) {
+		onGetParty: function (party) {
 			// Destroy invite frame if you join a party
 			if (this.invite)
 				this.destroyInvite();
@@ -111,11 +111,11 @@ define([
 			if (!party)
 				return;
 
-			party.forEach(function(p) {
+			party.forEach(function (p) {
 				if (p == window.player.serverId)
 					return;
 
-				var player = globals.onlineList.find(function(o) {
+				var player = globals.onlineList.find(function (o) {
 					return (o.id == p)
 				});
 				var name = player ? player.name : 'unknown';
@@ -134,7 +134,7 @@ define([
 					el.addClass('differentZone');
 
 				//Find stats
-				var memberObj = objects.objects.find(function(o) {
+				var memberObj = objects.objects.find(function (o) {
 					return (o.serverId == p);
 				});
 				if ((memberObj) && (memberObj.stats))
@@ -142,7 +142,7 @@ define([
 			}, this);
 		},
 
-		showContext: function(charName, id, e) {
+		showContext: function (charName, id, e) {
 			events.emit('onContextMenu', [{
 				text: 'whisper',
 				callback: events.emit.bind(events, 'onDoWhisper', charName)
@@ -158,11 +158,11 @@ define([
 			return false;
 		},
 
-		onGetInvite: function(sourceId) {
+		onGetInvite: function (sourceId) {
 			if (this.invite)
 				this.destroyInvite();
 
-			var sourcePlayer = globals.onlineList.find(function(o) {
+			var sourcePlayer = globals.onlineList.find(function (o) {
 				return (o.id == sourceId)
 			});
 
@@ -182,7 +182,7 @@ define([
 			};
 		},
 
-		destroyInvite: function(e) {
+		destroyInvite: function (e) {
 			if (e) {
 				if ($(e.target).hasClass('btnAccept'))
 					this.acceptInvite();
@@ -192,16 +192,18 @@ define([
 
 			this.invite.el.remove();
 			this.invite = null;
+
+			events.emit('onUiHover', false);
 		},
 
-		acceptInvite: function() {
+		acceptInvite: function () {
 			client.request({
 				cpn: 'social',
 				method: 'acceptInvite',
 				id: this.invite.fromId
 			});
 		},
-		declineInvite: function() {
+		declineInvite: function () {
 			client.request({
 				cpn: 'social',
 				method: 'declineInvite',
@@ -212,14 +214,14 @@ define([
 			});
 		},
 
-		removeFromParty: function(id) {
+		removeFromParty: function (id) {
 			client.request({
 				cpn: 'social',
 				method: 'removeFromParty',
 				data: id
 			});
 		},
-		leaveParty: function() {
+		leaveParty: function () {
 			client.request({
 				cpn: 'social',
 				method: 'leaveParty'

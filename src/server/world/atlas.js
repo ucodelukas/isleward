@@ -4,7 +4,7 @@ define([
 	'objects/objects',
 	'config/maps/mapList',
 	'security/connections'
-], function(
+], function (
 	fileLister,
 	childProcess,
 	objects,
@@ -17,11 +17,11 @@ define([
 		threads: [],
 		callbacks: [],
 
-		init: function() {
+		init: function () {
 			this.getMapFiles();
 		},
 
-		addObject: function(obj, keepPos, transfer) {
+		addObject: function (obj, keepPos, transfer) {
 			var thread = this.getThreadFromName(obj.zoneName);
 
 			var instanceId = obj.instanceId;
@@ -44,7 +44,7 @@ define([
 				}
 			});
 		},
-		removeObject: function(obj, skipLocal) {
+		removeObject: function (obj, skipLocal) {
 			if (!skipLocal)
 				objects.removeObject(obj);
 
@@ -61,7 +61,7 @@ define([
 				}
 			});
 		},
-		updateObject: function(obj, msgObj) {
+		updateObject: function (obj, msgObj) {
 			this.send(obj.zone, {
 				method: 'updateObject',
 				args: {
@@ -71,28 +71,28 @@ define([
 				}
 			});
 		},
-		queueAction: function(obj, action) {
+		queueAction: function (obj, action) {
 			this.send(obj.zone, {
 				method: 'queueAction',
 				args: {
 					id: obj.id,
 					instanceId: obj.instanceId,
-					action: action	
+					action: action
 				}
 			});
 		},
-		performAction: function(obj, action) {
+		performAction: function (obj, action) {
 			this.send(obj.zone, {
 				method: 'performAction',
 				args: {
 					id: obj.id,
 					instanceId: obj.instanceId,
-					action: action	
+					action: action
 				}
 			});
 		},
 
-		registerCallback: function(callback) {
+		registerCallback: function (callback) {
 			this.callbacks.push({
 				id: this.nextCallbackId++,
 				callback: callback
@@ -100,7 +100,7 @@ define([
 
 			return this.nextCallbackId - 1;
 		},
-		resolveCallback: function(msg) {
+		resolveCallback: function (msg) {
 			var callback = this.callbacks.spliceFirstWhere(c => c.id == msg.id);
 			if (!callback)
 				return;
@@ -108,23 +108,28 @@ define([
 			callback.callback(msg.result);
 		},
 
-		send: function(zone, msg) {
+		send: function (zone, msg) {
 			var thread = this.getThreadFromId(zone);
-			if (thread)
-				thread.worker.send(msg);
+			if (thread) {
+				try {
+					thread.worker.send(msg);
+				} catch (e) {
+					console.log(msg);
+				}
+			}
 		},
 
-		getThreadFromId: function(id) {
+		getThreadFromId: function (id) {
 			return this.threads.find(t => t.id == id);
 		},
-		getThreadFromName: function(name) {
+		getThreadFromName: function (name) {
 			return this.threads.find(t => t.name == name);
 		},
 
-		getMapFiles: function() {
+		getMapFiles: function () {
 			mapList.forEach(m => this.spawnMap(m));
 		},
-		spawnMap: function(name) {
+		spawnMap: function (name) {
 			var worker = childProcess.fork('./world/worker');
 			var thread = {
 				id: this.nextId++,
@@ -133,35 +138,41 @@ define([
 			};
 
 			var onMessage = this.onMessage.bind(this, thread);
-			worker.on('message', function(m) {
+			worker.on('message', function (m) {
 				onMessage(m);
 			});
 
 			this.threads.push(thread);
 		},
-		onMessage: function(thread, message) {
+		onMessage: function (thread, message) {
 			if (message.module)
 				global[message.module][message.method](message);
-			else
+			else if (message.event == 'onCrashed') {
+				thread.worker.kill();
+				process.exit();
+			} else
 				this.thread[message.method].call(this, thread, message);
 		},
 		thread: {
-			onReady: function(thread) {
+			onReady: function (thread) {
 				thread.worker.send({
 					method: 'init',
-					args: { name: thread.name, zoneId: thread.id }
+					args: {
+						name: thread.name,
+						zoneId: thread.id
+					}
 				});
 			},
-			event: function(thread, message) {
+			event: function (thread, message) {
 				objects.sendEvent(message);
 			},
-			events: function(thread, message) {
+			events: function (thread, message) {
 				objects.sendEvents(message);
 			},
-			object: function(thread, message) {
+			object: function (thread, message) {
 				objects.updateObject(message);
 			},
-			callDifferentThread: function(thread, message) {
+			callDifferentThread: function (thread, message) {
 				var obj = connections.players.find(p => (p.name == message.playerName));
 				if (!obj)
 					return;
@@ -175,7 +186,7 @@ define([
 					args: message.data.args
 				});
 			},
-			rezone: function(thread, message) {
+			rezone: function (thread, message) {
 				var obj = message.args.obj;
 				obj.destroyed = false;
 				obj.zoneName = message.args.newZone;
@@ -183,7 +194,7 @@ define([
 
 				var serverObj = objects.objects.find(o => o.id == obj.id);
 				serverObj.zoneName = obj.zoneName;
-				
+
 				var thread = this.getThreadFromName(obj.zoneName);
 
 				if (!thread) {

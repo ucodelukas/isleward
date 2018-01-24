@@ -54,18 +54,13 @@ define([
 						if ((!m.aggro) || (!m.effects))
 							continue;
 
-						var isPlayer = !!this.obj.player;
-						var isTargetPlayer = !!m.player;
-
-						if ((!this.obj.aggro.canAttack(m)) && (isPlayer == isTargetPlayer))
+						if (!this.obj.aggro.canAttack(m))
 							continue;
 
 						var targetEffect = m.effects.addEffect({
 							type: 'stunned',
 							noMsg: true
 						});
-
-						var ttl = 350;
 
 						var targetPos = {
 							x: m.x,
@@ -101,6 +96,9 @@ define([
 								targetPos.y += dy;
 							}
 						}
+
+						var distance = Math.max(Math.abs(m.x - targetPos.x), Math.abs(m.y - targetPos.y));
+						var ttl = distance * 125;
 
 						m.clearQueue();
 

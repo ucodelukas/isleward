@@ -372,7 +372,7 @@ module.exports = {
 			level: 2,
 			regular: {
 				drops: {
-					chance: 55,
+					chance: 60,
 					rolls: 1
 				}
 			},
@@ -388,7 +388,7 @@ module.exports = {
 			level: 3,
 			regular: {
 				drops: {
-					chance: 50,
+					chance: 56,
 					rolls: 1
 				}
 			},
@@ -445,10 +445,17 @@ module.exports = {
 		'mud crab': {
 			level: 9
 		},
-		penguin: {
+		frog: {
 			level: 8,
 			rare: {
-				name: 'Tuckle'
+				name: 'The Muck Prince'
+			}
+		},
+		eagle: {
+			level: 10,
+			faction: 'hostile',
+			rare: {
+				name: 'Fleshripper'
 			}
 		},
 		hermit: {
@@ -556,7 +563,7 @@ module.exports = {
 				count: 0
 			}
 		},
-		'priest': {
+		priest: {
 			level: 50,
 			attackable: false,
 			walkDistance: 0,

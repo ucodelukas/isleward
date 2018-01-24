@@ -5,8 +5,56 @@ define([
 ) {
 	return {
 		generators: {
-			hpMax: function (item, level, blueprint, perfection, calcPerfection) {
-				var max = ((level * 15) + level) / 10;
+			dmgPercent: function (item, level, blueprint, perfection) {
+				var max = (level / 2);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
+				else
+					return max * perfection * (blueprint.statMult.dmgPercent || 1);
+			},
+
+			elementDmgPercent: function (item, level, blueprint, perfection) {
+				var max = (level / 6.7);
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
+				else
+					return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
+			},
+
+			addCritMultiplier: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (level * 15) * div;
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
+				else
+					return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
+			},
+
+			addCritChance: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (level - 3) * 50 * div;
+
+				if (perfection == null)
+					return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
+				else
+					return max * perfection * (blueprint.statMult.addCritChance || 1);
+			},
+
+			hpMax: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = ((-0.6340155 + (13.68923 * level) - (0.34383 * Math.pow(level, 2)) + (0.06754871 * Math.pow(level, 3)) + (0.000174046 * Math.pow(level, 4)) + (0.000007675887 * Math.pow(level, 5))) / 10) * div;
 
 				if (calcPerfection) {
 					return (item.stats.hpMax / max);
@@ -15,9 +63,14 @@ define([
 				else
 					return max * perfection * (blueprint.statMult.hpMax || 1);
 			},
-			mainStat: function (item, level, blueprint, perfection, calcPerfection) {
-				var min = ((level * 6.05) - ((level - 1) * 1.2)) / 10;
-				var max = ((level * 14.9) + ((level - 1) * 31.49)) / 10;
+
+			mainStat: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var min = (level / 15) * div;
+				var max = (level * 5) * div;
 
 				if (calcPerfection)
 					return ((item.stats[calcPerfection] - min) / (max - min));
@@ -28,7 +81,7 @@ define([
 			},
 			armor: function (item, level, blueprint, perfection) {
 				var min = (level * 20);
-				var max = (level * 51.2);
+				var max = (level * 50);
 
 				if (perfection == null)
 					return random.norm(min, max) * blueprint.statMult.armor;
@@ -36,13 +89,21 @@ define([
 					return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 			},
 			elementResist: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
 				if (perfection == null)
-					return random.norm(1, 7.5) * (blueprint.statMult.elementResist || 1);
+					return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 				else
-					return (1 + (6.5 * perfection)) * (blueprint.statMult.elementResist || 1);
+					return (1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
 			},
-			regenHp: function (item, level, blueprint, perfection, calcPerfection) {
-				var max = (((10 + (level * 200)) / 20) / 2) / 10;
+			regenHp: function (item, level, blueprint, perfection) {
+				var div = 1 / 11;
+				if (item.slot == 'twoHanded')
+					div *= 2;
+
+				var max = (-0.05426729 + (3.477385 * level) - (0.03890282 * Math.pow(level, 2)) + (0.009244822 * Math.pow(level, 3)) + (0.0001700915 * Math.pow(level, 4)) - (0.00000138085 * Math.pow(level, 5))) * div;
 
 				if (calcPerfection) {
 					return (item.stats.regenHp / max);
@@ -71,15 +132,18 @@ define([
 
 			manaMax: {
 				min: 1,
-				max: 5
+				max: 8
 			},
 
 			regenMana: {
 				min: 1,
-				max: 7
+				max: 5
 			},
 
 			lvlRequire: {
+				level: {
+					min: 5
+				},
 				generator: 'lvlRequire'
 			},
 
@@ -93,62 +157,100 @@ define([
 				generator: 'mainStat'
 			},
 
+			elementAllResist: {
+				level: {
+					min: 25
+				},
+				generator: 'elementResist'
+			},
 			elementArcaneResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementFrostResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementFireResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementHolyResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementPhysicalResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementPoisonResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 			elementAllResist: {
+				level: {
+					min: 15
+				},
 				generator: 'elementResist'
 			},
 
 			dmgPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				ignore: true,
+				generator: 'dmgPercent'
 			},
 			elementArcanePercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementFrostPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementFirePercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementHolyPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementPhysicalPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			elementPoisonPercent: {
-				min: 1,
-				max: 5,
-				ignore: true
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
 			},
 			allAttributes: {
 				generator: 'mainStat',
@@ -156,6 +258,14 @@ define([
 			},
 
 			attackSpeed: {
+				min: 1,
+				max: 8.75,
+				ignore: true
+			},
+
+			castSpeed: {
+				min: 1,
+				max: 8.75,
 				ignore: true
 			},
 
@@ -164,18 +274,39 @@ define([
 				ignore: true
 			},
 
-			addCritChance: {
+			blockAttackChance: {
 				min: 1,
-				max: 90
+				max: 10,
+				ignore: true
+			},
+
+			blockSpellChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
+			addCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
 			},
 			addCritMultiplier: {
-				min: 5,
-				max: 50
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
 			},
 
 			magicFind: {
 				min: 1,
 				max: 15
+			},
+
+			itemQuantity: {
+				min: 2,
+				max: 27
 			},
 
 			xpIncrease: {
@@ -192,71 +323,85 @@ define([
 				}
 			},
 
-			finger: {
-				dmgPercent: {
+			offHand: {
+
+			},
+
+			trinket: {
+				attackSpeed: {
 					min: 1,
-					max: 5
+					max: 8.75,
 				},
-				elementArcanePercent: {
+				castSpeed: {
 					min: 1,
-					max: 5
+					max: 8.75,
+				}
+			},
+
+			finger: {
+				elementArcanePercent: {
+					generator: 'elementDmgPercent'
 				},
 				elementFrostPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementFirePercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementHolyPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementPhysicalPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
-					min: 1,
-					max: 5
+					generator: 'elementDmgPercent'
 				},
 				allAttributes: {
 					generator: 'mainStat'
+				},
+				attackSpeed: {
+					min: 1,
+					max: 8.75
+				},
+				castSpeed: {
+					min: 1,
+					max: 8.75
 				}
 			},
 
 			neck: {
 				dmgPercent: {
-					min: 1,
-					max: 10
+					generator: 'dmgPercent'
 				},
 				elementArcanePercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementFrostPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementFirePercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementHolyPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementPhysicalPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
-					min: 1,
-					max: 10
+					generator: 'elementDmgPercent'
 				},
 				allAttributes: {
 					generator: 'mainStat'
+				},
+				attackSpeed: {
+					min: 1,
+					max: 8.75
+				},
+				castSpeed: {
+					min: 1,
+					max: 8.75
 				}
 			}
 		},
@@ -277,8 +422,9 @@ define([
 			//If we enchant something we don't add armor
 			if (!blueprint.statMult)
 				blueprint.statMult = {};
-			if (blueprint.statMult.armor)
-				this.buildStat(item, blueprint, 'armor');
+			for (var s in blueprint.statMult) {
+				this.buildStat(item, blueprint, s);
+			}
 
 			var statCount = blueprint.statCount || (item.quality + 1);
 
@@ -313,7 +459,16 @@ define([
 		},
 
 		buildStat: function (item, blueprint, stat, result) {
-			var statOptions = extend(true, {}, this.stats, this.slots[item.slot] || {});
+			var slotStats = this.slots[item.slot] || {};
+			var statOptions = extend(true, {}, this.stats, slotStats || {});
+
+			for (var p in statOptions) {
+				if ((!slotStats[p]) || (slotStats[p].ignore))
+					continue;
+
+				delete statOptions[p].ignore;
+			}
+
 			var statBlueprint = null;
 
 			var value = null;
@@ -323,8 +478,17 @@ define([
 				value = split[1];
 			}
 
-			if (!stat) {
-				var options = Object.keys(statOptions).filter(s => !statOptions[s].ignore);
+			if ((!stat) || (!statOptions[stat])) {
+				var options = Object.keys(statOptions).filter(function (s) {
+					var o = statOptions[s];
+					if (o.ignore)
+						return false;
+					else if ((o.level) && (o.level.min) && (item.level < o.level.min))
+						return false;
+					else
+						return true;
+				});
+
 				stat = options[~~(Math.random() * options.length)];
 				statBlueprint = statOptions[stat];
 			} else

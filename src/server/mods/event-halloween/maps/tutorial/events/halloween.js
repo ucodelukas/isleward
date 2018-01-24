@@ -140,6 +140,10 @@ define([
 							}]
 						};
 					}
+				},
+
+				beforeCompleteAutoquest: function (quest, character) {
+
 				}
 			}
 		}]

@@ -91,6 +91,10 @@ define([
 					hpMax: 95
 				},
 				vitScale: 10,
+				gainStats: {
+					int: 1,
+					str: 1
+				},
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 			classes.weapons.necromancer = 'Sickle';
@@ -122,7 +126,7 @@ define([
 
 		beforeGetItemTypes: function (types) {
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
-				types.twoHanded[s] = {
+				types.oneHanded[s] = {
 					sprite: [i, 0],
 					spellName: 'harvest life',
 					spritesheet: `${this.folderName}/images/items.png`
@@ -133,28 +137,28 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 0.1,
+				statMult: 0.76,
 				element: 'physical',
 				auto: true,
 				cdMax: 6,
 				manaCost: 0,
 				range: 1,
 				random: {
-					damage: [2.2, 4.1],
+					damage: [1.5, 5.7],
 					healPercent: [5, 15]
 				}
 			};
 
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
-				statMult: 0.1,
+				statMult: 0.27,
 				element: 'physical',
 				cdMax: 7,
 				manaCost: 5,
 				range: 9,
 				random: {
-					damagePercent: [80, 120],
-					hpPercent: [65, 85]
+					damagePercent: [100, 380],
+					hpPercent: [40, 60]
 				}
 			};
 
@@ -162,13 +166,13 @@ define([
 				statType: ['str', 'int'],
 				statMult: 0.1,
 				element: 'physical',
-				cdMax: 7,
+				cdMax: 20,
 				manaCost: 5,
 				range: 9,
 				random: {
 					i_drainPercentage: [10, 50],
 					shieldMultiplier: [2, 5],
-					i_frenzyDuration: [10, 20]
+					i_frenzyDuration: [5, 15]
 				}
 			};
 		},

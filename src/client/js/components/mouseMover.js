@@ -4,7 +4,7 @@ define([
 	'js/system/client',
 	'js/input',
 	'js/objects/objects'
-], function(
+], function (
 	events,
 	renderer,
 	client,
@@ -30,18 +30,21 @@ define([
 
 		sprite: null,
 
-		init: function() {
+		init: function () {
+			events.on('onUiHover', this.onUiHover.bind(this, true));
+			events.on('onUiLeave', this.onUiHover.bind(this, false));
+
 			this.sprite = renderer.buildObject({
 				layerName: 'effects',
 				x: 0,
 				y: 0,
-				sheetName: 'ui', 
+				sheetName: 'ui',
 				cell: 7
 			});
 		},
 
-		clearPath: function() {
-			this.path.forEach(function(p) {
+		clearPath: function () {
+			this.path.forEach(function (p) {
 				if (p.sprite) {
 					renderer.destroyObject({
 						sprite: p.sprite,
@@ -53,7 +56,14 @@ define([
 			this.path = [];
 		},
 
-		showPath: function(e) {
+		onUiHover: function (dunno, onUiHover) {
+			if (!this.sprite)
+				return;
+
+			this.sprite.visible = !onUiHover;
+		},
+
+		showPath: function (e) {
 			if ((e.button != null) && (e.button != 0))
 				return;
 
@@ -70,44 +80,8 @@ define([
 
 			this.sprite.x = (this.hoverTile.x * scale);
 			this.sprite.y = (this.hoverTile.y * scale);
-
-			return;
-
-			if ((!e.down) && (!this.mouseDown))
-				return;
-
-			this.mouseDown = true;
-
-			var obj = this.obj;
-
-			this.clearPath();
-
-			//We floor the position in case we're charging (subpixel position)
-			var path = physics.getPath({
-				x: ~~this.obj.pather.pathPos.x,
-				y: ~~this.obj.pather.pathPos.y
-			}, {
-				x: this.hoverTile.x,
-				y: this.hoverTile.y
-			});
-
-			this.path = path.map(function(p) {
-				return {
-					x: p.x,
-					y: p.y,
-					sprite: renderer.buildRectangle({
-						layerName: 'effects',
-						x: (p.x * scale) + 4,
-						y: (p.y * scale) + 4,
-						w: 24,
-						h: 24,
-						color: '0x48edff',
-						alpha: 0.2
-					})
-				};
-			});
 		},
-		queuePath: function(e) {
+		queuePath: function (e) {
 			this.mouseDown = false;
 
 			if ((this.path.length == 0) || (e.down))
@@ -116,7 +90,7 @@ define([
 			client.request({
 				cpn: 'player',
 				method: 'moveList',
-				data: this.path.map(function(p) {
+				data: this.path.map(function (p) {
 					return {
 						x: p.x,
 						y: p.y
@@ -128,14 +102,14 @@ define([
 			this.path = [];
 		},
 
-		update: function() {
+		update: function () {
 			this.opacityCounter++;
 			if (this.sprite)
 				this.sprite.alpha = 0.35 + Math.abs(Math.sin(this.opacityCounter / 20) * 0.35);
 			this.showPath(input.mouse);
 		},
 
-		destroy: function() {
+		destroy: function () {
 			renderer.destroyObject({
 				sprite: this.sprite,
 				layerName: 'effects'

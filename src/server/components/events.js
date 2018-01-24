@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -8,7 +8,7 @@ define([
 
 		list: [],
 
-		simplify: function(self) {
+		simplify: function (self) {
 			if (!self)
 				return;
 
@@ -27,13 +27,13 @@ define([
 			return result;
 		},
 
-		save: function() {
+		save: function () {
 			return {
 				type: 'events'
 			};
 		},
 
-		unregisterEvent: function(event) {
+		unregisterEvent: function (event) {
 			this.list.spliceWhere(l => (l == event));
 
 			this.obj.syncer.setArray(true, 'events', 'removeList', {
@@ -41,8 +41,8 @@ define([
 			});
 		},
 
-		syncList: function() {
-			this.list.forEach(function(l) {
+		syncList: function () {
+			this.list.forEach(function (l) {
 				this.obj.syncer.setArray(true, 'events', 'updateList', {
 					id: l.id,
 					name: l.config.name,
@@ -52,13 +52,16 @@ define([
 		},
 
 		events: {
-			afterMove: function() {
+			afterMove: function () {
 				var events = this.obj.instance.events;
 				var closeEvents = events.getCloseEvents(this.obj);
 				if (!closeEvents)
 					return;
 
-				closeEvents.forEach(function(c) {
+				closeEvents.forEach(function (c) {
+					if (this.list.some(l => (l == c)))
+						return;
+
 					this.list.push(c);
 
 					this.obj.syncer.setArray(true, 'events', 'updateList', {

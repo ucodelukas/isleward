@@ -288,13 +288,27 @@ define([
 				var event = configs[i].event;
 				if (!event)
 					continue;
-				else if (event.participators.some(p => (p == obj)))
+
+				var exists = event.participators.find(p => (p.name == obj.name));
+				if (exists) {
+					event.participators.spliceWhere(p => (p == exists));
+					event.participators.push(obj);
+					result.push(event);
 					continue;
+				}
 
 				var distance = event.config.distance;
 				if (distance == -1) {
 					event.participators.push(obj);
 					result.push(event);
+
+					var rList = [{
+						nameLike: 'Ancient Carp',
+						removeAll: true
+					}];
+
+					this.instance.mail.sendMail(obj.name, rList);
+
 					continue;
 				}
 

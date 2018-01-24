@@ -219,6 +219,9 @@ define([
 				if (clonedItem.generate) {
 					clonedItem = generator.generate(clonedItem);
 					delete clonedItem.generate;
+
+					if (item.factions)
+						clonedItem.factions = item.factions;
 				}
 
 				this.obj.inventory.getItem(clonedItem);
@@ -295,10 +298,13 @@ define([
 
 			var reputation = this.obj.reputation;
 
+			var itemList = this.obj.inventory.items
+				.filter(i => ((i.worth > 0) && (!i.eq)));
+			itemList = extend(true, [], itemList);
+
 			this.obj.syncer.set(true, 'trade', 'sellList', {
 				markup: target.trade.markup.buy,
-				items: this.obj.inventory.items
-					.filter(i => ((i.worth > 0) && (!i.eq)))
+				items: itemList
 					.map(function (i) {
 						if (i.factions) {
 							i.factions = i.factions.map(function (f) {

@@ -53,6 +53,8 @@ define([
 		},
 
 		onJoinChannel: function (channel) {
+			this.find('[filter="' + channel.trim() + '"]').remove();
+
 			var container = this.find('.filters');
 			var newFilter = $(tplTab)
 				.appendTo(container)

@@ -157,14 +157,10 @@ define([
 				sprite: [8, 4]
 			}
 		},
-		twoHanded: {
+		oneHanded: {
 			'Sword': {
 				sprite: [9, 0],
 				spellName: 'slash'
-			},
-			'Gnarled Staff': {
-				sprite: [9, 1],
-				spellName: 'magic missile'
 			},
 			'Dagger': {
 				sprite: [9, 2],
@@ -178,11 +174,35 @@ define([
 			'Mace': {
 				sprite: [9, 4],
 				spellName: 'smite'
+			}
+		},
+		twoHanded: {
+			'Gnarled Staff': {
+				sprite: [9, 1],
+				spellName: 'magic missile'
 			},
 			'Spear': {
 				sprite: [9, 6],
 				spellName: 'slash',
 				range: 2
+			}
+		},
+		offHand: {
+			'Wooden Shield': {
+				sprite: [13, 0],
+				armorMult: 0.3,
+				blockAttackMult: 1
+			},
+			'Gilded Shield': {
+				sprite: [13, 1],
+				armorMult: 0.6,
+				blockAttackMult: 0.5
+			},
+			'Brittle Tome': {
+				sprite: [13, 2]
+			},
+			'Ancient Tome': {
+				sprite: [13, 3]
 			}
 		},
 		tool: {

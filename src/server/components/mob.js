@@ -18,6 +18,8 @@ define([
 		originY: 0,
 
 		walkDistance: 1,
+		maxChaseDistance: 25,
+		goHome: false,
 
 		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
@@ -27,30 +29,47 @@ define([
 		},
 
 		update: function () {
+			var obj = this.obj;
+
 			var target = null;
-			if (this.obj.aggro)
-				target = this.obj.aggro.getHighest();
-			var goHome = false;
-			if ((target) && (target != this.obj) && ((!this.obj.follower) || (this.obj.follower.master != target))) {
-				this.fight(target);
-				return;
-			} else if ((!target) && (this.target)) {
-				this.target = null;
-				this.obj.clearQueue();
-				goHome = true;
+			if (obj.aggro)
+				target = obj.aggro.getHighest();
+
+			//Are we too far from home?
+			if ((!this.goHome) && (!obj.follower) && (target)) {
+				if (!this.canChase(target)) {
+					obj.clearQueue();
+					obj.aggro.unAggro(target);
+					target = obj.aggro.getHighest();
+				}
 			}
 
-			if (this.obj.actionQueue.length > 0)
+			if (!this.goHome) {
+				//Are we in fight mode?
+				if ((target) && (target != obj) && ((!obj.follower) || (obj.follower.master != target))) {
+					this.fight(target);
+					return;
+				}
+				//Is fight mode over?
+				else if ((!target) && (this.target)) {
+					this.target = null;
+					obj.clearQueue();
+					this.goHome = true;
+				}
+			}
+
+			//If we're already going somewhere, don't calculate a new path
+			if (obj.actionQueue.length > 0)
 				return;
 
-			if ((!goHome) && (rnd() < 0.85))
+			//Unless we're going home, don't always move
+			if ((!this.goHome) && (rnd() < 0.85))
 				return;
 
+			//don't move around if we're not allowed to, unless we're going home
 			var walkDistance = this.walkDistance;
-			if ((!goHome) && (walkDistance <= 0))
+			if ((!this.goHome) && (walkDistance <= 0))
 				return;
-
-			var obj = this.obj;
 
 			var toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			var toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
@@ -172,6 +191,11 @@ define([
 					y: p.y
 				}
 			});
+		},
+
+		canChase: function (obj) {
+			var distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
+			return (distanceFromHome <= this.maxChaseDistance)
 		}
 	};
 });

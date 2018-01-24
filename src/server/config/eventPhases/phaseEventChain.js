@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -9,11 +9,11 @@ define([
 		cd: 0,
 		repeat: 0,
 
-		init: function() {
+		init: function () {
 			this.update();
 		},
 
-		update: function() {
+		update: function () {
 			if (this.cd == 0) {
 				if (this.state < this.config.length - 1) {
 					this.state++;
@@ -45,10 +45,9 @@ define([
 		},
 
 		events: {
-			mobTalk: function(config) {
+			mobTalk: function (config) {
 				var mob = this.instance.objects.objects.find(o => (o.id == config.id));
 				var text = (config.text instanceof Array) ? config.text[config.oldRepeat - config.repeat - 1] : config.text;
-				console.log(text);
 
 				if (config.zone) {
 					this.instance.syncer.queue('onGetMessages', {
@@ -62,7 +61,7 @@ define([
 					mob.syncer.set(false, 'chatter', 'msg', text);
 				}
 			},
-			addComponents: function(config) {
+			addComponents: function (config) {
 				var objects = this.instance.objects.objects;
 
 				var components = config.components;
@@ -83,7 +82,7 @@ define([
 					}
 				}
 			},
-			removeComponents: function(config) {
+			removeComponents: function (config) {
 				var objects = this.instance.objects.objects;
 
 				var components = config.components;

@@ -46,7 +46,7 @@ define([
 
 			var blueprintStats = character.components.find(c => c.type == 'stats') || {};
 			extend(true, blueprintStats, classes.stats[obj.class]);
-			blueprintStats.values.hpMax = 10 + ((blueprintStats.values.level || 1) * 40);
+			blueprintStats.values.hpMax = (blueprintStats.values.level || 1) * 32.7;
 			if (!blueprintStats.values.hp)
 				blueprintStats.values.hp = blueprintStats.values.hpMax;
 			var stats = obj.addComponent('stats');
@@ -57,6 +57,11 @@ define([
 				stats.stats[s] = blueprintStats.stats[s];
 			}
 			stats.vitScale = blueprintStats.vitScale;
+
+			var gainStats = classes.stats[character.class].gainStats;
+			for (var s in gainStats) {
+				stats.values[s] += (gainStats[s] * stats.values.level);
+			}
 
 			obj.portrait = classes.portraits[character.class];
 
@@ -182,8 +187,17 @@ define([
 				physics.addObject(this.obj, this.obj.x, this.obj.y);
 
 				this.obj.stats.die(source);
-			} else
+			} else {
 				this.obj.stats.dead = true;
+
+				process.send({
+					method: 'object',
+					serverId: this.obj.serverId,
+					obj: {
+						permadead: true
+					}
+				});
+			}
 
 			this.obj.fireEvent('onAfterDeath', source);
 

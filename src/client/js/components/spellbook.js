@@ -81,10 +81,11 @@ define([
 						return;
 					}
 
-					if (this.spells.length - 1 >= s.id)
-						this.spells.splice(s.id, 0, s);
-					else
-						this.spells.push(s);
+					this.spells.push(s);
+
+					this.spells = this.spells.sort(function (a, b) {
+						return (a.id - b.id);
+					});
 				}, this);
 
 				events.emit('onGetSpells', this.spells);
@@ -100,6 +101,8 @@ define([
 				spellNumber = 1;
 			else if (number == 3)
 				spellNumber = 2;
+			else if (number == 4)
+				spellNumber = 3;
 
 			if (spellNumber == -1)
 				return;
@@ -193,7 +196,7 @@ define([
 				this.target = this.obj;
 			}
 
-			if ((!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
+			if ((!spell.aura) && (!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
 				return;
 
 			var hoverTile = this.obj.mouseMover.hoverTile;

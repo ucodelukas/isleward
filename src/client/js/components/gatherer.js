@@ -2,7 +2,7 @@ define([
 	'js/system/client',
 	'js/system/events',
 	'js/misc/physics'
-], function(
+], function (
 	client,
 	events,
 	physics
@@ -11,11 +11,12 @@ define([
 		type: 'gatherer',
 		effect: null,
 
-		init: function() {
+		init: function () {
 			this.obj.on('onKeyDown', this.onKeyDown.bind(this));
+			events.on('onRezone', this.onRezone.bind(this));
 		},
 
-		extend: function(msg) {
+		extend: function (msg) {
 			if ((msg.width) && (msg.progress != 100)) {
 				if (this.effect)
 					this.effect.destroyed = true;
@@ -54,7 +55,14 @@ define([
 			}
 		},
 
-		onKeyDown: function(key) {
+		onRezone: function () {
+			this.extend({
+				progress: 100,
+				action: 'Fishing'
+			});
+		},
+
+		onKeyDown: function (key) {
 			if (key != 'g')
 				return;
 

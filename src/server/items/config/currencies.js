@@ -28,13 +28,22 @@ define([
 				description: `Rerolls an item's slot`,
 				material: true,
 				sprite: [6, 8]
+			},
+			"Brawler's Totem": {
+				name: "Brawler's Totem",
+				quantity: 1,
+				quality: 3,
+				description: `Rerolls a weapon's ability`,
+				material: true,
+				sprite: [7, 8]
 			}
 		},
 
 		chance: {
 			'Unstable Totem': 37,
 			'Ascendant Totem': 15,
-			"Gambler's Totem": 5
+			"Gambler's Totem": 5,
+			"Brawler's Totem": 6
 		}
 	};
 });

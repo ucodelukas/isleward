@@ -31,27 +31,39 @@ define([
 		stats: {
 			wizard: {
 				values: {
-					hpMax: 80
+					hpMax: 50
 				},
 				vitScale: 10,
+				gainStats: {
+					int: 1
+				}
 			},
 			cleric: {
 				values: {
-					hpMax: 90
+					hpMax: 60
 				},
-				vitScale: 10
+				vitScale: 10,
+				gainStats: {
+					int: 1
+				}
 			},
 			warrior: {
 				values: {
-					hpMax: 110
+					hpMax: 80
 				},
-				vitScale: 10
+				vitScale: 10,
+				gainStats: {
+					str: 1
+				}
 			},
 			thief: {
 				values: {
-					hpMax: 100
+					hpMax: 70
 				},
-				vitScale: 10
+				vitScale: 10,
+				gainStats: {
+					dex: 1
+				}
 			}
 		},
 		weapons: {
