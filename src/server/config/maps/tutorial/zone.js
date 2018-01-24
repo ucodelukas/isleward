@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'tutorial',
-	level: 2,
+	level: [1, 10],
 	resources: {
 		Moonbell: {
 			type: 'herb',

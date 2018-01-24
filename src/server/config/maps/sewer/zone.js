@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'Sewer',
-	level: 8,
+	level: [11, 13],
 
 	mobs: {
 		default: {

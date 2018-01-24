@@ -5,66 +5,74 @@ define([
 ) {
 	return {
 		generators: {
-			dmgPercent: function (item, level, blueprint, perfection) {
+			dmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
 				var max = (level / 2);
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
 				else
 					return max * perfection * (blueprint.statMult.dmgPercent || 1);
 			},
 
-			elementDmgPercent: function (item, level, blueprint, perfection) {
+			elementDmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
 				var max = (level / 6.7);
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
 				else
 					return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
 			},
 
-			addCritMultiplier: function (item, level, blueprint, perfection) {
+			addCritMultiplier: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
 				var max = (level * 15) * div;
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
 				else
 					return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
 			},
 
-			addCritChance: function (item, level, blueprint, perfection) {
+			addCritChance: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
 				var max = (level - 3) * 50 * div;
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
 				else
 					return max * perfection * (blueprint.statMult.addCritChance || 1);
 			},
 
-			hpMax: function (item, level, blueprint, perfection) {
+			hpMax: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
 				var max = ((-0.6340155 + (13.68923 * level) - (0.34383 * Math.pow(level, 2)) + (0.06754871 * Math.pow(level, 3)) + (0.000174046 * Math.pow(level, 4)) + (0.000007675887 * Math.pow(level, 5))) / 10) * div;
 
-				if (calcPerfection) {
-					return (item.stats.hpMax / max);
-				} else if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
 				else
 					return max * perfection * (blueprint.statMult.hpMax || 1);
 			},
 
-			mainStat: function (item, level, blueprint, perfection) {
+			mainStat: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
@@ -73,49 +81,55 @@ define([
 				var max = (level * 5) * div;
 
 				if (calcPerfection)
-					return ((item.stats[calcPerfection] - min) / (max - min));
+					return ((calcPerfection - min) / (max - min));
 				else if (perfection == null)
 					return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
 				else
 					return (min + ((max - min) * perfection)) * (blueprint.statMult.mainStat || 1);
 			},
-			armor: function (item, level, blueprint, perfection) {
+			armor: function (item, level, blueprint, perfection, calcPerfection) {
 				var min = (level * 20);
 				var max = (level * 50);
 
-				if (perfection == null)
+				if (calcPerfection)
+					return ((calcPerfection - min) / (max - min));
+				else if (perfection == null)
 					return random.norm(min, max) * blueprint.statMult.armor;
 				else
 					return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 			},
-			elementResist: function (item, level, blueprint, perfection) {
+			elementResist: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / 100);
+				else if (perfection == null)
 					return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 				else
 					return (1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
 			},
-			regenHp: function (item, level, blueprint, perfection) {
+			regenHp: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
 
 				var max = (-0.05426729 + (3.477385 * level) - (0.03890282 * Math.pow(level, 2)) + (0.009244822 * Math.pow(level, 3)) + (0.0001700915 * Math.pow(level, 4)) - (0.00000138085 * Math.pow(level, 5))) * div;
 
-				if (calcPerfection) {
-					return (item.stats.regenHp / max);
-				} else if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
 				else
 					return max * perfection * (blueprint.statMult.regenHp || 1);
 			},
-			lvlRequire: function (item, level, blueprint, perfection) {
+			lvlRequire: function (item, level, blueprint, perfection, calcPerfection) {
 				var max = ~~(level / 2);
 
-				if (perfection == null)
+				if (calcPerfection)
+					return (calcPerfection / max);
+				else if (perfection == null)
 					return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
 				else
 					return max * perfection * (blueprint.statMult.lvlRequire || 1);
@@ -312,6 +326,12 @@ define([
 			xpIncrease: {
 				min: 1,
 				max: 6
+			},
+
+			sprintChance: {
+				min: 1,
+				max: 20,
+				ignore: true
 			}
 		},
 
@@ -405,7 +425,6 @@ define([
 				}
 			}
 		},
-		mainStatChance: 0.7,
 
 		generate: function (item, blueprint, result) {
 			if (item.slot == 'tool') {
@@ -541,27 +560,19 @@ define([
 			};
 
 			for (var p in stats) {
-				if (['lvlRequire'].indexOf(p) > -1)
-					continue;
-				else if (p.indexOf('Resist') > -1)
-					continue;
-
-				var statName = p;
-				if (['int', 'str', 'dex'].indexOf(p) > -1)
-					statName = 'mainStat';
-
-				var generator = this.generators[statName];
+				var generator = this.stats[p].generator;
 				if (!generator)
 					continue;
-
-				if (p == 'armor') {
-					nStats.armor = Math.ceil(stats.armor * (level / item.level));
+				else if (['lvlRequire'].indexOf(p) > -1)
 					continue;
-				}
 
-				var perfection = generator(item, item.originalLevel || item.level, bpt, null, p);
+				generator = this.generators[generator];
+
+				var perfection = generator(item, item.originalLevel || item.level, bpt, null, stats[p]);
 				nStats[p] = Math.ceil(generator(item, level, bpt, perfection));
 			}
+
+			console.log(nStats);
 
 			return nStats;
 		}

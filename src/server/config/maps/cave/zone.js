@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'cave',
-	level: 20,
+	level: [14, 16],
 	addLevel: 0,
 	resources: {},
 	mobs: {

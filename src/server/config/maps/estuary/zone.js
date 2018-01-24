@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'estuary',
-	level: 20,
+	level: [15, 18],
 	addLevel: 0,
 	resources: {},
 	mobs: {

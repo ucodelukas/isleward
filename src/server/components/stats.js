@@ -71,6 +71,7 @@ define([
 		type: 'stats',
 
 		values: baseStats,
+		originalValues: null,
 
 		vitScale: 10,
 
@@ -172,7 +173,8 @@ define([
 		},
 
 		addStat: function (stat, value) {
-			this.values[stat] += value;
+			if (['lvlRequire', 'vit', 'allAttributes'].indexOf(stat) == -1)
+				this.values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax'].indexOf(stat) == -1);
 
@@ -201,6 +203,7 @@ define([
 					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
 				}, this);
 			}
+
 		},
 
 		calcXpMax: function () {
@@ -543,7 +546,7 @@ define([
 
 			return {
 				type: 'stats',
-				values: this.values,
+				values: this.originalValues || this.values,
 				stats: this.stats
 			};
 		},
@@ -615,15 +618,25 @@ define([
 		},
 
 		rescale: function (level, isMob) {
+			if (!this.originalValues)
+				this.originalValues = extend(true, {}, this.values);
+
 			var oldValues = this.values;
 			var newValues = extend(true, {}, baseStats);
 			this.values = newValues;
 
+			var gainStats = classes.stats[this.obj.class].gainStats;
+			for (var s in gainStats) {
+				newValues[s] += (gainStats[s] * level);
+			}
+
 			newValues.level = level;
-			newValues.hpMax = 10 + (level * 40);
+			newValues.hpMax = level * 32.7;
 			if (isMob)
-				newValues.hpMax = 10 + (level * 120);
-			newValues.hp = newValues.hpMax;
+				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
+
+			if (newValues.hp > newValues.hpMax)
+				newValues.hp = newValues.hpMax;
 
 			var addStats = this.obj.equipment.rescale(level);
 			for (var p in addStats) {

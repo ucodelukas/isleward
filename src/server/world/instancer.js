@@ -141,13 +141,19 @@ define([
 				else {
 					var o = objects.transferObject(obj);
 					questBuilder.obtain(o);
+
+					var maxLevel = o.instance.map.zone.level[1];
+					if (maxLevel < o.stats.values.level)
+						o.stats.rescale(maxLevel);
 				}
 			},
 			onAddObject: function (obj) {
 				if (obj.player)
 					obj.stats.onLogin();
 
-				//obj.stats.rescale(3);
+				var maxLevel = obj.instance.map.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
@@ -372,6 +378,10 @@ define([
 				if (obj.player)
 					obj.stats.onLogin();
 
+				var maxLevel = obj.instance.map.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
+
 				obj.fireEvent('afterMove');
 			},
 			updateObject: function (msg) {
@@ -518,6 +528,10 @@ define([
 
 					instance.questBuilder.obtain(obj);
 				}
+
+				var maxLevel = obj.instance.map.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
 
 				process.send({
 					method: 'object',
