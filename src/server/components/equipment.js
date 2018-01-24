@@ -59,10 +59,12 @@ define([
 				itemId = itemId.itemId;
 			}
 
+			var level = this.obj.stats.originalValues || this.obj.stats.values;
+
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > this.obj.stats.values.level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > level)) {
 				item.eq = false;
 				return;
 			} else if ((item.factions) && (this.obj.player)) {
@@ -133,11 +135,18 @@ define([
 			}
 
 			var stats = item.stats;
+			if (this.obj.player) {
+				var maxLevel = this.obj.instance.map.zone.level[1];
+				if (maxLevel < item.level)
+					stats = generatorStats.rescale(item, maxLevel);
+			}
+
 			for (var s in stats) {
 				var val = stats[s];
 
 				if (s == 'hpMax')
 					s = 'vit';
+
 				this.obj.stats.addStat(s, val);
 			}
 
@@ -201,6 +210,12 @@ define([
 				return;
 
 			var stats = item.stats;
+			if (this.obj.player) {
+				var maxLevel = this.obj.instance.map.zone.level[1];
+				if (maxLevel < item.level)
+					stats = generatorStats.rescale(item, maxLevel);
+			}
+
 			for (var s in stats) {
 				var val = stats[s];
 
@@ -302,7 +317,7 @@ define([
 			var eq = this.eq;
 			for (var p in eq) {
 				var item = items.find(i => (i.id == eq[p]));
-				if ((!item.slot) || (item.slot == 'tool'))
+				if ((!item.slot) || (item.slot == 'tool') || (item.level <= level))
 					continue;
 
 				var item = items.find(i => (i.id == eq[p]));

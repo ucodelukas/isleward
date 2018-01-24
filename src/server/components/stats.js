@@ -203,7 +203,6 @@ define([
 					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
 				}, this);
 			}
-
 		},
 
 		calcXpMax: function () {
@@ -618,6 +617,7 @@ define([
 		},
 
 		rescale: function (level, isMob) {
+			var oldHp = this.values.hp;
 			if (!this.originalValues)
 				this.originalValues = extend(true, {}, this.values);
 
@@ -635,6 +635,7 @@ define([
 			if (isMob)
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
 
+			newValues.hp = oldHp;
 			if (newValues.hp > newValues.hpMax)
 				newValues.hp = newValues.hpMax;
 
@@ -646,6 +647,8 @@ define([
 
 				this.addStat(statName, addStats[p]);
 			}
+
+			this.obj.spellbook.calcDps();
 		}
 	};
 });

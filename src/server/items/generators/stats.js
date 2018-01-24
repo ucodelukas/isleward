@@ -572,8 +572,6 @@ define([
 				nStats[p] = Math.ceil(generator(item, level, bpt, perfection));
 			}
 
-			console.log(nStats);
-
 			return nStats;
 		}
 	};
