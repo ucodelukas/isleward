@@ -35,6 +35,13 @@ define([
 			if (obj.aggro)
 				target = obj.aggro.getHighest();
 
+			//Have we reached home?
+			if (this.goHome) {
+				var distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
+				if (distanceFromHome < this.walkDistance)
+					this.goHome = false;
+			}
+
 			//Are we too far from home?
 			if ((!this.goHome) && (!obj.follower) && (target)) {
 				if (!this.canChase(target)) {
@@ -97,6 +104,11 @@ define([
 					}
 				});
 			}
+
+			//We use goHometo force followers to follow us around but they should never stay in that state
+			// since it messes with combat
+			if (obj.follower)
+				this.goHome = false;
 		},
 		fight: function (target) {
 			if (this.target != target) {
