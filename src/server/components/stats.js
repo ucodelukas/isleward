@@ -219,7 +219,7 @@ define([
 			if (values.level == 20)
 				return;
 
-			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
+			amount = ~~(amount * (1 + (values.xpIncrease / 100))) * 999;
 
 			values.xpTotal = ~~(values.xpTotal + amount);
 			values.xp = ~~(values.xp + amount);
@@ -237,6 +237,7 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				values.level++;
+				console.log(123);
 
 				if (values.level == 20)
 					values.xp = 0;
@@ -246,7 +247,7 @@ define([
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
 					values[s] += gainStats[s];
-					obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+					//obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
 				}
 
 				this.obj.spellbook.calcDps();
@@ -257,10 +258,10 @@ define([
 					text: 'level up'
 				});
 
-				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+				/*obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
 				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
-				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
+				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);*/
 
 				syncO.level = values.level;
 
@@ -276,13 +277,16 @@ define([
 				obj.auth.doSave();
 			}
 
-			obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
+			//obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
 
 			process.send({
 				method: 'object',
 				serverId: this.obj.serverId,
 				obj: syncO
 			});
+
+			var maxLevel = this.obj.instance.map.zone.level[1];
+			this.rescale(maxLevel, false);
 		},
 
 		kill: function (target) {
@@ -617,7 +621,13 @@ define([
 		},
 
 		rescale: function (level, isMob) {
+			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
+
 			var oldHp = this.values.hp;
+			var oldXp = this.values.xp;
+			var oldXpTotal = this.values.xpTotal;
+			var oldXpMax = this.values.xpMax;
+
 			if (!this.originalValues)
 				this.originalValues = extend(true, {}, this.values);
 
@@ -639,6 +649,10 @@ define([
 			if (newValues.hp > newValues.hpMax)
 				newValues.hp = newValues.hpMax;
 
+			newValues.xp = oldXp;
+			newValues.xpMax = oldXpMax;
+			newValues.xpTotal = oldXpTotal;
+
 			var addStats = this.obj.equipment.rescale(level);
 			for (var p in addStats) {
 				var statName = p;
@@ -649,6 +663,10 @@ define([
 			}
 
 			this.obj.spellbook.calcDps();
+
+			for (var p in newValues) {
+				sync(true, 'stats', 'values', p, newValues[p]);
+			}
 		}
 	};
 });

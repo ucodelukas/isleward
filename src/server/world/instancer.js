@@ -529,7 +529,7 @@ define([
 					instance.questBuilder.obtain(obj);
 				}
 
-				var maxLevel = obj.instance.map.zone.level[1];
+				var maxLevel = obj.instance.zone.level[1];
 				if (maxLevel < obj.stats.values.level)
 					obj.stats.rescale(maxLevel);
 
