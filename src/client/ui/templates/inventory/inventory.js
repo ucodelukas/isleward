@@ -501,9 +501,12 @@ define([
 		},
 
 		performItemAction: function (item, action) {
+			var stats = window.player.stats.values;
+			var playerLevel = stats.originalLevel || stats.level;
+
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > window.player.stats.values.level)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > playerLevel)))
 				return;
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;

@@ -58,7 +58,8 @@ define([
 					mail: mail,
 					map: map,
 					scheduler: scheduler,
-					eventEmitter: eventEmitter
+					eventEmitter: eventEmitter,
+					zone: map.zone
 				};
 
 				this.instances.push(fakeInstance);
@@ -142,7 +143,7 @@ define([
 					var o = objects.transferObject(obj);
 					questBuilder.obtain(o);
 
-					var maxLevel = o.instance.map.zone.level[1];
+					var maxLevel = o.instance.zone.level[1];
 					if (maxLevel < o.stats.values.level)
 						o.stats.rescale(maxLevel);
 				}
@@ -151,7 +152,7 @@ define([
 				if (obj.player)
 					obj.stats.onLogin();
 
-				var maxLevel = obj.instance.map.zone.level[1];
+				var maxLevel = obj.instance.zone.level[1];
 				if (maxLevel < obj.stats.values.level)
 					obj.stats.rescale(maxLevel);
 
@@ -378,7 +379,7 @@ define([
 				if (obj.player)
 					obj.stats.onLogin();
 
-				var maxLevel = obj.instance.map.zone.level[1];
+				var maxLevel = obj.instance.zone.level[1];
 				if (maxLevel < obj.stats.values.level)
 					obj.stats.rescale(maxLevel);
 

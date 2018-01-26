@@ -219,7 +219,7 @@ define([
 			if (values.level == 20)
 				return;
 
-			amount = ~~(amount * (1 + (values.xpIncrease / 100))) * 999;
+			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
 
 			values.xpTotal = ~~(values.xpTotal + amount);
 			values.xp = ~~(values.xp + amount);
@@ -237,7 +237,6 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				values.level++;
-				console.log(123);
 
 				if (values.level == 20)
 					values.xp = 0;
@@ -285,7 +284,7 @@ define([
 				obj: syncO
 			});
 
-			var maxLevel = this.obj.instance.map.zone.level[1];
+			var maxLevel = this.obj.instance.zone.level[1]
 			this.rescale(maxLevel, false);
 		},
 
@@ -641,6 +640,7 @@ define([
 			}
 
 			newValues.level = level;
+			newValues.originalLevel = oldValues.level;
 			newValues.hpMax = level * 32.7;
 			if (isMob)
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));

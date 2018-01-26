@@ -32,10 +32,12 @@ define([
 			if (!this.doAutoEq)
 				return;
 
+			var stats = this.obj.stats.values;
+
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > this.obj.stats.values.level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > (stats.originalLevel || stats.level))) {
 				item.eq = false;
 				return;
 			} else if ((item.factions) && (this.obj.player)) {
@@ -136,7 +138,7 @@ define([
 
 			var stats = item.stats;
 			if (this.obj.player) {
-				var maxLevel = this.obj.instance.map.zone.level[1];
+				var maxLevel = this.obj.instance.zone.level[1];
 				if (maxLevel < item.level)
 					stats = generatorStats.rescale(item, maxLevel);
 			}
@@ -211,7 +213,7 @@ define([
 
 			var stats = item.stats;
 			if (this.obj.player) {
-				var maxLevel = this.obj.instance.map.zone.level[1];
+				var maxLevel = this.obj.instance.zone.level[1];
 				if (maxLevel < item.level)
 					stats = generatorStats.rescale(item, maxLevel);
 			}

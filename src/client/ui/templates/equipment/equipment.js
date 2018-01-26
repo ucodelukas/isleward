@@ -314,9 +314,13 @@ define([
 
 			var xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
+			var level = stats.level;
+			if (stats.originalLevel)
+				level = stats.originalLevel + ' (' + stats.level + ')';
+
 			var newStats = {
 				basic: {
-					level: stats.level,
+					level: level,
 					'next level': xpRemaining + 'xp',
 					gap1: '',
 					gold: window.player.trade.gold,
