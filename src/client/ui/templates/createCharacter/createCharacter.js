@@ -16,7 +16,7 @@ define([
 		centered: true,
 
 		classSprites: null,
-		class: 'wizard',
+		class: null,
 		costume: 0,
 		skinId: null,
 
@@ -58,6 +58,9 @@ define([
 			this.classSprites = result;
 
 			this.costume = -1;
+
+			this.class = Object.keys(result)[0] || '';
+			this.find('.txtClass').html(this.class);
 
 			this.changeCostume({
 				target: this.find('.txtCostume')
@@ -158,6 +161,8 @@ define([
 			var el = $(e.target);
 
 			var spriteList = this.classSprites[this.class];
+			if (!spriteList)
+				return;
 
 			this.costume = (this.costume + 1) % spriteList.length;
 			this.skinId = spriteList[this.costume].id;
