@@ -535,6 +535,13 @@ module.exports = {
 				count: 0
 			}
 		},
+		luta: {
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
+			}
+		},
 		rodriguez: {
 			attackable: false,
 			level: 10,

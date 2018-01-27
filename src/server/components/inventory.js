@@ -586,7 +586,8 @@ define([
 				y: y,
 				properties: {
 					cpnChest: {
-						ownerId: ownerId
+						ownerId: ownerId,
+						ttl: this.obj.instance.instanced ? -1 : 1710
 					},
 					cpnInventory: {
 						items: extend(true, [], items)

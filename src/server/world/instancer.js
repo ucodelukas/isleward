@@ -490,7 +490,8 @@ define([
 					scheduler: extend(true, {}, scheduler),
 					mail: extend(true, {}, mail),
 					map: newMap,
-					eventEmitter: extend(true, {}, eventEmitter)
+					eventEmitter: extend(true, {}, eventEmitter),
+					instanced: true
 				};
 
 				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));

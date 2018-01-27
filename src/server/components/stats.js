@@ -646,8 +646,11 @@ define([
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
 
 			newValues.hp = oldHp;
-			if (newValues.hp > newValues.hpMax)
+			var resetHp = false;
+			if (newValues.hp > newValues.hpMax) {
+				resetHp = true;
 				newValues.hp = newValues.hpMax;
+			}
 
 			newValues.xp = oldXp;
 			newValues.xpMax = oldXpMax;
@@ -661,6 +664,9 @@ define([
 
 				this.addStat(statName, addStats[p]);
 			}
+
+			if (resetHp)
+				newValues.hp = newValues.hpMax;
 
 			this.obj.spellbook.calcDps();
 
