@@ -20,9 +20,10 @@ define([
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
-			
+
 			//Get saved value for showNames, or use the value set above
-			this.showNames = window.localStorage.getItem('iwd_opt_shownames') || this.showNames;
+			var showNames = window.localStorage.getItem('iwd_opt_shownames');
+			this.showNames = showNames ? (showNames == 'true') : this.showNames;
 		},
 
 		getLocation: function (x, y) {
@@ -298,10 +299,10 @@ define([
 		onKeyDown: function (key) {
 			if (key == 'v') {
 				this.showNames = !this.showNames;
-				
+
 				//Set new value in localStorage for showNames
 				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
-				
+
 				var showNames = this.showNames;
 
 				var objects = this.objects;

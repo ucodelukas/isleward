@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 
 		type: 'killX',
 
-		build: function() {
+		build: function () {
 			//If we're not in the correct zone, don't do this check, it'll just crash the server
 			// since the mob won't be available (most likely) in the zoneFile
 			if (this.obj.zoneName == this.zoneName) {
@@ -25,7 +25,7 @@ define([
 
 				if (!this.mobName) {
 					var mobCounts = this.obj.instance.spawners.mobTypes;
-					var keys = Object.keys(mobTypes).filter(function(m) {
+					var keys = Object.keys(mobTypes).filter(function (m) {
 						var mobBlueprint = mobTypes[m];
 
 						return (
@@ -44,7 +44,7 @@ define([
 
 					this.mobType = keys[~~(Math.random() * keys.length)];
 					var needMax = 8;
-					this.mobName = this.mobType.replace(/\w\S*/g, function(txt) {
+					this.mobName = this.mobType.replace(/\w\S*/g, function (txt) {
 						return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 					});
 
@@ -58,8 +58,8 @@ define([
 		},
 
 		events: {
-			afterKillMob: function(mob) {
-				if ((mob.name != this.mobName) || (this.have >= this.need))
+			afterKillMob: function (mob) {
+				if ((mob.name.toLowerCase() != this.mobName.toLowerCase()) || (this.have >= this.need))
 					return;
 
 				this.have++;

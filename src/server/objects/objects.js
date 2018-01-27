@@ -137,6 +137,9 @@ define([
 						this.physics.addRegion(obj);
 				}
 
+				if (obj.aggro)
+					obj.aggro.move();
+
 				if (lLen == 1)
 					return obj;
 			}

@@ -69,3 +69,8 @@ body {
 .stat {
 	margin-bottom: 5px;
 }
+
+.stat:before {
+	content: '*';
+	margin-right: 5px;
+}
