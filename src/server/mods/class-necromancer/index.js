@@ -88,7 +88,7 @@ define([
 			classes.spells.necromancer = ['summon skeleton', 'blood barrier'];
 			classes.stats.necromancer = {
 				values: {
-					hpMax: 95
+					hpMax: 65
 				},
 				vitScale: 10,
 				gainStats: {

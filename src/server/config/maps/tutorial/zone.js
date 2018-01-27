@@ -363,7 +363,7 @@ module.exports = {
 						slot: 'neck',
 						type: 'Pendant',
 						noSalvage: true,
-						stats: ['hpMax', 'regenHp', 'regenMana']
+						stats: ['vit', 'regenHp', 'regenMana']
 					}]
 				}
 			}

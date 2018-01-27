@@ -43,27 +43,6 @@ define([
 				if ((item.pos >= this.inventorySize) || (item.eq))
 					delete item.pos;
 
-				//Hacks for old items
-				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
-					items.splice(i, 1);
-					i--;
-					iLen--;
-					continue;
-				} else if ((item.spell) && (item.type == 'Spear')) {
-					item.spell.properties = item.spell.properties || {};
-					item.spell.properties.range = item.range;
-				} else if (item.quantity == NaN)
-					item.quantity = 1;
-				else if ((item.effects) && (Object.keys(item.effects[0]).length == 0)) {
-					items.splice(i, 1);
-					i--;
-					iLen--;
-					continue;
-				} else if (((item.slot != 'twoHanded') && (item.slot != 'oneHanded')) && (item.spell) && (!item.ability))
-					delete item.spell;
-				else if (item.slot == 'mainHand')
-					item.slot = 'oneHanded';
-
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
 				}

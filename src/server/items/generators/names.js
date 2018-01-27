@@ -1,7 +1,7 @@
 define([
 	'../config/prefixes',
 	'../config/suffixes'
-], function(
+], function (
 	prefixes,
 	suffixes
 ) {
@@ -13,7 +13,7 @@ define([
 			['gPrefix', 'gSuffix']
 		],
 		prefixes: {
-			hpMax: 'Healthy',
+			vit: 'Healthy',
 			regenHp: 'Regenerating',
 			manaMax: `Caster's`,
 			regenMana: 'Tapping',
@@ -46,7 +46,7 @@ define([
 			lvlRequire: 'Elementary'
 		},
 		suffixes: {
-			hpMax: 'Health',
+			vit: 'Health',
 			regenHp: 'Regeneration',
 			manaMax: 'Mana',
 			regenMana: 'Orbs',
@@ -94,10 +94,10 @@ define([
 			gen.forEach(g => this.types[g].call(this, item, blueprint));
 		},
 		types: {
-			basic: function(item, blueprint) {
+			basic: function (item, blueprint) {
 				item.name = item.type;
 			},
-			prefix: function(item, blueprint) {
+			prefix: function (item, blueprint) {
 				var maxStat = '';
 				var maxValue = 0;
 				for (var s in item.stats) {
@@ -109,7 +109,7 @@ define([
 
 				item.name = this.prefixes[maxStat] + ' ' + item.name;
 			},
-			suffix: function(item, blueprint) {
+			suffix: function (item, blueprint) {
 				var stats = [];
 				for (var s in item.stats) {
 					if (this.suffixes[s])
@@ -126,7 +126,7 @@ define([
 
 				item.name = item.name + ' of ' + this.suffixes[stats[useIndex].stat];
 			},
-			gPrefix: function(item, blueprint) {
+			gPrefix: function (item, blueprint) {
 				var list = prefixes.generic.concat(prefixes.slots[item.slot] || []);
 
 				if (item.stats.armor)
@@ -142,7 +142,7 @@ define([
 					item.name = item.name.split('%').join(replacer);
 				}
 			},
-			gSuffix: function(item, blueprint) {
+			gSuffix: function (item, blueprint) {
 				var list = null;
 
 				if (item.slot == 'tool') {

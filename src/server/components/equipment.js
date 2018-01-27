@@ -146,9 +146,6 @@ define([
 			for (var s in stats) {
 				var val = stats[s];
 
-				if (s == 'hpMax')
-					s = 'vit';
-
 				this.obj.stats.addStat(s, val);
 			}
 
@@ -221,8 +218,6 @@ define([
 			for (var s in stats) {
 				var val = stats[s];
 
-				if (s == 'hpMax')
-					s = 'vit';
 				this.obj.stats.addStat(s, -val);
 			}
 

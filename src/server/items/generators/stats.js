@@ -57,7 +57,7 @@ define([
 					return max * perfection * (blueprint.statMult.addCritChance || 1);
 			},
 
-			hpMax: function (item, level, blueprint, perfection, calcPerfection) {
+			vit: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
 				if (item.slot == 'twoHanded')
 					div *= 2;
@@ -67,9 +67,9 @@ define([
 				if (calcPerfection)
 					return (calcPerfection / max);
 				else if (perfection == null)
-					return random.norm(1, max) * (blueprint.statMult.hpMax || 1);
+					return random.norm(1, max) * (blueprint.statMult.vit || 1);
 				else
-					return max * perfection * (blueprint.statMult.hpMax || 1);
+					return max * perfection * (blueprint.statMult.vit || 1);
 			},
 
 			mainStat: function (item, level, blueprint, perfection, calcPerfection) {
@@ -137,8 +137,8 @@ define([
 		},
 
 		stats: {
-			hpMax: {
-				generator: 'hpMax'
+			vit: {
+				generator: 'vit'
 			},
 			regenHp: {
 				generator: 'regenHp'

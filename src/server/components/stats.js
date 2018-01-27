@@ -32,6 +32,7 @@ define([
 		critMultiplier: 150,
 		armor: 0,
 		dmgPercent: 0,
+		vit: 0,
 
 		blockAttackChance: 0,
 		blockSpellChance: 0,
@@ -173,10 +174,10 @@ define([
 		},
 
 		addStat: function (stat, value) {
-			if (['lvlRequire', 'vit', 'allAttributes'].indexOf(stat) == -1)
+			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
 				this.values[stat] += value;
 
-			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax'].indexOf(stat) == -1);
+			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
 			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
 
@@ -614,6 +615,9 @@ define([
 		},
 
 		rescale: function (level, isMob) {
+			if (level >= this.values.level)
+				return;
+
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
 
 			var oldHp = this.values.hp;
@@ -653,8 +657,6 @@ define([
 			var addStats = this.obj.equipment.rescale(level);
 			for (var p in addStats) {
 				var statName = p;
-				if (statName == 'hpMax')
-					statName = 'vit';
 
 				this.addStat(statName, addStats[p]);
 			}

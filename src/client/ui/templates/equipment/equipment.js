@@ -332,7 +332,8 @@ define([
 					gap3: '',
 					str: stats.str,
 					int: stats.int,
-					dex: stats.dex
+					dex: stats.dex,
+					vit: stats.vit
 				},
 				offense: {
 					'crit chance': (~~(stats.critChance * 10) / 10) + '%',

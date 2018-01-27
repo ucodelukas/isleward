@@ -5,7 +5,6 @@ define([
 ) {
 	var stats = {
 		'vit': 'vitality',
-		'hpMax': 'vitality',
 		'regenHp': 'health regeneration',
 		'manaMax': 'maximum mana',
 		'regenMana': 'mana regeneration',
