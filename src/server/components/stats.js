@@ -246,7 +246,6 @@ define([
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
 					values[s] += gainStats[s];
-					//obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
 				}
 
 				this.obj.spellbook.calcDps();
@@ -256,11 +255,6 @@ define([
 					event: true,
 					text: 'level up'
 				});
-
-				/*obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
-				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
-				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);*/
 
 				syncO.level = values.level;
 
@@ -276,16 +270,16 @@ define([
 				obj.auth.doSave();
 			}
 
-			//obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
-
 			process.send({
 				method: 'object',
 				serverId: this.obj.serverId,
 				obj: syncO
 			});
 
-			var maxLevel = this.obj.instance.zone.level[1]
-			this.rescale(maxLevel, false);
+			if (didLevelUp) {
+				var maxLevel = this.obj.instance.zone.level[1]
+				this.rescale(maxLevel, false);
+			}
 		},
 
 		kill: function (target) {
@@ -640,7 +634,7 @@ define([
 			}
 
 			newValues.level = level;
-			newValues.originalLevel = oldValues.level;
+			newValues.originalLevel = (this.originalValues || oldValues).level;
 			newValues.hpMax = level * 32.7;
 			if (isMob)
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
