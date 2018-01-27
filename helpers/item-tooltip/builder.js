@@ -32,21 +32,6 @@ $(function () {
 		},
 		spritesheet: '../../src/client/images/items.png',
 		sprite: [0, 4]
-	}, {
-		name: `Knight's Leather Glove`,
-		type: 'Chainmail Glove',
-		rqr: {
-			level: 20,
-			dex: 150
-		},
-		quality: 3,
-		stats: {
-			Vitality: '[20 - 35]',
-			Dexterity: '[150 - 220]',
-			'100% chance to be not owned by Entranog': null
-		},
-		spritesheet: '../../src/client/images/items.png',
-		sprite: [0, 3]
 	}];
 
 	for (var i = 0; i < items.length - 1; i++) {
