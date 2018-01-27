@@ -225,6 +225,8 @@ define([
 			values.xpTotal = ~~(values.xpTotal + amount);
 			values.xp = ~~(values.xp + amount);
 
+			this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+
 			this.syncer.queue('onGetDamage', {
 				id: obj.id,
 				event: true,
@@ -279,7 +281,12 @@ define([
 
 			if (didLevelUp) {
 				var maxLevel = this.obj.instance.zone.level[1]
-				this.rescale(maxLevel, false);
+				if (maxLevel < (this.originalValues || values).level)
+					this.rescale(maxLevel, false);
+				else {
+					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+				}
 			}
 		},
 
@@ -601,7 +608,7 @@ define([
 		},
 
 		rescale: function (level, isMob) {
-			if (level >= this.values.level)
+			if (level >= (this.originalValues || this.values).level)
 				return;
 
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
