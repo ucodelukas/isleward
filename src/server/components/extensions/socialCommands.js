@@ -312,7 +312,8 @@ define([
 				hp: 10000000,
 				manaMax: 10000000,
 				mana: 10000000,
-				sprintChance: 100
+				sprintChance: 100,
+				vit: 10000000
 			};
 
 			var syncer = obj.syncer;

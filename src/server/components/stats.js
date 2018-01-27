@@ -452,27 +452,13 @@ define([
 						if (this.obj.inventory) {
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
-							var done = [];
 							for (var i = 0; i < aLen; i++) {
 								var a = aggroList[i].obj;
-								if (done.some(d => d == a.serverId))
+
+								if (a.serverId == null)
 									continue;
 
-								if ((a.social) && (a.social.party)) {
-									a.social.party.forEach(function (p) {
-										if (done.some(d => d == p))
-											return;
-
-										this.obj.inventory.dropBag(p, killSource);
-										done.push(p);
-									}, this);
-								} else {
-									if (a.serverId == null)
-										continue;
-
-									this.obj.inventory.dropBag(a.serverId, killSource);
-									done.push(a.serverId);
-								}
+								this.obj.inventory.dropBag(a.serverId, killSource);
 							}
 						}
 					}
