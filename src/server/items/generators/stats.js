@@ -201,12 +201,6 @@ define([
 				},
 				generator: 'elementResist'
 			},
-			elementPhysicalResist: {
-				level: {
-					min: 15
-				},
-				generator: 'elementResist'
-			},
 			elementPoisonResist: {
 				level: {
 					min: 15
@@ -246,13 +240,6 @@ define([
 				generator: 'elementDmgPercent'
 			},
 			elementHolyPercent: {
-				level: {
-					min: 10
-				},
-				ignore: true,
-				generator: 'elementDmgPercent'
-			},
-			elementPhysicalPercent: {
 				level: {
 					min: 10
 				},
@@ -371,9 +358,6 @@ define([
 				elementHolyPercent: {
 					generator: 'elementDmgPercent'
 				},
-				elementPhysicalPercent: {
-					generator: 'elementDmgPercent'
-				},
 				elementPoisonPercent: {
 					generator: 'elementDmgPercent'
 				},
@@ -404,9 +388,6 @@ define([
 					generator: 'elementDmgPercent'
 				},
 				elementHolyPercent: {
-					generator: 'elementDmgPercent'
-				},
-				elementPhysicalPercent: {
 					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {

@@ -79,7 +79,6 @@ define([
 		'slash': {
 			statType: 'str',
 			statMult: 0.84,
-			element: 'physical',
 			threatMult: 4,
 			auto: true,
 			cdMax: 5,
@@ -91,7 +90,6 @@ define([
 		'charge': {
 			statType: 'str',
 			statMult: 0.59,
-			element: 'physical',
 			threatMult: 3,
 			cdMax: 15,
 			range: 10,
@@ -114,7 +112,6 @@ define([
 		'double slash': {
 			statType: 'dex',
 			statMult: 0.88,
-			element: 'physical',
 			cdMax: 3,
 			useWeaponRange: true,
 			auto: true,
@@ -144,7 +141,6 @@ define([
 		'crystal spikes': {
 			statType: ['dex', 'int'],
 			statMult: 1.82,
-			element: 'physical',
 			manaCost: 22,
 			needLos: true,
 			cdMax: 20,
@@ -160,7 +156,6 @@ define([
 		'innervation': {
 			statType: ['str'],
 			statMult: 0.0205,
-			element: 'physical',
 			manaReserve: {
 				percentage: 0.25
 			},
