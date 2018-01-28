@@ -50,7 +50,7 @@ define([
 			events.emit('onMobHover', mob);
 		},
 
-		getClosest: function (x, y, maxDistance, reverse, fromMob, callback) {
+		getClosest: function (x, y, maxDistance, reverse, fromMob) {
 			var objects = this.objects;
 			var oLen = objects.length;
 
@@ -75,6 +75,8 @@ define([
 
 				return (aDistance - bDistance);
 			});
+
+			list = list.filter((o) => ((o.aggro) && (o.aggro.faction != window.player.aggro.faction)));
 
 			if (!fromMob)
 				return list[0];
