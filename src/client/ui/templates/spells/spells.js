@@ -80,7 +80,7 @@ define([
 				.replace('$NAME$', spell.name)
 				.replace('$DESCRIPTION$', spell.description)
 				.replace('$MANA$', manaCost)
-				.replace('$CD$', cd)
+				.replace('$CD$', cd + 's')
 				.replace('$VALUES$', values)
 				.replace('$ELEMENT$', spell.element);
 
