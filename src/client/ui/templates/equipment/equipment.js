@@ -343,7 +343,6 @@ define([
 					'fire increase': stats.elementFirePercent + '%',
 					'frost increase': stats.elementFrostPercent + '%',
 					'holy increase': stats.elementHolyPercent + '%',
-					'physical increase': stats.elementPhysicalPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
 					gap2: '',
 					'damage increase': stats.dmgPercent + '%',
@@ -360,7 +359,6 @@ define([
 					'fire resist': stats.elementFireResist,
 					'frost resist': stats.elementFrostResist,
 					'holy resist': stats.elementHolyResist,
-					'physical resist': stats.elementPhysicalResist,
 					'poison resist': stats.elementPoisonResist,
 					gap2: '',
 					'all resist': stats.elementAllResist

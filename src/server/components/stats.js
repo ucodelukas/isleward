@@ -44,14 +44,12 @@ define([
 		elementFrostPercent: 0,
 		elementFirePercent: 0,
 		elementHolyPercent: 0,
-		elementPhysicalPercent: 0,
 		elementPoisonPercent: 0,
 
 		elementArcaneResist: 0,
 		elementFrostResist: 0,
 		elementFireResist: 0,
 		elementHolyResist: 0,
-		elementPhysicalResist: 0,
 		elementPoisonResist: 0,
 
 		elementAllResist: 0,
@@ -60,7 +58,7 @@ define([
 
 		xpIncrease: 0,
 
-		//fishing stats
+		//Fishing stats
 		catchChance: 0,
 		catchSpeed: 0,
 		fishRarity: 0,
@@ -197,7 +195,7 @@ define([
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
 			} else if (stat == 'elementAllResist') {
-				['arcane', 'frost', 'fire', 'holy', 'physical', 'poison'].forEach(function (s) {
+				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
 
 					this.values[element] += value;

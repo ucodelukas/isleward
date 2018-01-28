@@ -111,7 +111,7 @@ define([
 			var statValues = mob.stats.values;
 
 			var preferStat = ['str', 'dex', 'int'][~~(Math.random() * 3)];
-			var elementType = ['physical', 'poison', 'frost', 'fire', 'holy', 'arcane'][~~(Math.random() * 6)];
+			var elementType = [null, 'poison', 'frost', 'fire', 'holy', 'arcane'][~~(Math.random() * 6)];
 
 			mob.equipment.unequipAll();
 			mob.inventory.clear();

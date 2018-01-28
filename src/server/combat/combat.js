@@ -58,7 +58,7 @@ define([
 
 				if (!config.noCrit) {
 					var critChance = srcValues.critChance;
-					if ((config.crit) || (roll < critChance)) {
+					if ((config.crit) || (mathRandom() * 100 < critChance)) {
 						isCrit = true;
 						amount *= (srcValues.critMultiplier / 100);
 					}

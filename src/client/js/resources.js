@@ -28,7 +28,8 @@ define([
 			'animBoss',
 			'white',
 			'ray',
-			'images/skins/0001.png'
+			'images/skins/0001.png',
+			'images/skins/0010.png'
 		],
 		sprites: {},
 		ready: false,

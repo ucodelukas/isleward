@@ -28,7 +28,6 @@ define([
 		'elementFrostPercent': 'increased frost damage',
 		'elementFirePercent': 'increased fire damage',
 		'elementHolyPercent': 'increased holy damage',
-		'elementPhysicalPercent': 'increased physical damage',
 		'elementPoisonPercent': 'increased poison damage',
 
 		'elementAllResist': 'all resistance',
@@ -36,7 +35,6 @@ define([
 		'elementFrostResist': 'frost resistance',
 		'elementFireResist': 'fire resistance',
 		'elementHolyResist': 'holy resistance',
-		'elementPhysicalResist': 'physical resistance',
 		'elementPoisonResist': 'poison resistance',
 		'elementAllResist': 'all resistance',
 

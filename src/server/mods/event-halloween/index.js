@@ -82,7 +82,6 @@ define([
 			spells['scatter pumpkin pieces'] = {
 				statType: ['str'],
 				statMult: 0.1,
-				element: 'physical',
 				auto: true,
 				cdMax: 7,
 				manaCost: 0,

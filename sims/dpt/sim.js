@@ -13,7 +13,6 @@ define([
 	spells['harvest life'] = {
 		statType: ['str', 'int'],
 		statMult: 0.76,
-		element: 'physical',
 		auto: true,
 		cdMax: 6,
 		manaCost: 0,
@@ -28,7 +27,6 @@ define([
 	spells['skeleton melee'] = {
 		statType: ['str', 'int'],
 		statMult: 0.27 * bloodBarrierMult,
-		element: 'physical',
 		auto: true,
 		cdMax: 5,
 		manaCost: 0,
@@ -117,7 +115,6 @@ define([
 								elementArcanePercent: 0,
 								elementFrostPercent: 0,
 								elementPoisonPercent: 0,
-								elementPhysicalPercent: 0,
 								elementHolyPercent: 0,
 								elementFirePercent: 0
 							}
@@ -131,7 +128,6 @@ define([
 								elementArcaneResist: 0,
 								elementFrostResist: 0,
 								elementPoisonResist: 0,
-								elementPhysicalResist: 0,
 								elementHolyResist: 0,
 								elementFireResist: 0
 							}

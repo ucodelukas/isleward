@@ -138,7 +138,6 @@ define([
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
 				statMult: 0.76,
-				element: 'physical',
 				auto: true,
 				cdMax: 6,
 				manaCost: 0,
@@ -152,7 +151,6 @@ define([
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
 				statMult: 0.27,
-				element: 'physical',
 				cdMax: 7,
 				manaCost: 5,
 				range: 9,
@@ -165,7 +163,6 @@ define([
 			spells['blood barrier'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				element: 'physical',
 				cdMax: 20,
 				manaCost: 5,
 				range: 9,

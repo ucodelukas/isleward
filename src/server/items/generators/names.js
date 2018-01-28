@@ -31,14 +31,12 @@ define([
 			elementFrostPercent: 'Frigid',
 			elementFirePercent: 'Burning',
 			elementHolyPercent: 'Righteous',
-			elementPhysicalPercent: `Brawler's`,
 			elementPoisonPercent: 'Bubbling',
 
 			elementArcaneResist: 'Protective',
 			elementFrostResist: 'Protective',
 			elementFireResist: 'Protective',
 			elementHolyResist: 'Protective',
-			elementPhysicalResist: `Protective`,
 			elementPoisonResist: 'Protective',
 			elementAllResist: 'Protective',
 
@@ -64,21 +62,19 @@ define([
 			elementFrostPercent: 'Winter',
 			elementFirePercent: 'the Inferno',
 			elementHolyPercent: 'the Gods',
-			elementPhysicalPercent: 'Combat',
 			elementPoisonPercent: 'Poison',
 
 			elementArcaneResist: 'Arcane Resistance',
 			elementFrostResist: 'Frost Resistance',
 			elementFireResist: 'Fire Resistance',
 			elementHolyResist: 'Holy Resistance',
-			elementPhysicalResist: `Physical Resistance`,
 			elementPoisonResist: 'Poison Resistance',
 			elementAllResist: 'Arcane Resistance',
 
 			xpIncrease: 'Experience',
 			lvlRequire: 'Ease'
 		},
-		generate: function(item, blueprint) {
+		generate: function (item, blueprint) {
 			if (blueprint.name) {
 				item.name = blueprint.name;
 				return;

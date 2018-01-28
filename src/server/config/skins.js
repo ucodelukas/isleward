@@ -59,6 +59,7 @@ define([
 			class: 'cleric'
 		},
 
+		//Elite Skin Pack
 		'1.1': {
 			name: 'Sorcerer',
 			spritesheet: 'images/skins/0001.png',
@@ -88,6 +89,38 @@ define([
 			spritesheet: 'images/skins/0001.png',
 			sprite: [4, 0],
 			class: 'necromancer'
+		},
+
+		//Templar Skin Pack
+		'2.1': {
+			name: 'Crusader 1',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [0, 0],
+			class: ['cleric', 'warrior']
+		},
+		'2.2': {
+			name: 'Crusader 2',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [1, 0],
+			class: ['cleric', 'warrior']
+		},
+		'2.3': {
+			name: 'Crusader 3',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [2, 0],
+			class: ['cleric', 'warrior']
+		},
+		'2.4': {
+			name: 'Crusader 4',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [3, 0],
+			class: ['cleric', 'warrior']
+		},
+		'2.5': {
+			name: 'Grand Crusader',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [4, 0],
+			class: ['cleric', 'warrior']
 		}
 	};
 
@@ -112,16 +145,22 @@ define([
 				});
 
 			var result = {};
-			list.forEach(function (l) {
-				if (!result[l.class])
-					result[l.class] = [];
+			list.forEach(function (skin) {
+				var classList = skin.class;
+				if (!classList.push)
+					classList = [classList];
 
-				result[l.class].push({
-					name: l.name,
-					id: l.id,
-					sprite: l.sprite[0] + ',' + l.sprite[1],
-					spritesheet: l.spritesheet
-				});
+				classList.forEach(function (className) {
+					if (!result[className])
+						result[className] = [];
+
+					result[className].push({
+						name: skin.name,
+						id: skin.id,
+						sprite: skin.sprite[0] + ',' + skin.sprite[1],
+						spritesheet: skin.spritesheet
+					});
+				}, this);
 			});
 
 			return result;
