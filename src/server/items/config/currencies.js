@@ -46,8 +46,9 @@ define([
 			'Bone Idol': 6
 		},
 
-		getCurrencyName: function (action) {
-			return this.currencies[Object.keys.find(o => (this.currencies[o].action == action))].name;
+		getCurrencyFromAction: function (action) {
+			var currencies = this.currencies;
+			return currencies[Object.keys(currencies).find(o => (currencies[o].action == action))];
 		}
 	};
 });

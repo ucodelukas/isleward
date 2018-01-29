@@ -104,32 +104,7 @@ define([
 				}
 
 				item.power = newPower;
-
-				if ((result.success) && (msg.action != 'scour'))
-					this.addStat(item, result);
-				else if (item.enchantedStats) {
-					for (var p in item.enchantedStats) {
-						var value = item.enchantedStats[p];
-
-						if (item.stats[p]) {
-							result.addStatMsgs.push({
-								stat: p,
-								value: -value
-							});
-							item.stats[p] -= value;
-							if (item.stats[p] <= 0)
-								delete item.stats[p];
-
-							if (p == 'lvlRequire') {
-								item.level += value;
-								delete item.originalLevel;
-							}
-						}
-					}
-
-					delete item.enchantedStats;
-					delete item.power;
-				}
+				this.addStat(item, result);
 			}
 
 			obj.syncer.setArray(true, 'inventory', 'getItems', item);
@@ -148,21 +123,21 @@ define([
 			var result = null;
 
 			var powerLevel = item.power || 0;
-			powerLevel = Math.min(powerLevel, 9);
-			var mult = [2, 3, 5][powerLevel];
+			if (powerLevel < 3) {
+				var mult = [15, 30, 60][powerLevel];
 
-			if (action == 'reroll')
-				result = [configCurrencies.getCurrencyName('reroll')];
-			else if (action == 'relevel')
-				result = [configCurrencies.getCurrencyName('relevel')];
-			else if (action == 'reslot')
-				result = [configCurrencies.getCurrencyName[('reslot')]];
-			else if (action == 'reforge')
-				result = [configCurrencies.getCurrencyName('reforge')];
-			else {
-				result = salvager
-					.salvage(item, true)
-					.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult * 10)));
+				if (action == 'reroll')
+					result = [configCurrencies.getCurrencyFromAction('reroll')];
+				else if (action == 'relevel')
+					result = [configCurrencies.getCurrencyFromAction('relevel')];
+				else if (action == 'reslot')
+					result = [configCurrencies.getCurrencyFromAction('reslot')];
+				else if (action == 'reforge')
+					result = [configCurrencies.getCurrencyFromAction('reforge')];
+				else {
+					result = salvager.salvage(item, true);
+					result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
+				}
 			}
 
 			return {

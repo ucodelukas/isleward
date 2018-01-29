@@ -18,7 +18,7 @@ define([
 				name: 'Iron Bar',
 				chance: 100,
 				quantity: 3,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}, {
 			list: ['trinket'],
@@ -35,7 +35,7 @@ define([
 				chance: 100,
 				quantity: 1,
 				quality: 3,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}],
 		types: [{
@@ -44,7 +44,7 @@ define([
 				name: 'Iron Bar',
 				chance: 100,
 				quantity: 3,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}, {
 			list: ['Cowl', 'Robe', 'Gloves', 'Sash', 'Pants', 'Boots'],
@@ -52,7 +52,7 @@ define([
 				name: 'Cloth Scrap',
 				chance: 100,
 				quantity: 3,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}, {
 			list: ['Leather Cap', 'Leather Armor', 'Leather Gloves', 'Leather Belt', 'Leather Pants', 'Leather Boots', 'Facemask', 'Scalemail', 'Scale Gloves', 'Scaled Binding', 'Scale Leggings', 'Scale Boots'],
@@ -60,7 +60,7 @@ define([
 				name: 'Leather Scrap',
 				chance: 100,
 				quantity: 3,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}, {
 			list: ['Fishing Rod'],
@@ -68,7 +68,7 @@ define([
 				name: 'Cerulean Pearl',
 				chance: 100,
 				quantity: 1,
-				qualityMult: 1.1
+				qualityMult: 1
 			}]
 		}]
 	};
