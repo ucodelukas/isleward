@@ -130,10 +130,7 @@ define([
 			});
 
 			materials.forEach(function (m) {
-				var roll = Math.random() * 100;
-				if (maxRoll)
-					roll = 0;
-				if (roll > m.chance)
+				if ((!maxRoll) && (Math.random() * 100 > m.chance))
 					return;
 
 				var max = m.quantity;

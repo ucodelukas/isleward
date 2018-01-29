@@ -40,7 +40,6 @@ define([
 				item: item,
 				addStatMsgs: []
 			};
-			result.success = (Math.random() * 100) < config.successChance;
 
 			config.materials.forEach(function (m) {
 				var invMaterial = inventory.items.find(i => i.name == m.name);
@@ -99,6 +98,11 @@ define([
 				});
 			} else {
 				var newPower = (item.power || 0) + 1;
+				if (newPower > 3) {
+					inventory.resolveCallback(msg);
+					return;
+				}
+
 				item.power = newPower;
 
 				if ((result.success) && (msg.action != 'scour'))
@@ -145,34 +149,23 @@ define([
 
 			var powerLevel = item.power || 0;
 			powerLevel = Math.min(powerLevel, 9);
-			var mult = [2, 3, 5, 8, 12, 17, 23, 30, 38, 47][powerLevel];
+			var mult = [2, 3, 5][powerLevel];
 			if (action == 'scour')
 				mult *= 0.2;
 
 			result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
 
-			var successChance = [100, 60, 35, 15, 7, 3, 2, 1, 1, 1][powerLevel];
-			if (action == 'scour') {
-				successChance = 100;
-				if (powerLevel == 0)
-					result = [];
-			} else if (action == 'reroll') {
-				successChance = 100;
-				result = [configCurrencies.currencies['Unstable Totem']];
-			} else if (action == 'relevel') {
-				successChance = 100;
-				result = [configCurrencies.currencies['Ascendant Totem']];
-			} else if (action == 'reslot') {
-				successChance = 100;
-				result = [configCurrencies.currencies["Gambler's Totem"]];
-			} else if (action == 'reforge') {
-				successChance = 100;
-				result = [configCurrencies.currencies["Brawler's Totem"]];
-			}
+			if (action == 'reroll')
+				result = [configCurrencies.currencies['Unstable Idol']];
+			else if (action == 'relevel')
+				result = [configCurrencies.currencies['Ascendant Idol']];
+			else if (action == 'reslot')
+				result = [configCurrencies.currencies['Dragon-Glass Idol']];
+			else if (action == 'reforge')
+				result = [configCurrencies.currencies['Bone Idol']];
 
 			return {
-				materials: result,
-				successChance: successChance
+				materials: result
 			};
 		}
 	};
