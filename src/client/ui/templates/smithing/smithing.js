@@ -83,9 +83,7 @@ define([
 				zIndex: 9999999,
 				top: 100
 			};
-			if (this.action == 'scour')
-				msg.msg = 'Item Scouring Succeeded';
-			else if (this.action == 'reroll')
+			if (this.action == 'reroll')
 				msg.msg = 'Item Reroll Succeeded';
 			else if (this.action == 'relevel')
 				msg.msg = 'Item Relevel Succeeded';
@@ -204,8 +202,6 @@ define([
 
 			this.find('.actionButton').removeClass('disabled').addClass('disabled');
 
-			this.find('.chance').html('');
-
 			var material = result.materials[0];
 			if (material) {
 				var hasMaterials = window.player.inventory.items.find(function (i) {
@@ -222,8 +218,6 @@ define([
 
 				if (hasMaterials)
 					this.find('.actionButton').removeClass('disabled');
-
-				this.find('.chance').html(result.successChance + '%');
 
 				this.drawItem(this.find('.material'), material, !hasMaterials);
 			}
@@ -297,7 +291,6 @@ define([
 				this.find('.item').remove();
 				this.find('.icon').show();
 				this.find('.actionButton').removeClass('disabled').addClass('disabled');
-				this.find('.chance').html('');
 				this.show();
 			} else
 				this.hide();

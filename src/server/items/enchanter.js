@@ -145,24 +145,25 @@ define([
 		},
 
 		getEnchantMaterials: function (item, action) {
-			var result = salvager.salvage(item, true);
+			var result = null;
 
 			var powerLevel = item.power || 0;
 			powerLevel = Math.min(powerLevel, 9);
 			var mult = [2, 3, 5][powerLevel];
-			if (action == 'scour')
-				mult *= 0.2;
-
-			result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
 
 			if (action == 'reroll')
-				result = [configCurrencies.currencies['Unstable Idol']];
+				result = [configCurrencies.getCurrencyName('reroll')];
 			else if (action == 'relevel')
-				result = [configCurrencies.currencies['Ascendant Idol']];
+				result = [configCurrencies.getCurrencyName('relevel')];
 			else if (action == 'reslot')
-				result = [configCurrencies.currencies['Dragon-Glass Idol']];
+				result = [configCurrencies.getCurrencyName[('reslot')]];
 			else if (action == 'reforge')
-				result = [configCurrencies.currencies['Bone Idol']];
+				result = [configCurrencies.getCurrencyName('reforge')];
+			else {
+				result = salvager
+					.salvage(item, true)
+					.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult * 10)));
+			}
 
 			return {
 				materials: result
