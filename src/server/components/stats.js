@@ -205,7 +205,7 @@ define([
 		},
 
 		calcXpMax: function () {
-			var level = this.values.level;
+			var level = (this.originalValues || this.values).level;
 			this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
@@ -215,7 +215,7 @@ define([
 			var obj = this.obj;
 			var values = this.values;
 
-			if (values.level == 20)
+			if ((this.originalValues || this.values).level == 20)
 				return;
 
 			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
@@ -237,9 +237,13 @@ define([
 			while (values.xp >= values.xpMax) {
 				didLevelUp = true;
 				values.xp -= values.xpMax;
-				values.level++;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+				if (this.originalValues)
+					this.originalValues.level++;
+				else
+					values.level++;
 
-				if (values.level == 20)
+				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
 
 				values.hpMax = values.level * 32.7;
@@ -257,7 +261,7 @@ define([
 					text: 'level up'
 				});
 
-				syncO.level = values.level;
+				syncO.level = (this.originalValues || this.values).level;
 
 				this.calcXpMax();
 			}
