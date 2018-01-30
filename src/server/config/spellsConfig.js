@@ -32,7 +32,6 @@ define([
 			statType: 'int',
 			statMult: 1,
 			element: 'arcane',
-			auto: true,
 			cdMax: 14,
 			manaCost: 4,
 			range: 9,
@@ -102,7 +101,6 @@ define([
 			statType: 'str',
 			statMult: 1,
 			threatMult: 4,
-			auto: true,
 			cdMax: 10,
 			manaCost: 4,
 			useWeaponRange: true,
@@ -135,11 +133,10 @@ define([
 		'flurry': {
 			statType: 'dex',
 			statMult: 0.88,
-			cdMax: 3,
-			useWeaponRange: true,
-			auto: true,
+			cdMax: 20,
+			manaCost: 5,
 			random: {
-				damage: [1, 3.8]
+				i_duration: [3, 8]
 			}
 		},
 		'smokebomb': {

@@ -147,8 +147,6 @@ define([
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
 				statMult: 1,
-				element: 'physical',
-				auto: true,
 				cdMax: 12,
 				manaCost: 5,
 				range: 1,

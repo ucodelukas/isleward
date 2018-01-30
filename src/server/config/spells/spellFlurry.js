@@ -16,6 +16,7 @@ define([
 
 		row: 3,
 		col: 0,
+		aura: true,
 
 		cast: function (action) {
 			var obj = this.obj;
@@ -38,8 +39,8 @@ define([
 			this.obj.spellbook.spells[0].cd = 0;
 			this.obj.effects.addEffect({
 				type: 'frenzy',
-				ttl: this.frenzyDuration,
-				newCd: 2
+				ttl: this.i_duration,
+				newCd: 1
 			});
 		}
 	};

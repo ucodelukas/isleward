@@ -84,7 +84,7 @@ define([
 				.replace('$MANA$', manaCost)
 				.replace('$CD$', cd + 's')
 				.replace('$VALUES$', values)
-				.replace('$ELEMENT$', spell.element);
+				.replace('$ELEMENT$', spell.element ? 'element: ' + spell.element : '');
 
 			if (spell.range) {
 				tooltip = tooltip

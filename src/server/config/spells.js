@@ -5,10 +5,12 @@ define([
 ) {
 	var spells = [{
 			name: 'Melee',
+			description: 'Performs a quick melee attack.',
 			type: 'melee',
 			icon: [1, 0]
 		}, {
 			name: 'Projectile',
+			description: 'Performs a basic magical attack.',
 			type: 'projectile',
 			icon: [1, 0]
 		}, {
