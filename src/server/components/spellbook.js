@@ -142,11 +142,11 @@ define([
 		},
 
 		addSpellFromRune: function (runeSpell, spellId) {
-			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig.spells[name];
+			var type = runeSpell.type;
+			var playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() == runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type == type));
+			var playerSpellConfig = playerSpellsConfig.spells[runeSpell.name.toLowerCase()] || playerSpellsConfig.spells[runeSpell.type];
 
-			if (!playerSpell)
+			if (!playerSpellConfig)
 				return -1;
 
 			if (!runeSpell.rolls)
@@ -155,6 +155,7 @@ define([
 			runeSpell.values = {};
 
 			var builtSpell = extend(true, {
+				type: runeSpell.type,
 				values: {}
 			}, playerSpell, playerSpellConfig);
 
