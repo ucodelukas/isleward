@@ -200,7 +200,7 @@ define([
 				}
 			},
 			'Wand': {
-				sprite: [9, 4],
+				sprite: [9, 8],
 				spellName: 'projectile',
 				spellConfig: {
 					statType: 'int',
