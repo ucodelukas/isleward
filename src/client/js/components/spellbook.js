@@ -95,14 +95,16 @@ define([
 		getSpell: function (number) {
 			var spellNumber = -1;
 
-			if (number == 1) {
+			if (number == ' ')
 				spellNumber = 0;
-			} else if (number == 2)
+			else if (number == 1)
 				spellNumber = 1;
-			else if (number == 3)
+			else if (number == 2)
 				spellNumber = 2;
-			else if (number == 4)
+			else if (number == 3)
 				spellNumber = 3;
+			else if (number == 4)
+				spellNumber = 4;
 
 			if (spellNumber == -1)
 				return;
@@ -218,7 +220,7 @@ define([
 				data: {
 					action: 'spell',
 					priority: true,
-					spell: key - 1,
+					spell: spell.id,
 					auto: spell.auto,
 					target: target,
 					self: this.shiftDown
