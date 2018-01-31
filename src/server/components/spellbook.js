@@ -335,7 +335,7 @@ define([
 				var distance = Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY));
 				var range = spell.range;
 				if ((spell.useWeaponRange) && (this.obj.player)) {
-					var weapon = this.obj.inventory.findItem(this.obj.equipment.eq.twoHanded);
+					var weapon = this.obj.inventory.findItem(this.obj.equipment.eq.oneHanded) || this.obj.inventory.findItem(this.obj.equipment.eq.twoHanded);
 					if (weapon)
 						range = weapon.range || 1;
 				}
