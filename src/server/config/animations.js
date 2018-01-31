@@ -1,10 +1,10 @@
 define([
 	'misc/events'
-], function(
+], function (
 	events
 ) {
 	return {
-		init: function() {
+		init: function () {
 			events.emit('onBeforeGetAnimations', this);
 		},
 		classes: {

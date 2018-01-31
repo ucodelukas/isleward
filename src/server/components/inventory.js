@@ -6,7 +6,6 @@ define([
 	'config/classes',
 	'mtx/mtx',
 	'config/factions',
-	'misc/events',
 	'items/itemEffects'
 ], function (
 	generator,
@@ -16,7 +15,6 @@ define([
 	classes,
 	mtx,
 	factions,
-	events,
 	itemEffects
 ) {
 	return {
@@ -279,7 +277,7 @@ define([
 			}
 
 			var result = {};
-			events.emit('onBeforeUseItem', this.obj, item, result);
+			this.obj.instance.eventEmitter.emit('onBeforeUseItem', this.obj, item, result);
 
 			if (item.type == 'consumable') {
 				if (item.uses) {
@@ -586,7 +584,7 @@ define([
 		},
 
 		getItem: function (item, hideMessage, noStack) {
-			events.emit('onBeforeGetItem', item, this.obj);
+			this.obj.instance.eventEmitter.emit('onBeforeGetItem', item, this.obj);
 
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
@@ -862,7 +860,7 @@ define([
 			}
 
 			playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
-			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
+			this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
 				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);

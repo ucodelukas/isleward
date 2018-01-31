@@ -1,9 +1,7 @@
 define([
-	'items/generator',
-	'misc/events'
+	'items/generator'
 ], function (
-	itemGenerator,
-	events
+	itemGenerator
 ) {
 	var config = {
 		'Runecrafter\'s Toil': {
@@ -62,7 +60,7 @@ define([
 			var mobLevel = mob.stats.values.level;
 
 			var configs = extend(true, {}, config);
-			events.emit('onBeforeGetCardsConfig', configs);
+			looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 			Object.keys(configs).forEach(function (c) {
 				var card = configs[c];
@@ -116,7 +114,7 @@ define([
 
 		getReward: function (set) {
 			var configs = extend(true, {}, config);
-			events.emit('onBeforeGetCardsConfig', configs);
+			looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 			var reward = configs[set].reward;
 			var msg = {
@@ -124,7 +122,7 @@ define([
 				handler: this.rewards[reward]
 			};
 
-			events.emit('onBeforeGetCardReward', msg);
+			looter.instance.eventEmitter.emit('onBeforeGetCardReward', msg);
 
 			return msg.handler();
 		},

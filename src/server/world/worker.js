@@ -40,17 +40,7 @@ requirejs([
 	itemTypes
 ) {
 	var onDbReady = function () {
-		var oldExtend = extend;
-		global.extend = function () {
-			try {
-				oldExtend.apply(null, arguments);
-				return arguments[1];
-			} catch (e) {
-				console.log(arguments);
-				throw e;
-			}
-		};
-
+		global.extend = extend;
 		global._ = helpers;
 		global.instancer = _instancer;
 		require('../misc/random');
