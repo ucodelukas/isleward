@@ -48,7 +48,11 @@ define([
 
 		getCurrencyFromAction: function (action) {
 			var currencies = this.currencies;
-			return currencies[Object.keys(currencies).find(o => (currencies[o].action == action))];
+			var pick = Object.keys(currencies).find(o => (currencies[o].action == action));
+
+			return extend(true, {
+				name: pick
+			}, currencies[pick])
 		}
 	};
 });

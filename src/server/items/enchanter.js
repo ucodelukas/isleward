@@ -47,14 +47,14 @@ define([
 			});
 
 			if (msg.action == 'reroll') {
-				delete msg.addStatMsgs;
+				var enchantedStats = item.enchantedStats || {};
 				delete item.enchantedStats;
+				delete msg.addStatMsgs;
+
 				if ((item.stats) && (item.stats.lvlRequire)) {
 					item.level += item.stats.lvlRequire;
 					delete item.originalLevel;
 				}
-
-				delete item.power;
 
 				item.stats = {};
 				var bpt = {
@@ -66,14 +66,24 @@ define([
 				generatorSlots.generate(item, bpt);
 				generatorTypes.generate(item, bpt);
 				generatorStats.generate(item, bpt);
+
+				for (var p in enchantedStats) {
+					if (!item.stats[p])
+						item.stats[p] = 0;
+
+					item.stats[p] += enchantedStats[p];
+				}
+				item.enchantedStats = enchantedStats;
 			} else if (msg.action == 'relevel') {
-				var offset = ((~~(Math.random() * 2) * 2) - 1) * (1 + ~~(Math.random() * 2));
-				if (item.level == 1)
-					offset = Math.abs(offset);
-				item.level = Math.max(1, item.level + offset);
+				var offset = 1 + ~~(Math.random() * 2);
+				item.level = Math.min(20, item.level + offset);
 			} else if (msg.action == 'reslot') {
 				if (item.effects)
 					return;
+
+				var enchantedStats = item.enchantedStats || {};
+				delete item.enchantedStats;
+				delete msg.addStatMsgs;
 
 				var newItem = generator.generate({
 					slot: configSlots.getRandomSlot(item.slot),
@@ -85,6 +95,14 @@ define([
 				delete item.spritesheet;
 				delete item.stats;
 				delete item.spell;
+
+				for (var p in enchantedStats) {
+					if (!newItem.stats[p])
+						newItem.stats[p] = 0;
+
+					newItem.stats[p] += enchantedStats[p];
+				}
+				newItem.enchantedStats = enchantedStats;
 
 				extend(true, item, newItem);
 			} else if (msg.action == 'reforge') {
@@ -115,29 +133,29 @@ define([
 		addStat: function (item, result) {
 			generatorStats.generate(item, {
 				statCount: 1,
-
 			}, result);
 		},
 
 		getEnchantMaterials: function (item, action) {
 			var result = null;
 
-			var powerLevel = item.power || 0;
-			if (powerLevel < 3) {
-				var mult = [15, 30, 60][powerLevel];
+			if (action == 'reroll')
+				result = [configCurrencies.getCurrencyFromAction('reroll')];
+			else if (action == 'relevel')
+				result = [configCurrencies.getCurrencyFromAction('relevel')];
+			else if (action == 'reslot')
+				result = [configCurrencies.getCurrencyFromAction('reslot')];
+			else if (action == 'reforge')
+				result = [configCurrencies.getCurrencyFromAction('reforge')];
+			else {
+				var powerLevel = item.power || 0;
+				if (powerLevel < 3)
+					var mult = [15, 30, 60][powerLevel];
+				else
+					return;
 
-				if (action == 'reroll')
-					result = [configCurrencies.getCurrencyFromAction('reroll')];
-				else if (action == 'relevel')
-					result = [configCurrencies.getCurrencyFromAction('relevel')];
-				else if (action == 'reslot')
-					result = [configCurrencies.getCurrencyFromAction('reslot')];
-				else if (action == 'reforge')
-					result = [configCurrencies.getCurrencyFromAction('reforge')];
-				else {
-					result = salvager.salvage(item, true);
-					result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
-				}
+				result = salvager.salvage(item, true);
+				result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
 			}
 
 			return {
