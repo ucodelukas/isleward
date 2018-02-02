@@ -12,7 +12,38 @@ define([
 			name: 'Projectile',
 			description: 'Performs a basic magical attack.',
 			type: 'projectile',
-			icon: [7, 1]
+			icon: [7, 1],
+			animation: 'hitStaff',
+			row: 11,
+			col: 4,
+			speed: 110,
+			particles: {
+				color: {
+					start: ['ffeb38', 'ff6942'],
+					end: ['ff6942', 'd43346']
+				},
+				scale: {
+					start: {
+						min: 2,
+						max: 14
+					},
+					end: {
+						min: 0,
+						max: 8
+					}
+				},
+				lifetime: {
+					min: 1,
+					max: 1
+				},
+				alpha: {
+					start: 0.5,
+					end: 0
+				},
+				randomScale: true,
+				randomColor: true,
+				chance: 0.25
+			}
 		}, {
 			name: 'Magic Missile',
 			description: 'Launches an orb of unfocussed energy at your target.',

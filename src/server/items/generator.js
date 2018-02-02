@@ -73,8 +73,6 @@ define([
 			if (blueprint.uses)
 				item.uses = blueprint.uses;
 
-			console.log(item);
-
 			return item;
 		},
 
