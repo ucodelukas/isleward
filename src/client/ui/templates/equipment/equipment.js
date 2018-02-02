@@ -328,7 +328,7 @@ define([
 					hp: ~~stats.hp + '/' + ~~stats.hpMax,
 					mana: ~~stats.mana + '/' + ~~stats.manaMax,
 					'hp regen': stats.regenHp,
-					'mana regen': stats.regenMana + '%',
+					'mana regen': ~~stats.regenMana + '%',
 					gap3: '',
 					str: stats.str,
 					int: stats.int,
