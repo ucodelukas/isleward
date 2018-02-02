@@ -39,7 +39,7 @@ define([
 			this.obj.spellbook.spells[0].cd = 0;
 			this.obj.effects.addEffect({
 				type: 'frenzy',
-				ttl: this.i_duration,
+				ttl: this.duration,
 				newCd: 1
 			});
 		}

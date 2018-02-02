@@ -136,7 +136,7 @@ define([
 			cdMax: 20,
 			manaCost: 5,
 			random: {
-				i_duration: [3, 8]
+				i_duration: [4, 9]
 			}
 		},
 		'smokebomb': {

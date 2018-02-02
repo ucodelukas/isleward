@@ -250,7 +250,7 @@ define([
 			animation: 'hitSword',
 			row: 1,
 			col: 0,
-			icon: [2, 0]
+			icon: [2, 3]
 		}, {
 			name: 'Smokebomb',
 			type: 'smokeBomb',
