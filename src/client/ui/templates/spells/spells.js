@@ -34,8 +34,10 @@ define([
 				var x = -(icon[0] * 64);
 				var y = -(icon[1] * 64);
 
+				var hotkey = (i == 0) ? 'space' : spells[i].id;
+
 				var html = templateSpell
-					.replace('$HOTKEY$', (i + 1));
+					.replace('$HOTKEY$', hotkey);
 
 				var el = $(html)
 					.appendTo(this.el);
@@ -48,7 +50,7 @@ define([
 					.find('.icon').css({
 						'background': 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px'
 					})
-					.next().html(i + 1);
+					.next().html(hotkey);
 
 				this.onGetSpellCooldowns({
 					spell: i,
@@ -82,7 +84,7 @@ define([
 				.replace('$MANA$', manaCost)
 				.replace('$CD$', cd + 's')
 				.replace('$VALUES$', values)
-				.replace('$ELEMENT$', spell.element);
+				.replace('$ELEMENT$', spell.element ? 'element: ' + spell.element : '');
 
 			if (spell.range) {
 				tooltip = tooltip

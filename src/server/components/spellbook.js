@@ -27,12 +27,9 @@ define([
 			this.objects = this.obj.instance.objects;
 			this.physics = this.obj.instance.physics;
 
-			var spells = blueprint.spells || [];
-			spells.forEach(function (s) {
-				this.addSpell(s);
-			}, this);
-
 			this.dmgMult = blueprint.dmgMult;
+
+			(blueprint.spells || []).forEach(s => this.addSpell(s));
 
 			delete blueprint.spells;
 		},
@@ -123,6 +120,14 @@ define([
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 
+			if ((options.id == null) && (spellId == null)) {
+				spellId = 0;
+				this.spells.forEach(function (s) {
+					if (s.id >= spellId)
+						spellId = s.id + 1;
+				});
+			}
+
 			builtSpell.id = (options.id == null) ? spellId : options.id;
 			this.spells.push(builtSpell);
 			this.spells.sort(function (a, b) {
@@ -140,11 +145,11 @@ define([
 		},
 
 		addSpellFromRune: function (runeSpell, spellId) {
-			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig.spells[name];
+			var type = runeSpell.type;
+			var playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() == runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type == type));
+			var playerSpellConfig = playerSpellsConfig.spells[runeSpell.name.toLowerCase()] || playerSpellsConfig.spells[runeSpell.type];
 
-			if (!playerSpell)
+			if (!playerSpellConfig)
 				return -1;
 
 			if (!runeSpell.rolls)
@@ -153,6 +158,7 @@ define([
 			runeSpell.values = {};
 
 			var builtSpell = extend(true, {
+				type: runeSpell.type,
 				values: {}
 			}, playerSpell, playerSpellConfig);
 
@@ -230,9 +236,9 @@ define([
 		},
 		getRandomSpell: function (target) {
 			var valid = [];
-			this.spells.forEach(function (s, i) {
+			this.spells.forEach(function (s) {
 				if (s.canCast(target))
-					valid.push(i);
+					valid.push(s.id);
 			});
 
 			if (valid.length > 0)
@@ -246,7 +252,8 @@ define([
 				return true;
 			}
 
-			var spell = this.spells[action.spell];
+			var spell = this.spells.find(s => (s.id == action.spell));
+
 			if (!spell)
 				return false;
 

@@ -4,6 +4,16 @@ define([
 	events
 ) {
 	var spells = [{
+			name: 'Melee',
+			description: 'Performs a quick melee attack.',
+			type: 'melee',
+			icon: [7, 0]
+		}, {
+			name: 'Projectile',
+			description: 'Performs a basic magical attack.',
+			type: 'projectile',
+			icon: [7, 1]
+		}, {
 			name: 'Magic Missile',
 			description: 'Launches an orb of unfocussed energy at your target.',
 			type: 'projectile',
@@ -119,13 +129,13 @@ define([
 		}, {
 			name: 'Smite',
 			description: 'Calls down holy energy from the heavens upon your foe.',
-			type: 'melee',
+			type: 'smite',
 			row: 2,
 			col: 0,
 			icon: [0, 0],
 			animation: 'hitStaff'
 		}, {
-			name: 'Healing Circle',
+			name: 'Consecrate',
 			description: 'Creates a circle of pure holy energy that heals allies for a brief period.',
 			type: 'healingCircle',
 			icon: [0, 1],
@@ -183,7 +193,7 @@ define([
 		}, {
 			name: 'Slash',
 			description: 'Performs a melee attack with your equipped weapon.',
-			type: 'melee',
+			type: 'slash',
 			row: 0,
 			col: 0,
 			icon: [3, 0],
@@ -203,8 +213,8 @@ define([
 			icon: [3, 2],
 			animation: 'raiseShield'
 		}, {
-			name: 'Double Slash',
-			type: 'melee',
+			name: 'Flurry',
+			type: 'flurry',
 			description: 'Perform two quick melee attacks in succession',
 			animation: 'hitSword',
 			row: 1,

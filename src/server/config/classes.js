@@ -23,10 +23,10 @@ define([
 			}
 		},
 		spells: {
-			wizard: ['ice spear', 'fireblast'],
-			cleric: ['healing circle'],
-			warrior: ['charge'],
-			thief: ['smokebomb']
+			wizard: ['magic missile', 'ice spear'],
+			cleric: ['smite', 'consecrate'],
+			warrior: ['slash', 'charge'],
+			thief: ['flurry', 'smokebomb']
 		},
 		stats: {
 			wizard: {
@@ -68,7 +68,7 @@ define([
 		},
 		weapons: {
 			wizard: 'Gnarled Staff',
-			cleric: 'Mace',
+			cleric: 'Wand',
 			thief: 'Dagger',
 			warrior: 'Axe'
 		},

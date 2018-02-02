@@ -175,8 +175,8 @@ define([
 			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
 				runeSlot = 0;
 			else if (runeSlot == null) {
-				runeSlot = 3;
-				for (var i = 1; i <= 3; i++) {
+				runeSlot = 4;
+				for (var i = 1; i <= 4; i++) {
 					if (!this.items.some(j => (j.runeSlot == i))) {
 						runeSlot = i;
 						break;

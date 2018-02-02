@@ -18,8 +18,10 @@ define([
 			if (typeBlueprint.spritesheet)
 				item.spritesheet = typeBlueprint.spritesheet;
 
-			if (typeBlueprint.spellName)
+			if (typeBlueprint.spellName) {
 				blueprint.spellName = typeBlueprint.spellName;
+				blueprint.spellConfig = typeBlueprint.spellConfig;
+			}
 
 			if (typeBlueprint.range)
 				item.range = typeBlueprint.range;

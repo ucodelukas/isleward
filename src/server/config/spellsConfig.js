@@ -4,7 +4,18 @@ define([
 	events
 ) {
 	var spells = {
-		'magic missile': {
+		'melee': {
+			statType: 'str',
+			statMult: 0.84,
+			threatMult: 4,
+			auto: true,
+			cdMax: 5,
+			useWeaponRange: true,
+			random: {
+				damage: [3, 11.4]
+			}
+		},
+		'projectile': {
 			statType: 'int',
 			statMult: 0.9,
 			element: 'arcane',
@@ -14,6 +25,18 @@ define([
 			range: 9,
 			random: {
 				damage: [2, 7.6]
+			}
+		},
+
+		'magic missile': {
+			statType: 'int',
+			statMult: 1,
+			element: 'arcane',
+			cdMax: 14,
+			manaCost: 4,
+			range: 9,
+			random: {
+				damage: [4, 15]
 			}
 		},
 		'ice spear': {
@@ -42,18 +65,16 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 0.96,
-			element: 'holy',
-			auto: true,
-			needLos: true,
-			cdMax: 6,
-			manaCost: 0,
+			statMult: 1,
+			cdMax: 10,
 			range: 9,
+			manaCost: 4,
 			random: {
-				damage: [4, 15.2]
+				damage: [4, 14],
+				i_stunDuration: [6, 10]
 			}
 		},
-		'healing circle': {
+		'consecrate': {
 			statType: 'int',
 			statMult: 0.07,
 			element: 'holy',
@@ -78,13 +99,13 @@ define([
 		},*/
 		'slash': {
 			statType: 'str',
-			statMult: 0.84,
+			statMult: 1,
 			threatMult: 4,
-			auto: true,
-			cdMax: 5,
+			cdMax: 10,
+			manaCost: 4,
 			useWeaponRange: true,
 			random: {
-				damage: [3, 11.4]
+				damage: [6, 23]
 			}
 		},
 		'charge': {
@@ -109,14 +130,13 @@ define([
 				i_duration: [4, 8]
 			}
 		},*/
-		'double slash': {
+		'flurry': {
 			statType: 'dex',
 			statMult: 0.88,
-			cdMax: 3,
-			useWeaponRange: true,
-			auto: true,
+			cdMax: 20,
+			manaCost: 5,
 			random: {
-				damage: [1, 3.8]
+				i_duration: [3, 8]
 			}
 		},
 		'smokebomb': {

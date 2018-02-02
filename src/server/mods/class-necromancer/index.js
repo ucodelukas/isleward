@@ -85,7 +85,7 @@ define([
 		},
 
 		beforeGetClasses: function (classes) {
-			classes.spells.necromancer = ['summon skeleton', 'blood barrier'];
+			classes.spells.necromancer = ['harvest life', 'summon skeleton'];
 			classes.stats.necromancer = {
 				values: {
 					hpMax: 65
@@ -128,7 +128,16 @@ define([
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
 				types.oneHanded[s] = {
 					sprite: [i, 0],
-					spellName: 'harvest life',
+					spellName: 'melee',
+					spellConfig: {
+						statType: ['str', 'int'],
+						statMult: 0.76,
+						cdMax: 6,
+						useWeaponRange: true,
+						random: {
+							damage: [1.5, 5.7]
+						}
+					},
 					spritesheet: `${this.folderName}/images/items.png`
 				};
 			}, this);
@@ -137,14 +146,13 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 0.76,
-				auto: true,
-				cdMax: 6,
-				manaCost: 0,
+				statMult: 1,
+				cdMax: 12,
+				manaCost: 5,
 				range: 1,
 				random: {
-					damage: [1.5, 5.7],
-					healPercent: [5, 15]
+					damage: [3, 11],
+					healPercent: [10, 30]
 				}
 			};
 
