@@ -197,7 +197,7 @@ define([
 					level: [7, 10],
 					quality: 4,
 					noSpell: true,
-					slot: 'twoHanded',
+					slot: 'mainHand',
 					sprite: [1, 0],
 					spritesheet: '../../../images/legendaryItems.png',
 					type: 'Curved Dagger',

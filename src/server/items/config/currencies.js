@@ -32,7 +32,7 @@ define([
 			'Bone Idol': {
 				quantity: 1,
 				quality: 3,
-				description: `Rescales a weapon's ability`,
+				description: `Rescales a weapon's damage`,
 				material: true,
 				sprite: [7, 8],
 				action: 'reforge'
