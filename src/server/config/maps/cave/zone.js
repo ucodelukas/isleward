@@ -172,6 +172,7 @@ module.exports = {
 
 		'radulos': {
 			level: 18,
+			spawnCd: 1714,
 
 			regular: {
 				hpMult: 75,
