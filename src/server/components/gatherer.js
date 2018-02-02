@@ -194,7 +194,7 @@ define([
 			if (!gatherResult.noChangeAmount)
 				resourceNode.gather();
 
-			this.obj.stats.getXp(gatherResult.xp, gatherResult.obj);
+			this.obj.stats.getXp(gatherResult.xp, this.obj, gatherResult.obj);
 
 			if (gathering.destroyed) {
 				if (isFish) {

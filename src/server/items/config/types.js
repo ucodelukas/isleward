@@ -228,7 +228,7 @@ define([
 					manaCost: 0,
 					range: 9,
 					random: {
-						damage: [2, 7.6]
+						damage: [2, 15]
 					}
 				}
 			},
