@@ -5,45 +5,54 @@ define([
 ) {
 	return {
 		currencies: {
-			'Unstable Totem': {
-				name: 'Unstable Totem',
+			'Unstable Idol': {
 				quantity: 1,
 				quality: 1,
 				description: 'Rerolls the stats on an item',
 				material: true,
-				sprite: [1, 8]
+				sprite: [1, 8],
+				action: 'reroll'
 			},
-			'Ascendant Totem': {
-				name: 'Ascendant Totem',
+			'Ascendant Idol': {
 				quantity: 1,
 				quality: 2,
-				description: `Rerolls the level of an item`,
+				description: `Increases the level of an item`,
 				material: true,
-				sprite: [3, 8]
+				sprite: [3, 8],
+				action: 'relevel'
 			},
-			"Gambler's Totem": {
-				name: "Gambler's Totem",
+			'Dragon-Glass Idol': {
 				quantity: 1,
 				quality: 3,
 				description: `Rerolls an item's slot`,
 				material: true,
-				sprite: [6, 8]
+				sprite: [6, 8],
+				action: 'reslot'
 			},
-			"Brawler's Totem": {
-				name: "Brawler's Totem",
+			'Bone Idol': {
 				quantity: 1,
 				quality: 3,
-				description: `Rerolls a weapon's ability`,
+				description: `Rescales a weapon's ability`,
 				material: true,
-				sprite: [7, 8]
+				sprite: [7, 8],
+				action: 'reforge'
 			}
 		},
 
 		chance: {
-			'Unstable Totem': 37,
-			'Ascendant Totem': 15,
-			"Gambler's Totem": 5,
-			"Brawler's Totem": 6
+			'Unstable Idol': 37,
+			'Ascendant Idol': 15,
+			'Dragon-Glass Idol': 5,
+			'Bone Idol': 6
+		},
+
+		getCurrencyFromAction: function (action) {
+			var currencies = this.currencies;
+			var pick = Object.keys(currencies).find(o => (currencies[o].action == action));
+
+			return extend(true, {
+				name: pick
+			}, currencies[pick])
 		}
 	};
 });
