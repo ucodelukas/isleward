@@ -39,7 +39,7 @@ define([
 				if (this.range != null) {
 					var obj = this.obj;
 					var distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
-					inRange = distance <= this.range;
+					inRange = (distance <= this.range);
 				}
 
 				return inRange;

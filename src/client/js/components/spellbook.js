@@ -93,23 +93,11 @@ define([
 		},
 
 		getSpell: function (number) {
-			var spellNumber = -1;
+			var spellNumber = (number == ' ') ? 0 : number;
 
-			if (number == ' ')
-				spellNumber = 0;
-			else if (number == 1)
-				spellNumber = 1;
-			else if (number == 2)
-				spellNumber = 2;
-			else if (number == 3)
-				spellNumber = 3;
-			else if (number == 4)
-				spellNumber = 4;
-
-			if (spellNumber == -1)
-				return;
-
-			var spell = this.spells[spellNumber];
+			var spell = this.spells.find(function (s) {
+				return (s.id == spellNumber);
+			});
 			if (!spell)
 				return null;
 

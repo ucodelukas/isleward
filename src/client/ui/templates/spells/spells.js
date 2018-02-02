@@ -34,7 +34,7 @@ define([
 				var x = -(icon[0] * 64);
 				var y = -(icon[1] * 64);
 
-				var hotkey = (i == 0) ? 'space' : i;
+				var hotkey = (i == 0) ? 'space' : spells[i].id;
 
 				var html = templateSpell
 					.replace('$HOTKEY$', hotkey);

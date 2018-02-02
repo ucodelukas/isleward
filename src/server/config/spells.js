@@ -7,12 +7,12 @@ define([
 			name: 'Melee',
 			description: 'Performs a quick melee attack.',
 			type: 'melee',
-			icon: [1, 0]
+			icon: [7, 0]
 		}, {
 			name: 'Projectile',
 			description: 'Performs a basic magical attack.',
 			type: 'projectile',
-			icon: [1, 0]
+			icon: [7, 1]
 		}, {
 			name: 'Magic Missile',
 			description: 'Launches an orb of unfocussed energy at your target.',
