@@ -40,7 +40,6 @@ define([
 				item: item,
 				addStatMsgs: []
 			};
-			result.success = (Math.random() * 100) < config.successChance;
 
 			config.materials.forEach(function (m) {
 				var invMaterial = inventory.items.find(i => i.name == m.name);
@@ -99,33 +98,13 @@ define([
 				});
 			} else {
 				var newPower = (item.power || 0) + 1;
-				item.power = newPower;
-
-				if ((result.success) && (msg.action != 'scour'))
-					this.addStat(item, result);
-				else if (item.enchantedStats) {
-					for (var p in item.enchantedStats) {
-						var value = item.enchantedStats[p];
-
-						if (item.stats[p]) {
-							result.addStatMsgs.push({
-								stat: p,
-								value: -value
-							});
-							item.stats[p] -= value;
-							if (item.stats[p] <= 0)
-								delete item.stats[p];
-
-							if (p == 'lvlRequire') {
-								item.level += value;
-								delete item.originalLevel;
-							}
-						}
-					}
-
-					delete item.enchantedStats;
-					delete item.power;
+				if (newPower > 3) {
+					inventory.resolveCallback(msg);
+					return;
 				}
+
+				item.power = newPower;
+				this.addStat(item, result);
 			}
 
 			obj.syncer.setArray(true, 'inventory', 'getItems', item);
@@ -141,38 +120,28 @@ define([
 		},
 
 		getEnchantMaterials: function (item, action) {
-			var result = salvager.salvage(item, true);
+			var result = null;
 
 			var powerLevel = item.power || 0;
-			powerLevel = Math.min(powerLevel, 9);
-			var mult = [2, 3, 5, 8, 12, 17, 23, 30, 38, 47][powerLevel];
-			if (action == 'scour')
-				mult *= 0.2;
+			if (powerLevel < 3) {
+				var mult = [15, 30, 60][powerLevel];
 
-			result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
-
-			var successChance = [100, 60, 35, 15, 7, 3, 2, 1, 1, 1][powerLevel];
-			if (action == 'scour') {
-				successChance = 100;
-				if (powerLevel == 0)
-					result = [];
-			} else if (action == 'reroll') {
-				successChance = 100;
-				result = [configCurrencies.currencies['Unstable Totem']];
-			} else if (action == 'relevel') {
-				successChance = 100;
-				result = [configCurrencies.currencies['Ascendant Totem']];
-			} else if (action == 'reslot') {
-				successChance = 100;
-				result = [configCurrencies.currencies["Gambler's Totem"]];
-			} else if (action == 'reforge') {
-				successChance = 100;
-				result = [configCurrencies.currencies["Brawler's Totem"]];
+				if (action == 'reroll')
+					result = [configCurrencies.getCurrencyFromAction('reroll')];
+				else if (action == 'relevel')
+					result = [configCurrencies.getCurrencyFromAction('relevel')];
+				else if (action == 'reslot')
+					result = [configCurrencies.getCurrencyFromAction('reslot')];
+				else if (action == 'reforge')
+					result = [configCurrencies.getCurrencyFromAction('reforge')];
+				else {
+					result = salvager.salvage(item, true);
+					result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
+				}
 			}
 
 			return {
-				materials: result,
-				successChance: successChance
+				materials: result
 			};
 		}
 	};

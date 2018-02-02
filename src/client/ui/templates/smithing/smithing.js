@@ -83,19 +83,12 @@ define([
 				zIndex: 9999999,
 				top: 100
 			};
-			if (this.action == 'scour')
-				msg.msg = 'Item Scouring Succeeded';
-			else if (this.action == 'reroll')
+			if (this.action == 'reroll')
 				msg.msg = 'Item Reroll Succeeded';
 			else if (this.action == 'relevel')
 				msg.msg = 'Item Relevel Succeeded';
 			else if (this.action == 'reslot')
 				msg.msg = 'Item Reslot Succeeded';
-
-			if (!result.success) {
-				msg.msg = 'Item Enhancement Failed';
-				msg.type = 'failure';
-			}
 
 			result.addStatMsgs.forEach(function (a) {
 				msg.msg += '<br /> ' + ((a.value > 0) ? '+' : '') + a.value + ' ' + statTranslations.translate(a.stat);
@@ -107,6 +100,12 @@ define([
 				this.item = result.item;
 
 			this.getMaterials(this.item);
+
+			var augment = this.find('[action="augment"]').addClass('disabled');
+			if ((result.item.power || 0) < 3)
+				augment.removeClass('disabled');
+			else
+				this.find('[action="reroll"]').click();
 		},
 
 		//Something needs to listen to events or they'll be queued
@@ -156,6 +155,10 @@ define([
 			this.find('[action="augment"]').addClass('selected');
 			this.action = 'augment';
 
+			var augment = this.find('[action="augment"]').addClass('disabled');
+			if ((msg.item.power || 0) < 3)
+				augment.removeClass('disabled');
+
 			var reforge = this.find('[action="reforge"]').addClass('disabled');
 			if (msg.item.spell)
 				reforge.removeClass('disabled');
@@ -204,28 +207,26 @@ define([
 
 			this.find('.actionButton').removeClass('disabled').addClass('disabled');
 
-			this.find('.chance').html('');
+			if (result.materials) {
+				var material = result.materials[0];
+				if (material) {
+					var hasMaterials = window.player.inventory.items.find(function (i) {
+						return (i.name == material.name);
+					});
+					if (hasMaterials) {
+						material.quantityText = hasMaterials.quantity + '/' + material.quantity;
+						hasMaterials = hasMaterials.quantity >= material.quantity;
+					} else {
+						if (!material.quantityText)
+							material.quantityText = '';
+						material.quantityText += '0/' + material.quantity;
+					}
 
-			var material = result.materials[0];
-			if (material) {
-				var hasMaterials = window.player.inventory.items.find(function (i) {
-					return (i.name == material.name);
-				});
-				if (hasMaterials) {
-					material.quantityText = hasMaterials.quantity + '/' + material.quantity;
-					hasMaterials = hasMaterials.quantity >= material.quantity;
-				} else {
-					if (!material.quantityText)
-						material.quantityText = '';
-					material.quantityText += '0/' + material.quantity;
+					if (hasMaterials)
+						this.find('.actionButton').removeClass('disabled');
+
+					this.drawItem(this.find('.material'), material, !hasMaterials);
 				}
-
-				if (hasMaterials)
-					this.find('.actionButton').removeClass('disabled');
-
-				this.find('.chance').html(result.successChance + '%');
-
-				this.drawItem(this.find('.material'), material, !hasMaterials);
 			}
 
 			this.setDisabled(false);
@@ -297,7 +298,6 @@ define([
 				this.find('.item').remove();
 				this.find('.icon').show();
 				this.find('.actionButton').removeClass('disabled').addClass('disabled');
-				this.find('.chance').html('');
 				this.show();
 			} else
 				this.hide();
