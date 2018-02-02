@@ -807,6 +807,12 @@ define([
 			var instancedItems = extend(true, [], this.items);
 			this.items = [];
 
+			var dropEvent = {
+				chanceMultiplier: 1,
+				source: this.obj
+			};
+			playerObject.fireEvent('beforeGenerateLoot', dropEvent);
+
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var magicFind = (blueprint.magicFind || 0);
 				var bonusMagicFind = killSource.stats.values.magicFind;
@@ -818,7 +824,7 @@ define([
 					rolls++;
 
 				for (var i = 0; i < rolls; i++) {
-					if (Math.random() * 100 >= (blueprint.chance || 35))
+					if (Math.random() * 100 >= (blueprint.chance || 35) * dropEvent.chanceMultiplier)
 						continue;
 
 					var itemBlueprint = {
@@ -837,11 +843,11 @@ define([
 				var blueprints = blueprint.blueprints;
 				for (var i = 0; i < blueprints.length; i++) {
 					var drop = blueprints[i];
-					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
+					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance * dropEvent.chanceMultiplier))
 						continue;
 					else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
 						continue;
-					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance)) {
+					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance * dropEvent.chanceMultiplier)) {
 						continue;
 					}
 

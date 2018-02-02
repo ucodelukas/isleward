@@ -22,6 +22,14 @@ define([
 			if (!looter.player)
 				return;
 
+			var dropEvent = {
+				chanceMultiplier: 1,
+				source: dropper
+			};
+			looter.fireEvent('beforeGenerateLoot', dropEvent);
+			if (Math.random() >= dropEvent.chanceMultiplier)
+				return;
+
 			var res = cards.getCard(looter, dropper);
 			if (!res)
 				return;

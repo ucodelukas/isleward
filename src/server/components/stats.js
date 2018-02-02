@@ -80,7 +80,8 @@ define([
 			logins: 0,
 			played: 0,
 			lastLogin: null,
-			loginStreak: 0
+			loginStreak: 0,
+			mobKillStreaks: {}
 		},
 
 		dead: false,
@@ -211,11 +212,21 @@ define([
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
 
-		getXp: function (amount) {
+		getXp: function (amount, source, target) {
 			var obj = this.obj;
 			var values = this.values;
 
 			if ((this.originalValues || this.values).level == 20)
+				return;
+
+			var xpEvent = {
+				source: source,
+				target: target,
+				amount: amount
+			};
+
+			this.obj.fireEvent('beforeGetXp', xpEvent);
+			if (xpEvent.amount == 0)
 				return;
 
 			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
@@ -329,7 +340,7 @@ define([
 					else
 						amount = 0;
 
-					a.obj.stats.getXp(amount, this.obj);
+					a.obj.stats.getXp(amount, this.obj, target);
 				}
 
 				a.obj.fireEvent('afterKillMob', target);
@@ -663,6 +674,49 @@ define([
 
 			for (var p in newValues) {
 				sync(true, 'stats', 'values', p, newValues[p]);
+			}
+		},
+
+		getKillStreakCoefficient: function (mobName) {
+			var killStreak = this.stats.mobKillStreaks[mobName];
+			if (!killStreak)
+				return 1;
+			else
+				return Math.max(0, (2500 - Math.pow(killStreak, 2)) / 2500)
+		},
+
+		events: {
+			afterKillMob: function (mob) {
+				var mobKillStreaks = this.stats.mobKillStreaks;
+				var mobName = mob.name;
+
+				if (!mobKillStreaks[mobName])
+					mobKillStreaks.mobName = 0;
+
+				mobKillStreaks[mobName]++;
+
+				for (var p in mobKillStreaks) {
+					if (p == mobName)
+						continue;
+
+					mobKillStreaks[p]--;
+					if (!mobKillStreaks[p])
+						delete mobKillStreaks[p];
+				}
+			},
+
+			beforeGetXp: function (event) {
+				if (!event.target.mob)
+					return;
+
+				event.amount *= this.getKillStreakCoefficient(event.target.name);
+			},
+
+			beforeGenerateLoot: function (event) {
+				if (!event.source.mob)
+					return;
+
+				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
 			}
 		}
 	};
