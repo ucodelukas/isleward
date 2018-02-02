@@ -45,7 +45,7 @@ define([
 		},
 
 		onGetCardSetReward: function (set, obj) {
-			var reward = cards.getReward(set);
+			var reward = cards.getReward(obj, set);
 			if (!reward.push)
 				reward = [reward];
 

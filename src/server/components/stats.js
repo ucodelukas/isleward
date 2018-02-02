@@ -229,7 +229,7 @@ define([
 			if (xpEvent.amount == 0)
 				return;
 
-			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
+			amount = ~~(xpEvent.amount * (1 + (values.xpIncrease / 100)));
 
 			values.xpTotal = ~~(values.xpTotal + amount);
 			values.xp = ~~(values.xp + amount);
@@ -682,7 +682,7 @@ define([
 			if (!killStreak)
 				return 1;
 			else
-				return Math.max(0, (2500 - Math.pow(killStreak, 2)) / 2500)
+				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
 		},
 
 		events: {
@@ -693,14 +693,15 @@ define([
 				if (!mobKillStreaks[mobName])
 					mobKillStreaks.mobName = 0;
 
-				mobKillStreaks[mobName]++;
+				if (mobKillStreaks[mobName] < 100)
+					mobKillStreaks[mobName]++;
 
 				for (var p in mobKillStreaks) {
 					if (p == mobName)
 						continue;
 
 					mobKillStreaks[p]--;
-					if (!mobKillStreaks[p])
+					if (mobKillStreaks[p] <= 0)
 						delete mobKillStreaks[p];
 				}
 			},
@@ -717,6 +718,16 @@ define([
 					return;
 
 				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
+			},
+
+			afterMove: function (event) {
+				var mobKillStreaks = this.stats.mobKillStreaks;
+
+				for (var p in mobKillStreaks) {
+					mobKillStreaks[p] -= 0.01;
+					if (mobKillStreaks[p] <= 0)
+						delete mobKillStreaks[p];
+				}
 			}
 		}
 	};

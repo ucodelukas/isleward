@@ -169,7 +169,7 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				statValues.hpMax = ~~(statValues.hpMax * (level / 10));
+				statValues.hpMax = ~~(statValues.hpMax * [0.1, 0.25, 0.6, 1, 1, 1, 1, 1, 1][level - 1]);
 				dmgMult *= [0.3, 0.45, 0.6, 0.8, 1, 1, 1, 1, 1][level - 1];
 			}
 
