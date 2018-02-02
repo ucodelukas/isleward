@@ -1,11 +1,9 @@
 define([
 	'config/spells/spellCallbacks',
-	'combat/combat',
-	'misc/events'
+	'combat/combat'
 ], function (
 	spellCallbacks,
-	combat,
-	events
+	combat
 ) {
 	return {
 		cd: 0,

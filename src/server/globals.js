@@ -17,17 +17,7 @@ define([
 ) {
 	return {
 		init: function () {
-			var oldExtend = extend;
-			global.extend = function () {
-				try {
-					oldExtend.apply(null, arguments);
-					return arguments[1];
-				} catch (e) {
-					console.log(arguments);
-					throw e;
-				}
-			};
-
+			global.extend = extend;
 			global.cons = cons;
 			global._ = helpers;
 			global.lootRoller = lootRoller;

@@ -475,6 +475,12 @@ define([
 				};
 				newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
 
+				//Hack: We need to actually just always use the instanced eventEmitter
+				var eventQueue = eventEmitter.queue;
+				delete eventEmitter.queue;
+				var newEventEmitter = extend(true, {}, eventEmitter);
+				eventEmitter.queue = eventQueue;
+
 				var instance = {
 					id: objToAdd.name + '_' + (+new Date),
 					objects: extend(true, {}, objects),
@@ -490,7 +496,7 @@ define([
 					scheduler: extend(true, {}, scheduler),
 					mail: extend(true, {}, mail),
 					map: newMap,
-					eventEmitter: extend(true, {}, eventEmitter),
+					eventEmitter: newEventEmitter,
 					instanced: true
 				};
 

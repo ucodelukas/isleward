@@ -2,14 +2,12 @@ define([
 	'./../config/spells/spellTemplate',
 	'./../config/animations',
 	'./../config/spells',
-	'./../config/spellsConfig',
-	'misc/events'
+	'./../config/spellsConfig'
 ], function (
 	spellTemplate,
 	animations,
 	playerSpells,
-	playerSpellsConfig,
-	events
+	playerSpellsConfig
 ) {
 	return {
 		type: 'spellbook',
@@ -88,7 +86,7 @@ define([
 				type: type,
 				template: null
 			};
-			events.emit('onBeforeGetSpellTemplate', typeTemplate);
+			this.obj.instance.eventEmitter.emit('onBeforeGetSpellTemplate', typeTemplate);
 			if (!typeTemplate.template)
 				typeTemplate.template = require('./config/spells/spell' + type);
 
