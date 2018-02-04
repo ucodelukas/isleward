@@ -112,7 +112,7 @@ define([
 			return card;
 		},
 
-		getReward: function (set) {
+		getReward: function (looter, set) {
 			var configs = extend(true, {}, config);
 			looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 

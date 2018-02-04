@@ -423,7 +423,8 @@ define([
 			if (!blueprint.statMult)
 				blueprint.statMult = {};
 			for (var s in blueprint.statMult) {
-				this.buildStat(item, blueprint, s);
+				if (blueprint.statMult[s] > 0)
+					this.buildStat(item, blueprint, s);
 			}
 
 			var statCount = blueprint.statCount || (item.quality + 1);
