@@ -36,7 +36,7 @@ define([
 		},
 		'Tradesman\'s Pride': {
 			chance: 0.01,
-			reward: 'Five Random Totems',
+			reward: 'Five Random Idols',
 			setSize: 10
 		}
 	};
@@ -179,7 +179,7 @@ define([
 				});
 			},
 
-			"Five Random Totems": function () {
+			"Five Random Idols": function () {
 				var result = [];
 				for (var i = 0; i < 5; i++) {
 					result.push(itemGenerator.generate({
