@@ -66,13 +66,22 @@ define([
 
 		events: {
 			afterLootMobItem: function (item) {
-				if (this.obj.zoneName != this.zoneName)
-					return;
-				else if ((this.quality) && (item.quality != this.quality))
-					return;
-				else if ((this.slot.indexOf) && (this.slot.indexOf(item.slot) == -1))
-					return
-				else if ((!this.slot.indexOf) && (this.slot != item.slot))
+				if (
+					(this.isReady) ||
+					(this.obj.zoneName != this.zoneName) ||
+					(
+						(this.quality) &&
+						(item.quality != this.quality)
+					) ||
+					(
+						(this.slot.indexOf) &&
+						(this.slot.indexOf(item.slot) == -1)
+					) ||
+					(
+						(!this.slot.indexOf) &&
+						(this.slot != item.slot)
+					)
+				)
 					return;
 
 				this.ready();
