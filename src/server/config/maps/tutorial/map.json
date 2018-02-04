@@ -1830,7 +1830,7 @@
                  "properties":
                     {
                      "cpnArea":"{\"type\":\"stash\"}",
-                     "cpnNotice":"{\n\t\"msg\": \"Your Stash (Space to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
+                     "cpnNotice":"{\n\t\"msg\": \"Your Stash (U to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
                     },
                  "propertytypes":
                     {
@@ -2121,7 +2121,7 @@
                  "properties":
                     {
                      "cpnArea":"{\"type\":\"stash\"}",
-                     "cpnNotice":"{\n\t\"msg\": \"Your Stash (Space to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
+                     "cpnNotice":"{\n\t\"msg\": \"Your Stash (U to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
                     },
                  "propertytypes":
                     {
