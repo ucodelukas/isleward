@@ -66,7 +66,7 @@ define([
 				this.obj.inventory.getItem(r);
 			}, this);
 
-			this.obj.stats.getXp(this.xp || 10, this);
+			this.obj.stats.getXp(this.xp || 10, this.obj, this);
 		},
 
 		simplify: function (self) {

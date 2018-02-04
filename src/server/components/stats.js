@@ -212,6 +212,8 @@ define([
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
 
+		//Source is the object that caused you to gain xp (mostly yourself)
+		//Target is the source of the xp (a mob or quest)
 		getXp: function (amount, source, target) {
 			var obj = this.obj;
 			var values = this.values;
