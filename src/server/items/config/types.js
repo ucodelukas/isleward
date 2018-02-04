@@ -205,7 +205,7 @@ define([
 				spellConfig: {
 					statType: 'int',
 					statMult: 1,
-					element: 'arcane',
+					element: 'holy',
 					cdMax: 4,
 					manaCost: 0,
 					range: 6,
