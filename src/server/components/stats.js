@@ -301,6 +301,8 @@ define([
 				else {
 					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
 				}
 			}
 		},
@@ -674,8 +676,18 @@ define([
 
 			this.obj.spellbook.calcDps();
 
+			var publicStats = [
+				'hp',
+				'hpMax',
+				'mana',
+				'manaMax',
+				'level'
+			];
+
 			for (var p in newValues) {
 				sync(true, 'stats', 'values', p, newValues[p]);
+				if (publicStats.indexOf(p) > -1)
+					sync(false, 'stats', 'values', p, newValues[p]);
 			}
 		},
 
