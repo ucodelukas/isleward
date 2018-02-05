@@ -114,6 +114,31 @@ define([
 				generatorSpells.generate(item, {
 					spellName: spellName
 				});
+			} else if (msg.action == 'scour') {
+				if (!item.power)
+					return;
+
+				for (var p in item.enchantedStats) {
+					var value = item.enchantedStats[p];
+
+					if (item.stats[p]) {
+						result.addStatMsgs.push({
+							stat: p,
+							value: -value
+						});
+						item.stats[p] -= value;
+						if (item.stats[p] <= 0)
+							delete item.stats[p];
+
+						if (p == 'lvlRequire') {
+							item.level += value;
+							delete item.originalLevel;
+						}
+					}
+				}
+
+				delete item.enchantedStats;
+				delete item.power;
 			} else {
 				var newPower = (item.power || 0) + 1;
 				if (newPower > 3) {
@@ -147,10 +172,12 @@ define([
 				result = [configCurrencies.getCurrencyFromAction('reslot')];
 			else if (action == 'reforge')
 				result = [configCurrencies.getCurrencyFromAction('reforge')];
+			else if (action == 'scour')
+				result = [configCurrencies.getCurrencyFromAction('scour')];
 			else {
 				var powerLevel = item.power || 0;
 				if (powerLevel < 3)
-					var mult = [15, 30, 60][powerLevel];
+					var mult = [5, 10, 20][powerLevel];
 				else
 					return;
 

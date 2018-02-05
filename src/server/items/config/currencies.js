@@ -36,6 +36,14 @@ define([
 				material: true,
 				sprite: [7, 8],
 				action: 'reforge'
+			},
+			'Smoldering Idol': {
+				quantity: 1,
+				quality: 4,
+				description: `Removes all auments from an item`,
+				material: true,
+				sprite: [8, 8],
+				action: 'scour'
 			}
 		},
 
@@ -43,7 +51,8 @@ define([
 			'Unstable Idol': 37,
 			'Ascendant Idol': 15,
 			'Dragon-Glass Idol': 5,
-			'Bone Idol': 6
+			'Bone Idol': 6,
+			'Smoldering Idol': 1
 		},
 
 		getCurrencyFromAction: function (action) {
