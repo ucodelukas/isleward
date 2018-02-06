@@ -9,10 +9,6 @@ define([
 				x: 0,
 				y: 0
 			},
-			cleric: {
-				x: 1,
-				y: 0
-			},
 			wizard: {
 				x: 2,
 				y: 0
@@ -24,7 +20,6 @@ define([
 		},
 		spells: {
 			wizard: ['magic missile', 'ice spear'],
-			cleric: ['smite', 'consecrate'],
 			warrior: ['slash', 'charge'],
 			thief: ['flurry', 'smokebomb']
 		},
@@ -32,15 +27,6 @@ define([
 			wizard: {
 				values: {
 					hpMax: 50
-				},
-				vitScale: 10,
-				gainStats: {
-					int: 1
-				}
-			},
-			cleric: {
-				values: {
-					hpMax: 60
 				},
 				vitScale: 10,
 				gainStats: {
@@ -68,9 +54,8 @@ define([
 		},
 		weapons: {
 			wizard: 'Gnarled Staff',
-			cleric: 'Wand',
 			thief: 'Dagger',
-			warrior: 'Axe'
+			warrior: 'Sword'
 		},
 
 		getSpritesheet: function (className) {

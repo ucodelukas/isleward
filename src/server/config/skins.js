@@ -31,13 +31,13 @@ define([
 		'cleric 1': {
 			name: 'Cleric 1',
 			sprite: [4, 0],
-			class: 'cleric',
+			class: 'wizard',
 			default: true
 		},
 		'cleric 2': {
 			name: 'Cleric 2',
 			sprite: [5, 0],
-			class: 'cleric',
+			class: 'wizard',
 			default: true
 		},
 		'thief 1': {
@@ -70,7 +70,7 @@ define([
 			name: 'Diviner',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [1, 0],
-			class: 'cleric'
+			class: 'wizard'
 		},
 		'1.3': {
 			name: 'Cutthroat',
@@ -88,7 +88,7 @@ define([
 			name: 'Occultist',
 			spritesheet: 'images/skins/0001.png',
 			sprite: [4, 0],
-			class: 'necromancer'
+			class: 'wizard'
 		},
 
 		//Templar Skin Pack
@@ -96,31 +96,31 @@ define([
 			name: 'Crusader 1',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [0, 0],
-			class: ['cleric', 'warrior']
+			class: ['wizard', 'warrior']
 		},
 		'2.2': {
 			name: 'Crusader 2',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [1, 0],
-			class: ['cleric', 'warrior']
+			class: ['wizard', 'warrior']
 		},
 		'2.3': {
 			name: 'Crusader 3',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [2, 0],
-			class: ['cleric', 'warrior']
+			class: ['wizard', 'warrior']
 		},
 		'2.4': {
 			name: 'Crusader 4',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [3, 0],
-			class: ['cleric', 'warrior']
+			class: ['wizard', 'warrior']
 		},
 		'2.5': {
 			name: 'Grand Crusader',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [4, 0],
-			class: ['cleric', 'warrior']
+			class: ['wizard', 'warrior']
 		}
 	};
 

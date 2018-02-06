@@ -85,7 +85,7 @@ define([
 		},
 
 		beforeGetClasses: function (classes) {
-			classes.spells.necromancer = ['harvest life', 'summon skeleton'];
+			/*classes.spells.necromancer = ['harvest life', 'summon skeleton'];
 			classes.stats.necromancer = {
 				values: {
 					hpMax: 65
@@ -102,7 +102,7 @@ define([
 				spritesheet: `${this.folderName}/images/avatar.png`,
 				x: 0,
 				y: 0
-			};
+			};*/
 		},
 
 		beforeGetSpellTemplate: function (spell) {
@@ -118,7 +118,7 @@ define([
 			skins['necromancer 1'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
-				class: 'necromancer',
+				class: 'wizard',
 				spritesheet: `${this.folderName}/images/inGameSprite.png`,
 				default: true
 			};

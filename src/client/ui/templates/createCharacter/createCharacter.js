@@ -167,7 +167,7 @@ define([
 			this.costume = (this.costume + 1) % spriteList.length;
 			this.skinId = spriteList[this.costume].id;
 
-			el.html((this.costume + 1) + '/' + spriteList.length);
+			el.html(spriteList[this.costume].name);
 
 			this.setSprite();
 		},
