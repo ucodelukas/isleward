@@ -108,7 +108,7 @@ define([
 			io.set({
 				ent: this.username,
 				field: 'stash',
-				value: JSON.stringify(this.obj.stash.items)
+				value: JSON.stringify(this.obj.stash.items).split(`'`).join('`')
 			});
 		},
 
@@ -209,6 +209,11 @@ define([
 		},
 
 		onGetStash: function (data, character, result) {
+			if (result) {
+				result = result.split('`').join(`'`);
+				result = result.replace(/''+/g, '\'');
+			}
+
 			this.stash = JSON.parse(result || '[]');
 
 			if (this.skins != null) {
