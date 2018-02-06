@@ -4,6 +4,7 @@ define([
 	events
 ) {
 	var classes = {
+		list: ['warrior', 'wizard', 'thief'],
 		portraits: {
 			warrior: {
 				x: 0,

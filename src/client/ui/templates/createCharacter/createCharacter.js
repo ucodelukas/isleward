@@ -142,7 +142,7 @@ define([
 
 		changeClass: function (e) {
 			var el = $(e.target);
-			var classes = Object.keys(this.classSprites);
+			var classes = ['wizard', 'warrior', 'thief'];
 			var nextIndex = (classes.indexOf(el.html()) + 1) % classes.length;
 			this.costume = -1;
 
@@ -160,7 +160,7 @@ define([
 		changeCostume: function (e) {
 			var el = $(e.target);
 
-			var spriteList = this.classSprites[this.class];
+			var spriteList = this.classSprites;
 			if (!spriteList)
 				return;
 
@@ -173,7 +173,7 @@ define([
 		},
 
 		setSprite: function () {
-			var classSprite = this.classSprites[this.class][this.costume];
+			var classSprite = this.classSprites[this.costume];
 			var costume = classSprite.sprite.split(',');
 			var spirteX = -costume[0] * 8;
 			var spriteY = -costume[1] * 8;

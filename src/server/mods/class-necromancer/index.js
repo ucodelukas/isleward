@@ -115,12 +115,11 @@ define([
 		},
 
 		beforeGetSkins: function (skins) {
-			skins['necromancer 1'] = {
+			skins['1.8'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
 				class: 'wizard',
-				spritesheet: `${this.folderName}/images/inGameSprite.png`,
-				default: true
+				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 		},
 

@@ -1,7 +1,7 @@
 define([
-
+	'./roleSkins'
 ], function (
-
+	roleSkins
 ) {
 	return {
 		accounts: {
@@ -15,9 +15,7 @@ define([
 					sprite: [12, 0],
 					keyId: 'world'
 				}],
-				skins: [
-					'1.1', '1.2', '1.3', '1.4', '1.5', 'bearded wizard', '2.1', '2.2', '2.3', '2.4', '2.5'
-				]
+				skins: []
 			}
 		},
 
@@ -77,7 +75,21 @@ define([
 		},
 
 		getSkins: function (account) {
-			return this.accounts[account] ? this.accounts[account].skins : [];
+			var skins = [];
+			var account = this.accounts[account] || {
+				skins: []
+			};
+			(account.skins || []).forEach(function (s) {
+				skins.push(s);
+			});
+
+			var roleSkinList = roleSkins[account.level || 0];
+			roleSkinList.forEach(function (s) {
+				skins.push(s);
+			});
+
+			skins = skins.filter((s, i) => (skins.indexOf(s) == i));
+			return skins;
 		},
 
 		sendMessage: function (player, msg) {
