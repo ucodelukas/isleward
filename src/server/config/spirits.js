@@ -3,7 +3,7 @@ define([
 ], function (
 	events
 ) {
-	var classes = {
+	var spirits = {
 		list: ['bear', 'owl', 'lynx'],
 		portraits: {
 			bear: {

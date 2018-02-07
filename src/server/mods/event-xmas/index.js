@@ -54,7 +54,6 @@ define([
 			skins['bearded wizard'] = {
 				name: 'Bearded Wizard',
 				sprite: [0, 0],
-				class: 'wizard',
 				spritesheet: `${this.folderName}/images/skins.png`
 			};
 		},

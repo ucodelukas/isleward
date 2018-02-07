@@ -142,7 +142,7 @@ define([
 
 		changeClass: function (e) {
 			var el = $(e.target);
-			var classes = ['wizard', 'warrior', 'thief'];
+			var classes = ['owl', 'bear', 'thief'];
 			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
 			this.costume = -1;
 

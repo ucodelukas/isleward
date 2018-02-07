@@ -143,7 +143,6 @@ define([
 			skins['1.8'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
-				class: 'wizard',
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 		},
