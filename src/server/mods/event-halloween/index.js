@@ -12,7 +12,7 @@ define([
 		},
 
 		extraScripts: [
-			'maps/tutorial/events/halloween.js',
+			'maps/fjolarok/events/halloween.js',
 			'mtx/summonPumpkinSkeleton.js',
 			'spells/spellScatterPumpkinPieces.js'
 		],
@@ -22,7 +22,7 @@ define([
 		mapH: null,
 
 		init: function () {
-			this.mapFile = require.nodeRequire('../../../mods/event-halloween/maps/tutorial/map');
+			this.mapFile = require.nodeRequire('../../../mods/event-halloween/maps/fjolarok/map');
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
@@ -185,7 +185,7 @@ define([
 		},
 
 		onAfterGetLayerObjects: function (info) {
-			if (info.map != 'tutorial')
+			if (info.map != 'fjolarok')
 				return;
 
 			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
@@ -204,7 +204,7 @@ define([
 		},
 
 		onBeforeBuildLayerTile: function (info) {
-			if (info.map != 'tutorial')
+			if (info.map != 'fjolarok')
 				return;
 
 			var offset = this.mapOffset;
@@ -222,11 +222,11 @@ define([
 		},
 
 		onBeforeGetEventList: function (zone, list) {
-			if (zone != 'tutorial')
+			if (zone != 'fjolarok')
 				return;
 
-			list.push(this.relativeFolderName + '/maps/tutorial/events/halloween.js');
-			list.push(this.relativeFolderName + '/maps/tutorial/events/halloweenBoss.js');
+			list.push(this.relativeFolderName + '/maps/fjolarok/events/halloween.js');
+			list.push(this.relativeFolderName + '/maps/fjolarok/events/halloweenBoss.js');
 		},
 
 		onAfterGetZone: function (zone, config) {

@@ -33,7 +33,7 @@ define([
 				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
-				zoneName: character.zoneName || 'tutorial',
+				zoneName: character.zoneName || 'fjolarok',
 				x: character.x,
 				y: character.y,
 				account: character.account,

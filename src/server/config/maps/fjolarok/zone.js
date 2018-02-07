@@ -1,5 +1,5 @@
  module.exports = {
- 	name: 'tutorial',
+ 	name: 'fjolarok',
  	level: [1, 10],
  	resources: {
  		Moonbell: {
