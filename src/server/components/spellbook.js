@@ -106,7 +106,7 @@ define([
 				else if (sheetName.indexOf('/') > -1)
 					animation = animations.mobs[sheetName];
 				else
-					animation = animations.classes[this.obj.class];
+					animation = animations.classes;
 
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);

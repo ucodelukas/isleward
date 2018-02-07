@@ -106,7 +106,6 @@ define([
 			skins['3.0'] = {
 				name: 'Pumpkin-Head Necromancer',
 				sprite: [0, 0],
-				class: 'wizard',
 				spritesheet: `${this.folderName}/images/skins.png`
 			};
 		},
