@@ -145,9 +145,13 @@ define([
 			}
 
 			var item = this.findItem(itemId);
+			var statValues = this.obj.stats.values;
 			if (!item)
 				return;
 			else if (!item.spell) {
+				item.eq = false;
+				return;
+			} else if (item.level > (statValues.originalLevel || statValues.level)) {
 				item.eq = false;
 				return;
 			}
