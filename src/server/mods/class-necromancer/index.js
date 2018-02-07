@@ -25,7 +25,7 @@ define([
 		},
 
 		onAfterGetZone: function (zone, config) {
-			if (zone != 'tutorial')
+			if (zone != 'fjolarok')
 				return;
 
 			var newRunes = [{
