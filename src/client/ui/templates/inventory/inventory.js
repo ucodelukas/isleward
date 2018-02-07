@@ -508,6 +508,8 @@ define([
 				return;
 			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > playerLevel)))
 				return;
+			else if ((action == 'learnAbility') && (item.level > playerLevel))
+				return;
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
 			if ((item.factions) && (action == 'equip')) {

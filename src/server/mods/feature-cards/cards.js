@@ -6,7 +6,7 @@ define([
 	var config = {
 		'Runecrafter\'s Toil': {
 			chance: 0.025,
-			reward: 'Rune',
+			reward: 'Level 10 Rune',
 			setSize: 3,
 			mobLevel: [3, 100]
 		},
@@ -124,12 +124,13 @@ define([
 
 			looter.instance.eventEmitter.emit('onBeforeGetCardReward', msg);
 
-			return msg.handler();
+			return msg.handler(looter);
 		},
 
 		rewards: {
-			'Rune': function () {
+			'Level 10 Rune': function (obj) {
 				return itemGenerator.generate({
+					level: 10,
 					spell: true
 				});
 			},
