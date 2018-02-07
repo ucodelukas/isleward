@@ -738,7 +738,7 @@ define([
 				var mobKillStreaks = this.stats.mobKillStreaks;
 
 				for (var p in mobKillStreaks) {
-					mobKillStreaks[p] -= 0.08;
+					mobKillStreaks[p] -= 0.085;
 					if (mobKillStreaks[p] <= 0)
 						delete mobKillStreaks[p];
 				}

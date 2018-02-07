@@ -837,7 +837,8 @@ define([
 						bonusMagicFind: bonusMagicFind
 					};
 
-					useItem = generator.generate(itemBlueprint);
+					var statValues = this.obj.stats.values;
+					useItem = generator.generate(itemBlueprint, statValues.originalLevel || statValues.level);
 
 					this.getItem(useItem);
 				}
