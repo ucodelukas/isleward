@@ -58,6 +58,7 @@ requirejs([
 				return;
 
 			console.log('Error Logged: ' + e.toString());
+			console.log(e.stack);
 
 			io.set({
 				ent: new Date(),

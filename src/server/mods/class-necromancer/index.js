@@ -21,6 +21,31 @@ define([
 			this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
 			this.events.on('onBeforeGetResourceList', this.beforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
+			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+		},
+
+		onAfterGetZone: function (zone, config) {
+			if (zone != 'tutorial')
+				return;
+
+			var newRunes = [{
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'harvest life',
+				worth: 3
+			}, {
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'summon skeleton',
+				worth: 3
+			}];
+
+			var vikarTrade = config.mobs.vikar.properties.cpnTrade;
+			Array.prototype.push.apply(vikarTrade.items.extra, newRunes);
 		},
 
 		beforeGetAnimations: function (animations) {

@@ -59,8 +59,8 @@ define([
 
 			this.costume = -1;
 
-			this.class = Object.keys(result)[0] || '';
-			this.find('.txtClass').html(this.class);
+			this.class = 'wizard';
+			this.find('.txtClass').html('Wizard');
 
 			this.changeCostume({
 				target: this.find('.txtCostume')
@@ -143,18 +143,14 @@ define([
 		changeClass: function (e) {
 			var el = $(e.target);
 			var classes = ['wizard', 'warrior', 'thief'];
-			var nextIndex = (classes.indexOf(el.html()) + 1) % classes.length;
+			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
 			this.costume = -1;
 
 			var newClass = classes[nextIndex];
 
-			el.html(newClass);
+			el.html(newClass[0].toUpperCase() + newClass.substr(1));
 
 			this.class = newClass;
-
-			this.changeCostume({
-				target: this.find('.txtCostume')
-			});
 		},
 
 		changeCostume: function (e) {
