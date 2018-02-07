@@ -193,7 +193,7 @@ module.exports = {
 		'1': {
 			msg: [{
 				msg: `Is there anything I can help you with today?`,
-				options: [1.1]
+				options: [1.1, 1.2, 1.3]
 			}],
 			options: {
 				'1.1': {
@@ -203,6 +203,14 @@ module.exports = {
 						return !!fullSet;
 					},
 					goto: 'tradeCards'
+				},
+				'1.2': {
+					msg: `I would like to buy some runes`,
+					goto: 'tradeBuy'
+				},
+				'1.3': {
+					msg: `I have some items I would like to sell`,
+					goto: 'tradeSell'
 				}
 			}
 		},
@@ -232,6 +240,20 @@ module.exports = {
 
 				return `Thank you.`;
 			}
+		},
+		tradeBuy: {
+			cpn: 'trade',
+			method: 'startBuy',
+			args: [{
+				targetName: 'vikar'
+			}]
+		},
+		tradeSell: {
+			cpn: 'trade',
+			method: 'startSell',
+			args: [{
+				targetName: 'vikar'
+			}]
 		}
 	},
 	priest: {

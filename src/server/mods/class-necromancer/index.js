@@ -21,6 +21,31 @@ define([
 			this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
 			this.events.on('onBeforeGetResourceList', this.beforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
+			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+		},
+
+		onAfterGetZone: function (zone, config) {
+			if (zone != 'tutorial')
+				return;
+
+			var newRunes = [{
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'harvest life',
+				worth: 3
+			}, {
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'summon skeleton',
+				worth: 3
+			}];
+
+			var vikarTrade = config.mobs.vikar.properties.cpnTrade;
+			Array.prototype.push.apply(vikarTrade.items.extra, newRunes);
 		},
 
 		beforeGetAnimations: function (animations) {
@@ -85,7 +110,7 @@ define([
 		},
 
 		beforeGetClasses: function (classes) {
-			classes.spells.necromancer = ['harvest life', 'summon skeleton'];
+			/*classes.spells.necromancer = ['harvest life', 'summon skeleton'];
 			classes.stats.necromancer = {
 				values: {
 					hpMax: 65
@@ -102,7 +127,7 @@ define([
 				spritesheet: `${this.folderName}/images/avatar.png`,
 				x: 0,
 				y: 0
-			};
+			};*/
 		},
 
 		beforeGetSpellTemplate: function (spell) {
@@ -115,12 +140,11 @@ define([
 		},
 
 		beforeGetSkins: function (skins) {
-			skins['necromancer 1'] = {
+			skins['1.8'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
-				class: 'necromancer',
-				spritesheet: `${this.folderName}/images/inGameSprite.png`,
-				default: true
+				class: 'wizard',
+				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 		},
 

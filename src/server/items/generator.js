@@ -15,7 +15,7 @@ define([
 ) {
 	var generators = [g1, g2, g3, g4, g5, g6, g11, g7];
 	var materialGenerators = [g6, g8];
-	var spellGenerators = [g1, g9];
+	var spellGenerators = [g1, g9, g7];
 	var currencyGenerators = [g10];
 
 	var generator = {

@@ -273,8 +273,8 @@ define([
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
 
-			if (!skinList[character.class].some(s => (s.id == character.skinId))) {
-				character.skinId = character.class + ' 1';
+			if (!skinList.some(s => (s.id == character.skinId))) {
+				character.skinId = '1.0';
 
 				character.cell = skins.getCell(character.skinId);
 				character.sheetName = skins.getSpritesheet(character.skinId);

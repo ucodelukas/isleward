@@ -183,7 +183,7 @@ define([
 					},
 					forceItems: [{
 						type: 'skin',
-						id: 'bearded wizard',
+						id: '3.1',
 						infinite: true,
 						worth: {
 							currency: `Unique Snowflake`,

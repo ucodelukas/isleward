@@ -40,9 +40,7 @@ define([
 						frames: 5,
 						frameDelay: 3
 					}
-				}
-			},
-			cleric: {
+				},
 				'4': {
 					hitStaff: {
 						sheet: 'animChar',

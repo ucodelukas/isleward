@@ -103,10 +103,10 @@ define([
 		},
 
 		onBeforeGetSkins: function (skins) {
-			skins['pumpkin-head necromancer'] = {
+			skins['3.0'] = {
 				name: 'Pumpkin-Head Necromancer',
 				sprite: [0, 0],
-				class: 'necromancer',
+				class: 'wizard',
 				spritesheet: `${this.folderName}/images/skins.png`
 			};
 		},
