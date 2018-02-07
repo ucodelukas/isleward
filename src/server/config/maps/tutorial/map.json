@@ -1918,7 +1918,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>space<\/font> to toggle auto-attack. Remember to stand close if you are a Warrior, Thief or Necromancer.\"}"
+                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>space<\/font> to toggle auto-attack. Remember to stand close if you are using melee attacks.\"}"
                     },
                  "propertytypes":
                     {
@@ -1994,7 +1994,7 @@
                  "name":"",
                  "properties":
                     {
-                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>space<\/font> to toggle auto-attack. Remember to stand close if you are a Warrior, Thief or Necromancer.\"}"
+                     "cpnNotice":"{\"maxLevel\": 1, \"msg\": \"The seagull's eyes are bloodshot and in its beak you see a glinting locket. It stole your family heirloom!<br \/><br \/>Click on it to target it then press <font class='color-green'>space<\/font> to toggle auto-attack. Remember to stand close if you are using melee attacks.\"}"
                     },
                  "propertytypes":
                     {
