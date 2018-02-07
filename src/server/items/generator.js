@@ -22,7 +22,7 @@ define([
 		spellChance: 0.02,
 		currencyChance: 0.025,
 
-		generate: function (blueprint) {
+		generate: function (blueprint, ownerLevel) {
 			var isSpell = false;
 			var isCurrency = false;
 
@@ -31,13 +31,17 @@ define([
 
 			var item = {};
 
+			var currencyChance = this.currencyChance;
+			if ((blueprint.level) && (ownerLevel))
+				currencyChance *= Math.max(0, (10 - Math.abs(ownerLevel - blueprint.level)) / 10);
+
 			if ((!blueprint.slot) && (!blueprint.noSpell)) {
 				isSpell = blueprint.spell;
 				isCurrency = blueprint.currency;
 				if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
 					isSpell = Math.random() < this.spellChance;
 					if (!isSpell)
-						isCurrency = Math.random() < this.currencyChance;
+						isCurrency = Math.random() < currencyChance;
 				}
 			}
 
