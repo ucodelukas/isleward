@@ -137,15 +137,8 @@ define([
 				return;
 
 			var charname = this.obj.auth.charname;
-			var level = this.obj.stats.values.level;
-			if (level >= 10)
-				level = 4;
-			else if (level >= 6)
-				level = 2;
-			else
-				level = 0;
 
-			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('q' + level);
+			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('q');
 
 			var messageString = msg.data.message;
 			if (messageString[0] == '@') {
