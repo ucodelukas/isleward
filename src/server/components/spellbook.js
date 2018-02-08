@@ -46,9 +46,16 @@ define([
 		die: function () {
 			this.auto = [];
 
+			var mana = this.obj.stats.values.mana;
+
 			this.spells.forEach(function (s) {
+				var reserve = s.manaReserve;
+
+				if ((reserve) && (reserve.percentage) && (s.active))
+					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+
 				s.die();
-			});
+			}, this);
 		},
 
 		simplify: function (self) {

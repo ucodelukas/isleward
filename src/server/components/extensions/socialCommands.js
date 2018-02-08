@@ -27,7 +27,8 @@ define([
 		completeQuests: 10,
 		getReputation: 10,
 		loseReputation: 10,
-		setStat: 10
+		setStat: 10,
+		die: 10
 	};
 
 	var localCommands = [
@@ -357,6 +358,12 @@ define([
 
 		setStat: function (config) {
 			this.obj.stats.values[config.stat] = ~~config.value;
+		},
+
+		die: function () {
+			this.obj.stats.takeDamage({
+				amount: 99999
+			}, 1, this.obj);
 		}
 	};
 });
