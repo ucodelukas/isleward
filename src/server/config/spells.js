@@ -246,7 +246,7 @@ define([
 		}, {
 			name: 'Flurry',
 			type: 'flurry',
-			description: 'Perform two quick melee attacks in succession',
+			description: 'Grants a stack of frenzy, greatly inreasing your attack speed.',
 			animation: 'hitSword',
 			row: 1,
 			col: 0,
