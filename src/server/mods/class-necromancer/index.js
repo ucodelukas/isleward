@@ -25,7 +25,7 @@ define([
 		},
 
 		onAfterGetZone: function (zone, config) {
-			if (zone != 'tutorial')
+			if (zone != 'fjolarok')
 				return;
 
 			var newRunes = [{
@@ -143,7 +143,6 @@ define([
 			skins['1.8'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
-				class: 'wizard',
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 		},

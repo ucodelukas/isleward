@@ -14,7 +14,7 @@ define([
 		},
 
 		init: function () {
-			this.mapFile = require.nodeRequire('../../../mods/event-xmas/maps/tutorial/map');
+			this.mapFile = require.nodeRequire('../../../mods/event-xmas/maps/fjolarok/map');
 			this.mapW = this.mapFile.width;
 			this.mapH = this.mapFile.height;
 
@@ -54,7 +54,6 @@ define([
 			skins['bearded wizard'] = {
 				name: 'Bearded Wizard',
 				sprite: [0, 0],
-				class: 'wizard',
 				spritesheet: `${this.folderName}/images/skins.png`
 			};
 		},
@@ -212,7 +211,7 @@ define([
 		},
 
 		onAfterGetLayerObjects: function (info) {
-			if (info.map != 'tutorial')
+			if (info.map != 'fjolarok')
 				return;
 
 			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
@@ -231,7 +230,7 @@ define([
 		},
 
 		onBeforeBuildLayerTile: function (info) {
-			if (info.map != 'tutorial')
+			if (info.map != 'fjolarok')
 				return;
 
 			var offset = this.mapOffset;
@@ -327,10 +326,10 @@ define([
 		},
 
 		onBeforeGetEventList: function (zone, list) {
-			if (zone != 'tutorial')
+			if (zone != 'fjolarok')
 				return;
 
-			list.push(this.relativeFolderName + '/maps/tutorial/events/xmas.js');
+			list.push(this.relativeFolderName + '/maps/fjolarok/events/xmas.js');
 		},
 
 		onBeforeGetDialogue: function (zone, config) {

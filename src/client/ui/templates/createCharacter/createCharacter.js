@@ -27,7 +27,11 @@ define([
 
 			uiFactory.build('tooltips');
 
-			this.find('.txtClass').on('click', this.changeClass.bind(this));
+			this.find('.txtClass')
+				.on('click', this.changeClass.bind(this))
+				.on('mousemove', this.onClassHover.bind(this))
+				.on('mouseleave', this.onClassUnhover.bind(this));
+
 			this.find('.txtCostume').on('click', this.changeCostume.bind(this));
 
 			this.find('.btnBack').on('click', this.back.bind(this));
@@ -59,8 +63,8 @@ define([
 
 			this.costume = -1;
 
-			this.class = 'wizard';
-			this.find('.txtClass').html('Wizard');
+			this.class = 'owl';
+			this.find('.txtClass').html('Owl');
 
 			this.changeCostume({
 				target: this.find('.txtCostume')
@@ -80,12 +84,10 @@ define([
 			events.emit('onShowTooltip', text, el[0], pos);
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
-
 		onProphecyUnhover: function (e) {
 			var el = $(e.currentTarget);
 			events.emit('onHideTooltip', el[0]);
 		},
-
 		onProphecyClick: function (e) {
 			var el = $(e.currentTarget);
 			var pName = el.attr('prophecy');
@@ -140,9 +142,30 @@ define([
 				this.el.find('.message').html(result);
 		},
 
+		onClassHover: function (e) {
+			var el = $(e.currentTarget);
+
+			var pos = {
+				x: e.clientX + 25,
+				y: e.clientY
+			};
+
+			var text = ({
+				owl: `The wise Owl guides you; granting you the focus needed to cast spells. <br /><br />Upon level up, you gain 1 Intellect.`,
+				bear: `The towering Bear strenghtens you; lending force to your blows. <br /><br />Upon level up, you gain 1 Strength.`,
+				lynx: `The nimble Lynx hastens you; allowing your strikes to land true. <br /><br />Upon level up, you gain 1 Dexterity.`
+			})[this.class];
+
+			events.emit('onShowTooltip', text, el[0], pos, 200);
+			$('.uiTooltips .tooltip').addClass('bright');
+		},
+		onClassUnhover: function (e) {
+			var el = $(e.currentTarget);
+			events.emit('onHideTooltip', el[0]);
+		},
 		changeClass: function (e) {
 			var el = $(e.target);
-			var classes = ['wizard', 'warrior', 'thief'];
+			var classes = ['owl', 'bear', 'lynx'];
 			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
 			this.costume = -1;
 
@@ -151,6 +174,8 @@ define([
 			el.html(newClass[0].toUpperCase() + newClass.substr(1));
 
 			this.class = newClass;
+
+			this.onClassHover(e);
 		},
 
 		changeCostume: function (e) {

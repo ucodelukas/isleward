@@ -8,138 +8,132 @@ define([
 			events.emit('onBeforeGetAnimations', this);
 		},
 		classes: {
-			wizard: {
-				'2': {
-					hitStaff: {
-						sheet: 'animChar',
-						row: 1,
-						col: 5,
-						frames: 3,
-						frameDelay: 4
-					},
-					raiseStaff: {
-						sheet: 'animChar',
-						row: 0,
-						col: 3,
-						frames: 5,
-						frameDelay: 3
-					}
+			'2': {
+				hitStaff: {
+					sheet: 'animChar',
+					row: 1,
+					col: 5,
+					frames: 3,
+					frameDelay: 4
 				},
-				'3': {
-					hitStaff: {
-						sheet: 'animChar',
-						row: 0,
-						col: 0,
-						frames: 3,
-						frameDelay: 4
-					},
-					raiseStaff: {
-						sheet: 'animChar',
-						row: 1,
-						col: 0,
-						frames: 5,
-						frameDelay: 3
-					}
-				},
-				'4': {
-					hitStaff: {
-						sheet: 'animChar',
-						row: 2,
-						col: 5,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseStaff: {
-						sheet: 'animChar',
-						row: 2,
-						col: 0,
-						frames: 5,
-						frameDelay: 4
-					}
-				},
-				'5': {
-					hitStaff: {
-						sheet: 'animChar',
-						row: 3,
-						col: 0,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseStaff: {
-						sheet: 'animChar',
-						row: 3,
-						col: 3,
-						frames: 5,
-						frameDelay: 4
-					}
+				raiseStaff: {
+					sheet: 'animChar',
+					row: 0,
+					col: 3,
+					frames: 5,
+					frameDelay: 3
 				}
 			},
-			thief: {
-				'6': {
-					hitSword: {
-						sheet: 'animChar',
-						row: 5,
-						col: 5,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseHands: {
-						sheet: 'animChar',
-						row: 5,
-						col: 0,
-						frames: 5,
-						frameDelay: 5
-					}
+			'3': {
+				hitStaff: {
+					sheet: 'animChar',
+					row: 0,
+					col: 0,
+					frames: 3,
+					frameDelay: 4
 				},
-				'7': {
-					hitSword: {
-						sheet: 'animChar',
-						row: 4,
-						col: 0,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseHands: {
-						sheet: 'animChar',
-						row: 4,
-						col: 3,
-						frames: 5,
-						frameDelay: 6
-					}
+				raiseStaff: {
+					sheet: 'animChar',
+					row: 1,
+					col: 0,
+					frames: 5,
+					frameDelay: 3
 				}
 			},
-			warrior: {
-				'9': {
-					hitSword: {
-						sheet: 'animChar',
-						row: 6,
-						col: 0,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseShield: {
-						sheet: 'animChar',
-						row: 7,
-						col: 0,
-						frames: 5,
-						frameDelay: 7
-					}
+			'4': {
+				hitStaff: {
+					sheet: 'animChar',
+					row: 2,
+					col: 5,
+					frames: 3,
+					frameDelay: 5
 				},
-				'10': {
-					hitSword: {
-						sheet: 'animChar',
-						row: 7,
-						col: 5,
-						frames: 3,
-						frameDelay: 5
-					},
-					raiseShield: {
-						sheet: 'animChar',
-						row: 6,
-						col: 3,
-						frames: 5,
-						frameDelay: 7
-					}
+				raiseStaff: {
+					sheet: 'animChar',
+					row: 2,
+					col: 0,
+					frames: 5,
+					frameDelay: 4
+				}
+			},
+			'5': {
+				hitStaff: {
+					sheet: 'animChar',
+					row: 3,
+					col: 0,
+					frames: 3,
+					frameDelay: 5
+				},
+				raiseStaff: {
+					sheet: 'animChar',
+					row: 3,
+					col: 3,
+					frames: 5,
+					frameDelay: 4
+				}
+			},
+			'6': {
+				hitSword: {
+					sheet: 'animChar',
+					row: 5,
+					col: 5,
+					frames: 3,
+					frameDelay: 5
+				},
+				raiseHands: {
+					sheet: 'animChar',
+					row: 5,
+					col: 0,
+					frames: 5,
+					frameDelay: 5
+				}
+			},
+			'7': {
+				hitSword: {
+					sheet: 'animChar',
+					row: 4,
+					col: 0,
+					frames: 3,
+					frameDelay: 5
+				},
+				raiseHands: {
+					sheet: 'animChar',
+					row: 4,
+					col: 3,
+					frames: 5,
+					frameDelay: 6
+				}
+			},
+			'9': {
+				hitSword: {
+					sheet: 'animChar',
+					row: 6,
+					col: 0,
+					frames: 3,
+					frameDelay: 5
+				},
+				raiseShield: {
+					sheet: 'animChar',
+					row: 7,
+					col: 0,
+					frames: 5,
+					frameDelay: 7
+				}
+			},
+			'10': {
+				hitSword: {
+					sheet: 'animChar',
+					row: 7,
+					col: 5,
+					frames: 3,
+					frameDelay: 5
+				},
+				raiseShield: {
+					sheet: 'animChar',
+					row: 6,
+					col: 3,
+					frames: 5,
+					frameDelay: 7
 				}
 			}
 		},
