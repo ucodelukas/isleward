@@ -526,7 +526,13 @@ define([
 			leaderboard.deleteCharacter(msg.data.name);
 		},
 		onRemoveFromList: function (msg, result) {
-			msg.callback(this.characterList);
+			var result = this.characterList
+				.map(c => ({
+					name: c.name ? c.name : c,
+					level: leaderboard.getLevel(c.name ? c.name : c)
+				}));
+
+			msg.callback(result);
 		},
 
 		onAppendList: function (msg, result) {
