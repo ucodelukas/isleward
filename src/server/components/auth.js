@@ -176,8 +176,6 @@ define([
 		},
 
 		getCustomChannels: function (data, character) {
-			if (!character.name)
-				console.log(character);
 			io.get({
 				ent: character.name,
 				field: 'customChannels',
