@@ -159,6 +159,9 @@ define([
 			if (result) {
 				result = result.split('`').join(`'`);
 				result = result.replace(/''+/g, '\'');
+			} else {
+				console.log('char not found');
+				console.log(data);
 			}
 
 			var character = JSON.parse(result || '{}');
