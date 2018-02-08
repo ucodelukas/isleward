@@ -264,6 +264,7 @@ define([
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
 					values[s] += gainStats[s];
+					this.obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
 				}
 
 				this.obj.spellbook.calcDps();
