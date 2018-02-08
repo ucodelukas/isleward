@@ -179,22 +179,6 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, null, true);
 		},
 
-		update: function () {
-			return;
-			var maxTtl = this.maxTtl;
-
-			for (var i = 0; i < this.messages.length; i++) {
-				var m = this.messages[i];
-
-				if (m.ttl > 0) {
-					m.ttl--;
-
-					var opacity = ~~(m.ttl / maxTtl * 10) / 10;
-					m.el[0].style.opacity = opacity;
-				}
-			}
-		},
-
 		toggle: function (show, isFake) {
 			if ((isFake) && (this.hoverFilter))
 				return;

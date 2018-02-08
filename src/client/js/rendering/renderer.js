@@ -687,45 +687,6 @@ define([
             obj.sprite.position.y = obj.y;
             obj.sprite.width = obj.w;
             obj.sprite.height = obj.h;
-            return;
-
-            var points = obj.sprite.graphicsData[0].shape.points;
-            if (!points)
-                return;
-
-            graphics.clear();
-
-            graphics.beginFill(obj.color || '0x48edff', fillAlpha);
-
-            if (obj.strokeColor)
-                graphics.lineStyle(scaleMult, obj.strokeColor);
-
-            graphics.drawRect(0, 0, obj.w, obj.h);
-
-            /*graphics.moveTo(obj.x, obj.y);
-            graphics.lineTo(obj.x + obj.w, obj.y);
-            graphics.lineTo(obj.x + obj.w, obj.y + obj.h);
-            graphics.lineTo(obj.x, obj.y + obj.h);
-            graphics.lineTo(obj.x, obj.y);*/
-
-            graphics.endFill();
-
-            graphics.position.x = obj.x;
-            graphics.position.y = obj.y;
-
-            /*obj.sprite.dirty = true;
-            obj.sprite.clearDirty = true;
-
-            points[0] = obj.x;
-            points[1] = obj.y;
-            points[2] = obj.x + obj.w;
-            points[3] = obj.y;
-            points[4] = obj.x + obj.w;
-            points[5] = obj.y + obj.h;
-            points[6] = obj.x;
-            points[7] = obj.y + obj.h;
-            points[8] = obj.x;
-            points[9] = obj.y;*/
         },
 
         buildObject: function (obj) {
