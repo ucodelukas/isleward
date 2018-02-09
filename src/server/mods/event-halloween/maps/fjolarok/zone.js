@@ -41,7 +41,7 @@ define([
 						},
 						forceItems: [{
 							type: 'skin',
-							id: 'pumpkin-head necromancer',
+							id: '3.0',
 							infinite: true,
 							worth: {
 								currency: `Candy Corn`,

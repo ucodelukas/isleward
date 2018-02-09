@@ -659,7 +659,7 @@
  						max: 10,
  						extra: [{
  							type: 'skin',
- 							id: 'gaekatla druid',
+ 							id: '2.0',
  							worth: 100,
  							factions: [{
  								id: 'gaekatla',
