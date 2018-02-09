@@ -478,7 +478,9 @@ define([
 				//Hack: We need to actually just always use the instanced eventEmitter
 				var eventQueue = eventEmitter.queue;
 				delete eventEmitter.queue;
-				var newEventEmitter = extend(true, {}, eventEmitter);
+				var newEventEmitter = extend(true, {
+					queue: []
+				}, eventEmitter);
 				eventEmitter.queue = eventQueue;
 
 				var instance = {
