@@ -4,3 +4,4 @@ storage.db
 *.sublime-workspace
 *.css
 !helpers/item-tooltip/styles.css
+!helpers/passives/styles.css
