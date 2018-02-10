@@ -10,7 +10,6 @@ define([
 		cdMax: 0,
 		manaCost: 1,
 		threatMult: 1,
-		statType: 'str',
 
 		needLos: false,
 

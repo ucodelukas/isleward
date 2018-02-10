@@ -42,7 +42,7 @@ define([
 				item.stats = {};
 
 			if (blueprint.spellConfig)
-				extend(true, spellAesthetic, blueprint.spellConfig);
+				spellAesthetic = extend(true, {}, spellAesthetic, blueprint.spellConfig);
 
 			item.spell = {
 				name: spellAesthetic.name || 'Weapon Damage',
@@ -50,6 +50,10 @@ define([
 				rolls: {},
 				values: {}
 			};
+
+			if (blueprint.spellConfig) {
+				extend(true, item.spell, blueprint.spellConfig);
+			}
 
 			var propertyPerfection = [];
 

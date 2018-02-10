@@ -12,7 +12,6 @@ define([
 		range: 9,
 
 		speed: 150,
-		damage: 1,
 
 		row: 3,
 		col: 0,
