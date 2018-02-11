@@ -8,3 +8,37 @@ body {
 	margin: 0px;
 	overflow: hidden;
 }
+
+.left, .right {
+	float: left;
+	height: 100%;
+}
+
+.left {
+	width: 85%;
+}
+
+.right {
+	width: 15%;
+	background-color: #373041;
+}
+
+.right .id {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+	color: #fafcfc;
+	font-size: 36px;
+}
+
+.right .command {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+	color: #fafcfc;
+	font-size: 24px;
+}
+
+.right .id:before {
+	content: 'id: ';
+}
