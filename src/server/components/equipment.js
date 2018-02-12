@@ -62,7 +62,6 @@ define([
 			}
 
 			var level = (this.obj.stats.originalValues || this.obj.stats.values).level;
-
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
@@ -314,11 +313,14 @@ define([
 			var eq = this.eq;
 			for (var p in eq) {
 				var item = items.find(i => (i.id == eq[p]));
-				if ((!item.slot) || (item.slot == 'tool') || (item.level <= level))
+				if ((!item.slot) || (item.slot == 'tool')) {
 					continue;
+				}
 
 				var item = items.find(i => (i.id == eq[p]));
-				var nItemStats = generatorStats.rescale(item, level);
+				var nItemStats = item.stats;
+				if (item.level > level)
+					nItemStats = generatorStats.rescale(item, level);
 
 				for (var s in nItemStats) {
 					if (!stats[s])
