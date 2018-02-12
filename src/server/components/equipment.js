@@ -61,7 +61,7 @@ define([
 				itemId = itemId.itemId;
 			}
 
-			var level = this.obj.stats.originalValues || this.obj.stats.values;
+			var level = (this.obj.stats.originalValues || this.obj.stats.values).level;
 
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
