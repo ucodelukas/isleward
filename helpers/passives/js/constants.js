@@ -10,6 +10,8 @@ define([
 		defaultDistanceInc: 60,
 		defaultAngle: Math.PI / 2,
 		defaultAngleInc: Math.PI / 8,
-		gridSize: 30
+		gridSize: 30,
+
+		scrollSpeed: 0.5
 	};
 });

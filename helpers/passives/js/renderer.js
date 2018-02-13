@@ -9,6 +9,8 @@ define([
 		canvas: null,
 		ctx: null,
 
+		panOrigin: null,
+
 		screen: {
 			w: 0,
 			h: 0
@@ -19,6 +21,8 @@ define([
 			y: 0
 		},
 
+		oldPos: null,
+
 		mouse: {
 			x: 0,
 			y: 0
@@ -27,9 +31,9 @@ define([
 		dirty: true,
 
 		init: function () {
-			this.canvas = $('canvas')[0];
-			this.screen.w = this.canvas.width = $('.left').width();
-			this.screen.h = this.canvas.height = $('.left').height();
+			this.canvas = $('.canvas')[0];
+			this.screen.w = this.canvas.width = $('body').width();
+			this.screen.h = this.canvas.height = $('body').height();
 			this.ctx = this.canvas.getContext('2d');
 
 			this.ctx.lineWidth = constants.lineWidth;
@@ -40,14 +44,25 @@ define([
 				});
 
 			events.on('onMouseMove', this.events.onMouseMove.bind(this));
+			events.on('onStartAreaSelect', this.events.onStartAreaSelect.bind(this));
+			events.on('onEndAreaSelect', this.events.onEndAreaSelect.bind(this));
 		},
 
 		center: function (node) {
 			this.pos.x = ~~(node.pos.x * constants.gridSize) + (constants.blockSize / 2) - (this.screen.w / 2);
 			this.pos.y = ~~(node.pos.y * constants.gridSize) + (constants.blockSize / 2) - (this.screen.h / 2);
 
-			this.ctx.translate(-this.pos.x, -this.pos.y);
 			this.makeDirty();
+		},
+
+		pan: function (e, event) {
+			var action = ({
+				down: 'onPanStart',
+				up: 'onPanEnd',
+				move: 'onPan'
+			})[event];
+
+			this.events[action].call(this, e);
 		},
 
 		makeDirty: function () {
@@ -75,7 +90,11 @@ define([
 
 		renderers: {
 			clear: function () {
-				this.ctx.clearRect(this.pos.x, this.pos.y, this.screen.w, this.screen.h);
+				var pos = this.oldPos || this.pos;
+
+				this.ctx.clearRect(0, 0, this.screen.w, this.screen.h);
+
+				delete this.oldPos;
 			},
 
 			grid: function () {
@@ -83,20 +102,28 @@ define([
 				var ctx = this.ctx;
 				var mouse = this.mouse;
 
-				var w = this.screen.w / gridSize;
-				var h = this.screen.h / gridSize;
+				var gapSize = (constants.blockSize - 4) / 2;
+
+				var x = ~~(this.pos.x / gridSize) - (this.pos.x / gridSize);
+				var y = ~~(this.pos.y / gridSize) - (this.pos.y / gridSize);
+
+				w = ~~(this.screen.w / gridSize);
+				h = ~~(this.screen.h / gridSize);
 
 				ctx.fillStyle = '#3c3f4c';
-				for (var i = 0; i < w; i++) {
-					for (var j = 0; j < h; j++) {
-						if ((mouse.x == i) && (mouse.y == j)) {
-							ctx.fillStyle = '#ff6942';
-							ctx.fillRect((i * gridSize) - 25, (j * gridSize) - 25, 9, 9);
-							ctx.fillStyle = '#3c3f4c';
-						} else
-							ctx.fillRect((i * gridSize) - 23, (j * gridSize) - 23, 5, 5);
+				for (var i = x; i < w; i++) {
+					for (var j = y; j < h; j++) {
+						ctx.fillRect((i * gridSize) + gapSize, (j * gridSize) + gapSize, 4, 4);
 					}
 				}
+
+				ctx.fillStyle = '#ff0000';
+				ctx.fillRect(
+					(this.mouse.x * constants.gridSize) - this.pos.x + (gapSize / 1),
+					(this.mouse.y * constants.gridSize) - this.pos.y + (gapSize / 1),
+					8,
+					8
+				);
 			},
 
 			node: function (node) {
@@ -111,8 +138,8 @@ define([
 					constants.blockSize * 2,
 					constants.blockSize * 3
 				])[node.size];
-				var x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2);
-				var y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2);
+				var x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.x;
+				var y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.y;
 
 				this.ctx.fillRect(x, y, size, size);
 
@@ -126,11 +153,11 @@ define([
 				var ctx = this.ctx;
 				var halfSize = constants.blockSize / 2;
 
-				var fromX = (fromNode.pos.x * constants.gridSize) + halfSize;
-				var fromY = (fromNode.pos.y * constants.gridSize) + halfSize;
+				var fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				var fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
-				var toX = (toNode.pos.x * constants.gridSize) + halfSize;
-				var toY = (toNode.pos.y * constants.gridSize) + halfSize;
+				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
 				ctx.strokeStyle = '#69696e';
 				ctx.beginPath();
@@ -142,12 +169,6 @@ define([
 		},
 
 		events: {
-			onClick: function (e) {
-				generator.onClick(e.button, ~~((e.clientX + this.pos.x + 40) / constants.gridSize) - 1, ~~((e.clientY + this.pos.y + 40) / constants.gridSize) - 1);
-				e.preventDefault();
-				return false;
-			},
-
 			onMouseMove: function (pos) {
 				if ((this.mouse.x == pos.x) && (this.mouse.y == pos.y))
 					return;
@@ -157,6 +178,49 @@ define([
 					y: pos.y
 				};
 				this.makeDirty();
+			},
+
+			onPanStart: function (e) {
+				this.panOrigin = {
+					x: e.clientX,
+					y: e.clientY
+				};
+			},
+
+			onPan: function (e) {
+				if (!this.panOrigin)
+					return;
+
+				if (!this.oldPos) {
+					this.oldPos = {
+						x: this.pos.x,
+						y: this.pos.y
+					};
+				}
+
+				this.pos.x += (this.panOrigin.x - e.clientX) * constants.scrollSpeed;
+				this.pos.y += (this.panOrigin.y - e.clientY) * constants.scrollSpeed;
+
+				this.panOrigin = {
+					x: e.clientX,
+					y: e.clientY
+				};
+			},
+
+			onPanEnd: function (e) {
+				this.panOrigin = null;
+			},
+
+			onStartAreaSelect: function (e) {
+				this.areaSelectOrigin = {
+					x: e.x,
+					y: e.y
+				};
+			},
+
+			onEndAreaSelect: function (e) {
+				events.emit('onAreaSelect', this.areaSelectOrigin, e);
+				this.areaSelectOrigin = null;
 			}
 		}
 	};

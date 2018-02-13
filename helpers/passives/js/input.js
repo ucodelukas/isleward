@@ -25,9 +25,9 @@ define([
 		mouse: {
 			button: null,
 			x: 0,
-			y: 0
+			y: 0,
+			raw: null
 		},
-		mouseRaw: null,
 
 		keys: {},
 
@@ -38,7 +38,8 @@ define([
 			$('canvas')
 				.on('mousedown', this.events.mouse.onMouseDown.bind(this))
 				.on('mouseup', this.events.mouse.onMouseUp.bind(this))
-				.on('mousemove', this.events.mouse.onMouseMove.bind(this));
+				.on('mousemove', this.events.mouse.onMouseMove.bind(this))
+				.on('mousewheel', this.events.mouse.onMouseWheel.bind(this));
 		},
 
 		resetKeys: function () {
@@ -60,10 +61,10 @@ define([
 
 		},
 
-		isKeyDown: function (key, noConsume) {
+		isKeyDown: function (key, consume) {
 			var down = this.keys[key];
 			if (down != null) {
-				if (noConsume)
+				if (!consume)
 					return true;
 				else {
 					this.keys[key] = 2;
@@ -126,17 +127,18 @@ define([
 						return;
 
 					var button = e.button;
-					this.mouse.button = null;
 					this.mouse.down = false;
 
 					events.emit('onMouseUp', this.mouse);
+
+					this.mouse.button = null;
 				},
 
 				onMouseMove: function (e) {
 					if (e)
-						this.mouseRaw = e;
+						this.mouse.raw = e;
 					else
-						e = this.mouseRaw;
+						e = this.mouse.raw;
 
 					if (!e)
 						return;
@@ -145,10 +147,19 @@ define([
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					this.mouse.x = ~~((e.offsetX + renderer.pos.x + 40) / constants.gridSize)
-					this.mouse.y = ~~((e.offsetY + renderer.pos.y + 40) / constants.gridSize)
+					var x = ~~((e.offsetX + renderer.pos.x) / constants.gridSize);
+					var y = ~~((e.offsetY + renderer.pos.y) / constants.gridSize);
+
+					this.mouse.x = x;
+					this.mouse.y = y;
 
 					events.emit('onMouseMove', this.mouse);
+				},
+
+				onMouseWheel: function (e) {
+					events.emit('onMouseWheel', {
+						delta: (e.originalEvent.deltaY > 0) ? 1 : -1
+					});
 				}
 			}
 		}

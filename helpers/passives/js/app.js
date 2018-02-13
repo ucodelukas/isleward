@@ -2,7 +2,10 @@ require.config({
 	baseUrl: '',
 	waitSeconds: 120,
 	paths: {
-		'jquery': '../../src/client/plugins/jquery.min',
+		'jquery': 'plugins/jquery.min',
+		'text': 'plugins/text',
+		'html': 'plugins/html',
+		'css': 'plugins/css'
 	},
 	shim: {
 		'jquery': {
@@ -12,7 +15,7 @@ require.config({
 });
 
 require([
-	'../../src/client/js/misc/helpers',
+	'js/helpers',
 	'jquery',
 	'js/main'
 ], function (
