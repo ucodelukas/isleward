@@ -74,7 +74,11 @@ define([
 
 		renderNodes: function (nodes, links) {
 			links.forEach(function (l) {
-				this.renderers.line.call(this, l.from, l.to);
+				var linked = (
+					nodes.find(n => (n == l.from)).selected &&
+					nodes.find(n => (n == l.to)).selected
+				);
+				this.renderers.line.call(this, l.from, l.to, linked);
 			}, this);
 
 			nodes.forEach(function (n) {
@@ -160,7 +164,7 @@ define([
 				}
 			},
 
-			line: function (fromNode, toNode) {
+			line: function (fromNode, toNode, linked) {
 				var ctx = this.ctx;
 				var halfSize = constants.blockSize / 2;
 
@@ -170,7 +174,7 @@ define([
 				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
 				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
-				ctx.strokeStyle = '#69696e';
+				ctx.strokeStyle = linked ? '#fafcfc' : '#69696e';
 				ctx.beginPath();
 				ctx.moveTo(fromX, fromY);
 				ctx.lineTo(toX, toY);
