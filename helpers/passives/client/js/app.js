@@ -5,11 +5,15 @@ require.config({
 		'jquery': 'plugins/jquery.min',
 		'text': 'plugins/text',
 		'html': 'plugins/html',
-		'css': 'plugins/css'
+		'css': 'plugins/css',
+		'socket': 'plugins/socket'
 	},
 	shim: {
 		'jquery': {
 			exports: '$'
+		},
+		'socket': {
+			exports: 'io'
 		}
 	}
 });

@@ -49,6 +49,9 @@ define([
 		},
 
 		center: function (node) {
+			if (!node)
+				return;
+
 			this.pos.x = ~~(node.pos.x * constants.gridSize) + (constants.blockSize / 2) - (this.screen.w / 2);
 			this.pos.y = ~~(node.pos.y * constants.gridSize) + (constants.blockSize / 2) - (this.screen.h / 2);
 
@@ -143,6 +146,14 @@ define([
 
 				this.ctx.fillRect(x, y, size, size);
 
+				this.ctx.strokeStyle = ([
+					'#69696e',
+					'#42548d',
+					'#386646',
+					'#763b3b'
+				])[node.color];
+				this.ctx.strokeRect(x, y, size, size);
+
 				if (node.selected) {
 					this.ctx.strokeStyle = '#fafcfc';
 					this.ctx.strokeRect(x, y, size, size);
@@ -205,6 +216,8 @@ define([
 					x: e.clientX,
 					y: e.clientY
 				};
+
+				this.makeDirty();
 			},
 
 			onPanEnd: function (e) {

@@ -1,9 +1,13 @@
 define([
 	'js/tplNode',
-	'js/events'
+	'js/events',
+	'js/client',
+	'js/input'
 ], function (
 	tplNode,
-	events
+	events,
+	client,
+	input
 ) {
 	return {
 		links: [],
@@ -12,14 +16,21 @@ define([
 		init: function () {
 			events.on('onAreaSelect', this.events.onAreaSelect.bind(this));
 
-			this.actions.addNode.call(this, {
+			/*this.actions.addNode.call(this, {
 				x: 100,
 				y: 100
-			});
+			});*/
 		},
 
 		findNode: function (x, y) {
-			return this.nodes.find(n => ((n.pos.x == x) && (n.pos.y == y)));
+			var res = this.nodes.find(n => ((n.pos.x == x) && (n.pos.y == y)));
+			if (!res) {
+				res = this.nodes.find(function (n) {
+					return ((n.size > 0) && (Math.abs(n.pos.x - x) <= 1) && (Math.abs(n.pos.y - y) <= 1))
+				});
+			}
+
+			return res;
 		},
 
 		callAction: function (action, options = {}) {
@@ -41,10 +52,35 @@ define([
 		},
 
 		actions: {
+			load: function () {
+				client.load(this.actions.onLoad.bind(this));
+			},
+			onLoad: function (data) {
+				this.nodes = data.nodes;
+				this.links = data.links.map(function (l) {
+					l.from = this.nodes.find(n => (n.id == l.from.id));
+					l.to = this.nodes.find(n => (n.id == l.to.id));
+
+					return l;
+				}, this);
+			},
+
+			save: function () {
+				var res = JSON.stringify({
+					nodes: this.nodes,
+					links: this.links
+				});
+
+				client.save(res);
+			},
+
 			selectNode: function (options) {
 				if (
-					(!options.node) ||
-					(!this.nodes.some(n => ((n.selected) && (n == options.node))))
+					(
+						(!options.node) ||
+						(!this.nodes.some(n => ((n.selected) && (n == options.node))))
+					) &&
+					(!input.isKeyDown('ctrl'))
 				)
 					this.nodes.forEach(n => (n.selected = false));
 
@@ -98,19 +134,25 @@ define([
 
 			moveNode: function (options) {
 				var selected = this.getSelected();
-				if (!selected.length) {
-					selected = this.findNode(options.x, options.y);
-					if (!selected)
-						return true;
+				if (!selected.length)
+					return true;
 
-					this.callAction('selectNode', {
-						node: selected
-					});
-				}
+				if (selected.length == 0)
+					return;
+
+				selected.sort(function (a, b) {
+					var distanceA = Math.abs(a.pos.x - options.x) + Math.abs(a.pos.y - options.y);
+					var distanceB = Math.abs(b.pos.x - options.x) + Math.abs(b.pos.y - options.y);
+
+					return (distanceA > distanceB) ? 1 : -1;
+				});
+
+				var deltaX = selected[0].pos.x - options.x;
+				var deltaY = selected[0].pos.y - options.y;
 
 				selected.forEach(function (s) {
-					s.pos.x = options.x;
-					s.pos.y = options.y;
+					s.pos.x -= deltaX;
+					s.pos.y -= deltaY;
 				});
 			},
 
@@ -141,7 +183,8 @@ define([
 
 		events: {
 			onAreaSelect: function (from, to) {
-				this.nodes.forEach(n => (n.selected = false));
+				if (!input.isKeyDown('ctrl'))
+					this.nodes.forEach(n => (n.selected = false));
 
 				for (var i = from.x; i <= to.x; i++) {
 					for (var j = from.y; j <= to.y; j++) {
@@ -151,8 +194,6 @@ define([
 						node.selected = true;
 					}
 				}
-
-				console.log(this.getSelected());
 			}
 		}
 	};

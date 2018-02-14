@@ -3,30 +3,19 @@ define([
 	'js/generator',
 	'js/renderer',
 	'js/input',
-	'ui/factory.js'
+	'ui/factory',
+	'js/client'
 ], function (
 	events,
 	generator,
 	renderer,
 	input,
-	uiFactory
+	uiFactory,
+	client
 ) {
 	return {
 		init: function () {
-			generator.init();
-			renderer.init();
-			input.init();
-
-			events.on('onMouseDown', this.events.onMouseDown.bind(this, true));
-			events.on('onMouseUp', this.events.onMouseDown.bind(this, false));
-			events.on('onMouseMove', this.events.onMouseMove.bind(this));
-			events.on('onMouseWheel', this.events.onMouseWheel.bind(this));
-			events.on('onKeyDown', this.events.onKeyDown.bind(this));
-
-			uiFactory.build('nodeInfo');
-
-			renderer.center(generator.nodes[0]);
-			this.render();
+			client.init(this.events.onConnected.bind(this));
 		},
 
 		render: function () {
@@ -37,6 +26,23 @@ define([
 		},
 
 		events: {
+			onConnected: function () {
+				generator.init();
+				renderer.init();
+				input.init();
+
+				events.on('onMouseDown', this.events.onMouseDown.bind(this, true));
+				events.on('onMouseUp', this.events.onMouseDown.bind(this, false));
+				events.on('onMouseMove', this.events.onMouseMove.bind(this));
+				events.on('onMouseWheel', this.events.onMouseWheel.bind(this));
+				events.on('onKeyDown', this.events.onKeyDown.bind(this));
+
+				uiFactory.build('nodeInfo');
+
+				renderer.center(generator.nodes[0]);
+				this.render();
+			},
+
 			onMouseDown: function (isDown, e) {
 				var success = false;
 
@@ -59,7 +65,7 @@ define([
 						y: e.y,
 						shiftDown: input.isKeyDown('shift')
 					});
-				} else if ((!isDown) && (e.button != 1))
+				} else if ((!isDown) && (e.button != 1) && (generator.getSelected().length <= 1))
 					generator.callAction('selectNode', {});
 
 				if ((!isDown) || (!success))
@@ -96,7 +102,9 @@ define([
 
 			onKeyDown: function (key) {
 				var action = ({
-					d: 'deleteNode'
+					d: 'deleteNode',
+					l: 'load',
+					s: 'save'
 				})[key];
 				if (!action)
 					return;
