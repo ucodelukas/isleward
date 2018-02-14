@@ -15,11 +15,6 @@ define([
 
 		init: function () {
 			events.on('onAreaSelect', this.events.onAreaSelect.bind(this));
-
-			/*this.actions.addNode.call(this, {
-				x: 100,
-				y: 100
-			});*/
 		},
 
 		findNode: function (x, y) {
@@ -51,11 +46,15 @@ define([
 				return selected;
 		},
 
+		serialize: function () {
+			return JSON.stringify({
+				nodes: this.nodes,
+				links: this.links
+			});
+		},
+
 		actions: {
-			load: function () {
-				client.load(this.actions.onLoad.bind(this));
-			},
-			onLoad: function (data) {
+			load: function (data) {
 				this.nodes = data.nodes;
 				this.links = data.links.map(function (l) {
 					l.from = this.nodes.find(n => (n.id == l.from.id));
@@ -63,15 +62,6 @@ define([
 
 					return l;
 				}, this);
-			},
-
-			save: function () {
-				var res = JSON.stringify({
-					nodes: this.nodes,
-					links: this.links
-				});
-
-				client.save(res);
 			},
 
 			selectNode: function (options) {

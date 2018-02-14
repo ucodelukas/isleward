@@ -32,10 +32,10 @@ var mod = {
 
 		onRequest: function (socket, msg, callback) {
 			if (msg.action == 'load') {
-				var res = JSON.parse(fs.readFileSync('save.json'));
+				var res = JSON.parse(fs.readFileSync(msg.fileName + '.json'));
 				callback(res);
 			} else if (msg.action == 'save')
-				fs.writeFileSync('save.json', msg.data);
+				fs.writeFileSync(msg.fileName + '.json', msg.data);
 
 			if (callback)
 				callback();

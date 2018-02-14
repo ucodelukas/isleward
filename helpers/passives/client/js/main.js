@@ -37,7 +37,7 @@ define([
 				events.on('onMouseWheel', this.events.onMouseWheel.bind(this));
 				events.on('onKeyDown', this.events.onKeyDown.bind(this));
 
-				uiFactory.build('nodeInfo');
+				uiFactory.build('loadSave');
 
 				renderer.center(generator.nodes[0]);
 				this.render();
@@ -102,9 +102,7 @@ define([
 
 			onKeyDown: function (key) {
 				var action = ({
-					d: 'deleteNode',
-					l: 'load',
-					s: 'save'
+					d: 'deleteNode'
 				})[key];
 				if (!action)
 					return;

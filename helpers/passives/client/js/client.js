@@ -15,14 +15,16 @@ define([
 			this.socket.on('connect', this.onConnected.bind(this, onReady));
 		},
 
-		load: function (callback) {
+		load: function (fileName, callback) {
 			this.socket.emit('request', {
+				fileName: fileName,
 				action: 'load'
 			}, callback);
 		},
 
-		save: function (data, callback) {
+		save: function (fileName, data, callback) {
 			this.socket.emit('request', {
+				fileName: fileName,
 				action: 'save',
 				data: data
 			}, callback);
