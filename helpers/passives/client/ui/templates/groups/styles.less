@@ -1,9 +1,9 @@
 @import "../../../css/ui.less";
 
-.uiLoad {
+.uiGroups {
 	position: absolute;
 	right: 10px;
-	top: 10px;
+	top: 110px;
 	padding: 10px;
 	width: 200px;
 	background-color: #373041;
@@ -27,6 +27,20 @@
 			&:last-child {
 				margin-bottom: 0px;
 			}
+		}
+	}
+
+	.btn {
+		width: calc((100% - 30px) / 3);
+		color: @white;
+		margin-top: 15px;
+		background-color: @blueB;
+		padding: 5px;
+		box-sizing: border-box;
+		float: left;
+
+		&:not(:last-child) {
+			margin-right: 15px;
 		}
 	}
 }

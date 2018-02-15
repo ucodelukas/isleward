@@ -38,6 +38,7 @@ define([
 				events.on('onKeyDown', this.events.onKeyDown.bind(this));
 
 				uiFactory.build('menu');
+				uiFactory.build('groups');
 
 				renderer.center(generator.nodes[0]);
 				this.render();

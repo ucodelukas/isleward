@@ -53,15 +53,30 @@ define([
 			});
 		},
 
+		getNextId: function () {
+			for (var i = 0; i < this.nodes.length; i++) {
+				if (!this.nodes.some(n => (n.id == i)))
+					return i;
+			}
+
+			return this.nodes.length;
+		},
+
 		actions: {
 			load: function (data) {
 				this.nodes = data.nodes;
+
 				this.links = data.links.map(function (l) {
 					l.from = this.nodes.find(n => (n.id == l.from.id));
 					l.to = this.nodes.find(n => (n.id == l.to.id));
 
 					return l;
 				}, this);
+
+				events.emit('onTreeLoaded', {
+					nodes: this.nodes,
+					links: this.links
+				});
 			},
 
 			selectNode: function (options) {
@@ -76,13 +91,15 @@ define([
 
 				if (options.node)
 					options.node.selected = true;
+				else if (options instanceof Array)
+					options.forEach(n => (n.selected = true));
 
 				return !options.node;
 			},
 
 			addNode: function (options) {
 				this.nodes.push(tplNode.build({
-					id: this.nodes.length,
+					id: this.getNextId(),
 					x: options.x,
 					y: options.y
 				}));
