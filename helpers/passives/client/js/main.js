@@ -39,6 +39,7 @@ define([
 
 				uiFactory.build('menu');
 				uiFactory.build('groups');
+				uiFactory.build('nodeInfo');
 
 				renderer.center(generator.nodes[0]);
 				this.render();

@@ -2,8 +2,8 @@
 
 .uiGroups {
 	position: absolute;
-	right: 10px;
-	top: 110px;
+	left: 10px;
+	bottom: 10px;
 	padding: 10px;
 	width: 200px;
 	background-color: #373041;
@@ -15,7 +15,9 @@
 	}
 
 	.list {
-		
+		&:not(:empty) {
+			margin-bottom: 15px;
+		}
 
 		.item {
 			width: 100%;
@@ -33,7 +35,6 @@
 	.btn {
 		width: calc((100% - 30px) / 3);
 		color: @white;
-		margin-top: 15px;
 		background-color: @blueB;
 		padding: 5px;
 		box-sizing: border-box;

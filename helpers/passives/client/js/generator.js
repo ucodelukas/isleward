@@ -85,7 +85,10 @@ define([
 						(!options.node) ||
 						(!this.nodes.some(n => ((n.selected) && (n == options.node))))
 					) &&
-					(!input.isKeyDown('ctrl'))
+					(
+						(!input.isKeyDown('ctrl')) ||
+						(options.force)
+					)
 				)
 					this.nodes.forEach(n => (n.selected = false));
 
@@ -93,6 +96,8 @@ define([
 					options.node.selected = true;
 				else if (options instanceof Array)
 					options.forEach(n => (n.selected = true));
+
+				events.emit('onSelectNode', this.nodes.filter(n => n.selected));
 
 				return !options.node;
 			},
@@ -112,7 +117,7 @@ define([
 
 				var singleSelected = this.getSelected(true);
 
-				if (singleSelected) {
+				if ((singleSelected) && (input.isKeyDown('ctrl'))) {
 					if (options.shiftDown) {
 						this.links.spliceWhere(l => (
 							(
@@ -131,7 +136,13 @@ define([
 							to: node
 						});
 					}
-					return this.callAction('selectNode');
+					this.callAction('selectNode', {
+						force: true
+					});
+
+					this.callAction('selectNode', {
+						node: options.node
+					});
 				} else {
 					return this.callAction('selectNode', {
 						node: node
@@ -207,6 +218,8 @@ define([
 						node.selected = true;
 					}
 				}
+
+				events.emit('onSelectNode', this.nodes.filter(n => n.selected));
 			}
 		}
 	};
