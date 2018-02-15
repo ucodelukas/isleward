@@ -37,7 +37,7 @@ define([
 				events.on('onMouseWheel', this.events.onMouseWheel.bind(this));
 				events.on('onKeyDown', this.events.onKeyDown.bind(this));
 
-				uiFactory.build('loadSave');
+				uiFactory.build('menu');
 
 				renderer.center(generator.nodes[0]);
 				this.render();

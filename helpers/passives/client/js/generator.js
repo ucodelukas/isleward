@@ -176,8 +176,14 @@ define([
 				if (!input.isKeyDown('ctrl'))
 					this.nodes.forEach(n => (n.selected = false));
 
-				for (var i = from.x; i <= to.x; i++) {
-					for (var j = from.y; j <= to.y; j++) {
+				var lowX = Math.min(from.x, to.x);
+				var lowY = Math.min(from.y, to.y);
+
+				var highX = Math.max(from.x, to.x);
+				var highY = Math.max(from.y, to.y);
+
+				for (var i = lowX; i <= highX; i++) {
+					for (var j = lowY; j <= highY; j++) {
 						var node = this.findNode(i, j);
 						if (!node)
 							continue;

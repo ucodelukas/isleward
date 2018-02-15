@@ -13,6 +13,14 @@ var mod = {
 			next();
 		});
 
+		var lessMiddleware = require('less-middleware');
+		app.use(lessMiddleware('../', {
+			force: true,
+			render: {
+				strictMath: true
+			}
+		}));
+
 		app.get('/', this.requests.root.bind(this));
 		app.get(/^(.*)$/, this.requests.default.bind(this));
 
@@ -32,10 +40,14 @@ var mod = {
 
 		onRequest: function (socket, msg, callback) {
 			if (msg.action == 'load') {
-				var res = JSON.parse(fs.readFileSync(msg.fileName + '.json'));
+				var res = JSON.parse(fs.readFileSync('saves/' + msg.fileName + '.json'));
 				callback(res);
 			} else if (msg.action == 'save')
-				fs.writeFileSync(msg.fileName + '.json', msg.data);
+				fs.writeFileSync('saves/' + msg.fileName + '.json', msg.data);
+			else if (msg.action == 'getFileList') {
+				callback(fs.readdirSync('saves/').map(l => (l.split('.')[0])));
+				return;
+			}
 
 			if (callback)
 				callback();
@@ -45,6 +57,7 @@ var mod = {
 		root: function (req, res) {
 			res.sendFile('index.html');
 		},
+
 		default: function (req, res, next) {
 			var root = req.url.split('/')[1];
 			var file = req.params[0];

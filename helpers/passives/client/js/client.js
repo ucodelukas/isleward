@@ -30,6 +30,12 @@ define([
 			}, callback);
 		},
 
+		getFileList: function (callback) {
+			this.socket.emit('request', {
+				action: 'getFileList'
+			}, callback);
+		},
+
 		onConnected: function (onReady) {
 			onReady();
 		}
