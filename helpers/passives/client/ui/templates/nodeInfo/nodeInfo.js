@@ -1,6 +1,6 @@
 define([
-	'html!./template',
-	'css!./styles',
+	'html!ui/templates/nodeInfo/template',
+	'css!ui/templates/nodeInfo/styles',
 	'js/constants',
 	'js/input'
 ], function (

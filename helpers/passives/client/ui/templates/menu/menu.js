@@ -20,7 +20,7 @@ define([
 
 		postRender: function () {
 			if (constants.standAlone) {
-				this.find('.content > *:not(.btnNew)').addClass('disabled');
+				this.find('.content > *:not(.btnNew):not(.btnImport):not(.btnExport)').addClass('disabled');
 			}
 
 			this.on('.btnNew', 'click', this.actions.onNew.bind(this));

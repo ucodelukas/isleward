@@ -4,7 +4,7 @@ define([
 
 ) {
 	return {
-		standAlone: false,
+		standAlone: true,
 
 		lineWidth: 5,
 		blockSize: 20,

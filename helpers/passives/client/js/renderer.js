@@ -170,8 +170,8 @@ define([
 					}
 				}
 
-				ctx.fillStyle = '#ff0000';
-				ctx.fillRect(
+				ctx.strokeStyle = '#44cb95';
+				ctx.strokeRect(
 					(this.mouse.x * constants.gridSize) - this.pos.x + (gapSize / 1),
 					(this.mouse.y * constants.gridSize) - this.pos.y + (gapSize / 1),
 					8,
