@@ -52,8 +52,11 @@ define([
 
 			remove: function (group) {
 				generator.nodes.forEach(function (g) {
-					if ((g.group) && (g.group.indexOf(group) > -1))
+					if ((g.group) && (g.group.indexOf(group) > -1)) {
 						g.group.spliceWhere(g => (g == group));
+						if (g.group.length == 0)
+							delete g.group;
+					}
 				});
 
 				this.find('.item[group="' + group + '"]').remove();

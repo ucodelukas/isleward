@@ -4,18 +4,23 @@ define([
 	'js/renderer',
 	'js/input',
 	'ui/factory',
-	'js/client'
+	'js/client',
+	'js/constants'
 ], function (
 	events,
 	generator,
 	renderer,
 	input,
 	uiFactory,
-	client
+	client,
+	constants
 ) {
 	return {
 		init: function () {
-			client.init(this.events.onConnected.bind(this));
+			if (constants.standAlone)
+				this.events.onConnected.call(this);
+			else
+				client.init(this.events.onConnected.bind(this));
 		},
 
 		render: function () {

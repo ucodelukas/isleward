@@ -4,6 +4,8 @@ define([
 
 ) {
 	return {
+		standAlone: false,
+
 		lineWidth: 5,
 		blockSize: 20,
 		defaultDistance: 50,

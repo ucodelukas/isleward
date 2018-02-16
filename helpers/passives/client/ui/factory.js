@@ -65,7 +65,7 @@ define([
 						if (!u.modal)
 							return;
 
-						u.hide();
+						u.destroy();
 					});
 					$('.uiOverlay').hide();
 				}

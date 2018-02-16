@@ -3,13 +3,15 @@ define([
 	'css!./styles',
 	'ui/factory',
 	'js/generator',
-	'js/renderer'
+	'js/renderer',
+	'js/constants'
 ], function (
 	template,
 	styles,
 	uiFactory,
 	generator,
-	renderer
+	renderer,
+	constants
 ) {
 	return {
 		tpl: template,
@@ -17,9 +19,15 @@ define([
 		loaded: null,
 
 		postRender: function () {
+			if (constants.standAlone) {
+				this.find('.content > *:not(.btnNew)').addClass('disabled');
+			}
+
 			this.on('.btnNew', 'click', this.actions.onNew.bind(this));
 			this.on('.btnLoad', 'click', this.actions.onLoad.bind(this));
 			this.on('.btnSave', 'click', this.actions.onSave.bind(this));
+			this.on('.btnExport', 'click', this.actions.onExport.bind(this));
+			this.on('.btnImport', 'click', this.actions.onImport.bind(this));
 		},
 
 		actions: {
@@ -35,6 +43,14 @@ define([
 
 			onSave: function () {
 				uiFactory.build('save');
+			},
+
+			onExport: function () {
+				uiFactory.build('export');
+			},
+
+			onImport: function () {
+				uiFactory.build('import');
 			}
 		}
 	}
