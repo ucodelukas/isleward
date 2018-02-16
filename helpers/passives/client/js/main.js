@@ -27,6 +27,8 @@ define([
 
 		events: {
 			onConnected: function () {
+				uiFactory.init();
+
 				generator.init();
 				renderer.init();
 				input.init();
@@ -36,6 +38,8 @@ define([
 				events.on('onMouseMove', this.events.onMouseMove.bind(this));
 				events.on('onMouseWheel', this.events.onMouseWheel.bind(this));
 				events.on('onKeyDown', this.events.onKeyDown.bind(this));
+
+				$(window).on('focus', this.events.onFocus.bind(this));
 
 				uiFactory.build('menu');
 				uiFactory.build('groups');
@@ -90,19 +94,28 @@ define([
 			},
 
 			onMouseWheel: function (e) {
+				var delta = (e.delta > 0) ? 1 : 0;
+
 				var action = ([
 					'resizeNode',
 					'recolorNode'
-				])[(e.delta > 0) ? 1 : 0];
+				])[delta];
 				if (!action)
 					return;
 
-				generator.callAction(action, {});
+				if (!generator.callAction(action, {}))
+					renderer.zoom(delta);
 
 				renderer.makeDirty();
 			},
 
 			onKeyDown: function (key) {
+				if (key == 'z') {
+					renderer.zoom(0, 1);
+					renderer.makeDirty();
+					return;
+				}
+
 				var action = ({
 					d: 'deleteNode'
 				})[key];
@@ -111,6 +124,10 @@ define([
 
 				generator.callAction(action, {});
 
+				renderer.makeDirty();
+			},
+
+			onFocus: function () {
 				renderer.makeDirty();
 			}
 		}

@@ -143,6 +143,7 @@ define([
 			onShowLookup: function (e) {
 				this.statEl = $(e.currentTarget);
 				this.find('.lookup').show();
+				this.el.addClass('picking');
 			},
 
 			onScrollStat: function (e) {

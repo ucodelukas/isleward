@@ -40,6 +40,8 @@ define([
 
 			onClickItem: function (item) {
 				this.actions.onLoad.call(this, item);
+
+				$('.uiMenu').data('ui').loaded = item;
 			}
 		}
 	}

@@ -12,7 +12,7 @@ define([
 		defaultAngleInc: Math.PI / 8,
 		gridSize: 30,
 
-		scrollSpeed: 0.5,
+		scrollSpeed: 0.75,
 
 		stats: {
 			vit: 'vitality',

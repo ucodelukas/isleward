@@ -1,7 +1,9 @@
 define([
-	'ui/uiBase'
+	'ui/uiBase',
+	'js/events'
 ], function (
-	uiBase
+	uiBase,
+	events
 ) {
 	return {
 		uis: [],
@@ -10,6 +12,8 @@ define([
 		init: function (root) {
 			if (root)
 				this.root = root + '/';
+
+			events.on('onKeyDown', this.events.onKeyDown.bind(this));
 		},
 
 		build: function (type, options) {
@@ -44,18 +48,6 @@ define([
 			}, this);
 		},
 
-		onKeyDown: function (key) {
-			if (key == 'esc') {
-				this.uis.forEach(function (u) {
-					if (!u.modal)
-						return;
-
-					u.hide();
-				});
-				$('.uiOverlay').hide();
-			}
-		},
-
 		update: function () {
 			var uis = this.uis;
 			var uLen = uis.length;
@@ -63,6 +55,20 @@ define([
 				var u = uis[i];
 				if (u.update)
 					u.update();
+			}
+		},
+
+		events: {
+			onKeyDown: function (key) {
+				if (key == 'esc') {
+					this.uis.forEach(function (u) {
+						if (!u.modal)
+							return;
+
+						u.hide();
+					});
+					$('.uiOverlay').hide();
+				}
 			}
 		}
 	};

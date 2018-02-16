@@ -16,6 +16,10 @@ define([
 
 		postRender: function () {
 			this.on('.btnSave', 'click', this.actions.onSave.bind(this));
+
+			var loaded = $('.uiMenu').data('ui').loaded;
+			if (loaded)
+				this.find('.fileName').val(loaded);
 		},
 
 		actions: {

@@ -63,8 +63,17 @@ define([
 		},
 
 		actions: {
+			reset: function () {
+				this.nodes = [];
+				this.links = [];
+			},
+
 			load: function (data) {
 				this.nodes = data.nodes;
+				this.nodes.forEach(function (n) {
+					if ((n.group) && (!n.group.push))
+						n.group = [n.group];
+				});
 
 				this.links = data.links.map(function (l) {
 					l.from = this.nodes.find(n => (n.id == l.from.id));
@@ -86,7 +95,7 @@ define([
 						(!this.nodes.some(n => ((n.selected) && (n == options.node))))
 					) &&
 					(
-						(!input.isKeyDown('ctrl')) ||
+						(!input.isKeyDown('shift')) ||
 						(options.force)
 					)
 				)
@@ -108,12 +117,16 @@ define([
 					x: options.x,
 					y: options.y
 				}));
+
+				this.callAction('selectNode');
 			},
 
 			connectNode: function (options) {
 				var node = options.node;
-				if (!node)
+				if (!node) {
+					this.callAction('selectNode');
 					return true;
+				}
 
 				var singleSelected = this.getSelected(true);
 

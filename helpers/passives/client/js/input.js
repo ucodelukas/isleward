@@ -147,8 +147,8 @@ define([
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var x = ~~((e.offsetX + renderer.pos.x) / constants.gridSize);
-					var y = ~~((e.offsetY + renderer.pos.y) / constants.gridSize);
+					var x = ~~((renderer.pos.x + (e.offsetX / renderer.currentZoom)) / constants.gridSize);
+					var y = ~~((renderer.pos.y + (e.offsetY / renderer.currentZoom)) / constants.gridSize);
 
 					this.mouse.x = x;
 					this.mouse.y = y;

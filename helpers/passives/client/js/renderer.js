@@ -9,7 +9,10 @@ define([
 		canvas: null,
 		ctx: null,
 
+		areaSelectOrigin: null,
 		panOrigin: null,
+
+		currentZoom: 1,
 
 		screen: {
 			w: 0,
@@ -46,6 +49,7 @@ define([
 			events.on('onMouseMove', this.events.onMouseMove.bind(this));
 			events.on('onStartAreaSelect', this.events.onStartAreaSelect.bind(this));
 			events.on('onEndAreaSelect', this.events.onEndAreaSelect.bind(this));
+			events.on('onSelectGroup', this.events.onSelectGroup.bind(this));
 		},
 
 		center: function (node) {
@@ -93,6 +97,29 @@ define([
 			this.renderers.grid.call(this);
 
 			this.renderNodes(nodes, links);
+
+			if (this.areaSelectOrigin)
+				this.renderers.selectArea.call(this);
+		},
+
+		zoom: function (delta, zoom) {
+			delta = delta ? -1 : 1;
+
+			this.renderers.clear.call(this);
+			this.ctx.restore();
+
+			var newZoom = zoom || (this.currentZoom + (delta * 0.2));
+			this.currentZoom = newZoom;
+			if (this.currentZoom < 0.4)
+				this.currentZoom = 0.4;
+			else if (this.currentZoom > 3)
+				this.currentZoom = 3;
+
+			this.screen.w = $('body').width() / this.currentZoom;
+			this.screen.h = $('body').height() / this.currentZoom;
+
+			this.ctx.save();
+			this.ctx.scale(this.currentZoom, this.currentZoom);
 		},
 
 		renderers: {
@@ -102,6 +129,25 @@ define([
 				this.ctx.clearRect(0, 0, this.screen.w, this.screen.h);
 
 				delete this.oldPos;
+			},
+
+			selectArea: function () {
+				var ctx = this.ctx;
+				var area = this.areaSelectOrigin;
+				var mouse = this.mouse;
+
+				ctx.fillStyle = '#51fc9a';
+				ctx.globalAlpha = 0.1;
+
+				var lowX = (Math.min(area.x, mouse.x) * constants.gridSize) - this.pos.x;
+				var lowY = (Math.min(area.y, mouse.y) * constants.gridSize) - this.pos.y;
+
+				var highX = (Math.max(area.x, mouse.x) * constants.gridSize) - this.pos.x;
+				var highY = (Math.max(area.y, mouse.y) * constants.gridSize) - this.pos.y;
+
+				ctx.fillRect(lowX, lowY, highX - lowX, highY - lowY);
+
+				ctx.globalAlpha = 1;
 			},
 
 			grid: function () {
@@ -213,8 +259,11 @@ define([
 					};
 				}
 
-				this.pos.x += (this.panOrigin.x - e.clientX) * constants.scrollSpeed;
-				this.pos.y += (this.panOrigin.y - e.clientY) * constants.scrollSpeed;
+				var zoomPanMultiplier = this.currentZoom;
+				var scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
+
+				this.pos.x += (this.panOrigin.x - e.clientX) * scrollSpeed;
+				this.pos.y += (this.panOrigin.y - e.clientY) * scrollSpeed;
 
 				this.panOrigin = {
 					x: e.clientX,
@@ -238,6 +287,13 @@ define([
 			onEndAreaSelect: function (e) {
 				events.emit('onAreaSelect', this.areaSelectOrigin, e);
 				this.areaSelectOrigin = null;
+			},
+
+			onSelectGroup: function (pos) {
+				this.pos.x = pos.x;
+				this.pos.y = pos.y;
+
+				this.makeDirty();
 			}
 		}
 	};
