@@ -136,8 +136,8 @@ define([
 
 				this.find('.lookup').hide();
 
-				this.buildStatSelector();
 				this.updateNode();
+				this.setStats();
 			},
 
 			onShowLookup: function (e) {

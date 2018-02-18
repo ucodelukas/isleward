@@ -18,6 +18,8 @@ define([
 
 		postRender: function () {
 			this.onEvent('onTreeLoaded', this.events.onTreeLoaded.bind(this));
+			this.onEvent('onNew', this.events.onNew.bind(this));
+			this.onEvent('onDeleteNode', this.events.onDeleteNode.bind(this));
 
 			this.on('.btnAdd', 'click', this.actions.add.bind(this));
 			this.on('.btnRename', 'click', this.events.onClickRename.bind(this));
@@ -64,6 +66,21 @@ define([
 		},
 
 		events: {
+			onNew: function () {
+				this.find('.list').empty();
+			},
+
+			onDeleteNode: function (node) {
+				if ((!node.group) || (node.group.length == 0))
+					return;
+
+				node.group.forEach(function (g) {
+					var hasSiblings = generator.nodes.some(n => ((n.group) && (n.group.indexOf(g) > -1)))
+					if (!hasSiblings)
+						this.find('.item[group="' + g + '"]').remove();
+				}, this);
+			},
+
 			onClickRename: function (e) {
 				this.find('.activeMode').removeClass('activeMode');
 				this.find('.btnRename').addClass('activeMode');

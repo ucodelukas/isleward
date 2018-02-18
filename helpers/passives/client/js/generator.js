@@ -72,6 +72,8 @@ define([
 			reset: function () {
 				this.nodes = [];
 				this.links = [];
+
+				events.emit('onNew');
 			},
 
 			load: function (data) {
@@ -199,6 +201,8 @@ define([
 				this.links.spliceWhere(n => ((n.from == selected) || (n.to == selected)));
 
 				selected.selected = false;
+
+				events.emit('onDeleteNode', selected);
 			},
 
 			recolorNode: function () {
