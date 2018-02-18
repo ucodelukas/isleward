@@ -55,11 +55,11 @@ define([
 			else
 				el = $(el);
 
-			el.on(event, function () {
+			el.on(event, function (e) {
 				var args = [].slice.call(arguments, 1);
 				args.splice(0, 0, event);
 
-				callback.apply(null, args);
+				callback.apply(null, [...args, e]);
 			});
 		},
 

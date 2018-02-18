@@ -13,6 +13,8 @@ define([
 		links: [],
 		nodes: [],
 
+		mode: 'none',
+
 		init: function () {
 			events.on('onAreaSelect', this.events.onAreaSelect.bind(this));
 		},
@@ -60,6 +62,10 @@ define([
 			}
 
 			return this.nodes.length;
+		},
+
+		setMode: function (mode) {
+			this.mode = mode;
 		},
 
 		actions: {

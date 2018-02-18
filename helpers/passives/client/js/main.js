@@ -46,6 +46,7 @@ define([
 
 				$(window).on('focus', this.events.onFocus.bind(this));
 
+				uiFactory.build('mode');
 				uiFactory.build('menu');
 				uiFactory.build('groups');
 				uiFactory.build('nodeInfo');
@@ -65,6 +66,14 @@ define([
 					else
 						events.emit('onEndAreaSelect', e);
 				} else if (isDown) {
+					if (generator.mode != 'none') {
+						e.button = ([
+							'place',
+							'link',
+							'select'
+						]).indexOf(generator.mode);
+					}
+
 					var action = ([
 						'addNode',
 						'connectNode',
