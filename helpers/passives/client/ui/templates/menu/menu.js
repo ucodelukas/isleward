@@ -19,9 +19,8 @@ define([
 		loaded: null,
 
 		postRender: function () {
-			if (constants.standAlone) {
+			if (constants.standAlone)
 				this.find('.content > *:not(.btnNew):not(.btnImport):not(.btnExport)').addClass('disabled');
-			}
 
 			this.on('.btnNew', 'click', this.actions.onNew.bind(this));
 			this.on('.btnLoad', 'click', this.actions.onLoad.bind(this));

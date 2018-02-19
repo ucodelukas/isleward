@@ -17,6 +17,7 @@ define([
 
 		postRender: function () {
 			this.onEvent('onSelectNode', this.events.onSelectNode.bind(this));
+			this.onEvent('onFocusNode', this.events.onFocusNode.bind(this));
 
 			this.buildLookup();
 		},
@@ -47,7 +48,7 @@ define([
 				if (nodes.some(n => (n.group != group)))
 					group = '';
 			}
-			this.find('.lblGroup').html(group);
+			this.find('.lblGroup').html(group.toString());
 
 			var size = nodes.size;
 			if (isArray) {
@@ -112,6 +113,10 @@ define([
 		},
 
 		events: {
+			onFocusNode: function (node) {
+				this.events.onSelectNode.call(this, [node]);
+			},
+
 			onSelectNode: function (nodes) {
 				this.nodes = nodes;
 

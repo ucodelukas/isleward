@@ -17,6 +17,7 @@ define([
 
 		init: function () {
 			events.on('onAreaSelect', this.events.onAreaSelect.bind(this));
+			events.on('onMouseMove', this.events.onMouseMove.bind(this));
 		},
 
 		findNode: function (x, y) {
@@ -116,6 +117,9 @@ define([
 
 				events.emit('onSelectNode', this.nodes.filter(n => n.selected));
 
+				if (options.node)
+					events.emit('onFocusNode', options.node);
+
 				return !options.node;
 			},
 
@@ -196,13 +200,15 @@ define([
 			},
 
 			deleteNode: function (options) {
-				var selected = this.getSelected(true);
-				this.nodes.spliceWhere(n => (n == selected));
-				this.links.spliceWhere(n => ((n.from == selected) || (n.to == selected)));
+				var selected = this.getSelected();
+				selected.forEach(function (s) {
+					this.nodes.spliceWhere(n => (n == s));
+					this.links.spliceWhere(n => ((n.from == s) || (n.to == s)));
 
-				selected.selected = false;
+					s.selected = false;
 
-				events.emit('onDeleteNode', selected);
+					events.emit('onDeleteNode', s);
+				}, this);
 			},
 
 			recolorNode: function () {
@@ -243,6 +249,22 @@ define([
 				}
 
 				events.emit('onSelectNode', this.nodes.filter(n => n.selected));
+			},
+
+			onMouseMove: function (e) {
+				var hoverNode = this.findNode(e.x, e.y);
+				if (hoverNode) {
+					var text = '';
+					var stats = hoverNode.stats || {};
+					for (var s in stats) {
+						text += s + ': ' + stats[s] + '<br />';
+					}
+					text = text.substr(0, text.length - 6);
+
+					if (text.length > 0)
+						events.emit('onShowTooltip', e, text);
+				} else
+					events.emit('onHideTooltip');
 			}
 		}
 	};

@@ -15,6 +15,7 @@ define([
 		centered: true,
 
 		postRender: function () {
+			this.find('input').focus();
 			this.on('.btnSave', 'click', this.actions.onSave.bind(this));
 
 			var loaded = $('.uiMenu').data('ui').loaded;

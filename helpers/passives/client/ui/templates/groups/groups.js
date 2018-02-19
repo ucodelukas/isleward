@@ -4,14 +4,18 @@ define([
 	'js/generator',
 	'js/client',
 	'js/renderer',
-	'js/input'
+	'js/input',
+	'ui/factory',
+	'js/events'
 ], function (
 	template,
 	styles,
 	generator,
 	client,
 	renderer,
-	input
+	input,
+	uiFactory,
+	events
 ) {
 	return {
 		tpl: template,
@@ -20,6 +24,7 @@ define([
 			this.onEvent('onTreeLoaded', this.events.onTreeLoaded.bind(this));
 			this.onEvent('onNew', this.events.onNew.bind(this));
 			this.onEvent('onDeleteNode', this.events.onDeleteNode.bind(this));
+			this.onEvent('onSelectNode', this.events.onSelectNode.bind(this));
 
 			this.on('.btnAdd', 'click', this.actions.add.bind(this));
 			this.on('.btnRename', 'click', this.events.onClickRename.bind(this));
@@ -27,10 +32,11 @@ define([
 		},
 
 		addGroup: function (groupName) {
-			$('<div class="item">' + groupName + '</div>')
+			var el = $('<div class="item">' + groupName + '</div>')
 				.appendTo(this.find('.list'))
-				.attr('group', groupName)
-				.on('click', this.events.onClickGroup.bind(this, groupName));
+				.attr('group', groupName);
+
+			el.on('click', this.events.onClickGroup.bind(this));
 		},
 
 		actions: {
@@ -48,8 +54,24 @@ define([
 				this.addGroup(groupName);
 			},
 
-			rename: function (group) {
+			rename: function (newName) {
+				var el = this.find('.list .active').eq(0);
+				if (!el)
+					return;
 
+				var oldName = el.attr('group');
+
+				el
+					.html(newName)
+					.attr('group', newName);
+
+				generator.nodes
+					.filter(n => ((n.group) && (n.group.indexOf(oldName) > -1)))
+					.forEach(function (n) {
+						var group = n.group;
+						group.spliceWhere(g => (g == oldName));
+						group.push(newName);
+					});
 			},
 
 			remove: function (group) {
@@ -82,13 +104,33 @@ define([
 			},
 
 			onClickRename: function (e) {
-				this.find('.activeMode').removeClass('activeMode');
-				this.find('.btnRename').addClass('activeMode');
+				uiFactory.build('renameGroup', {
+					onDone: this.events.onRenameGroupBuilt.bind(this)
+				});
+			},
+
+			onRenameGroupBuilt: function () {
+				var oldName = null;
+				var el = this.find('.list .active').eq(0);
+				if (el)
+					oldName = el.attr('group');
+
+				events.emit('onRenameGroup', oldName, this.actions.rename.bind(this));
 			},
 
 			onClickRemove: function (e) {
-				this.find('.activeMode').removeClass('activeMode');
-				this.find('.btnRemove').addClass('activeMode');
+				var el = this.find('.list .active').eq(0);
+				if (!el)
+					return;
+
+				el.remove();
+				var groupName = el.attr('group');
+
+				generator.nodes
+					.filter(n => ((n.group) && (n.group.indexOf(groupName) > -1)))
+					.forEach(function (n) {
+						n.group.spliceWhere(g => (g == groupName));
+					});
 			},
 
 			onTreeLoaded: function (tree) {
@@ -114,16 +156,8 @@ define([
 					}, this);
 			},
 
-			onClickGroup: function (group) {
-				var mode = this.find('.activeMode').eq(0);
-				if (mode) {
-					if (mode.hasClass('btnRemove'))
-						this.actions.remove.call(this, group);
-					else if (mode.hasClass('btnRename'))
-						this.actions.rename.call(this, group);
-
-					this.find('.activeMode').removeClass('activeMode');
-				}
+			onClickGroup: function (e) {
+				var group = $(e.currentTarget).attr('group');
 
 				var pos = {
 					x: 0,
@@ -152,6 +186,24 @@ define([
 					});
 				}
 				renderer.makeDirty();
+			},
+
+			onSelectNode: function (nodes) {
+				this.find('.list .active').removeClass('active');
+
+				var selectedGroup = null;
+
+				nodes.forEach(function (n) {
+					(n.group || []).forEach(function (g) {
+						var list = generator.nodes.filter(a => ((a.group) && (a.group.indexOf(g) > -1)));
+						var check = nodes.filter(a => ((a.group) && (a.group.indexOf(g) > -1)));
+						if (list.length == check.length)
+							selectedGroup = g;
+					});
+				});
+
+				if (selectedGroup)
+					this.find('.list .item[group="' + selectedGroup + '"]').addClass('active');
 			}
 		}
 	}

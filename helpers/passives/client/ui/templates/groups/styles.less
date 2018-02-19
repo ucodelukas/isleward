@@ -34,21 +34,21 @@
 			&:last-child {
 				margin-bottom: 0px;
 			}
+
+			&.active {
+				background-color: @grayC;
+			}
 		}
 	}
 
 	.btn {
-		width: calc((100% - 20px) / 2);
+		width: calc((100% - 30px) / 3);
 		color: @white;
 		background-color: @blueB;
 		padding: 5px;
 		box-sizing: border-box;
 		float: left;
 		cursor: pointer;
-
-		&.activeMode {
-			background-color: @tealB;
-		}
 
 		&:hover {
 			background-color: @tealB;

@@ -37,6 +37,9 @@ define([
 			ui.el.data('ui', ui);
 
 			this.uis.push(ui);
+
+			if ((options) && (options.onDone))
+				options.onDone(ui);
 		},
 
 		onResize: function () {
