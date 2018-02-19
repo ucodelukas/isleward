@@ -180,12 +180,18 @@ define([
 			},
 
 			node: function (node) {
+				var color = (node.color >= 0) ? (node.color + 1) : -1;
+				if ((!node.stats) || (Object.keys(node.stats).length == 0))
+					color = 0;
+
 				this.ctx.fillStyle = ([
+					'#69696e',
 					'#c0c3cf',
 					'#3fa7dd',
 					'#4ac441',
-					'#d43346'
-				])[node.color];
+					'#d43346',
+					'#a24eff'
+				])[color];
 				var size = ([
 					constants.blockSize,
 					constants.blockSize * 2,
@@ -198,10 +204,12 @@ define([
 
 				this.ctx.strokeStyle = ([
 					'#69696e',
+					'#69696e',
 					'#42548d',
 					'#386646',
-					'#763b3b'
-				])[node.color];
+					'#763b3b',
+					'#533399'
+				])[color];
 				this.ctx.strokeRect(x, y, size, size);
 
 				if (node.selected) {

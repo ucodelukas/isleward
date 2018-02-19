@@ -216,7 +216,7 @@ define([
 				if (!selected)
 					return true;
 
-				selected.color = (selected.color + 1) % 4;
+				selected.color = (selected.color + 1) % 5;
 			},
 
 			resizeNode: function () {

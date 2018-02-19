@@ -48,7 +48,7 @@ define([
 				if (nodes.some(n => (n.group != group)))
 					group = '';
 			}
-			this.find('.lblGroup').html(group.toString());
+			this.find('.lblGroup').html((group || []).toString());
 
 			var size = nodes.size;
 			if (isArray) {
@@ -145,6 +145,8 @@ define([
 
 				this.updateNode();
 				this.setStats();
+
+				this.el.removeClass('picking');
 			},
 
 			onShowLookup: function (e) {

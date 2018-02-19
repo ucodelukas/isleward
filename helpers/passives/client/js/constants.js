@@ -17,14 +17,16 @@ define([
 		scrollSpeed: 0.75,
 
 		stats: {
+			str: 'strength',
+			int: 'intellect',
+			dex: 'dexterity',
 			vit: 'vitality',
 			regenHp: 'health regeneration',
 			manaMax: 'maximum mana',
 			regenMana: 'mana regeneration',
-			str: 'strength',
-			int: 'intellect',
-			dex: 'dexterity',
 			armor: 'armor',
+			attackSpeed: 'attack speed',
+			castSpeed: 'cast speed',
 			blockAttackChance: 'chance to block attacks',
 			blockSpellChance: 'chance to block spells',
 			addCritChance: 'increased crit chance',
@@ -48,13 +50,15 @@ define([
 			elementHolyResist: 'holy resistance',
 			elementPoisonResist: 'poison resistance',
 			elementAllResist: 'all resistance',
-			attackSpeed: 'attack speed',
-			castSpeed: 'cast speed',
-			catchChance: 'extra catch chance',
-			catchSpeed: 'faster catch speed',
-			fishRarity: 'higher fish rarity',
-			fishWeight: 'increased fish weight',
-			fishItems: 'extra chance to hook items'
+
+			increasedStunDuration: 'increased stun duration',
+			physicalPercent: 'increased physical damage',
+			spellPercent: 'increased spell damage',
+			elementPercent: 'increased elemental damage',
+			hpPercent: 'increased life',
+			armorPercent: 'increased armor',
+			spellAddCritChance: 'increased spell crit chance',
+			spellAddCritMultiplier: 'increased spell crit multiplier'
 		}
 	};
 });
