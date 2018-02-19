@@ -125,6 +125,8 @@ define([
 				else if (nodes.length == 0)
 					return;
 
+				this.find('.nodeCount').html(nodes.length);
+
 				this.setStats();
 			},
 
