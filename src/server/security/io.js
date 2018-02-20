@@ -5,7 +5,7 @@ define([
 ) {
 	return {
 		db: null,
-		file: 'storage.db',
+		file: '../../data/storage.db',
 		exists: false,
 
 		tables: {
