@@ -13,7 +13,8 @@ define([
 	'config/classes',
 	'config/spellsConfig',
 	'config/spells',
-	'items/config/types'
+	'items/config/types',
+	'security/sheets'
 ], function (
 	globals,
 	server,
@@ -29,7 +30,8 @@ define([
 	classes,
 	spellsConfig,
 	spells,
-	itemTypes
+	itemTypes,
+	sheets
 ) {
 	return {
 		init: function () {
@@ -65,6 +67,7 @@ define([
 		onServerReady: function () {
 			atlas.init();
 			leaderboard.init();
+			sheets.init();
 		},
 
 		onError: function (e) {
