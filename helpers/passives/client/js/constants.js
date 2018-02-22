@@ -58,7 +58,10 @@ define([
 			hpPercent: 'increased life',
 			armorPercent: 'increased armor',
 			spellAddCritChance: 'increased spell crit chance',
-			spellAddCritMultiplier: 'increased spell crit multiplier'
+			spellAddCritMultiplier: 'increased spell crit multiplier',
+			auraReserveMultiplier: 'aura mana reservation multiplier',
+
+			auraDoubleEffect: 'doubles the effect of your auras'
 		}
 	};
 });
