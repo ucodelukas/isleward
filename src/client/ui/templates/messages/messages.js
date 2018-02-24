@@ -235,7 +235,7 @@ define([
 
 			textbox.blur();
 
-			if (val == '')
+			if (val.trim() == '')
 				return;
 
 			client.request({
