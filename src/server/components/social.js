@@ -132,8 +132,8 @@ define([
 			if (!msg.data.message)
 				return;
 
-            if (msg.data.message.trim() == '')
-                return;
+			if (msg.data.message.trim() == '')
+				return;
 
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
