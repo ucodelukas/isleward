@@ -40,7 +40,7 @@ define([
 			'Smoldering Idol': {
 				quantity: 1,
 				quality: 4,
-				description: `Removes all auments from an item`,
+				description: `Removes all augments from an item`,
 				material: true,
 				sprite: [8, 8],
 				action: 'scour'
