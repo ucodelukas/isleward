@@ -40,8 +40,8 @@ define([
 					o[p] = r[p];
 				});
 
-				o.items = JSON.parse(o.items);
-				o.skins = JSON.parse(o.skins);
+				o.items = JSON.parse(o.items || "{}");
+				o.skins = JSON.parse(o.skins || "[]");
 
 				return o;
 			});
