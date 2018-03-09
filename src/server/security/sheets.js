@@ -1,9 +1,11 @@
 define([
 	'google-spreadsheet',
-	'./creds'
+	'./creds',
+	'./sheetsConfig'
 ], function (
 	googleSheets,
-	creds
+	creds,
+	sheetsConfig
 ) {
 	return {
 		doc: null,
@@ -12,7 +14,7 @@ define([
 		records: null,
 
 		init: function () {
-			this.doc = new googleSheets('1PhNFF8IbNX7uecFeWkFsoTZgDfLF-zWVibOTuutNy8c');
+			this.doc = new googleSheets(sheetsConfig.sheetId);
 			this.doc.useServiceAccountAuth(creds, this.onAuth.bind(this));
 		},
 
