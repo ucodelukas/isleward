@@ -22,7 +22,8 @@ requirejs([
 	'config/classes',
 	'config/spellsConfig',
 	'config/spells',
-	'items/config/types'
+	'items/config/types',
+	'security/sheets'
 ], function (
 	extend,
 	helpers,
@@ -37,7 +38,8 @@ requirejs([
 	classes,
 	spellsConfig,
 	spells,
-	itemTypes
+	itemTypes,
+	sheets
 ) {
 	var onDbReady = function () {
 		global.extend = extend;
@@ -86,6 +88,7 @@ requirejs([
 		spellsConfig.init();
 		spells.init();
 		itemTypes.init();
+		sheets.init();
 
 		process.send({
 			method: 'onReady'
