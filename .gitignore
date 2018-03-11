@@ -5,3 +5,4 @@ storage.db
 *.css
 !helpers/item-tooltip/styles.css
 !helpers/passives/**/*.css
+creds.js

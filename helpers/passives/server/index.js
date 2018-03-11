@@ -26,7 +26,7 @@ var mod = {
 
 		io.on('connection', this.listeners.onConnection.bind(this));
 
-		var port = process.env.PORT || 4000;
+		var port = process.env.PORT || 5000;
 		server.listen(port, function () {
 			var message = 'Server: Ready';
 			console.log(message);

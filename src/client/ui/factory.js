@@ -49,7 +49,8 @@ define([
 				'leaderboard',
 				'reputation',
 				'mail',
-				'wardrobe'
+				'wardrobe',
+				'passives'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);
