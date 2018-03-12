@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/passives/template',
 	'css!ui/templates/passives/styles',
 	'ui/templates/passives/constants',
-	'ui/templates/passives/temp'
+	'ui/templates/passives/temp',
+	'ui/templates/passives/input'
 ], function (
 	events,
 	client,
 	tpl,
 	styles,
 	constants,
-	temp
+	temp,
+	input
 ) {
 	return {
 		tpl: tpl,
@@ -23,10 +25,19 @@ define([
 		size: {},
 		ctx: null,
 
+		mouse: {
+			x: 0,
+			y: 0
+		},
+
+		currentZoom: 1,
 		pos: {
 			x: 0,
 			y: 0
 		},
+		oldPos: null,
+
+		panOrigin: null,
 
 		data: {
 			nodes: null,
@@ -34,6 +45,8 @@ define([
 		},
 
 		postRender: function () {
+			input.init(this.el);
+
 			var data = JSON.parse(temp.json);
 			this.data.nodes = data.nodes;
 			this.data.links = data.links;
@@ -63,6 +76,9 @@ define([
 				});
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
+			this.onEvent('uiMouseMove', this.events.onPan.bind(this));
+			this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
+			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 
 			//Calculate midpoint
 			this.data.nodes.forEach(function (n) {
@@ -172,6 +188,54 @@ define([
 				ctx.lineTo(toX, toY);
 				ctx.closePath();
 				ctx.stroke();
+			}
+		},
+
+		events: {
+			onMouseMove: function (pos) {
+				if ((this.mouse.x == pos.x) && (this.mouse.y == pos.y))
+					return;
+
+				this.mouse = {
+					x: pos.x,
+					y: pos.y
+				};
+			},
+
+			onPanStart: function (e) {
+				this.panOrigin = {
+					x: e.raw.clientX,
+					y: e.raw.clientY
+				};
+			},
+
+			onPan: function (e) {
+				if (!this.panOrigin)
+					this.events.onMouseMove.call(this, e);
+
+				if (!this.oldPos) {
+					this.oldPos = {
+						x: this.pos.x,
+						y: this.pos.y
+					};
+				}
+
+				var zoomPanMultiplier = this.currentZoom;
+				var scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
+
+				this.pos.x += (this.panOrigin.x - e.raw.clientX) * scrollSpeed;
+				this.pos.y += (this.panOrigin.y - e.raw.clientY) * scrollSpeed;
+
+				this.panOrigin = {
+					x: e.raw.clientX,
+					y: e.raw.clientY
+				};
+
+				this.renderNodes();
+			},
+
+			onPanEnd: function (e) {
+				this.panOrigin = null;
 			}
 		}
 	}
