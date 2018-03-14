@@ -81,13 +81,13 @@ define([
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 
 			//Calculate midpoint
-			this.data.nodes.forEach(function (n) {
+			/*this.data.nodes.forEach(function (n) {
 				this.pos.x += n.pos.x;
 				this.pos.y += n.pos.y;
 			}, this);
 
 			this.pos.x = ~~(this.pos.x / this.data.nodes.length) * constants.gridSize;
-			this.pos.y = ~~(this.pos.y / this.data.nodes.length) * constants.gridSize;
+			this.pos.y = ~~(this.pos.y / this.data.nodes.length) * constants.gridSize;*/
 		},
 
 		renderNodes: function () {
@@ -203,6 +203,24 @@ define([
 			},
 
 			onPanStart: function (e) {
+				var cell = {
+					x: ~~((this.pos.x + e.raw.offsetX) / constants.gridSize),
+					y: ~~((this.pos.y + e.raw.offsetY) / constants.gridSize)
+				};
+
+				var node = this.data.nodes.find(function (n) {
+					return (
+						(n.pos.x == cell.x) &&
+						(n.pos.y == cell.y)
+					);
+				});
+
+				if (node) {
+					node.selected = !node.selected;
+					this.renderNodes();
+					return;
+				}
+
 				this.panOrigin = {
 					x: e.raw.clientX,
 					y: e.raw.clientY
@@ -210,8 +228,10 @@ define([
 			},
 
 			onPan: function (e) {
-				if (!this.panOrigin)
+				if (!this.panOrigin) {
 					this.events.onMouseMove.call(this, e);
+					return;
+				}
 
 				if (!this.oldPos) {
 					this.oldPos = {
