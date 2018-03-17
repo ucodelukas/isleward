@@ -33,9 +33,11 @@ define([
 		},
 
 		onGetRows: function (err, rows) {
-			console.log('GOOGLE SHEETS ERROR');
-			console.log(err);
-			console.log('___________________');
+			if (err) {
+				console.log('GOOGLE SHEETS ERROR');
+				console.log(err);
+				console.log('___________________');
+			}
 			this.records = (rows || []).map(function (r) {
 				var o = {};
 				Object.keys(r).forEach(function (p) {
