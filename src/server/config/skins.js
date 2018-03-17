@@ -7,7 +7,7 @@ define([
 		'1.0': {
 			name: 'Wizard 1',
 			sprite: [2, 0],
-			default: true
+			defaultSpirit: 'owl'
 		},
 		'1.1': {
 			name: 'Wizard 2',
@@ -16,7 +16,7 @@ define([
 		'1.2': {
 			name: 'Warrior 1',
 			sprite: [1, 1],
-			default: true
+			defaultSpirit: 'bear'
 		},
 		'1.3': {
 			name: 'Warrior 2',
@@ -33,7 +33,7 @@ define([
 		'1.6': {
 			name: 'Thief 1',
 			sprite: [6, 0],
-			default: true
+			defaultSpirit: 'lynx'
 		},
 		'1.7': {
 			name: 'Thief 2',
@@ -126,7 +126,8 @@ define([
 					name: skin.name,
 					id: skin.id,
 					sprite: skin.sprite[0] + ',' + skin.sprite[1],
-					spritesheet: skin.spritesheet
+					spritesheet: skin.spritesheet,
+					defaultSpirit: skin.defaultSpirit
 				});
 			}, this);
 

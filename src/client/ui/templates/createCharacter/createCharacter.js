@@ -167,9 +167,18 @@ define([
 			var el = $(e.target);
 			var classes = ['owl', 'bear', 'lynx'];
 			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
-			this.costume = -1;
 
 			var newClass = classes[nextIndex];
+
+			var newCostume = this.classSprites.firstIndex(function (c) {
+				return (c.defaultSpirit == newClass);
+			});
+			if (newCostume > -1) {
+				this.costume = newCostume;
+				this.skinId = this.classSprites[newCostume].id;
+				this.find('.txtCostume').html(this.classSprites[this.costume].name);
+				this.setSprite();
+			}
 
 			el.html(newClass[0].toUpperCase() + newClass.substr(1));
 
