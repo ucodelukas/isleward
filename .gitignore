@@ -4,4 +4,5 @@ storage.db
 *.sublime-workspace
 *.css
 creds.js
+sheetsConfig.js
 !helpers/item-tooltip/styles.css

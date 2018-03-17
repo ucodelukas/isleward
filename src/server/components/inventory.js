@@ -631,7 +631,7 @@ define([
 							id: this.obj.id,
 							messages: [{
 								class: 'q0',
-								message: 'you bags are too full to loot any more items',
+								message: 'your bags are too full to loot any more items',
 								type: 'info'
 							}]
 						}, [this.obj.serverId]);

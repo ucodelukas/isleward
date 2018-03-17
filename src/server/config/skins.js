@@ -41,7 +41,7 @@ define([
 		},
 
 		'2.0': {
-			name: 'Skin: Gaekatlan Druid',
+			name: 'Gaekatlan Druid',
 			sprite: [0, 4]
 		},
 
