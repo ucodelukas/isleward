@@ -33,7 +33,10 @@ define([
 		},
 
 		onGetRows: function (err, rows) {
-			this.records = rows.map(function (r) {
+			console.log('GOOGLE SHEETS ERROR');
+			console.log(err);
+			console.log('___________________');
+			this.records = (rows || []).map(function (r) {
 				var o = {};
 				Object.keys(r).forEach(function (p) {
 					if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
