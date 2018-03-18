@@ -48,6 +48,9 @@ define([
 					o.messagePrefix = o.messageprefix;
 					delete o.messageprefix;
 
+					o.items = JSON.parse(o.items || "[]");
+					o.skins = JSON.parse(o.skins || "[]");
+
 					return o;
 				});
 
