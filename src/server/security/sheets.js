@@ -47,6 +47,11 @@ define([
 					o[p] = r[p];
 				});
 
+				o.messageStyle = o.messagestyle;
+				delete o.messagestyle;
+				o.messagePrefix = o.messageprefix;
+				delete o.messageprefix;
+
 				o.items = JSON.parse(o.items || "[]");
 				o.skins = JSON.parse(o.skins || "[]");
 
