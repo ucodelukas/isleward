@@ -43,11 +43,15 @@ define([
 						o[p] = r[p];
 					});
 
-					o.items = JSON.parse(o.items || "[]");
-					o.skins = JSON.parse(o.skins || "[]");
+					o.messageStyle = o.messagestyle;
+					delete o.messagestyle;
+					o.messagePrefix = o.messageprefix;
+					delete o.messageprefix;
 
 					return o;
 				});
+
+				console.log(this.records);
 			}
 
 			setTimeout(this.update.bind(this), 10000)
