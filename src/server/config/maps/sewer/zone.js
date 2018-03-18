@@ -9,7 +9,7 @@ module.exports = {
 		},
 
 		rat: {
-			faction: 'flolgard',
+			faction: 'fjolgard',
 			grantRep: {
 				fjolgard: 6
 			},
@@ -37,7 +37,7 @@ module.exports = {
 		},
 
 		stinktooth: {
-			faction: 'flolgard',
+			faction: 'fjolgard',
 			grantRep: {
 				fjolgard: 15
 			},
