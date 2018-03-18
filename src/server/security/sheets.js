@@ -33,23 +33,22 @@ define([
 		},
 
 		onGetRows: function (err, rows) {
-			if (!rows)
-				return;
+			if (rows) {
+				this.records = (rows || []).map(function (r) {
+					var o = {};
+					Object.keys(r).forEach(function (p) {
+						if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
+							return;
 
-			this.records = (rows || []).map(function (r) {
-				var o = {};
-				Object.keys(r).forEach(function (p) {
-					if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
-						return;
+						o[p] = r[p];
+					});
 
-					o[p] = r[p];
+					o.items = JSON.parse(o.items || "[]");
+					o.skins = JSON.parse(o.skins || "[]");
+
+					return o;
 				});
-
-				o.items = JSON.parse(o.items || "[]");
-				o.skins = JSON.parse(o.skins || "[]");
-
-				return o;
-			});
+			}
 
 			setTimeout(this.update.bind(this), 10000)
 		},
