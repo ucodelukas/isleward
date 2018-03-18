@@ -53,8 +53,6 @@ define([
 
 					return o;
 				});
-
-				console.log(this.records);
 			}
 
 			setTimeout(this.update.bind(this), 10000)
