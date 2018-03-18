@@ -33,11 +33,9 @@ define([
 		},
 
 		onGetRows: function (err, rows) {
-			if (err) {
-				console.log('GOOGLE SHEETS ERROR');
-				console.log(err);
-				console.log('___________________');
-			}
+			if (!rows)
+				return;
+
 			this.records = (rows || []).map(function (r) {
 				var o = {};
 				Object.keys(r).forEach(function (p) {
@@ -46,11 +44,6 @@ define([
 
 					o[p] = r[p];
 				});
-
-				o.messageStyle = o.messagestyle;
-				delete o.messagestyle;
-				o.messagePrefix = o.messageprefix;
-				delete o.messageprefix;
 
 				o.items = JSON.parse(o.items || "[]");
 				o.skins = JSON.parse(o.skins || "[]");

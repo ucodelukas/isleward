@@ -88,7 +88,7 @@ requirejs([
 		spellsConfig.init();
 		spells.init();
 		itemTypes.init();
-		sheets.init();
+		//sheets.init();
 
 		process.send({
 			method: 'onReady'
