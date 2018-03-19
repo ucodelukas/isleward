@@ -34,28 +34,32 @@ define([
 
 		onGetRows: function (err, rows) {
 			if (rows) {
-				this.records = (rows || []).map(function (r) {
-					var o = {};
-					Object.keys(r).forEach(function (p) {
-						if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
-							return;
+				try {
+					var records = (rows || []).map(function (r) {
+						var o = {};
+						Object.keys(r).forEach(function (p) {
+							if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
+								return;
 
-						o[p] = r[p];
+							o[p] = r[p];
+						});
+
+						o.messageStyle = o.messagestyle;
+						delete o.messagestyle;
+						o.messagePrefix = o.messageprefix;
+						delete o.messageprefix;
+
+						o.items = JSON.parse(o.items || "[]");
+						o.skins = JSON.parse(o.skins || "[]");
+
+						return o;
 					});
 
-					o.messageStyle = o.messagestyle;
-					delete o.messagestyle;
-					o.messagePrefix = o.messageprefix;
-					delete o.messageprefix;
-
-					o.items = JSON.parse(o.items || "[]");
-					o.skins = JSON.parse(o.skins || "[]");
-
-					return o;
-				});
+					this.records = records;
+				} catch (e) {}
 			}
 
-			setTimeout(this.update.bind(this), 10000)
+			setTimeout(this.update.bind(this), 300000)
 		},
 
 		update: function () {
