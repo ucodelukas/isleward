@@ -51,7 +51,7 @@ define([
 		},
 
 		onBeforeGetSkins: function (skins) {
-			skins['bearded wizard'] = {
+			skins['3.1'] = {
 				name: 'Bearded Wizard',
 				sprite: [0, 0],
 				spritesheet: `${this.folderName}/images/skins.png`
