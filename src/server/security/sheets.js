@@ -56,7 +56,9 @@ define([
 					});
 
 					this.records = records;
-				} catch (e) {}
+				} catch (e) {
+					console.log('Sheets in error state');
+				}
 			}
 
 			setTimeout(this.update.bind(this), 300000)
