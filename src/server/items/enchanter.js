@@ -81,6 +81,9 @@ define([
 				if (item.effects)
 					return;
 
+				if (item.originalLevel)
+					item.level = item.originalLevel;
+
 				var enchantedStats = item.enchantedStats || {};
 				delete item.enchantedStats;
 				delete msg.addStatMsgs;
@@ -101,6 +104,12 @@ define([
 						newItem.stats[p] = 0;
 
 					newItem.stats[p] += enchantedStats[p];
+
+					if (p == 'lvlRequire') {
+						newItem.level -= enchantedStats[p];
+						if (newItem.level < 1)
+							newItem.level = 1;
+					}
 				}
 				newItem.enchantedStats = enchantedStats;
 
