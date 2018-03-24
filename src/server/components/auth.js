@@ -354,11 +354,6 @@ define([
 				}
 			}
 
-			if (!profanities.isClean(credentials.username)) {
-				msg.callback(messages.login.invalid);
-				return;
-			}
-
 			io.get({
 				ent: credentials.username,
 				field: 'login',
