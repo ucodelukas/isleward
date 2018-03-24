@@ -117,12 +117,15 @@ define([
 			} else if (msg.action == 'reforge') {
 				if (!item.spell)
 					return;
-
 				var spellName = item.spell.name.toLowerCase();
+
+				var oldSpell = item.spell;
 				delete item.spell;
+
 				generatorSpells.generate(item, {
 					spellName: spellName
 				});
+				item.spell = extend(true, oldSpell, item.spell);
 			} else if (msg.action == 'scour') {
 				if (!item.power)
 					return;
