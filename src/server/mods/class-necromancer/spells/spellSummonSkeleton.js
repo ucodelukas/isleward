@@ -62,7 +62,7 @@ define([
 				spells: [{
 					type: 'melee',
 					damage: 1,
-					statMult: 0.2,
+					statMult: 1,
 					animation: 'melee'
 				}]
 			}, false, 'regular');

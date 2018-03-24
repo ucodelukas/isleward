@@ -4,10 +4,15 @@ define([
 	events
 ) {
 	var spells = {
-		'magic missile': {
-			statType: 'int',
-			statMult: 0.59,
-			element: 'arcane',
+		'melee': {
+			auto: true,
+			cdMax: 5,
+			useWeaponRange: true,
+			random: {
+				damage: [3, 11.4]
+			}
+		},
+		'projectile': {
 			auto: true,
 			cdMax: 7,
 			manaCost: 0,
@@ -16,9 +21,21 @@ define([
 				damage: [2, 7.6]
 			}
 		},
+
+		'magic missile': {
+			statType: 'int',
+			statMult: 1,
+			element: 'arcane',
+			cdMax: 14,
+			manaCost: 4,
+			range: 9,
+			random: {
+				damage: [4, 15]
+			}
+		},
 		'ice spear': {
 			statType: 'int',
-			statMult: 0.42,
+			statMult: 0.49,
 			element: 'frost',
 			cdMax: 12,
 			manaCost: 4,
@@ -30,7 +47,7 @@ define([
 		},
 		'fireblast': {
 			statType: 'int',
-			statMult: 0.25,
+			statMult: 0.22,
 			element: 'fire',
 			cdMax: 6,
 			manaCost: 5,
@@ -42,20 +59,18 @@ define([
 		},
 		'smite': {
 			statType: 'int',
-			statMult: 0.84,
-			element: 'holy',
-			auto: true,
-			needLos: true,
-			cdMax: 6,
-			manaCost: 0,
+			statMult: 1,
+			cdMax: 10,
 			range: 9,
+			manaCost: 4,
 			random: {
-				damage: [4, 15.2]
+				damage: [4, 14],
+				i_stunDuration: [6, 10]
 			}
 		},
-		'healing circle': {
+		'consecrate': {
 			statType: 'int',
-			statMult: 0.055,
+			statMult: 0.07,
 			element: 'holy',
 			cdMax: 10,
 			manaCost: 8,
@@ -78,20 +93,18 @@ define([
 		},*/
 		'slash': {
 			statType: 'str',
-			statMult: 0.745,
-			element: 'physical',
+			statMult: 1,
 			threatMult: 4,
-			auto: true,
-			cdMax: 5,
+			cdMax: 10,
+			manaCost: 4,
 			useWeaponRange: true,
 			random: {
-				damage: [3, 11.4]
+				damage: [6, 23]
 			}
 		},
 		'charge': {
 			statType: 'str',
-			statMult: 0.48,
-			element: 'physical',
+			statMult: 0.59,
 			threatMult: 3,
 			cdMax: 15,
 			range: 10,
@@ -111,22 +124,20 @@ define([
 				i_duration: [4, 8]
 			}
 		},*/
-		'double slash': {
+		'flurry': {
 			statType: 'dex',
-			statMult: 0.84,
-			element: 'physical',
-			cdMax: 3,
-			useWeaponRange: true,
-			auto: true,
+			statMult: 0.88,
+			cdMax: 20,
+			manaCost: 5,
 			random: {
-				damage: [1, 3.8]
+				i_duration: [4, 9]
 			}
 		},
 		'smokebomb': {
 			statType: 'dex',
-			statMult: 0.335,
+			statMult: 0.98,
 			element: 'poison',
-			cdMax: 3,
+			cdMax: 5,
 			manaCost: 6,
 			random: {
 				damage: [0.25, 0.73],
@@ -143,8 +154,7 @@ define([
 		},*/
 		'crystal spikes': {
 			statType: ['dex', 'int'],
-			statMult: 3.18,
-			element: 'physical',
+			statMult: 1.82,
 			manaCost: 22,
 			needLos: true,
 			cdMax: 20,
@@ -160,7 +170,6 @@ define([
 		'innervation': {
 			statType: ['str'],
 			statMult: 0.0205,
-			element: 'physical',
 			manaReserve: {
 				percentage: 0.25
 			},

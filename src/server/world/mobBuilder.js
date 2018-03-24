@@ -1,17 +1,15 @@
 define([
 	'config/animations',
 	'items/generator',
-	'combat/combat',
-	'misc/events'
+	'combat/combat'
 ], function (
 	animations,
 	itemGenerator,
-	combat,
-	events
+	combat
 ) {
 	return {
 		build: function (mob, blueprint, scaleDrops, type, zoneName) {
-			events.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
+			mob.instance.eventEmitter.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
 
 			var typeDefinition = blueprint[type] || blueprint;
 
@@ -111,12 +109,12 @@ define([
 			var statValues = mob.stats.values;
 
 			var preferStat = ['str', 'dex', 'int'][~~(Math.random() * 3)];
-			var elementType = ['physical', 'poison', 'frost', 'fire', 'holy', 'arcane'][~~(Math.random() * 6)];
+			var elementType = [null, 'poison', 'frost', 'fire', 'holy', 'arcane'][~~(Math.random() * 6)];
 
 			mob.equipment.unequipAll();
 			mob.inventory.clear();
 
-			var hp = ~~(30 + (Math.pow(level, 3) * 0.072));
+			var hp = level * 32.7;
 			statValues.hpMax = hp;
 
 			statValues.level = level;
@@ -138,6 +136,7 @@ define([
 						noSpell: true,
 						level: level,
 						slot: slot,
+						quality: 4,
 						forceStats: [preferStat]
 					});
 					delete item.spell;
@@ -149,6 +148,9 @@ define([
 				drops.blueprints.forEach(function (d) {
 					var drop = extend(true, {}, d);
 					d.level = level;
+					if (drop.type == 'key')
+						return;
+
 					mob.inventory.getItem(itemGenerator.generate(drop));
 				}, this);
 			}
@@ -167,8 +169,8 @@ define([
 			var hpMult = 1 * mob.mob.hpMult;
 
 			if (level < 10) {
-				statValues.hpMax = ~~(statValues.hpMax * (level / 10));
-				//dmgMult *= [0.1, 0.2, 0.4, 0.7, 1, 1, 1, 1, 1][level - 1];
+				statValues.hpMax = ~~(statValues.hpMax * [0.1, 0.25, 0.6, 1, 1, 1, 1, 1, 1][level - 1]);
+				dmgMult *= [0.3, 0.45, 0.6, 0.8, 1, 1, 1, 1, 1][level - 1];
 			}
 
 			if (mob.isRare) {

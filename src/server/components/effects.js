@@ -1,9 +1,7 @@
 define([
-	'config/effects/effectTemplate',
-	'misc/events'
+	'config/effects/effectTemplate'
 ], function (
-	effectTemplate,
-	events
+	effectTemplate
 ) {
 	return {
 		type: 'effects',
@@ -138,7 +136,7 @@ define([
 					type: type,
 					url: 'config/effects/effect' + type + '.js'
 				};
-				events.emit('onBeforeGetEffect', result);
+				this.obj.instance.eventEmitter.emit('onBeforeGetEffect', result);
 
 				typeTemplate = require(result.url);
 			}

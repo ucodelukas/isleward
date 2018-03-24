@@ -58,7 +58,8 @@ define([
 					mail: mail,
 					map: map,
 					scheduler: scheduler,
-					eventEmitter: eventEmitter
+					eventEmitter: eventEmitter,
+					zone: map.zone
 				};
 
 				this.instances.push(fakeInstance);
@@ -141,11 +142,19 @@ define([
 				else {
 					var o = objects.transferObject(obj);
 					questBuilder.obtain(o);
+
+					var maxLevel = o.instance.zone.level[1];
+					if (maxLevel < o.stats.values.level)
+						o.stats.rescale(maxLevel);
 				}
 			},
 			onAddObject: function (obj) {
 				if (obj.player)
 					obj.stats.onLogin();
+
+				var maxLevel = obj.instance.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
@@ -370,6 +379,10 @@ define([
 				if (obj.player)
 					obj.stats.onLogin();
 
+				var maxLevel = obj.instance.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
+
 				obj.fireEvent('afterMove');
 			},
 			updateObject: function (msg) {
@@ -462,6 +475,14 @@ define([
 				};
 				newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
 
+				//Hack: We need to actually just always use the instanced eventEmitter
+				var eventQueue = eventEmitter.queue;
+				delete eventEmitter.queue;
+				var newEventEmitter = extend(true, {
+					queue: []
+				}, eventEmitter);
+				eventEmitter.queue = eventQueue;
+
 				var instance = {
 					id: objToAdd.name + '_' + (+new Date),
 					objects: extend(true, {}, objects),
@@ -477,7 +498,8 @@ define([
 					scheduler: extend(true, {}, scheduler),
 					mail: extend(true, {}, mail),
 					map: newMap,
-					eventEmitter: extend(true, {}, eventEmitter)
+					eventEmitter: newEventEmitter,
+					instanced: true
 				};
 
 				['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));
@@ -516,6 +538,10 @@ define([
 
 					instance.questBuilder.obtain(obj);
 				}
+
+				var maxLevel = obj.instance.zone.level[1];
+				if (maxLevel < obj.stats.values.level)
+					obj.stats.rescale(maxLevel);
 
 				process.send({
 					method: 'object',

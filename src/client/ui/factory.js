@@ -14,6 +14,7 @@ define([
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
 			events.on('onKeyDown', this.onKeyDown.bind(this));
+			events.on('onResize', this.onResize.bind(this));
 		},
 		onEnterGame: function () {
 			events.clearQueue();
@@ -63,7 +64,6 @@ define([
 				return;
 
 			this.getTemplate(type, options);
-			$(window).on('resize', this.onResize.bind(this));
 		},
 		getTemplate: function (type, options) {
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));

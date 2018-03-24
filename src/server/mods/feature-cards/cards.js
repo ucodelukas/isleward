@@ -1,14 +1,12 @@
 define([
-	'items/generator',
-	'misc/events'
+	'items/generator'
 ], function (
-	itemGenerator,
-	events
+	itemGenerator
 ) {
 	var config = {
 		'Runecrafter\'s Toil': {
 			chance: 0.025,
-			reward: 'Rune',
+			reward: 'Level 10 Rune',
 			setSize: 3,
 			mobLevel: [3, 100]
 		},
@@ -38,7 +36,7 @@ define([
 		},
 		'Tradesman\'s Pride': {
 			chance: 0.01,
-			reward: 'Five Random Totems',
+			reward: 'Five Random Idols',
 			setSize: 10
 		}
 	};
@@ -62,7 +60,7 @@ define([
 			var mobLevel = mob.stats.values.level;
 
 			var configs = extend(true, {}, config);
-			events.emit('onBeforeGetCardsConfig', configs);
+			looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 			Object.keys(configs).forEach(function (c) {
 				var card = configs[c];
@@ -114,9 +112,9 @@ define([
 			return card;
 		},
 
-		getReward: function (set) {
+		getReward: function (looter, set) {
 			var configs = extend(true, {}, config);
-			events.emit('onBeforeGetCardsConfig', configs);
+			looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 			var reward = configs[set].reward;
 			var msg = {
@@ -124,14 +122,15 @@ define([
 				handler: this.rewards[reward]
 			};
 
-			events.emit('onBeforeGetCardReward', msg);
+			looter.instance.eventEmitter.emit('onBeforeGetCardReward', msg);
 
-			return msg.handler();
+			return msg.handler(looter);
 		},
 
 		rewards: {
-			'Rune': function () {
+			'Level 10 Rune': function (obj) {
 				return itemGenerator.generate({
+					level: 10,
 					spell: true
 				});
 			},
@@ -151,8 +150,7 @@ define([
 				return itemGenerator.generate({
 					level: 10,
 					noSpell: true,
-					//Always be at least magic
-					bonusMagicFind: 286,
+					quality: 1,
 					perfection: 1,
 					slot: 'finger'
 				});
@@ -161,7 +159,7 @@ define([
 			"Princess Morgawsa's Trident": function () {
 				return itemGenerator.generate({
 					name: `Princess Morgawsa's Trident`,
-					level: [10, 15],
+					level: [18, 20],
 					quality: 4,
 					noSpell: true,
 					slot: 'twoHanded',
@@ -177,11 +175,24 @@ define([
 							i_chance: [2, 5],
 							i_duration: [2, 4]
 						}
-					}]
+					}],
+					spellName: 'projectile',
+					spellConfig: {
+						statType: 'int',
+						statMult: 0.9,
+						element: 'arcane',
+						auto: true,
+						cdMax: 7,
+						manaCost: 0,
+						range: 9,
+						random: {
+							damage: [2, 15]
+						}
+					}
 				});
 			},
 
-			"Five Random Totems": function () {
+			"Five Random Idols": function () {
 				var result = [];
 				for (var i = 0; i < 5; i++) {
 					result.push(itemGenerator.generate({
@@ -194,10 +205,10 @@ define([
 			"Steelclaw's Bite": function () {
 				return itemGenerator.generate({
 					name: `Steelclaw's Bite`,
-					level: [7, 10],
+					level: [18, 20],
 					quality: 4,
 					noSpell: true,
-					slot: 'twoHanded',
+					slot: 'oneHanded',
 					sprite: [1, 0],
 					spritesheet: '../../../images/legendaryItems.png',
 					type: 'Curved Dagger',
@@ -212,7 +223,17 @@ define([
 					}, {
 						type: 'alwaysCrit',
 						rolls: {}
-					}]
+					}],
+					spellName: 'melee',
+					spellConfig: {
+						statType: 'dex',
+						statMult: 0.88,
+						cdMax: 3,
+						useWeaponRange: true,
+						random: {
+							damage: [1, 3.8]
+						}
+					}
 				});
 			}
 		}

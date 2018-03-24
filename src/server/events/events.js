@@ -1,11 +1,9 @@
 define([
 	'../config/eventPhases/phaseTemplate',
-	'fs',
-	'misc/events'
+	'fs'
 ], function (
 	phaseTemplate,
-	fs,
-	events
+	fs
 ) {
 	return {
 		configs: [],
@@ -21,7 +19,7 @@ define([
 			var files = fs.readdirSync(path)
 				.map(f => ('../' + path + '/' + f));
 
-			events.emit('onBeforeGetEventList', this.instance.map.name, files);
+			this.instance.eventEmitter.emit('onBeforeGetEventList', this.instance.map.name, files);
 
 			files.forEach(function (f) {
 				var e = require(f);
@@ -193,7 +191,7 @@ define([
 			for (var i = 0; i < cLen; i++) {
 				var phase = currentPhases[i];
 				if (!phase.destroyed) {
-					if ((phase.end) || (phase.endMark == event.age)) {
+					if ((phase.end) || (phase.endMark <= event.age)) {
 						if ((phase.destroy) && (!phase.destroyed))
 							phase.destroy();
 						phase.destroyed = true;

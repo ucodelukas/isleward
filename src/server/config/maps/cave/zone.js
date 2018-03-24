@@ -1,10 +1,16 @@
 module.exports = {
 	name: 'cave',
-	level: 20,
+	level: [14, 16],
 	addLevel: 0,
 	resources: {},
 	mobs: {
 		default: {
+			spells: [{
+				type: 'melee',
+				statMult: 0.1356,
+				element: 'arcane'
+			}],
+
 			regular: {
 				drops: {
 					chance: 35,
@@ -166,6 +172,7 @@ module.exports = {
 
 		'radulos': {
 			level: 18,
+			spawnCd: 1714,
 
 			regular: {
 				hpMult: 75,
@@ -262,16 +269,19 @@ module.exports = {
 		'akarei scout': {
 			level: 20,
 			faction: 'akarei',
+			attackable: false,
 			deathRep: -3
 		},
 		'biorn': {
 			level: 22,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
 		'veleif': {
 			level: 22,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
@@ -279,11 +289,13 @@ module.exports = {
 
 		'akarei artificer': {
 			level: 24,
+			attackable: false,
 			faction: 'akarei',
 			deathRep: -6
 		},
 		'thaumaturge yala': {
 			level: 30,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 

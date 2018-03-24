@@ -1,11 +1,9 @@
 define([
 	'config/quests/templates/questTemplate',
-	'config/questsBase',
-	'misc/events'
+	'config/questsBase'
 ], function (
 	questTemplate,
-	globalQuests,
-	events
+	globalQuests
 ) {
 	return {
 		instance: null,
@@ -31,7 +29,7 @@ define([
 				zoneTemplate = globalQuests;
 
 			var config = extend(true, {}, zoneTemplate);
-			events.emit('onBeforeGetQuests', config);
+			this.instance.eventEmitter.emit('onBeforeGetQuests', config);
 			if (config.infini.length == 0)
 				return;
 

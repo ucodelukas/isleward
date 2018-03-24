@@ -314,21 +314,26 @@ define([
 
 			var xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
+			var level = stats.level;
+			if (stats.originalLevel)
+				level = stats.originalLevel + ' (' + stats.level + ')';
+
 			var newStats = {
 				basic: {
-					level: stats.level,
+					level: level,
 					'next level': xpRemaining + 'xp',
 					gap1: '',
 					gold: window.player.trade.gold,
 					gap2: '',
-					hp: ~~stats.hp + '/' + stats.hpMax,
-					mana: ~~stats.mana + '/' + stats.manaMax,
+					hp: ~~stats.hp + '/' + ~~stats.hpMax,
+					mana: ~~stats.mana + '/' + ~~stats.manaMax,
 					'hp regen': stats.regenHp,
-					'mana regen': stats.regenMana + '%',
+					'mana regen': ~~stats.regenMana + '%',
 					gap3: '',
 					str: stats.str,
 					int: stats.int,
-					dex: stats.dex
+					dex: stats.dex,
+					vit: stats.vit
 				},
 				offense: {
 					'crit chance': (~~(stats.critChance * 10) / 10) + '%',
@@ -338,7 +343,6 @@ define([
 					'fire increase': stats.elementFirePercent + '%',
 					'frost increase': stats.elementFrostPercent + '%',
 					'holy increase': stats.elementHolyPercent + '%',
-					'physical increase': stats.elementPhysicalPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
 					gap2: '',
 					'damage increase': stats.dmgPercent + '%',
@@ -355,7 +359,6 @@ define([
 					'fire resist': stats.elementFireResist,
 					'frost resist': stats.elementFrostResist,
 					'holy resist': stats.elementHolyResist,
-					'physical resist': stats.elementPhysicalResist,
 					'poison resist': stats.elementPoisonResist,
 					gap2: '',
 					'all resist': stats.elementAllResist

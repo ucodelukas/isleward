@@ -2,14 +2,12 @@ define([
 	'./../config/spells/spellTemplate',
 	'./../config/animations',
 	'./../config/spells',
-	'./../config/spellsConfig',
-	'misc/events'
+	'./../config/spellsConfig'
 ], function (
 	spellTemplate,
 	animations,
 	playerSpells,
-	playerSpellsConfig,
-	events
+	playerSpellsConfig
 ) {
 	return {
 		type: 'spellbook',
@@ -29,12 +27,9 @@ define([
 			this.objects = this.obj.instance.objects;
 			this.physics = this.obj.instance.physics;
 
-			var spells = blueprint.spells || [];
-			spells.forEach(function (s) {
-				this.addSpell(s);
-			}, this);
-
 			this.dmgMult = blueprint.dmgMult;
+
+			(blueprint.spells || []).forEach(s => this.addSpell(s));
 
 			delete blueprint.spells;
 		},
@@ -51,9 +46,16 @@ define([
 		die: function () {
 			this.auto = [];
 
+			var mana = this.obj.stats.values.mana;
+
 			this.spells.forEach(function (s) {
+				var reserve = s.manaReserve;
+
+				if ((reserve) && (reserve.percentage) && (s.active))
+					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+
 				s.die();
-			});
+			}, this);
 		},
 
 		simplify: function (self) {
@@ -88,7 +90,7 @@ define([
 				type: type,
 				template: null
 			};
-			events.emit('onBeforeGetSpellTemplate', typeTemplate);
+			this.obj.instance.eventEmitter.emit('onBeforeGetSpellTemplate', typeTemplate);
 			if (!typeTemplate.template)
 				typeTemplate.template = require('./config/spells/spell' + type);
 
@@ -111,7 +113,7 @@ define([
 				else if (sheetName.indexOf('/') > -1)
 					animation = animations.mobs[sheetName];
 				else
-					animation = animations.classes[this.obj.class];
+					animation = animations.classes;
 
 				if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
 					builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
@@ -124,6 +126,14 @@ define([
 				this.closestRange = builtSpell.range;
 			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
+
+			if ((options.id == null) && (spellId == null)) {
+				spellId = 0;
+				this.spells.forEach(function (s) {
+					if (s.id >= spellId)
+						spellId = s.id + 1;
+				});
+			}
 
 			builtSpell.id = (options.id == null) ? spellId : options.id;
 			this.spells.push(builtSpell);
@@ -142,11 +152,10 @@ define([
 		},
 
 		addSpellFromRune: function (runeSpell, spellId) {
-			var name = runeSpell.name.toLowerCase();
-			var playerSpell = playerSpells.spells.find(s => s.name.toLowerCase() == name);
-			var playerSpellConfig = playerSpellsConfig.spells[name];
-
-			if (!playerSpell)
+			var type = runeSpell.type;
+			var playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() == runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type == type));
+			var playerSpellConfig = playerSpellsConfig.spells[runeSpell.name.toLowerCase()] || playerSpellsConfig.spells[runeSpell.type];
+			if (!playerSpellConfig)
 				return -1;
 
 			if (!runeSpell.rolls)
@@ -155,8 +164,9 @@ define([
 			runeSpell.values = {};
 
 			var builtSpell = extend(true, {
+				type: runeSpell.type,
 				values: {}
-			}, playerSpell, playerSpellConfig);
+			}, playerSpell, playerSpellConfig, runeSpell);
 
 			for (var r in builtSpell.random) {
 				var range = builtSpell.random[r];
@@ -170,7 +180,7 @@ define([
 					val = ~~val;
 					r = r.replace('i_', '');
 				} else
-					val = ~~(val * 10) / 10;
+					val = ~~(val * 100) / 100;
 
 				builtSpell[r] = val;
 				builtSpell.values[r] = val;
@@ -232,9 +242,9 @@ define([
 		},
 		getRandomSpell: function (target) {
 			var valid = [];
-			this.spells.forEach(function (s, i) {
+			this.spells.forEach(function (s) {
 				if (s.canCast(target))
-					valid.push(i);
+					valid.push(s.id);
 			});
 
 			if (valid.length > 0)
@@ -248,7 +258,8 @@ define([
 				return true;
 			}
 
-			var spell = this.spells[action.spell];
+			var spell = this.spells.find(s => (s.id == action.spell));
+
 			if (!spell)
 				return false;
 
@@ -334,7 +345,7 @@ define([
 				var distance = Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY));
 				var range = spell.range;
 				if ((spell.useWeaponRange) && (this.obj.player)) {
-					var weapon = this.obj.inventory.findItem(this.obj.equipment.eq.twoHanded);
+					var weapon = this.obj.inventory.findItem(this.obj.equipment.eq.oneHanded) || this.obj.inventory.findItem(this.obj.equipment.eq.twoHanded);
 					if (weapon)
 						range = weapon.range || 1;
 				}

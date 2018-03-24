@@ -10,12 +10,18 @@ define([
 		closed: true,
 		key: null,
 
+		autoCloseCd: 0,
+		autoClose: null,
+		destroyKey: false,
+
 		openSprite: 157,
 		closedSprite: 156,
 
 		init: function (blueprint) {
 			this.locked = blueprint.locked;
 			this.key = blueprint.key;
+			this.destroyKey = blueprint.destroyKey;
+			this.autoClose = blueprint.autoClose;
 
 			if (this.closed)
 				this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
@@ -111,10 +117,26 @@ define([
 
 			var syncO = thisObj.syncer.o;
 
-			if (this.locked) {
+			if ((this.locked) && (this.closed)) {
+				if (this.autoClose)
+					this.autoCloseCd = this.autoClose;
+
 				var key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
 				if (!key)
 					return;
+
+				if (((key.singleUse) || (this.destroyKey)) && (key.keyId != 'world')) {
+					obj.inventory.destroyItem(key.id);
+
+					obj.instance.syncer.queue('onGetMessages', {
+						id: obj.id,
+						messages: [{
+							class: 'q0',
+							message: 'The ' + key.name + ' disintegrates on use',
+							type: 'info'
+						}]
+					}, [obj.serverId]);
+				}
 			}
 
 			if (this.closed) {
@@ -131,6 +153,21 @@ define([
 
 				this.closed = true;
 				this.enterArea(obj);
+			}
+		},
+
+		update: function () {
+			if (!this.autoCloseCd)
+				return;
+
+			this.autoCloseCd--;
+
+			if (this.autoCloseCd == 0) {
+				this.obj.cell = this.closedSprite;
+				this.obj.syncer.o.cell = this.closedSprite;
+				this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+
+				this.closed = true;
 			}
 		}
 	};

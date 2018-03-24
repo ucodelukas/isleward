@@ -1,72 +1,76 @@
 define([
 	'config/animations',
-	'config/loginRewards'
+	'config/loginRewards',
+	'config/classes'
 ], function (
 	animations,
-	loginRewards
+	loginRewards,
+	classes
 ) {
+	var baseStats = {
+		mana: 20,
+		manaMax: 20,
+
+		manaReservePercent: 0,
+
+		hp: 5,
+		hpMax: 5,
+		xpTotal: 0,
+		xp: 0,
+		xpMax: 0,
+		level: 1,
+		str: 0,
+		int: 0,
+		dex: 0,
+		magicFind: 0,
+		itemQuantity: 0,
+		regenHp: 0,
+		regenMana: 5,
+		addCritChance: 0,
+		addCritMultiplier: 0,
+		critChance: 5,
+		critMultiplier: 150,
+		armor: 0,
+		dmgPercent: 0,
+		vit: 0,
+
+		blockAttackChance: 0,
+		blockSpellChance: 0,
+
+		attackSpeed: 0,
+		castSpeed: 0,
+
+		elementArcanePercent: 0,
+		elementFrostPercent: 0,
+		elementFirePercent: 0,
+		elementHolyPercent: 0,
+		elementPoisonPercent: 0,
+
+		elementArcaneResist: 0,
+		elementFrostResist: 0,
+		elementFireResist: 0,
+		elementHolyResist: 0,
+		elementPoisonResist: 0,
+
+		elementAllResist: 0,
+
+		sprintChance: 0,
+
+		xpIncrease: 0,
+
+		//Fishing stats
+		catchChance: 0,
+		catchSpeed: 0,
+		fishRarity: 0,
+		fishWeight: 0,
+		fishItems: 0
+	};
+
 	return {
 		type: 'stats',
 
-		values: {
-			mana: 20,
-			manaMax: 20,
-
-			manaReservePercent: 0,
-
-			hp: 5,
-			hpMax: 5,
-			xpTotal: 0,
-			xp: 0,
-			xpMax: 0,
-			level: 1,
-			str: 0,
-			int: 0,
-			dex: 0,
-			magicFind: 0,
-			itemQuantity: 0,
-			regenHp: 0,
-			regenMana: 5,
-			addCritChance: 0,
-			addCritMultiplier: 0,
-			critChance: 5,
-			critMultiplier: 150,
-			armor: 0,
-			dmgPercent: 0,
-
-			blockAttackChance: 0,
-			blockSpellChance: 0,
-
-			attackSpeed: 0,
-			castSpeed: 0,
-
-			elementArcanePercent: 0,
-			elementFrostPercent: 0,
-			elementFirePercent: 0,
-			elementHolyPercent: 0,
-			elementPhysicalPercent: 0,
-			elementPoisonPercent: 0,
-
-			elementArcaneResist: 0,
-			elementFrostResist: 0,
-			elementFireResist: 0,
-			elementHolyResist: 0,
-			elementPhysicalResist: 0,
-			elementPoisonResist: 0,
-
-			elementAllResist: 0,
-
-			sprintChance: 0,
-
-			xpIncrease: 0,
-
-			//fishing stats
-			catchChance: 0,
-			catchSpeed: 0,
-			fishRarity: 0,
-			fishWeight: 0,
-			fishItems: 0
-		},
+		values: baseStats,
+		originalValues: null,
 
 		vitScale: 10,
 
@@ -76,7 +80,8 @@ define([
 			logins: 0,
 			played: 0,
 			lastLogin: null,
-			loginStreak: 0
+			loginStreak: 0,
+			mobKillStreaks: {}
 		},
 
 		dead: false,
@@ -136,9 +141,9 @@ define([
 			regenMana = values.regenMana / 50;
 
 			if (!isInCombat)
-				regenHp = values.hpMax / 100;
+				regenHp = Math.max(values.hpMax / 112, values.regenHp * 0.2);
 			else
-				regenHp = values.regenHp * 0.3;
+				regenHp = values.regenHp * 0.2;
 
 			if (values.hp < values.hpMax) {
 				values.hp += regenHp;
@@ -168,9 +173,10 @@ define([
 		},
 
 		addStat: function (stat, value) {
-			this.values[stat] += value;
+			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
+				this.values[stat] += value;
 
-			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax'].indexOf(stat) == -1);
+			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
 			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
 
@@ -189,27 +195,48 @@ define([
 					this.values[s] += value;
 					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
 				}, this);
+			} else if (stat == 'elementAllResist') {
+				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
+					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
+
+					this.values[element] += value;
+					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+				}, this);
 			}
 		},
 
 		calcXpMax: function () {
-			var level = this.values.level;
-			this.values.xpMax = ~~(level * 10 * Math.pow(level, 2.2));
+			var level = (this.originalValues || this.values).level;
+			this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 		},
 
-		getXp: function (amount) {
+		//Source is the object that caused you to gain xp (mostly yourself)
+		//Target is the source of the xp (a mob or quest)
+		getXp: function (amount, source, target) {
 			var obj = this.obj;
 			var values = this.values;
 
-			if (values.level == 20)
+			if ((this.originalValues || this.values).level == 20)
 				return;
 
-			amount = ~~(amount * (1 + (values.xpIncrease / 100)));
+			var xpEvent = {
+				source: source,
+				target: target,
+				amount: amount
+			};
+
+			this.obj.fireEvent('beforeGetXp', xpEvent);
+			if (xpEvent.amount == 0)
+				return;
+
+			amount = ~~(xpEvent.amount * (1 + (values.xpIncrease / 100)));
 
 			values.xpTotal = ~~(values.xpTotal + amount);
 			values.xp = ~~(values.xp + amount);
+
+			this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
 
 			this.syncer.queue('onGetDamage', {
 				id: obj.id,
@@ -223,12 +250,24 @@ define([
 			while (values.xp >= values.xpMax) {
 				didLevelUp = true;
 				values.xp -= values.xpMax;
-				values.level++;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+				if (this.originalValues)
+					this.originalValues.level++;
+				else
+					values.level++;
 
-				if (values.level == 20)
+				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
 
-				values.hpMax += 50;
+				values.hpMax = values.level * 32.7;
+
+				var gainStats = classes.stats[this.obj.class].gainStats;
+				for (var s in gainStats) {
+					values[s] += gainStats[s];
+					this.obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+				}
+
+				this.obj.spellbook.calcDps();
 
 				this.syncer.queue('onGetDamage', {
 					id: obj.id,
@@ -236,12 +275,7 @@ define([
 					text: 'level up'
 				});
 
-				obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
-				obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-				obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
-				obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
-
-				syncO.level = values.level;
+				syncO.level = (this.originalValues || this.values).level;
 
 				this.calcXpMax();
 			}
@@ -255,13 +289,23 @@ define([
 				obj.auth.doSave();
 			}
 
-			obj.syncer.setObject(true, 'stats', 'values', 'xp', this.values.xp);
-
 			process.send({
 				method: 'object',
 				serverId: this.obj.serverId,
 				obj: syncO
 			});
+
+			if (didLevelUp) {
+				var maxLevel = this.obj.instance.zone.level[1]
+				if (maxLevel < (this.originalValues || values).level)
+					this.rescale(maxLevel, false);
+				else {
+					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+				}
+			}
 		},
 
 		kill: function (target) {
@@ -301,7 +345,7 @@ define([
 					else
 						amount = 0;
 
-					a.obj.stats.getXp(amount, this.obj);
+					a.obj.stats.getXp(amount, this.obj, target);
 				}
 
 				a.obj.fireEvent('afterKillMob', target);
@@ -433,27 +477,13 @@ define([
 						if (this.obj.inventory) {
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
-							var done = [];
 							for (var i = 0; i < aLen; i++) {
 								var a = aggroList[i].obj;
-								if (done.some(d => d == a.serverId))
+
+								if (a.serverId == null)
 									continue;
 
-								if ((a.social) && (a.social.party)) {
-									a.social.party.forEach(function (p) {
-										if (done.some(d => d == p))
-											return;
-
-										this.obj.inventory.dropBag(p, killSource);
-										done.push(p);
-									}, this);
-								} else {
-									if (a.serverId == null)
-										continue;
-
-									this.obj.inventory.dropBag(a.serverId, killSource);
-									done.push(a.serverId);
-								}
+								this.obj.inventory.dropBag(a.serverId, killSource);
 							}
 						}
 					}
@@ -524,7 +554,7 @@ define([
 
 			return {
 				type: 'stats',
-				values: this.values,
+				values: this.originalValues || this.values,
 				stats: this.stats
 			};
 		},
@@ -593,6 +623,127 @@ define([
 				this.obj.instance.mail.getMail(this.obj.name);
 
 			stats.lastLogin = time;
+		},
+
+		rescale: function (level, isMob) {
+			if (level >= (this.originalValues || this.values).level)
+				return;
+
+			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
+
+			var oldHp = this.values.hp;
+			var oldXp = this.values.xp;
+			var oldXpTotal = this.values.xpTotal;
+			var oldXpMax = this.values.xpMax;
+
+			if (!this.originalValues)
+				this.originalValues = extend(true, {}, this.values);
+
+			var oldValues = this.values;
+			var newValues = extend(true, {}, baseStats);
+			this.values = newValues;
+
+			var gainStats = classes.stats[this.obj.class].gainStats;
+			for (var s in gainStats) {
+				newValues[s] += (gainStats[s] * level);
+			}
+
+			newValues.level = level;
+			newValues.originalLevel = (this.originalValues || oldValues).level;
+			newValues.hpMax = level * 32.7;
+			if (isMob)
+				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
+
+			newValues.hp = oldHp;
+			var resetHp = false;
+			if (newValues.hp > newValues.hpMax) {
+				resetHp = true;
+				newValues.hp = newValues.hpMax;
+			}
+
+			newValues.xp = oldXp;
+			newValues.xpMax = oldXpMax;
+			newValues.xpTotal = oldXpTotal;
+
+			var addStats = this.obj.equipment.rescale(level);
+			for (var p in addStats) {
+				var statName = p;
+
+				this.addStat(statName, addStats[p]);
+			}
+
+			if (resetHp)
+				newValues.hp = newValues.hpMax;
+
+			this.obj.spellbook.calcDps();
+
+			var publicStats = [
+				'hp',
+				'hpMax',
+				'mana',
+				'manaMax',
+				'level'
+			];
+
+			for (var p in newValues) {
+				sync(true, 'stats', 'values', p, newValues[p]);
+				if (publicStats.indexOf(p) > -1)
+					sync(false, 'stats', 'values', p, newValues[p]);
+			}
+		},
+
+		getKillStreakCoefficient: function (mobName) {
+			var killStreak = this.stats.mobKillStreaks[mobName];
+			if (!killStreak)
+				return 1;
+			else
+				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
+		},
+
+		events: {
+			afterKillMob: function (mob) {
+				var mobKillStreaks = this.stats.mobKillStreaks;
+				var mobName = mob.name;
+
+				if (!mobKillStreaks[mobName])
+					mobKillStreaks.mobName = 0;
+
+				if (mobKillStreaks[mobName] < 100)
+					mobKillStreaks[mobName]++;
+
+				for (var p in mobKillStreaks) {
+					if (p == mobName)
+						continue;
+
+					mobKillStreaks[p]--;
+					if (mobKillStreaks[p] <= 0)
+						delete mobKillStreaks[p];
+				}
+			},
+
+			beforeGetXp: function (event) {
+				if (!event.target.mob)
+					return;
+
+				event.amount *= this.getKillStreakCoefficient(event.target.name);
+			},
+
+			beforeGenerateLoot: function (event) {
+				if (!event.source.mob)
+					return;
+
+				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
+			},
+
+			afterMove: function (event) {
+				var mobKillStreaks = this.stats.mobKillStreaks;
+
+				for (var p in mobKillStreaks) {
+					mobKillStreaks[p] -= 0.085;
+					if (mobKillStreaks[p] <= 0)
+						delete mobKillStreaks[p];
+				}
+			}
 		}
 	};
 });

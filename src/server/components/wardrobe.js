@@ -120,7 +120,7 @@ define([
 		onGetSkins: function (obj, skins) {
 			this.obj.instance.syncer.queue('onGetWardrobeSkins', {
 				id: this.obj.id,
-				skins: skins[obj.class]
+				skins: skins
 			}, [obj.serverId]);
 		}
 	};

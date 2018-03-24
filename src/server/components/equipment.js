@@ -1,7 +1,7 @@
 define([
-
+	'items/generators/stats'
 ], function (
-
+	generatorStats
 ) {
 	return {
 		type: 'equipment',
@@ -32,10 +32,12 @@ define([
 			if (!this.doAutoEq)
 				return;
 
+			var stats = this.obj.stats.values;
+
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > this.obj.stats.values.level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > (stats.originalLevel || stats.level))) {
 				item.eq = false;
 				return;
 			} else if ((item.factions) && (this.obj.player)) {
@@ -59,10 +61,11 @@ define([
 				itemId = itemId.itemId;
 			}
 
+			var level = (this.obj.stats.originalValues || this.obj.stats.values).level;
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > this.obj.stats.values.level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > level)) {
 				item.eq = false;
 				return;
 			} else if ((item.factions) && (this.obj.player)) {
@@ -133,11 +136,15 @@ define([
 			}
 
 			var stats = item.stats;
+			if (this.obj.player) {
+				var maxLevel = this.obj.instance.zone.level[1];
+				if (maxLevel < item.level)
+					stats = generatorStats.rescale(item, maxLevel);
+			}
+
 			for (var s in stats) {
 				var val = stats[s];
 
-				if (s == 'hpMax')
-					s = 'vit';
 				this.obj.stats.addStat(s, val);
 			}
 
@@ -201,11 +208,15 @@ define([
 				return;
 
 			var stats = item.stats;
+			if (this.obj.player) {
+				var maxLevel = this.obj.instance.zone.level[1];
+				if (maxLevel < item.level)
+					stats = generatorStats.rescale(item, maxLevel);
+			}
+
 			for (var s in stats) {
 				var val = stats[s];
 
-				if (s == 'hpMax')
-					s = 'vit';
 				this.obj.stats.addStat(s, -val);
 			}
 
@@ -292,6 +303,34 @@ define([
 					}, [this.obj.serverId]);
 				}
 			}, this);
+		},
+
+		rescale: function (level) {
+			var items = this.obj.inventory.items;
+
+			var stats = {};
+
+			var eq = this.eq;
+			for (var p in eq) {
+				var item = items.find(i => (i.id == eq[p]));
+				if ((!item.slot) || (item.slot == 'tool')) {
+					continue;
+				}
+
+				var item = items.find(i => (i.id == eq[p]));
+				var nItemStats = item.stats;
+				if (item.level > level)
+					nItemStats = generatorStats.rescale(item, level);
+
+				for (var s in nItemStats) {
+					if (!stats[s])
+						stats[s] = 0;
+
+					stats[s] += nItemStats[s];
+				}
+			}
+
+			return stats;
 		}
 	};
 });

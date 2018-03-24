@@ -26,7 +26,9 @@ define([
 		clearInventory: 10,
 		completeQuests: 10,
 		getReputation: 10,
-		loseReputation: 10
+		loseReputation: 10,
+		setStat: 10,
+		die: 10
 	};
 
 	var localCommands = [
@@ -311,7 +313,8 @@ define([
 				hp: 10000000,
 				manaMax: 10000000,
 				mana: 10000000,
-				sprintChance: 100
+				sprintChance: 100,
+				vit: 10000000
 			};
 
 			var syncer = obj.syncer;
@@ -351,6 +354,16 @@ define([
 				return;
 
 			this.obj.reputation.getReputation(faction, -50000);
+		},
+
+		setStat: function (config) {
+			this.obj.stats.values[config.stat] = ~~config.value;
+		},
+
+		die: function () {
+			this.obj.stats.takeDamage({
+				amount: 99999
+			}, 1, this.obj);
 		}
 	};
 });

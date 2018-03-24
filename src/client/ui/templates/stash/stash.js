@@ -235,7 +235,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == ' ')
+			if (key == 'u')
 				this.toggle();
 			else if (key == 'shift') {
 				this.shiftDown = true;

@@ -101,8 +101,10 @@ define([
                 if (l == 'tileSprites') {
                     layers[l] = new pixi.Container();
                     layers[l].layer = 'tiles';
-                } else
+                } else {
                     layers[l] = new pixi.Container();
+                    layers[l].layer = l;
+                }
 
                 this.stage.addChild(layers[l])
             }, this);
@@ -289,6 +291,11 @@ define([
         },
 
         clean: function () {
+            this.stage.removeChild(this.layers.hiders);
+            this.layers.hiders = new pixi.Container();
+            this.layers.hiders.layer = 'hiders';
+            this.stage.addChild(this.layers.hiders);
+
             var container = this.layers.tileSprites;
             this.stage.removeChild(container);
 
@@ -297,7 +304,11 @@ define([
             this.stage.addChild(container);
 
             this.stage.children.sort(function (a, b) {
-                if (a.layer == 'tiles')
+                if (a.layer == 'hiders')
+                    return 1;
+                else if (b.layer == 'hiders')
+                    return -1;
+                else if (a.layer == 'tiles')
                     return -1;
                 else if (b.layer == 'tiles')
                     return 1;
@@ -676,45 +687,6 @@ define([
             obj.sprite.position.y = obj.y;
             obj.sprite.width = obj.w;
             obj.sprite.height = obj.h;
-            return;
-
-            var points = obj.sprite.graphicsData[0].shape.points;
-            if (!points)
-                return;
-
-            graphics.clear();
-
-            graphics.beginFill(obj.color || '0x48edff', fillAlpha);
-
-            if (obj.strokeColor)
-                graphics.lineStyle(scaleMult, obj.strokeColor);
-
-            graphics.drawRect(0, 0, obj.w, obj.h);
-
-            /*graphics.moveTo(obj.x, obj.y);
-            graphics.lineTo(obj.x + obj.w, obj.y);
-            graphics.lineTo(obj.x + obj.w, obj.y + obj.h);
-            graphics.lineTo(obj.x, obj.y + obj.h);
-            graphics.lineTo(obj.x, obj.y);*/
-
-            graphics.endFill();
-
-            graphics.position.x = obj.x;
-            graphics.position.y = obj.y;
-
-            /*obj.sprite.dirty = true;
-            obj.sprite.clearDirty = true;
-
-            points[0] = obj.x;
-            points[1] = obj.y;
-            points[2] = obj.x + obj.w;
-            points[3] = obj.y;
-            points[4] = obj.x + obj.w;
-            points[5] = obj.y + obj.h;
-            points[6] = obj.x;
-            points[7] = obj.y + obj.h;
-            points[8] = obj.x;
-            points[9] = obj.y;*/
         },
 
         buildObject: function (obj) {

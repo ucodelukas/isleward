@@ -1,29 +1,16 @@
 define([
-
+	'security/sheets'
 ], function (
-
+	sheets
 ) {
 	return {
-		accounts: {
-			waffle: {
-				level: 10,
-				messageStyle: 'color-cyan',
-				messagePrefix: '(dev) ',
-				items: [{
-					type: 'key',
-					name: 'Key to the world',
-					sprite: [12, 0],
-					keyId: 'world'
-				}],
-				skins: [
-					'1.1', '1.2', '1.3', '1.4', '1.5', 'bearded wizard'
-				]
-			}
+		getAccount: function (name) {
+			return sheets.getRecord(name);
 		},
 
 		onBeforePlayerEnterGame: function (obj, blueprint) {
 			var account = obj.account;
-			var config = this.accounts[account] || {};
+			var config = this.getAccount(account) || {};
 			if (config.items) {
 				var blueprintInventory = blueprint.components.find(c => (c.type == 'inventory'));
 				if (!blueprintInventory) {
@@ -49,14 +36,14 @@ define([
 
 		getRoleLevel: function (player) {
 			var account = player.account;
-			var level = this.accounts[account] ? this.accounts[account].level : 0;
+			var level = this.getAccount(account) ? this.getAccount(account).level : 0;
 
 			return level;
 		},
 
 		isRoleLevel: function (player, requireLevel, message) {
 			var account = player.account;
-			var level = this.accounts[account] ? this.accounts[account].level : 0;
+			var level = this.getAccount(account) ? this.getAccount(account).level : 0;
 
 			var success = (level >= requireLevel);
 
@@ -68,16 +55,25 @@ define([
 
 		getRoleMessageStyle: function (player) {
 			var account = player.account;
-			return this.accounts[account] ? this.accounts[account].messageStyle : null;
+			return this.getAccount(account) ? this.getAccount(account).messageStyle : null;
 		},
 
 		getRoleMessagePrefix: function (player) {
 			var account = player.account;
-			return this.accounts[account] ? this.accounts[account].messagePrefix : null;
+			return this.getAccount(account) ? this.getAccount(account).messagePrefix : null;
 		},
 
 		getSkins: function (account) {
-			return this.accounts[account] ? this.accounts[account].skins : [];
+			var skins = [];
+			var account = this.getAccount(account) || {
+				skins: []
+			};
+			(account.skins || []).forEach(function (s) {
+				skins.push(s);
+			});
+
+			skins = skins.filter((s, i) => (skins.indexOf(s) == i));
+			return skins;
 		},
 
 		sendMessage: function (player, msg) {

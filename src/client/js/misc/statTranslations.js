@@ -5,7 +5,6 @@ define([
 ) {
 	var stats = {
 		'vit': 'vitality',
-		'hpMax': 'vitality',
 		'regenHp': 'health regeneration',
 		'manaMax': 'maximum mana',
 		'regenMana': 'mana regeneration',
@@ -29,14 +28,13 @@ define([
 		'elementFrostPercent': 'increased frost damage',
 		'elementFirePercent': 'increased fire damage',
 		'elementHolyPercent': 'increased holy damage',
-		'elementPhysicalPercent': 'increased physical damage',
 		'elementPoisonPercent': 'increased poison damage',
 
+		'elementAllResist': 'all resistance',
 		'elementArcaneResist': 'arcane resistance',
 		'elementFrostResist': 'frost resistance',
 		'elementFireResist': 'fire resistance',
 		'elementHolyResist': 'holy resistance',
-		'elementPhysicalResist': 'physical resistance',
 		'elementPoisonResist': 'poison resistance',
 		'elementAllResist': 'all resistance',
 

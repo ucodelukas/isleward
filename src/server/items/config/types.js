@@ -160,31 +160,92 @@ define([
 		oneHanded: {
 			'Sword': {
 				sprite: [9, 0],
-				spellName: 'slash'
+				spellName: 'melee',
+				spellConfig: {
+					statType: 'str',
+					statMult: 0.84,
+					threatMult: 4,
+					cdMax: 5,
+					useWeaponRange: true,
+					random: {
+						damage: [3, 11.4]
+					}
+				}
 			},
 			'Dagger': {
 				sprite: [9, 2],
-				spellName: 'double slash'
+				spellName: 'melee',
+				spellConfig: {
+					statType: 'dex',
+					statMult: 0.88,
+					cdMax: 3,
+					useWeaponRange: true,
+					random: {
+						damage: [1, 3.8]
+					}
+				}
 			},
 			'Axe': {
 				sprite: [9, 3],
-				spellName: 'slash',
-				onlyDungeon: true
+				spellName: 'melee',
+				spellConfig: {
+					statType: 'str',
+					statMult: 0.84,
+					threatMult: 4,
+					cdMax: 5,
+					useWeaponRange: true,
+					random: {
+						damage: [3, 11.4]
+					}
+				}
 			},
-			'Mace': {
-				sprite: [9, 4],
-				spellName: 'smite'
+			'Wand': {
+				sprite: [9, 8],
+				spellName: 'projectile',
+				spellConfig: {
+					statType: 'int',
+					statMult: 1,
+					element: 'holy',
+					cdMax: 4,
+					manaCost: 0,
+					range: 6,
+					random: {
+						damage: [2, 12]
+					}
+				}
 			}
 		},
 		twoHanded: {
 			'Gnarled Staff': {
 				sprite: [9, 1],
-				spellName: 'magic missile'
+				spellName: 'projectile',
+				spellConfig: {
+					statType: 'int',
+					statMult: 0.9,
+					element: 'arcane',
+					auto: true,
+					cdMax: 7,
+					manaCost: 0,
+					range: 9,
+					random: {
+						damage: [2, 15]
+					}
+				}
 			},
 			'Spear': {
 				sprite: [9, 6],
-				spellName: 'slash',
-				range: 2
+				spellName: 'melee',
+				spellConfig: {
+					statType: 'str',
+					statMult: 0.84,
+					threatMult: 4,
+					cdMax: 5,
+					useWeaponRange: true,
+					range: 2,
+					random: {
+						damage: [3, 11.4]
+					}
+				}
 			}
 		},
 		offHand: {

@@ -20,13 +20,6 @@ define([
 		selected: null,
 		deleteCount: 0,
 
-		classSprites: {
-			warrior: [1, 1],
-			wizard: [2, 0],
-			thief: [6, 0],
-			cleric: [4, 0]
-		},
-
 		postRender: function () {
 			this.find('.btnPlay').on('click', this.onPlayClick.bind(this));
 			this.find('.btnNew').on('click', this.onNewClick.bind(this));

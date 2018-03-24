@@ -6,7 +6,6 @@ define([
 	'config/classes',
 	'mtx/mtx',
 	'config/factions',
-	'misc/events',
 	'items/itemEffects'
 ], function (
 	generator,
@@ -16,7 +15,6 @@ define([
 	classes,
 	mtx,
 	factions,
-	events,
 	itemEffects
 ) {
 	return {
@@ -42,27 +40,6 @@ define([
 				var item = items[i];
 				if ((item.pos >= this.inventorySize) || (item.eq))
 					delete item.pos;
-
-				//Hacks for old items
-				if (((item.spell) && (!item.spell.rolls)) || (!item.sprite)) {
-					items.splice(i, 1);
-					i--;
-					iLen--;
-					continue;
-				} else if ((item.spell) && (item.type == 'Spear')) {
-					item.spell.properties = item.spell.properties || {};
-					item.spell.properties.range = item.range;
-				} else if (item.quantity == NaN)
-					item.quantity = 1;
-				else if ((item.effects) && (Object.keys(item.effects[0]).length == 0)) {
-					items.splice(i, 1);
-					i--;
-					iLen--;
-					continue;
-				} else if (((item.slot != 'twoHanded') && (item.slot != 'oneHanded')) && (item.spell) && (!item.ability))
-					delete item.spell;
-				else if (item.slot == 'mainHand')
-					item.slot = 'oneHanded';
 
 				while (item.name.indexOf(`''`) > -1) {
 					item.name = item.name.replace(`''`, `'`);
@@ -168,9 +145,13 @@ define([
 			}
 
 			var item = this.findItem(itemId);
+			var statValues = this.obj.stats.values;
 			if (!item)
 				return;
 			else if (!item.spell) {
+				item.eq = false;
+				return;
+			} else if (item.level > (statValues.originalLevel || statValues.level)) {
 				item.eq = false;
 				return;
 			}
@@ -198,8 +179,8 @@ define([
 			if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
 				runeSlot = 0;
 			else if (runeSlot == null) {
-				runeSlot = 3;
-				for (var i = 1; i <= 3; i++) {
+				runeSlot = 4;
+				for (var i = 1; i <= 4; i++) {
 					if (!this.items.some(j => (j.runeSlot == i))) {
 						runeSlot = i;
 						break;
@@ -300,7 +281,7 @@ define([
 			}
 
 			var result = {};
-			events.emit('onBeforeUseItem', this.obj, item, result);
+			this.obj.instance.eventEmitter.emit('onBeforeUseItem', this.obj, item, result);
 
 			if (item.type == 'consumable') {
 				if (item.uses) {
@@ -586,7 +567,8 @@ define([
 				y: y,
 				properties: {
 					cpnChest: {
-						ownerId: ownerId
+						ownerId: ownerId,
+						ttl: this.obj.instance.instanced ? -1 : 1710
 					},
 					cpnInventory: {
 						items: extend(true, [], items)
@@ -606,7 +588,7 @@ define([
 		},
 
 		getItem: function (item, hideMessage, noStack) {
-			events.emit('onBeforeGetItem', item, this.obj);
+			this.obj.instance.eventEmitter.emit('onBeforeGetItem', item, this.obj);
 
 			//We need to know if a mob dropped it for quest purposes
 			var fromMob = item.fromMob;
@@ -649,7 +631,7 @@ define([
 							id: this.obj.id,
 							messages: [{
 								class: 'q0',
-								message: 'you bags are too full to loot any more items',
+								message: 'your bags are too full to loot any more items',
 								type: 'info'
 							}]
 						}, [this.obj.serverId]);
@@ -829,6 +811,12 @@ define([
 			var instancedItems = extend(true, [], this.items);
 			this.items = [];
 
+			var dropEvent = {
+				chanceMultiplier: 1,
+				source: this.obj
+			};
+			playerObject.fireEvent('beforeGenerateLoot', dropEvent);
+
 			if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
 				var magicFind = (blueprint.magicFind || 0);
 				var bonusMagicFind = killSource.stats.values.magicFind;
@@ -840,7 +828,7 @@ define([
 					rolls++;
 
 				for (var i = 0; i < rolls; i++) {
-					if (Math.random() * 100 >= (blueprint.chance || 35))
+					if (Math.random() * 100 >= (blueprint.chance || 35) * dropEvent.chanceMultiplier)
 						continue;
 
 					var itemBlueprint = {
@@ -849,7 +837,8 @@ define([
 						bonusMagicFind: bonusMagicFind
 					};
 
-					useItem = generator.generate(itemBlueprint);
+					var statValues = this.obj.stats.values;
+					useItem = generator.generate(itemBlueprint, statValues.originalLevel || statValues.level);
 
 					this.getItem(useItem);
 				}
@@ -859,11 +848,11 @@ define([
 				var blueprints = blueprint.blueprints;
 				for (var i = 0; i < blueprints.length; i++) {
 					var drop = blueprints[i];
-					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance))
+					if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance * dropEvent.chanceMultiplier))
 						continue;
 					else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
 						continue;
-					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance)) {
+					else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance * dropEvent.chanceMultiplier)) {
 						continue;
 					}
 
@@ -871,7 +860,7 @@ define([
 					drop.magicFind = magicFind;
 
 					var item = drop;
-					if (!item.quest)
+					if ((!item.quest) && (item.type != 'key'))
 						item = generator.generate(drop);
 
 					if (!item.slot)
@@ -882,7 +871,7 @@ define([
 			}
 
 			playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
-			events.emit('onBeforeDropBag', this.obj, this.items, killSource);
+			this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
 				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);

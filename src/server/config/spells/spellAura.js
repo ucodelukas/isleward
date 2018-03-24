@@ -39,6 +39,11 @@ define([
 			delete values.effects;
 		},
 
+		die: function () {
+			if (this.active)
+				this.cast();
+		},
+
 		updateActive: function () {
 			var o = this.obj;
 			var amount = 0;

@@ -1,7 +1,7 @@
 define([
-	'misc/events'
+
 ], function (
-	events
+
 ) {
 	return {
 		rewards: [],
@@ -48,7 +48,7 @@ define([
 
 			var obj = this.obj;
 
-			events.emitNoSticky('beforeCompleteAutoquest', this, obj);
+			this.obj.instance.eventEmitter.emitNoSticky('beforeCompleteAutoquest', this, obj);
 
 			obj.instance.syncer.queue('onGetMessages', {
 				id: obj.id,
@@ -60,13 +60,13 @@ define([
 
 			obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
-			events.emit('onCompleteQuest', this);
+			this.obj.instance.eventEmitter.emit('onCompleteQuest', this);
 
 			this.rewards.forEach(function (r) {
 				this.obj.inventory.getItem(r);
 			}, this);
 
-			this.obj.stats.getXp(this.xp || 10);
+			this.obj.stats.getXp(this.xp || 10, this.obj, this);
 		},
 
 		simplify: function (self) {

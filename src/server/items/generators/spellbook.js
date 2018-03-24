@@ -19,7 +19,7 @@ define([
 			}
 
 			var spell = spellsConfig.spells[spellName];
-			var spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName);
+			var spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName) || {};
 
 			if (!item.slot) {
 				var sprite = [10, 0];
@@ -41,12 +41,19 @@ define([
 			} else if (spellQuality == 'basic')
 				item.stats = {};
 
+			if (blueprint.spellConfig)
+				spellAesthetic = extend(true, {}, spellAesthetic, blueprint.spellConfig);
+
 			item.spell = {
-				name: spellAesthetic.name,
-				type: spellAesthetic.type,
+				name: spellAesthetic.name || 'Weapon Damage',
+				type: spellAesthetic.type || spellName,
 				rolls: {},
 				values: {}
 			};
+
+			if (blueprint.spellConfig) {
+				extend(true, item.spell, blueprint.spellConfig);
+			}
 
 			var propertyPerfection = [];
 

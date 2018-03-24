@@ -11,6 +11,7 @@ define([
 		zone: null,
 		physics: null,
 		map: null,
+		zone: null,
 
 		cdMax: 50,
 
@@ -20,6 +21,7 @@ define([
 			this.zone = instance.zone;
 			this.physics = instance.physics;
 			this.map = instance.map;
+			this.zone = instance.zone;
 		},
 
 		register: function (name, blueprint) {
@@ -117,7 +119,7 @@ define([
 				cpnResourceNode: {
 					nodeType: blueprint.type,
 					ttl: blueprint.ttl,
-					xp: this.map.zone.level * this.map.zone.level,
+					xp: this.zone.level * this.zone.level,
 					blueprint: extend(true, {}, blueprint),
 					quantity: quantity
 				}

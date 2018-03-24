@@ -108,7 +108,7 @@ define([
 			io.set({
 				ent: this.username,
 				field: 'stash',
-				value: JSON.stringify(this.obj.stash.items)
+				value: JSON.stringify(this.obj.stash.items).split(`'`).join('`')
 			});
 		},
 
@@ -159,6 +159,9 @@ define([
 			if (result) {
 				result = result.split('`').join(`'`);
 				result = result.replace(/''+/g, '\'');
+			} else {
+				console.log('char not found');
+				console.log(data);
 			}
 
 			var character = JSON.parse(result || '{}');
@@ -209,6 +212,11 @@ define([
 		},
 
 		onGetStash: function (data, character, result) {
+			if (result) {
+				result = result.split('`').join(`'`);
+				result = result.replace(/''+/g, '\'');
+			}
+
 			this.stash = JSON.parse(result || '[]');
 
 			if (this.skins != null) {
@@ -268,8 +276,8 @@ define([
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
 
-			if (!skinList[character.class].some(s => (s.id == character.skinId))) {
-				character.skinId = character.class + ' 1';
+			if (!skinList.some(s => (s.id == character.skinId))) {
+				character.skinId = '1.0';
 
 				character.cell = skins.getCell(character.skinId);
 				character.sheetName = skins.getSpritesheet(character.skinId);
@@ -443,10 +451,14 @@ define([
 			this.obj.cell = skins.getCell(this.obj.skinId);
 			this.obj.sheetName = skins.getSpritesheet(this.obj.skinId);
 
+			this.verifySkin(this.obj);
+
 			var simple = this.obj.getSimple(true);
+			var prophecies = data.prophecies || [];
+			prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) == i));
 			simple.components.push({
 				type: 'prophecies',
-				list: data.prophecies || []
+				list: prophecies
 			});
 
 			io.set({
@@ -514,7 +526,13 @@ define([
 			leaderboard.deleteCharacter(msg.data.name);
 		},
 		onRemoveFromList: function (msg, result) {
-			msg.callback(this.characterList);
+			var result = this.characterList
+				.map(c => ({
+					name: c.name ? c.name : c,
+					level: leaderboard.getLevel(c.name ? c.name : c)
+				}));
+
+			msg.callback(result);
 		},
 
 		onAppendList: function (msg, result) {

@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'estuary',
-	level: 20,
+	level: [15, 18],
 	addLevel: 0,
 	resources: {},
 	mobs: {
@@ -9,6 +9,12 @@ module.exports = {
 			grantRep: {
 				gaekatla: 15
 			},
+
+			spells: [{
+				type: 'melee',
+				statMult: 0.1356,
+				element: 'poison'
+			}],
 
 			regular: {
 				hpMult: 4,

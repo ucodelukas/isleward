@@ -1,18 +1,15 @@
 define([
 	'config/spells/spellCallbacks',
-	'combat/combat',
-	'misc/events'
+	'combat/combat'
 ], function (
 	spellCallbacks,
-	combat,
-	events
+	combat
 ) {
 	return {
 		cd: 0,
 		cdMax: 0,
 		manaCost: 1,
 		threatMult: 1,
-		statType: 'str',
 
 		needLos: false,
 
@@ -39,7 +36,7 @@ define([
 				if (this.range != null) {
 					var obj = this.obj;
 					var distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
-					inRange = distance <= this.range;
+					inRange = (distance <= this.range);
 				}
 
 				return inRange;
@@ -82,6 +79,12 @@ define([
 				attackSpeed += 1;
 
 				dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
+				var duration = this.values.duration;
+				if (duration) {
+					dmg *= duration;
+				}
+
+				dmg /= this.cdMax;
 
 				if (this.damage) {
 					this.values.dmg = ~~(dmg * 100) / 100 + '/tick';

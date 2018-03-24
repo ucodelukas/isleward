@@ -21,6 +21,31 @@ define([
 			this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
 			this.events.on('onBeforeGetResourceList', this.beforeGetResourceList.bind(this));
 			this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
+			this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+		},
+
+		onAfterGetZone: function (zone, config) {
+			if (zone != 'fjolarok')
+				return;
+
+			var newRunes = [{
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'harvest life',
+				worth: 3
+			}, {
+				generate: true,
+				spell: true,
+				spellQuality: 'basic',
+				infinite: true,
+				spellName: 'summon skeleton',
+				worth: 3
+			}];
+
+			var vikarTrade = config.mobs.vikar.properties.cpnTrade;
+			Array.prototype.push.apply(vikarTrade.items.extra, newRunes);
 		},
 
 		beforeGetAnimations: function (animations) {
@@ -85,12 +110,16 @@ define([
 		},
 
 		beforeGetClasses: function (classes) {
-			classes.spells.necromancer = ['summon skeleton', 'blood barrier'];
+			/*classes.spells.necromancer = ['harvest life', 'summon skeleton'];
 			classes.stats.necromancer = {
 				values: {
-					hpMax: 95
+					hpMax: 65
 				},
 				vitScale: 10,
+				gainStats: {
+					int: 1,
+					str: 1
+				},
 				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 			classes.weapons.necromancer = 'Sickle';
@@ -98,7 +127,7 @@ define([
 				spritesheet: `${this.folderName}/images/avatar.png`,
 				x: 0,
 				y: 0
-			};
+			};*/
 		},
 
 		beforeGetSpellTemplate: function (spell) {
@@ -111,12 +140,10 @@ define([
 		},
 
 		beforeGetSkins: function (skins) {
-			skins['necromancer 1'] = {
+			skins['1.8'] = {
 				name: 'Necromancer 1',
 				sprite: [0, 0],
-				class: 'necromancer',
-				spritesheet: `${this.folderName}/images/inGameSprite.png`,
-				default: true
+				spritesheet: `${this.folderName}/images/inGameSprite.png`
 			};
 		},
 
@@ -124,7 +151,16 @@ define([
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
 				types.oneHanded[s] = {
 					sprite: [i, 0],
-					spellName: 'harvest life',
+					spellName: 'melee',
+					spellConfig: {
+						statType: ['str', 'int'],
+						statMult: 0.76,
+						cdMax: 6,
+						useWeaponRange: true,
+						random: {
+							damage: [1.5, 5.7]
+						}
+					},
 					spritesheet: `${this.folderName}/images/items.png`
 				};
 			}, this);
@@ -133,27 +169,24 @@ define([
 		beforeGetSpellsConfig: function (spells) {
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
-				statMult: 1.34,
-				element: 'physical',
-				auto: true,
-				cdMax: 6,
-				manaCost: 0,
+				statMult: 1,
+				cdMax: 12,
+				manaCost: 5,
 				range: 1,
 				random: {
-					damage: [1.5, 5.7],
-					healPercent: [5, 15]
+					damage: [3, 11],
+					healPercent: [10, 30]
 				}
 			};
 
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
-				statMult: 0.1,
-				element: 'physical',
+				statMult: 0.27,
 				cdMax: 7,
 				manaCost: 5,
 				range: 9,
 				random: {
-					damagePercent: [100, 380],
+					damagePercent: [20, 76],
 					hpPercent: [40, 60]
 				}
 			};
@@ -161,7 +194,6 @@ define([
 			spells['blood barrier'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				element: 'physical',
 				cdMax: 20,
 				manaCost: 5,
 				range: 9,

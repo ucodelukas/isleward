@@ -33,7 +33,7 @@ define([
 				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
-				zoneName: character.zoneName || 'tutorial',
+				zoneName: character.zoneName || 'fjolarok',
 				x: character.x,
 				y: character.y,
 				account: character.account,
@@ -46,7 +46,7 @@ define([
 
 			var blueprintStats = character.components.find(c => c.type == 'stats') || {};
 			extend(true, blueprintStats, classes.stats[obj.class]);
-			blueprintStats.values.hpMax = 10 + ((blueprintStats.values.level || 1) * 40);
+			blueprintStats.values.hpMax = (blueprintStats.values.level || 1) * 32.7;
 			if (!blueprintStats.values.hp)
 				blueprintStats.values.hp = blueprintStats.values.hpMax;
 			var stats = obj.addComponent('stats');
@@ -57,6 +57,11 @@ define([
 				stats.stats[s] = blueprintStats.stats[s];
 			}
 			stats.vitScale = blueprintStats.vitScale;
+
+			var gainStats = classes.stats[character.class].gainStats;
+			for (var s in gainStats) {
+				stats.values[s] += (gainStats[s] * stats.values.level);
+			}
 
 			obj.portrait = classes.portraits[character.class];
 

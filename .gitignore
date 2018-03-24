@@ -2,5 +2,7 @@ node_modules
 storage.db
 *.sublime-project
 *.sublime-workspace
-
 *.css
+creds.js
+sheetsConfig.js
+!helpers/item-tooltip/styles.css

@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -10,22 +10,22 @@ define([
 
 		ttl: -1,
 
-		init: function(blueprint) {
-			if (blueprint.ownerId != null) 
+		init: function (blueprint) {
+			if (blueprint.ownerId != null)
 				this.ownerId = blueprint.ownerId;
 
-			if (this.ownerId != null)
-				this.ttl = 600;
+			if (blueprint.ttl)
+				this.ttl = blueprint.ttl;
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			return {
 				type: 'chest',
 				ownerId: this.ownerId
 			};
 		},
 
-		update: function() {
+		update: function () {
 			if (this.ttl > 0) {
 				this.ttl--;
 
@@ -34,7 +34,7 @@ define([
 			}
 		},
 
-		collisionEnter: function(obj) {
+		collisionEnter: function (obj) {
 			if (!obj.player)
 				return;
 
@@ -43,8 +43,7 @@ define([
 				if (ownerId instanceof Array) {
 					if (ownerId.indexOf(obj.serverId) == -1)
 						return;
-				}
-				else if (ownerId != obj.serverId)
+				} else if (ownerId != obj.serverId)
 					return;
 			}
 

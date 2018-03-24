@@ -9,13 +9,6 @@ define([
 		items: [],
 
 		init: function (blueprint) {
-			this.items.forEach(function (i) {
-				if ((i.stats) && (i.stats.hpMax)) {
-					i.stats.vit = i.stats.hpMax;
-					delete i.stats.hpMax;
-				}
-			});
-
 			events.emit('onGetItems', this.items);
 		},
 		extend: function (blueprint) {
@@ -34,11 +27,6 @@ define([
 				for (var i = 0; i < nLen; i++) {
 					var nItem = newItems[i];
 					var nId = nItem.id;
-
-					if ((nItem.stats) && (nItem.stats.hpMax)) {
-						nItem.stats.vit = nItem.stats.hpMax;
-						delete nItem.stats.hpMax;
-					}
 
 					var findItem = items.find(function (item) {
 						return (item.id == nId);

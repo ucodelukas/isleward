@@ -6,7 +6,7 @@ define([
 	'ui/factory',
 	'js/objects/objects',
 	'js/system/client'
-], function(
+], function (
 	events,
 	template,
 	styles,
@@ -21,7 +21,7 @@ define([
 
 		modal: true,
 
-		postRender: function() {
+		postRender: function () {
 			//this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
@@ -34,11 +34,11 @@ define([
 			this.onEvent('onResize', this.onResize.bind(this));
 		},
 
-		patreon: function() {
-			window.open('http://patreon.com/bigbadwaffle', '_blank');
+		patreon: function () {
+			window.open('https://patreon.com/bigbadwaffle', '_blank');
 		},
 
-		charSelect: function() {
+		charSelect: function () {
 			client.request({
 				module: 'cons',
 				method: 'unzone'
@@ -49,7 +49,7 @@ define([
 			renderer.buildTitleScreen();
 
 			events.emit('onShowCharacterSelect');
-			$('[class^="ui"]:not(.ui-container)').each(function(i, el) {
+			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
 				var ui = $(el).data('ui');
 				if ((ui) && (ui.destroy))
 					ui.destroy();
@@ -57,11 +57,11 @@ define([
 			factory.build('characters', {});
 		},
 
-		toggleScreen: function() {
+		toggleScreen: function () {
 			this.el.find('.btnScreen').html(renderer.toggleScreen());
 		},
 
-		onResize: function() {
+		onResize: function () {
 			var isFullscreen = (window.innerHeight == screen.height);
 			if (isFullscreen)
 				this.el.find('.btnScreen').html('Windowed');
@@ -69,26 +69,25 @@ define([
 				this.el.find('.btnScreen').html('Fullscreen');
 		},
 
-		toggle: function() {
+		toggle: function () {
 			this.onResize();
-		
+
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
 				this.show();
 				events.emit('onShowOverlay', this.el);
-			}
-			else {
+			} else {
 				this.hide();
 				events.emit('onHideOverlay', this.el);
 			}
 		},
 
-		logOut: function() {
+		logOut: function () {
 			window.location = window.location;
 		},
 
-		onKeyDown: function(key) {
+		onKeyDown: function (key) {
 			if (key == 'esc')
 				this.toggle();
 		}

@@ -159,10 +159,24 @@ define([
 					var skinBlueprint = skins.getBlueprint(item.id);
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
+				} else if (item.generate) {
+					var generated = generator.generate(item);
+					if (item.worth)
+						generated.worth = item.worth;
+					if (item.infinite)
+						generated.infinite = true;
+					item = generated;
 				}
 
-				list.items.push(item);
+				var id = 0;
+				list.items.forEach(function (checkItem) {
+					if (checkItem.id >= id)
+						id = checkItem.id + 1;
+				});
 
+				item.id = id;
+
+				list.items.push(item);
 			}
 		},
 

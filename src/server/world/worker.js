@@ -22,7 +22,8 @@ requirejs([
 	'config/classes',
 	'config/spellsConfig',
 	'config/spells',
-	'items/config/types'
+	'items/config/types',
+	'security/sheets'
 ], function (
 	extend,
 	helpers,
@@ -37,20 +38,11 @@ requirejs([
 	classes,
 	spellsConfig,
 	spells,
-	itemTypes
+	itemTypes,
+	sheets
 ) {
 	var onDbReady = function () {
-		var oldExtend = extend;
-		global.extend = function () {
-			try {
-				oldExtend.apply(null, arguments);
-				return arguments[1];
-			} catch (e) {
-				console.log(arguments);
-				throw e;
-			}
-		};
-
+		global.extend = extend;
 		global._ = helpers;
 		global.instancer = _instancer;
 		require('../misc/random');
@@ -68,6 +60,7 @@ requirejs([
 				return;
 
 			console.log('Error Logged: ' + e.toString());
+			console.log(e.stack);
 
 			io.set({
 				ent: new Date(),
@@ -95,6 +88,7 @@ requirejs([
 		spellsConfig.init();
 		spells.init();
 		itemTypes.init();
+		//sheets.init();
 
 		process.send({
 			method: 'onReady'

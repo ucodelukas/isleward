@@ -63,7 +63,7 @@ define([
 			} else
 				player = this.players.find(p => p.socket.id == socket.id);
 
-			if ((!player) || (player.permadead))
+			if ((!player) || ((player.permadead) && (['getCharacterList', 'getCharacter', 'deleteCharacter'].indexOf(msg.method) === -1)))
 				return;
 
 			var cpn = player[msg.cpn];

@@ -151,10 +151,12 @@ define([
 			if (item.power)
 				this.tooltip.find('.power').show();
 
-			if (item.level > window.player.stats.values.level)
+			var playerStats = window.player.stats.values;
+			var level = playerStats.originalLevel || playerStats.level;
+			if (item.level > level)
 				this.tooltip.find('.level').addClass('high-level');
 
-			if ((item.material) || (item.quest) || (item.ability)) {
+			if ((item.material) || (item.quest)) {
 				this.tooltip.find('.level').hide();
 				this.tooltip.find('.info').hide();
 
@@ -172,7 +174,7 @@ define([
 
 			if (item.spell) {
 				this.tooltip.find('.spellName')
-					.html('<br />' + item.spell.name)
+					.html(item.spell.name)
 					.addClass('q' + item.spell.quality)
 					.show();
 				this.tooltip.find('.damage')

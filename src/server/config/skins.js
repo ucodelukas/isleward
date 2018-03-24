@@ -4,90 +4,102 @@ define([
 	events
 ) {
 	var config = {
-		'wizard 1': {
+		'1.0': {
 			name: 'Wizard 1',
 			sprite: [2, 0],
-			class: 'wizard',
+			defaultSpirit: 'owl',
 			default: true
 		},
-		'wizard 2': {
-			name: 'Wizard 2',
-			sprite: [3, 0],
-			class: 'wizard',
-			default: true
-		},
-		'warrior 1': {
-			name: 'Warrior 1',
-			sprite: [1, 1],
-			class: 'warrior',
-			default: true
-		},
-		'warrior 2': {
-			name: 'Warrior 2',
-			sprite: [2, 1],
-			class: 'warrior',
-			default: true
-		},
-		'cleric 1': {
-			name: 'Cleric 1',
-			sprite: [4, 0],
-			class: 'cleric',
-			default: true
-		},
-		'cleric 2': {
-			name: 'Cleric 2',
-			sprite: [5, 0],
-			class: 'cleric',
-			default: true
-		},
-		'thief 1': {
-			name: 'Thief 1',
-			sprite: [6, 0],
-			class: 'thief',
-			default: true
-		},
-		'thief 2': {
-			name: 'Thief 2',
-			sprite: [7, 0],
-			class: 'thief',
-			default: true
-		},
-
-		'gaekatla druid': {
-			name: 'Skin: Gaekatlan Druid',
-			sprite: [0, 4],
-			class: 'cleric'
-		},
-
 		'1.1': {
-			name: 'Sorcerer',
-			spritesheet: 'images/skins/0001.png',
-			sprite: [0, 0],
-			class: 'wizard'
+			name: 'Wizard 2',
+			sprite: [3, 0]
 		},
 		'1.2': {
-			name: 'Diviner',
-			spritesheet: 'images/skins/0001.png',
-			sprite: [1, 0],
-			class: 'cleric'
+			name: 'Warrior 1',
+			sprite: [1, 1],
+			defaultSpirit: 'bear',
+			default: true
 		},
 		'1.3': {
-			name: 'Cutthroat',
-			spritesheet: 'images/skins/0001.png',
-			sprite: [2, 0],
-			class: 'thief'
+			name: 'Warrior 2',
+			sprite: [2, 1]
 		},
 		'1.4': {
-			name: 'Man of War',
-			spritesheet: 'images/skins/0001.png',
-			sprite: [3, 0],
-			class: 'warrior'
+			name: 'Cleric 1',
+			sprite: [4, 0]
 		},
 		'1.5': {
+			name: 'Cleric 2',
+			sprite: [5, 0]
+		},
+		'1.6': {
+			name: 'Thief 1',
+			sprite: [6, 0],
+			defaultSpirit: 'lynx',
+			default: true
+		},
+		'1.7': {
+			name: 'Thief 2',
+			sprite: [7, 0]
+		},
+
+		'2.0': {
+			name: 'Gaekatlan Druid',
+			sprite: [0, 4]
+		},
+
+		//Elite Skin Pack
+		'10.0': {
+			name: 'Sorcerer',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [0, 0]
+		},
+		'10.1': {
+			name: 'Diviner',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [1, 0]
+		},
+		'10.2': {
+			name: 'Cutthroat',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [2, 0]
+		},
+		'10.3': {
+			name: 'Man of War',
+			spritesheet: 'images/skins/0001.png',
+			sprite: [3, 0]
+		},
+		'10.4': {
 			name: 'Occultist',
 			spritesheet: 'images/skins/0001.png',
-			sprite: [4, 0],
-			class: 'necromancer'
+			sprite: [4, 0]
+		},
+
+		//Templar Skin Pack
+		'11.0': {
+			name: 'Crusader 1',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [0, 0]
+		},
+		'11.1': {
+			name: 'Crusader 2',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [1, 0]
+		},
+		'11.2': {
+			name: 'Crusader 3',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [2, 0]
+		},
+		'11.3': {
+			name: 'Crusader 4',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [3, 0]
+		},
+		'11.4': {
+			name: 'Grand Crusader',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [4, 0]
 		}
 	};
 
@@ -103,7 +115,7 @@ define([
 		getSkinList: function (skins) {
 			var list = Object.keys(config)
 				.filter(function (s) {
-					return ((config[s].default) || (skins.some(f => (f == s))));
+					return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
 				})
 				.map(function (s) {
 					var res = extend(true, {}, config[s]);
@@ -111,29 +123,27 @@ define([
 					return res;
 				});
 
-			var result = {};
-			list.forEach(function (l) {
-				if (!result[l.class])
-					result[l.class] = [];
-
-				result[l.class].push({
-					name: l.name,
-					id: l.id,
-					sprite: l.sprite[0] + ',' + l.sprite[1],
-					spritesheet: l.spritesheet
+			var result = [];
+			list.forEach(function (skin) {
+				result.push({
+					name: skin.name,
+					id: skin.id,
+					sprite: skin.sprite[0] + ',' + skin.sprite[1],
+					spritesheet: skin.spritesheet,
+					defaultSpirit: skin.defaultSpirit
 				});
-			});
+			}, this);
 
 			return result;
 		},
 
 		getCell: function (skinId) {
-			var skin = config[skinId];
+			var skin = config[skinId] || config['1.0'];
 			return (skin.sprite[1] * 8) + skin.sprite[0];
 		},
 
 		getSpritesheet: function (skinId) {
-			var skin = config[skinId];
+			var skin = config[skinId] || config['1.0'];
 			return skin.spritesheet || 'characters';
 		}
 	};

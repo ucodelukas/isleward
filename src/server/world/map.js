@@ -343,8 +343,12 @@ define([
 				if (objZoneName != name)
 					blueprint.objZoneName = objZoneName;
 
-				if ((this.zone) && (this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
-					extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
+				if (this.zone) {
+					if ((this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
+						extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
+					else if ((this.zone.objects) && (this.zone.mobs[objZoneName.toLowerCase()]))
+						extend(true, blueprint, this.zone.mobs[objZoneName.toLowerCase()]);
+				}
 
 				if (blueprint.blocking)
 					this.collisionMap[blueprint.x][blueprint.y] = 1;
@@ -379,7 +383,7 @@ define([
 					this.hiddenRooms.push(blueprint);
 				} else if (!clientObj) {
 					if (!mapFile.properties.isRandom)
-						spawners.register(blueprint, mapFile.properties.spawnCd);
+						spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 					else {
 						var room = this.rooms.find(function (r) {
 							return (!(

@@ -1,9 +1,7 @@
 define([
-	'items/generators/quality',
-	'misc/events'
+	'items/generators/quality'
 ], function (
-	qualityGenerator,
-	events
+	qualityGenerator
 ) {
 	return {
 		type: 'gatherer',
@@ -106,7 +104,7 @@ define([
 				xp: resourceNode.xp,
 				items: gathering.inventory.items
 			});
-			events.emitNoSticky('beforeGatherResource', gatherResult, this.obj);
+			this.obj.instance.eventEmitter.emitNoSticky('beforeGatherResource', gatherResult, this.obj);
 			this.obj.fireEvent('beforeGatherResource', gatherResult, this.obj);
 
 			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
@@ -196,7 +194,7 @@ define([
 			if (!gatherResult.noChangeAmount)
 				resourceNode.gather();
 
-			this.obj.stats.getXp(gatherResult.xp);
+			this.obj.stats.getXp(gatherResult.xp, this.obj, gatherResult.obj);
 
 			if (gathering.destroyed) {
 				if (isFish) {
@@ -223,7 +221,7 @@ define([
 			var gatherResult = extend(true, {
 				nodeName: node.name
 			});
-			events.emitNoSticky('beforeEnterPool', gatherResult, this.obj);
+			this.obj.instance.eventEmitter.emitNoSticky('beforeEnterPool', gatherResult, this.obj);
 
 			var nodeType = node.resourceNode.nodeType;
 			var msg = `Press G to $ (${gatherResult.nodeName})`;

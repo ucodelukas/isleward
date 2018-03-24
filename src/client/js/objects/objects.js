@@ -20,6 +20,10 @@ define([
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
+
+			//Get saved value for showNames, or use the value set above
+			var showNames = window.localStorage.getItem('iwd_opt_shownames');
+			this.showNames = showNames ? (showNames == 'true') : this.showNames;
 		},
 
 		getLocation: function (x, y) {
@@ -46,7 +50,7 @@ define([
 			events.emit('onMobHover', mob);
 		},
 
-		getClosest: function (x, y, maxDistance, reverse, fromMob, callback) {
+		getClosest: function (x, y, maxDistance, reverse, fromMob) {
 			var objects = this.objects;
 			var oLen = objects.length;
 
@@ -71,6 +75,8 @@ define([
 
 				return (aDistance - bDistance);
 			});
+
+			list = list.filter((o) => ((o.aggro) && (o.aggro.faction != window.player.aggro.faction)));
 
 			if (!fromMob)
 				return list[0];
@@ -295,6 +301,9 @@ define([
 		onKeyDown: function (key) {
 			if (key == 'v') {
 				this.showNames = !this.showNames;
+
+				//Set new value in localStorage for showNames
+				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
 
 				var showNames = this.showNames;
 

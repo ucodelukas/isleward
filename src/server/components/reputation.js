@@ -40,8 +40,10 @@ define([
 				factionBlueprint = factions.getFaction(factionId);
 			} catch (e) {}
 
-			if (factionBlueprint == null)
+			if (factionBlueprint == null) {
+				console.log('No faction blueprint found');
 				return;
+			}
 
 			factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
 

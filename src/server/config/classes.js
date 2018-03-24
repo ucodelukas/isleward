@@ -4,61 +4,59 @@ define([
 	events
 ) {
 	var classes = {
+		list: ['bear', 'owl', 'lynx'],
 		portraits: {
-			warrior: {
+			bear: {
 				x: 0,
 				y: 0
 			},
-			cleric: {
-				x: 1,
-				y: 0
-			},
-			wizard: {
+			owl: {
 				x: 2,
 				y: 0
 			},
-			thief: {
+			lynx: {
 				x: 3,
 				y: 0
 			}
 		},
 		spells: {
-			wizard: ['ice spear', 'fireblast'],
-			cleric: ['healing circle'],
-			warrior: ['charge'],
-			thief: ['smokebomb']
+			owl: ['magic missile', 'ice spear'],
+			bear: ['slash', 'charge'],
+			lynx: ['flurry', 'smokebomb']
 		},
 		stats: {
-			wizard: {
+			owl: {
 				values: {
 					hpMax: 50
 				},
 				vitScale: 10,
+				gainStats: {
+					int: 1
+				}
 			},
-			cleric: {
-				values: {
-					hpMax: 60
-				},
-				vitScale: 10
-			},
-			warrior: {
+			bear: {
 				values: {
 					hpMax: 80
 				},
-				vitScale: 10
+				vitScale: 10,
+				gainStats: {
+					str: 1
+				}
 			},
-			thief: {
+			lynx: {
 				values: {
 					hpMax: 70
 				},
-				vitScale: 10
+				vitScale: 10,
+				gainStats: {
+					dex: 1
+				}
 			}
 		},
 		weapons: {
-			wizard: 'Gnarled Staff',
-			cleric: 'Mace',
-			thief: 'Dagger',
-			warrior: 'Axe'
+			owl: 'Gnarled Staff',
+			lynx: 'Dagger',
+			bear: 'Sword'
 		},
 
 		getSpritesheet: function (className) {
