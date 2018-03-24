@@ -19,6 +19,8 @@ define([
 		minions: [],
 
 		cast: function (action) {
+			return;
+
 			this.killMinion();
 
 			var obj = this.obj;
