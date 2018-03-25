@@ -306,6 +306,13 @@ define([
 					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
 				}
 			}
+
+			var originalValues = this.originalValues;
+			if (originalValues) {
+				originalValues.xp = values.xp;
+				originalValues.xpMax = values.xpMax;
+				originalValues.xpTotal = values.xpTotal;
+			}
 		},
 
 		kill: function (target) {

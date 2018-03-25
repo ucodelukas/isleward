@@ -28,7 +28,8 @@ define([
 		getReputation: 10,
 		loseReputation: 10,
 		setStat: 10,
-		die: 10
+		die: 10,
+		getXp: 10
 	};
 
 	var localCommands = [
@@ -358,6 +359,10 @@ define([
 
 		setStat: function (config) {
 			this.obj.stats.values[config.stat] = ~~config.value;
+		},
+
+		getXp: function (amount) {
+			this.obj.stats.getXp(amount, this.obj, this.obj);
 		},
 
 		die: function () {
