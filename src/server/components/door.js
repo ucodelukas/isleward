@@ -126,7 +126,7 @@ define([
 					return;
 
 				if (((key.singleUse) || (this.destroyKey)) && (key.keyId != 'world')) {
-					obj.inventory.destroyItem(key.id);
+					obj.inventory.destroyItem(key.id, 1);
 
 					obj.instance.syncer.queue('onGetMessages', {
 						id: obj.id,

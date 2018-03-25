@@ -27,7 +27,8 @@ module.exports = {
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -123,7 +124,7 @@ module.exports = {
 		sewerdoor: {
 			properties: {
 				cpnDoor: {
-					autoClose: 15,
+					autoClose: 171,
 					locked: true,
 					key: 'rustedSewer',
 					destroyKey: true
