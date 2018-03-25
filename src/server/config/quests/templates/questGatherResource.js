@@ -55,7 +55,7 @@ define([
 			afterGatherResource: function (gatherResult) {
 				if (gatherResult.nodeType != this.gatherType)
 					return;
-				else if ((this.requiredQuality) && (gatherResult.items[0].quality != this.requiredQuality))
+				else if ((this.requiredQuality) && (gatherResult.items[0].quality < this.requiredQuality))
 					return;
 
 				if ((this.obj.zoneName != this.zoneName) || (this.have >= this.need))

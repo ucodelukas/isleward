@@ -71,7 +71,7 @@ define([
 					(this.obj.zoneName != this.zoneName) ||
 					(
 						(this.quality) &&
-						(item.quality != this.quality)
+						(item.quality < this.quality)
 					) ||
 					(
 						(this.slot.indexOf) &&
