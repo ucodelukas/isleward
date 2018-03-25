@@ -94,39 +94,49 @@
 	.invite {
 		position: absolute;
 
-		right: 10px;
-		bottom: 164px;
+		right: 356px;
+		bottom: 10px;
+		height: 144px;
 
-		background-color: @gray;
-		border: 4px solid @lightGray;
+		background-color: fade(@darkGray, 90%);
 		padding: 8px;
 
 		color: @white;
 
 		.text {
-			height: 16px;
 			margin-bottom: 16px;
+			text-align: center;
+
+			> * {
+				display: block;
+				width: 100%;
+			}
+
+			.name {
+				margin-top: 10px;
+				margin-bottom: -4px;
+			}
 		}
 
 		.buttons {
 			[class^='btn'] {
-				width: 96px;
-				background-color: @lightGray;
+				width: 100%;
+				background-color: @blackA;
 				text-align: center;
 				padding: 8px;
 				cursor: pointer;
-
-				&:hover {
-					background-color: lighten(@lightGray, 20%);
-					color: @black;
-				}
+				color: @white;
 
 				&.btnDecline {
-					float: left;
 				}
 
 				&.btnAccept {
-					float: right;
+					margin-bottom: 10px;
+				}
+
+				&:hover {
+					background-color: @grayD;
+					color: @black;
 				}
 			}
 		}
