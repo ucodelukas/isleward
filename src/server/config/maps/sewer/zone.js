@@ -23,6 +23,7 @@ module.exports = {
 					blueprints: [{
 						chance: 2,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
