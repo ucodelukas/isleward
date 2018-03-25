@@ -76,7 +76,14 @@ define([
 				item.enchantedStats = enchantedStats;
 			} else if (msg.action == 'relevel') {
 				var offset = 1 + ~~(Math.random() * 2);
-				item.level = Math.min(20, item.level + offset);
+
+				if (!item.originalLevel)
+					item.level = Math.min(20, item.level + offset);
+				else {
+					offset = Math.min(20 - item.originalLevel, offset);
+					item.originalLevel = Math.min(20, item.originalLevel + offset);
+					item.level = Math.min(20, item.level + offset);
+				}
 			} else if (msg.action == 'reslot') {
 				if (item.effects)
 					return;
