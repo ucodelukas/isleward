@@ -485,9 +485,9 @@ define([
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
 							for (var i = 0; i < aLen; i++) {
-								var a = aggroList[i].obj;
+								var a = aggroList[i];
 
-								if (a.serverId == null)
+								if ((!a.threat) || (a.obj.serverId == null))
 									continue;
 
 								this.obj.inventory.dropBag(a.serverId, killSource);
