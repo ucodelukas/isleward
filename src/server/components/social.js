@@ -166,7 +166,7 @@ define([
 					event: 'onGetMessages',
 					data: {
 						messages: [{
-							class: msgStyle,
+							class: 'color-yellowB',
 							message: '(you to ' + playerName + '): ' + messageString,
 							type: 'chat'
 						}]
@@ -177,7 +177,7 @@ define([
 					event: 'onGetMessages',
 					data: {
 						messages: [{
-							class: msgStyle,
+							class: 'color-yellowB',
 							message: '(' + this.obj.name + ' to you): ' + messageString,
 							type: 'chat'
 						}]
