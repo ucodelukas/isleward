@@ -165,7 +165,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: learnMsg.msg || 'you cannot learn that ability',
 						type: 'info'
 					}]
@@ -630,7 +630,7 @@ define([
 						this.obj.instance.syncer.queue('onGetMessages', {
 							id: this.obj.id,
 							messages: [{
-								class: 'q0',
+								class: 'color-redA',
 								message: 'your bags are too full to loot any more items',
 								type: 'info'
 							}]

@@ -77,7 +77,7 @@ define([
 						player.instance.syncer.queue('onGetMessages', {
 							id: player.id,
 							messages: [{
-								class: 'q0',
+								class: 'color-greenB',
 								message: r.msg,
 								type: 'info'
 							}]

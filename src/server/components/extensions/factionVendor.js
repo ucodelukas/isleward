@@ -195,7 +195,7 @@ define([
 				requestedBy.instance.syncer.queue('onGetMessages', {
 					id: requestedBy.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: `your reputation is too low to buy that item`,
 						type: 'info'
 					}]

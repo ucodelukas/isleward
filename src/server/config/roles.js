@@ -82,7 +82,7 @@ define([
 			player.instance.syncer.queue('onGetMessages', {
 				id: player.id,
 				messages: {
-					class: 'color-green',
+					class: 'color-redA',
 					message: msg
 				}
 			}, [player.serverId]);

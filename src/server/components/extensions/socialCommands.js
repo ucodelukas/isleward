@@ -116,7 +116,7 @@ define([
 			obj.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q0',
+						class: 'color-yellowB',
 						message: 'joined channel: ' + value,
 						type: 'info'
 					}]
@@ -140,7 +140,7 @@ define([
 				obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'you are not currently in that channel',
 							type: 'info'
 						}]
@@ -168,7 +168,7 @@ define([
 			this.obj.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q0',
+						class: 'color-yellowB',
 						message: 'left channel: ' + value,
 						type: 'info'
 					}]

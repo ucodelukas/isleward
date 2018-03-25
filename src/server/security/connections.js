@@ -39,7 +39,7 @@ define([
 				io.sockets.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q3',
+							class: 'color-blueB',
 							message: player.name + ' has gone offline'
 						}]
 					}],
@@ -98,7 +98,7 @@ define([
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q3',
+						class: 'color-blueB',
 						message: player.name + ' has gone offline'
 					}]
 				}],

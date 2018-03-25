@@ -39,9 +39,11 @@ define([
 				if (!this.global)
 					this.obj.syncer.set(false, 'chatter', 'msg', pick.msg);
 				else {
+					//HACK
+					//This shouldn't always be pink, but only events use this atm so it's fine
 					this.obj.instance.syncer.queue('onGetMessages', {
 						messages: {
-							class: 'q2',
+							class: 'color-pinkB',
 							message: this.obj.name + ': ' + pick.msg
 						}
 					});

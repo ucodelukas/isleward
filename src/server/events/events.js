@@ -158,7 +158,7 @@ define([
 			if (event.winText) {
 				this.instance.syncer.queue('onGetMessages', {
 					messages: {
-						class: 'q4',
+						class: 'color-pinkB',
 						message: event.winText
 					}
 				});
@@ -210,7 +210,7 @@ define([
 				if (n) {
 					this.instance.syncer.queue('onGetMessages', {
 						messages: {
-							class: 'q4',
+							class: 'color-pinkB',
 							message: n.msg
 						}
 					});

@@ -131,7 +131,7 @@ define([
 					obj.instance.syncer.queue('onGetMessages', {
 						id: obj.id,
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'The ' + key.name + ' disintegrates on use',
 							type: 'info'
 						}]

@@ -101,7 +101,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: equipMsg.msg || 'you cannot equip that item',
 						type: 'info'
 					}]
@@ -296,7 +296,7 @@ define([
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
-							class: 'q4',
+							class: 'color-redA',
 							message: 'you unequip your ' + item.name + ' as it zaps you',
 							type: 'rep'
 						}]

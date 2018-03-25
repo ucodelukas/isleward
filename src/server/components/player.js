@@ -120,7 +120,7 @@ define([
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q3',
+						class: 'color-blueB',
 						message: this.obj.name + ' has come online'
 					}]
 				}],

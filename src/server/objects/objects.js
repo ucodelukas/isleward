@@ -284,7 +284,7 @@ define([
 				io.sockets.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q1',
+							class: 'color-blueB',
 							message: player.name + ' has reached level ' + obj.level
 						}]
 					}],

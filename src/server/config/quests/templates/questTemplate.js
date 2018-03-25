@@ -16,7 +16,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-yellowB',
 						message: 'quest obtained (' + this.name + ')'
 					}]
 				}, [this.obj.serverId]);
@@ -34,7 +34,7 @@ define([
 			this.obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
-					class: 'q0',
+					class: 'color-yellowB',
 					message: 'quest ready for turn-in (' + this.name + ')'
 				}]
 			}, [this.obj.serverId]);
@@ -53,7 +53,7 @@ define([
 			obj.instance.syncer.queue('onGetMessages', {
 				id: obj.id,
 				messages: [{
-					class: 'q0',
+					class: 'color-yellowB',
 					message: 'quest completed (' + this.name + ')'
 				}]
 			}, [obj.serverId]);

@@ -155,7 +155,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: `you can't afford that item`,
 						type: 'info'
 					}]
@@ -177,7 +177,7 @@ define([
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: `you have already unlocked that skin`,
 							type: 'info'
 						}]
@@ -231,8 +231,8 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
-						message: item.name + ' (unlocked)',
+						class: 'color-greenB',
+						message: 'Unlocked skin: ' + item.name,
 						type: 'info'
 					}]
 				}, [this.obj.serverId]);

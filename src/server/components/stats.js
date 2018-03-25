@@ -454,7 +454,7 @@ define([
 
 							this.obj.instance.syncer.queue('onGetMessages', {
 								messages: {
-									class: 'color-red',
+									class: 'color-redA',
 									message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
 								}
 							});

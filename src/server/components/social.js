@@ -26,12 +26,12 @@ define([
 			};
 		},
 
-		sendMessage: function (msg) {
+		sendMessage: function (msg, color) {
 			this.obj.socket.emit('event', {
 				event: 'onGetMessages',
 				data: {
 					messages: [{
-						class: 'q0',
+						class: color || 'q0',
 						message: msg,
 						type: 'chat'
 					}]
@@ -44,7 +44,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'you are not in a party',
 							type: 'info'
 						}]
@@ -63,7 +63,7 @@ define([
 				player.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-grayB',
 							message: '(party: ' + charname + '): ' + message,
 							type: 'chat'
 						}]
@@ -84,7 +84,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'syntax: $channel message',
 							type: 'info'
 						}]
@@ -95,7 +95,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'you are not currently in channel: ' + channel,
 							type: 'info'
 						}]
@@ -108,7 +108,7 @@ define([
 						pList[i].socket.emit('events', {
 							onGetMessages: [{
 								messages: [{
-									class: 'q0',
+									class: 'color-grayB',
 									message: '[' + channel + '] ' + this.obj.auth.charname + ': ' + message,
 									type: channel.trim()
 								}]
@@ -141,7 +141,7 @@ define([
 
 			var charname = this.obj.auth.charname;
 
-			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('q');
+			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
 
 			var messageString = msg.data.message;
 			if (messageString[0] == '@') {
@@ -226,8 +226,8 @@ define([
 			if (!source)
 				return;
 
-			source.social.sendMessage('invite sent');
-			this.sendMessage(source.name + ' has invited you to join a party');
+			source.social.sendMessage('invite sent', 'color-yellowB');
+			this.sendMessage(source.name + ' has invited you to join a party', 'color-yellowB');
 
 			this.obj.socket.emit('event', {
 				event: 'onGetInvite',
@@ -262,7 +262,7 @@ define([
 				var msg = source.name + ' has joined the party';
 				if (p == sourceId)
 					msg = 'you have joined a party';
-				player.social.sendMessage(msg);
+				player.social.sendMessage(msg, 'color-yellowB');
 
 				player
 					.socket.emit('event', {
@@ -277,7 +277,7 @@ define([
 			if (!target)
 				return;
 
-			this.sendMessage(target.name + ' declined your party invitation');
+			this.sendMessage(target.name + ' declined your party invitation', 'color-redA');
 		},
 
 		//Gets called on the player that requested to leave
@@ -358,7 +358,7 @@ define([
 		//Gets called on the player that requested the removal
 		removeFromParty: function (msg) {
 			if (!this.isPartyLeader) {
-				this.sendMessage('you are not the party leader');
+				this.sendMessage('you are not the party leader', 'color-redA');
 				return;
 			}
 
@@ -374,7 +374,7 @@ define([
 						onGetParty: [this.party],
 						onGetMessages: [{
 							messages: [{
-								class: 'q0',
+								class: 'color-yellowB',
 								message: target.name + ' has been removed from the party'
 							}]
 						}]
@@ -384,7 +384,7 @@ define([
 			target.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: 'you have been removed from the party'
 					}]
 				}],
@@ -400,7 +400,7 @@ define([
 				this.isPartyLeader = null;
 				this.updatePartyOnThread();
 
-				this.sendMessage('your party has been disbanded');
+				this.sendMessage('your party has been disbanded', 'color-yellowB');
 			}
 		},
 
