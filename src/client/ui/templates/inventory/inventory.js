@@ -68,7 +68,9 @@ define([
 
 			this.find('.split-box .amount').on('mousewheel', this.onChangeStackAmount.bind(this));
 			this.find('.split-box').on('click', this.splitStackEnd.bind(this, true));
-			this.find('.split-box .button').on('click', this.splitStackEnd.bind(this));
+			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this));
+			this.find('.split-box .btnLess').on('click', this.onChangeStackAmount.bind(this, null, -1));
+			this.find('.split-box .btnMore').on('click', this.onChangeStackAmount.bind(this, null, 1));
 		},
 
 		build: function () {
@@ -373,8 +375,12 @@ define([
 		splitStackEnd: function (cancel, e) {
 			var box = this.find('.split-box');
 
-			if ((!e) || (e.target != box.find('.button')[0]))
+			if ((!e) || (e.target != box.find('.btnSplit')[0])) {
+				if ((cancel) && (!$(e.target).hasClass('button')))
+					box.hide();
+
 				return;
+			}
 
 			box.hide();
 
@@ -392,9 +398,9 @@ define([
 			});
 		},
 
-		onChangeStackAmount: function (e) {
+		onChangeStackAmount: function (e, amount) {
 			var item = this.find('.split-box').data('item');
-			var delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
+			var delta = e ? ((e.originalEvent.deltaY > 0) ? -1 : 1) : amount;
 			if (this.shiftDown)
 				delta *= 10;
 			var amount = this.find('.split-box .amount');

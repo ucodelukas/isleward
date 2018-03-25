@@ -133,7 +133,7 @@
 			top: 50%;
 			transform: translate(-50%, -50%);
 			width: 200px;
-			height: 143px;
+			height: 147px;
 
 			> .heading {
 				color: @blueA;
@@ -153,22 +153,38 @@
 				padding: 10px;
 
 				.amount {
+					float: left;
 					color: @white;
 					text-align: center;
-					width: 100%;
+					width: calc(100% - 80px);
 					height: 36px;
-					padding-top: 8px;
+					padding-top: 12px;
 				}
 
 				.button {
 					width: 100%;
 					height: 36px;
-					margin-top: 5px;
 					background-color: @blueC;
 					color: @white;
 
 					&:hover {
 						background-color: @blueB;
+					}
+
+					&:not(.btnSplit) {
+						width: 40px;
+						float: left;
+						color: @white;
+						background-color: @blackB;
+
+						&:hover {
+							background-color: @blackA;
+						}
+					}
+
+					&.btnSplit {
+						margin-top: 45px;
+						clear: both;
 					}
 				}
 			}
