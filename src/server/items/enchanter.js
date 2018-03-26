@@ -72,6 +72,12 @@ define([
 						item.stats[p] = 0;
 
 					item.stats[p] += enchantedStats[p];
+
+					if (p == 'lvlRequire') {
+						item.level -= enchantedStats[p];
+						if (item.level < 1)
+							item.level = 1;
+					}
 				}
 				item.enchantedStats = enchantedStats;
 			} else if (msg.action == 'relevel') {
