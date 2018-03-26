@@ -340,7 +340,7 @@ define([
 					mult = (1 + (partySize * 0.1));
 				}
 
-				if ((a.obj.stats) && (!a.obj.follower)) {
+				if ((a.obj.stats) && (!a.obj.follower) && (!a.obj.player)) {
 					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 					//Mobs that are farther then 10 levels from you, give no xp
 					//We don't currently do this for quests/herb gathering
@@ -729,7 +729,7 @@ define([
 			},
 
 			beforeGetXp: function (event) {
-				if (!event.target.mob)
+				if ((!event.target.mob) && (!event.target.player))
 					return;
 
 				event.amount *= this.getKillStreakCoefficient(event.target.name);
