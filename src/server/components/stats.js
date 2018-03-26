@@ -316,6 +316,9 @@ define([
 		},
 
 		kill: function (target) {
+			if (target.player)
+				return;
+
 			var level = target.stats.values.level;
 
 			//Who should get xp?
@@ -340,7 +343,7 @@ define([
 					mult = (1 + (partySize * 0.1));
 				}
 
-				if ((a.obj.stats) && (!a.obj.follower) && (!a.obj.player)) {
+				if ((a.obj.stats) && (!a.obj.follower)) {
 					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 					//Mobs that are farther then 10 levels from you, give no xp
 					//We don't currently do this for quests/herb gathering
