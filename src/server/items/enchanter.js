@@ -130,8 +130,8 @@ define([
 			} else if (msg.action == 'reforge') {
 				if (!item.spell)
 					return;
+				console.log(item);
 				var spellName = item.spell.name.toLowerCase();
-
 				var oldSpell = item.spell;
 				delete item.spell;
 

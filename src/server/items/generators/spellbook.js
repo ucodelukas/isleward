@@ -1,9 +1,11 @@
 define([
 	'config/spells',
-	'config/spellsConfig'
+	'config/spellsConfig',
+	'items/config/types'
 ], function (
 	spells,
-	spellsConfig
+	spellsConfig,
+	configTypes
 ) {
 	var maxQuality = 5;
 
@@ -55,6 +57,12 @@ define([
 				extend(true, item.spell, blueprint.spellConfig);
 			}
 
+			if (item.type) {
+				var typeConfig = configTypes.types[item.slot][item.type];
+				if (typeConfig)
+					spell = extend(true, {}, spell, typeConfig.spellConfig);
+			}
+
 			var propertyPerfection = [];
 
 			var randomProperties = spell.random || {};
@@ -75,6 +83,7 @@ define([
 
 				var int = r.indexOf('i_') == 0;
 				var val = range[0] + ((range[1] - range[0]) * roll);
+
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
