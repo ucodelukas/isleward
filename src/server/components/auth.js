@@ -167,7 +167,7 @@ define([
 			}
 
 			var character = JSON.parse(result || '{}');
-			fixes.fix(character);
+			fixes.fixCharacter(character);
 
 			//Hack for old characters
 			if (!character.skinId)
@@ -221,6 +221,8 @@ define([
 			}
 
 			this.stash = JSON.parse(result || '[]');
+
+			fixes.fixStash(this.stash);
 
 			if (this.skins != null) {
 				this.verifySkin(character);

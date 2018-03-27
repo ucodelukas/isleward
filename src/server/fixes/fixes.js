@@ -4,16 +4,18 @@ define([
 
 ) {
 	return {
-		fix: function (player) {
-			this.fixInventory(player);
+		fixCharacter: function (player) {
+			var inv = player.components.find(c => (c.type == 'inventory'));
+			if ((inv) && (inv.items))
+				this.fixItems(inv.items);
 		},
 
-		fixInventory: function (player) {
-			var inv = player.components.find(c => (c.type == 'inventory'));
-			if ((!inv) || (!inv.items))
-				return;
+		fixStash: function (stash) {
+			this.fixItems(stash);
+		},
 
-			inv.items
+		fixItems: function (items) {
+			items
 				.filter(i => ((i.name == 'Cowl of Obscurity') && (!i.factions)))
 				.forEach(function (i) {
 					i.factions = [{
