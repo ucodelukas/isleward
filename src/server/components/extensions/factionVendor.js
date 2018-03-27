@@ -165,6 +165,10 @@ define([
 						generated.worth = item.worth;
 					if (item.infinite)
 						generated.infinite = true;
+
+					if (item.factions)
+						generated.factions = item.factions;
+
 					item = generated;
 				}
 
