@@ -322,6 +322,10 @@ define([
 				if (item.level > level)
 					nItemStats = generatorStats.rescale(item, level);
 
+				var tempItem = extend(true, {}, item);
+				tempItem.stats = nItemStats;
+				this.obj.fireEvent('afterRescaleItemStats', tempItem);
+
 				for (var s in nItemStats) {
 					if (!stats[s])
 						stats[s] = 0;
