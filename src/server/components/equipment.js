@@ -326,11 +326,11 @@ define([
 				tempItem.stats = extend(true, {}, nItemStats);
 				this.obj.fireEvent('afterRescaleItemStats', tempItem);
 
-				for (var s in nItemStats) {
+				for (var s in tempItem.stats) {
 					if (!stats[s])
 						stats[s] = 0;
 
-					stats[s] += nItemStats[s];
+					stats[s] += tempItem.stats[s];
 				}
 			}
 

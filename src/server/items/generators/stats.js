@@ -104,11 +104,11 @@ define([
 					div *= 2;
 
 				if (calcPerfection)
-					return (calcPerfection / 100);
+					return (calcPerfection / (100 * div));
 				else if (perfection == null)
 					return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 				else
-					return (1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
+					return ~~((1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div);
 			},
 			regenHp: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
