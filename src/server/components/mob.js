@@ -207,7 +207,7 @@ define([
 
 		canChase: function (obj) {
 			var distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
-			return (distanceFromHome <= this.maxChaseDistance)
+			return ((!this.goHome) && (distanceFromHome <= this.maxChaseDistance));
 		}
 	};
 });

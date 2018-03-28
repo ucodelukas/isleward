@@ -259,11 +259,13 @@ define([
 
 				if (amount == null) {
 					list.splice(i, 1);
+					obj.aggro.unAggro(this.obj);
 					break;
 				} else {
 					l.threat -= amount;
 					if (l.threat <= 0) {
 						list.splice(i, 1);
+						obj.aggro.unAggro(this.obj);
 						break;
 					}
 				}
