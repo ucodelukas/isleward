@@ -64,9 +64,9 @@ define([
 		},
 
 		init: function () {
-			events.emit('onBeforeGetClasses', classes);
+			events.emit('onBeforeGetClasses', spirits);
 		}
 	};
 
-	return classes;
+	return spirits;
 });
