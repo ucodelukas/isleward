@@ -100,6 +100,11 @@ define([
 			name: 'Grand Crusader',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [4, 0]
+		},
+		'11.5': {
+			name: 'Infernal Crusader',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [5, 0]
 		}
 	};
 
