@@ -125,9 +125,9 @@ define([
 
 			msg.data.message = msg.data.message
 				.split('<')
-				.join('')
+				.join('&lt;')
 				.split('>')
-				.join('');
+				.join('&gt;');
 
 			if (!msg.data.message)
 				return;
