@@ -126,7 +126,19 @@ define([
 			if ((item.spell) && (item.spell.values)) {
 				var abilityValues = '';
 				for (var p in item.spell.values) {
-					abilityValues += p + ': ' + item.spell.values[p] + '<br/>';
+					if (compare && shiftDown) {
+						var delta = item.spell.values[p] - compare.spell.values[p];
+						var rowClass = "";
+						if (delta > 0 ) {
+							rowClass = 'gainDamage';
+							delta = "+" + delta;
+						} else if (delta < 0) {
+							rowClass = 'loseDamage';
+						}
+						abilityValues += '<div class="' + rowClass + '">' + p + ': ' + delta + '</div>';
+					} else {
+						abilityValues += p + ': ' + item.spell.values[p] + '<br/>';
+					}
 				}
 				if (!item.ability)
 					abilityValues = abilityValues;
