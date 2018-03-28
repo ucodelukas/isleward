@@ -88,7 +88,7 @@ define([
 					val = ~~val;
 					r = r.replace('i_', '');
 				} else
-					val = ~~(val * 10) / 10;
+					val = ~~(val * 100) / 100;
 
 				item.spell.values[r] = val;
 
