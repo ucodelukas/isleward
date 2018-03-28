@@ -562,9 +562,13 @@ define([
 				delete this.sessionDuration;
 			}
 
+			var values = extend(true, {}, this.originalValues || this.values);
+			values.hp = this.values.hp;
+			values.mana = this.values.mana;
+
 			return {
 				type: 'stats',
-				values: this.originalValues || this.values,
+				values: values,
 				stats: this.stats
 			};
 		},
