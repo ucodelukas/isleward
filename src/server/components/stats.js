@@ -640,9 +640,6 @@ define([
 		},
 
 		rescale: function (level, isMob) {
-			if (level >= (this.originalValues || this.values).level)
-				return;
-
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
 
 			var oldHp = this.values.hp;
@@ -715,6 +712,13 @@ define([
 		},
 
 		events: {
+			transferComplete: function () {
+				var maxLevel = this.obj.instance.zone.level[1];
+				if (maxLevel < this.obj.stats.values.level)
+					maxLevel = this.obj.stats.values.level;
+				this.obj.stats.rescale(maxLevel);
+			},
+
 			afterKillMob: function (mob) {
 				var mobKillStreaks = this.stats.mobKillStreaks;
 				var mobName = mob.name;

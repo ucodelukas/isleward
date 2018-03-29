@@ -54,7 +54,7 @@ define([
 			boxes.eq(1).find('.text').html(Math.floor(stats.mana) + '/' + ~~stats.manaMax);
 
 			var level = stats.level;
-			if (stats.originalLevel)
+			if ((stats.originalLevel) && (stats.originalLevel != level))
 				level = stats.originalLevel + ' (' + stats.level + ')';
 
 			boxes.eq(2).find('.text').html('level: ' + level);
