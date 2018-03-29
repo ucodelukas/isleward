@@ -128,6 +128,8 @@ define([
 				for (var p in item.spell.values) {
 					if (compare && shiftDown) {
 						var delta = item.spell.values[p] - compare.spell.values[p];
+						// this has to use Math.round and EPSILON, otherwise 3.15 - 2 = 1.14 due to floating point imprecision... and that's not cool.
+						delta = Math.round((delta + Number.EPSILON) * 100  ) / 100;
 						var rowClass = "";
 						if (delta > 0 ) {
 							rowClass = 'gainDamage';
