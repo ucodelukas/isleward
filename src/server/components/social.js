@@ -1,9 +1,11 @@
 define([
 	'world/atlas',
-	'config/roles'
+	'config/roles',
+	'misc/events'
 ], function (
 	atlas,
-	roles
+	roles,
+	events
 ) {
 	return {
 		type: 'social',
@@ -144,6 +146,7 @@ define([
 			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
 
 			var messageString = msg.data.message;
+			events.emit('onBeforeSendMessage', messageString, charname);
 			if (messageString[0] == '@') {
 				var playerName = '';
 				//Check if there's a space in the name
