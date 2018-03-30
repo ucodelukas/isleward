@@ -14,7 +14,7 @@ define([
 			afterDealDamage: function (item, damage, target) {
 				var rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
 
-				var amount = (damage.amount / 100) * rolls.percentage;
+				var amount = (damage.dealt / 100) * rolls.percentage;
 
 				this.stats.takeDamage({
 					amount: amount,

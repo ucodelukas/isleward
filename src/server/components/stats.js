@@ -398,6 +398,8 @@ define([
 			if (amount > this.values.hp)
 				amount = this.values.hp;
 
+			damage.dealt = amount;
+
 			this.values.hp -= amount;
 			var recipients = [];
 			if (this.obj.serverId != null)
