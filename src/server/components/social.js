@@ -146,7 +146,11 @@ define([
 			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
 
 			var messageString = msg.data.message;
-			events.emit('onBeforeSendMessage', messageString, charname);
+			var msgEvent = {
+				source: charname,
+				msg: messageString
+			};
+			events.emit('onBeforeSendMessage', msgEvent);
 			if (messageString[0] == '@') {
 				var playerName = '';
 				//Check if there's a space in the name
