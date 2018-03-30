@@ -58,6 +58,10 @@ define([
 			return true;
 		},
 
+		getXpMultiplier: function () {
+			return this.need;
+		},
+
 		events: {
 			afterKillMob: function (mob) {
 				if ((mob.name.toLowerCase() != this.mobName.toLowerCase()) || (this.have >= this.need))

@@ -38,6 +38,15 @@ define([
 			return true;
 		},
 
+		getXpMultiplier: function () {
+			if (this.requiredQuality == 2)
+				return 8;
+			else if (this.requiredQuality == 1)
+				return 6;
+			else
+				return this.need;
+		},
+
 		updateDescription: function () {
 			var typeName = this.typeName;
 			if (this.requiredQuality > 0)

@@ -46,8 +46,6 @@ define([
 
 			if (template)
 				quest.xp = template.xp;
-			else
-				quest.xp = Math.pow(this.instance.spawners.zone.level, 2) * 10;
 
 			//Calculate next id
 			var id = 0;
@@ -62,8 +60,15 @@ define([
 			quest.obj = obj;
 			quest.zoneName = zoneName;
 
-			if (!oQuests.obtain(quest, !!template))
+			if (!oQuests.obtain(quest, !!template)) {
+				console.log(template);
 				this.obtain(obj, template);
+			} else if (!template) {
+				var level = this.instance.spawners.zone.level;
+				level = level[0];
+				var xp = ~~(level * 22 * quest.getXpMultiplier());
+				quest.xp = xp;
+			}
 		}
 	};
 });
