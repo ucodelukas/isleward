@@ -1,38 +1,46 @@
 define([
-	'../misc/fileLister'
+	'misc/fileLister',
+	'misc/events',
+	'path'
 ], function(
-	fileLister
+	fileLister,
+	events,
+	pathUtilities
 ) {
 	var onReady = null;
 
 	var components = {
 		components: {},
-		waiting: null,
+		waiting: [],
 
 		init: function(callback) {
 			onReady = callback;
-			this.getComponentNames();
+			events.emit('onBeforeGetComponents', this.components);
+			this.getComponentFolder();
 		},
-		getComponentNames: function() {
-			this.waiting = fileLister.getFolder('./components/');
-			this.waiting = this.waiting.filter(w => (
-				(w.indexOf('components') == -1) && 
+
+		getComponentFolder: function() {
+			var files = fileLister.getFolder('./components/');
+			files = files.filter(w => (
+				(w.indexOf('components') == -1) &&
 				(w.indexOf('cpnBase') == -1) &&
 				(w.indexOf('projectile') == -1)
 			));
-			this.onGetComponentNames();
-		},
-		onGetComponentNames: function() {
-			for (var i = 0; i < this.waiting.length; i++) {
-				var name = this.waiting[i];
-				this.getComponent(name);
+			var fLen = files.length;
+			for (var i = 0; i < fLen; i++) {
+				this.getComponentFile(`./components/${files[i]}`);
 			}
 		},
-		getComponent: function(name) {
-			require([ './components/' + name ], this.onGetComponent.bind(this));
+
+		getComponentFile: function(path) {
+			var fileName = pathUtilities.basename(path);
+			fileName = fileName.replace('.js', '');
+			this.waiting.push(fileName);
+			require([ path ], this.onGetComponent.bind(this));
 		},
+
 		onGetComponent: function(template) {
-			this.waiting.spliceWhere(w => w == template.type + '.js');
+			this.waiting.spliceWhere(w => w == template.type);
 
 			this.components[template.type] = template;
 
