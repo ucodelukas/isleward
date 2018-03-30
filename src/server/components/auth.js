@@ -6,7 +6,8 @@ define([
 	'leaderboard/leaderboard',
 	'config/skins',
 	'config/roles',
-	'misc/profanities'
+	'misc/profanities',
+	'fixes/fixes'
 ], function (
 	bcrypt,
 	io,
@@ -15,7 +16,8 @@ define([
 	leaderboard,
 	skins,
 	roles,
-	profanities
+	profanities,
+	fixes
 ) {
 	return {
 		type: 'auth',
@@ -165,6 +167,7 @@ define([
 			}
 
 			var character = JSON.parse(result || '{}');
+			fixes.fixCharacter(character);
 
 			//Hack for old characters
 			if (!character.skinId)
@@ -218,6 +221,8 @@ define([
 			}
 
 			this.stash = JSON.parse(result || '[]');
+
+			fixes.fixStash(this.stash);
 
 			if (this.skins != null) {
 				this.verifySkin(character);

@@ -61,6 +61,8 @@ define([
 					cpn.transfer();
 			}
 
+			obj.fireEvent('transferComplete');
+
 			return obj;
 		},
 

@@ -575,6 +575,17 @@ define([
 
 		events: {
 			beforeRezone: function () {
+				this.spells.forEach(function (s) {
+					if (s.active) {
+						s.active = false;
+
+						var reserve = s.manaReserve;
+
+						if ((reserve) && (reserve.percentage))
+							this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+					}
+				}, this);
+
 				var callbacks = this.callbacks;
 				var cLen = callbacks.length;
 				for (var i = 0; i < cLen; i++) {

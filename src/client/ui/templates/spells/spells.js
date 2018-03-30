@@ -34,7 +34,7 @@ define([
 				var x = -(icon[0] * 64);
 				var y = -(icon[1] * 64);
 
-				var hotkey = (i == 0) ? 'space' : spells[i].id;
+				var hotkey = (spells[i].id == 0) ? 'space' : spells[i].id;
 
 				var html = templateSpell
 					.replace('$HOTKEY$', hotkey);
@@ -53,7 +53,7 @@ define([
 					.next().html(hotkey);
 
 				this.onGetSpellCooldowns({
-					spell: i,
+					spell: spells[i].id,
 					cd: spells[i].cd * 350 //HACK - we don't actually know how long a tick is
 				});
 			}
@@ -101,7 +101,9 @@ define([
 		},
 
 		onGetSpellCooldowns: function (options) {
-			var spell = this.spells[options.spell];
+			var spell = this.spells.find(function (s) {
+				return (s.id == options.spell);
+			});
 			spell.ttl = options.cd;
 			spell.ttlStart = +new Date;
 		},

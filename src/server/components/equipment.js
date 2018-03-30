@@ -322,11 +322,15 @@ define([
 				if (item.level > level)
 					nItemStats = generatorStats.rescale(item, level);
 
-				for (var s in nItemStats) {
+				var tempItem = extend(true, {}, item);
+				tempItem.stats = extend(true, {}, nItemStats);
+				this.obj.fireEvent('afterRescaleItemStats', tempItem);
+
+				for (var s in tempItem.stats) {
 					if (!stats[s])
 						stats[s] = 0;
 
-					stats[s] += nItemStats[s];
+					stats[s] += tempItem.stats[s];
 				}
 			}
 

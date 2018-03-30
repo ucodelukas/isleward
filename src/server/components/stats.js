@@ -316,6 +316,9 @@ define([
 		},
 
 		kill: function (target) {
+			if (target.player)
+				return;
+
 			var level = target.stats.values.level;
 
 			//Who should get xp?
@@ -559,9 +562,13 @@ define([
 				delete this.sessionDuration;
 			}
 
+			var values = extend(true, {}, this.originalValues || this.values);
+			values.hp = this.values.hp;
+			values.mana = this.values.mana;
+
 			return {
 				type: 'stats',
-				values: this.originalValues || this.values,
+				values: values,
 				stats: this.stats
 			};
 		},
@@ -633,9 +640,6 @@ define([
 		},
 
 		rescale: function (level, isMob) {
-			if (level >= (this.originalValues || this.values).level)
-				return;
-
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
 
 			var oldHp = this.values.hp;
@@ -708,6 +712,13 @@ define([
 		},
 
 		events: {
+			transferComplete: function () {
+				var maxLevel = this.obj.instance.zone.level[1];
+				if (maxLevel < this.obj.stats.values.level)
+					maxLevel = this.obj.stats.values.level;
+				this.obj.stats.rescale(maxLevel);
+			},
+
 			afterKillMob: function (mob) {
 				var mobKillStreaks = this.stats.mobKillStreaks;
 				var mobName = mob.name;
@@ -729,7 +740,7 @@ define([
 			},
 
 			beforeGetXp: function (event) {
-				if (!event.target.mob)
+				if ((!event.target.mob) && (!event.target.player))
 					return;
 
 				event.amount *= this.getKillStreakCoefficient(event.target.name);
