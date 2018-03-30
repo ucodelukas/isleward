@@ -1,7 +1,7 @@
 define([
-
+	'../security/io'
 ], function (
-
+	io
 ) {
 	return {
 		fixCharacter: function (player) {
