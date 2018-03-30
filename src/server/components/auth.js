@@ -243,6 +243,8 @@ define([
 
 		onGetSkins: function (msg, character, result) {
 			this.skins = JSON.parse(result || '[]');
+			fixes.fixSkins(this.username, this.skins);
+
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
 

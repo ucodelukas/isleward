@@ -1,7 +1,9 @@
 define([
-
+	'security/io',
+	'config/skins'
 ], function (
-
+	io,
+	configSkins
 ) {
 	return {
 		fixCharacter: function (player) {
@@ -23,6 +25,19 @@ define([
 						tier: 7
 					}];
 				});
+		},
+
+		fixSkins: function (username, skins) {
+			var length = skins.length;
+			skins = skins.filter(s => !!configSkins.getBlueprint(s));
+
+			if (length != skins.length) {
+				io.set({
+					ent: username,
+					field: 'skins',
+					value: JSON.stringify(skins)
+				});
+			}
 		}
 	};
 });

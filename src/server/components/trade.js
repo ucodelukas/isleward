@@ -41,7 +41,7 @@ define([
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
 					item.spritesheet = skinBlueprint.spritesheet;
-					id = item.id;
+					item.skinId = skinBlueprint.id;
 				}
 
 				item.id = id;
@@ -171,7 +171,7 @@ define([
 			}
 
 			if (item.type == 'skin') {
-				var haveSkin = this.obj.auth.doesOwnSkin(item.id);
+				var haveSkin = this.obj.auth.doesOwnSkin(item.skinId);
 
 				if (haveSkin) {
 					this.obj.instance.syncer.queue('onGetMessages', {
@@ -226,7 +226,7 @@ define([
 
 				this.obj.inventory.getItem(clonedItem);
 			} else {
-				this.obj.auth.saveSkin(item.id);
+				this.obj.auth.saveSkin(item.skinId);
 
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,

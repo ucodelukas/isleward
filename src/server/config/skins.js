@@ -120,7 +120,7 @@ define([
 		getSkinList: function (skins) {
 			var list = Object.keys(config)
 				.filter(function (s) {
-					return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
+				return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
 				})
 				.map(function (s) {
 					var res = extend(true, {}, config[s]);

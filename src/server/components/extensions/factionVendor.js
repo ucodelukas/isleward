@@ -157,6 +157,7 @@ define([
 
 				if (item.type == 'skin') {
 					var skinBlueprint = skins.getBlueprint(item.id);
+					item.skinId = item.id;
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
 				} else if (item.generate) {
