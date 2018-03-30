@@ -126,20 +126,20 @@ define([
 			if ((item.spell) && (item.spell.values)) {
 				var abilityValues = '';
 				for (var p in item.spell.values) {
-					if (compare && shiftDown) {
+					if ((compare) && (shiftDown)) {
 						var delta = item.spell.values[p] - compare.spell.values[p];
 						// adjust by EPSILON to handle float point imprecision, otherwise 3.15 - 2 = 1.14 or 2 - 3.15 = -1.14
 						// have to move away from zero by EPSILON, not a simple add
-						if(delta >= 0) {
+						if (delta >= 0) {
 							delta += Number.EPSILON;
 						} else {
 							delta -= Number.EPSILON;
 						}
 						delta = ~~((delta) * 100) / 100;
-						var rowClass = "";
+						var rowClass = '';
 						if (delta > 0 ) {
 							rowClass = 'gainDamage';
-							delta = "+" + delta;
+							delta = '+' + delta;
 						} else if (delta < 0) {
 							rowClass = 'loseDamage';
 						}
