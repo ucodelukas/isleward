@@ -735,7 +735,7 @@ define([
 					this.obj.equipment.equip(item.id);
 			} else {
 				if (!item.effects)
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
 				else {
 					var result = extend(true, {}, item);
 					result.effects = result.effects.map(e => ({
@@ -765,7 +765,7 @@ define([
 						}, this);
 					}
 
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', result, true);
 				}
 			}
 

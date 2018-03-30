@@ -78,7 +78,7 @@ define([
 
 			obj[property] = value;
 		},
-		setArray: function (self, cpnType, property, value) {
+		setArray: function (self, cpnType, property, value, noDuplicate) {
 			var o = this.o;
 			if (self)
 				o = this.oSelf;
@@ -93,6 +93,9 @@ define([
 
 			if (cpn[property] == null)
 				cpn[property] = [];
+
+			if ((noDuplicate) && (cpn[property].find(f => (f == value))))
+				return;
 
 			cpn[property].push(value);
 		},
