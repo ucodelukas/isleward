@@ -235,13 +235,13 @@ define([
 			'Spear': {
 				sprite: [9, 6],
 				spellName: 'melee',
+				range: 2,
 				spellConfig: {
 					statType: 'str',
 					statMult: 0.84,
 					threatMult: 4,
 					cdMax: 5,
 					useWeaponRange: true,
-					range: 2,
 					random: {
 						damage: [3, 11.4]
 					}
