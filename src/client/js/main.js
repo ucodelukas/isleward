@@ -60,10 +60,10 @@ define([
 				var allowedList = ['txtUsername', 'txtPassword'];
 
 				var allowed = allowedList.some(function(item) {
-					return e.target.classList.contains(item);
+					return $(e.target).hasClass(item);
 				});
 
-				if(!allowed) {
+				if (!allowed) {
 				    e.preventDefault();
 				    return false;
 			    }
