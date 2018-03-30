@@ -34,7 +34,9 @@ define([
 
 					result = {
 						factionId: 'akarei',
-						chance: chanceRoll,
+						properties: {
+							chance: chanceRoll,
+						},
 						text: chanceRoll + '% chance on crit to cast a lightning bolt',
 						events: {}
 					};
@@ -60,7 +62,7 @@ define([
 					var effect = item.effects.find(e => (e.factionId == 'akarei'));
 
 					var roll = Math.random() * 100;
-					if (roll >= effect.chance)
+					if (roll >= effect.properties.chance)
 						return;
 
 					var cbExplode = function (target) {
@@ -70,7 +72,7 @@ define([
 						var damage = combat.getDamage({
 							source: this,
 							target: target,
-							damage: 1,
+							damage: item.level * 3,
 							element: 'arcane',
 							noCrit: true
 						});

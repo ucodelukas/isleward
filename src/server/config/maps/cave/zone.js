@@ -313,8 +313,11 @@ module.exports = {
 			properties: {
 				cpnTrade: {
 					items: {
-						min: 5,
-						max: 10,
+						min: 2,
+						max: 5,
+						minLevel: 14,
+						maxLevel: 18,
+						slot: 'neck',
 						extra: []
 					},
 					faction: {
@@ -323,7 +326,7 @@ module.exports = {
 					},
 					markup: {
 						buy: 0.25,
-						sell: 10
+						sell: 20
 					}
 				}
 			}
