@@ -294,6 +294,19 @@ define([
 				});
 			}
 		},
+
+		notifyCollisionChange: function (x, y, collides) {
+			this.objects
+				.filter(o => o.player)
+				.forEach(function (o) {
+					o.syncer.setArray(true, 'player', 'collisionChanges', {
+						x: x,
+						y: y,
+						collides: collides
+					});
+				});
+		},
+
 		update: function () {
 			var objects = this.objects;
 			var len = objects.length;

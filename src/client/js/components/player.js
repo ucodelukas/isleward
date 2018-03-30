@@ -1,9 +1,11 @@
 define([
 	'js/rendering/renderer',
-	'js/system/events'
-], function(
+	'js/system/events',
+	'js/misc/physics'
+], function (
 	renderer,
-	events
+	events,
+	physics
 ) {
 	var scale = 40;
 
@@ -15,7 +17,7 @@ define([
 			y: 0
 		},
 
-		init: function() {
+		init: function () {
 			this.obj.addComponent('keyboardMover');
 			this.obj.addComponent('mouseMover');
 			this.obj.addComponent('serverActions');
@@ -25,7 +27,7 @@ define([
 			events.emit('onGetPortrait', this.obj.portrait);
 		},
 
-		update: function() {
+		update: function () {
 			var obj = this.obj;
 			var oldPos = this.oldPos;
 
@@ -38,7 +40,7 @@ define([
 			var instant = false;
 			if ((dx > 5) || (dy > 5))
 				instant = true;
-			
+
 			if (dx != 0)
 				dx = dx / Math.abs(dx);
 			if (dy != 0)
@@ -53,7 +55,17 @@ define([
 			}, instant);
 		},
 
-		canvasFollow: function(delta, instant) {
+		extend: function (blueprint) {
+			if (blueprint.collisionChanges) {
+				blueprint.collisionChanges.forEach(function (c) {
+					physics.setCollision(c.x, c.y, c.collides);
+				});
+
+				delete blueprint.collisionChanges;
+			}
+		},
+
+		canvasFollow: function (delta, instant) {
 			var obj = this.obj;
 			delta = delta || {
 				x: 0,

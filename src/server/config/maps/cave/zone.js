@@ -335,6 +335,7 @@ module.exports = {
 				cpnBlocker: {
 					init: function () {
 						this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+						this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, true);
 					}
 				}
 			}
@@ -528,6 +529,7 @@ module.exports = {
 						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);
+							this.obj.instance.objects.notifyCollisionChange(w.x, w.y, false);
 
 							syncer.queue('onGetObject', {
 								x: w.x,
@@ -538,7 +540,7 @@ module.exports = {
 									col: 4
 								}]
 							});
-						});
+						}, this);
 					}
 				}
 			}

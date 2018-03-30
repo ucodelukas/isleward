@@ -370,7 +370,9 @@ define([
 				x = ~~fromX;
 				y = ~~fromY;
 
-				if (!graphGrid[x][y])
+				var node = graphGrid[x][y];
+
+				if ((!node) || (node.weight == 0))
 					return false;
 				else if ((x == toX) && (y == toY))
 					return true;
@@ -498,6 +500,8 @@ define([
 		},
 
 		setCollision: function (x, y, collides) {
+			this.collisionMap[x][y] = collides ? 1 : 0;
+
 			var grid = this.graph.grid;
 			if (!grid[x][y]) {
 				grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
