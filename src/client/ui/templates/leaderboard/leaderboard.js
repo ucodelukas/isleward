@@ -48,7 +48,7 @@ define([
 			else if (this.offset > this.maxOffset)
 				this.offset = this.maxOffset;
 
-			this.onGetList(this.records, true);
+			this.getList(true);
 		},
 
 		onMine: function () {
@@ -90,7 +90,9 @@ define([
 				this.prophecyFilter.push(prophecyName);
 		},
 
-		getList: function () {
+		getList: function (keepOffset) {
+			this.el.addClass('disabled');
+
 			if (!this.prophecyFilter) {
 				var prophecies = window.player.prophecies;
 				this.prophecyFilter = prophecies ? prophecies.list : [];
@@ -101,34 +103,34 @@ define([
 				module: 'leaderboard',
 				method: 'requestList',
 				data: {
-					prophecies: this.prophecyFilter
+					prophecies: this.prophecyFilter,
+					offset: this.offset * this.pageSize
 				},
-				callback: this.onGetList.bind(this)
+				callback: this.onGetList.bind(this, keepOffset)
 			});
 		},
 
-		onGetList: function (result, keepOffset) {
+		onGetList: function (keepOffset, result) {
+			this.records = result;
+
 			if (!keepOffset) {
 				this.offset = 0;
 
-				var foundIndex = result.firstIndex(function (r) {
+				var foundIndex = this.records.list.firstIndex(function (r) {
 					return (r.name == window.player.name);
 				}, this);
 				if (foundIndex != -1)
 					this.offset = ~~(foundIndex / this.pageSize);
 			}
 
-			this.records = result;
-
 			var container = this.find('.list').empty();
 
 			var low = this.offset * this.pageSize;
 			var high = Math.min(result.length, low + this.pageSize);
-
 			this.maxOffset = Math.ceil(result.length / this.pageSize) - 1;
 
-			for (var i = low; i < high; i++) {
-				var r = result[i];
+			for (var i = 0; i < this.records.list.length; i++) {
+				var r = this.records.list[i];
 
 				var html = '<div class="row"><div class="col">' + r.level + '</div><div class="col">' + r.name + '</div></div>';
 				var el = $(html)
@@ -149,6 +151,8 @@ define([
 			}
 
 			this.updatePaging();
+
+			this.el.removeClass('disabled');
 		},
 
 		updatePaging: function () {
