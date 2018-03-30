@@ -90,12 +90,6 @@ define([
 					l.name = l.name.split(`'`).join('');
 			});
 
-			this.list.forEach(function (l) {
-				for (var i = 0; i < 10; i++) {
-					this.list.push(l);
-				}
-			}, this);
-
 			var doSave = false;
 
 			this.waiting.forEach(function (w) {
