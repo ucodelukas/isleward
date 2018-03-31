@@ -36,9 +36,11 @@ define([
 			var html = templateQuest
 				.replace('$ZONE$', quest.zoneName)
 				.replace('$NAME$', quest.name)
-				.replace('$DESCRIPTION$', quest.description);
+				.replace('$DESCRIPTION$', quest.description)
+				.replace('$REWARD$', quest.xp + ' xp');
 
-			var el = $(html).appendTo(list);
+			var el = $(html)
+				.appendTo(list);
 
 			if (quest.isReady)
 				el.addClass('ready');

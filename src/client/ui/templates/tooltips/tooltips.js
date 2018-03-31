@@ -3,7 +3,7 @@ define([
 	'css!ui/templates/tooltips/styles',
 	'html!ui/templates/tooltips/template',
 	'html!ui/templates/tooltips/templateTooltip'
-], function(
+], function (
 	events,
 	styles,
 	template,
@@ -18,14 +18,14 @@ define([
 
 		hoverEl: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.tooltip = this.el.find('.tooltip');
-			
+
 			this.onEvent('onShowTooltip', this.onShowTooltip.bind(this));
 			this.onEvent('onHideTooltip', this.onHideTooltip.bind(this));
 		},
 
-		onHideTooltip: function(el) {
+		onHideTooltip: function (el) {
 			if (this.hoverEl != el)
 				return;
 
@@ -33,7 +33,7 @@ define([
 			this.tooltip.hide();
 		},
 
-		onShowTooltip: function(text, el, pos, width, bottomAlign, rightAlign, zIndex) {
+		onShowTooltip: function (text, el, pos, width, bottomAlign, rightAlign, zIndex) {
 			this.hoverEl = el;
 
 			this.tooltip
