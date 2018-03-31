@@ -66,9 +66,12 @@ define([
 				.on('mousemove', this.onMouseMove.bind(this))
 				.on('mouseleave', this.onMouseDown.bind(this, null, null, false));
 
-			this.find('.split-box .amount').on('mousewheel', this.onChangeStackAmount.bind(this));
+			this.find('.split-box .amount')
+				.on('mousewheel', this.onChangeStackAmount.bind(this))
+				.on('input', this.onEnterStackAmount.bind(this));
+
 			this.find('.split-box').on('click', this.splitStackEnd.bind(this, true));
-			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this));
+			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this, null));
 			this.find('.split-box .btnLess').on('click', this.onChangeStackAmount.bind(this, null, -1));
 			this.find('.split-box .btnMore').on('click', this.onChangeStackAmount.bind(this, null, 1));
 		},
@@ -369,13 +372,15 @@ define([
 			var box = this.find('.split-box').show();
 			box.data('item', item);
 
-			box.find('.amount').html(1);
+			box.find('.amount')
+				.val('1')
+				.focus();
 		},
 
 		splitStackEnd: function (cancel, e) {
 			var box = this.find('.split-box');
 
-			if ((!e) || (e.target != box.find('.btnSplit')[0])) {
+			if ((cancel) || (!e) || (e.target != box.find('.btnSplit')[0])) {
 				if ((cancel) && (!$(e.target).hasClass('button')))
 					box.hide();
 
@@ -392,7 +397,7 @@ define([
 					method: 'splitStack',
 					data: {
 						itemId: box.data('item').id,
-						stackSize: ~~this.find('.split-box .amount').html()
+						stackSize: ~~this.find('.split-box .amount').val()
 					}
 				}
 			});
@@ -405,7 +410,23 @@ define([
 				delta *= 10;
 			var amount = this.find('.split-box .amount');
 
-			amount.html(Math.max(1, Math.min(item.quantity - 1, ~~amount.html() + delta)));
+			amount.val(Math.max(1, Math.min(item.quantity - 1, ~~amount.val() + delta)));
+		},
+
+		onEnterStackAmount: function (e) {
+			var el = this.find('.split-box .amount');
+			var val = el.val();
+			if (val != ~~val)
+				el.val('');
+			else if (val) {
+				var item = this.find('.split-box').data('item');
+				if (val < 0)
+					val = '';
+				else if (val > item.quantity - 1)
+					val = item.quantity - 1;
+
+				el.val(val);
+			}
 		},
 
 		hideTooltip: function () {
