@@ -1,10 +1,12 @@
 define([
-
+	'combat/combat'
 ], function (
-
+	combat
 ) {
 	return {
 		events: {
+			element: null,
+
 			onGetText: function (item) {
 				var rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
 
@@ -12,14 +14,27 @@ define([
 			},
 
 			afterDealDamage: function (item, damage, target) {
-				var rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
+				var effect = item.effects.find(e => (e.type == 'damageSelf'));
+				var rolls = effect.rolls;
 
 				var amount = (damage.dealt / 100) * rolls.percentage;
 
-				this.stats.takeDamage({
-					amount: amount,
-					noEvents: true
-				}, 1, this);
+				var newDamage = combat.getDamage({
+					source: {
+						stats: {
+							values: {}
+						}
+					},
+					isAttack: false,
+					target: this,
+					damage: amount,
+					element: effect.properties.element,
+					noCrit: true
+				});
+
+				newDamage.noEvents = true;
+
+				this.stats.takeDamage(newDamage, 1, this);
 			}
 		}
 	};

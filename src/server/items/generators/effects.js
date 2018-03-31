@@ -25,6 +25,7 @@ define([
 
 				return {
 					type: e.type,
+					properties: e.properties,
 					rolls: newRolls
 				};
 			});

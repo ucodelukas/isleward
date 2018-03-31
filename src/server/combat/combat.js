@@ -38,13 +38,13 @@ define([
 
 				statValue = max(1, statValue);
 				var statMult = config.statMult || 1;
-				var dmgPercent = 100 + srcValues.dmgPercent;
+				var dmgPercent = 100 + (srcValues.dmgPercent || 0);
 
 				amount *= statValue * statMult;
 
 				if (config.element) {
 					var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
-					dmgPercent += srcValues[elementName + 'Percent'];
+					dmgPercent += (srcValues[elementName + 'Percent'] || 0);
 
 					//Don't mitigate heals
 					if (!config.noMitigate) {

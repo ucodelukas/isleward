@@ -217,6 +217,9 @@ define([
 					stats: ['dex', 'dex', 'addCritMultiplier', 'addCritMultiplier'],
 					effects: [{
 						type: 'damageSelf',
+						properties: {
+							element: 'poison'
+						},
 						rolls: {
 							i_percentage: [8, 22]
 						}
