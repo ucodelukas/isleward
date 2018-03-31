@@ -23,6 +23,11 @@ define([
 		},
 
 		onGetInfo: function () {
+			if (!this.doc.worksheets) {
+				setTimeout(this.onAuth.bind(this), 300000);
+				return;
+			}
+
 			this.sheet = this.doc.worksheets[0];
 
 			this.update();
