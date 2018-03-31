@@ -22,12 +22,13 @@ define([
 			return {
 				type: 'social',
 				party: this.party,
-				customChannels: self ? this.customChannels : null
+				customChannels: self ? this.customChannels : null,
+				muted: this.muted
 			};
 		},
 
-		sendMessage: function (msg, color) {
-			this.obj.socket.emit('event', {
+		sendMessage: function (msg, color, target) {
+			(target || this.obj).socket.emit('event', {
 				event: 'onGetMessages',
 				data: {
 					messages: [{
@@ -138,6 +139,11 @@ define([
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
 				return;
+
+			if (this.muted) {
+				this.sendMessage('You have been muted from talking', 'color-redA');
+				return;
+			}
 
 			var charname = this.obj.auth.charname;
 

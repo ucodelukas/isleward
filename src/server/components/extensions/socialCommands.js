@@ -5,7 +5,8 @@ define([
 	'misc/random',
 	'items/config/slots',
 	'security/io',
-	'config/factions'
+	'config/factions',
+	'security/connections'
 ], function (
 	roles,
 	atlas,
@@ -13,12 +14,20 @@ define([
 	random,
 	configSlots,
 	io,
-	factions
+	factions,
+	connections
 ) {
 	var commandRoles = {
+		//Regular players
 		join: 0,
 		leave: 0,
 		unEq: 0,
+
+		//Mods
+		mute: 5,
+		unmute: 5,
+
+		//Admin
 		getItem: 10,
 		getGold: 10,
 		setLevel: 10,
@@ -34,7 +43,9 @@ define([
 
 	var localCommands = [
 		'join',
-		'leave'
+		'leave',
+		'mute',
+		'unmute'
 	];
 
 	return {
@@ -185,6 +196,108 @@ define([
 			Object.keys(eq.eq).forEach(function (slot) {
 				eq.unequip(eq.eq[slot]);
 			});
+		},
+
+		mute: function (target, reason) {
+			if (typeof (target) == 'object') {
+				var keys = Object.keys(target);
+				target = keys[0];
+				reason = keys[1];
+			}
+
+			if (target == this.obj.name)
+				return;
+
+			var o = connections.players.find(o => (o.name == target));
+			if (!o)
+				return;
+
+			var role = roles.getRoleLevel(o);
+			if (role >= this.roleLevel)
+				return;
+
+			var social = o.social;
+			if (social.muted) {
+				this.sendMessage('That player has already been muted', 'color-redA');
+				return;
+			}
+
+			var reasonMsg = '';
+			if (reason)
+				reasonMsg = ' (' + reason + ')';
+
+			social.muted = true;
+			this.sendMessage('Successfully muted ' + target, 'color-yellowB');
+			this.sendMessage('You have been muted' + reasonMsg, 'color-yellowB', o);
+
+			atlas.updateObject(o, {
+				components: [{
+					type: 'social',
+					muted: true
+				}]
+			});
+
+			io.set({
+				ent: new Date(),
+				field: 'modLog',
+				value: JSON.stringify({
+					source: this.obj.name,
+					command: 'mute',
+					target: target,
+					reason: reason
+				})
+			});
+		},
+
+		unmute: function (target, reason) {
+			if (typeof (target) == 'object') {
+				var keys = Object.keys(target);
+				target = keys[0];
+				reason = keys[1];
+			}
+
+			if (target == this.obj.name)
+				return;
+
+			var o = connections.players.find(o => (o.name == target));
+			if (!o)
+				return;
+
+			var role = roles.getRoleLevel(o);
+			if (role >= this.roleLevel)
+				return;
+
+			var social = o.social;
+			if (!social.muted) {
+				this.sendMessage('That player is not muted', 'color-redA');
+				return;
+			}
+
+			var reasonMsg = '';
+			if (reason)
+				reasonMsg = ' (' + reason + ')';
+
+			delete social.muted;
+			this.sendMessage('Successfully unmuted ' + target, 'color-yellowB');
+			this.sendMessage('You have been unmuted' + reasonMsg, 'color-yellowB', o);
+
+			atlas.updateObject(o, {
+				components: [{
+					type: 'social',
+					muted: null
+				}]
+			});
+
+			io.set({
+				ent: new Date(),
+				field: 'modLog',
+				value: JSON.stringify({
+					source: this.obj.name,
+					command: 'unmute',
+					target: target,
+					reason: reason
+				})
+			})
 		},
 
 		clearInventory: function () {
