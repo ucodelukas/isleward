@@ -115,18 +115,20 @@ define([
 		},
 
 		addEffect: function (options) {
-			var exists = this.effects.find(e => e.type == options.type);
-			if (exists) {
-				exists.ttl += options.ttl;
+			if (!options.new) {
+				var exists = this.effects.find(e => e.type == options.type);
+				if (exists) {
+					exists.ttl += options.ttl;
 
-				for (var p in options) {
-					if (p == 'ttl')
-						continue;
+					for (var p in options) {
+						if (p == 'ttl')
+							continue;
 
-					exists[p] = options[p];
+						exists[p] = options[p];
+					}
+
+					return exists;
 				}
-
-				return exists;
 			}
 
 			var typeTemplate = null;
