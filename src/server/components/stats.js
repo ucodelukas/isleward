@@ -640,6 +640,9 @@ define([
 		},
 
 		rescale: function (level, isMob) {
+			if (level > this.values.level)
+				level = this.values.level;
+
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
 
 			var oldHp = this.values.hp;
