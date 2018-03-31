@@ -320,6 +320,11 @@ define([
 				return;
 
 			var level = target.stats.values.level;
+			var mobDiffMult = 1;
+			if (target.isRare)
+				mobDiffMult = 2;
+			else if (target.isChampion)
+				mobDiffMult = 5;
 
 			//Who should get xp?
 			var aggroList = target.aggro.list;
@@ -349,9 +354,10 @@ define([
 					//We don't currently do this for quests/herb gathering
 					var sourceLevel = a.obj.stats.values.level;
 					var levelDelta = level - sourceLevel;
-					var amount = level * 10 * mult;
+
+					var amount = null;
 					if (Math.abs(levelDelta) <= 10)
-						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult);
+						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult * mobDiffMult);
 					else
 						amount = 0;
 
