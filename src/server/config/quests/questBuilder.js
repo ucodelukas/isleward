@@ -60,15 +60,15 @@ define([
 			quest.obj = obj;
 			quest.zoneName = zoneName;
 
-			if (!oQuests.obtain(quest, !!template)) {
-				console.log(template);
-				this.obtain(obj, template);
-			} else if (!template) {
+			if (!template) {
 				var level = this.instance.spawners.zone.level;
 				level = level[0];
 				var xp = ~~(level * 22 * quest.getXpMultiplier());
 				quest.xp = xp;
 			}
+
+			if (!oQuests.obtain(quest, !!template))
+				this.obtain(obj, template);
 		}
 	};
 });
