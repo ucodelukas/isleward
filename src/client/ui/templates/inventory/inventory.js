@@ -498,6 +498,7 @@ define([
 						} else {
 							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
 							compare = $.extend(true, {}, equippedOneHanded);
+							compare.refItem = equippedOneHanded;
 
 							for (var s in equippedOffhand.stats) {
 								if (!compare.stats[s])
