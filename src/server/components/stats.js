@@ -1,10 +1,8 @@
 define([
 	'config/animations',
-	'config/loginRewards',
 	'config/classes'
 ], function (
 	animations,
-	loginRewards,
 	classes
 ) {
 	var baseStats = {
@@ -609,42 +607,11 @@ define([
 
 		onLogin: function () {
 			var stats = this.stats;
-
 			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
-			var lastLogin = stats.lastLogin;
-			if ((!lastLogin) || (lastLogin.day != time.day)) {
-				var daysSkipped = 1;
-				if (lastLogin) {
-					if (time.day > lastLogin.day)
-						daysSkipped = time.day - lastLogin.day;
-					else {
-						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
-						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
-
-						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
-							daysSkipped += scheduler.daysInMonth(i);
-						}
-					}
-				}
-
-				if (daysSkipped == 1) {
-					stats.loginStreak++;
-					if (stats.loginStreak > 21)
-						stats.loginStreak = 21;
-				} else {
-					stats.loginStreak -= (daysSkipped - 1);
-					if (stats.loginStreak < 1)
-						stats.loginStreak = 1;
-				}
-
-				var mail = this.obj.instance.mail;
-				var rewards = loginRewards.generate(stats.loginStreak);
-				mail.sendMail(this.obj.name, rewards);
-			} else
-				this.obj.instance.mail.getMail(this.obj.name);
-
 			stats.lastLogin = time;
+
+			this.obj.instance.mail.getMail(this.obj.name);
 		},
 
 		rescale: function (level, isMob) {

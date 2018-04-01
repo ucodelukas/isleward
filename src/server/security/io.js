@@ -19,7 +19,8 @@ define([
 			mail: null,
 			customChannels: null,
 			error: null,
-			modLog: null
+			modLog: null,
+			accountInfo: null
 		},
 
 		init: function (cbReady) {
