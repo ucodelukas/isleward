@@ -475,6 +475,37 @@ define([
 				compare = this.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
 				});
+
+				// check special cases for mismatched weapon/offhand scenarios
+				if (!compare) {
+					var equippedTwoHanded = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'twoHanded'));
+					});
+
+					var equippedOneHanded = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'oneHanded'));
+					});
+
+					var equippedOffhand = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'offHand'));
+					});
+
+					if (item.slot == 'twoHanded') {
+						//compare = equippedOneHanded + equippedOffhand;
+						// How do we add these items together to make the combined virtual object? 
+						// dunno if there's an easy way in js or if I have to brute force it
+					}
+
+					if (item.slot == 'oneHanded') {
+						compare = equippedTwoHanded;
+					}
+
+					if (item.slot == 'offHand') {
+						compare = equippedTwoHanded;
+						// need a fix for the missing damage mod on offHand, which excludes that from the final tooltip
+						// can we just add it here, or is that going to have unintended side-effects?
+					}
+				}				
 			}
 
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
