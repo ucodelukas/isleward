@@ -144,15 +144,6 @@ define([
 					obj[p] = value;
 			}
 
-			if (template.class) {
-				obj.sheetName = 'mobs';
-				obj.cell = ({
-					owl: 87,
-					lynx: 85,
-					bear: 86
-				})[template.class];
-			}
-
 			if (obj.sheetName) {
 				obj.sprite = renderer.buildObject(obj);
 				if (template.hidden)
