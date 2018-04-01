@@ -516,6 +516,7 @@ define([
 					if ((item.slot == 'offHand') && (equippedTwoHanded)) {
 						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
 						// the player would lose by switching to the offhand (which would remove the twoHander)
+						// keep a reference to the original item for use in onHideToolTip
 						var spellClone = $.extend(true, {}, equippedTwoHanded.spell);
 						spellClone.name = '';
 						spellClone.values['damage'] = 0;
@@ -523,8 +524,9 @@ define([
 						var clone = $.extend(true, {}, item, {
 							spell: spellClone
 						});
-
+						clone.refItem = item;
 						item = clone;
+
 						compare = equippedTwoHanded;
 					}
 				}				
