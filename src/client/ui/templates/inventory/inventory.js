@@ -476,8 +476,8 @@ define([
 					return ((i.eq) && (i.slot == item.slot));
 				});
 
-				// check special cases for mismatched weapon/offhand scenarios
-				if (!compare) {
+				// check special cases for mismatched weapon/offhand scenarios (only valid when comparing)
+				if ((!compare) && (this.shiftDown)) {
 					var equippedTwoHanded = this.items.find(function (i) {
 						return ((i.eq) && (i.slot == 'twoHanded'));
 					});
@@ -491,19 +491,41 @@ define([
 					});
 
 					if (item.slot == 'twoHanded') {
-						//compare = equippedOneHanded + equippedOffhand;
-						// How do we add these items together to make the combined virtual object? 
-						// dunno if there's an easy way in js or if I have to brute force it
+						if (!equippedOneHanded) {
+							compare = equippedOffhand;
+						} else if (!equippedOffhand) {
+							compare = equippedOneHanded;
+						} else {
+							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
+							compare = $.extend(true, {}, equippedOneHanded);
+
+							for (var s in equippedOffhand.stats) {
+								if (!compare.stats[s])
+									compare.stats[s] = 0;
+	
+								compare.stats[s] += equippedOffhand.stats[s]
+							}
+						}
 					}
 
 					if (item.slot == 'oneHanded') {
 						compare = equippedTwoHanded;
 					}
 
-					if (item.slot == 'offHand') {
+					// this case is kind of ugly, but we don't want to go in when comparing an offHand to (oneHanded + empty offHand) - that should just use the normal compare which is offHand to empty
+					if ((item.slot == 'offHand') && (equippedTwoHanded)) {
+						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
+						// the player would lose by switching to the offhand (which would remove the twoHander)
+						var spellClone = $.extend(true, {}, equippedTwoHanded.spell);
+						spellClone.name = '';
+						spellClone.values['damage'] = 0;
+
+						var clone = $.extend(true, {}, item, {
+							spell: spellClone
+						});
+
+						item = clone;
 						compare = equippedTwoHanded;
-						// need a fix for the missing damage mod on offHand, which excludes that from the final tooltip
-						// can we just add it here, or is that going to have unintended side-effects?
 					}
 				}				
 			}
