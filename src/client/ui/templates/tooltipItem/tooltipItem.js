@@ -44,7 +44,7 @@ define([
 		},
 
 		onHideItemTooltip: function (item) {
-			if (this.item != item)
+			if ((this.item != item) && (this.item.refItem) && (this.item.refItem != item))
 				return;
 
 			this.item = null;
