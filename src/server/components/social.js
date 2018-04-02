@@ -150,8 +150,8 @@ define([
 				source: charname,
 				msg: messageString
 			};
-			messageString = msgEvent.msg;
 			events.emit('onBeforeSendMessage', msgEvent);
+			messageString = msgEvent.msg;
 			if (messageString[0] == '@') {
 				var playerName = '';
 				//Check if there's a space in the name
