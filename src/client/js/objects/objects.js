@@ -146,8 +146,15 @@ define([
 
 			if (obj.sheetName) {
 				obj.sprite = renderer.buildObject(obj);
-				if (template.hidden)
+				if (template.hidden) {
 					obj.sprite.visible = false;
+					if (obj.nameSprite)
+						obj.nameSprite.visible = false;
+					if ((obj.stats) && (obj.stats.hpSprite)) {
+						obj.stats.hpSprite.visible = false;
+						obj.stats.hpSpriteInner.visible = false;
+					}
+				}
 			}
 
 			components.forEach(function (c) {
@@ -254,6 +261,12 @@ define([
 			if (sprite) {
 				if (template.hidden != null) {
 					sprite.visible = !template.hidden;
+					if (obj.nameSprite)
+						obj.nameSprite.visible = this.nameSprite;
+					if ((obj.stats) && (obj.stats.hpSprite)) {
+						obj.stats.hpSprite.visible = !template.hidden;
+						obj.stats.hpSpriteInner.visible = !template.hidden;
+					}
 				}
 			}
 
@@ -310,8 +323,9 @@ define([
 				var objects = this.objects;
 				var oLen = objects.length;
 				for (var i = 0; i < oLen; i++) {
-					var ns = objects[i].nameSprite;
-					if (!ns)
+					var obj = objects[i];
+					var ns = obj.nameSprite;
+					if ((!ns) || (obj.dead))
 						continue;
 
 					ns.visible = showNames;

@@ -111,7 +111,7 @@ define([
 		},
 
 		update: function () {
-			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.obj.dead))
 				return;
 
 			var values = this.values;
@@ -367,24 +367,87 @@ define([
 		},
 
 		die: function (source) {
-			this.values.hp = this.values.hpMax;
-			this.values.mana = this.values.manaMax;
-
-			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
-			this.obj.syncer.setObject(false, 'stats', 'values', 'mana', this.values.mana);
+			var obj = this.obj;
+			var values = this.values;
 
 			this.syncer.queue('onGetDamage', {
-				id: this.obj.id,
+				id: obj.id,
 				event: true,
 				text: 'death'
 			});
 
+			obj.syncer.set(true, null, 'dead', true);
+
+			var obj = obj;
+			var syncO = obj.syncer.o;
+
+			obj.hidden = true;
+			obj.nonSelectable = true;
+			syncO.hidden = true;
+			syncO.nonSelectable = true;
+
+			var xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+
+			values.xp -= xpLoss;
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+
 			this.syncer.queue('onDeath', {
-				x: this.obj.x,
-				y: this.obj.y,
-				source: source.name
-			}, [this.obj.serverId]);
+				source: source.name,
+				xpLoss: xpLoss
+			}, [obj.serverId]);
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
 		},
+
+		respawn: function () {
+			this.obj.syncer.set(true, null, 'dead', false);
+
+			var obj = this.obj;
+			var syncO = obj.syncer.o;
+
+			this.obj.dead = false;
+			var values = this.values;
+
+			values.hp = values.hpMax;
+			values.mana = values.manaMax;
+
+			obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
+			obj.syncer.setObject(false, 'stats', 'values', 'mana', values.mana);
+
+			obj.hidden = false;
+			obj.nonSelectable = false;
+			syncO.hidden = false;
+			syncO.nonSelectable = false;
+
+			process.send({
+				method: 'object',
+				serverId: this.obj.serverId,
+				obj: {
+					dead: false
+				}
+			});
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
+
+			this.obj.player.respawn();
+		},
+
 		takeDamage: function (damage, threatMult, source) {
 			source.fireEvent('beforeDealDamage', damage, this.obj);
 			this.obj.fireEvent('beforeTakeDamage', damage, source);

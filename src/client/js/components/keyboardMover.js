@@ -2,7 +2,7 @@ define([
 	'js/input',
 	'js/system/client',
 	'js/misc/physics'
-], function(
+], function (
 	input,
 	client,
 	physics
@@ -17,7 +17,10 @@ define([
 			y: 0
 		},
 
-		update: function() {
+		update: function () {
+			if (this.obj.dead)
+				return;
+
 			if (this.obj.moveAnimation)
 				this.obj.pather.clearPath();
 
@@ -40,17 +43,17 @@ define([
 			this.keyMove();
 		},
 
-		bump: function(dx, dy) {
+		bump: function (dx, dy) {
 			if (this.obj.pather.path.length > 0)
 				return;
-			
+
 			this.obj.addComponent('bumpAnimation', {
 				deltaX: dx,
 				deltaY: dy
 			});
 		},
 
-		keyMove: function() {
+		keyMove: function () {
 			var delta = {
 				x: input.getAxis('horizontal'),
 				y: input.getAxis('vertical')
@@ -74,7 +77,7 @@ define([
 
 			this.addQueue(newX, newY);
 		},
-		addQueue: function(x, y) {
+		addQueue: function (x, y) {
 			if (this.obj.moveAnimation)
 				return;
 

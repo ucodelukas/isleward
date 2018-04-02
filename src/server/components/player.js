@@ -26,6 +26,9 @@ define([
 		spawn: function (character, cb) {
 			var obj = this.obj;
 
+			if (character.dead)
+				obj.dead = true;
+
 			extend(true, obj, {
 				layerName: 'mobs',
 				cell: character.cell,
@@ -36,6 +39,7 @@ define([
 				zoneName: character.zoneName || 'fjolarok',
 				x: character.x,
 				y: character.y,
+				hidden: character.dead,
 				account: character.account,
 				instanceId: character.instanceId
 			});
@@ -162,6 +166,9 @@ define([
 			var physics = this.obj.instance.physics;
 
 			physics.removeObject(this.obj, this.obj.x, this.obj.y);
+			this.obj.dead = true;
+
+			this.obj.aggro.die();
 
 			if (!permadeath) {
 				var level = this.obj.stats.values.level;
@@ -180,20 +187,21 @@ define([
 				this.obj.x = spawnPos.x;
 				this.obj.y = spawnPos.y;
 
-				var syncer = this.obj.syncer;
-				syncer.o.x = this.obj.x;
-				syncer.o.y = this.obj.y;
-
-				physics.addObject(this.obj, this.obj.x, this.obj.y);
-
 				this.obj.stats.die(source);
-			} else {
-				this.obj.stats.dead = true;
 
 				process.send({
 					method: 'object',
 					serverId: this.obj.serverId,
 					obj: {
+						dead: true
+					}
+				});
+			} else {
+				process.send({
+					method: 'object',
+					serverId: this.obj.serverId,
+					obj: {
+						dead: true,
 						permadead: true
 					}
 				});
@@ -201,11 +209,18 @@ define([
 
 			this.obj.fireEvent('onAfterDeath', source);
 
-			this.obj.aggro.die();
 			this.obj.spellbook.die();
 			this.obj.effects.die();
+		},
+
+		respawn: function () {
+			var syncer = this.obj.syncer;
+			syncer.o.x = this.obj.x;
+			syncer.o.y = this.obj.y;
 
 			this.obj.aggro.move();
+
+			this.obj.instance.physics.addObject(this.obj, this.obj.x, this.obj.y);
 		},
 
 		move: function (msg) {
