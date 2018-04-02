@@ -150,6 +150,7 @@ define([
 				source: charname,
 				msg: messageString
 			};
+			messageString = msgEvent.msg;
 			events.emit('onBeforeSendMessage', msgEvent);
 			if (messageString[0] == '@') {
 				var playerName = '';
