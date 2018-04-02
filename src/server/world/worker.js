@@ -49,7 +49,7 @@ requirejs([
 
 		instancer = _instancer;
 
-		components.init(onCpnsReady);
+		mods.init(onModsReady);
 
 		setInterval(function () {
 			global.gc();
@@ -75,11 +75,11 @@ requirejs([
 		});
 	};
 
-	var onCpnsReady = function () {
-		mods.init(onModsReady);
+	var onModsReady = function () {
+		components.init(onCpnsReady);
 	};
 
-	var onModsReady = function () {
+	var onCpnsReady = function () {
 		factions.init();
 		skins.init();
 		mtx.init();
