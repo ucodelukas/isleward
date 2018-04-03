@@ -28,7 +28,7 @@ define([
 					isAttack: false,
 					target: this,
 					damage: amount,
-					element: effect.properties.element,
+					element: (effect.properties || {}).element,
 					noCrit: true
 				});
 
