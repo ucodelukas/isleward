@@ -72,7 +72,7 @@ define([
 						var damage = combat.getDamage({
 							source: this,
 							target: target,
-							damage: item.level * 3,
+							damage: item.level * 5,
 							element: 'arcane',
 							noCrit: true
 						});
