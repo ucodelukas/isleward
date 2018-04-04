@@ -461,6 +461,10 @@ define([
 			});
 		},
 		onRegister: function (msg, result) {
+			this.accountInfo = {
+				loginStreak: 0
+			};
+
 			io.set({
 				ent: msg.data.username,
 				field: 'characterList',
