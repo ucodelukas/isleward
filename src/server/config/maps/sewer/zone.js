@@ -53,10 +53,12 @@ module.exports = {
 					blueprints: [{
 						chance: 0.5,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -107,10 +109,12 @@ module.exports = {
 					blueprints: [{
 						chance: 100,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
