@@ -752,7 +752,7 @@ define([
 		events: {
 			transferComplete: function () {
 				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < this.obj.stats.values.level)
+				if (maxLevel > this.obj.stats.values.level)
 					maxLevel = this.obj.stats.values.level;
 				this.obj.stats.rescale(maxLevel);
 			},
