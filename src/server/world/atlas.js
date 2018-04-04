@@ -3,13 +3,15 @@ define([
 	'child_process',
 	'objects/objects',
 	'config/maps/mapList',
-	'security/connections'
+	'security/connections',
+	'config/serverConfig'
 ], function (
 	fileLister,
 	childProcess,
 	objects,
 	mapList,
-	connections
+	connections,
+	serverConfig
 ) {
 	return {
 		nextId: 0,
@@ -29,7 +31,7 @@ define([
 				instanceId = -1;
 
 			if (!thread) {
-				thread = this.getThreadFromName('fjolarok');
+				thread = this.getThreadFromName(serverConfig.defaultZone);
 				obj.zoneName = thread.name;
 			}
 
@@ -193,7 +195,7 @@ define([
 				var thread = this.getThreadFromName(obj.zoneName);
 
 				if (!thread) {
-					thread = this.getThreadFromName('fjolarok');
+					thread = this.getThreadFromName(serverConfig.defaultZone);
 					obj.zoneName = thread.name;
 					serverObj.zoneName = thread.name;
 				}
