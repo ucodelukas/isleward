@@ -1,11 +1,13 @@
 define([
 	'world/atlas',
 	'config/classes',
-	'config/roles'
+	'config/roles',
+	'config/serverConfig'
 ], function (
 	atlas,
 	classes,
-	roles
+	roles,
+	serverConfig
 ) {
 	return {
 		type: 'player',
@@ -36,7 +38,7 @@ define([
 				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
-				zoneName: character.zoneName || 'fjolarok',
+				zoneName: character.zoneName || serverConfig.defaultZone,
 				x: character.x,
 				y: character.y,
 				hidden: character.dead,
