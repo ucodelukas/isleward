@@ -249,10 +249,13 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
-				if (this.originalValues)
+				if (this.originalValues) {
 					this.originalValues.level++;
-				else
-					values.level++;
+				}
+
+				if (values.originalLevel)
+					values.originalLevel++;
+				values.level++;
 
 				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
@@ -295,13 +298,15 @@ define([
 
 			if (didLevelUp) {
 				var maxLevel = this.obj.instance.zone.level[1]
-				if (maxLevel < (this.originalValues || values).level)
+				if (maxLevel < (this.originalValues || values).level) {
 					this.rescale(maxLevel, false);
-				else {
+				} else {
 					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 				}
 			}
 
