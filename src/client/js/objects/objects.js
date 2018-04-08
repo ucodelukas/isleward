@@ -262,7 +262,7 @@ define([
 				if (template.hidden != null) {
 					sprite.visible = !template.hidden;
 					if (obj.nameSprite)
-						obj.nameSprite.visible = this.nameSprite;
+						obj.nameSprite.visible = this.showNames;
 					if ((obj.stats) && (obj.stats.hpSprite)) {
 						obj.stats.hpSprite.visible = !template.hidden;
 						obj.stats.hpSpriteInner.visible = !template.hidden;
