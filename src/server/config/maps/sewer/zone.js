@@ -84,7 +84,6 @@ module.exports = {
 
 		whiskers: {
 			level: 13,
-			cron: '0 */2 * * *',
 			faction: 'hostile',
 			grantRep: {
 				fjolgard: 22

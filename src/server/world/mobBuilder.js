@@ -77,6 +77,7 @@ define([
 			mob.addComponent('equipment');
 			mob.addComponent('inventory', drops);
 			mob.inventory.inventorySize = -1;
+			mob.inventory.dailyDrops = blueprint.dailyDrops;
 
 			if (this.zone) {
 				var chats = this.zone.chats;

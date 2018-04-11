@@ -1,9 +1,11 @@
 define([
 	'config/animations',
-	'config/classes'
+	'config/classes',
+	'misc/scheduler'
 ], function (
 	animations,
-	classes
+	classes,
+	scheduler
 ) {
 	var baseStats = {
 		mana: 20,
@@ -79,7 +81,8 @@ define([
 			played: 0,
 			lastLogin: null,
 			loginStreak: 0,
-			mobKillStreaks: {}
+			mobKillStreaks: {},
+			lootStats: {}
 		},
 
 		dead: false,
@@ -675,7 +678,6 @@ define([
 
 		onLogin: function () {
 			var stats = this.stats;
-			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
 			stats.lastLogin = time;
 
@@ -754,6 +756,18 @@ define([
 				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
 		},
 
+		canGetMobLoot: function (mob) {
+			if (!mob.inventory.dailyDrops)
+				return true;
+
+			var lootStats = this.stats.lootStats[mob.name];
+			var time = scheduler.getTime();
+			if (!lootStats) {
+				this.stats.lootStats[mob.name] = time;
+			} else
+				return ((lootStats.day != time.day), (lootStats.month != time.month));
+		},
+
 		events: {
 			transferComplete: function () {
 				var maxLevel = this.obj.instance.zone.level[1];
@@ -794,6 +808,9 @@ define([
 					return;
 
 				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
+
+				if ((event.chanceMultiplier > 0) && (!this.canGetMobLoot(event.source)))
+					event.chanceMultiplier = 0;
 			},
 
 			afterMove: function (event) {
