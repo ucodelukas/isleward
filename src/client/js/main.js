@@ -8,6 +8,7 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
+	'js/sound/sound',
 	'ui/templates/inventory/inventory',
 	'ui/templates/equipment/equipment',
 	'ui/templates/stash/stash',
@@ -30,12 +31,14 @@ define([
 	numbers,
 	input,
 	events,
-	resources
+	resources,
+	sound
 ) {
 	return {
 		hasFocus: true,
 
 		init: function () {
+			sound.init();
 			client.init(this.onClientReady.bind(this));
 		},
 
@@ -59,14 +62,14 @@ define([
 			$(window).on('contextmenu', function (e) {
 				var allowedList = ['txtUsername', 'txtPassword'];
 
-				var allowed = allowedList.some(function(item) {
+				var allowed = allowedList.some(function (item) {
 					return $(e.target).hasClass(item);
 				});
 
 				if (!allowed) {
-				    e.preventDefault();
-				    return false;
-			    }
+					e.preventDefault();
+					return false;
+				}
 			});
 
 			objects.init();

@@ -17,9 +17,13 @@ require.config({
 		'helpers': 'js/misc/helpers',
 		'particles': 'plugins/pixi.particles',
 		'picture': 'plugins/pixi.picture',
-		'pixi': 'plugins/pixi.min'
+		'pixi': 'plugins/pixi.min',
+		'howler': 'plugins/howler.min'
 	},
 	shim: {
+		'howler': {
+			exports: 'howl'
+		},
 		'socket': {
 			exports: 'io'
 		},
@@ -55,7 +59,7 @@ require.config({
 
 require([
 	'main'
-], function(
+], function (
 	main
 ) {
 	main.init();

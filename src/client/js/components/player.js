@@ -1,11 +1,13 @@
 define([
 	'js/rendering/renderer',
 	'js/system/events',
-	'js/misc/physics'
+	'js/misc/physics',
+	'js/sound/sound'
 ], function (
 	renderer,
 	events,
-	physics
+	physics,
+	sound
 ) {
 	var scale = 40;
 
@@ -53,6 +55,8 @@ define([
 				x: dx,
 				y: dy
 			}, instant);
+
+			sound.update(obj.x, obj.y);
 		},
 
 		extend: function (blueprint) {
