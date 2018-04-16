@@ -8,7 +8,6 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
-	'js/sound/sound',
 	'ui/templates/inventory/inventory',
 	'ui/templates/equipment/equipment',
 	'ui/templates/stash/stash',
@@ -31,14 +30,12 @@ define([
 	numbers,
 	input,
 	events,
-	resources,
-	sound
+	resources
 ) {
 	return {
 		hasFocus: true,
 
 		init: function () {
-			sound.init();
 			client.init(this.onClientReady.bind(this));
 		},
 
