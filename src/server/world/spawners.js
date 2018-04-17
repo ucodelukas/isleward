@@ -37,6 +37,7 @@ define([
 			var spawner = extend(true, {
 				cdMax: cdMax || 171,
 				cron: blueprint.cron,
+				lifetime: blueprint.lifetime,
 				blueprint: blueprint,
 				amountLeft: blueprint.amount || -1
 			});
@@ -102,6 +103,27 @@ define([
 
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
+
+				if ((l.lifetime) && (l.mob) && (!l.mob.destroyed)) {
+					if (!l.age)
+						l.age = 1;
+					else
+						l.age++;
+
+					if (l.age >= l.lifetime) {
+						this.syncer.queue('onGetObject', {
+							x: l.mob.x,
+							y: l.mob.y,
+							components: [{
+								type: 'attackAnimation',
+								row: 0,
+								col: 4
+							}]
+						});
+
+						l.mob.destroyed = true;
+					}
+				}
 
 				if (!l.cron) {
 					if (l.cd > 0) {
