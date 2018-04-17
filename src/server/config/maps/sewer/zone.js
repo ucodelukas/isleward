@@ -144,6 +144,10 @@ module.exports = {
 			properties: {
 				cpnDoor: {}
 			}
+		},
+
+		treasure: {
+			cron: '0 2 * * *'
 		}
 	}
 };
