@@ -1,11 +1,13 @@
 define([
 	'js/objects/objBase',
 	'js/system/events',
-	'js/rendering/renderer'
+	'js/rendering/renderer',
+	'js/sound/sound'
 ], function (
 	objBase,
 	events,
-	renderer
+	renderer,
+	sound
 ) {
 	var scale = 40;
 
@@ -180,6 +182,8 @@ define([
 			if (obj.self) {
 				events.emit('onGetPlayer', obj);
 				window.player = obj;
+
+				sound.init(obj.zoneName);
 
 				renderer.setPosition({
 					x: (obj.x - (renderer.width / (scale * 2))) * scale,
