@@ -19,7 +19,7 @@ define([
 
 		unload: function () {
 			this.sounds.forEach(function (s) {
-				if (!s.sound)
+				if (s.sound)
 					s.sound.unload();
 			});
 
