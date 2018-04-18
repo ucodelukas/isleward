@@ -1,11 +1,11 @@
 define([
 	'config/animations',
-	'config/loginRewards',
-	'config/classes'
+	'config/classes',
+	'misc/scheduler'
 ], function (
 	animations,
-	loginRewards,
-	classes
+	classes,
+	scheduler
 ) {
 	var baseStats = {
 		mana: 20,
@@ -81,7 +81,8 @@ define([
 			played: 0,
 			lastLogin: null,
 			loginStreak: 0,
-			mobKillStreaks: {}
+			mobKillStreaks: {},
+			lootStats: {}
 		},
 
 		dead: false,
@@ -113,7 +114,7 @@ define([
 		},
 
 		update: function () {
-			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.obj.dead))
 				return;
 
 			var values = this.values;
@@ -251,10 +252,13 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
-				if (this.originalValues)
+				if (this.originalValues) {
 					this.originalValues.level++;
-				else
-					values.level++;
+				}
+
+				if (values.originalLevel)
+					values.originalLevel++;
+				values.level++;
 
 				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
@@ -297,13 +301,15 @@ define([
 
 			if (didLevelUp) {
 				var maxLevel = this.obj.instance.zone.level[1]
-				if (maxLevel < (this.originalValues || values).level)
+				if (maxLevel < (this.originalValues || values).level) {
 					this.rescale(maxLevel, false);
-				else {
+				} else {
 					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 				}
 			}
 
@@ -320,6 +326,11 @@ define([
 				return;
 
 			var level = target.stats.values.level;
+			var mobDiffMult = 1;
+			if (target.isRare)
+				mobDiffMult = 2;
+			else if (target.isChampion)
+				mobDiffMult = 5;
 
 			//Who should get xp?
 			var aggroList = target.aggro.list;
@@ -349,9 +360,10 @@ define([
 					//We don't currently do this for quests/herb gathering
 					var sourceLevel = a.obj.stats.values.level;
 					var levelDelta = level - sourceLevel;
-					var amount = level * 10 * mult;
+
+					var amount = null;
 					if (Math.abs(levelDelta) <= 10)
-						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult);
+						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult * mobDiffMult);
 					else
 						amount = 0;
 
@@ -363,24 +375,87 @@ define([
 		},
 
 		die: function (source) {
-			this.values.hp = this.values.hpMax;
-			this.values.mana = this.values.manaMax;
-
-			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
-			this.obj.syncer.setObject(false, 'stats', 'values', 'mana', this.values.mana);
+			var obj = this.obj;
+			var values = this.values;
 
 			this.syncer.queue('onGetDamage', {
-				id: this.obj.id,
+				id: obj.id,
 				event: true,
 				text: 'death'
 			});
 
+			obj.syncer.set(true, null, 'dead', true);
+
+			var obj = obj;
+			var syncO = obj.syncer.o;
+
+			obj.hidden = true;
+			obj.nonSelectable = true;
+			syncO.hidden = true;
+			syncO.nonSelectable = true;
+
+			var xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+
+			values.xp -= xpLoss;
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+
 			this.syncer.queue('onDeath', {
-				x: this.obj.x,
-				y: this.obj.y,
-				source: source.name
-			}, [this.obj.serverId]);
+				source: source.name,
+				xpLoss: xpLoss
+			}, [obj.serverId]);
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
 		},
+
+		respawn: function () {
+			this.obj.syncer.set(true, null, 'dead', false);
+
+			var obj = this.obj;
+			var syncO = obj.syncer.o;
+
+			this.obj.dead = false;
+			var values = this.values;
+
+			values.hp = values.hpMax;
+			values.mana = values.manaMax;
+
+			obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
+			obj.syncer.setObject(false, 'stats', 'values', 'mana', values.mana);
+
+			obj.hidden = false;
+			obj.nonSelectable = false;
+			syncO.hidden = false;
+			syncO.nonSelectable = false;
+
+			process.send({
+				method: 'object',
+				serverId: this.obj.serverId,
+				obj: {
+					dead: false
+				}
+			});
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
+
+			this.obj.player.respawn();
+		},
+
 		takeDamage: function (damage, threatMult, source) {
 			source.fireEvent('beforeDealDamage', damage, this.obj);
 			this.obj.fireEvent('beforeTakeDamage', damage, source);
@@ -397,6 +472,8 @@ define([
 
 			if (amount > this.values.hp)
 				amount = this.values.hp;
+
+			damage.dealt = amount;
 
 			this.values.hp -= amount;
 			var recipients = [];
@@ -488,12 +565,12 @@ define([
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
 							for (var i = 0; i < aLen; i++) {
-								var a = aggroList[i].obj;
+								var a = aggroList[i];
 
-								if (a.serverId == null)
+								if ((!a.threat) || (a.obj.serverId == null))
 									continue;
 
-								this.obj.inventory.dropBag(a.serverId, killSource);
+								this.obj.inventory.dropBag(a.obj.serverId, killSource);
 							}
 						}
 					}
@@ -601,42 +678,10 @@ define([
 
 		onLogin: function () {
 			var stats = this.stats;
-
-			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
-			var lastLogin = stats.lastLogin;
-			if ((!lastLogin) || (lastLogin.day != time.day)) {
-				var daysSkipped = 1;
-				if (lastLogin) {
-					if (time.day > lastLogin.day)
-						daysSkipped = time.day - lastLogin.day;
-					else {
-						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
-						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
-
-						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
-							daysSkipped += scheduler.daysInMonth(i);
-						}
-					}
-				}
-
-				if (daysSkipped == 1) {
-					stats.loginStreak++;
-					if (stats.loginStreak > 21)
-						stats.loginStreak = 21;
-				} else {
-					stats.loginStreak -= (daysSkipped - 1);
-					if (stats.loginStreak < 1)
-						stats.loginStreak = 1;
-				}
-
-				var mail = this.obj.instance.mail;
-				var rewards = loginRewards.generate(stats.loginStreak);
-				mail.sendMail(this.obj.name, rewards);
-			} else
-				this.obj.instance.mail.getMail(this.obj.name);
-
 			stats.lastLogin = time;
+
+			this.obj.instance.mail.getMail(this.obj.name);
 		},
 
 		rescale: function (level, isMob) {
@@ -714,10 +759,22 @@ define([
 				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
 		},
 
+		canGetMobLoot: function (mob) {
+			if (!mob.inventory.dailyDrops)
+				return true;
+
+			var lootStats = this.stats.lootStats[mob.name];
+			var time = scheduler.getTime();
+			if (!lootStats) {
+				this.stats.lootStats[mob.name] = time;
+			} else
+				return ((lootStats.day != time.day), (lootStats.month != time.month));
+		},
+
 		events: {
 			transferComplete: function () {
 				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < this.obj.stats.values.level)
+				if (maxLevel > this.obj.stats.values.level)
 					maxLevel = this.obj.stats.values.level;
 				this.obj.stats.rescale(maxLevel);
 			},
@@ -754,6 +811,9 @@ define([
 					return;
 
 				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
+
+				if ((event.chanceMultiplier > 0) && (!this.canGetMobLoot(event.source)))
+					event.chanceMultiplier = 0;
 			},
 
 			afterMove: function (event) {

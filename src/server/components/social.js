@@ -1,9 +1,11 @@
 define([
 	'world/atlas',
-	'config/roles'
+	'config/roles',
+	'misc/events'
 ], function (
 	atlas,
-	roles
+	roles,
+	events
 ) {
 	return {
 		type: 'social',
@@ -22,12 +24,13 @@ define([
 			return {
 				type: 'social',
 				party: this.party,
-				customChannels: self ? this.customChannels : null
+				customChannels: self ? this.customChannels : null,
+				muted: this.muted
 			};
 		},
 
-		sendMessage: function (msg, color) {
-			this.obj.socket.emit('event', {
+		sendMessage: function (msg, color, target) {
+			(target || this.obj).socket.emit('event', {
 				event: 'onGetMessages',
 				data: {
 					messages: [{
@@ -125,9 +128,9 @@ define([
 
 			msg.data.message = msg.data.message
 				.split('<')
-				.join('')
+				.join('&lt;')
 				.split('>')
-				.join('');
+				.join('&gt;');
 
 			if (!msg.data.message)
 				return;
@@ -139,11 +142,22 @@ define([
 			if (msg.data.ignore)
 				return;
 
+			if (this.muted) {
+				this.sendMessage('You have been muted from talking', 'color-redA');
+				return;
+			}
+
 			var charname = this.obj.auth.charname;
 
 			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
 
 			var messageString = msg.data.message;
+			var msgEvent = {
+				source: charname,
+				msg: messageString
+			};
+			events.emit('onBeforeSendMessage', msgEvent);
+			messageString = msgEvent.msg;
 			if (messageString[0] == '@') {
 				var playerName = '';
 				//Check if there's a space in the name

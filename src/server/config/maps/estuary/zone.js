@@ -25,6 +25,17 @@ module.exports = {
 					rolls: 1,
 					magicFind: 500
 				}
+			},
+
+			rare: {
+				hpMult: 7,
+				dmgMult: 3,
+
+				drops: {
+					chance: 100,
+					rolls: 1,
+					magicFind: 2000
+				}
 			}
 		},
 		'giant gull': {

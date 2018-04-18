@@ -1,6 +1,6 @@
 define([
 	'js/misc/pathfinder'
-], function(
+], function (
 	pathfinder
 ) {
 	var sqrt = Math.sqrt.bind(Math);
@@ -15,7 +15,7 @@ define([
 		width: 0,
 		height: 0,
 
-		init: function(collisionMap) {
+		init: function (collisionMap) {
 			this.collisionMap = collisionMap;
 
 			this.width = collisionMap.length;
@@ -28,7 +28,7 @@ define([
 			});
 		},
 
-		addRegion: function(obj) {
+		addRegion: function (obj) {
 			var lowX = obj.x;
 			var lowY = obj.y;
 			var highX = lowX + obj.width;
@@ -43,7 +43,7 @@ define([
 			}
 		},
 
-		addObject: function(obj, x, y, fromX, fromY) {
+		addObject: function (obj, x, y, fromX, fromY) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -73,7 +73,7 @@ define([
 			cell.push(obj);
 			return true;
 		},
-		removeObject: function(obj, x, y, toX, toY) {
+		removeObject: function (obj, x, y, toX, toY) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -108,7 +108,7 @@ define([
 			}
 		},
 
-		isValid: function(x, y) {
+		isValid: function (x, y) {
 			var row = this.cells[x];
 
 			if ((!row) || (row.length <= y) || (!this.graph.grid[x][y]))
@@ -117,7 +117,7 @@ define([
 				return true;
 		},
 
-		getCell: function(x, y) {
+		getCell: function (x, y) {
 			var row = this.cells[x];
 
 			if (!row)
@@ -130,7 +130,7 @@ define([
 
 			return cell;
 		},
-		getArea: function(x1, y1, x2, y2, filter) {
+		getArea: function (x1, y1, x2, y2, filter) {
 			var width = this.width;
 			var height = this.height;
 
@@ -177,7 +177,7 @@ define([
 			return result;
 		},
 
-		getOpenCellInArea: function(x1, y1, x2, y2) {
+		getOpenCellInArea: function (x1, y1, x2, y2) {
 			var width = this.width;
 			var height = this.height;
 
@@ -220,7 +220,7 @@ define([
 			return result;
 		},
 
-		getPath: function(from, to) {
+		getPath: function (from, to) {
 			var graph = this.graph;
 			var grid = graph.grid;
 
@@ -255,22 +255,24 @@ define([
 
 			return path;
 		},
-		isTileBlocking: function(x, y, mob, obj) {
+		isTileBlocking: function (x, y, mob, obj) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
 			x = ~~x;
 			y = ~~y;
 
-			return !this.graph.grid[x][y];
+			var node = this.graph.grid[x][y];
+
+			return ((!node) || (node.weight == 0));
 		},
-		isCellOpen: function(x, y) {
+		isCellOpen: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
 			return (this.cells[x][y].length == 0);
 		},
-		hasLos: function(fromX, fromY, toX, toY) {
+		hasLos: function (fromX, fromY, toX, toY) {
 			if ((fromX < 0) || (fromY < 0) || (fromX >= this.width) | (fromY >= this.height) || (toX < 0) || (toY < 0) || (toX >= this.width) | (toY >= this.height))
 				return false;
 
@@ -311,7 +313,7 @@ define([
 			return true;
 		},
 
-		getClosestPos: function(fromX, fromY, toX, toY, target) {
+		getClosestPos: function (fromX, fromY, toX, toY, target) {
 			var tried = {};
 
 			var hasLos = this.hasLos.bind(this, toX, toY);
@@ -337,8 +339,7 @@ define([
 					incX = -1;
 					lowX = x2;
 					highX = x1 - 1;
-				}
-				else {
+				} else {
 					incX = 1;
 					lowX = x1;
 					highX = x2 + 1;
@@ -348,8 +349,7 @@ define([
 					incY = -1;
 					lowY = y2;
 					highY = y1 - 1;
-				}
-				else {
+				} else {
 					incY = 1;
 					lowY = y1;
 					highY = y2 + 1;
@@ -405,7 +405,7 @@ define([
 			}
 		},
 
-		mobsCollide: function(x, y, obj) {
+		mobsCollide: function (x, y, obj) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
@@ -427,6 +427,16 @@ define([
 			}
 
 			return false;
+		},
+
+		setCollision: function (x, y, collides) {
+			var node = this.graph.grid[x][y];
+			if (!node) {
+				var grid = this.graph.grid;
+				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
+			}
+
+			node.weight = collides ? 0 : 1;
 		}
 	};
 });

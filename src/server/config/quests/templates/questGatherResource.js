@@ -38,6 +38,15 @@ define([
 			return true;
 		},
 
+		getXpMultiplier: function () {
+			if (this.requiredQuality == 2)
+				return 8;
+			else if (this.requiredQuality == 1)
+				return 6;
+			else
+				return this.need;
+		},
+
 		updateDescription: function () {
 			var typeName = this.typeName;
 			if (this.requiredQuality > 0)
@@ -55,7 +64,7 @@ define([
 			afterGatherResource: function (gatherResult) {
 				if (gatherResult.nodeType != this.gatherType)
 					return;
-				else if ((this.requiredQuality) && (gatherResult.items[0].quality != this.requiredQuality))
+				else if ((this.requiredQuality) && (gatherResult.items[0].quality < this.requiredQuality))
 					return;
 
 				if ((this.obj.zoneName != this.zoneName) || (this.have >= this.need))

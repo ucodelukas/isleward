@@ -1,12 +1,12 @@
 define([
 
-], function(
+], function (
 
 ) {
 	var events = {
 		events: {},
 		queue: [],
-		on: function(event, callback) {
+		on: function (event, callback) {
 			var list = this.events[event] || (this.events[event] = []);
 			list.push(callback);
 
@@ -25,13 +25,13 @@ define([
 
 			return callback;
 		},
-		clearQueue: function() {
+		clearQueue: function () {
 			//Hack to allow the player list to persist
-			this.queue.spliceWhere(function(q) {
-				return (q.event != 'onGetConnectedPlayer');
+			this.queue.spliceWhere(function (q) {
+				return ((q.event != 'onGetConnectedPlayer') && (q.event != 'onGetDisconnectedPlayer'));
 			});
 		},
-		off: function(event, callback) {
+		off: function (event, callback) {
 			var list = this.events[event] || [];
 			var lLen = list.length;
 			for (var i = 0; i < lLen; i++) {
@@ -45,7 +45,7 @@ define([
 			if (lLen == 0)
 				delete this.events[event];
 		},
-		emit: function(event) {
+		emit: function (event) {
 			var args = [].slice.call(arguments, 1);
 
 			var list = this.events[event];

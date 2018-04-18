@@ -18,7 +18,9 @@ define([
 			customMap: null,
 			mail: null,
 			customChannels: null,
-			error: null
+			error: null,
+			modLog: null,
+			accountInfo: null
 		},
 
 		init: function (cbReady) {

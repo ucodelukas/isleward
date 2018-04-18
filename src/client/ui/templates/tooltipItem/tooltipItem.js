@@ -44,7 +44,7 @@ define([
 		},
 
 		onHideItemTooltip: function (item) {
-			if (this.item != item)
+			if ((this.item != item) && (this.item.refItem) && (this.item.refItem != item))
 				return;
 
 			this.item = null;
@@ -55,6 +55,8 @@ define([
 			this.item = item;
 
 			var tempStats = $.extend(true, {}, item.stats);
+			var enchantedStats = item.enchantedStats || {};
+
 			if ((compare) && (shiftDown)) {
 				if (!item.eq) {
 					var compareStats = compare.stats;
@@ -74,11 +76,26 @@ define([
 						}
 					}
 				}
+			} else {
+				Object.keys(tempStats).forEach(function (s) {
+					if (enchantedStats[s]) {
+						tempStats[s] -= enchantedStats[s];
+						if (tempStats[s] <= 0)
+							delete tempStats[s];
+
+						tempStats['_' + s] = enchantedStats[s];
+					}
+				});
 			}
 
 			stats = Object.keys(tempStats)
 				.map(function (s) {
-					var statName = statTranslations.translate(s);
+					var isEnchanted = (s[0] == '_');
+					var statName = s;
+					if (isEnchanted)
+						statName = statName.substr(1);
+
+					statName = statTranslations.translate(statName);
 					var value = tempStats[s];
 
 					if (percentageStats.indexOf(s) > -1)
@@ -95,13 +112,23 @@ define([
 						else if (row.indexOf('+') > -1)
 							rowClass = 'gainStat';
 					}
+					if (isEnchanted)
+						rowClass += ' enchanted';
 
 					row = '<div class="' + rowClass + '">' + row + '</div>';
 
 					return row;
 				}, this)
 				.sort(function (a, b) {
-					return (a.length - b.length);
+					return (a.replace(' enchanted', '').length - b.replace(' enchanted', '').length);
+				})
+				.sort(function (a, b) {
+					if ((a.indexOf('enchanted') > -1) && (b.indexOf('enchanted') == -1))
+						return 1;
+					else if ((a.indexOf('enchanted') == -1) && (b.indexOf('enchanted') > -1))
+						return -1;
+					else
+						return 0;
 				})
 				.join('');
 
@@ -126,7 +153,27 @@ define([
 			if ((item.spell) && (item.spell.values)) {
 				var abilityValues = '';
 				for (var p in item.spell.values) {
-					abilityValues += p + ': ' + item.spell.values[p] + '<br/>';
+					if ((compare) && (shiftDown)) {
+						var delta = item.spell.values[p] - compare.spell.values[p];
+						// adjust by EPSILON to handle float point imprecision, otherwise 3.15 - 2 = 1.14 or 2 - 3.15 = -1.14
+						// have to move away from zero by EPSILON, not a simple add
+						if (delta >= 0) {
+							delta += Number.EPSILON;
+						} else {
+							delta -= Number.EPSILON;
+						}
+						delta = ~~((delta) * 100) / 100;
+						var rowClass = '';
+						if (delta > 0 ) {
+							rowClass = 'gainDamage';
+							delta = '+' + delta;
+						} else if (delta < 0) {
+							rowClass = 'loseDamage';
+						}
+						abilityValues += '<div class="' + rowClass + '">' + p + ': ' + delta + '</div>';
+					} else {
+						abilityValues += p + ': ' + item.spell.values[p] + '<br/>';
+					}
 				}
 				if (!item.ability)
 					abilityValues = abilityValues;

@@ -64,6 +64,19 @@ define([
 			return true;
 		},
 
+		getXpMultiplier: function () {
+			var multiplier = 1;
+
+			if (!this.quality)
+				multiplier *= 8;
+			else if (this.quality == 2)
+				multiplier *= 6;
+			else if (this.quality == 1)
+				multiplier *= 4;
+
+			return multiplier;
+		},
+
 		events: {
 			afterLootMobItem: function (item) {
 				if (
@@ -71,7 +84,7 @@ define([
 					(this.obj.zoneName != this.zoneName) ||
 					(
 						(this.quality) &&
-						(item.quality != this.quality)
+						(item.quality < this.quality)
 					) ||
 					(
 						(this.slot.indexOf) &&

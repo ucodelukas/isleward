@@ -14,6 +14,12 @@ define([
 		records: null,
 
 		init: function () {
+			if (sheetsConfig.roles) {
+				this.update = function () {};
+				this.onGetRows(null, sheetsConfig.roles);
+				return;
+			}
+
 			this.doc = new googleSheets(sheetsConfig.sheetId);
 			this.doc.useServiceAccountAuth(creds, this.onAuth.bind(this));
 		},
@@ -23,6 +29,11 @@ define([
 		},
 
 		onGetInfo: function () {
+			if (!this.doc.worksheets) {
+				setTimeout(this.onAuth.bind(this), 300000);
+				return;
+			}
+
 			this.sheet = this.doc.worksheets[0];
 
 			this.update();
@@ -49,8 +60,10 @@ define([
 						o.messagePrefix = o.messageprefix;
 						delete o.messageprefix;
 
-						o.items = JSON.parse(o.items || "[]");
-						o.skins = JSON.parse(o.skins || "[]");
+						if (typeof (o.items) == 'string')
+							o.items = JSON.parse(o.items || "[]");
+						if (typeof (o.skins) == 'string')
+							o.skins = JSON.parse(o.skins || "[]");
 
 						return o;
 					});

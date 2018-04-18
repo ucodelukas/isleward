@@ -27,7 +27,8 @@ define([
 				stash: ['withdraw'],
 				trade: ['buySell'],
 				door: ['lock', 'unlock'],
-				wardrobe: ['open', 'apply']
+				wardrobe: ['open', 'apply'],
+				stats: ['respawn']
 			};
 
 			return ((secondaryAllowed[msg.data.cpn]) && (secondaryAllowed[msg.data.cpn].indexOf(msg.data.method) > -1));

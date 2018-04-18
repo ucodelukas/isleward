@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/quests/template',
 	'html!ui/templates/quests/templateQuest',
 	'css!ui/templates/quests/styles'
-], function(
+], function (
 	client,
 	events,
 	tpl,
@@ -17,7 +17,7 @@ define([
 		quests: [],
 		container: '.right',
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainQuest', this.onObtainQuest.bind(this));
@@ -25,24 +25,27 @@ define([
 			this.onEvent('onCompleteQuest', this.onCompleteQuest.bind(this));
 		},
 
-		onRezone: function() {
+		onRezone: function () {
 			this.quests = [];
 			this.el.find('.list').empty();
 		},
 
-		onObtainQuest: function(quest) {
+		onObtainQuest: function (quest) {
 			var list = this.el.find('.list');
 
 			var html = templateQuest
+				.replace('$ZONE$', quest.zoneName)
 				.replace('$NAME$', quest.name)
-				.replace('$DESCRIPTION$', quest.description);
+				.replace('$DESCRIPTION$', quest.description)
+				.replace('$REWARD$', quest.xp + ' xp');
 
-			var el = $(html).appendTo(list);
+			var el = $(html)
+				.appendTo(list);
 
 			if (quest.isReady)
 				el.addClass('ready');
 
-			if (quest.active) 
+			if (quest.active)
 				el.addClass('active');
 			else if (!quest.isReady)
 				el.addClass('disabled');
@@ -58,7 +61,7 @@ define([
 			var quests = list.find('.quest');
 
 			quests
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					a = $(a).hasClass('active') ? 1 : 0;
 					b = $(b).hasClass('active') ? 1 : 0;
 					return b - a;
@@ -66,8 +69,7 @@ define([
 				.appendTo(list);
 		},
 
-
-		onClick: function(el, quest) {
+		onClick: function (el, quest) {
 			if (!el.hasClass('ready'))
 				return;
 
@@ -82,8 +84,8 @@ define([
 			});
 		},
 
-		onUpdateQuest: function(quest) {
-			var q = this.quests.find(function(q) {
+		onUpdateQuest: function (quest) {
+			var q = this.quests.find(function (q) {
 				return (q.id == quest.id);
 			});
 
@@ -98,8 +100,8 @@ define([
 			}
 		},
 
-		onCompleteQuest: function(id) {
-			var q = this.quests.find(function(q) {
+		onCompleteQuest: function (id) {
+			var q = this.quests.find(function (q) {
 				return (q.id == id);
 			});
 
@@ -107,7 +109,7 @@ define([
 				return;
 
 			q.el.remove();
-			this.quests.spliceWhere(function(q) {
+			this.quests.spliceWhere(function (q) {
 				return (q.id == id);
 			});
 		}

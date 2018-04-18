@@ -213,9 +213,9 @@ define([
 			var textbox = this.find('input');
 			var val = textbox.val()
 				.split('<')
-				.join('')
+				.join('&lt;')
 				.split('>')
-				.join('');
+				.join('&gt;');
 
 			textbox.blur();
 

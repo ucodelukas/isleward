@@ -313,8 +313,11 @@ module.exports = {
 			properties: {
 				cpnTrade: {
 					items: {
-						min: 5,
-						max: 10,
+						min: 2,
+						max: 5,
+						minLevel: 14,
+						maxLevel: 18,
+						slot: 'neck',
 						extra: []
 					},
 					faction: {
@@ -323,7 +326,7 @@ module.exports = {
 					},
 					markup: {
 						buy: 0.25,
-						sell: 10
+						sell: 20
 					}
 				}
 			}
@@ -335,6 +338,7 @@ module.exports = {
 				cpnBlocker: {
 					init: function () {
 						this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+						this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, true);
 					}
 				}
 			}
@@ -528,6 +532,7 @@ module.exports = {
 						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);
+							this.obj.instance.objects.notifyCollisionChange(w.x, w.y, false);
 
 							syncer.queue('onGetObject', {
 								x: w.x,
@@ -538,7 +543,7 @@ module.exports = {
 									col: 4
 								}]
 							});
-						});
+						}, this);
 					}
 				}
 			}

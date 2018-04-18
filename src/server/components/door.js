@@ -23,8 +23,10 @@ define([
 			this.destroyKey = blueprint.destroyKey;
 			this.autoClose = blueprint.autoClose;
 
-			if (this.closed)
+			if (this.closed) {
 				this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+				this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, true);
+			}
 
 			var o = this.obj.instance.objects.buildObjects([{
 				properties: {
@@ -126,7 +128,7 @@ define([
 					return;
 
 				if (((key.singleUse) || (this.destroyKey)) && (key.keyId != 'world')) {
-					obj.inventory.destroyItem(key.id);
+					obj.inventory.destroyItem(key.id, 1);
 
 					obj.instance.syncer.queue('onGetMessages', {
 						id: obj.id,
@@ -143,6 +145,7 @@ define([
 				thisObj.cell = this.openSprite;
 				syncO.cell = this.openSprite;
 				this.obj.instance.physics.setCollision(thisObj.x, thisObj.y, false);
+				this.obj.instance.objects.notifyCollisionChange(thisObj.x, thisObj.y, false);
 
 				this.closed = false;
 				this.enterArea(obj);
@@ -150,6 +153,7 @@ define([
 				thisObj.cell = this.closedSprite;
 				syncO.cell = this.closedSprite;
 				this.obj.instance.physics.setCollision(thisObj.x, thisObj.y, true);
+				this.obj.instance.objects.notifyCollisionChange(thisObj.x, thisObj.y, true);
 
 				this.closed = true;
 				this.enterArea(obj);
