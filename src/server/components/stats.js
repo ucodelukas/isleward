@@ -34,10 +34,10 @@ define([
 		addSpellCritMultiplier: 0,
 		critChance: 5,
 		critMultiplier: 150,
-		attackCritChance: 5,
-		attackCritMultiplier: 150,
-		spellCritChance: 5,
-		spellCritMultiplier: 150,
+		attackCritChance: 0,
+		attackCritMultiplier: 0,
+		spellCritChance: 0,
+		spellCritMultiplier: 0,
 		armor: 0,
 		dmgPercent: 0,
 		vit: 0,
@@ -191,24 +191,12 @@ define([
 
 			if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
 				var morphStat = stat.substr(3);
-				morphStat = morphStat[0].toUpperCase() + morphStat.substr(1);
-				this.addStat(morphStat, (0.5 * value));
-
-				if (stat == 'addCritChance') {
-					['attackCritChance', 'spellCritChance'].forEach(function (s) {
-						this.addStat(s, (0.5 * value));
-					}, this);
-				}
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
+				this.addStat(morphStat, (0.05 * value));
 			} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
 				var morphStat = stat.substr(3);
-				morphStat = morphStat[0].toUpperCase() + morphStat.substr(1);
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 				this.addStat(morphStat, value);
-
-				if (stat == 'addCritMultiplier') {
-					['attackCritMultiplier', 'spellCritMultiplier'].forEach(function (s) {
-						this.addStat(s, (0.5 * value));
-					}, this);
-				}
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
