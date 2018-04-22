@@ -12,8 +12,13 @@ define([
 		'int': 'intellect',
 		'dex': 'dexterity',
 		'armor': 'armor',
+
 		'blockAttackChance': 'chance to block attacks',
 		'blockSpellChance': 'chance to block spells',
+
+		'dodgeAttackChance': 'chance to dodge attacks',
+		'dodgeSpellChance': 'chance to dodge spells',
+
 		'addCritChance': 'global crit chance',
 		'addCritMultiplier': 'global crit multiplier',
 		'addAttackCritChance': 'attack crit chance',

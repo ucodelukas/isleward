@@ -44,6 +44,8 @@ define([
 
 		blockAttackChance: 0,
 		blockSpellChance: 0,
+		dodgeAttackChance: 0,
+		dodgeSpellChance: 0,
 
 		attackSpeed: 0,
 		castSpeed: 0,
@@ -497,7 +499,7 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				if (!damage.blocked) {
+				if ((!damage.blocked) && (!damage.dodged)) {
 					this.syncer.queue('onGetDamage', {
 						id: this.obj.id,
 						source: source.id,

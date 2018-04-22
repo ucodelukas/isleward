@@ -287,6 +287,18 @@ define([
 				ignore: true
 			},
 
+			dodgeAttackChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
+			dodgeSpellChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
 			addCritChance: {
 				generator: 'addCritChance',
 				level: {
@@ -353,7 +365,17 @@ define([
 				sprintChance: {
 					min: 1,
 					max: 20
-				}
+				},
+
+				dodgeAttackChance: {
+					min: 1,
+					max: 10
+				},
+
+				dodgeSpellChance: {
+					min: 1,
+					max: 10
+				},
 			},
 
 			offHand: {

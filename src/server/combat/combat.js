@@ -13,6 +13,7 @@ define([
 
 			var amount = config.damage;
 			var blocked = false;
+			var dodged = false;
 			var isCrit = false;
 
 			//Don't block heals
@@ -22,9 +23,17 @@ define([
 					blocked = true;
 					amount = 0;
 				}
+
+				if (!blocked) {
+					var dodgeChance = config.isAttack ? tgtValues.dodgeAttackChance : tgtValues.dodgeSpellChance;
+					if (mathRandom() * 100 < dodgeChance) {
+						dodged = true;
+						amount = 0;
+					}
+				}
 			}
 
-			if (!blocked) {
+			if ((!blocked) && (!dodged)) {
 				var statValue = 0;
 				if (config.statType) {
 					var statType = config.statType;
@@ -73,6 +82,7 @@ define([
 			return {
 				amount: amount,
 				blocked: blocked,
+				dodged: dodged,
 				crit: isCrit,
 				element: config.element
 			};

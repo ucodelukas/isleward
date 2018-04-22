@@ -359,12 +359,15 @@ define([
 					'chance to block attacks': stats.blockAttackChance + '%',
 					'chance to block spells': stats.blockSpellChance + '%',
 					gap1: '',
+					'chance to dodge attacks': stats.dodgeAttackChance + '%',
+					'chance to dodge spells': stats.dodgeSpellChance + '%',
+					gap2: '',
 					'arcane resist': stats.elementArcaneResist,
 					'fire resist': stats.elementFireResist,
 					'frost resist': stats.elementFrostResist,
 					'holy resist': stats.elementHolyResist,
 					'poison resist': stats.elementPoisonResist,
-					gap2: '',
+					gap3: '',
 					'all resist': stats.elementAllResist
 				},
 				misc: {
