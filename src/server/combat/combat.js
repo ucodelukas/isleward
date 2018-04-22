@@ -58,9 +58,14 @@ define([
 
 				if (!config.noCrit) {
 					var critChance = srcValues.critChance;
+					critChance += (config.isAttack) ? srcValues.attackCritChance : srcValues.spellCritChance;
+
+					var critMultiplier = srcValues.critMultiplier;
+					critMultiplier += (config.isAttack) ? srcValues.attackCritMultiplier : srcValues.spellCritMultiplier;
+
 					if ((config.crit) || (mathRandom() * 100 < critChance)) {
 						isCrit = true;
-						amount *= (srcValues.critMultiplier / 100);
+						amount *= (critMultiplier / 100);
 					}
 				}
 			}

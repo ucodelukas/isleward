@@ -336,8 +336,12 @@ define([
 					vit: stats.vit
 				},
 				offense: {
-					'crit chance': (~~(stats.critChance * 10) / 10) + '%',
-					'crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
+					'global crit chance': (~~(stats.critChance * 10) / 10) + '%',
+					'global crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
+					'attack crit chance': (~~(stats.attackCritChance * 10) / 10) + '%',
+					'attack crit multiplier': (~~(stats.attackCritMultiplier * 10) / 10) + '%',
+					'spell crit chance': (~~(stats.spellCritChance * 10) / 10) + '%',
+					'spell crit multiplier': (~~(stats.spellCritMultiplier * 10) / 10) + '%',
 					gap1: '',
 					'arcane increase': stats.elementArcanePercent + '%',
 					'fire increase': stats.elementFirePercent + '%',

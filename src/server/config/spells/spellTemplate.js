@@ -73,9 +73,13 @@ define([
 					noCrit: true
 				}).amount;
 
-				var critChance = this.obj.stats.values.critChance;
-				var critMultiplier = this.obj.stats.values.critMultiplier;
-				var attackSpeed = (this.obj.stats.values.attackSpeed / 100);
+				var isAttack = (this.type == 'melee');
+
+				var statValues = this.obj.stats.values;
+
+				var critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
+				var critMultiplier = isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier;
+				var attackSpeed = (statValues.attackSpeed / 100);
 				attackSpeed += 1;
 
 				dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;

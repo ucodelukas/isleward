@@ -28,8 +28,16 @@ define([
 		regenMana: 5,
 		addCritChance: 0,
 		addCritMultiplier: 0,
+		addAttackCritChance: 0,
+		addAttackCritMultiplier: 0,
+		addSpellCritChance: 0,
+		addSpellCritMultiplier: 0,
 		critChance: 5,
 		critMultiplier: 150,
+		attackCritChance: 5,
+		attackCritMultiplier: 150,
+		spellCritChance: 5,
+		spellCritMultiplier: 150,
 		armor: 0,
 		dmgPercent: 0,
 		vit: 0,
@@ -181,12 +189,26 @@ define([
 
 			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
 
-			if (stat == 'addCritChance') {
-				this.values.critChance += (0.05 * value);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
-			} else if (stat == 'addCritMultiplier') {
-				this.values.critMultiplier += value;
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
+			if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toUpperCase() + morphStat.substr(1);
+				this.addStat(morphStat, (0.5 * value));
+
+				if (stat == 'addCritChance') {
+					['attackCritChance', 'spellCritChance'].forEach(function (s) {
+						this.addStat(s, (0.5 * value));
+					}, this);
+				}
+			} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toUpperCase() + morphStat.substr(1);
+				this.addStat(morphStat, value);
+
+				if (stat == 'addCritMultiplier') {
+					['attackCritMultiplier', 'spellCritMultiplier'].forEach(function (s) {
+						this.addStat(s, (0.5 * value));
+					}, this);
+				}
 			} else if (stat == 'vit') {
 				this.values.hpMax += (value * this.vitScale);
 				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);

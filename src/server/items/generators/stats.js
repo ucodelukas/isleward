@@ -300,6 +300,32 @@ define([
 				}
 			},
 
+			addAttackCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addAttackCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
+			addSpellCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addSpellCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
 			magicFind: {
 				min: 1,
 				max: 15

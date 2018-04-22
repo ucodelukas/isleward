@@ -1,7 +1,7 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		names: {
@@ -13,8 +13,12 @@ define([
 			str: 'Strength',
 			int: 'Intellect',
 			dex: 'Dexterity',
-			critChance: 'Critical Chance',
-			critMultiplier: 'Critical Multiplier',
+			critChance: 'Global Critical Chance',
+			critMultiplier: 'Global Critical Multiplier',
+			attackCritChance: 'Attack Critical Chance',
+			attackCritMultiplier: 'Attack Critical Multiplier',
+			spellCritChance: 'Spell Critical Chance',
+			spellCritMultiplier: 'Spell Critical Multiplier',
 			attackSpeed: 'Attack Speed',
 			sprintChance: 'Sprint Chance',
 			attackRange: 'Attack Range',

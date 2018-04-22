@@ -14,6 +14,10 @@ define([
 	var percentageStats = [
 		'addCritChance',
 		'addCritMultiplier',
+		'addAttackCritChance',
+		'addAttackCritMultiplier',
+		'addSpellCritChance',
+		'addSpellCritMultiplier',
 		'sprintChance',
 		'dmgPercent',
 		'xpIncrease',
@@ -164,7 +168,7 @@ define([
 						}
 						delta = ~~((delta) * 100) / 100;
 						var rowClass = '';
-						if (delta > 0 ) {
+						if (delta > 0) {
 							rowClass = 'gainDamage';
 							delta = '+' + delta;
 						} else if (delta < 0) {
