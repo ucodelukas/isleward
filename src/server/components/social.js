@@ -16,6 +16,8 @@ define([
 
 		customChannels: null,
 
+		messageHistory: [],
+
 		init: function (blueprint) {
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
@@ -147,11 +149,32 @@ define([
 				return;
 			}
 
+			var messageString = msg.data.message;
+
+			var history = this.messageHistory;
+
+			var time = +new Date;
+			history.spliceWhere(h => ((time - h.time) > 5000));
+
+			if (history.length > 0) {
+				if (history[history.length - 1].msg == messageString) {
+					this.sendMessage('You have already sent that message', 'color-redA');
+					return;
+				} else if (history.length >= 3) {
+					this.sendMessage('You are sending too many messages', 'color-redA');
+					return;
+				}
+			}
+
+			history.push({
+				msg: messageString,
+				time: time
+			});
+
 			var charname = this.obj.auth.charname;
 
 			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
 
-			var messageString = msg.data.message;
 			var msgEvent = {
 				source: charname,
 				msg: messageString
