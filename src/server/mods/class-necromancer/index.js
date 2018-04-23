@@ -130,6 +130,7 @@ define([
 				types.oneHanded[s] = {
 					sprite: [i, 0],
 					spellName: 'melee',
+					attrRequire: ['int'],
 					spellConfig: {
 						statType: ['str', 'int'],
 						statMult: 0.76,

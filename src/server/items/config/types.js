@@ -159,6 +159,7 @@ define([
 		},
 		oneHanded: {
 			'Sword': {
+				attrRequire: 'str',
 				sprite: [9, 0],
 				spellName: 'melee',
 				spellConfig: {
@@ -173,6 +174,7 @@ define([
 				}
 			},
 			'Dagger': {
+				attrRequire: 'dex',
 				sprite: [9, 2],
 				spellName: 'melee',
 				spellConfig: {
@@ -186,6 +188,7 @@ define([
 				}
 			},
 			'Axe': {
+				attrRequire: 'str',
 				sprite: [9, 3],
 				spellName: 'melee',
 				spellConfig: {
@@ -200,6 +203,7 @@ define([
 				}
 			},
 			'Wand': {
+				attrRequire: 'int',
 				sprite: [9, 8],
 				spellName: 'projectile',
 				spellConfig: {
@@ -217,6 +221,7 @@ define([
 		},
 		twoHanded: {
 			'Gnarled Staff': {
+				attrRequire: 'int',
 				sprite: [9, 1],
 				spellName: 'projectile',
 				spellConfig: {
@@ -233,6 +238,7 @@ define([
 				}
 			},
 			'Spear': {
+				attrRequire: 'str',
 				sprite: [9, 6],
 				spellName: 'melee',
 				range: 2,
@@ -250,19 +256,23 @@ define([
 		},
 		offHand: {
 			'Wooden Shield': {
+				attrRequire: 'str',
 				sprite: [13, 0],
 				armorMult: 0.3,
 				blockAttackMult: 1
 			},
 			'Gilded Shield': {
+				attrRequire: 'str',
 				sprite: [13, 1],
 				armorMult: 0.6,
 				blockAttackMult: 0.5
 			},
 			'Brittle Tome': {
+				attrRequire: 'int',
 				sprite: [13, 2]
 			},
 			'Ancient Tome': {
+				attrRequire: 'int',
 				sprite: [13, 3]
 			}
 		},

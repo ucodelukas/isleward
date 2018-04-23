@@ -37,14 +37,9 @@ define([
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > (stats.originalLevel || stats.level))) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
 				item.eq = false;
 				return;
-			} else if ((item.factions) && (this.obj.player)) {
-				if (!this.obj.reputation.canEquipItem(item)) {
-					item.eq = false;
-					return;
-				}
 			}
 
 			var currentEqId = this.eq[item.slot];
@@ -61,18 +56,12 @@ define([
 				itemId = itemId.itemId;
 			}
 
-			var level = (this.obj.stats.originalValues || this.obj.stats.values).level;
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
 				item.eq = false;
 				return;
-			} else if ((item.factions) && (this.obj.player)) {
-				if (!this.obj.reputation.canEquipItem(item)) {
-					item.eq = false;
-					return;
-				}
 			}
 
 			if (!slot)

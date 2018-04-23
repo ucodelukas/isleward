@@ -28,7 +28,7 @@
 			}
 		}
 
-		.stats {
+		> .stats {
 			color: darken(@white, 20%);
 			margin-bottom: 8px;
 
@@ -55,12 +55,20 @@
 			margin-bottom: 8px;
 		}
 
-		.level {
+		.requires {
 			margin-top: 8px;
 			color: darken(@white, 40%);
 
 			&.high-level {
 				color: @red;
+			}
+
+			.high-level {
+				color: @red;
+			}
+
+			> *:not(.high-level) {
+				color: darken(@white, 40%);
 			}
 		}
 

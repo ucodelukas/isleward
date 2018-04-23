@@ -154,6 +154,13 @@ define([
 				.replace('$SLOT$', item.slot)
 				.replace('$STATS$', stats)
 				.replace('$LEVEL$', level);
+
+			if (item.requires) {
+				html = html
+					.replace('$ATTRIBUTE$', item.requires[0].stat)
+					.replace('$ATTRIBUTEVALUE$', item.requires[0].value);
+			}
+
 			if (item.power)
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
@@ -194,6 +201,11 @@ define([
 			else
 				this.tooltip.find('.level').show();
 
+			if (!item.requires)
+				this.tooltip.find('.stats').hide();
+			else
+				this.tooltip.find('.stats').show();
+
 			if ((!item.type) || (item.type == item.name))
 				this.tooltip.find('.type').hide();
 			else {
@@ -205,10 +217,11 @@ define([
 			if (item.power)
 				this.tooltip.find('.power').show();
 
-			var playerStats = window.player.stats.values;
-			var level = playerStats.originalLevel || playerStats.level;
-			if (item.level > level)
-				this.tooltip.find('.level').addClass('high-level');
+			var equipErrors = window.player.inventory.equipItemErrors(item);
+			equipErrors.forEach(function (e) {
+				this.tooltip.find('.requires').addClass('high-level');
+				this.tooltip.find('.requires .' + e).addClass('high-level');
+			}, this);
 
 			if ((item.material) || (item.quest)) {
 				this.tooltip.find('.level').hide();
