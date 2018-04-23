@@ -9,6 +9,11 @@ define([
 		effects: [],
 		nextId: 0,
 
+		ccResistances: {
+			stunned: 0,
+			slowed: 0
+		},
+
 		init: function (blueprint) {
 			var effects = blueprint.effects || [];
 			var eLen = effects.length;
@@ -114,7 +119,19 @@ define([
 			}
 		},
 
+		canApplyEffect: function (type) {
+			var ccResistances = this.ccResistances;
+			if ((100 - ccResistances[type]) >= 50) {
+				ccResistances[type] += 50;
+				return true;
+			} else
+				return false;
+		},
+
 		addEffect: function (options) {
+			if (!this.canApplyEffect(options.type))
+				return;
+
 			if (!options.new) {
 				var exists = this.effects.find(e => e.type == options.type);
 				if (exists) {
@@ -270,6 +287,11 @@ define([
 
 					this.syncRemove(e.id, e.type, e.noMsg);
 				}
+			}
+
+			for (var p in this.ccResistances) {
+				if (this.ccResistances[p] > 0)
+					this.ccResistances[p]--;
 			}
 		}
 	};

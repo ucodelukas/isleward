@@ -1,7 +1,7 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'iceSpear',
@@ -18,7 +18,7 @@ define([
 
 		needLos: true,
 
-		cast: function(action) {
+		cast: function (action) {
 			var obj = this.obj;
 			var target = action.target;
 
@@ -53,7 +53,7 @@ define([
 
 			return true;
 		},
-		explode: function(target) {
+		explode: function (target) {
 			if (this.obj.destroyed)
 				return;
 
@@ -62,11 +62,13 @@ define([
 				ttl: this.freezeDuration
 			});
 
-			this.obj.instance.syncer.queue('onGetDamage', {
-				id: target.id,
-				event: true,
-				text: 'slowed'
-			});
+			if (targetEffect) {
+				this.obj.instance.syncer.queue('onGetDamage', {
+					id: target.id,
+					event: true,
+					text: 'slowed'
+				});
+			}
 
 			var damage = this.getDamage(target);
 			target.stats.takeDamage(damage, this.threatMult, this.obj);
