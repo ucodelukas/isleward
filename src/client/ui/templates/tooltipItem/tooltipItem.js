@@ -139,6 +139,23 @@ define([
 				})
 				.join('');
 
+			var implicitStats = (item.implicitStats || []).map(function (s) {
+				var stat = s.stat;
+				var statName = statTranslations.translate(stat);
+				var value = s.value;
+
+				if (percentageStats.indexOf(stat) > -1)
+					value += '%';
+				else if ((stat.indexOf('element') == 0) && (stat.indexOf('Resist') == -1))
+					value += '%';
+
+				var row = value + ' ' + statName;
+				var rowClass = '';
+				row = '<div class="' + rowClass + '">' + row + '</div>';
+
+				return row;
+			}).join('');
+
 			var name = item.name;
 			if (item.quantity > 1)
 				name += ' x' + item.quantity;
@@ -152,6 +169,7 @@ define([
 				.replace('$QUALITY$', item.quality)
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
+				.replace('$IMPLICITSTATS$', implicitStats)
 				.replace('$STATS$', stats)
 				.replace('$LEVEL$', level);
 
@@ -201,10 +219,15 @@ define([
 			else
 				this.tooltip.find('.level').show();
 
-			if (!item.requires)
-				this.tooltip.find('.stats').hide();
+			if (!item.implicitStats)
+				this.tooltip.find('.implicitStats').hide();
 			else
-				this.tooltip.find('.stats').show();
+				this.tooltip.find('.implicitStats').show();
+
+			if (!item.requires)
+				this.tooltip.find('.requires .stats').hide();
+			else
+				this.tooltip.find('.requires .stats').show();
 
 			if ((!item.type) || (item.type == item.name))
 				this.tooltip.find('.type').hide();

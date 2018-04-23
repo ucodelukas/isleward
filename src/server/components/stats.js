@@ -26,18 +26,21 @@ define([
 		itemQuantity: 0,
 		regenHp: 0,
 		regenMana: 5,
+
 		addCritChance: 0,
 		addCritMultiplier: 0,
 		addAttackCritChance: 0,
 		addAttackCritMultiplier: 0,
 		addSpellCritChance: 0,
 		addSpellCritMultiplier: 0,
+
 		critChance: 5,
 		critMultiplier: 150,
 		attackCritChance: 0,
 		attackCritMultiplier: 0,
 		spellCritChance: 0,
 		spellCritMultiplier: 0,
+		
 		armor: 0,
 		dmgPercent: 0,
 		vit: 0,

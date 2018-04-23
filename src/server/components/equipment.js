@@ -137,6 +137,10 @@ define([
 				this.obj.stats.addStat(s, val);
 			}
 
+			(item.implicitStats || []).forEach(function (s) {
+				this.obj.stats.addStat(s.stat, s.value);
+			}, this);
+
 			item.eq = true;
 			this.eq[slot] = itemId;
 			item.equipSlot = slot;
@@ -208,6 +212,10 @@ define([
 
 				this.obj.stats.addStat(s, -val);
 			}
+
+			(item.implicitStats || []).forEach(function (s) {
+				this.obj.stats.addStat(s.stat, -s.value);
+			}, this);
 
 			delete item.eq;
 			delete this.eq[item.equipSlot];

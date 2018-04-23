@@ -485,6 +485,16 @@ define([
 				}
 			}
 
+			var implicitStat = blueprint.implicitStat;
+			if (implicitStat) {
+				var value = implicitStat.value[0] + ~~(Math.random() * (implicitStat.value[1] - implicitStat.value[0]));
+
+				item.implicitStats = [{
+					stat: implicitStat.stat,
+					value: value
+				}];
+			}
+
 			if (blueprint.stats) {
 				var useStats = extend(true, [], blueprint.stats);
 				var addStats = Math.min(statCount, blueprint.stats.length);
@@ -507,7 +517,7 @@ define([
 			}
 		},
 
-		buildStat: function (item, blueprint, stat, result) {
+		buildStat: function (item, blueprint, stat, result, isImplicit) {
 			var slotStats = this.slots[item.slot] || {};
 			var statOptions = extend(true, {}, this.stats, slotStats || {});
 

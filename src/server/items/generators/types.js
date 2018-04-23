@@ -34,6 +34,9 @@ define([
 					blueprint.statMult.armor *= material.statMult.armor
 			}
 
+			if (typeBlueprint.implicitStat)
+				blueprint.implicitStat = typeBlueprint.implicitStat;
+
 			if (typeBlueprint.attrRequire)
 				blueprint.attrRequire = typeBlueprint.attrRequire;
 

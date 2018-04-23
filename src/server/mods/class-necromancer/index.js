@@ -128,6 +128,7 @@ define([
 		beforeGetItemTypes: function (types) {
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
 				types.oneHanded[s] = {
+					spritesheet: `${this.folderName}/images/items.png`,
 					sprite: [i, 0],
 					spellName: 'melee',
 					attrRequire: ['int'],
@@ -140,7 +141,10 @@ define([
 							damage: [1.5, 5.7]
 						}
 					},
-					spritesheet: `${this.folderName}/images/items.png`
+					implicitStat: {
+						stat: 'attackSpeed',
+						value: [1, 5]
+					}
 				};
 			}, this);
 		},
