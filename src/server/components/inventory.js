@@ -3,7 +3,7 @@ define([
 	'items/salvager',
 	'items/enchanter',
 	'objects/objects',
-	'config/classes',
+	'config/spirits',
 	'mtx/mtx',
 	'config/factions',
 	'items/itemEffects'

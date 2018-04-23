@@ -1,6 +1,6 @@
 define([
 	'config/animations',
-	'config/classes',
+	'config/spirits',
 	'misc/scheduler'
 ], function (
 	animations,
@@ -82,7 +82,12 @@ define([
 		values: baseStats,
 		originalValues: null,
 
-		vitScale: 10,
+		statScales: {
+			vitToHp: 10,
+			strToArmor: 1,
+			intToMana: (1 / 6),
+			dexToDodge: (1 / 12)
+		},
 
 		syncer: null,
 
@@ -184,12 +189,16 @@ define([
 		},
 
 		addStat: function (stat, value) {
+			var values = this.values;
+
 			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
-				this.values[stat] += value;
+				values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
-			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
+			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, values[stat]);
+			if (sendOnlyToSelf)
+				this.obj.syncer.setObject(false, 'stats', 'values', stat, values[stat]);
 
 			if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
 				var morphStat = stat.substr(3);
@@ -200,22 +209,22 @@ define([
 				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 				this.addStat(morphStat, value);
 			} else if (stat == 'vit') {
-				this.values.hpMax += (value * this.vitScale);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
-				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
+				this.addStat('hpMax', (value * this.statScales.vitToHp));
 			} else if (stat == 'allAttributes') {
 				['int', 'str', 'dex'].forEach(function (s) {
-					this.values[s] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
+					this.addStat(s, value)
 				}, this);
 			} else if (stat == 'elementAllResist') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
-
-					this.values[element] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+					this.addStat(element, value);
 				}, this);
-			}
+			} else if (stat == 'str')
+				this.addStat('armor', (value * this.statScales.strToArmor));
+			else if (stat == 'int')
+				this.addStat('manaMax', (value * this.statScales.intToMana));
+			else if (stat == 'dex')
+				this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
 		},
 
 		calcXpMax: function () {

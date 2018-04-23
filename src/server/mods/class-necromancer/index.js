@@ -13,7 +13,6 @@ define([
 		],
 
 		init: function () {
-			this.events.on('onBeforeGetClasses', this.beforeGetClasses.bind(this));
 			this.events.on('onBeforeGetSkins', this.beforeGetSkins.bind(this));
 			this.events.on('onBeforeGetItemTypes', this.beforeGetItemTypes.bind(this));
 			this.events.on('onBeforeGetSpellsInfo', this.beforeGetSpellsInfo.bind(this));
@@ -107,27 +106,6 @@ define([
 			list.push(`${this.folderName}/images/inGameSprite.png`);
 			list.push(`${this.folderName}/images/abilityIcons.png`);
 			list.push(`${this.folderName}/images/mobs.png`);
-		},
-
-		beforeGetClasses: function (classes) {
-			/*classes.spells.necromancer = ['harvest life', 'summon skeleton'];
-			classes.stats.necromancer = {
-				values: {
-					hpMax: 65
-				},
-				vitScale: 10,
-				gainStats: {
-					int: 1,
-					str: 1
-				},
-				spritesheet: `${this.folderName}/images/inGameSprite.png`
-			};
-			classes.weapons.necromancer = 'Sickle';
-			classes.portraits.necromancer = {
-				spritesheet: `${this.folderName}/images/avatar.png`,
-				x: 0,
-				y: 0
-			};*/
 		},
 
 		beforeGetSpellTemplate: function (spell) {
