@@ -5,7 +5,8 @@ define([
 	'css!ui/templates/passives/styles',
 	'ui/templates/passives/constants',
 	'ui/templates/passives/temp',
-	'ui/templates/passives/input'
+	'ui/templates/passives/input',
+	'js/misc/statTranslations'
 ], function (
 	events,
 	client,
@@ -13,7 +14,8 @@ define([
 	styles,
 	constants,
 	temp,
-	input
+	input,
+	statTranslations
 ) {
 	return {
 		tpl: tpl,
@@ -81,13 +83,16 @@ define([
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 
 			//Calculate midpoint
-			/*this.data.nodes.forEach(function (n) {
+			this.data.nodes.forEach(function (n) {
 				this.pos.x += n.pos.x;
 				this.pos.y += n.pos.y;
 			}, this);
 
 			this.pos.x = ~~(this.pos.x / this.data.nodes.length) * constants.gridSize;
-			this.pos.y = ~~(this.pos.y / this.data.nodes.length) * constants.gridSize;*/
+			this.pos.y = ~~(this.pos.y / this.data.nodes.length) * constants.gridSize;
+
+			this.pos.x -= ~~(this.canvas.width / 2);
+			this.pos.y -= ~~(this.canvas.height / 2);
 		},
 
 		renderNodes: function () {
@@ -200,6 +205,53 @@ define([
 					x: pos.x,
 					y: pos.y
 				};
+
+				var cell = {
+					x: ~~((this.pos.x + this.mouse.x) / constants.gridSize),
+					y: ~~((this.pos.y + this.mouse.y) / constants.gridSize)
+				};
+
+				var node = this.data.nodes.find(function (n) {
+					return (
+						(n.pos.x == cell.x) &&
+						(n.pos.y == cell.y)
+					);
+				});
+
+				if (node) {
+					var percentageStats = [
+						'addCritChance',
+						'addCritMultiplier',
+						'sprintChance',
+						'dmgPercent',
+						'xpIncrease',
+						'blockAttackChance',
+						'blockSpellChance',
+						'attackSpeed',
+						'castSpeed',
+						'itemQuantity',
+						'catchChance',
+						'catchSpeed',
+						'fishRarity',
+						'fishWeight',
+						'fishItems'
+					];
+
+					var text = Object.keys(node.stats)
+						.map(function (s) {
+							console.log(s);
+							var statName = statTranslations.translate(s);
+							var statValue = node.stats[s];
+							if (percentageStats.indexOf(s) > -1)
+								statValue += '%';
+
+							return ('+' + statValue + ' ' + statName);
+						})
+						.join('<br />');
+
+					events.emit('onShowTooltip', text, this.el[0], this.mouse);
+				} else
+					events.emit('onHideTooltip', this.el[0]);
 			},
 
 			onPanStart: function (e) {
