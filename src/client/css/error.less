@@ -1,0 +1,76 @@
+@import "colors.less";
+
+@font-face
+{
+    font-family: bitty;
+    src: url('../fonts/bitty.ttf');
+}
+
+* {
+	box-sizing: border-box;
+	font-family: bitty;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+body {
+	margin: 0px;
+	width: 100vw;
+	height: 100vh;
+	background-color: @black;
+	background-image: url(../images/static_bg.png);
+	background-repeat: repeat;
+	background-position: 0 0;
+	overflow: hidden;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	z-index: 20;
+	overflow: hidden;
+
+	.ui-error {
+		margin-top: -80px;
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.logo {
+	width: 562px;
+	height: 200px;
+	margin-bottom: 48px;
+}
+
+.infobox {
+	height: 169px;
+	background-color: @gray;
+	width: 400px;
+	padding: 16px;
+}
+
+.error-message {
+	color: @redA;
+	font-size: 24px;
+	text-align: center;
+}
+
+.discord-link {
+	text-align: center;
+}
+
+.discord-link a {
+	color: @white;
+	text-decoration: none;
+}
