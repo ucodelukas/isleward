@@ -20,7 +20,8 @@ define([
 	'ui/templates/overlay/overlay',
 	'ui/templates/tooltips/tooltips',
 	'ui/templates/reputation/reputation',
-	'ui/templates/death/death'
+	'ui/templates/death/death',
+	'ui/templates/passives/passives'
 ], function (
 	client,
 	uiFactory,

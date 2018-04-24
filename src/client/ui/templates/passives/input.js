@@ -1,9 +1,7 @@
 define([
-	'js/system/events',
-	'js/rendering/renderer'
+	'js/system/events'
 ], function (
-	events,
-	renderer
+	events
 ) {
 	return {
 		axes: {
@@ -48,12 +46,8 @@ define([
 
 		enabled: true,
 
-		init: function () {
-			$(window).on('keydown', this.events.keyboard.keyDown.bind(this));
-			$(window).on('keyup', this.events.keyboard.keyUp.bind(this));
-			events.on('onSceneMove', this.events.mouse.mouseMove.bind(this));
-
-			$('.ui-container')
+		init: function (el) {
+			el
 				.on('mousedown', this.events.mouse.mouseDown.bind(this))
 				.on('mouseup', this.events.mouse.mouseUp.bind(this))
 				.on('mousemove', this.events.mouse.mouseMove.bind(this));
@@ -156,26 +150,28 @@ define([
 			mouse: {
 				mouseDown: function (e) {
 					var el = $(e.target);
-					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
 					var button = e.button;
 					this.mouse.button = button;
 					this.mouse.down = true;
 					this.mouse.event = e;
+					this.mouse.raw = e;
 
-					events.emit('mouseDown', this.mouse);
+					events.emit('uiMouseDown', this.mouse);
 				},
 				mouseUp: function (e) {
 					var el = $(e.target);
-					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
 					var button = e.button;
 					this.mouse.button = null;
 					this.mouse.down = false;
+					this.mouse.raw = e;
 
-					events.emit('mouseUp', this.mouse);
+					events.emit('uiMouseUp', this.mouse);
 				},
 				mouseMove: function (e) {
 					if (e)
@@ -187,11 +183,15 @@ define([
 						return;
 
 					var el = $(e.target);
-					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					this.mouse.x = e.offsetX + (renderer.pos.x);
-					this.mouse.y = e.offsetY + (renderer.pos.y);
+					this.mouse.x = e.offsetX;
+					this.mouse.y = e.offsetY;
+
+					this.mouse.raw = e;
+
+					events.emit('uiMouseMove', this.mouse);
 				}
 			}
 		}
