@@ -12,68 +12,6 @@ define([
 			['gPrefix', 'gSuffix'],
 			['gPrefix', 'gSuffix']
 		],
-		prefixes: {
-			vit: 'Healthy',
-			regenHp: 'Regenerating',
-			manaMax: `Caster's`,
-			regenMana: 'Tapping',
-			str: 'Brutal',
-			int: 'Wise',
-			dex: 'Agile',
-			addArmor: 'Plated',
-			addCritChance: 'Precise',
-			addCritMultiplier: 'Piercing',
-			magicFind: `Seeker's`,
-			sprintChance: `Traveler's`,
-			dmgPercent: 'Powerful',
-			allAttributes: 'Hybrid',
-			elementArcanePercent: 'Volatile',
-			elementFrostPercent: 'Frigid',
-			elementFirePercent: 'Burning',
-			elementHolyPercent: 'Righteous',
-			elementPoisonPercent: 'Bubbling',
-
-			elementArcaneResist: 'Protective',
-			elementFrostResist: 'Protective',
-			elementFireResist: 'Protective',
-			elementHolyResist: 'Protective',
-			elementPoisonResist: 'Protective',
-			elementAllResist: 'Protective',
-
-			xpIncrease: `Scholar's`,
-			lvlRequire: 'Elementary'
-		},
-		suffixes: {
-			vit: 'Health',
-			regenHp: 'Regeneration',
-			manaMax: 'Mana',
-			regenMana: 'Orbs',
-			str: 'the Titan',
-			int: 'Angels',
-			dex: 'the Assassin',
-			addArmor: 'the Fortress',
-			addCritChance: 'Pain',
-			addCritMultiplier: 'Ferocity',
-			magicFind: 'Luck',
-			sprintChance: 'Haste',
-			dmgPercent: 'Power',
-			allAttributes: 'Divergence',
-			elementArcanePercent: 'the Magi',
-			elementFrostPercent: 'Winter',
-			elementFirePercent: 'the Inferno',
-			elementHolyPercent: 'the Gods',
-			elementPoisonPercent: 'Poison',
-
-			elementArcaneResist: 'Arcane Resistance',
-			elementFrostResist: 'Frost Resistance',
-			elementFireResist: 'Fire Resistance',
-			elementHolyResist: 'Holy Resistance',
-			elementPoisonResist: 'Poison Resistance',
-			elementAllResist: 'Arcane Resistance',
-
-			xpIncrease: 'Experience',
-			lvlRequire: 'Ease'
-		},
 		generate: function (item, blueprint) {
 			if (blueprint.name) {
 				item.name = blueprint.name;
@@ -93,35 +31,7 @@ define([
 			basic: function (item, blueprint) {
 				item.name = item.type;
 			},
-			prefix: function (item, blueprint) {
-				var maxStat = '';
-				var maxValue = 0;
-				for (var s in item.stats) {
-					if ((item.stats[s] > maxValue) && (this.prefixes[s])) {
-						maxValue = item.stats[s];
-						maxStat = s;
-					}
-				}
 
-				item.name = this.prefixes[maxStat] + ' ' + item.name;
-			},
-			suffix: function (item, blueprint) {
-				var stats = [];
-				for (var s in item.stats) {
-					if (this.suffixes[s])
-						stats.push({
-							stat: s,
-							value: item.stats[s]
-						});
-				}
-				stats.sort((a, b) => b.value - a.value);
-
-				var useIndex = 1;
-				if (useIndex >= stats.length)
-					useIndex = 0;
-
-				item.name = item.name + ' of ' + this.suffixes[stats[useIndex].stat];
-			},
 			gPrefix: function (item, blueprint) {
 				var list = prefixes.generic.concat(prefixes.slots[item.slot] || []);
 
@@ -138,6 +48,7 @@ define([
 					item.name = item.name.split('%').join(replacer);
 				}
 			},
+
 			gSuffix: function (item, blueprint) {
 				var list = null;
 

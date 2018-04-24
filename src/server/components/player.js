@@ -1,11 +1,13 @@
 define([
 	'world/atlas',
-	'config/classes',
-	'config/roles'
+	'config/spirits',
+	'config/roles',
+	'config/serverConfig'
 ], function (
 	atlas,
 	classes,
-	roles
+	roles,
+	serverConfig
 ) {
 	return {
 		type: 'player',
@@ -26,6 +28,9 @@ define([
 		spawn: function (character, cb) {
 			var obj = this.obj;
 
+			if (character.dead)
+				obj.dead = true;
+
 			extend(true, obj, {
 				layerName: 'mobs',
 				cell: character.cell,
@@ -33,9 +38,10 @@ define([
 				skinId: character.skinId,
 				name: character.name,
 				class: character.class,
-				zoneName: character.zoneName || 'fjolarok',
+				zoneName: character.zoneName || serverConfig.defaultZone,
 				x: character.x,
 				y: character.y,
+				hidden: character.dead,
 				account: character.account,
 				instanceId: character.instanceId
 			});
@@ -56,7 +62,6 @@ define([
 			for (var s in blueprintStats.stats) {
 				stats.stats[s] = blueprintStats.stats[s];
 			}
-			stats.vitScale = blueprintStats.vitScale;
 
 			var gainStats = classes.stats[character.class].gainStats;
 			for (var s in gainStats) {
@@ -121,7 +126,7 @@ define([
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q3',
+						class: 'color-blueB',
 						message: this.obj.name + ' has come online'
 					}]
 				}],
@@ -163,6 +168,9 @@ define([
 			var physics = this.obj.instance.physics;
 
 			physics.removeObject(this.obj, this.obj.x, this.obj.y);
+			this.obj.dead = true;
+
+			this.obj.aggro.die();
 
 			if (!permadeath) {
 				var level = this.obj.stats.values.level;
@@ -181,20 +189,21 @@ define([
 				this.obj.x = spawnPos.x;
 				this.obj.y = spawnPos.y;
 
-				var syncer = this.obj.syncer;
-				syncer.o.x = this.obj.x;
-				syncer.o.y = this.obj.y;
-
-				physics.addObject(this.obj, this.obj.x, this.obj.y);
-
 				this.obj.stats.die(source);
-			} else {
-				this.obj.stats.dead = true;
 
 				process.send({
 					method: 'object',
 					serverId: this.obj.serverId,
 					obj: {
+						dead: true
+					}
+				});
+			} else {
+				process.send({
+					method: 'object',
+					serverId: this.obj.serverId,
+					obj: {
+						dead: true,
 						permadead: true
 					}
 				});
@@ -202,11 +211,18 @@ define([
 
 			this.obj.fireEvent('onAfterDeath', source);
 
-			this.obj.aggro.die();
 			this.obj.spellbook.die();
 			this.obj.effects.die();
+		},
+
+		respawn: function () {
+			var syncer = this.obj.syncer;
+			syncer.o.x = this.obj.x;
+			syncer.o.y = this.obj.y;
 
 			this.obj.aggro.move();
+
+			this.obj.instance.physics.addObject(this.obj, this.obj.x, this.obj.y);
 		},
 
 		move: function (msg) {

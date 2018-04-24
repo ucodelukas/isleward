@@ -5,6 +5,7 @@ define([
 ) {
     return {
         port: 4000,
-        startupMessage: 'Server: ready'
+        startupMessage: 'Server: ready',
+        defaultZone: 'fjolarok'
     }
 });

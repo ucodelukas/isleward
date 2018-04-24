@@ -13,6 +13,7 @@ define([
 
 			var amount = config.damage;
 			var blocked = false;
+			var dodged = false;
 			var isCrit = false;
 
 			//Don't block heals
@@ -22,9 +23,17 @@ define([
 					blocked = true;
 					amount = 0;
 				}
+
+				if (!blocked) {
+					var dodgeChance = config.isAttack ? tgtValues.dodgeAttackChance : tgtValues.dodgeSpellChance;
+					if (mathRandom() * 100 < dodgeChance) {
+						dodged = true;
+						amount = 0;
+					}
+				}
 			}
 
-			if (!blocked) {
+			if ((!blocked) && (!dodged)) {
 				var statValue = 0;
 				if (config.statType) {
 					var statType = config.statType;
@@ -38,13 +47,13 @@ define([
 
 				statValue = max(1, statValue);
 				var statMult = config.statMult || 1;
-				var dmgPercent = 100 + srcValues.dmgPercent;
+				var dmgPercent = 100 + (srcValues.dmgPercent || 0);
 
 				amount *= statValue * statMult;
 
 				if (config.element) {
 					var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
-					dmgPercent += srcValues[elementName + 'Percent'];
+					dmgPercent += (srcValues[elementName + 'Percent'] || 0);
 
 					//Don't mitigate heals
 					if (!config.noMitigate) {
@@ -58,9 +67,14 @@ define([
 
 				if (!config.noCrit) {
 					var critChance = srcValues.critChance;
+					critChance += (config.isAttack) ? srcValues.attackCritChance : srcValues.spellCritChance;
+
+					var critMultiplier = srcValues.critMultiplier;
+					critMultiplier += (config.isAttack) ? srcValues.attackCritMultiplier : srcValues.spellCritMultiplier;
+
 					if ((config.crit) || (mathRandom() * 100 < critChance)) {
 						isCrit = true;
-						amount *= (srcValues.critMultiplier / 100);
+						amount *= (critMultiplier / 100);
 					}
 				}
 			}
@@ -68,6 +82,7 @@ define([
 			return {
 				amount: amount,
 				blocked: blocked,
+				dodged: dodged,
 				crit: isCrit,
 				element: config.element
 			};

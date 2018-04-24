@@ -4,7 +4,7 @@
 // Implements the astar search algorithm in javascript using a Binary Heap.
 // Includes Binary Heap (with modifications) from Marijn Haverbeke.
 // http://eloquentjavascript.net/appendix2.html
-(function(definition) {
+(function (definition) {
 	/* global module, define */
 	if (typeof module === 'object' && typeof module.exports === 'object') {
 		module.exports = definition();
@@ -15,7 +15,7 @@
 		window.astar = exports.astar;
 		window.Graph = exports.Graph;
 	}
-})(function() {
+})(function () {
 
 	function pathTo(node) {
 		var curr = node;
@@ -28,7 +28,7 @@
 	}
 
 	function getHeap() {
-		return new BinaryHeap(function(node) {
+		return new BinaryHeap(function (node) {
 			return node.f;
 		});
 	}
@@ -42,10 +42,13 @@
 		* @param {Object} [options]
 		* @param {bool} [options.closest] Specifies whether to return the
 				   path to the closest node if the target is unreachable.
-		* @param {Function} [options.heuristic] Heuristic function (see
+		* @param {
+			Function
+		}[options.heuristic] Heuristic
+		function (see
 		*          astar.heuristics).
 		*/
-		search: function(graph, start, end, options) {
+		search: function (graph, start, end, options) {
 			start = graph.grid[start.x][start.y] || start;
 			end = graph.grid[end.x][end.y] || end;
 
@@ -77,8 +80,7 @@
 					if (distance) {
 						if (currentNode.h == distance)
 							return pathTo(currentNode);
-					}
-					else {
+					} else {
 						// End case -- result has been found, return the traced path.
 						if (currentNode === end) {
 							return pathTo(currentNode);
@@ -142,17 +144,17 @@
 		},
 		// See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
 		heuristics: {
-			manhattan: function(pos0, pos1) {
+			manhattan: function (pos0, pos1) {
 				var d1 = Math.abs(pos1.x - pos0.x);
 				var d2 = Math.abs(pos1.y - pos0.y);
 				return Math.max(d1, d2);
 			},
-			manhattanDistance: function(pos0, pos1, distance) {
+			manhattanDistance: function (pos0, pos1, distance) {
 				var d1 = Math.abs(pos1.x - pos0.x);
 				var d2 = Math.abs(pos1.y - pos0.y);
 				return Math.abs(distance - Math.max(d1, d2)) + 1;
 			},
-			diagonal: function(pos0, pos1) {
+			diagonal: function (pos0, pos1) {
 				var D = 1;
 				var D2 = Math.sqrt(2);
 				var d1 = Math.abs(pos1.x - pos0.x);
@@ -160,7 +162,7 @@
 				return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
 			}
 		},
-		cleanNode: function(node) {
+		cleanNode: function (node) {
 			if (!node)
 				return;
 			node.f = 0;
@@ -198,25 +200,25 @@
 		this.init();
 	}
 
-	Graph.prototype.init = function() {
+	Graph.prototype.init = function () {
 		this.dirtyNodes = [];
 		for (var i = 0; i < this.nodes.length; i++) {
 			astar.cleanNode(this.nodes[i]);
 		}
 	};
 
-	Graph.prototype.cleanDirty = function() {
+	Graph.prototype.cleanDirty = function () {
 		for (var i = 0; i < this.dirtyNodes.length; i++) {
 			astar.cleanNode(this.dirtyNodes[i]);
 		}
 		this.dirtyNodes = [];
 	};
 
-	Graph.prototype.markDirty = function(node) {
+	Graph.prototype.markDirty = function (node) {
 		this.dirtyNodes.push(node);
 	};
 
-	Graph.prototype.neighbors = function(node) {
+	Graph.prototype.neighbors = function (node) {
 		var ret = [];
 		var x = node.x;
 		var y = node.y;
@@ -267,7 +269,7 @@
 		return ret;
 	};
 
-	Graph.prototype.toString = function() {
+	Graph.prototype.toString = function () {
 		var graphString = [];
 		var nodes = this.grid;
 		for (var x = 0; x < nodes.length; x++) {
@@ -287,11 +289,11 @@
 		this.weight = weight;
 	}
 
-	GridNode.prototype.toString = function() {
+	GridNode.prototype.toString = function () {
 		return "[" + this.x + " " + this.y + "]";
 	};
 
-	GridNode.prototype.getCost = function(fromNeighbor) {
+	GridNode.prototype.getCost = function (fromNeighbor) {
 		// Take diagonal weight into consideration.
 		if (fromNeighbor && fromNeighbor.x != this.x && fromNeighbor.y != this.y) {
 			return this.weight * 1.41421;
@@ -299,7 +301,7 @@
 		return this.weight;
 	};
 
-	GridNode.prototype.isWall = function() {
+	GridNode.prototype.isWall = function () {
 		return this.weight === 0;
 	};
 
@@ -309,14 +311,14 @@
 	}
 
 	BinaryHeap.prototype = {
-		push: function(element) {
+		push: function (element) {
 			// Add the new element to the end of the array.
 			this.content.push(element);
 
 			// Allow it to sink down.
 			this.sinkDown(this.content.length - 1);
 		},
-		pop: function() {
+		pop: function () {
 			// Store the first element so we can return it later.
 			var result = this.content[0];
 			// Get the element at the end of the array.
@@ -329,7 +331,7 @@
 			}
 			return result;
 		},
-		remove: function(node) {
+		remove: function (node) {
 			var i = this.content.indexOf(node);
 
 			// When it is found, the process seen in 'pop' is repeated
@@ -346,13 +348,13 @@
 				}
 			}
 		},
-		size: function() {
+		size: function () {
 			return this.content.length;
 		},
-		rescoreElement: function(node) {
+		rescoreElement: function (node) {
 			this.sinkDown(this.content.indexOf(node));
 		},
-		sinkDown: function(n) {
+		sinkDown: function (n) {
 			// Fetch the element that has to be sunk.
 			var element = this.content[n];
 
@@ -375,7 +377,7 @@
 				}
 			}
 		},
-		bubbleUp: function(n) {
+		bubbleUp: function (n) {
 			// Look up the target element and its score.
 			var length = this.content.length;
 			var element = this.content[n];
@@ -426,7 +428,7 @@
 	return {
 		astar: astar,
 		Graph: Graph,
-		GridNode: GridNode
+		gridNode: GridNode
 	};
 
 });

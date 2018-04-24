@@ -167,7 +167,6 @@ define([
 			var el = $(e.target);
 			var classes = ['owl', 'bear', 'lynx'];
 			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
-			this.costume = -1;
 
 			var newClass = classes[nextIndex];
 

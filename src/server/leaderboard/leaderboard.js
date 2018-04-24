@@ -1,6 +1,6 @@
 define([
 	'../security/io'
-], function(
+], function (
 	io
 ) {
 	return {
@@ -8,23 +8,23 @@ define([
 		waiting: [],
 		loaded: false,
 
-		init: function() {
+		init: function () {
 			this.getList();
 		},
 
-		requestList: function(msg) {
+		requestList: function (msg) {
 			var prophecyFilter = msg.data.prophecies;
+			var offset = msg.data.offset;
 
 			var result = this.list;
+			var length = result.length;
 
 			if (prophecyFilter) {
 				var pLen = prophecyFilter.length;
 
 				result = result
-					.filter(function(r) {
+					.filter(function (r) {
 						var rProphecies = r.prophecies || [];
-						//if (rProphecies.length != pLen)
-						//	return false;
 
 						var match = true;
 						for (var i = 0; i < pLen; i++) {
@@ -36,12 +36,25 @@ define([
 
 						return match;
 					});
+
+				length = result.length;
+
+				result = result
+					.filter(function (r, i) {
+						return (
+							(i >= offset) &&
+							(i < offset + 10)
+						);
+					});
 			}
 
-			msg.callback(result);
+			msg.callback({
+				list: result,
+				length: length
+			});
 		},
 
-		getList: function() {
+		getList: function () {
 			io.get({
 				ent: 'list',
 				field: 'leaderboard',
@@ -49,7 +62,7 @@ define([
 			});
 		},
 
-		onGetList: function(result) {
+		onGetList: function (result) {
 			if (!result) {
 				var list = {
 					list: []
@@ -63,23 +76,23 @@ define([
 			} else
 				this.parseList(result);
 
-				this.loaded = true;
+			this.loaded = true;
 		},
 
-		parseList: function(result) {
+		parseList: function (result) {
 			this.list = JSON.parse(result).list;
 
 			if (!(this.list instanceof Array))
 				this.list = [];
-			
-			this.list.forEach(function(l) {
+
+			this.list.forEach(function (l) {
 				if (l.name.indexOf(`'`) > -1)
 					l.name = l.name.split(`'`).join('');
 			});
 
 			var doSave = false;
 
-			this.waiting.forEach(function(w) {
+			this.waiting.forEach(function (w) {
 				if (!this.list.some(l => l.name == w.name)) {
 					this.list.push(w);
 					doSave = true;
@@ -92,7 +105,7 @@ define([
 			this.waiting = [];
 		},
 
-		getLevel: function(name) {
+		getLevel: function (name) {
 			if (!this.list)
 				return null;
 
@@ -103,7 +116,7 @@ define([
 				return null;
 		},
 
-		setLevel: function(name, level, prophecies) {
+		setLevel: function (name, level, prophecies) {
 			if (!this.list) {
 				this.waiting.push({
 					name: name,
@@ -132,12 +145,12 @@ define([
 			}
 		},
 
-		deleteCharacter: function(name) {
+		deleteCharacter: function (name) {
 			this.list.spliceWhere(l => (l.name == name));
 			this.save();
 		},
 
-		killCharacter: function(name) {
+		killCharacter: function (name) {
 			var character = this.list.find(l => (l.name == name));
 			if (!character)
 				return;
@@ -146,13 +159,13 @@ define([
 			this.save();
 		},
 
-		sort: function() {
-			this.list.sort(function(a, b) {
+		sort: function () {
+			this.list.sort(function (a, b) {
 				return (b.level - a.level);
 			}, this);
 		},
 
-		save: function() {
+		save: function () {
 			this.sort();
 
 			if (!this.loaded)

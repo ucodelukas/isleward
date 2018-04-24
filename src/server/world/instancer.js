@@ -158,6 +158,13 @@ define([
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
+
+				if (obj.dead) {
+					obj.instance.syncer.queue('onDeath', {
+						x: obj.x,
+						y: obj.y
+					}, [obj.serverId]);
+				}
 			},
 			updateObject: function (msg) {
 				var obj = objects.find(o => o.serverId == msg.id);
@@ -384,6 +391,13 @@ define([
 					obj.stats.rescale(maxLevel);
 
 				obj.fireEvent('afterMove');
+
+				if (obj.dead) {
+					obj.instance.syncer.queue('onDeath', {
+						x: obj.x,
+						y: obj.y
+					}, [obj.serverId]);
+				}
 			},
 			updateObject: function (msg) {
 				var id = msg.id;
@@ -478,7 +492,9 @@ define([
 				//Hack: We need to actually just always use the instanced eventEmitter
 				var eventQueue = eventEmitter.queue;
 				delete eventEmitter.queue;
-				var newEventEmitter = extend(true, {}, eventEmitter);
+				var newEventEmitter = extend(true, {
+					queue: []
+				}, eventEmitter);
 				eventEmitter.queue = eventQueue;
 
 				var instance = {
@@ -548,6 +564,13 @@ define([
 						instanceId: instance.id
 					}
 				});
+
+				if (obj.dead) {
+					obj.instance.syncer.queue('onDeath', {
+						x: obj.x,
+						y: obj.y
+					}, [obj.serverId]);
+				}
 
 				return obj;
 			}

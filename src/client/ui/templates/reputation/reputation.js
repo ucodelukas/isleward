@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/reputation/template',
 	'css!ui/templates/reputation/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -17,12 +17,12 @@ define([
 
 		list: null,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetReputations', this.onGetReputations.bind(this));
 			this.onEvent('onShowReputation', this.toggle.bind(this, true));
 		},
 
-		build: function() {
+		build: function () {
 			var list = this.list;
 
 			this.find('.info .heading-bottom').html('');
@@ -36,7 +36,10 @@ define([
 
 			var elList = this.find('.list').empty();
 
-			list.forEach(function(l) {
+			list.forEach(function (l) {
+				if (l.noGainRep)
+					return;
+
 				var html = '<div class="faction">' + l.name.toLowerCase() + '</div>';
 
 				var el = $(html)
@@ -47,7 +50,7 @@ define([
 			}, this);
 		},
 
-		onSelectFaction: function(el, faction) {
+		onSelectFaction: function (el, faction) {
 			this.find('.selected').removeClass('selected');
 			$(el).addClass('selected');
 
@@ -77,9 +80,9 @@ define([
 			this.find('.tier').html(tiers[tier].name.toLowerCase() + ' (' + percentage + '%)');
 		},
 
-		onGetReputations: function(list) {
+		onGetReputations: function (list) {
 			this.list = list;
-			this.list.sort(function(a, b) {
+			this.list.sort(function (a, b) {
 				if (a.name[0] < b.name[0])
 					return -1;
 				else
@@ -90,14 +93,13 @@ define([
 				this.build();
 		},
 
-		toggle: function() {
+		toggle: function () {
 			var shown = !this.el.is(':visible');
 
 			if (shown) {
 				this.build();
 				this.show();
-			}
-			else
+			} else
 				this.hide();
 		}
 	};

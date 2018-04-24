@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/death/template',
 	'css!ui/templates/death/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -15,7 +15,7 @@ define([
 		modal: true,
 		centered: true,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onDeath', this.onDeath.bind(this));
 			this.onEvent('onPermadeath', this.onPermadeath.bind(this));
 
@@ -23,27 +23,46 @@ define([
 			this.find('.btn-respawn').on('click', this.onRespawn.bind(this));
 		},
 
-		onLogout: function() {
+		onLogout: function () {
 			$('.uiOptions').data('ui').charSelect();
 		},
 
-		onRespawn: function() {
+		onRespawn: function () {
 			events.emit('onHideOverlay', this.el);
 			this.hide();
+
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'stats',
+					method: 'respawn'
+				}
+			});
 		},
 
-		doShow: function() {
+		doShow: function () {
 			this.show();
 			events.emit('onShowOverlay', this.el);
 		},
 
-		onDeath: function(event) {
-			this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
+		onDeath: function (event) {
+			if (!event.source) {
+				this.find('.msg').html('you are dead');
+			} else
+				this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
+			this.find('.penalty')
+				.html('you lost ' + event.xpLoss + ' experience')
+				.show();
+
+			if (!event.xpLoss)
+				this.find('.penalty').hide();
+
 			this.el.removeClass('permadeath');
 			this.doShow();
 		},
 
-		onPermadeath: function(event) {
+		onPermadeath: function (event) {
 			this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
 			this.el.addClass('permadeath');
 			this.doShow();

@@ -19,10 +19,11 @@ requirejs([
 	'config/animations',
 	'config/skins',
 	'config/factions',
-	'config/classes',
+	'config/spirits',
 	'config/spellsConfig',
 	'config/spells',
-	'items/config/types'
+	'items/config/types',
+	'security/sheets'
 ], function (
 	extend,
 	helpers,
@@ -37,7 +38,8 @@ requirejs([
 	classes,
 	spellsConfig,
 	spells,
-	itemTypes
+	itemTypes,
+	sheets
 ) {
 	var onDbReady = function () {
 		global.extend = extend;
@@ -47,7 +49,7 @@ requirejs([
 
 		instancer = _instancer;
 
-		components.init(onCpnsReady);
+		mods.init(onModsReady);
 
 		setInterval(function () {
 			global.gc();
@@ -73,11 +75,11 @@ requirejs([
 		});
 	};
 
-	var onCpnsReady = function () {
-		mods.init(onModsReady);
+	var onModsReady = function () {
+		components.init(onCpnsReady);
 	};
 
-	var onModsReady = function () {
+	var onCpnsReady = function () {
 		factions.init();
 		skins.init();
 		mtx.init();
@@ -86,6 +88,7 @@ requirejs([
 		spellsConfig.init();
 		spells.init();
 		itemTypes.init();
+		sheets.init();
 
 		process.send({
 			method: 'onReady'

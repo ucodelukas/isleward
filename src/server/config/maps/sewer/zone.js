@@ -9,7 +9,7 @@ module.exports = {
 		},
 
 		rat: {
-			faction: 'flolgard',
+			faction: 'fjolgard',
 			grantRep: {
 				fjolgard: 6
 			},
@@ -23,10 +23,12 @@ module.exports = {
 					blueprints: [{
 						chance: 2,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -37,7 +39,7 @@ module.exports = {
 		},
 
 		stinktooth: {
-			faction: 'flolgard',
+			faction: 'fjolgard',
 			grantRep: {
 				fjolgard: 15
 			},
@@ -51,10 +53,12 @@ module.exports = {
 					blueprints: [{
 						chance: 0.5,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -105,10 +109,12 @@ module.exports = {
 					blueprints: [{
 						chance: 100,
 						type: 'key',
+						noSalvage: true,
 						name: 'Rusted Key',
 						keyId: 'rustedSewer',
 						singleUse: true,
-						sprite: [12, 1]
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -122,7 +128,7 @@ module.exports = {
 		sewerdoor: {
 			properties: {
 				cpnDoor: {
-					autoClose: 15,
+					autoClose: 171,
 					locked: true,
 					key: 'rustedSewer',
 					destroyKey: true
@@ -138,6 +144,10 @@ module.exports = {
 			properties: {
 				cpnDoor: {}
 			}
+		},
+
+		treasure: {
+			cron: '0 2 * * *'
 		}
 	}
 };

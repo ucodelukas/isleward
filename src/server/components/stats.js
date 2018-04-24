@@ -1,11 +1,11 @@
 define([
 	'config/animations',
-	'config/loginRewards',
-	'config/classes'
+	'config/spirits',
+	'misc/scheduler'
 ], function (
 	animations,
-	loginRewards,
-	classes
+	classes,
+	scheduler
 ) {
 	var baseStats = {
 		mana: 20,
@@ -26,16 +26,29 @@ define([
 		itemQuantity: 0,
 		regenHp: 0,
 		regenMana: 5,
+
 		addCritChance: 0,
 		addCritMultiplier: 0,
+		addAttackCritChance: 0,
+		addAttackCritMultiplier: 0,
+		addSpellCritChance: 0,
+		addSpellCritMultiplier: 0,
+
 		critChance: 5,
 		critMultiplier: 150,
+		attackCritChance: 0,
+		attackCritMultiplier: 0,
+		spellCritChance: 0,
+		spellCritMultiplier: 0,
+
 		armor: 0,
 		dmgPercent: 0,
 		vit: 0,
 
 		blockAttackChance: 0,
 		blockSpellChance: 0,
+		dodgeAttackChance: 0,
+		dodgeSpellChance: 0,
 
 		attackSpeed: 0,
 		castSpeed: 0,
@@ -72,7 +85,12 @@ define([
 		values: baseStats,
 		originalValues: null,
 
-		vitScale: 10,
+		statScales: {
+			vitToHp: 10,
+			strToArmor: 1,
+			intToMana: (1 / 6),
+			dexToDodge: (1 / 12)
+		},
 
 		syncer: null,
 
@@ -81,7 +99,8 @@ define([
 			played: 0,
 			lastLogin: null,
 			loginStreak: 0,
-			mobKillStreaks: {}
+			mobKillStreaks: {},
+			lootStats: {}
 		},
 
 		dead: false,
@@ -113,7 +132,7 @@ define([
 		},
 
 		update: function () {
-			if (((this.obj.mob) && (!this.obj.follower)) || (this.dead))
+			if (((this.obj.mob) && (!this.obj.follower)) || (this.obj.dead))
 				return;
 
 			var values = this.values;
@@ -173,36 +192,42 @@ define([
 		},
 
 		addStat: function (stat, value) {
+			var values = this.values;
+
 			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
-				this.values[stat] += value;
+				values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
-			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
+			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, values[stat]);
+			if (sendOnlyToSelf)
+				this.obj.syncer.setObject(false, 'stats', 'values', stat, values[stat]);
 
-			if (stat == 'addCritChance') {
-				this.values.critChance += (0.05 * value);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
-			} else if (stat == 'addCritMultiplier') {
-				this.values.critMultiplier += value;
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
+			if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
+				this.addStat(morphStat, (0.05 * value));
+			} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
+				this.addStat(morphStat, value);
 			} else if (stat == 'vit') {
-				this.values.hpMax += (value * this.vitScale);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
-				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
+				this.addStat('hpMax', (value * this.statScales.vitToHp));
 			} else if (stat == 'allAttributes') {
 				['int', 'str', 'dex'].forEach(function (s) {
-					this.values[s] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
+					this.addStat(s, value)
 				}, this);
 			} else if (stat == 'elementAllResist') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
-
-					this.values[element] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+					this.addStat(element, value);
 				}, this);
-			}
+			} else if (stat == 'str')
+				this.addStat('armor', (value * this.statScales.strToArmor));
+			else if (stat == 'int')
+				this.addStat('manaMax', (value * this.statScales.intToMana));
+			else if (stat == 'dex')
+				this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
 		},
 
 		calcXpMax: function () {
@@ -251,10 +276,13 @@ define([
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
-				if (this.originalValues)
+				if (this.originalValues) {
 					this.originalValues.level++;
-				else
-					values.level++;
+				}
+
+				if (values.originalLevel)
+					values.originalLevel++;
+				values.level++;
 
 				this.obj.fireEvent('onLevelUp', (this.originalValues || this.values).level);
 
@@ -265,8 +293,7 @@ define([
 
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
-					values[s] += gainStats[s];
-					this.obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+					this.addStat(s, gainStats[s]);
 				}
 
 				this.obj.spellbook.calcDps();
@@ -299,19 +326,36 @@ define([
 
 			if (didLevelUp) {
 				var maxLevel = this.obj.instance.zone.level[1]
-				if (maxLevel < (this.originalValues || values).level)
+				if (maxLevel < (this.originalValues || values).level) {
 					this.rescale(maxLevel, false);
-				else {
+				} else {
 					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
+					this.obj.syncer.setObject(false, 'stats', 'values', 'level', this.values.level);
+					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
 				}
+			}
+
+			var originalValues = this.originalValues;
+			if (originalValues) {
+				originalValues.xp = values.xp;
+				originalValues.xpMax = values.xpMax;
+				originalValues.xpTotal = values.xpTotal;
 			}
 		},
 
 		kill: function (target) {
+			if (target.player)
+				return;
+
 			var level = target.stats.values.level;
+			var mobDiffMult = 1;
+			if (target.isRare)
+				mobDiffMult = 2;
+			else if (target.isChampion)
+				mobDiffMult = 5;
 
 			//Who should get xp?
 			var aggroList = target.aggro.list;
@@ -341,9 +385,10 @@ define([
 					//We don't currently do this for quests/herb gathering
 					var sourceLevel = a.obj.stats.values.level;
 					var levelDelta = level - sourceLevel;
-					var amount = level * 10 * mult;
+
+					var amount = null;
 					if (Math.abs(levelDelta) <= 10)
-						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult);
+						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult * mobDiffMult);
 					else
 						amount = 0;
 
@@ -355,24 +400,87 @@ define([
 		},
 
 		die: function (source) {
-			this.values.hp = this.values.hpMax;
-			this.values.mana = this.values.manaMax;
-
-			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
-			this.obj.syncer.setObject(false, 'stats', 'values', 'mana', this.values.mana);
+			var obj = this.obj;
+			var values = this.values;
 
 			this.syncer.queue('onGetDamage', {
-				id: this.obj.id,
+				id: obj.id,
 				event: true,
 				text: 'death'
 			});
 
+			obj.syncer.set(true, null, 'dead', true);
+
+			var obj = obj;
+			var syncO = obj.syncer.o;
+
+			obj.hidden = true;
+			obj.nonSelectable = true;
+			syncO.hidden = true;
+			syncO.nonSelectable = true;
+
+			var xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+
+			values.xp -= xpLoss;
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+
 			this.syncer.queue('onDeath', {
-				x: this.obj.x,
-				y: this.obj.y,
-				source: source.name
-			}, [this.obj.serverId]);
+				source: source.name,
+				xpLoss: xpLoss
+			}, [obj.serverId]);
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
 		},
+
+		respawn: function () {
+			this.obj.syncer.set(true, null, 'dead', false);
+
+			var obj = this.obj;
+			var syncO = obj.syncer.o;
+
+			this.obj.dead = false;
+			var values = this.values;
+
+			values.hp = values.hpMax;
+			values.mana = values.manaMax;
+
+			obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
+			obj.syncer.setObject(false, 'stats', 'values', 'mana', values.mana);
+
+			obj.hidden = false;
+			obj.nonSelectable = false;
+			syncO.hidden = false;
+			syncO.nonSelectable = false;
+
+			process.send({
+				method: 'object',
+				serverId: this.obj.serverId,
+				obj: {
+					dead: false
+				}
+			});
+
+			obj.instance.syncer.queue('onGetObject', {
+				x: obj.x,
+				y: obj.y,
+				components: [{
+					type: 'attackAnimation',
+					row: 0,
+					col: 4
+				}]
+			});
+
+			this.obj.player.respawn();
+		},
+
 		takeDamage: function (damage, threatMult, source) {
 			source.fireEvent('beforeDealDamage', damage, this.obj);
 			this.obj.fireEvent('beforeTakeDamage', damage, source);
@@ -390,6 +498,8 @@ define([
 			if (amount > this.values.hp)
 				amount = this.values.hp;
 
+			damage.dealt = amount;
+
 			this.values.hp -= amount;
 			var recipients = [];
 			if (this.obj.serverId != null)
@@ -402,7 +512,7 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				if (!damage.blocked) {
+				if ((!damage.blocked) && (!damage.dodged)) {
 					this.syncer.queue('onGetDamage', {
 						id: this.obj.id,
 						source: source.id,
@@ -449,7 +559,7 @@ define([
 
 							this.obj.instance.syncer.queue('onGetMessages', {
 								messages: {
-									class: 'color-red',
+									class: 'color-redA',
 									message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
 								}
 							});
@@ -480,12 +590,12 @@ define([
 							var aggroList = this.obj.aggro.list;
 							var aLen = aggroList.length;
 							for (var i = 0; i < aLen; i++) {
-								var a = aggroList[i].obj;
+								var a = aggroList[i];
 
-								if (a.serverId == null)
+								if ((!a.threat) || (a.obj.serverId == null))
 									continue;
 
-								this.obj.inventory.dropBag(a.serverId, killSource);
+								this.obj.inventory.dropBag(a.obj.serverId, killSource);
 							}
 						}
 					}
@@ -554,9 +664,13 @@ define([
 				delete this.sessionDuration;
 			}
 
+			var values = extend(true, {}, this.originalValues || this.values);
+			values.hp = this.values.hp;
+			values.mana = this.values.mana;
+
 			return {
 				type: 'stats',
-				values: this.originalValues || this.values,
+				values: values,
 				stats: this.stats
 			};
 		},
@@ -589,47 +703,15 @@ define([
 
 		onLogin: function () {
 			var stats = this.stats;
-
-			var scheduler = require('misc/scheduler');
 			var time = scheduler.getTime();
-			var lastLogin = stats.lastLogin;
-			if ((!lastLogin) || (lastLogin.day != time.day)) {
-				var daysSkipped = 1;
-				if (lastLogin) {
-					if (time.day > lastLogin.day)
-						daysSkipped = time.day - lastLogin.day;
-					else {
-						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
-						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
-
-						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
-							daysSkipped += scheduler.daysInMonth(i);
-						}
-					}
-				}
-
-				if (daysSkipped == 1) {
-					stats.loginStreak++;
-					if (stats.loginStreak > 21)
-						stats.loginStreak = 21;
-				} else {
-					stats.loginStreak -= (daysSkipped - 1);
-					if (stats.loginStreak < 1)
-						stats.loginStreak = 1;
-				}
-
-				var mail = this.obj.instance.mail;
-				var rewards = loginRewards.generate(stats.loginStreak);
-				mail.sendMail(this.obj.name, rewards);
-			} else
-				this.obj.instance.mail.getMail(this.obj.name);
-
 			stats.lastLogin = time;
+
+			this.obj.instance.mail.getMail(this.obj.name);
 		},
 
 		rescale: function (level, isMob) {
-			if (level >= (this.originalValues || this.values).level)
-				return;
+			if (level > this.values.level)
+				level = this.values.level;
 
 			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
 
@@ -647,7 +729,7 @@ define([
 
 			var gainStats = classes.stats[this.obj.class].gainStats;
 			for (var s in gainStats) {
-				newValues[s] += (gainStats[s] * level);
+				this.addStat(s, (gainStats[s] * level));
 			}
 
 			newValues.level = level;
@@ -704,7 +786,26 @@ define([
 				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
 		},
 
+		canGetMobLoot: function (mob) {
+			if (!mob.inventory.dailyDrops)
+				return true;
+
+			var lootStats = this.stats.lootStats[mob.name];
+			var time = scheduler.getTime();
+			if (!lootStats) {
+				this.stats.lootStats[mob.name] = time;
+			} else
+				return ((lootStats.day != time.day), (lootStats.month != time.month));
+		},
+
 		events: {
+			transferComplete: function () {
+				var maxLevel = this.obj.instance.zone.level[1];
+				if (maxLevel > this.obj.stats.values.level)
+					maxLevel = this.obj.stats.values.level;
+				this.obj.stats.rescale(maxLevel);
+			},
+
 			afterKillMob: function (mob) {
 				var mobKillStreaks = this.stats.mobKillStreaks;
 				var mobName = mob.name;
@@ -726,7 +827,7 @@ define([
 			},
 
 			beforeGetXp: function (event) {
-				if (!event.target.mob)
+				if ((!event.target.mob) && (!event.target.player))
 					return;
 
 				event.amount *= this.getKillStreakCoefficient(event.target.name);
@@ -737,6 +838,9 @@ define([
 					return;
 
 				event.chanceMultiplier *= this.getKillStreakCoefficient(event.source.name);
+
+				if ((event.chanceMultiplier > 0) && (!this.canGetMobLoot(event.source)))
+					event.chanceMultiplier = 0;
 			},
 
 			afterMove: function (event) {

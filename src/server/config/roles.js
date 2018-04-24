@@ -1,27 +1,16 @@
 define([
-	'./roleSkins'
+	'security/sheets'
 ], function (
-	roleSkins
+	sheets
 ) {
 	return {
-		accounts: {
-			waffle: {
-				level: 10,
-				messageStyle: 'color-cyan',
-				messagePrefix: '(dev) ',
-				items: [{
-					type: 'key',
-					name: 'Key to the world',
-					sprite: [12, 0],
-					keyId: 'world'
-				}],
-				skins: []
-			}
+		getAccount: function (name) {
+			return sheets.getRecord(name);
 		},
 
 		onBeforePlayerEnterGame: function (obj, blueprint) {
 			var account = obj.account;
-			var config = this.accounts[account] || {};
+			var config = this.getAccount(account) || {};
 			if (config.items) {
 				var blueprintInventory = blueprint.components.find(c => (c.type == 'inventory'));
 				if (!blueprintInventory) {
@@ -47,14 +36,14 @@ define([
 
 		getRoleLevel: function (player) {
 			var account = player.account;
-			var level = this.accounts[account] ? this.accounts[account].level : 0;
+			var level = this.getAccount(account) ? this.getAccount(account).level : 0;
 
 			return level;
 		},
 
 		isRoleLevel: function (player, requireLevel, message) {
 			var account = player.account;
-			var level = this.accounts[account] ? this.accounts[account].level : 0;
+			var level = this.getAccount(account) ? this.getAccount(account).level : 0;
 
 			var success = (level >= requireLevel);
 
@@ -66,25 +55,20 @@ define([
 
 		getRoleMessageStyle: function (player) {
 			var account = player.account;
-			return this.accounts[account] ? this.accounts[account].messageStyle : null;
+			return this.getAccount(account) ? this.getAccount(account).messageStyle : null;
 		},
 
 		getRoleMessagePrefix: function (player) {
 			var account = player.account;
-			return this.accounts[account] ? this.accounts[account].messagePrefix : null;
+			return this.getAccount(account) ? this.getAccount(account).messagePrefix : null;
 		},
 
 		getSkins: function (account) {
 			var skins = [];
-			var account = this.accounts[account] || {
+			var account = this.getAccount(account) || {
 				skins: []
 			};
 			(account.skins || []).forEach(function (s) {
-				skins.push(s);
-			});
-
-			var roleSkinList = roleSkins[account.level || 0];
-			roleSkinList.forEach(function (s) {
 				skins.push(s);
 			});
 
@@ -98,7 +82,7 @@ define([
 			player.instance.syncer.queue('onGetMessages', {
 				id: player.id,
 				messages: {
-					class: 'color-green',
+					class: 'color-redA',
 					message: msg
 				}
 			}, [player.serverId]);

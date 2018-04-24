@@ -82,7 +82,7 @@ define([
 				.forEach(function (c, i) {
 					var name = c.name;
 					if (c.level != null)
-						name += '<font class="q2"> (' + c.level + ')</font>'
+						name += '<font class="color-yellowB"> (' + c.level + ')</font>'
 
 					var html = templateListItem
 						.replace('$NAME$', name);

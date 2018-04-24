@@ -269,16 +269,19 @@ module.exports = {
 		'akarei scout': {
 			level: 20,
 			faction: 'akarei',
+			attackable: false,
 			deathRep: -3
 		},
 		'biorn': {
 			level: 22,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
 		'veleif': {
 			level: 22,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
@@ -286,11 +289,13 @@ module.exports = {
 
 		'akarei artificer': {
 			level: 24,
+			attackable: false,
 			faction: 'akarei',
 			deathRep: -6
 		},
 		'thaumaturge yala': {
 			level: 30,
+			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 
@@ -308,8 +313,11 @@ module.exports = {
 			properties: {
 				cpnTrade: {
 					items: {
-						min: 5,
-						max: 10,
+						min: 2,
+						max: 5,
+						minLevel: 14,
+						maxLevel: 18,
+						slot: 'neck',
 						extra: []
 					},
 					faction: {
@@ -318,7 +326,7 @@ module.exports = {
 					},
 					markup: {
 						buy: 0.25,
-						sell: 10
+						sell: 20
 					}
 				}
 			}
@@ -330,6 +338,7 @@ module.exports = {
 				cpnBlocker: {
 					init: function () {
 						this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);
+						this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, true);
 					}
 				}
 			}
@@ -523,6 +532,7 @@ module.exports = {
 						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);
+							this.obj.instance.objects.notifyCollisionChange(w.x, w.y, false);
 
 							syncer.queue('onGetObject', {
 								x: w.x,
@@ -533,7 +543,7 @@ module.exports = {
 									col: 4
 								}]
 							});
-						});
+						}, this);
 					}
 				}
 			}

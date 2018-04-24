@@ -1,6 +1,6 @@
 define([
 
-], function(
+], function (
 
 ) {
 	return {
@@ -11,19 +11,19 @@ define([
 
 		trigger: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.states = blueprint.config;
 		},
 
-		destroy: function() {
+		destroy: function () {
 			if (this.trigger)
 				this.trigger.destroyed = true;
 		},
 
-		talk: function(msg) {
+		talk: function (msg) {
 			if (!msg)
-			    return false;
-			
+				return false;
+
 			var target = msg.target;
 
 			if ((target == null) && (!msg.targetName))
@@ -33,11 +33,10 @@ define([
 				target = this.obj.instance.objects.objects.find(o => o.id == target);
 				if (!target)
 					return false;
-			}
-			else if (msg.targetName != null) {
+			} else if (msg.targetName != null) {
 				target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
 				if (!target)
-					return false;	
+					return false;
 			}
 
 			if (!target.dialogue)
@@ -56,11 +55,11 @@ define([
 			this.obj.syncer.set(true, 'dialogue', 'state', state);
 		},
 
-		stopTalk: function() {
-			this.obj.syncer.set(true, 'dialogue', 'state', null);	
+		stopTalk: function () {
+			this.obj.syncer.set(true, 'dialogue', 'state', null);
 		},
 
-		getState: function(sourceObj, state) {
+		getState: function (sourceObj, state) {
 			state = state || 1;
 
 			//Goto?
@@ -72,7 +71,7 @@ define([
 				var goto = (config.options[state] || {}).goto;
 				if (goto instanceof Array) {
 					var gotos = [];
-					goto.forEach(function(g) {
+					goto.forEach(function (g) {
 						var rolls = (g.chance * 100) || 100;
 						for (var i = 0; i < rolls; i++) {
 							gotos.push(g.number);
@@ -80,15 +79,14 @@ define([
 					});
 
 					state = gotos[~~(Math.random() * gotos.length)];
-				}
-				else
+				} else
 					state = goto;
 			}
 
 			this.sourceStates[sourceObj.id] = state;
 
 			if (!this.states) {
-				console.log(sourceObj.name, this.obj.name, state);			
+				console.log(sourceObj.name, this.obj.name, state);
 				return null;
 			}
 			var stateConfig = this.states[state];
@@ -108,16 +106,14 @@ define([
 						return this.getState(sourceObj, stateConfig.goto.success);
 					else
 						return this.getState(sourceObj, stateConfig.goto.failure);
-				}
-				else {
+				} else {
 					if (result) {
 						useMsg = extend(true, [], useMsg);
 						useMsg[0].msg = result;
 					} else
 						return null;
 				}
-			}
-			else if (stateConfig.method) {
+			} else if (stateConfig.method) {
 				var methodResult = stateConfig.method.call(this.obj, sourceObj);
 				if (methodResult) {
 					useMsg = extend(true, [], useMsg);
@@ -137,7 +133,7 @@ define([
 
 			if (useMsg instanceof Array) {
 				var msgs = [];
-				useMsg.forEach(function(m, i) {
+				useMsg.forEach(function (m, i) {
 					var rolls = (m.chance * 100) || 100;
 					for (var j = 0; j < rolls; j++) {
 						msgs.push({
@@ -151,8 +147,7 @@ define([
 
 				result.msg = pick.msg.msg;
 				result.options = useMsg[pick.index].options;
-			}
-			else {
+			} else {
 				result.msg = useMsg;
 				result.options = stateConfig.options;
 			}
@@ -160,12 +155,12 @@ define([
 			if (!(result.options instanceof Array)) {
 				if (result.options[0] == '$')
 					result.options = this.states[result.options.replace('$', '')].options;
-				
+
 				result.options = Object.keys(result.options);
 			}
 
 			result.options = result.options
-				.map(function(o) {
+				.map(function (o) {
 					var gotoState = this.states[(o + '').split('.')[0]];
 					var picked = gotoState.options[o];
 
@@ -192,7 +187,7 @@ define([
 			return result;
 		},
 
-		simplify: function(self) {
+		simplify: function (self) {
 			return {
 				type: 'dialogue'
 			};
@@ -200,21 +195,20 @@ define([
 
 		//These don't belong here, but I can't figure out where to put them right now
 		//They are actions that can be performed while chatting with someone
-		teleport: function(msg) {
-			this.obj.syncer.set(true, 'dialogue', 'state', null);	
+		teleport: function (msg) {
+			this.obj.syncer.set(true, 'dialogue', 'state', null);
 
 			var portal = extend(true, {}, require('./components/portal'), msg);
 			portal.collisionEnter(this.obj);
 		},
 
-		getItem: function(msg, source) {
+		getItem: function (msg, source) {
 			var inventory = this.obj.inventory;
 			var exists = inventory.items.find(i => (i.name == msg.item.name));
 			if (!exists) {
 				inventory.getItem(msg.item);
 				return msg.successMsg || false;
-			}
-			else
+			} else
 				return msg.existsMsg || false;
 		}
 	};

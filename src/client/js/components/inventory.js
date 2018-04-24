@@ -59,6 +59,31 @@ define([
 
 				events.emit('onGetItems', this.items, rerender);
 			}
+		},
+
+		equipItemErrors: function (item) {
+			var errors = [];
+			var stats = this.obj.stats.values;
+
+			var playerLevel = (stats.originalLevel || stats.level);
+			if (item.level > playerLevel)
+				errors.push('level');
+
+			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
+				errors.push('stats');
+
+			if (item.factions) {
+				if (item.factions.some(function (f) {
+						return f.noEquip;
+					}))
+					errors.push('faction');
+			}
+
+			return errors;
+		},
+
+		canEquipItem: function (item) {
+			return (this.equipItemErrors.length == 0);
 		}
 	};
 });

@@ -49,6 +49,9 @@ define([
 		},
 
 		move: function () {
+			if (this.obj.dead)
+				return;
+
 			var result = {
 				success: true
 			};
@@ -93,7 +96,7 @@ define([
 			//find mobs in range
 			var range = this.range;
 			var faction = this.faction;
-			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
+			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
 			if (inRange.length == 0)
 				return;
@@ -235,13 +238,16 @@ define([
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
 				if (!l) {
-					console.log('aggro obj empty???');
+					lLen--;
 					continue;
 				}
 				//Maybe the aggro component was removed?
 				var targetAggro = l.obj.aggro;
-				if (targetAggro)
+				if (targetAggro) {
 					targetAggro.unAggro(this.obj);
+					i--;
+					lLen--;
+				}
 			}
 
 			this.list = [];
@@ -259,11 +265,13 @@ define([
 
 				if (amount == null) {
 					list.splice(i, 1);
+					obj.aggro.unAggro(this.obj);
 					break;
 				} else {
 					l.threat -= amount;
 					if (l.threat <= 0) {
 						list.splice(i, 1);
+						obj.aggro.unAggro(this.obj);
 						break;
 					}
 				}

@@ -76,7 +76,6 @@ define([
             PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 
             events.on('onGetMap', this.onGetMap.bind(this));
-            events.on('onDeath', this.onDeath.bind(this));
             events.on('onToggleFullscreen', this.toggleScreen.bind(this));
 
             this.width = $('body').width();
@@ -238,13 +237,6 @@ define([
                     container.addChild(tile);
                 }
             }
-        },
-
-        onDeath: function (pos) {
-            this.setPosition({
-                x: (pos.x - (this.width / (scale * 2))) * scale,
-                y: (pos.y - (this.height / (scale * 2))) * scale
-            }, true);
         },
 
         onResize: function () {

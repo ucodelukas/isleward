@@ -39,7 +39,7 @@ define([
 				io.sockets.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q3',
+							class: 'color-blueB',
 							message: player.name + ' has gone offline'
 						}]
 					}],
@@ -63,7 +63,19 @@ define([
 			} else
 				player = this.players.find(p => p.socket.id == socket.id);
 
-			if ((!player) || ((player.permadead) && (['getCharacterList', 'getCharacter', 'deleteCharacter'].indexOf(msg.method) === -1)))
+			if (
+				(!player) ||
+				(
+					(player.permadead) &&
+					(['getCharacterList', 'getCharacter', 'deleteCharacter'].indexOf(msg.method) === -1)
+				) ||
+				(
+					(player.dead) &&
+					(msg.method != 'performAction') &&
+					(msg.data.cpn != 'stats') &&
+					(msg.data.method != 'respawn')
+				)
+			)
 				return;
 
 			var cpn = player[msg.cpn];
@@ -98,7 +110,7 @@ define([
 			io.sockets.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q3',
+						class: 'color-blueB',
 						message: player.name + ' has gone offline'
 					}]
 				}],

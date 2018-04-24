@@ -5,7 +5,7 @@ define([
 ) {
 	return {
 		db: null,
-		file: 'storage.db',
+		file: '../../data/storage.db',
 		exists: false,
 
 		tables: {
@@ -18,7 +18,9 @@ define([
 			customMap: null,
 			mail: null,
 			customChannels: null,
-			error: null
+			error: null,
+			modLog: null,
+			accountInfo: null
 		},
 
 		init: function (cbReady) {

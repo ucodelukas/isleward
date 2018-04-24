@@ -3,7 +3,7 @@ define([
 	'items/salvager',
 	'items/enchanter',
 	'objects/objects',
-	'config/classes',
+	'config/spirits',
 	'mtx/mtx',
 	'config/factions',
 	'items/itemEffects'
@@ -18,12 +18,15 @@ define([
 	itemEffects
 ) {
 	return {
+		//Properties
 		type: 'inventory',
 
 		inventorySize: 50,
 		items: [],
 
 		blueprint: null,
+
+		//Base Methods
 
 		init: function (blueprint, isTransfer) {
 			var items = blueprint.items || [];
@@ -68,51 +71,74 @@ define([
 			this.hookItemEvents();
 		},
 
-		hookItemEvents: function (items) {
-			var items = items || this.items;
+		save: function () {
+			return {
+				type: 'inventory',
+				items: this.items
+			};
+		},
+
+		simplify: function (self) {
+			if (!self)
+				return null;
+
+			var reputation = this.obj.reputation;
+
+			return {
+				type: 'inventory',
+				items: this.items
+					.map(function (i) {
+						var item = extend(true, {}, i);
+
+						if (item.effects) {
+							item.effects = item.effects.map(e => ({
+								factionId: e.factionId,
+								text: e.text,
+								properties: e.properties,
+								mtx: e.mtx,
+								type: e.type,
+								rolls: e.rolls
+							}));
+						}
+
+						if (item.factions) {
+							item.factions = item.factions.map(function (f) {
+								var faction = reputation.getBlueprint(f.id);
+								var factionTier = reputation.getTier(f.id);
+
+								var noEquip = null;
+								if (factionTier < f.tier)
+									noEquip = true;
+
+								if (!faction)
+									console.log(f);
+
+								return {
+									id: f.id,
+									name: faction.name,
+									tier: f.tier,
+									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+									noEquip: noEquip
+								};
+							}, this);
+						}
+
+						return item;
+					})
+			};
+		},
+
+		update: function () {
+			var items = this.items;
 			var iLen = items.length;
 			for (var i = 0; i < iLen; i++) {
 				var item = items[i];
+				if (!item.cd)
+					continue;
 
-				if (item.effects) {
-					item.effects.forEach(function (e) {
-						if (e.mtx) {
-							var mtxUrl = mtx.get(e.mtx);
-							var mtxModule = require(mtxUrl);
+				item.cd--;
 
-							e.events = mtxModule.events;
-						} else if (e.factionId) {
-							var faction = factions.getFaction(e.factionId);
-							var statGenerator = faction.uniqueStat;
-							statGenerator.generate(item);
-						} else {
-							var effectUrl = itemEffects.get(e.type);
-							var effectModule = require(effectUrl);
-
-							e.events = effectModule.events;
-						}
-					});
-				}
-
-				if ((item.pos == null) && (!item.eq)) {
-					var pos = i;
-					for (var j = 0; j < iLen; j++) {
-						if (!items.some(fj => (fj.pos == j))) {
-							pos = j;
-							break;
-						}
-					}
-					item.pos = pos;
-				} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
-					var pos = item.pos;
-					for (var j = 0; j < iLen; j++) {
-						if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
-							pos = j;
-							break;
-						}
-					}
-					item.pos = pos;
-				}
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 			}
 		},
 
@@ -165,7 +191,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: learnMsg.msg || 'you cannot learn that ability',
 						type: 'info'
 					}]
@@ -439,6 +465,7 @@ define([
 				callback: this.onCheckCharExists.bind(this, msg, item)
 			});
 		},
+
 		onCheckCharExists: function (msg, item, res) {
 			if (!res) {
 				this.resolveCallback(msg, 'Recipient does not exist');
@@ -453,6 +480,54 @@ define([
 		},
 
 		//Helpers
+
+		hookItemEvents: function (items) {
+			var items = items || this.items;
+			var iLen = items.length;
+			for (var i = 0; i < iLen; i++) {
+				var item = items[i];
+
+				if (item.effects) {
+					item.effects.forEach(function (e) {
+						if (e.mtx) {
+							var mtxUrl = mtx.get(e.mtx);
+							var mtxModule = require(mtxUrl);
+
+							e.events = mtxModule.events;
+						} else if (e.factionId) {
+							var faction = factions.getFaction(e.factionId);
+							var statGenerator = faction.uniqueStat;
+							statGenerator.generate(item);
+						} else {
+							var effectUrl = itemEffects.get(e.type);
+							var effectModule = require(effectUrl);
+
+							e.events = effectModule.events;
+						}
+					});
+				}
+
+				if ((item.pos == null) && (!item.eq)) {
+					var pos = i;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fj => (fj.pos == j))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
+					var pos = item.pos;
+					for (var j = 0; j < iLen; j++) {
+						if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
+							pos = j;
+							break;
+						}
+					}
+					item.pos = pos;
+				}
+			}
+		},
 
 		setItemPosition: function (id) {
 			var item = this.findItem(id);
@@ -630,8 +705,8 @@ define([
 						this.obj.instance.syncer.queue('onGetMessages', {
 							id: this.obj.id,
 							messages: [{
-								class: 'q0',
-								message: 'you bags are too full to loot any more items',
+								class: 'color-redA',
+								message: 'your bags are too full to loot any more items',
 								type: 'info'
 							}]
 						}, [this.obj.serverId]);
@@ -735,7 +810,7 @@ define([
 					this.obj.equipment.equip(item.id);
 			} else {
 				if (!item.effects)
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
 				else {
 					var result = extend(true, {}, item);
 					result.effects = result.effects.map(e => ({
@@ -765,7 +840,7 @@ define([
 						}, this);
 					}
 
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', result, true);
 				}
 			}
 
@@ -950,75 +1025,24 @@ define([
 			this.items = [];
 		},
 
-		save: function () {
-			return {
-				type: 'inventory',
-				items: this.items
-			};
-		},
+		canEquipItem: function (item) {
+			var stats = this.obj.stats.values;
 
-		simplify: function (self) {
-			if (!self)
-				return null;
+			var playerLevel = (stats.originalLevel || stats.level);
+			if (item.level > playerLevel)
+				return false;
 
-			var reputation = this.obj.reputation;
+			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
+				return false;
 
-			return {
-				type: 'inventory',
-				items: this.items
-					.map(function (i) {
-						var item = extend(true, {}, i);
-
-						if (item.effects) {
-							item.effects = item.effects.map(e => ({
-								factionId: e.factionId,
-								text: e.text,
-								properties: e.properties,
-								mtx: e.mtx,
-								type: e.type,
-								rolls: e.rolls
-							}));
-						}
-
-						if (item.factions) {
-							item.factions = item.factions.map(function (f) {
-								var faction = reputation.getBlueprint(f.id);
-								var factionTier = reputation.getTier(f.id);
-
-								var noEquip = null;
-								if (factionTier < f.tier)
-									noEquip = true;
-
-								if (!faction)
-									console.log(f);
-
-								return {
-									id: f.id,
-									name: faction.name,
-									tier: f.tier,
-									tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-									noEquip: noEquip
-								};
-							}, this);
-						}
-
-						return item;
-					})
-			};
-		},
-
-		update: function () {
-			var items = this.items;
-			var iLen = items.length;
-			for (var i = 0; i < iLen; i++) {
-				var item = items[i];
-				if (!item.cd)
-					continue;
-
-				item.cd--;
-
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			if (item.factions) {
+				if (item.factions.some(function (f) {
+						return f.noEquip;
+					}))
+					return false;
 			}
+
+			return true;
 		}
 	};
 });

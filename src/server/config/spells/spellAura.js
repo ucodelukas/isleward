@@ -92,7 +92,8 @@ define([
 					type: this.effect,
 					amount: amount,
 					caster: this.obj,
-					ttl: -1
+					ttl: -1,
+					new: true
 				});
 			}, this);
 		},

@@ -37,14 +37,9 @@ define([
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > (stats.originalLevel || stats.level))) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
 				item.eq = false;
 				return;
-			} else if ((item.factions) && (this.obj.player)) {
-				if (!this.obj.reputation.canEquipItem(item)) {
-					item.eq = false;
-					return;
-				}
 			}
 
 			var currentEqId = this.eq[item.slot];
@@ -61,19 +56,12 @@ define([
 				itemId = itemId.itemId;
 			}
 
-			var level = this.obj.stats.originalValues || this.obj.stats.values;
-
 			var item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
-			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (item.level > level)) {
+			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
 				item.eq = false;
 				return;
-			} else if ((item.factions) && (this.obj.player)) {
-				if (!this.obj.reputation.canEquipItem(item)) {
-					item.eq = false;
-					return;
-				}
 			}
 
 			if (!slot)
@@ -102,7 +90,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: equipMsg.msg || 'you cannot equip that item',
 						type: 'info'
 					}]
@@ -148,6 +136,10 @@ define([
 
 				this.obj.stats.addStat(s, val);
 			}
+
+			(item.implicitStats || []).forEach(function (s) {
+				this.obj.stats.addStat(s.stat, s.value);
+			}, this);
 
 			item.eq = true;
 			this.eq[slot] = itemId;
@@ -220,6 +212,10 @@ define([
 
 				this.obj.stats.addStat(s, -val);
 			}
+
+			(item.implicitStats || []).forEach(function (s) {
+				this.obj.stats.addStat(s.stat, -s.value);
+			}, this);
 
 			delete item.eq;
 			delete this.eq[item.equipSlot];
@@ -297,7 +293,7 @@ define([
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
-							class: 'q4',
+							class: 'color-redA',
 							message: 'you unequip your ' + item.name + ' as it zaps you',
 							type: 'rep'
 						}]
@@ -314,17 +310,24 @@ define([
 			var eq = this.eq;
 			for (var p in eq) {
 				var item = items.find(i => (i.id == eq[p]));
-				if ((!item.slot) || (item.slot == 'tool') || (item.level <= level))
+				if ((!item.slot) || (item.slot == 'tool')) {
 					continue;
+				}
 
 				var item = items.find(i => (i.id == eq[p]));
-				var nItemStats = generatorStats.rescale(item, level);
+				var nItemStats = item.stats;
+				if (item.level > level)
+					nItemStats = generatorStats.rescale(item, level);
 
-				for (var s in nItemStats) {
+				var tempItem = extend(true, {}, item);
+				tempItem.stats = extend(true, {}, nItemStats);
+				this.obj.fireEvent('afterRescaleItemStats', tempItem);
+
+				for (var s in tempItem.stats) {
 					if (!stats[s])
 						stats[s] = 0;
 
-					stats[s] += nItemStats[s];
+					stats[s] += tempItem.stats[s];
 				}
 			}
 

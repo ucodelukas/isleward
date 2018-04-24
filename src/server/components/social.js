@@ -1,9 +1,11 @@
 define([
 	'world/atlas',
-	'config/roles'
+	'config/roles',
+	'misc/events'
 ], function (
 	atlas,
-	roles
+	roles,
+	events
 ) {
 	return {
 		type: 'social',
@@ -14,6 +16,8 @@ define([
 
 		customChannels: null,
 
+		messageHistory: [],
+
 		init: function (blueprint) {
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
@@ -22,16 +26,17 @@ define([
 			return {
 				type: 'social',
 				party: this.party,
-				customChannels: self ? this.customChannels : null
+				customChannels: self ? this.customChannels : null,
+				muted: this.muted
 			};
 		},
 
-		sendMessage: function (msg) {
-			this.obj.socket.emit('event', {
+		sendMessage: function (msg, color, target) {
+			(target || this.obj).socket.emit('event', {
 				event: 'onGetMessages',
 				data: {
 					messages: [{
-						class: 'q0',
+						class: color || 'q0',
 						message: msg,
 						type: 'chat'
 					}]
@@ -44,7 +49,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'you are not in a party',
 							type: 'info'
 						}]
@@ -63,7 +68,7 @@ define([
 				player.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-grayB',
 							message: '(party: ' + charname + '): ' + message,
 							type: 'chat'
 						}]
@@ -84,7 +89,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'syntax: $channel message',
 							type: 'info'
 						}]
@@ -95,7 +100,7 @@ define([
 				this.obj.socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: 'you are not currently in channel: ' + channel,
 							type: 'info'
 						}]
@@ -108,7 +113,7 @@ define([
 						pList[i].socket.emit('events', {
 							onGetMessages: [{
 								messages: [{
-									class: 'q0',
+									class: 'color-grayB',
 									message: '[' + channel + '] ' + this.obj.auth.charname + ': ' + message,
 									type: channel.trim()
 								}]
@@ -125,22 +130,57 @@ define([
 
 			msg.data.message = msg.data.message
 				.split('<')
-				.join('')
+				.join('&lt;')
 				.split('>')
-				.join('');
+				.join('&gt;');
 
 			if (!msg.data.message)
+				return;
+
+			if (msg.data.message.trim() == '')
 				return;
 
 			this.onBeforeChat(msg.data);
 			if (msg.data.ignore)
 				return;
 
-			var charname = this.obj.auth.charname;
-
-			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('q');
+			if (this.muted) {
+				this.sendMessage('You have been muted from talking', 'color-redA');
+				return;
+			}
 
 			var messageString = msg.data.message;
+
+			var history = this.messageHistory;
+
+			var time = +new Date;
+			history.spliceWhere(h => ((time - h.time) > 5000));
+
+			if (history.length > 0) {
+				if (history[history.length - 1].msg == messageString) {
+					this.sendMessage('You have already sent that message', 'color-redA');
+					return;
+				} else if (history.length >= 3) {
+					this.sendMessage('You are sending too many messages', 'color-redA');
+					return;
+				}
+			}
+
+			history.push({
+				msg: messageString,
+				time: time
+			});
+
+			var charname = this.obj.auth.charname;
+
+			var msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
+
+			var msgEvent = {
+				source: charname,
+				msg: messageString
+			};
+			events.emit('onBeforeSendMessage', msgEvent);
+			messageString = msgEvent.msg;
 			if (messageString[0] == '@') {
 				var playerName = '';
 				//Check if there's a space in the name
@@ -163,7 +203,7 @@ define([
 					event: 'onGetMessages',
 					data: {
 						messages: [{
-							class: msgStyle,
+							class: 'color-yellowB',
 							message: '(you to ' + playerName + '): ' + messageString,
 							type: 'chat'
 						}]
@@ -174,7 +214,7 @@ define([
 					event: 'onGetMessages',
 					data: {
 						messages: [{
-							class: msgStyle,
+							class: 'color-yellowB',
 							message: '(' + this.obj.name + ' to you): ' + messageString,
 							type: 'chat'
 						}]
@@ -223,8 +263,8 @@ define([
 			if (!source)
 				return;
 
-			source.social.sendMessage('invite sent');
-			this.sendMessage(source.name + ' has invited you to join a party');
+			source.social.sendMessage('invite sent', 'color-yellowB');
+			this.sendMessage(source.name + ' has invited you to join a party', 'color-yellowB');
 
 			this.obj.socket.emit('event', {
 				event: 'onGetInvite',
@@ -259,7 +299,7 @@ define([
 				var msg = source.name + ' has joined the party';
 				if (p == sourceId)
 					msg = 'you have joined a party';
-				player.social.sendMessage(msg);
+				player.social.sendMessage(msg, 'color-yellowB');
 
 				player
 					.socket.emit('event', {
@@ -274,7 +314,7 @@ define([
 			if (!target)
 				return;
 
-			this.sendMessage(target.name + ' declined your party invitation');
+			this.sendMessage(target.name + ' declined your party invitation', 'color-redA');
 		},
 
 		//Gets called on the player that requested to leave
@@ -355,7 +395,7 @@ define([
 		//Gets called on the player that requested the removal
 		removeFromParty: function (msg) {
 			if (!this.isPartyLeader) {
-				this.sendMessage('you are not the party leader');
+				this.sendMessage('you are not the party leader', 'color-redA');
 				return;
 			}
 
@@ -371,7 +411,7 @@ define([
 						onGetParty: [this.party],
 						onGetMessages: [{
 							messages: [{
-								class: 'q0',
+								class: 'color-yellowB',
 								message: target.name + ' has been removed from the party'
 							}]
 						}]
@@ -381,7 +421,7 @@ define([
 			target.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: 'you have been removed from the party'
 					}]
 				}],
@@ -397,7 +437,7 @@ define([
 				this.isPartyLeader = null;
 				this.updatePartyOnThread();
 
-				this.sendMessage('your party has been disbanded');
+				this.sendMessage('your party has been disbanded', 'color-yellowB');
 			}
 		},
 

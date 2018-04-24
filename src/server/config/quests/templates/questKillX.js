@@ -34,7 +34,8 @@ define([
 								(mobBlueprint.attackable) ||
 								(mobBlueprint.attackable == null)
 							) &&
-							(mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35))
+							(mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35)) &&
+							(mobCounts[m] > 1)
 						);
 					}, this);
 
@@ -55,6 +56,10 @@ define([
 			this.description = 'Kill ' + this.have + '/' + this.need + ' ' + this.mobName;
 
 			return true;
+		},
+
+		getXpMultiplier: function () {
+			return this.need;
 		},
 
 		events: {

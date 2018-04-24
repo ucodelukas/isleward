@@ -108,13 +108,14 @@ define([
 
 			var itemCount = blueprint.items.min + ~~(Math.random() * (blueprint.items.max - blueprint.items.min));
 			for (var i = 0; i < itemCount; i++) {
-				var minLevel = Math.max(1, list.level * 0.75);
-				var maxLevel = list.level * 1.25;
+				var minLevel = blueprint.items.minLevel || Math.max(1, list.level * 0.75);
+				var maxLevel = blueprint.items.maxLevel || (list.level * 1.25);
 				var level = ~~(minLevel + (Math.random() * (maxLevel - minLevel)));
 
 				var item = generator.generate({
 					noSpell: true,
 					magicFind: 150,
+					slot: blueprint.items.slot,
 					level: level
 				});
 
@@ -157,6 +158,7 @@ define([
 
 				if (item.type == 'skin') {
 					var skinBlueprint = skins.getBlueprint(item.id);
+					item.skinId = item.id;
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
 				} else if (item.generate) {
@@ -165,6 +167,10 @@ define([
 						generated.worth = item.worth;
 					if (item.infinite)
 						generated.infinite = true;
+
+					if (item.factions)
+						generated.factions = item.factions;
+
 					item = generated;
 				}
 
@@ -195,7 +201,7 @@ define([
 				requestedBy.instance.syncer.queue('onGetMessages', {
 					id: requestedBy.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: `your reputation is too low to buy that item`,
 						type: 'info'
 					}]

@@ -77,7 +77,7 @@ define([
 						player.instance.syncer.queue('onGetMessages', {
 							id: player.id,
 							messages: [{
-								class: 'q0',
+								class: 'color-greenB',
 								message: r.msg,
 								type: 'info'
 							}]
@@ -108,7 +108,7 @@ define([
 			this.sendMail(playerName, queue);
 		},
 
-		sendMail: function (playerName, items) {
+		sendMail: function (playerName, items, callback) {
 			if (this.busy[playerName]) {
 				var queue = this.queue[playerName];
 				if (!queue) {
@@ -133,10 +133,10 @@ define([
 			io.get({
 				ent: playerName,
 				field: 'mail',
-				callback: this.doSendMail.bind(this, playerName, items)
+				callback: this.doSendMail.bind(this, playerName, items, callback)
 			});
 		},
-		doSendMail: function (playerName, items, result) {
+		doSendMail: function (playerName, items, callback, result) {
 			if (result == 'null')
 				result = null;
 
@@ -152,7 +152,7 @@ define([
 				ent: playerName,
 				field: 'mail',
 				value: itemString,
-				callback: this.getMail.bind(this, playerName)
+				callback: callback || this.getMail.bind(this, playerName)
 			});
 		}
 	};

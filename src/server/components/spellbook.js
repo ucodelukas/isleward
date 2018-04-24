@@ -155,7 +155,6 @@ define([
 			var type = runeSpell.type;
 			var playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() == runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type == type));
 			var playerSpellConfig = playerSpellsConfig.spells[runeSpell.name.toLowerCase()] || playerSpellsConfig.spells[runeSpell.type];
-
 			if (!playerSpellConfig)
 				return -1;
 
@@ -167,7 +166,7 @@ define([
 			var builtSpell = extend(true, {
 				type: runeSpell.type,
 				values: {}
-			}, playerSpell, playerSpellConfig);
+			}, playerSpell, playerSpellConfig, runeSpell);
 
 			for (var r in builtSpell.random) {
 				var range = builtSpell.random[r];
@@ -576,6 +575,17 @@ define([
 
 		events: {
 			beforeRezone: function () {
+				this.spells.forEach(function (s) {
+					if (s.active) {
+						s.active = false;
+
+						var reserve = s.manaReserve;
+
+						if ((reserve) && (reserve.percentage))
+							this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+					}
+				}, this);
+
 				var callbacks = this.callbacks;
 				var cLen = callbacks.length;
 				for (var i = 0; i < cLen; i++) {

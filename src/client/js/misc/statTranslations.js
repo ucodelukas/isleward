@@ -12,10 +12,19 @@ define([
 		'int': 'intellect',
 		'dex': 'dexterity',
 		'armor': 'armor',
+
 		'blockAttackChance': 'chance to block attacks',
 		'blockSpellChance': 'chance to block spells',
-		'addCritChance': 'increased crit chance',
-		'addCritMultiplier': 'increased crit multiplier',
+
+		'dodgeAttackChance': 'chance to dodge attacks',
+		'dodgeSpellChance': 'chance to dodge spells',
+
+		'addCritChance': 'global crit chance',
+		'addCritMultiplier': 'global crit multiplier',
+		'addAttackCritChance': 'attack crit chance',
+		'addAttackCritMultiplier': 'attack crit multiplier',
+		'addSpellCritChance': 'spell crit chance',
+		'addSpellCritMultiplier': 'spell crit multiplier',
 		'magicFind': 'increased item quality',
 		'itemQuantity': 'increased item quantity',
 		'sprintChance': 'sprint chance',

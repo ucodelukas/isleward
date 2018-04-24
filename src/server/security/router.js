@@ -28,7 +28,7 @@ define([
 				trade: ['buySell'],
 				door: ['lock', 'unlock'],
 				wardrobe: ['open', 'apply'],
-				passives: ['tickNode', 'untickNode']
+				stats: ['respawn']
 			};
 
 			return ((secondaryAllowed[msg.data.cpn]) && (secondaryAllowed[msg.data.cpn].indexOf(msg.data.method) > -1));

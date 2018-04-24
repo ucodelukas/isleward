@@ -6,7 +6,9 @@ define([
 	var config = {
 		'1.0': {
 			name: 'Wizard 1',
-			sprite: [2, 0]
+			sprite: [2, 0],
+			defaultSpirit: 'owl',
+			default: true
 		},
 		'1.1': {
 			name: 'Wizard 2',
@@ -14,7 +16,9 @@ define([
 		},
 		'1.2': {
 			name: 'Warrior 1',
-			sprite: [1, 1]
+			sprite: [1, 1],
+			defaultSpirit: 'bear',
+			default: true
 		},
 		'1.3': {
 			name: 'Warrior 2',
@@ -30,7 +34,9 @@ define([
 		},
 		'1.6': {
 			name: 'Thief 1',
-			sprite: [6, 0]
+			sprite: [6, 0],
+			defaultSpirit: 'lynx',
+			default: true
 		},
 		'1.7': {
 			name: 'Thief 2',
@@ -38,7 +44,7 @@ define([
 		},
 
 		'2.0': {
-			name: 'Skin: Gaekatlan Druid',
+			name: 'Gaekatlan Druid',
 			sprite: [0, 4]
 		},
 
@@ -94,6 +100,11 @@ define([
 			name: 'Grand Crusader',
 			spritesheet: 'images/skins/0010.png',
 			sprite: [4, 0]
+		},
+		'11.5': {
+			name: 'Infernal Crusader',
+			spritesheet: 'images/skins/0010.png',
+			sprite: [5, 0]
 		}
 	};
 
@@ -109,7 +120,7 @@ define([
 		getSkinList: function (skins) {
 			var list = Object.keys(config)
 				.filter(function (s) {
-					return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
+				return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
 				})
 				.map(function (s) {
 					var res = extend(true, {}, config[s]);
@@ -123,7 +134,8 @@ define([
 					name: skin.name,
 					id: skin.id,
 					sprite: skin.sprite[0] + ',' + skin.sprite[1],
-					spritesheet: skin.spritesheet
+					spritesheet: skin.spritesheet,
+					defaultSpirit: skin.defaultSpirit
 				});
 			}, this);
 

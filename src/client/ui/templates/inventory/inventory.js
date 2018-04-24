@@ -66,9 +66,14 @@ define([
 				.on('mousemove', this.onMouseMove.bind(this))
 				.on('mouseleave', this.onMouseDown.bind(this, null, null, false));
 
-			this.find('.split-box .amount').on('mousewheel', this.onChangeStackAmount.bind(this));
+			this.find('.split-box .amount')
+				.on('mousewheel', this.onChangeStackAmount.bind(this))
+				.on('input', this.onEnterStackAmount.bind(this));
+
 			this.find('.split-box').on('click', this.splitStackEnd.bind(this, true));
-			this.find('.split-box .button').on('click', this.splitStackEnd.bind(this));
+			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this, null));
+			this.find('.split-box .btnLess').on('click', this.onChangeStackAmount.bind(this, null, -1));
+			this.find('.split-box .btnMore').on('click', this.onChangeStackAmount.bind(this, null, 1));
 		},
 
 		build: function () {
@@ -367,14 +372,20 @@ define([
 			var box = this.find('.split-box').show();
 			box.data('item', item);
 
-			box.find('.amount').html(1);
+			box.find('.amount')
+				.val('1')
+				.focus();
 		},
 
 		splitStackEnd: function (cancel, e) {
 			var box = this.find('.split-box');
 
-			if ((!e) || (e.target != box.find('.button')[0]))
+			if ((cancel) || (!e) || (e.target != box.find('.btnSplit')[0])) {
+				if ((cancel) && (!$(e.target).hasClass('button')))
+					box.hide();
+
 				return;
+			}
 
 			box.hide();
 
@@ -386,20 +397,36 @@ define([
 					method: 'splitStack',
 					data: {
 						itemId: box.data('item').id,
-						stackSize: ~~this.find('.split-box .amount').html()
+						stackSize: ~~this.find('.split-box .amount').val()
 					}
 				}
 			});
 		},
 
-		onChangeStackAmount: function (e) {
+		onChangeStackAmount: function (e, amount) {
 			var item = this.find('.split-box').data('item');
-			var delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
+			var delta = e ? ((e.originalEvent.deltaY > 0) ? -1 : 1) : amount;
 			if (this.shiftDown)
 				delta *= 10;
 			var amount = this.find('.split-box .amount');
 
-			amount.html(Math.max(1, Math.min(item.quantity - 1, ~~amount.html() + delta)));
+			amount.val(Math.max(1, Math.min(item.quantity - 1, ~~amount.val() + delta)));
+		},
+
+		onEnterStackAmount: function (e) {
+			var el = this.find('.split-box .amount');
+			var val = el.val();
+			if (val != ~~val)
+				el.val('');
+			else if (val) {
+				var item = this.find('.split-box').data('item');
+				if (val < 0)
+					val = '';
+				else if (val > item.quantity - 1)
+					val = item.quantity - 1;
+
+				el.val(val);
+			}
 		},
 
 		hideTooltip: function () {
@@ -448,6 +475,62 @@ define([
 				compare = this.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
 				});
+
+				// check special cases for mismatched weapon/offhand scenarios (only valid when comparing)
+				if ((!compare) && (this.shiftDown)) {
+					var equippedTwoHanded = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'twoHanded'));
+					});
+
+					var equippedOneHanded = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'oneHanded'));
+					});
+
+					var equippedOffhand = this.items.find(function (i) {
+						return ((i.eq) && (i.slot == 'offHand'));
+					});
+
+					if (item.slot == 'twoHanded') {
+						if (!equippedOneHanded) {
+							compare = equippedOffhand;
+						} else if (!equippedOffhand) {
+							compare = equippedOneHanded;
+						} else {
+							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
+							compare = $.extend(true, {}, equippedOneHanded);
+							compare.refItem = equippedOneHanded;
+
+							for (var s in equippedOffhand.stats) {
+								if (!compare.stats[s])
+									compare.stats[s] = 0;
+
+								compare.stats[s] += equippedOffhand.stats[s]
+							}
+						}
+					}
+
+					if (item.slot == 'oneHanded') {
+						compare = equippedTwoHanded;
+					}
+
+					// this case is kind of ugly, but we don't want to go in when comparing an offHand to (oneHanded + empty offHand) - that should just use the normal compare which is offHand to empty
+					if ((item.slot == 'offHand') && (equippedTwoHanded)) {
+						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
+						// the player would lose by switching to the offhand (which would remove the twoHander)
+						// keep a reference to the original item for use in onHideToolTip
+						var spellClone = $.extend(true, {}, equippedTwoHanded.spell);
+						spellClone.name = '';
+						spellClone.values['damage'] = 0;
+
+						var clone = $.extend(true, {}, item, {
+							spell: spellClone
+						});
+						clone.refItem = item;
+						item = clone;
+
+						compare = equippedTwoHanded;
+					}
+				}
 			}
 
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
@@ -506,18 +589,12 @@ define([
 
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > playerLevel)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (!window.player.inventory.canEquipItem(item))))
 				return;
-			else if ((action == 'learnAbility') && (item.level > playerLevel))
+			else if ((action == 'learnAbility') && (!window.player.inventory.canEquipItem(item)))
 				return;
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
-			if ((item.factions) && (action == 'equip')) {
-				if (item.factions.some(function (f) {
-						return f.noEquip;
-					}))
-					return;
-			}
 
 			var cpn = 'inventory';
 			if (action == 'equip')

@@ -40,8 +40,10 @@ define([
 				factionBlueprint = factions.getFaction(factionId);
 			} catch (e) {}
 
-			if (factionBlueprint == null)
+			if (factionBlueprint == null) {
+				console.log('No faction blueprint found');
 				return;
+			}
 
 			factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
 
@@ -127,25 +129,25 @@ define([
 			this.obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
-					class: 'q1',
+					class: (action == 'gained') ? 'color-greenB' : 'color-redA',
 					message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
 					type: 'rep'
 				}]
 			}, [this.obj.serverId]);
 
 			if (faction.tier != oldTier) {
-				this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name);
+				this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name, (faction.tier > oldTier));
 				this.obj.equipment.unequipFactionGear(faction.id, faction.tier);
 			}
 
 			this.syncFaction(factionId, fullSync);
 		},
 
-		sendMessage: function (tierName, factionName) {
+		sendMessage: function (tierName, factionName, didIncrease) {
 			this.obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
-					class: 'q4',
+					class: didIncrease ? 'color-greenB' : 'color-redA',
 					message: 'you are now ' + tierName + ' with ' + factionName,
 					type: 'rep'
 				}]

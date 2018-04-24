@@ -36,7 +36,7 @@ define([
 				if (chanceRoll >= (rolls.chance || 100))
 					return;
 
-				var amount = rolls.amount || ((damage.amount / 100) * rolls.percentage);
+				var amount = rolls.amount || ((damage.dealt / 100) * rolls.percentage);
 
 				this.stats.getHp({
 					amount: amount

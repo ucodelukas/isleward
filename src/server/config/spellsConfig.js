@@ -5,9 +5,6 @@ define([
 ) {
 	var spells = {
 		'melee': {
-			statType: 'str',
-			statMult: 0.84,
-			threatMult: 4,
 			auto: true,
 			cdMax: 5,
 			useWeaponRange: true,
@@ -16,9 +13,6 @@ define([
 			}
 		},
 		'projectile': {
-			statType: 'int',
-			statMult: 0.9,
-			element: 'arcane',
 			auto: true,
 			cdMax: 7,
 			manaCost: 0,
@@ -183,7 +177,7 @@ define([
 			auraRange: 9,
 			effect: 'regenHp',
 			random: {
-				regenPercentage: [0.1, 0.5]
+				regenPercentage: [0.3, 1.5]
 			}
 		},
 		'tranquility': {

@@ -13,7 +13,6 @@ define([
 		],
 
 		init: function () {
-			this.events.on('onBeforeGetClasses', this.beforeGetClasses.bind(this));
 			this.events.on('onBeforeGetSkins', this.beforeGetSkins.bind(this));
 			this.events.on('onBeforeGetItemTypes', this.beforeGetItemTypes.bind(this));
 			this.events.on('onBeforeGetSpellsInfo', this.beforeGetSpellsInfo.bind(this));
@@ -109,27 +108,6 @@ define([
 			list.push(`${this.folderName}/images/mobs.png`);
 		},
 
-		beforeGetClasses: function (classes) {
-			/*classes.spells.necromancer = ['harvest life', 'summon skeleton'];
-			classes.stats.necromancer = {
-				values: {
-					hpMax: 65
-				},
-				vitScale: 10,
-				gainStats: {
-					int: 1,
-					str: 1
-				},
-				spritesheet: `${this.folderName}/images/inGameSprite.png`
-			};
-			classes.weapons.necromancer = 'Sickle';
-			classes.portraits.necromancer = {
-				spritesheet: `${this.folderName}/images/avatar.png`,
-				x: 0,
-				y: 0
-			};*/
-		},
-
 		beforeGetSpellTemplate: function (spell) {
 			if (spell.type == 'HarvestLife')
 				spell.template = require(`${this.relativeFolderName}/spells/spellHarvestLife`);
@@ -150,8 +128,10 @@ define([
 		beforeGetItemTypes: function (types) {
 			['Sickle', 'Jade Sickle', 'Golden Sickle', 'Bone Sickle'].forEach(function (s, i) {
 				types.oneHanded[s] = {
+					spritesheet: `${this.folderName}/images/items.png`,
 					sprite: [i, 0],
 					spellName: 'melee',
+					attrRequire: ['int'],
 					spellConfig: {
 						statType: ['str', 'int'],
 						statMult: 0.76,
@@ -161,7 +141,10 @@ define([
 							damage: [1.5, 5.7]
 						}
 					},
-					spritesheet: `${this.folderName}/images/items.png`
+					implicitStat: {
+						stat: 'attackSpeed',
+						value: [1, 5]
+					}
 				};
 			}, this);
 		},

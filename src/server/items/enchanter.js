@@ -72,14 +72,30 @@ define([
 						item.stats[p] = 0;
 
 					item.stats[p] += enchantedStats[p];
+
+					if (p == 'lvlRequire') {
+						item.level -= enchantedStats[p];
+						if (item.level < 1)
+							item.level = 1;
+					}
 				}
 				item.enchantedStats = enchantedStats;
 			} else if (msg.action == 'relevel') {
 				var offset = 1 + ~~(Math.random() * 2);
-				item.level = Math.min(20, item.level + offset);
+
+				if (!item.originalLevel)
+					item.level = Math.min(20, item.level + offset);
+				else {
+					offset = Math.min(20 - item.originalLevel, offset);
+					item.originalLevel = Math.min(20, item.originalLevel + offset);
+					item.level = Math.min(20, item.level + offset);
+				}
 			} else if (msg.action == 'reslot') {
 				if (item.effects)
 					return;
+
+				if (item.originalLevel)
+					item.level = item.originalLevel;
 
 				var enchantedStats = item.enchantedStats || {};
 				delete item.enchantedStats;
@@ -101,6 +117,12 @@ define([
 						newItem.stats[p] = 0;
 
 					newItem.stats[p] += enchantedStats[p];
+
+					if (p == 'lvlRequire') {
+						newItem.level -= enchantedStats[p];
+						if (newItem.level < 1)
+							newItem.level = 1;
+					}
 				}
 				newItem.enchantedStats = enchantedStats;
 
@@ -110,10 +132,13 @@ define([
 					return;
 
 				var spellName = item.spell.name.toLowerCase();
+				var oldSpell = item.spell;
 				delete item.spell;
+
 				generatorSpells.generate(item, {
 					spellName: spellName
 				});
+				item.spell = extend(true, oldSpell, item.spell);
 			} else if (msg.action == 'scour') {
 				if (!item.power)
 					return;

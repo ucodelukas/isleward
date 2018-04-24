@@ -158,7 +158,7 @@ define([
 			if (event.winText) {
 				this.instance.syncer.queue('onGetMessages', {
 					messages: {
-						class: 'q4',
+						class: 'color-pinkB',
 						message: event.winText
 					}
 				});
@@ -191,7 +191,7 @@ define([
 			for (var i = 0; i < cLen; i++) {
 				var phase = currentPhases[i];
 				if (!phase.destroyed) {
-					if ((phase.end) || (phase.endMark == event.age)) {
+					if ((phase.end) || (phase.endMark <= event.age)) {
 						if ((phase.destroy) && (!phase.destroyed))
 							phase.destroy();
 						phase.destroyed = true;
@@ -210,7 +210,7 @@ define([
 				if (n) {
 					this.instance.syncer.queue('onGetMessages', {
 						messages: {
-							class: 'q4',
+							class: 'color-pinkB',
 							message: n.msg
 						}
 					});

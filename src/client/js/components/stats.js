@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
 	'js/rendering/renderer'
-], function(
+], function (
 	events,
 	renderer
 ) {
@@ -15,7 +15,7 @@ define([
 		hpSprite: null,
 		hpSpriteInner: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
@@ -50,7 +50,10 @@ define([
 			this.updateHpSprite();
 		},
 
-		updateHpSprite: function() {
+		updateHpSprite: function () {
+			if (this.obj.dead)
+				return;
+
 			var obj = this.obj;
 
 			var yOffset = -12;
@@ -80,7 +83,7 @@ define([
 			this.hpSpriteInner.visible = this.hpSprite.visible;
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			var bValues = blueprint.values || {};
 
 			var values = this.values;
@@ -99,7 +102,7 @@ define([
 			this.updateHpSprite();
 		},
 
-		destroy: function() {
+		destroy: function () {
 			renderer.destroyObject({
 				sprite: this.hpSprite,
 				layerName: 'effects'

@@ -104,11 +104,11 @@ define([
 					div *= 2;
 
 				if (calcPerfection)
-					return (calcPerfection / 100);
+					return (calcPerfection / (100 * div));
 				else if (perfection == null)
 					return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 				else
-					return (1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div;
+					return ~~((1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div);
 			},
 			regenHp: function (item, level, blueprint, perfection, calcPerfection) {
 				var div = 1 / 11;
@@ -287,6 +287,18 @@ define([
 				ignore: true
 			},
 
+			dodgeAttackChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
+			dodgeSpellChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
 			addCritChance: {
 				generator: 'addCritChance',
 				level: {
@@ -294,6 +306,32 @@ define([
 				}
 			},
 			addCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
+			addAttackCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addAttackCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
+			addSpellCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addSpellCritMultiplier: {
 				generator: 'addCritMultiplier',
 				level: {
 					min: 12
@@ -327,7 +365,17 @@ define([
 				sprintChance: {
 					min: 1,
 					max: 20
-				}
+				},
+
+				dodgeAttackChance: {
+					min: 1,
+					max: 10
+				},
+
+				dodgeSpellChance: {
+					min: 1,
+					max: 10
+				},
 			},
 
 			offHand: {
@@ -437,6 +485,16 @@ define([
 				}
 			}
 
+			var implicitStat = blueprint.implicitStat;
+			if (implicitStat) {
+				var value = implicitStat.value[0] + ~~(Math.random() * (implicitStat.value[1] - implicitStat.value[0]));
+
+				item.implicitStats = [{
+					stat: implicitStat.stat,
+					value: value
+				}];
+			}
+
 			if (blueprint.stats) {
 				var useStats = extend(true, [], blueprint.stats);
 				var addStats = Math.min(statCount, blueprint.stats.length);
@@ -459,7 +517,7 @@ define([
 			}
 		},
 
-		buildStat: function (item, blueprint, stat, result) {
+		buildStat: function (item, blueprint, stat, result, isImplicit) {
 			var slotStats = this.slots[item.slot] || {};
 			var statOptions = extend(true, {}, this.stats, slotStats || {});
 

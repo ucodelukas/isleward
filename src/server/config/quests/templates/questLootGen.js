@@ -48,6 +48,10 @@ define([
 			return true;
 		},
 
+		getXpMultiplier: function () {
+			return (this.need * 1.5);
+		},
+
 		oComplete: function () {
 			var inventory = this.obj.inventory;
 			var item = inventory.items.find((i => i.name == this.item.name).bind(this));

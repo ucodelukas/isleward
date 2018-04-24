@@ -6,7 +6,10 @@ define([
 	'leaderboard/leaderboard',
 	'config/skins',
 	'config/roles',
-	'misc/profanities'
+	'misc/profanities',
+	'fixes/fixes',
+	'config/loginRewards',
+	'misc/mail'
 ], function (
 	bcrypt,
 	io,
@@ -15,7 +18,10 @@ define([
 	leaderboard,
 	skins,
 	roles,
-	profanities
+	profanities,
+	fixes,
+	loginRewards,
+	mail
 ) {
 	return {
 		type: 'auth',
@@ -25,6 +31,7 @@ define([
 		characters: {},
 		characterList: [],
 		stash: null,
+		accountInfo: null,
 
 		customChannels: [],
 
@@ -44,6 +51,60 @@ define([
 
 			this.charname = character.name;
 
+			this.checkLoginReward(data, character);
+		},
+
+		checkLoginReward: function (data, character) {
+			var accountInfo = this.accountInfo;
+
+			var scheduler = require('misc/scheduler');
+			var time = scheduler.getTime();
+			var lastLogin = accountInfo.lastLogin;
+			if ((!lastLogin) || (lastLogin.day != time.day)) {
+				var daysSkipped = 1;
+				if (lastLogin) {
+					if (time.day > lastLogin.day)
+						daysSkipped = time.day - lastLogin.day;
+					else {
+						var daysInMonth = scheduler.daysInMonth(lastLogin.month);
+						daysSkipped = (daysInMonth - lastLogin.day) + time.day;
+
+						for (var i = lastLogin.month + 1; i < time.month - 1; i++) {
+							daysSkipped += scheduler.daysInMonth(i);
+						}
+					}
+				}
+
+				if (daysSkipped == 1) {
+					accountInfo.loginStreak++;
+					if (accountInfo.loginStreak > 21)
+						accountInfo.loginStreak = 21;
+				} else {
+					accountInfo.loginStreak -= (daysSkipped - 1);
+					if (accountInfo.loginStreak < 1)
+						accountInfo.loginStreak = 1;
+				}
+
+				var rewards = loginRewards.generate(accountInfo.loginStreak);
+				mail.sendMail(character.name, rewards, this.onSendRewards.bind(this, data, character));
+			} else
+				this.onSendRewards(data, character);
+
+			accountInfo.lastLogin = time;
+		},
+
+		onSendRewards: function (data, character) {
+			delete mail.busy[character.name];
+
+			io.set({
+				ent: this.username,
+				field: 'accountInfo',
+				value: JSON.stringify(this.accountInfo),
+				callback: this.onUpdateAccountInfo.bind(this, data, character)
+			});
+		},
+
+		onUpdateAccountInfo: function (data, character) {
 			this.obj.player.sessionStart = +new Date;
 			this.obj.player.spawn(character, data.callback);
 
@@ -165,6 +226,7 @@ define([
 			}
 
 			var character = JSON.parse(result || '{}');
+			fixes.fixCharacter(character);
 
 			//Hack for old characters
 			if (!character.skinId)
@@ -219,6 +281,8 @@ define([
 
 			this.stash = JSON.parse(result || '[]');
 
+			fixes.fixStash(this.stash);
+
 			if (this.skins != null) {
 				this.verifySkin(character);
 				data.callback(character);
@@ -238,6 +302,8 @@ define([
 
 		onGetSkins: function (msg, character, result) {
 			this.skins = JSON.parse(result || '[]');
+			fixes.fixSkins(this.username, this.skins);
+
 			var list = [...this.skins, ...roles.getSkins(this.username)];
 			var skinList = skins.getSkinList(list);
 
@@ -335,6 +401,24 @@ define([
 		onLoginVerified: function (msg) {
 			this.username = msg.data.username;
 			connections.logOut(this.obj);
+
+			io.get({
+				ent: msg.data.username,
+				field: 'accountInfo',
+				callback: this.onGetAccountInfo.bind(this, msg)
+			});
+		},
+
+		onGetAccountInfo: function (msg, info) {
+			if (!info) {
+				info = {
+					loginStreak: 0
+				};
+			} else
+				info = JSON.parse(info);
+
+			this.accountInfo = info;
+
 			msg.callback();
 		},
 
@@ -352,11 +436,6 @@ define([
 					msg.callback(messages.login.illegal);
 					return;
 				}
-			}
-
-			if (!profanities.isClean(credentials.username)) {
-				msg.callback(messages.login.invalid);
-				return;
 			}
 
 			io.get({
@@ -384,6 +463,10 @@ define([
 			});
 		},
 		onRegister: function (msg, result) {
+			this.accountInfo = {
+				loginStreak: 0
+			};
+
 			io.set({
 				ent: msg.data.username,
 				field: 'characterList',

@@ -1,9 +1,11 @@
 define([
 	'config/spells',
-	'config/spellsConfig'
+	'config/spellsConfig',
+	'items/config/types'
 ], function (
 	spells,
-	spellsConfig
+	spellsConfig,
+	configTypes
 ) {
 	var maxQuality = 5;
 
@@ -42,7 +44,7 @@ define([
 				item.stats = {};
 
 			if (blueprint.spellConfig)
-				extend(true, spellAesthetic, blueprint.spellConfig);
+				spellAesthetic = extend(true, {}, spellAesthetic, blueprint.spellConfig);
 
 			item.spell = {
 				name: spellAesthetic.name || 'Weapon Damage',
@@ -50,6 +52,16 @@ define([
 				rolls: {},
 				values: {}
 			};
+
+			if (blueprint.spellConfig) {
+				extend(true, item.spell, blueprint.spellConfig);
+			}
+
+			if (item.type) {
+				var typeConfig = configTypes.types[item.slot][item.type];
+				if (typeConfig)
+					spell = extend(true, {}, spell, typeConfig.spellConfig);
+			}
 
 			var propertyPerfection = [];
 
@@ -71,11 +83,12 @@ define([
 
 				var int = r.indexOf('i_') == 0;
 				var val = range[0] + ((range[1] - range[0]) * roll);
+
 				if (int) {
 					val = ~~val;
 					r = r.replace('i_', '');
 				} else
-					val = ~~(val * 10) / 10;
+					val = ~~(val * 100) / 100;
 
 				item.spell.values[r] = val;
 

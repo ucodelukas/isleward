@@ -150,8 +150,7 @@ define([
 				return itemGenerator.generate({
 					level: 10,
 					noSpell: true,
-					//Always be at least magic
-					bonusMagicFind: 286,
+					quality: 1,
 					perfection: 1,
 					slot: 'finger'
 				});
@@ -160,7 +159,7 @@ define([
 			"Princess Morgawsa's Trident": function () {
 				return itemGenerator.generate({
 					name: `Princess Morgawsa's Trident`,
-					level: [10, 15],
+					level: [18, 20],
 					quality: 4,
 					noSpell: true,
 					slot: 'twoHanded',
@@ -176,7 +175,20 @@ define([
 							i_chance: [2, 5],
 							i_duration: [2, 4]
 						}
-					}]
+					}],
+					spellName: 'projectile',
+					spellConfig: {
+						statType: 'int',
+						statMult: 0.9,
+						element: 'arcane',
+						auto: true,
+						cdMax: 7,
+						manaCost: 0,
+						range: 9,
+						random: {
+							damage: [2, 15]
+						}
+					}
 				});
 			},
 
@@ -193,10 +205,10 @@ define([
 			"Steelclaw's Bite": function () {
 				return itemGenerator.generate({
 					name: `Steelclaw's Bite`,
-					level: [7, 10],
+					level: [18, 20],
 					quality: 4,
 					noSpell: true,
-					slot: 'mainHand',
+					slot: 'oneHanded',
 					sprite: [1, 0],
 					spritesheet: '../../../images/legendaryItems.png',
 					type: 'Curved Dagger',
@@ -205,13 +217,26 @@ define([
 					stats: ['dex', 'dex', 'addCritMultiplier', 'addCritMultiplier'],
 					effects: [{
 						type: 'damageSelf',
+						properties: {
+							element: 'poison'
+						},
 						rolls: {
 							i_percentage: [8, 22]
 						}
 					}, {
 						type: 'alwaysCrit',
 						rolls: {}
-					}]
+					}],
+					spellName: 'melee',
+					spellConfig: {
+						statType: 'dex',
+						statMult: 0.88,
+						cdMax: 3,
+						useWeaponRange: true,
+						random: {
+							damage: [1, 3.8]
+						}
+					}
 				});
 			}
 		}

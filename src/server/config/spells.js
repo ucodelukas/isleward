@@ -46,7 +46,7 @@ define([
 			}
 		}, {
 			name: 'Magic Missile',
-			description: 'Launches an orb of unfocussed energy at your target.',
+			description: 'Launches an orb of unfocused energy at your target.',
 			type: 'projectile',
 			icon: [1, 0],
 			animation: 'hitStaff',

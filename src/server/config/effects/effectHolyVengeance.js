@@ -10,7 +10,7 @@ define([
 
 		events: {
 			afterDealDamage: function(damage, target) {
-				damage.amount *= 0.5;
+				damage.dealt *= 0.5;
 				this.obj.stats.getHp(damage, this.obj);
 			}
 		}

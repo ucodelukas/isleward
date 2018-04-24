@@ -41,7 +41,7 @@ define([
 					item.name = skinBlueprint.name;
 					item.sprite = skinBlueprint.sprite;
 					item.spritesheet = skinBlueprint.spritesheet;
-					id = item.id;
+					item.skinId = skinBlueprint.id;
 				}
 
 				item.id = id;
@@ -155,7 +155,7 @@ define([
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
+						class: 'color-redA',
 						message: `you can't afford that item`,
 						type: 'info'
 					}]
@@ -171,13 +171,13 @@ define([
 			}
 
 			if (item.type == 'skin') {
-				var haveSkin = this.obj.auth.doesOwnSkin(item.id);
+				var haveSkin = this.obj.auth.doesOwnSkin(item.skinId);
 
 				if (haveSkin) {
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
-							class: 'q0',
+							class: 'color-redA',
 							message: `you have already unlocked that skin`,
 							type: 'info'
 						}]
@@ -226,13 +226,13 @@ define([
 
 				this.obj.inventory.getItem(clonedItem);
 			} else {
-				this.obj.auth.saveSkin(item.id);
+				this.obj.auth.saveSkin(item.skinId);
 
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
 					messages: [{
-						class: 'q0',
-						message: item.name + ' (unlocked)',
+						class: 'color-greenB',
+						message: 'Unlocked skin: ' + item.name,
 						type: 'info'
 					}]
 				}, [this.obj.serverId]);

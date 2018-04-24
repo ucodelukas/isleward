@@ -61,6 +61,8 @@ define([
 					cpn.transfer();
 			}
 
+			obj.fireEvent('transferComplete');
+
 			return obj;
 		},
 
@@ -130,9 +132,9 @@ define([
 						cpn.init();
 				}
 
-				if (this.physics) {
+				if ((this.physics) && (!obj.dead)) {
 					if (!obj.width)
-						this.physics.addObject(obj, obj.x, obj.y);
+					this.physics.addObject(obj, obj.x, obj.y);
 					else
 						this.physics.addRegion(obj);
 				}
@@ -204,7 +206,8 @@ define([
 			}
 
 			this.objects.push(newO);
-			this.physics.addObject(newO, newO.x, newO.y);
+			if (!newO.dead)
+				this.physics.addObject(newO, newO.x, newO.y);
 
 			callback(newO);
 
@@ -284,7 +287,7 @@ define([
 				io.sockets.emit('events', {
 					onGetMessages: [{
 						messages: [{
-							class: 'q1',
+							class: 'color-blueB',
 							message: player.name + ' has reached level ' + obj.level
 						}]
 					}],
@@ -292,6 +295,19 @@ define([
 				});
 			}
 		},
+
+		notifyCollisionChange: function (x, y, collides) {
+			this.objects
+				.filter(o => o.player)
+				.forEach(function (o) {
+					o.syncer.setArray(true, 'player', 'collisionChanges', {
+						x: x,
+						y: y,
+						collides: collides
+					});
+				});
+		},
+
 		update: function () {
 			var objects = this.objects;
 			var len = objects.length;
