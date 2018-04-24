@@ -40,7 +40,7 @@ define([
 		attackCritMultiplier: 0,
 		spellCritChance: 0,
 		spellCritMultiplier: 0,
-		
+
 		armor: 0,
 		dmgPercent: 0,
 		vit: 0,
@@ -291,8 +291,7 @@ define([
 
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
-					values[s] += gainStats[s];
-					this.obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+					this.addStat(s, gainStats[s]);
 				}
 
 				this.obj.spellbook.calcDps();
@@ -728,7 +727,7 @@ define([
 
 			var gainStats = classes.stats[this.obj.class].gainStats;
 			for (var s in gainStats) {
-				newValues[s] += (gainStats[s] * level);
+				this.addStat(s, (gainStats[s] * level));
 			}
 
 			newValues.level = level;
