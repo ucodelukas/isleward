@@ -5,17 +5,6 @@ define([
 ) {
 	return {
 		generators: {
-			dmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
-				var max = (level / 2);
-
-				if (calcPerfection)
-					return (calcPerfection / max);
-				else if (perfection == null)
-					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
-				else
-					return max * perfection * (blueprint.statMult.dmgPercent || 1);
-			},
-
 			elementDmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
 				var max = (level / 6.7);
 
@@ -214,10 +203,6 @@ define([
 				generator: 'elementResist'
 			},
 
-			dmgPercent: {
-				ignore: true,
-				generator: 'dmgPercent'
-			},
 			elementArcanePercent: {
 				level: {
 					min: 10
@@ -247,6 +232,27 @@ define([
 				generator: 'elementDmgPercent'
 			},
 			elementPoisonPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			physicalPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			elementPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			spellPercent: {
 				level: {
 					min: 10
 				},
@@ -409,6 +415,15 @@ define([
 				elementPoisonPercent: {
 					generator: 'elementDmgPercent'
 				},
+				elementPercent: {
+					generator: 'elementDmgPercent'
+				},
+				physicalPercent: {
+					generator: 'elementDmgPercent'
+				},
+				spellPercent: {
+					generator: 'elementDmgPercent'
+				},
 				allAttributes: {
 					generator: 'mainStat'
 				},
@@ -423,9 +438,6 @@ define([
 			},
 
 			neck: {
-				dmgPercent: {
-					generator: 'dmgPercent'
-				},
 				elementArcanePercent: {
 					generator: 'elementDmgPercent'
 				},
@@ -439,6 +451,15 @@ define([
 					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
+					generator: 'elementDmgPercent'
+				},
+				physicalPercent: {
+					generator: 'elementDmgPercent'
+				},
+				elementPercent: {
+					generator: 'elementDmgPercent'
+				},
+				spellPercent: {
 					generator: 'elementDmgPercent'
 				},
 				allAttributes: {

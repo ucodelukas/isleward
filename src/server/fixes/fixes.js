@@ -49,6 +49,18 @@ define([
 						chance: chance
 					};
 				});
+
+			items
+				.filter(f => ((f.stats) && (f.stats.dmgPercent)))
+				.forEach(function (i) {
+					i.stats.physicalPercent = i.stats.dmgPercent;
+					delete i.stats.dmgPercent;
+
+					if ((i.enchantedStats) && (i.enchantedStats.dmgPercent)) {
+						i.enchantedStats.physicalPercent = i.enchantedStats.dmgPercent;
+						delete i.enchantedStats.dmgPercent;
+					}
+				});
 		},
 
 		fixSkins: function (username, skins) {

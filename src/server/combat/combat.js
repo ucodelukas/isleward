@@ -54,14 +54,20 @@ define([
 				if (config.element) {
 					var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 					dmgPercent += (srcValues[elementName + 'Percent'] || 0);
+					dmgPercent += srcValues.elementPercent;
+
+					if (!config.isAttack)
+						dmgPercent += srcValues.spellPercent;
 
 					//Don't mitigate heals
 					if (!config.noMitigate) {
 						var resist = tgtValues.elementAllResist + (tgtValues[elementName + 'Resist'] || 0);
 						amount *= max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5);
 					}
-				} else if (!config.noMitigate)
+				} else if (!config.noMitigate) {
+					dmgPercent += srcValues.physicalPercent;
 					amount *= max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5);
+				}
 
 				amount *= (dmgPercent / 100);
 

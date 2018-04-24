@@ -34,7 +34,6 @@ define([
 			magicFind: 'increased item quality',
 			itemQuantity: 'increased item quantity',
 			sprintChance: 'sprint chance',
-			dmgPercent: 'to all damage',
 			allAttributes: 'to all attributes',
 			xpIncrease: 'additional xp per kill',
 			lvlRequire: 'level requirement reduction',
@@ -51,17 +50,14 @@ define([
 			elementPoisonResist: 'poison resistance',
 			elementAllResist: 'all resistance',
 
-			increasedStunDuration: 'increased stun duration',
 			physicalPercent: 'increased physical damage',
 			spellPercent: 'increased spell damage',
 			elementPercent: 'increased elemental damage',
-			hpPercent: 'increased life',
-			armorPercent: 'increased armor',
-			spellAddCritChance: 'increased spell crit chance',
-			spellAddCritMultiplier: 'increased spell crit multiplier',
-			auraReserveMultiplier: 'aura mana reservation multiplier',
-
-			auraDoubleEffect: 'doubles the effect of your auras'
+			addSpellCritChance: 'increased spell crit chance',
+			addSpellCritMultiplier: 'increased spell crit multiplier',
+			addAttackCritChance: 'increased attack crit chance',
+			addAttackCritMultiplier: 'increased attack crit multiplier',
+			dodgeAttackChance: 'chance to dodge attacks'
 		}
 	};
 });

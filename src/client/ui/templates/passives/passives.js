@@ -150,7 +150,7 @@ define([
 					color = 0;
 
 				if (node.spiritStart) {
-					color = 6;
+					color = 8;
 					node.size = 1;
 				}
 
@@ -161,6 +161,8 @@ define([
 					'#4ac441',
 					'#d43346',
 					'#a24eff',
+					'#faac45',
+					'#44cb95',
 					'#fafcfc'
 				])[color];
 				var size = ([
@@ -196,6 +198,8 @@ define([
 						'#386646',
 						'#763b3b',
 						'#533399',
+						'#d07840',
+						'#3f8d6d',
 						'#fafcfc'
 					])[color];
 					this.ctx.strokeRect(x, y, size, size);
@@ -271,7 +275,6 @@ define([
 						'addCritChance',
 						'addCritMultiplier',
 						'sprintChance',
-						'dmgPercent',
 						'xpIncrease',
 						'blockAttackChance',
 						'blockSpellChance',

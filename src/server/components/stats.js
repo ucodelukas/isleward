@@ -42,7 +42,6 @@ define([
 		spellCritMultiplier: 0,
 
 		armor: 0,
-		dmgPercent: 0,
 		vit: 0,
 
 		blockAttackChance: 0,
@@ -58,6 +57,10 @@ define([
 		elementFirePercent: 0,
 		elementHolyPercent: 0,
 		elementPoisonPercent: 0,
+		physicalPercent: 0,
+
+		elementPercent: 0,
+		spellPercent: 0,
 
 		elementArcaneResist: 0,
 		elementFrostResist: 0,
@@ -220,6 +223,11 @@ define([
 			} else if (stat == 'elementAllResist') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
+					this.addStat(element, value);
+				}, this);
+			} else if (stat == 'elementPercent') {
+				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
+					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
 					this.addStat(element, value);
 				}, this);
 			} else if (stat == 'str')

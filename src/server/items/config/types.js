@@ -113,7 +113,7 @@ define([
 			'Viridian Band': {
 				sprite: [4, 3],
 				implicitStat: {
-					stat: 'dmgPercent',
+					stat: 'physicalPercent',
 					value: [1, 3]
 				}
 			}

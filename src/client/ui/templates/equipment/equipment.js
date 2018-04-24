@@ -348,8 +348,9 @@ define([
 					'frost increase': stats.elementFrostPercent + '%',
 					'holy increase': stats.elementHolyPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
+					'physical increase': stats.physicalPercent + '%',
 					gap2: '',
-					'damage increase': stats.dmgPercent + '%',
+					'spell increase': stats.spellPercent + '%',
 					gap3: '',
 					'attack speed': (100 + stats.attackSpeed) + '%',
 					'cast speed': (100 + stats.castSpeed) + '%',
@@ -377,6 +378,8 @@ define([
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',
 					'xp increase': stats.xpIncrease + '%',
+					gap3: '',
+					'aura mana reservation multiplier': stats.auraReserveMultiplier
 				}
 			}[this.find('.tab.selected').html()];
 

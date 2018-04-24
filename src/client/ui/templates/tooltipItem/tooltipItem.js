@@ -19,7 +19,6 @@ define([
 		'addSpellCritChance',
 		'addSpellCritMultiplier',
 		'sprintChance',
-		'dmgPercent',
 		'xpIncrease',
 		'blockAttackChance',
 		'blockSpellChance',

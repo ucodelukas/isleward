@@ -28,7 +28,6 @@ define([
 		'magicFind': 'increased item quality',
 		'itemQuantity': 'increased item quantity',
 		'sprintChance': 'sprint chance',
-		'dmgPercent': 'to all damage',
 		'allAttributes': 'to all attributes',
 		'xpIncrease': 'additional xp per kill',
 		'lvlRequire': 'level requirement reduction',
@@ -38,6 +37,10 @@ define([
 		'elementFirePercent': 'increased fire damage',
 		'elementHolyPercent': 'increased holy damage',
 		'elementPoisonPercent': 'increased poison damage',
+		'physicalPercent': 'increased physical damage',
+
+		'elementPercent': 'increased elemental damage',
+		'spellPercent': 'increased spell damage',
 
 		'elementAllResist': 'all resistance',
 		'elementArcaneResist': 'arcane resistance',
@@ -49,6 +52,8 @@ define([
 
 		'attackSpeed': 'attack speed',
 		'castSpeed': 'cast speed',
+
+		'auraReserveMultiplier': 'aura mana reservation multiplier',
 
 		//This stat is used for gambling when you can't see the stats
 		'stats': 'stats',

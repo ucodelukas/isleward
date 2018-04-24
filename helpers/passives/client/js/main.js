@@ -132,7 +132,9 @@ define([
 				}
 
 				var action = ({
-					d: 'deleteNode'
+					d: 'deleteNode',
+					c: 'recolorNode',
+					r: 'resizeNode'
 				})[key];
 				if (!action)
 					return;

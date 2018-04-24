@@ -52,7 +52,16 @@ define([
 		serialize: function () {
 			return JSON.stringify({
 				nodes: this.nodes,
-				links: this.links
+				links: this.links.map(function (l) {
+					return {
+						from: {
+							id: l.from.id
+						},
+						to: {
+							id: l.to.id
+						}
+					};
+				})
 			});
 		},
 
@@ -216,7 +225,7 @@ define([
 				if (!selected)
 					return true;
 
-				selected.color = (selected.color + 1) % 5;
+				selected.color = (selected.color + 1) % 7;
 			},
 
 			resizeNode: function () {

@@ -190,7 +190,9 @@ define([
 					'#3fa7dd',
 					'#4ac441',
 					'#d43346',
-					'#a24eff'
+					'#a24eff',
+					'#faac45',
+					'#44cb95'
 				])[color];
 				var size = ([
 					constants.blockSize,
@@ -208,7 +210,9 @@ define([
 					'#42548d',
 					'#386646',
 					'#763b3b',
-					'#533399'
+					'#533399',
+					'#d07840',
+					'#3f8d6d'
 				])[color];
 				this.ctx.strokeRect(x, y, size, size);
 
