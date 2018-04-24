@@ -84,20 +84,12 @@ define([
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 			this.onEvent('onGetPassives', this.events.onGetPassives.bind(this));
 			this.onEvent('onGetPassivePoints', this.events.onGetPassivePoints.bind(this));
-
-			//Calculate midpoint
-			var start = this.data.nodes.find(function (n) {
-				return (n.spiritStart == window.player.class);
-			});
-
-			this.pos.x = start.pos.x * constants.gridSize;
-			this.pos.y = start.pos.y * constants.gridSize;
-
-			this.pos.x -= ~~(this.canvas.width / 2);
-			this.pos.y -= ~~(this.canvas.height / 2);
 		},
 
 		renderNodes: function () {
+			if (!this.shown)
+				return;
+
 			this.renderers.clear.call(this);
 
 			var links = this.data.links;
@@ -124,6 +116,17 @@ define([
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown) {
+				//Calculate midpoint
+				var start = this.data.nodes.find(function (n) {
+					return (n.spiritStart == window.player.class);
+				});
+
+				this.pos.x = start.pos.x * constants.gridSize;
+				this.pos.y = start.pos.y * constants.gridSize;
+
+				this.pos.x -= ~~(this.canvas.width / 2);
+				this.pos.y -= ~~(this.canvas.height / 2);
+
 				this.show();
 				this.renderNodes();
 			} else
@@ -219,12 +222,6 @@ define([
 				var ctx = this.ctx;
 				var halfSize = constants.blockSize / 2;
 
-				var fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
-				var fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
-
-				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
-				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
-
 				fromNode = this.data.nodes.find(function (n) {
 					return (n.id == fromNode.id);
 				});
@@ -232,6 +229,12 @@ define([
 				toNode = this.data.nodes.find(function (n) {
 					return (n.id == toNode.id);
 				});
+
+				var fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				var fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
+
+				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
 				if ((!linked) && (!fromNode.selected) && (!toNode.selected))
 					this.ctx.globalAlpha = 0.25;

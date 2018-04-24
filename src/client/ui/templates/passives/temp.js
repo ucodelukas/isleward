@@ -15,7 +15,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"physicalPercent": 1
+				"physicalPercent": 15
 			}
 		}, {
 			"color": 3,
@@ -28,7 +28,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"physicalPercent": 1
+				"physicalPercent": 15
 			}
 		}, {
 			"color": 3,
@@ -41,7 +41,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"physicalPercent": 1
+				"physicalPercent": 15
 			}
 		}, {
 			"color": 3,
@@ -54,7 +54,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 4
 			}
 		}, {
 			"color": 3,
@@ -67,7 +67,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 4
 			}
 		}, {
 			"color": 3,
@@ -80,7 +80,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"addAttackCritMultiplier": 1
+				"addAttackCritMultiplier": 100
 			}
 		}, {
 			"color": 3,
@@ -93,7 +93,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 4
 			}
 		}, {
 			"color": 3,
@@ -106,7 +106,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 4
 			}
 		}, {
 			"color": 3,
@@ -119,7 +119,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"addAttackCritChance": 1
+				"addAttackCritChance": 70
 			}
 		}, {
 			"color": 3,
@@ -158,7 +158,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"armor": 1
+				"armor": 50
 			}
 		}, {
 			"color": 3,
@@ -171,7 +171,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"armor": 1
+				"armor": 50
 			}
 		}, {
 			"color": 3,
@@ -184,7 +184,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"blockAttackChance": 1
+				"blockAttackChance": 10
 			}
 		}, {
 			"color": 3,
@@ -197,7 +197,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"armor": 1
+				"armor": 50
 			}
 		}, {
 			"color": 3,
@@ -236,7 +236,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"blockSpellChance": 1
+				"blockSpellChance": 10
 			}
 		}, {
 			"color": 3,
@@ -262,7 +262,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"armor": 1
+				"armor": 50
 			}
 		}, {
 			"color": 3,
@@ -275,7 +275,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"armor": 1
+				"armor": 50
 			}
 		}, {
 			"color": 4,
@@ -302,7 +302,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"vit": 1
+				"vit": 5
 			}
 		}, {
 			"color": 3,
@@ -315,7 +315,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"vit": 1
+				"vit": 5
 			}
 		}, {
 			"color": 3,
@@ -328,7 +328,7 @@ define([
 			"selected": false,
 			"group": ["Bear"],
 			"stats": {
-				"regenHp": 1
+				"regenHp": 8
 			}
 		}, {
 			"color": 2,
@@ -340,7 +340,7 @@ define([
 			"id": 15,
 			"selected": false,
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -353,7 +353,7 @@ define([
 			"id": 25,
 			"selected": false,
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -366,7 +366,7 @@ define([
 			"id": 27,
 			"selected": false,
 			"stats": {
-				"attackSpeed": 1
+				"attackSpeed": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -379,7 +379,7 @@ define([
 			"id": 28,
 			"selected": false,
 			"stats": {
-				"addAttackCritChance": 1
+				"addAttackCritChance": 25
 			},
 			"group": ["Lynx"]
 		}, {
@@ -392,7 +392,7 @@ define([
 			"id": 29,
 			"selected": false,
 			"stats": {
-				"addAttackCritChance": 1
+				"addAttackCritChance": 25
 			},
 			"group": ["Lynx"]
 		}, {
@@ -405,7 +405,7 @@ define([
 			"id": 31,
 			"selected": false,
 			"stats": {
-				"addAttackCritMultiplier": 1
+				"addAttackCritMultiplier": 40
 			},
 			"group": ["Lynx"]
 		}, {
@@ -418,7 +418,7 @@ define([
 			"id": 32,
 			"selected": false,
 			"stats": {
-				"addAttackCritMultiplier": 1
+				"addAttackCritMultiplier": 40
 			},
 			"group": ["Lynx"]
 		}, {
@@ -444,7 +444,7 @@ define([
 			"id": 34,
 			"selected": false,
 			"stats": {
-				"elementPoisonPercent": 1
+				"elementPoisonPercent": 20
 			},
 			"group": ["Lynx"]
 		}, {
@@ -470,7 +470,7 @@ define([
 			"id": 50,
 			"selected": false,
 			"stats": {
-				"spellPercent": 1
+				"spellPercent": 10
 			},
 			"group": ["Owl"]
 		}, {
@@ -483,7 +483,7 @@ define([
 			"id": 51,
 			"selected": false,
 			"stats": {
-				"castSpeed": 1
+				"castSpeed": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -496,7 +496,7 @@ define([
 			"id": 52,
 			"selected": false,
 			"stats": {
-				"addSpellCritChance": 1
+				"addSpellCritChance": 50
 			},
 			"group": ["Owl"]
 		}, {
@@ -509,7 +509,7 @@ define([
 			"id": 53,
 			"selected": false,
 			"stats": {
-				"castSpeed": 1
+				"castSpeed": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -522,7 +522,7 @@ define([
 			"id": 56,
 			"selected": false,
 			"stats": {
-				"spellPercent": 1
+				"spellPercent": 10
 			},
 			"group": ["Owl"]
 		}, {
@@ -535,7 +535,7 @@ define([
 			"id": 58,
 			"selected": false,
 			"stats": {
-				"castSpeed": 1
+				"castSpeed": 2
 			},
 			"group": ["Owl"]
 		}, {
@@ -587,7 +587,7 @@ define([
 			"id": 64,
 			"selected": false,
 			"stats": {
-				"spellPercent": 1
+				"spellPercent": 10
 			},
 			"group": ["Owl"]
 		}, {
@@ -600,7 +600,7 @@ define([
 			"id": 65,
 			"selected": false,
 			"stats": {
-				"castSpeed": 1
+				"castSpeed": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -613,7 +613,7 @@ define([
 			"id": 66,
 			"selected": false,
 			"stats": {
-				"spellPercent": 1
+				"spellPercent": 10
 			},
 			"group": ["Owl"]
 		}, {
@@ -626,7 +626,7 @@ define([
 			"id": 67,
 			"selected": false,
 			"stats": {
-				"regenMana": 1
+				"regenMana": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -639,7 +639,7 @@ define([
 			"id": 68,
 			"selected": false,
 			"stats": {
-				"addSpellCritMultiplier": 1
+				"addSpellCritMultiplier": 60
 			},
 			"group": ["Owl"]
 		}, {
@@ -665,7 +665,7 @@ define([
 			"id": 70,
 			"selected": false,
 			"stats": {
-				"regenMana": 1
+				"regenMana": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -678,7 +678,7 @@ define([
 			"id": 71,
 			"selected": false,
 			"stats": {
-				"addSpellCritMultiplier": 1
+				"addSpellCritMultiplier": 60
 			},
 			"group": ["Owl"]
 		}, {
@@ -691,7 +691,7 @@ define([
 			"id": 57,
 			"selected": false,
 			"stats": {
-				"addSpellCritMultiplier": 1
+				"addSpellCritMultiplier": 60
 			},
 			"group": ["Owl"]
 		}, {
@@ -704,7 +704,7 @@ define([
 			"id": 72,
 			"selected": false,
 			"stats": {
-				"addSpellCritChance": 1
+				"addSpellCritChance": 50
 			},
 			"group": ["Owl"]
 		}, {
@@ -717,7 +717,7 @@ define([
 			"id": 73,
 			"selected": false,
 			"stats": {
-				"addSpellCritChance": 1
+				"addSpellCritChance": 50
 			},
 			"group": ["Owl"]
 		}, {
@@ -730,7 +730,7 @@ define([
 			"id": 75,
 			"selected": false,
 			"stats": {
-				"physicalPercent": 1
+				"physicalPercent": 15
 			},
 			"group": ["Lynx"]
 		}, {
@@ -743,7 +743,7 @@ define([
 			"id": 76,
 			"selected": false,
 			"stats": {
-				"physicalPercent": 1
+				"physicalPercent": 15
 			},
 			"group": ["Lynx"]
 		}, {
@@ -795,7 +795,7 @@ define([
 			"id": 81,
 			"selected": false,
 			"stats": {
-				"dodgeAttackChance": 1
+				"dodgeAttackChance": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -808,7 +808,7 @@ define([
 			"id": 82,
 			"selected": false,
 			"stats": {
-				"dodgeAttackChance": 1
+				"dodgeAttackChance": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -821,7 +821,7 @@ define([
 			"id": 83,
 			"selected": false,
 			"stats": {
-				"sprintChance": 1
+				"sprintChance": 12
 			},
 			"group": ["Lynx"]
 		}, {
@@ -834,7 +834,7 @@ define([
 			"id": 84,
 			"selected": false,
 			"stats": {
-				"dodgeAttackChance": 1
+				"dodgeAttackChance": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -847,7 +847,7 @@ define([
 			"id": 85,
 			"selected": false,
 			"stats": {
-				"regenHp": 1
+				"regenHp": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -858,9 +858,9 @@ define([
 				"y": 57
 			},
 			"id": 86,
-			"selected": false,
+			"selected": true,
 			"stats": {
-				"regenHp": 1
+				"regenHp": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -873,7 +873,7 @@ define([
 			"id": 87,
 			"selected": false,
 			"stats": {
-				"vit": 1
+				"vit": 10
 			},
 			"group": ["Lynx"]
 		}, {
@@ -886,7 +886,7 @@ define([
 			"id": 88,
 			"selected": false,
 			"stats": {
-				"regenHp": 1
+				"regenHp": 3
 			},
 			"group": ["Lynx"]
 		}, {
@@ -938,7 +938,7 @@ define([
 			"id": 44,
 			"selected": false,
 			"stats": {
-				"addSpellCritChance": 1
+				"addSpellCritChance": 50
 			},
 			"group": ["Owl"]
 		}, {
@@ -951,12 +951,12 @@ define([
 			"id": 74,
 			"selected": false,
 			"stats": {
-				"regenMana": 1
+				"regenMana": 3
 			},
 			"group": ["Owl"]
 		}, {
 			"color": 1,
-			"size": 0,
+			"size": 1,
 			"pos": {
 				"x": 74,
 				"y": 78
@@ -964,7 +964,7 @@ define([
 			"id": 45,
 			"selected": false,
 			"stats": {
-				"manaMax": 1
+				"manaMax": 12
 			},
 			"group": ["Owl"]
 		}, {
@@ -977,7 +977,7 @@ define([
 			"id": 90,
 			"selected": false,
 			"stats": {
-				"regenMana": 1
+				"regenMana": 3
 			},
 			"group": ["Owl"]
 		}, {
@@ -990,7 +990,7 @@ define([
 			"id": 91,
 			"selected": false,
 			"stats": {
-				"elementArcanePercent": 1
+				"elementArcanePercent": 20
 			},
 			"group": ["Owl"]
 		}, {
@@ -1003,7 +1003,7 @@ define([
 			"id": 92,
 			"selected": false,
 			"stats": {
-				"elementHolyPercent": 1
+				"elementHolyPercent": 20
 			},
 			"group": ["Owl"]
 		}, {
@@ -1016,7 +1016,7 @@ define([
 			"id": 93,
 			"selected": false,
 			"stats": {
-				"elementFirePercent": 1
+				"elementFirePercent": 20
 			},
 			"group": ["Owl"]
 		}, {
@@ -1029,7 +1029,7 @@ define([
 			"id": 94,
 			"selected": false,
 			"stats": {
-				"elementFrostPercent": 1
+				"elementFrostPercent": 20
 			},
 			"group": ["Owl"]
 		}, {
@@ -1218,7 +1218,7 @@ define([
 			"id": 106,
 			"selected": false,
 			"stats": {
-				"elementAllResist": 1
+				"elementAllResist": 15
 			}
 		}],
 		"links": [{
