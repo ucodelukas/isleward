@@ -70,6 +70,7 @@ define([
 			obj.addComponent('dialogue');
 			obj.addComponent('trade', character.components.find(c => c.type == 'trade'));
 			obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
+			obj.addComponent('passives', character.components.find(c => c.type == 'passives'));
 
 			var social = character.components.find(c => c.type == 'social');
 			if (social)

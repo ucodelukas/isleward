@@ -256,6 +256,8 @@ define([
 				else
 					values.level++;
 
+				this.obj.fireEvent('onLevelUp', (this.originalValues || this.values).level);
+
 				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
 
@@ -671,6 +673,8 @@ define([
 
 				this.addStat(statName, addStats[p]);
 			}
+
+			this.obj.passives.applyPassives();
 
 			if (resetHp)
 				newValues.hp = newValues.hpMax;

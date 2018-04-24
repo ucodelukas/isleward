@@ -46,12 +46,13 @@ define([
 			links: null
 		},
 
+		hoverNode: null,
+
 		postRender: function () {
 			input.init(this.el);
 
-			var data = JSON.parse(temp.json);
-			this.data.nodes = data.nodes;
-			this.data.links = data.links;
+			this.data.nodes = temp.nodes;
+			this.data.links = temp.links;
 
 			//We need to be able to determine the size of elements
 			this.el.css({
@@ -81,15 +82,16 @@ define([
 			this.onEvent('uiMouseMove', this.events.onPan.bind(this));
 			this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
+			this.onEvent('onGetPassives', this.events.onGetPassives.bind(this));
+			this.onEvent('onGetPassivePoints', this.events.onGetPassivePoints.bind(this));
 
 			//Calculate midpoint
-			this.data.nodes.forEach(function (n) {
-				this.pos.x += n.pos.x;
-				this.pos.y += n.pos.y;
-			}, this);
+			var start = this.data.nodes.find(function (n) {
+				return (n.spiritStart == window.player.class);
+			});
 
-			this.pos.x = ~~(this.pos.x / this.data.nodes.length) * constants.gridSize;
-			this.pos.y = ~~(this.pos.y / this.data.nodes.length) * constants.gridSize;
+			this.pos.x = start.pos.x * constants.gridSize;
+			this.pos.y = start.pos.y * constants.gridSize;
 
 			this.pos.x -= ~~(this.canvas.width / 2);
 			this.pos.y -= ~~(this.canvas.height / 2);
@@ -103,8 +105,12 @@ define([
 
 			links.forEach(function (l) {
 				var linked = (
-					nodes.find(n => (n.id == l.from.id)).selected &&
-					nodes.find(n => (n.id == l.to.id)).selected
+					nodes.find(function (n) {
+						return (n.id == l.from.id);
+					}).selected &&
+					nodes.find(function (n) {
+						return (n.id == l.to.id);
+					}).selected
 				);
 				this.renderers.line.call(this, l.from, l.to, linked);
 			}, this);
@@ -140,8 +146,13 @@ define([
 
 			node: function (node) {
 				var color = (node.color >= 0) ? (node.color + 1) : -1;
-				if ((!node.stats) || (Object.keys(node.stats).length == 0))
+				if (((!node.stats) || (Object.keys(node.stats).length == 0)) && (!node.spiritStart))
 					color = 0;
+
+				if (node.spiritStart) {
+					color = 6;
+					node.size = 1;
+				}
 
 				this.ctx.fillStyle = ([
 					'#69696e',
@@ -149,7 +160,8 @@ define([
 					'#3fa7dd',
 					'#4ac441',
 					'#d43346',
-					'#a24eff'
+					'#a24eff',
+					'#fafcfc'
 				])[color];
 				var size = ([
 					constants.blockSize,
@@ -159,22 +171,44 @@ define([
 				var x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.x;
 				var y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.y;
 
+				var linked = this.data.links.some(function (l) {
+					if ((l.from.id != node.id) && (l.to.id != node.id))
+						return false;
+
+					return this.data.nodes.some(function (n) {
+						return (
+							((n.id == l.from.id) && (n.selected)) ||
+							((n.id == l.to.id) && (n.selected))
+						);
+					});
+				}, this);
+
+				if (!linked)
+					this.ctx.globalAlpha = 0.25;
+
 				this.ctx.fillRect(x, y, size, size);
 
-				this.ctx.strokeStyle = ([
-					'#69696e',
-					'#69696e',
-					'#42548d',
-					'#386646',
-					'#763b3b',
-					'#533399'
-				])[color];
-				this.ctx.strokeRect(x, y, size, size);
-
-				if (node.selected) {
-					this.ctx.strokeStyle = '#fafcfc';
+				if (linked) {
+					this.ctx.strokeStyle = ([
+						'#69696e',
+						'#69696e',
+						'#42548d',
+						'#386646',
+						'#763b3b',
+						'#533399',
+						'#fafcfc'
+					])[color];
 					this.ctx.strokeRect(x, y, size, size);
+
+					if (node.selected) {
+						this.ctx.strokeStyle = '#fafcfc';
+						this.ctx.strokeRect(x, y, size, size);
+					}
 				}
+
+				if (!linked)
+					this.ctx.globalAlpha = 1;
+
 			},
 
 			line: function (fromNode, toNode, linked) {
@@ -187,12 +221,26 @@ define([
 				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
 				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
+				fromNode = this.data.nodes.find(function (n) {
+					return (n.id == fromNode.id);
+				});
+
+				toNode = this.data.nodes.find(function (n) {
+					return (n.id == toNode.id);
+				});
+
+				if ((!linked) && (!fromNode.selected) && (!toNode.selected))
+					this.ctx.globalAlpha = 0.25;
+
 				ctx.strokeStyle = linked ? '#fafcfc' : '#69696e';
 				ctx.beginPath();
 				ctx.moveTo(fromX, fromY);
 				ctx.lineTo(toX, toY);
 				ctx.closePath();
 				ctx.stroke();
+
+				if ((!linked) && (!fromNode.selected) && (!toNode.selected))
+					this.ctx.globalAlpha = 1;
 			}
 		},
 
@@ -211,7 +259,7 @@ define([
 					y: ~~((this.pos.y + this.mouse.y) / constants.gridSize)
 				};
 
-				var node = this.data.nodes.find(function (n) {
+				var node = this.hoverNode = this.data.nodes.find(function (n) {
 					return (
 						(n.pos.x == cell.x) &&
 						(n.pos.y == cell.y)
@@ -239,37 +287,34 @@ define([
 
 					var text = Object.keys(node.stats)
 						.map(function (s) {
-							console.log(s);
 							var statName = statTranslations.translate(s);
 							var statValue = node.stats[s];
+							var negative = ((statValue + '')[0] == '-');
 							if (percentageStats.indexOf(s) > -1)
 								statValue += '%';
 
-							return ('+' + statValue + ' ' + statName);
+							return ((negative ? '' : '+') + statValue + ' ' + statName);
 						})
 						.join('<br />');
 
-					events.emit('onShowTooltip', text, this.el[0], this.mouse);
+					if (node.spiritStart == window.player.class)
+						text = 'Your starting node';
+					else if (node.spiritStart)
+						text = 'Starting node for ' + node.spiritStart + ' spirits';
+
+					var pos = {
+						x: input.mouse.raw.clientX + 15,
+						y: input.mouse.raw.clientY
+					};
+
+					events.emit('onShowTooltip', text, this.el[0], pos);
 				} else
 					events.emit('onHideTooltip', this.el[0]);
 			},
 
 			onPanStart: function (e) {
-				var cell = {
-					x: ~~((this.pos.x + e.raw.offsetX) / constants.gridSize),
-					y: ~~((this.pos.y + e.raw.offsetY) / constants.gridSize)
-				};
-
-				var node = this.data.nodes.find(function (n) {
-					return (
-						(n.pos.x == cell.x) &&
-						(n.pos.y == cell.y)
-					);
-				});
-
-				if (node) {
-					node.selected = !node.selected;
-					this.renderNodes();
+				if (this.hoverNode) {
+					this.events.onTryClickNode.call(this, this.hoverNode);
 					return;
 				}
 
@@ -308,6 +353,38 @@ define([
 
 			onPanEnd: function (e) {
 				this.panOrigin = null;
+			},
+
+			onTryClickNode: function (node) {
+				if (node.spiritStart)
+					return;
+
+				client.request({
+					cpn: 'player',
+					method: 'performAction',
+					data: {
+						cpn: 'passives',
+						method: node.selected ? 'untickNode' : 'tickNode',
+						data: {
+							nodeId: node.id
+						}
+					}
+				});
+			},
+
+			onGetPassives: function (selected) {
+				this.data.nodes.forEach(function (n) {
+					n.selected = selected.some(function (s) {
+						return (s == n.id);
+					});
+				});
+
+				this.renderNodes();
+			},
+
+			onGetPassivePoints: function (points) {
+				var el = this.find('.points')
+					.html('Points Available: ' + points);
 			}
 		}
 	}
