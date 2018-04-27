@@ -18,7 +18,7 @@ define([
 
 			var tempItem = {
 				quality: 0,
-				level: 20,
+				level: item.level,
 				stats: {}
 			};
 
@@ -31,6 +31,11 @@ define([
 
 			var statValue = tempItem.stats[Object.keys(tempItem.stats)[0]];
 			statValue += ~~(item.level * (this.minLevelMult + ~~(Math.random() * (this.maxLevelMult - this.minLevelMult))));
+			statValue = Math.ceil(((item.level - 1) / 20) * statValue);
+			if (statValue <= 0) {
+				item.requires = null;
+				return;
+			}
 
 			item.requires.push({
 				stat: blueprint.attrRequire,
