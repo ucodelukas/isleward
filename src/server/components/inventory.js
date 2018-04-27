@@ -1026,6 +1026,9 @@ define([
 		},
 
 		canEquipItem: function (item) {
+			if (!this.obj.player)
+				return true;
+
 			var stats = this.obj.stats.values;
 
 			var playerLevel = (stats.originalLevel || stats.level);
