@@ -377,9 +377,7 @@ define([
 					gap1: '',
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',
-					'xp increase': stats.xpIncrease + '%',
-					gap3: '',
-					'aura mana reservation multiplier': stats.auraReserveMultiplier
+					'xp increase': stats.xpIncrease + '%'
 				}
 			}[this.find('.tab.selected').html()];
 
