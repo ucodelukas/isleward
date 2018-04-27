@@ -100,7 +100,7 @@ define([
 				}
 			}, this);
 
-			this.selected.spliceWhere(s => (!s.spiritStart));
+			this.selected = [this.selected[0]];
 		},
 
 		/*untickNode: function (msg) {
