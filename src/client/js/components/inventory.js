@@ -83,7 +83,7 @@ define([
 		},
 
 		canEquipItem: function (item) {
-			return (this.equipItemErrors.length == 0);
+			return (this.equipItemErrors(item).length == 0);
 		}
 	};
 });

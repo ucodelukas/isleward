@@ -81,6 +81,29 @@ define([
 		},
 
 		untickNode: function (msg) {
+			var stats = this.obj.stats;
+
+			this.selected.forEach(function (s) {
+				var node = passiveTree.nodes.find(n => (n.id == s));
+				if (node.spiritStart)
+					return;
+
+				this.points++;
+				this.obj.syncer.set(true, 'passives', 'points', this.points);
+
+				this.obj.syncer.setArray(true, 'passives', 'untickNodes', node.id);
+
+				if (node) {
+					for (var p in node.stats) {
+						stats.addStat(p, -node.stats[p]);
+					}
+				}
+			}, this);
+
+			this.selected.spliceWhere(s => (!s.spiritStart));
+		},
+
+		/*untickNode: function (msg) {
 			var nodeId = msg.nodeId;
 
 			if (!this.selected.some(s => (s == msg.nodeId)))
@@ -104,7 +127,7 @@ define([
 					stats.addStat(p, -node.stats[p]);
 				}
 			}
-		},
+		},*/
 
 		simplify: function (self) {
 			if (!self)

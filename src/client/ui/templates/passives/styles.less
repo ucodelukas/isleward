@@ -24,6 +24,22 @@
 	.bottom {
 		height: calc(100% - 36px - 36px);
 		background-color: @blackC;
+
+		.button.btnReset {
+			position: absolute;
+			height: 35px;
+			padding-left: 10px;
+			padding-right: 10px;
+			bottom: 46px;
+			right: 10px;
+			background-color: @redC;
+			color: @white;
+			cursor: pointer;
+
+			&:hover {
+				background-color: @redB;
+			}
+		}
 	}
 
 	.status {

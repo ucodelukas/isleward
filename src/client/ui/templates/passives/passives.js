@@ -78,6 +78,8 @@ define([
 					return false;
 				});
 
+			this.find('.btnReset').on('click', this.events.onReset.bind(this));
+
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('uiMouseMove', this.events.onPan.bind(this));
 			this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
@@ -362,7 +364,7 @@ define([
 			},
 
 			onTryClickNode: function (node) {
-				if (node.spiritStart)
+				if ((node.spiritStart) || (node.selected))
 					return;
 
 				client.request({
@@ -391,6 +393,20 @@ define([
 			onGetPassivePoints: function (points) {
 				var el = this.find('.points')
 					.html('Points Available: ' + points);
+			},
+
+			onReset: function () {
+				client.request({
+					cpn: 'player',
+					method: 'performAction',
+					data: {
+						cpn: 'passives',
+						method: 'untickNode',
+						data: {
+							nodeId: node.id
+						}
+					}
+				});
 			}
 		}
 	}
