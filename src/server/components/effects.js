@@ -120,6 +120,9 @@ define([
 		},
 
 		canApplyEffect: function (type) {
+			if (this.ccResistances[type] == null)
+				return true;
+
 			var ccResistances = this.ccResistances;
 			if ((100 - ccResistances[type]) >= 50) {
 				ccResistances[type] += 50;
