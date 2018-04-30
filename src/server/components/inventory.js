@@ -530,17 +530,18 @@ define([
 
 			this.getItem(generator.generate({
 				name: `Echo Wand`,
-				level: [1, 2],
+				level: [18, 20],
 				quality: 3,
 				noSpell: true,
 				slot: 'oneHanded',
-				sprite: [9, 8],
+				sprite: [3, 0],
+				spritesheet: '../../../images/legendaryItems.png',
 				type: 'Wand',
-				stats: ['elementArcanePercent', 'elementArcanePercent', 'elementArcanePercent'],
+				stats: ['elementArcanePercent', 'elementArcanePercent', 'elementArcanePercent', 'elementArcanePercent'],
 				effects: [{
 					type: 'doubleProjectile',
 					rolls: {
-						i_chance: [98, 99]
+						i_chance: [25, 50]
 					}
 				}],
 				spellName: 'projectile',
