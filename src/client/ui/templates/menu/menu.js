@@ -2,14 +2,14 @@ define([
 	'js/system/events',
 	'html!ui/templates/menu/template',
 	'css!ui/templates/menu/styles'
-], function(
+], function (
 	events,
 	template,
 	styles
 ) {
 	return {
 		tpl: template,
-		postRender: function() {
+		postRender: function () {
 			this.find('.btnSmithing').on('click', events.emit.bind(events, 'onShowSmithing'));
 			this.find('.btnHelp').on('click', events.emit.bind(events, 'onShowHelp'));
 			this.find('.btnInventory').on('click', events.emit.bind(events, 'onShowInventory'));
@@ -18,6 +18,22 @@ define([
 			this.find('.btnLeaderboard').on('click', events.emit.bind(events, 'onShowLeaderboard'));
 			this.find('.btnReputation').on('click', events.emit.bind(events, 'onShowReputation'));
 			this.find('.btnOptions').on('click', events.emit.bind(events, 'onToggleOptions'));
+			this.find('.btnPassives').on('click', events.emit.bind(events, 'onShowPassives'));
+
+			this.onEvent('onGetPassivePoints', this.onGetPassivePoints.bind(this));
+		},
+
+		onGetPassivePoints: function (points) {
+			var el = this.find('.btnPassives .points');
+			el
+				.html('')
+				.hide();
+
+			if (points > 0) {
+				el
+					.html(points)
+					.show();
+			}
 		}
 	}
 });

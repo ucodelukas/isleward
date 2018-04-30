@@ -235,6 +235,9 @@ define([
 			else
 				this.tooltip.find('.requires .stats').show();
 
+			if ((!item.stats) || (!Object.keys(item.stats).length))
+				this.tooltip.children('.stats').hide();
+
 			if ((!item.type) || (item.type == item.name))
 				this.tooltip.find('.type').hide();
 			else {

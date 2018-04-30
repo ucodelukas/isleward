@@ -359,11 +359,11 @@
  					blueprints: [{
  						maxLevel: 2,
  						name: 'Family Heirloom',
- 						quality: 2,
+ 						quality: 1,
  						slot: 'neck',
- 						type: 'Pendant',
+ 						type: 'Choker',
  						noSalvage: true,
- 						stats: ['vit', 'regenHp', 'regenMana']
+ 						stats: ['vit', 'regenMana']
  					}]
  				}
  			}

@@ -236,6 +236,8 @@ define([
 				this.addStat('manaMax', (value * this.statScales.intToMana));
 			else if (stat == 'dex')
 				this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
+
+			this.obj.equipment.unequipAttrRqrGear();
 		},
 
 		calcXpMax: function () {
