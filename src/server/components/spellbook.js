@@ -394,7 +394,7 @@ define([
 				if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
 					cd.cd = 1;
 
-				this.obj.fireEvent('beforeSetSpellCooldown', cd);
+				this.obj.fireEvent('beforeSetSpellCooldown', cd, spell);
 
 				spell.cd = cd.cd;
 

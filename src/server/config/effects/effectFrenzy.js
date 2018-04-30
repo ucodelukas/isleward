@@ -9,6 +9,9 @@ define([
 
 		events: {
 			beforeSetSpellCooldown: function (msg, spell) {
+				if (!spell.auto)
+					return;
+
 				msg.cd = this.newCd;
 			}
 		}
