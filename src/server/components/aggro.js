@@ -14,6 +14,9 @@ define([
 		list: [],
 		ignoreList: [],
 
+		threatDecay: 0.0052,
+		threatCeiling: 0.15,
+
 		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
@@ -176,9 +179,9 @@ define([
 			this.ignoreList.spliceWhere(o => o == obj);
 		},
 
-		tryEngage: function (obj, amount, threatMult) {
+		tryEngage: function (source, amount, threatMult) {
 			//Don't aggro yourself, stupid
-			if (obj == this.obj)
+			if (source == this.obj)
 				return;
 
 			var result = {
@@ -189,36 +192,35 @@ define([
 				return false;
 
 			//Mobs shouldn't aggro players that are too far from their home
-			var mob = this.obj.mob;
-			if (!mob)
-				mob = obj.mob;
+			var mob = this.obj.mob || source.mob;
 			if (mob) {
-				var notMob = (obj == mob) ? this.obj : obj;
+				var notMob = (source == mob) ? this.obj : source;
 				if (!mob.canChase(notMob))
 					return false;
 			}
 
-			var oId = obj.id;
+			var oId = source.id;
 			var list = this.list;
 
-			amount = amount || 0;
-			threatMult = threatMult || 1;
+			amount = (amount || 0);
+			var threat = (amount / this.obj.stats.values.hpMax) * (threatMult || 1);
 
 			var exists = list.find(l => l.obj.id == oId);
-			if (exists) {
-				exists.damage += amount;
-				exists.threat += amount * threatMult;
-			} else {
-				var l = {
-					obj: obj,
-					damage: amount,
-					threat: amount * threatMult
+			if (!exists) {
+				exists = {
+					obj: source,
+					damage: 0,
+					threat: 0
 				};
 
-				list.push(l);
+				list.push(exists);
 			}
 
-			//this.sortThreat();
+			exists.damage += amount;
+			exists.threat += threat;
+
+			if (exists.threat > this.threatCeiling)
+				exists.threat = this.threatCeiling;
 
 			return true;
 		},
@@ -340,10 +342,15 @@ define([
 
 			for (var i = 0; i < lLen; i++) {
 				var l = list[i];
+
 				if (l.obj.destroyed) {
 					this.unAggro(l.obj);
 					i--;
 					lLen--;
+				} else if (l.threat > 0) {
+					l.threat -= this.threatDecay;
+					if (l.threat < 0)
+						l.threat = 0;
 				}
 			}
 		}
