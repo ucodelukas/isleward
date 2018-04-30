@@ -527,6 +527,36 @@ define([
 					item.pos = pos;
 				}
 			}
+
+			this.getItem(generator.generate({
+				name: `Echo Wand`,
+				level: [1, 2],
+				quality: 3,
+				noSpell: true,
+				slot: 'oneHanded',
+				sprite: [9, 8],
+				type: 'Wand',
+				stats: ['elementArcanePercent', 'elementArcanePercent', 'elementArcanePercent'],
+				effects: [{
+					type: 'doubleProjectile',
+					rolls: {
+						i_chance: [98, 99]
+					}
+				}],
+				spellName: 'projectile',
+				spellConfig: {
+					statType: 'int',
+					statMult: 0.9,
+					element: 'arcane',
+					auto: true,
+					cdMax: 7,
+					manaCost: 0,
+					range: 9,
+					random: {
+						damage: [2, 15]
+					}
+				}
+			}));
 		},
 
 		setItemPosition: function (id) {
