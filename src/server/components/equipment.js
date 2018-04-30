@@ -281,14 +281,21 @@ define([
 				if (!item)
 					return;
 
-				if (!inventory.canEquipItem(item)) {
+				var errors = inventory.equipItemErrors(item);
+				if (errors.length > 0) {
 					this.unequip(itemId);
+
+					var message = ({
+						int: `You suddenly feel too stupid to wear your ${item.name}`,
+						str: `Your weak body can no longer equip your ${item.name}`,
+						dex: `Your sluggish physique cannot possibly equip your ${item.name}`
+					})[errors[0]];
 
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
 							class: 'color-redA',
-							message: 'You unequip your ' + item.name + ' as it zaps you.',
+							message: message,
 							type: 'rep'
 						}]
 					}, [this.obj.serverId]);
