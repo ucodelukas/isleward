@@ -15,8 +15,17 @@ define([
 
 			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
 
-			this.points = this.obj.stats.values.level - this.selected.length + 1;
-			blueprint.points = this.points;
+			var points = this.calcPoints();
+
+			if (points < this.selected.length) {
+				this.selected = [];
+				this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
+				blueprint.selected = this.selected;
+				points = this.calcPoints();
+			}
+
+			this.points = points;
+			blueprint.points = points;
 
 			var stats = this.obj.stats;
 
@@ -28,6 +37,16 @@ define([
 					}
 				}
 			});
+		},
+
+		calcPoints: function () {
+			var level = this.obj.stats.values.level;
+			var points = level - this.selected.length + 1;
+
+			if (level < 20)
+				points--;
+
+			return points;
 		},
 
 		applyPassives: function () {
@@ -78,6 +97,8 @@ define([
 					stats.addStat(p, node.stats[p]);
 				}
 			}
+
+			this.obj.spellbook.calcDps();
 		},
 
 		untickNode: function (msg) {
@@ -100,34 +121,10 @@ define([
 				}
 			}, this);
 
-			this.selected = [this.selected[0]];
+			this.selected.spliceWhere(s => (!s.spiritStart));
+
+			this.obj.spellbook.calcDps();
 		},
-
-		/*untickNode: function (msg) {
-			var nodeId = msg.nodeId;
-
-			if (!this.selected.some(s => (s == msg.nodeId)))
-				return;
-
-			var node = passiveTree.nodes.find(n => (n.id == nodeId));
-
-			if (node.spiritStart)
-				return;
-
-			this.points++;
-			this.obj.syncer.set(true, 'passives', 'points', this.points);
-
-			this.selected.spliceWhere(id => (id == nodeId));
-			this.obj.syncer.setArray(true, 'passives', 'untickNodes', nodeId);
-
-			var node = passiveTree.nodes.find(n => (n.id == nodeId));
-			var stats = this.obj.stats;
-			if (node) {
-				for (var p in node.stats) {
-					stats.addStat(p, -node.stats[p]);
-				}
-			}
-		},*/
 
 		simplify: function (self) {
 			if (!self)
@@ -142,7 +139,7 @@ define([
 
 		events: {
 			onLevelUp: function (level) {
-				this.points = level - this.selected.length + 1;
+				this.points = this.calcPoints();
 				this.obj.syncer.set(true, 'passives', 'points', this.points);
 			}
 		}

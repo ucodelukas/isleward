@@ -1025,27 +1025,33 @@ define([
 			this.items = [];
 		},
 
-		canEquipItem: function (item) {
+		equipItemErrors: function (item) {
+			var errors = [];
+
 			if (!this.obj.player)
-				return true;
+				return [];
 
 			var stats = this.obj.stats.values;
 
 			var playerLevel = (stats.originalLevel || stats.level);
 			if (item.level > playerLevel)
-				return false;
+				errors.push('level');
 
 			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
-				return false;
+				errors.push(item.requires[0].stat);
 
 			if (item.factions) {
 				if (item.factions.some(function (f) {
 						return f.noEquip;
 					}))
-					return false;
+					errors.push('faction');
 			}
 
-			return true;
+			return errors;
+		},
+
+		canEquipItem: function (item) {
+			return (this.equipItemErrors(item).length == 0);
 		}
 	};
 });

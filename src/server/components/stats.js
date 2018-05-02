@@ -236,6 +236,8 @@ define([
 				this.addStat('manaMax', (value * this.statScales.intToMana));
 			else if (stat == 'dex')
 				this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
+
+			this.obj.equipment.unequipAttrRqrGear();
 		},
 
 		calcXpMax: function () {
@@ -733,6 +735,9 @@ define([
 
 			var oldValues = this.values;
 			var newValues = extend(true, {}, baseStats);
+			newValues.level = level;
+			newValues.originalLevel = (this.originalValues || oldValues).level;
+
 			this.values = newValues;
 
 			var gainStats = classes.stats[this.obj.class].gainStats;
@@ -740,8 +745,6 @@ define([
 				this.addStat(s, (gainStats[s] * level));
 			}
 
-			newValues.level = level;
-			newValues.originalLevel = (this.originalValues || oldValues).level;
 			newValues.hpMax = level * 32.7;
 			if (isMob)
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));

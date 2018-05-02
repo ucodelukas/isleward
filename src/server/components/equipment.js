@@ -207,6 +207,10 @@ define([
 					stats = generatorStats.rescale(item, maxLevel);
 			}
 
+			delete item.eq;
+			delete this.eq[item.equipSlot];
+			delete item.equipSlot;
+
 			for (var s in stats) {
 				var val = stats[s];
 
@@ -216,10 +220,6 @@ define([
 			(item.implicitStats || []).forEach(function (s) {
 				this.obj.stats.addStat(s.stat, -s.value);
 			}, this);
-
-			delete item.eq;
-			delete this.eq[item.equipSlot];
-			delete item.equipSlot;
 
 			this.obj.inventory.setItemPosition(itemId);
 
@@ -271,6 +271,38 @@ define([
 			}, this);
 		},
 
+		unequipAttrRqrGear: function () {
+			var inventory = this.obj.inventory;
+
+			var eq = this.eq;
+			Object.keys(this.eq).forEach(function (slot) {
+				var itemId = eq[slot];
+				var item = inventory.findItem(itemId);
+				if (!item)
+					return;
+
+				var errors = inventory.equipItemErrors(item);
+				if (errors.length > 0) {
+					this.unequip(itemId);
+
+					var message = ({
+						int: `You suddenly feel too stupid to wear your ${item.name}`,
+						str: `Your weak body can no longer equip your ${item.name}`,
+						dex: `Your sluggish physique cannot possibly equip your ${item.name}`
+					})[errors[0]];
+
+					this.obj.instance.syncer.queue('onGetMessages', {
+						id: this.obj.id,
+						messages: [{
+							class: 'color-redA',
+							message: message,
+							type: 'rep'
+						}]
+					}, [this.obj.serverId]);
+				}
+			}, this);
+		},
+
 		unequipFactionGear: function (factionId, tier) {
 			var inventory = this.obj.inventory;
 
@@ -294,7 +326,7 @@ define([
 						id: this.obj.id,
 						messages: [{
 							class: 'color-redA',
-							message: 'you unequip your ' + item.name + ' as it zaps you',
+							message: 'You unequip your ' + item.name + ' as it zaps you.',
 							type: 'rep'
 						}]
 					}, [this.obj.serverId]);

@@ -86,6 +86,7 @@ define([
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 			this.onEvent('onGetPassives', this.events.onGetPassives.bind(this));
 			this.onEvent('onGetPassivePoints', this.events.onGetPassivePoints.bind(this));
+			this.onEvent('onShowPassives', this.toggle.bind(this));
 		},
 
 		renderNodes: function () {
