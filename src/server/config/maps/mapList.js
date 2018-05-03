@@ -7,6 +7,7 @@ define([
 		'cave',
 		'estuary',
 		'sewer',
-		'fjolarok'
+		'fjolarok',
+		'dungeon'
 	];
 });

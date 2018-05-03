@@ -1516,6 +1516,26 @@
                  "width":24,
                  "x":1592,
                  "y":976
+                }, 
+                {
+                 "gid":715,
+                 "height":24,
+                 "id":860,
+                 "name":"estuary entrance",
+                 "properties":
+                    {
+                     "cpnPortal":"{\"zone\":\"dungeon\",\"pos\":{\"x\":6,\"y\":104}}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnPortal":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":928,
+                 "y":848
                 }],
          "opacity":1,
          "properties":
@@ -3519,7 +3539,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":860,
+ "nextobjectid":861,
  "orientation":"orthogonal",
  "properties":
     {

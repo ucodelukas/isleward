@@ -301,6 +301,9 @@ define([
 				else if (sheetName == 'objects')
 					cell += 448;
 
+				if (!sheetName)
+					console.log(cell);
+
 				if ((layerName != 'hiddenWalls') && (layerName != 'hiddenTiles')) {
 					var layer = this.layers;
 					if (this.oldLayers[layerName])
