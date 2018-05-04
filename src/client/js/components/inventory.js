@@ -64,12 +64,13 @@ define([
 		equipItemErrors: function (item) {
 			var errors = [];
 			var stats = this.obj.stats.values;
+			var originalValues = this.obj.stats.originalValues;
 
 			var playerLevel = (stats.originalLevel || stats.level);
 			if (item.level > playerLevel)
 				errors.push('level');
 
-			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
+			if ((item.requires) && (originalValues[item.requires[0].stat] < item.requires[0].value))
 				errors.push('stats');
 
 			if (item.factions) {

@@ -706,6 +706,7 @@ define([
 			return {
 				type: 'stats',
 				values: values,
+				originalValues: this.originalValues,
 				stats: this.stats,
 				vitScale: this.vitScale
 			};

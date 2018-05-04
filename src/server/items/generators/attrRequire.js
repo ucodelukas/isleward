@@ -4,9 +4,9 @@ define([
 	generatorStats
 ) {
 	return {
-		minSlotPerfection: 0.5,
+		minSlotPerfection: 0.1,
 		maxSlotPerfection: 1,
-		minLevelMult: 0.,
+		minLevelMult: 0.3,
 		maxLevelMult: 1,
 
 		generate: function (item, blueprint) {
