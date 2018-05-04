@@ -48,22 +48,23 @@ define([
 			};
 		},
 
-		move: function () {
-			if (this.obj.dead)
+		move: function (obj, x, y) {
+			obj = obj || this.obj;
+			var aggro = obj.aggro;
+
+			if (obj.dead)
 				return;
 
 			var result = {
 				success: true
 			};
-			this.obj.fireEvent('beforeAggro', result);
+			obj.fireEvent('beforeAggro', result);
 			if (!result.success)
 				return;
 
-			var obj = this.obj;
-
 			//If we're attacking something, don't try and look for more trouble. SAVE THE CPU!
 			// this only counts for mobs, players can have multiple attackers
-			var list = this.list;
+			var list = aggro.list;
 			if (obj.isMob) {
 				var lLen = list.length;
 				for (var i = 0; i < lLen; i++) {
@@ -90,13 +91,13 @@ define([
 				}
 			}
 
-			var x = obj.x;
-			var y = obj.y;
+			x = (x == null) ? obj.x : x;
+			y = (y == null) ? obj.y : y;
 
 			//find mobs in range
-			var range = this.range;
-			var faction = this.faction;
-			var inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
+			var range = aggro.range;
+			var faction = aggro.faction;
+			var inRange = aggro.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
 			if (inRange.length == 0)
 				return;
@@ -116,11 +117,11 @@ define([
 					continue;
 
 				//Do we have LoS?
-				if (!this.physics.hasLos(x, y, enemy.x, enemy.y))
+				if (!aggro.physics.hasLos(x, y, enemy.x, enemy.y))
 					continue;
 
 				if (enemy.aggro.tryEngage(obj))
-					this.tryEngage(enemy, 0);
+					aggro.tryEngage(enemy, 0);
 			}
 		},
 
@@ -216,9 +217,10 @@ define([
 				};
 
 				list.push(l);
-			}
 
-			//this.sortThreat();
+				if (obj.player)
+					this.move(obj, this.obj.x, this.obj.y);
+			}
 
 			return true;
 		},
