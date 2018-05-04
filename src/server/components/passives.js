@@ -17,7 +17,7 @@ define([
 
 			var points = this.calcPoints();
 
-			if (points < this.selected.length) {
+			if (points + this.selected.length < this.selected.length) {
 				this.selected = [];
 				this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
 				blueprint.selected = this.selected;
@@ -121,7 +121,8 @@ define([
 				}
 			}, this);
 
-			this.selected.spliceWhere(s => (!s.spiritStart));
+			this.selected = [];
+			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
 
 			this.obj.spellbook.calcDps();
 		},

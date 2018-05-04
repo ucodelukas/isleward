@@ -134,6 +134,13 @@ define([
 				this.renderNodes();
 			} else
 				this.hide();
+
+			events.emit('onHideTooltip', this.el[0]);
+		},
+
+		beforeHide: function () {
+			events.emit('onHideTooltip', this.el[0]);
+			events.emit('onHideTooltip', this.el[0]);
 		},
 
 		onKeyDown: function (key) {
