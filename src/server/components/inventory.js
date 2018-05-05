@@ -1032,7 +1032,7 @@ define([
 				return [];
 
 			var stats = this.obj.stats.values;
-			var originalValues = this.obj.stats.originalValues;
+			var originalValues = this.obj.stats.originalValues || this.obj.stats.values;
 
 			var playerLevel = (stats.originalLevel || stats.level);
 			if (item.level > playerLevel)
