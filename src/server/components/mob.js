@@ -21,6 +21,9 @@ define([
 		maxChaseDistance: 25,
 		goHome: false,
 
+		patrol: null,
+		patrolTargetNode: 0,
+
 		init: function (blueprint) {
 			this.physics = this.obj.instance.physics;
 
@@ -70,16 +73,32 @@ define([
 				return;
 
 			//Unless we're going home, don't always move
-			if ((!this.goHome) && (rnd() < 0.85))
+			if ((!this.goHome) && (rnd() < 0.85) && (!this.patrol))
 				return;
 
-			//don't move around if we're not allowed to, unless we're going home
+			//Don't move around if we're not allowed to, unless we're going home
 			var walkDistance = this.walkDistance;
 			if ((!this.goHome) && (walkDistance <= 0))
 				return;
 
-			var toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
-			var toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+			var toX, toY;
+
+			if (!this.patrol) {
+				toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+				toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+			} else {
+				while (true) {
+					var toNode = this.patrol[this.patrolTargetNode];
+					toX = toNode[0];
+					toY = toNode[1];
+					if ((toX - obj.x == 0) && (toY - obj.y == 0)) {
+						this.patrolTargetNode++;
+						if (this.patrolTargetNode >= this.patrol.length)
+							this.patrolTargetNode = 0;
+					} else
+						break;
+				}
+			}
 
 			if (!this.physics.isCellOpen(toX, toY))
 				return;
@@ -112,6 +131,12 @@ define([
 		},
 		fight: function (target) {
 			if (this.target != target) {
+				//Patrol mobs' home is wherever you initially aggroed them
+				if ((this.patrol) && (!this.target)) {
+					this.originX = this.obj.x;
+					this.originY = this.obj.y;
+				}
+
 				this.obj.clearQueue();
 				this.target = target;
 			}

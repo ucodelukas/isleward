@@ -52,6 +52,7 @@ define([
 			cpnMob.dmgMult = blueprint.dmgMult || typeDefinition.dmgMult;
 			cpnMob.grantRep = blueprint.grantRep;
 			cpnMob.deathRep = blueprint.deathRep;
+			cpnMob.patrol = blueprint.patrol;
 
 			var spells = extend(true, [], blueprint.spells);
 			spells.forEach(function (s) {
