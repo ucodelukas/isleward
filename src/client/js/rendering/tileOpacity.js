@@ -83,7 +83,8 @@ define([
 			156, 158, 162, 163, 167, 168, //Ledges
 			189, //Wall Sign
 			195, 196, 197, 198, 199, 200, 201, 202, 203, //Stone Ledges
-			204, 205, 206, 207, 214, 215, 220, 221, 222, 223 //Ship Edges
+			204, 205, 206, 207, 214, 215, 220, 221, 222, 223, //Ship Edges
+			230, 231 //Gray wall sides
 		],
 		objectsNoFlip: [
 			96, 101, //Clotheslines
