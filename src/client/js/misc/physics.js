@@ -1,7 +1,9 @@
 define([
-	'js/misc/pathfinder'
+	'js/misc/pathfinder',
+	'js/misc/distanceToPolygon'
 ], function (
-	pathfinder
+	pathfinder,
+	distanceToPolygon
 ) {
 	return {
 		graph: null,
@@ -59,6 +61,10 @@ define([
 			}
 
 			return inside;
+		},
+
+		distanceToPolygon: function (p, verts) {
+			return distanceToPolygon.calculate(p, verts);
 		}
 	};
 });

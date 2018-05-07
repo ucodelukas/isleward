@@ -44,20 +44,19 @@ define([
 					dist = (dist * dist) / 100;
 					volume = 0.3 * dist;
 				} else {
-					if (!s.area) {
-						var inside = (!((x < s.x) || (y < s.y) || (x >= s.x + s.w) || (y >= s.y + s.h)));
-						if (!inside) {
-							if (s.sound)
-								s.sound.volume(0);
-							return;
-						}
+					if (physics.isInPolygon(x, y, s.area)) {
+						volume = 0.3;
 					} else {
-						var inside = physics.isInPolygon(x, y, s.area);
-						if (!inside) {
+						var distance = physics.distanceToPolygon([x, y], s.area);
+						if (distance > 10) {
 							if (s.sound)
 								s.sound.volume(0);
 							return;
 						}
+
+						var dist = 10 - distance;
+						dist = (dist * dist) / 100;
+						volume = 0.3 * dist;
 					}
 				}
 
@@ -75,6 +74,15 @@ define([
 		},
 
 		addSound: function (zoneId, file, volume, x, y, w, h, area) {
+			if ((!area) && (w)) {
+				area = [
+					[x, y],
+					[x + w, y],
+					[x + w, y + h],
+					[x, y + h]
+				];
+			}
+
 			var sound = {
 				file: file,
 				x: x,
