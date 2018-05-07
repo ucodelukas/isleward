@@ -413,16 +413,21 @@ define([
             this.hiddenRooms.forEach(function (h) {
                 h.container = new pixi.Container();
                 this.layers.hiders.addChild(h.container);
-                this.buildRectangle({
-                    x: h.x * scale,
-                    y: h.y * scale,
-                    w: h.width * scale,
-                    h: h.height * scale,
-                    color: 0x2d2136,
-                    parent: h.container
-                });
                 for (var i = h.x; i < h.x + h.width; i++) {
                     for (var j = h.y; j < h.y + h.height; j++) {
+                        if (!physics.isInPolygon(i, j, h.area))
+                            continue;
+
+                        this.buildRectangle({
+                            x: i * scale,
+                            y: j * scale,
+                            w: scale,
+                            h: scale,
+                            color: 0x2d2136,
+                            alpha: (h.fog == 1) ? 0.8 : 1,
+                            parent: h.container
+                        });
+
                         [hiddenTiles, hiddenWalls].forEach(function (k) {
                             var cell = k[i][j];
                             if (cell == 0)
@@ -449,12 +454,17 @@ define([
             var hLen = hiddenRooms.length;
             for (var i = 0; i < hLen; i++) {
                 var h = hiddenRooms[i];
-                h.container.visible = (
+                var visible = (
                     (x < h.x) ||
                     (x >= h.x + h.width) ||
                     (y < h.y) ||
                     (y >= h.y + h.height)
                 );
+
+                if (!visible)
+                    visible = !physics.isInPolygon(x, y, h.area);
+
+                h.container.visible = visible;
             }
         },
 
