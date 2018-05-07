@@ -106,7 +106,12 @@ define([
 
 				//If we have fromX and fromY, check if the target cell doesn't contain the same obj (like a notice area)
 				if ((c.width) && (fromX)) {
-					if ((fromX < c.x) || (fromY < c.y) || (fromX >= c.x + c.width) || (fromY >= c.y + c.height)) {
+					if (c.area) {
+						if ((this.isInPolygon(x, y, c.area)) && (!this.isInPolygon(fromX, fromY, c.area))) {
+							c.collisionEnter(obj);
+							obj.collisionEnter(c);
+						}
+					} else if ((fromX < c.x) || (fromY < c.y) || (fromX >= c.x + c.width) || (fromY >= c.y + c.height)) {
 						c.collisionEnter(obj);
 						obj.collisionEnter(c);
 					}
@@ -140,7 +145,12 @@ define([
 				if (c.id != oId) {
 					//If we have toX and toY, check if the target cell doesn't contain the same obj (like a notice area)
 					if ((c.width) && (toX)) {
-						if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
+						if (c.area) {
+							if ((this.isInPolygon(x, y, c.area)) && (!this.isInPolygon(toX, toY, c.area))) {
+								c.collisionExit(obj);
+								obj.collisionExit(c);
+							}
+						} else if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
 							c.collisionExit(obj);
 							obj.collisionExit(c);
 						}
@@ -509,6 +519,31 @@ define([
 				grid[x][y].weight = collides ? 0 : 1;
 				pathfinder.astar.cleanNode(grid[x][y]);
 			}
+		},
+
+		isInPolygon: function (x, y, verts) {
+			var inside = false;
+
+			var vLen = verts.length;
+			for (var i = 0, j = vLen - 1; i < vLen; j = i++) {
+				var vi = verts[i];
+				var vj = verts[j];
+
+				var xi = vi[0];
+				var yi = vi[1];
+				var xj = vj[0];
+				var yj = vj[1];
+
+				var doesIntersect = (
+					((yi > y) != (yj > y)) &&
+					(x < ((((xj - xi) * (y - yi)) / (yj - yi)) + xi))
+				);
+
+				if (doesIntersect)
+					inside = !inside
+			}
+
+			return inside;
 		}
 	};
 });

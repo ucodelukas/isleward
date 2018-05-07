@@ -88,6 +88,9 @@ define([
 					obj.height = l.height;
 				}
 
+				if (l.area)
+					obj.area = l.area;
+
 				//Add components (certain ones need to happen first)
 				//TODO: Clean this part up
 				var properties = extend(true, {}, l.properties);
@@ -134,7 +137,7 @@ define([
 
 				if ((this.physics) && (!obj.dead)) {
 					if (!obj.width)
-					this.physics.addObject(obj, obj.x, obj.y);
+						this.physics.addObject(obj, obj.x, obj.y);
 					else
 						this.physics.addRegion(obj);
 				}

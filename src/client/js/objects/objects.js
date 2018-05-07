@@ -133,7 +133,7 @@ define([
 			var components = template.components || [];
 			delete template.components;
 
-			var syncTypes = ['portrait'];
+			var syncTypes = ['portrait', 'area'];
 
 			for (var p in template) {
 				var value = template[p];
@@ -183,7 +183,7 @@ define([
 				events.emit('onGetPlayer', obj);
 				window.player = obj;
 
-				sound.init(obj.zoneName);
+				sound.init(obj.zoneId);
 
 				renderer.setPosition({
 					x: (obj.x - (renderer.width / (scale * 2))) * scale,

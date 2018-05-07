@@ -32,7 +32,8 @@ var components = [
 	'reputation',
 	'serverActions',
 	'social',
-	'passives'
+	'passives',
+	'sound'
 ].map(function (c) {
 	return 'js/components/' + c;
 });

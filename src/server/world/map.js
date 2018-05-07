@@ -385,7 +385,36 @@ define([
 				} else if (layerName == 'hiddenRooms') {
 					this.hiddenRooms.push(blueprint);
 				} else if (!clientObj) {
-					if (!mapFile.properties.isRandom)
+					if (cell.polyline) {
+						var lowX = this.size.w;
+						var lowY = this.size.h;
+						var highX = 0;
+						var highY = 0;
+
+						blueprint.area = cell.polyline.map(function (v) {
+							var x = ~~((v.x + cell.x) / mapScale);
+							var y = ~~((v.y + cell.y) / mapScale);
+
+							if (x < lowX)
+								lowX = x;
+							if (x > highX)
+								highX = x;
+
+							if (y < lowY)
+								lowY = y;
+							if (y > highY)
+								highY = y;
+
+							return [x, y];
+						});
+
+						blueprint.x = lowX;
+						blueprint.y = lowY;
+						blueprint.width = (highX - lowX);
+						blueprint.height = (highY - lowY);
+
+						spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
+					} else if (!mapFile.properties.isRandom)
 						spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 					else {
 						var room = this.rooms.find(function (r) {
@@ -399,6 +428,38 @@ define([
 						room.objects.push(blueprint);
 					}
 				} else {
+					if (cell.polyline) {
+						var lowX = this.size.w;
+						var lowY = this.size.h;
+						var highX = 0;
+						var highY = 0;
+
+						blueprint.area = cell.polyline.map(function (v) {
+							var x = ~~((v.x + cell.x) / mapScale);
+							var y = ~~((v.y + cell.y) / mapScale);
+
+							if (x < lowX)
+								lowX = x;
+							if (x > highX)
+								highX = x;
+
+							if (y < lowY)
+								lowY = y;
+							if (y > highY)
+								highY = y;
+
+							return [x, y];
+						});
+
+						blueprint.x = lowX;
+						blueprint.y = lowY;
+						blueprint.width = (highX - lowX);
+						blueprint.height = (highY - lowY);
+					} else if (cell.width) {
+						blueprint.width = cell.width / mapScale;
+						blueprint.height = cell.height / mapScale;
+					}
+
 					var obj = objects.buildObjects([blueprint], true).getSimple(true);
 					this.objBlueprints.push(obj);
 				}

@@ -104,7 +104,7 @@ define([
 				o = this;
 			}
 
-			var syncTypes = ['portrait'];
+			var syncTypes = ['portrait', 'area'];
 
 			for (var p in o) {
 				var value = o[p];
@@ -112,7 +112,6 @@ define([
 					continue;
 
 				var type = typeof (value);
-
 				//build component
 				if (type == 'object') {
 					if (value.type) {

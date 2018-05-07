@@ -3,14 +3,40 @@ module.exports = {
 	level: [18, 20],
 
 	mobs: {
-		acowlyte: {
-			level: 20,
+		default: {
+			faction: 'hostile',
+			grantRep: {
+				gaekatla: 15
+			},
 
-			patrol: [
-				[25, 90],
-				[67, 90]
-			],
-			faction: 'hostile'
+			regular: {
+				hpMult: 4,
+				dmgMult: 2.2,
+
+				drops: {
+					chance: 45,
+					rolls: 1,
+					magicFind: 500
+				}
+			},
+
+			rare: {
+				hpMult: 7,
+				dmgMult: 3,
+
+				drops: {
+					chance: 100,
+					rolls: 1,
+					magicFind: 2000
+				}
+			}
+		},
+		snekk: {
+			level: 15
+		},
+
+		snekkboss: {
+			level: 15,
 		}
 	}
 };
