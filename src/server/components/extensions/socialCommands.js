@@ -23,6 +23,9 @@ define([
 		leave: 0,
 		unEq: 0,
 
+		//Utility
+		roll: 0,
+
 		//Mods
 		mute: 5,
 		unmute: 5,
@@ -45,7 +48,8 @@ define([
 		'join',
 		'leave',
 		'mute',
-		'unmute'
+		'unmute',
+		'roll'
 	];
 
 	return {
@@ -189,6 +193,20 @@ define([
 
 		isInChannel: function (character, channel) {
 			return character.auth.customChannels.some(c => (c == channel));
+		},
+
+		roll: function () {
+			var roll = 1 + ~~(Math.random() * 100);
+			global.io.sockets.emit('event', {
+				event: 'onGetMessages',
+				data: {
+					messages: [{
+						class: 'color-grayB',
+						message: this.obj.name + ' rolled ' + roll,
+						type: 'chat'
+					}]
+				}
+			});
 		},
 
 		unEq: function () {
