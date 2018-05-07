@@ -413,7 +413,6 @@ define([
 					}
 				} else if (layerName == 'hiddenRooms') {
 					blueprint.fog = (cell.properties || {}).fog;
-					console.log(blueprint.fog);
 					this.hiddenRooms.push(blueprint);
 				} else if (!clientObj) {
 					if (!mapFile.properties.isRandom)
