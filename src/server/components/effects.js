@@ -132,6 +132,9 @@ define([
 		},
 
 		addEffect: function (options) {
+			if ((options.ttl != null) && (options.ttl <= 0))
+				return;
+
 			if (!this.canApplyEffect(options.type))
 				return;
 

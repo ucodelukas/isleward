@@ -381,6 +381,11 @@ define([
 			if (!castSuccess.success)
 				return false;
 
+			if (spell.targetFurthest)
+				spell.target = this.obj.aggro.getFurthest();
+			else if (spell.targetRandom)
+				spell.target = this.obj.aggro.getRandom();
+
 			success = spell.cast(action);
 
 			if (success) {

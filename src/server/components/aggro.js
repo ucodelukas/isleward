@@ -336,6 +336,14 @@ define([
 			}
 		},
 
+		getFurthest: function () {
+
+		},
+
+		getRandom: function () {
+
+		},
+
 		update: function () {
 			var list = this.list;
 			var lLen = list.length;

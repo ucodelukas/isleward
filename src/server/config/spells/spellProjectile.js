@@ -6,6 +6,8 @@ define([
 	return {
 		type: 'projectile',
 
+		applyEffect: null,
+
 		cdMax: 7,
 		manaCost: 0,
 
@@ -109,6 +111,10 @@ define([
 				console.log(target);
 				return;
 			}
+
+			if (this.applyEffect)
+				target.effects.addEffect(this.applyEffect);
+
 			target.stats.takeDamage(damage, this.threatMult, this.obj);
 		}
 	};

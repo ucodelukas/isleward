@@ -1,6 +1,6 @@
 define([
 	'js/rendering/effects'
-], function(
+], function (
 	effects
 ) {
 	var scale = 40;
@@ -22,7 +22,7 @@ define([
 
 		particles: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if ((!this.source) || (!this.target)) {
 				this.obj.destroyed = true;
 				return;
@@ -83,7 +83,7 @@ define([
 			effects.register(this);
 		},
 
-		renderManual: function() {
+		renderManual: function () {
 			var source = this.obj;
 			var target = this.target;
 
@@ -99,8 +99,7 @@ define([
 				if (!this.noExplosion)
 					this.obj.explosion.explode();
 				this.obj.destroyed = true;
-			}
-			else {
+			} else {
 				dx /= ticksLeft;
 				dy /= ticksLeft;
 
@@ -112,7 +111,7 @@ define([
 			}
 		},
 
-		destroy: function() {
+		destroy: function () {
 			effects.unregister(this);
 		}
 	};
