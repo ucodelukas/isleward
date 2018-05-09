@@ -337,11 +337,36 @@ define([
 		},
 
 		getFurthest: function () {
+			var furthest = null;
+			var distance = 0;
 
+			var list = this.list;
+			var lLen = list.length;
+
+			var thisObj = this.obj;
+			var x = thisObj.x;
+			var y = thisObj.y;
+
+			for (var i = 0; i < lLen; i++) {
+				var l = list[i];
+				var obj = l.obj;
+
+				if (this.ignoreList.some(o => o == obj))
+					continue;
+
+				var oDistance = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
+				if (oDistance > distance) {
+					furthest = l;
+					distance = oDistance;
+				}
+			}
+
+			return furthest.obj;
 		},
 
 		getRandom: function () {
-
+			var useList = this.list.filter(l => (!this.ignoreList.some(o => (o == l.obj))));
+			return useList[~~(Math.random() * useList.length)];
 		},
 
 		update: function () {
