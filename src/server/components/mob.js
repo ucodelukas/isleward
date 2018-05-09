@@ -29,6 +29,9 @@ define([
 
 			this.originX = this.obj.x;
 			this.originY = this.obj.y;
+
+			if (blueprint.patrol)
+				this.patrol = blueprint.patrol;
 		},
 
 		update: function () {
@@ -87,6 +90,7 @@ define([
 				toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 				toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			} else {
+				console.log(this.patrol);
 				while (true) {
 					var toNode = this.patrol[this.patrolTargetNode];
 					toX = toNode[0];

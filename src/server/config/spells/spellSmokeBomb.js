@@ -7,6 +7,7 @@ define([
 		type: 'smokePatch',
 
 		contents: [],
+		ttl: 0,
 
 		applyDamage: function (o, amount) {
 			o.stats.takeDamage(amount, 1, this.caster);
@@ -34,8 +35,9 @@ define([
 		},
 
 		update: function () {
-			if (this.caster.destroyed)
-				return;
+			this.ttl--;
+			if (this.ttl <= 0)
+				this.obj.destroyed = true;
 
 			var stats = this.caster.stats;
 
@@ -135,7 +137,8 @@ define([
 								smokePatch: {
 									caster: obj,
 									statType: this.statType,
-									getDamage: this.getDamage.bind(this)
+									getDamage: this.getDamage.bind(this),
+									ttl: this.duration
 								}
 							}
 						}]);
@@ -151,7 +154,7 @@ define([
 					});
 				}
 
-				this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
+				//this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 			}
 
 			return true;

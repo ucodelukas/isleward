@@ -59,8 +59,8 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":48,
-                 "y":920
+                 "x":200,
+                 "y":952
                 }, 
                 {
                  "gid":794,
@@ -97,6 +97,38 @@
                  "width":8,
                  "x":112,
                  "y":856
+                }, 
+                {
+                 "gid":263,
+                 "height":8,
+                 "id":978,
+                 "name":"viridian serpent",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":200,
+                 "y":984
+                }, 
+                {
+                 "gid":263,
+                 "height":8,
+                 "id":979,
+                 "name":"viridian serpent",
+                 "properties":
+                    {
+                     "cpnMob":"{\"patrol\": [[6, 120], [25, 120]]}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnMob":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":48,
+                 "y":968
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -840,7 +872,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":978,
+ "nextobjectid":980,
  "orientation":"orthogonal",
  "properties":
     {

@@ -3,6 +3,7 @@ var balance = {
 		violetSerpent: {
 			level: 5,
 			meleeDmg: 1,
+			meleeCd: 5,
 			slowDmg: 0.1,
 			slowTtl: 20,
 			slowCd: 50,
@@ -11,12 +12,18 @@ var balance = {
 		scarletSerpent: {
 			level: 5,
 			meleeDmg: 1,
+			meleeCd: 5,
 			chargeDmg: 1,
+			chargeCd: 20
 		},
 		viridianSerpent: {
 			level: 5,
 			spitCd: 20,
 			spitDmg: 1,
+			spitDotDuration: 10,
+			spitDotAmount: 1,
+			poolDuration: 40,
+			poolDmg: 5
 		}
 	}
 };
@@ -61,7 +68,8 @@ module.exports = {
 			spells: [{
 				type: 'melee',
 				element: 'poison',
-				statMult: balance.mobs.violetSerpent.meleeDmg
+				statMult: balance.mobs.violetSerpent.meleeDmg,
+				cdMax: balance.mobs.violetSerpent.meleeCd
 			}, {
 				statMult: balance.mobs.violetSerpent.slowDmg,
 				element: 'poison',
@@ -135,12 +143,14 @@ module.exports = {
 			spells: [{
 				type: 'melee',
 				element: 'poison',
-				statMult: balance.mobs.scarletSerpent.meleeDmg
+				statMult: balance.mobs.scarletSerpent.meleeDmg,
+				cdMax: balance.mobs.scarletSerpent.meleeCd
 			}, {
 				type: 'charge',
 				targetFurthest: true,
 				stunDuration: 0,
-				statMult: balance.mobs.scarletSerpent.chargeDmg
+				statMult: balance.mobs.scarletSerpent.chargeDmg,
+				cdMax: balance.mobs.scarletSerpent.chargeCd
 			}]
 		},
 
@@ -148,12 +158,22 @@ module.exports = {
 			level: balance.mobs.viridianSerpent.level,
 
 			spells: [{
-				statMult: balance.mobs.scarletSerpent.spitDmg,
+				type: 'smokeBomb',
+				castOnDeath: true,
+				duration: balance.mobs.viridianSerpent.poolDuration,
+				cdMult: balance.mobs.viridianSerpent.poolDmg
+			}, {
+				statMult: balance.mobs.viridianSerpent.spitDmg,
 				element: 'poison',
 				cdMax: balance.mobs.viridianSerpent.spitCd,
 				type: 'projectile',
 				row: 5,
 				col: 4,
+				applyEffect: {
+					type: 'lifeDrain',
+					ttl: balance.mobs.viridianSerpent.spitDotDuration,
+					amount: balance.mobs.viridianSerpent.spitDotAmount
+				},
 				targetRandom: true,
 				particles: {
 					color: {

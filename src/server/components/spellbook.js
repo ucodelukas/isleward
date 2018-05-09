@@ -122,10 +122,12 @@ define([
 					builtSpell.animation = null;
 			}
 
-			if ((this.closestRange == -1) || (builtSpell.range < this.closestRange))
-				this.closestRange = builtSpell.range;
-			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
-				this.furthestRange = builtSpell.range;
+			if (!builtSpell.castOnDeath) {
+				if ((this.closestRange == -1) || (builtSpell.range < this.closestRange))
+					this.closestRange = builtSpell.range;
+				if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
+					this.furthestRange = builtSpell.range;
+			}
 
 			if ((options.id == null) && (spellId == null)) {
 				spellId = 0;
@@ -243,6 +245,9 @@ define([
 		getRandomSpell: function (target) {
 			var valid = [];
 			this.spells.forEach(function (s) {
+				if (s.castOnDeath)
+					return;
+
 				if (s.canCast(target))
 					valid.push(s.id);
 			});
@@ -579,6 +584,15 @@ define([
 		},
 
 		events: {
+			beforeDeath: function () {
+				this.spells.forEach(function (s) {
+					if (!s.castOnDeath)
+						return;
+
+					s.cast();
+				});
+			},
+
 			beforeRezone: function () {
 				this.spells.forEach(function (s) {
 					if (s.active) {

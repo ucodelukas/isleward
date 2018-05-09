@@ -48,7 +48,7 @@ define([
 			};
 		},
 
-		move: function (obj, x, y) {
+		move: function (obj, x, y, range) {
 			obj = obj || this.obj;
 			var aggro = obj.aggro;
 
@@ -95,7 +95,7 @@ define([
 			y = (y == null) ? obj.y : y;
 
 			//find mobs in range
-			var range = aggro.range;
+			range = range || aggro.range;
 			var faction = aggro.faction;
 			var inRange = aggro.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
@@ -219,7 +219,7 @@ define([
 				list.push(l);
 
 				if (obj.player)
-					this.move(obj, this.obj.x, this.obj.y);
+					this.move(obj, this.obj.x, this.obj.y, ~~(this.range / 2));
 			}
 
 			return true;

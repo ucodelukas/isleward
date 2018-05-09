@@ -113,7 +113,7 @@ define([
 			}
 
 			if (this.applyEffect)
-				target.effects.addEffect(this.applyEffect);
+				target.effects.addEffect(this.applyEffect, this.obj);
 
 			target.stats.takeDamage(damage, this.threatMult, this.obj);
 		}

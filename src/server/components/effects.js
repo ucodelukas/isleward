@@ -131,9 +131,11 @@ define([
 				return false;
 		},
 
-		addEffect: function (options) {
+		addEffect: function (options, source) {
 			if ((options.ttl != null) && (options.ttl <= 0))
 				return;
+
+			options.caster = options.caster || source;
 
 			if (!this.canApplyEffect(options.type))
 				return;
