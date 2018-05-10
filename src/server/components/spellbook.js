@@ -391,35 +391,40 @@ define([
 			else if (spell.targetRandom)
 				spell.target = this.obj.aggro.getRandom();
 
-			success = spell.cast(action);
+			success = spell.castBase(action);
 
 			if (success) {
-				var stats = this.obj.stats.values;
-				stats.mana -= spell.manaCost;
-				var cd = {
-					cd: spell.cdMax
-				};
-
-				var isAttack = (spell.type == 'melee');
-				if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
-					cd.cd = 1;
-
-				this.obj.fireEvent('beforeSetSpellCooldown', cd);
-
-				spell.cd = cd.cd;
-
-				if (this.obj.player) {
-					var syncer = this.obj.syncer;
-					syncer.setObject(true, 'stats', 'values', 'mana', this.obj.stats.values.mana);
-					this.obj.instance.syncer.queue('onGetSpellCooldowns', {
-						id: this.obj.id,
-						spell: action.spell,
-						cd: (spell.cd * 350)
-					}, [this.obj.serverId]);
-				}
+				spell.consumeMana();
+				spell.setCd();
 			}
 
 			return success;
+
+			var stats = this.obj.stats.values;
+			stats.mana -= spell.manaCost;
+			var cd = {
+				cd: spell.cdMax
+			};
+
+			var isAttack = (spell.type == 'melee');
+			if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
+				cd.cd = 1;
+
+			this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
+			spell.cd = cd.cd;
+
+			if (this.obj.player) {
+				var syncer = this.obj.syncer;
+				syncer.setObject(true, 'stats', 'values', 'mana', this.obj.stats.values.mana);
+				this.obj.instance.syncer.queue('onGetSpellCooldowns', {
+					id: this.obj.id,
+					spell: action.spell,
+					cd: (spell.cd * 350)
+				}, [this.obj.serverId]);
+			}
+
+			return true;
 		},
 
 		getClosestRange: function (spellNum) {

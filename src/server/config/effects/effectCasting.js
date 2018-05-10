@@ -1,21 +1,21 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'casting',
 
 		events: {
-			beforeMove: function(targetPos) {
+			beforeMove: function (targetPos) {
 				var obj = this.obj;
 
 				targetPos.x = obj.x;
 				targetPos.y = obj.y;
 			},
 
-			beforeCastSpell: function(successObj) {		
-				successObj.success = false;
+			beforeCastSpell: function (successObj) {
+				successObj.successObjs = false;
 			}
 		}
 	};

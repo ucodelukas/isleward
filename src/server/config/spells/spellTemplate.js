@@ -11,18 +11,15 @@ define([
 		manaCost: 1,
 		threatMult: 1,
 
+		casting: false,
+		castTime: 0,
+		castTimeMax: 5,
+
 		needLos: false,
 
-		pendingAttacks: [],
+		currentAction: null,
 
-		castBase: function () {
-			if (this.cd > 0)
-				return false;
-			else if (this.manaCost > this.obj.stats.values.mana)
-				return false;
-			else
-				return true;
-		},
+		pendingAttacks: [],
 
 		canCast: function (target) {
 			if (this.cd > 0)
@@ -43,9 +40,66 @@ define([
 			}
 		},
 
+		castBase: function (action) {
+			if (this.castTimeMax > 0) {
+				if ((!this.currentAction) || (this.currentAction.target != action.target)) {
+					this.currentAction = action;
+					this.castTime = this.castTimeMax;
+				}
+
+				return false;
+			}
+
+			return this.cast(action);
+		},
+
 		updateBase: function () {
+			if (this.castTime > 0) {
+				this.castTime--;
+				if (!this.castTime) {
+					if (this.cast(this.currentAction)) {
+						this.consumeMana();
+						this.setCd();
+						this.currentAction = null;
+					}
+				} else
+					this.sendBump(null, 0, -1);
+
+				return;
+			}
+
 			if (this.cd > 0)
 				this.cd--;
+		},
+
+		consumeMana: function () {
+			var stats = this.obj.stats.values;
+			stats.mana -= this.manaCost;
+
+			if (this.obj.player)
+				this.obj.syncer.setObject(true, 'stats', 'values', 'mana', stats.mana);
+		},
+
+		setCd: function () {
+			var cd = {
+				cd: this.cdMax
+			};
+
+			var isAttack = (this.type == 'melee');
+			if ((Math.random() * 100) < this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'])
+				cd.cd = 1;
+
+			this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
+			this.cd = cd.cd;
+
+			if (this.obj.player) {
+				this.obj.instance.syncer.queue('onGetSpellCooldowns', {
+					id: this.obj.id,
+					spell: this.id,
+					cd: (this.cd * 350)
+				}, [this.obj.serverId]);
+			}
 		},
 
 		calcDps: function (target, noSync) {
@@ -104,25 +158,24 @@ define([
 			this.obj.instance.syncer.queue('onGetObject', blueprint);
 		},
 
-		sendBump: function (target) {
-			var x = this.obj.x;
-			var y = this.obj.y;
+		sendBump: function (target, deltaX, deltaY) {
+			if (target) {
+				var x = this.obj.x;
+				var y = this.obj.y;
 
-			var tx = target.x;
-			var ty = target.y;
+				var tx = target.x;
+				var ty = target.y;
 
-			var deltaX = 0;
-			var deltaY = 0;
+				if (tx < x)
+					deltaX = -1;
+				else if (tx > x)
+					deltaX = 1;
 
-			if (tx < x)
-				deltaX = -1;
-			else if (tx > x)
-				deltaX = 1;
-
-			if (ty < y)
-				deltaY = -1;
-			else if (ty > y)
-				deltaY = 1;
+				if (ty < y)
+					deltaY = -1;
+				else if (ty > y)
+					deltaY = 1;
+			}
 
 			var components = [{
 				type: 'bumpAnimation',
@@ -130,7 +183,8 @@ define([
 				deltaY: deltaY
 			}];
 
-			if (this.animation) {
+			//During casting we only bump
+			if ((target) && (this.animation)) {
 				components.push({
 					type: 'animation',
 					template: this.animation
