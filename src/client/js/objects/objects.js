@@ -247,6 +247,13 @@ define([
 				if ((p == 'x') || (p == 'y'))
 					moved = true;
 
+				if (p == 'casting') {
+					if (obj == window.player)
+						events.emit('onGetSelfCasting', value);
+					else
+						events.emit('onGetTargetCasting', value);
+				}
+
 				if (sprite) {
 					if (p == 'x') {
 						if (obj.x < oldX)

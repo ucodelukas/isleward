@@ -13,7 +13,7 @@ define([
 
 		casting: false,
 		castTime: 0,
-		castTimeMax: 5,
+		castTimeMax: 0,
 
 		needLos: false,
 
@@ -45,6 +45,7 @@ define([
 				if ((!this.currentAction) || (this.currentAction.target != action.target)) {
 					this.currentAction = action;
 					this.castTime = this.castTimeMax;
+					this.obj.syncer.set(false, null, 'casting', 0);
 				}
 
 				return false;
@@ -56,6 +57,8 @@ define([
 		updateBase: function () {
 			if (this.castTime > 0) {
 				this.castTime--;
+				this.obj.syncer.set(false, null, 'casting', (this.castTimeMax - this.castTime) / this.castTimeMax);
+
 				if (!this.castTime) {
 					if (this.cast(this.currentAction)) {
 						this.consumeMana();

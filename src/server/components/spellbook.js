@@ -392,6 +392,7 @@ define([
 				spell.target = this.obj.aggro.getRandom();
 
 			success = spell.castBase(action);
+			this.stopCasting(spell);
 
 			if (success) {
 				spell.consumeMana();
@@ -588,7 +589,24 @@ define([
 			}
 		},
 
+		stopCasting: function (ignore) {
+			this.spells.forEach(function (s) {
+				if ((!s.castTimeMax) || (!s.castTime) || (s == ignore))
+					return;
+
+				s.castTime = 0;
+				s.currentAction = null;
+
+				if (!ignore)
+					this.obj.syncer.set(false, null, 'casting', 0);
+			}, this);
+		},
+
 		events: {
+			beforeMove: function () {
+				this.stopCasting();
+			},
+
 			beforeDeath: function () {
 				this.spells.forEach(function (s) {
 					if (!s.castOnDeath)

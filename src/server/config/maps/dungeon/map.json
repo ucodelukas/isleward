@@ -51,18 +51,6 @@
                  "y":728
                 }, 
                 {
-                 "gid":263,
-                 "height":8,
-                 "id":969,
-                 "name":"viridian serpent",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":8,
-                 "x":200,
-                 "y":952
-                }, 
-                {
                  "gid":794,
                  "height":24,
                  "id":974,
@@ -97,18 +85,6 @@
                  "width":8,
                  "x":112,
                  "y":856
-                }, 
-                {
-                 "gid":263,
-                 "height":8,
-                 "id":978,
-                 "name":"viridian serpent",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":8,
-                 "x":200,
-                 "y":984
                 }, 
                 {
                  "gid":263,
@@ -876,7 +852,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "instanced":"1",
+     "instanced":"0",
      "name":"Test Zone",
      "spawn":"[{\"maxLevel\":999,\"x\":6,\"y\":104}]"
     },

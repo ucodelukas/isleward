@@ -132,7 +132,7 @@ define([
 		},
 
 		addEffect: function (options, source) {
-			if ((options.ttl != null) && (options.ttl <= 0))
+			if ((options.ttl != null) && (options.ttl == 0))
 				return;
 
 			options.caster = options.caster || source;
