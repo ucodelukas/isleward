@@ -29,7 +29,6 @@ define([
 				values: {
 					hpMax: 50
 				},
-				vitScale: 10,
 				gainStats: {
 					int: 1
 				}
@@ -38,7 +37,6 @@ define([
 				values: {
 					hpMax: 80
 				},
-				vitScale: 10,
 				gainStats: {
 					str: 1
 				}
@@ -47,7 +45,6 @@ define([
 				values: {
 					hpMax: 70
 				},
-				vitScale: 10,
 				gainStats: {
 					dex: 1
 				}
@@ -64,7 +61,7 @@ define([
 		},
 
 		init: function () {
-			events.emit('onBeforeGetClasses', spirits);
+			events.emit('onBeforeGetSpirits', spirits);
 		}
 	};
 

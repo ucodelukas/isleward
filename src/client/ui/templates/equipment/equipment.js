@@ -336,16 +336,21 @@ define([
 					vit: stats.vit
 				},
 				offense: {
-					'crit chance': (~~(stats.critChance * 10) / 10) + '%',
-					'crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
+					'global crit chance': (~~(stats.critChance * 10) / 10) + '%',
+					'global crit multiplier': (~~(stats.critMultiplier * 10) / 10) + '%',
+					'attack crit chance': (~~((stats.critChance + stats.attackCritChance) * 10) / 10) + '%',
+					'attack crit multiplier': (~~((stats.critMultiplier + stats.attackCritMultiplier) * 10) / 10) + '%',
+					'spell crit chance': (~~((stats.critChance + stats.spellCritChance) * 10) / 10) + '%',
+					'spell crit multiplier': (~~((stats.critMultiplier + stats.spellCritMultiplier) * 10) / 10) + '%',
 					gap1: '',
 					'arcane increase': stats.elementArcanePercent + '%',
 					'fire increase': stats.elementFirePercent + '%',
 					'frost increase': stats.elementFrostPercent + '%',
 					'holy increase': stats.elementHolyPercent + '%',
 					'poison increase': stats.elementPoisonPercent + '%',
+					'physical increase': stats.physicalPercent + '%',
 					gap2: '',
-					'damage increase': stats.dmgPercent + '%',
+					'spell increase': stats.spellPercent + '%',
 					gap3: '',
 					'attack speed': (100 + stats.attackSpeed) + '%',
 					'cast speed': (100 + stats.castSpeed) + '%',
@@ -355,12 +360,15 @@ define([
 					'chance to block attacks': stats.blockAttackChance + '%',
 					'chance to block spells': stats.blockSpellChance + '%',
 					gap1: '',
+					'chance to dodge attacks': (~~(stats.dodgeAttackChance * 10) / 10) + '%',
+					'chance to dodge spells': (~~(stats.dodgeSpellChance * 10) / 10) + '%',
+					gap2: '',
 					'arcane resist': stats.elementArcaneResist,
 					'fire resist': stats.elementFireResist,
 					'frost resist': stats.elementFrostResist,
 					'holy resist': stats.elementHolyResist,
 					'poison resist': stats.elementPoisonResist,
-					gap2: '',
+					gap3: '',
 					'all resist': stats.elementAllResist
 				},
 				misc: {
@@ -369,7 +377,7 @@ define([
 					gap1: '',
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',
-					'xp increase': stats.xpIncrease + '%',
+					'xp increase': stats.xpIncrease + '%'
 				}
 			}[this.find('.tab.selected').html()];
 

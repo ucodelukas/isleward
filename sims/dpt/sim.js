@@ -111,7 +111,6 @@ define([
 						stats: {
 							values: {
 								level: level,
-								dmgPercent: max ? 20 : 0,
 								elementArcanePercent: 0,
 								elementFrostPercent: 0,
 								elementPoisonPercent: 0,

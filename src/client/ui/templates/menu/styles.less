@@ -8,7 +8,7 @@
 	right: 10px;
 	bottom: 10px;
 
-	width: ((@btnSize * 4) + (@pad * 10));
+	width: ((@btnSize * 5) + (@pad * 12));
 	height: ((@btnSize * 2) + (@pad * 2));
 	padding: @pad;
 	background-color: fade(@darkGray, 90%);
@@ -36,6 +36,10 @@
 			height: 100%;
 		}
 
+		&.btnInventory {
+			margin: 0px 8px 0px 45px;
+		}
+
 		&.btnInventory .icon {
 			background: url('../../../images/uiIcons.png') 0px 0px;
 		}
@@ -46,6 +50,29 @@
 
 		&.btnSmithing .icon {
 			background: url('../../../images/uiIcons.png') -128px -64px;
+		}
+
+		&.btnPassives {
+			width: 65px;
+			position: relative;
+
+			.points {
+				width: 100%;
+				text-align: center;
+				left: 0px;
+				bottom: 23px;
+				position: absolute;
+				color: @white;
+				filter:
+					drop-shadow(0px -2px 0px @blackD) 
+					drop-shadow(0px 2px 0px @blackD)
+					drop-shadow(2px 0px 0px @blackD) 
+					drop-shadow(-2px 0px 0px @blackD);
+			}
+		}
+
+		&.btnPassives .icon {
+			background: url('../../../images/uiIcons.png') -320px -64px;
 		}
 
 		&.btnOnline .icon {

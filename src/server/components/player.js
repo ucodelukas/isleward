@@ -1,6 +1,6 @@
 define([
 	'world/atlas',
-	'config/classes',
+	'config/spirits',
 	'config/roles',
 	'config/serverConfig'
 ], function (
@@ -62,7 +62,6 @@ define([
 			for (var s in blueprintStats.stats) {
 				stats.stats[s] = blueprintStats.stats[s];
 			}
-			stats.vitScale = blueprintStats.vitScale;
 
 			var gainStats = classes.stats[character.class].gainStats;
 			for (var s in gainStats) {
@@ -113,6 +112,7 @@ define([
 
 			obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
 			obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
+			obj.addComponent('passives', character.components.find(c => c.type == 'passives'));
 			obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
 			obj.addComponent('events', character.components.find(c => c.type == 'events'));
 

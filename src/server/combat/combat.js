@@ -13,6 +13,7 @@ define([
 
 			var amount = config.damage;
 			var blocked = false;
+			var dodged = false;
 			var isCrit = false;
 
 			//Don't block heals
@@ -22,9 +23,17 @@ define([
 					blocked = true;
 					amount = 0;
 				}
+
+				if (!blocked) {
+					var dodgeChance = config.isAttack ? tgtValues.dodgeAttackChance : tgtValues.dodgeSpellChance;
+					if (mathRandom() * 100 < dodgeChance) {
+						dodged = true;
+						amount = 0;
+					}
+				}
 			}
 
-			if (!blocked) {
+			if ((!blocked) && (!dodged)) {
 				var statValue = 0;
 				if (config.statType) {
 					var statType = config.statType;
@@ -45,22 +54,33 @@ define([
 				if (config.element) {
 					var elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 					dmgPercent += (srcValues[elementName + 'Percent'] || 0);
+					dmgPercent += srcValues.elementPercent;
+
+					if (!config.isAttack)
+						dmgPercent += srcValues.spellPercent;
 
 					//Don't mitigate heals
 					if (!config.noMitigate) {
 						var resist = tgtValues.elementAllResist + (tgtValues[elementName + 'Resist'] || 0);
 						amount *= max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5);
 					}
-				} else if (!config.noMitigate)
+				} else if (!config.noMitigate) {
+					dmgPercent += srcValues.physicalPercent;
 					amount *= max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5);
+				}
 
 				amount *= (dmgPercent / 100);
 
 				if (!config.noCrit) {
 					var critChance = srcValues.critChance;
+					critChance += (config.isAttack) ? srcValues.attackCritChance : srcValues.spellCritChance;
+
+					var critMultiplier = srcValues.critMultiplier;
+					critMultiplier += (config.isAttack) ? srcValues.attackCritMultiplier : srcValues.spellCritMultiplier;
+
 					if ((config.crit) || (mathRandom() * 100 < critChance)) {
 						isCrit = true;
-						amount *= (srcValues.critMultiplier / 100);
+						amount *= (critMultiplier / 100);
 					}
 				}
 			}
@@ -68,6 +88,7 @@ define([
 			return {
 				amount: amount,
 				blocked: blocked,
+				dodged: dodged,
 				crit: isCrit,
 				element: config.element
 			};

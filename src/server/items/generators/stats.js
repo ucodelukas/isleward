@@ -5,17 +5,6 @@ define([
 ) {
 	return {
 		generators: {
-			dmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
-				var max = (level / 2);
-
-				if (calcPerfection)
-					return (calcPerfection / max);
-				else if (perfection == null)
-					return random.norm(1, max) * (blueprint.statMult.dmgPercent || 1);
-				else
-					return max * perfection * (blueprint.statMult.dmgPercent || 1);
-			},
-
 			elementDmgPercent: function (item, level, blueprint, perfection, calcPerfection) {
 				var max = (level / 6.7);
 
@@ -214,10 +203,6 @@ define([
 				generator: 'elementResist'
 			},
 
-			dmgPercent: {
-				ignore: true,
-				generator: 'dmgPercent'
-			},
 			elementArcanePercent: {
 				level: {
 					min: 10
@@ -247,6 +232,27 @@ define([
 				generator: 'elementDmgPercent'
 			},
 			elementPoisonPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			physicalPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			elementPercent: {
+				level: {
+					min: 10
+				},
+				ignore: true,
+				generator: 'elementDmgPercent'
+			},
+			spellPercent: {
 				level: {
 					min: 10
 				},
@@ -287,6 +293,18 @@ define([
 				ignore: true
 			},
 
+			dodgeAttackChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
+			dodgeSpellChance: {
+				min: 1,
+				max: 10,
+				ignore: true
+			},
+
 			addCritChance: {
 				generator: 'addCritChance',
 				level: {
@@ -294,6 +312,32 @@ define([
 				}
 			},
 			addCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
+			addAttackCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addAttackCritMultiplier: {
+				generator: 'addCritMultiplier',
+				level: {
+					min: 12
+				}
+			},
+
+			addSpellCritChance: {
+				generator: 'addCritChance',
+				level: {
+					min: 7
+				}
+			},
+			addSpellCritMultiplier: {
 				generator: 'addCritMultiplier',
 				level: {
 					min: 12
@@ -327,7 +371,17 @@ define([
 				sprintChance: {
 					min: 1,
 					max: 20
-				}
+				},
+
+				dodgeAttackChance: {
+					min: 1,
+					max: 10
+				},
+
+				dodgeSpellChance: {
+					min: 1,
+					max: 10
+				},
 			},
 
 			offHand: {
@@ -361,6 +415,15 @@ define([
 				elementPoisonPercent: {
 					generator: 'elementDmgPercent'
 				},
+				elementPercent: {
+					generator: 'elementDmgPercent'
+				},
+				physicalPercent: {
+					generator: 'elementDmgPercent'
+				},
+				spellPercent: {
+					generator: 'elementDmgPercent'
+				},
 				allAttributes: {
 					generator: 'mainStat'
 				},
@@ -375,9 +438,6 @@ define([
 			},
 
 			neck: {
-				dmgPercent: {
-					generator: 'dmgPercent'
-				},
 				elementArcanePercent: {
 					generator: 'elementDmgPercent'
 				},
@@ -391,6 +451,15 @@ define([
 					generator: 'elementDmgPercent'
 				},
 				elementPoisonPercent: {
+					generator: 'elementDmgPercent'
+				},
+				physicalPercent: {
+					generator: 'elementDmgPercent'
+				},
+				elementPercent: {
+					generator: 'elementDmgPercent'
+				},
+				spellPercent: {
 					generator: 'elementDmgPercent'
 				},
 				allAttributes: {
@@ -437,6 +506,16 @@ define([
 				}
 			}
 
+			var implicitStat = blueprint.implicitStat;
+			if (implicitStat) {
+				var value = implicitStat.value[0] + ~~(Math.random() * (implicitStat.value[1] - implicitStat.value[0]));
+
+				item.implicitStats = [{
+					stat: implicitStat.stat,
+					value: value
+				}];
+			}
+
 			if (blueprint.stats) {
 				var useStats = extend(true, [], blueprint.stats);
 				var addStats = Math.min(statCount, blueprint.stats.length);
@@ -459,7 +538,7 @@ define([
 			}
 		},
 
-		buildStat: function (item, blueprint, stat, result) {
+		buildStat: function (item, blueprint, stat, result, isImplicit) {
 			var slotStats = this.slots[item.slot] || {};
 			var statOptions = extend(true, {}, this.stats, slotStats || {});
 

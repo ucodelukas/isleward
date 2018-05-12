@@ -503,7 +503,7 @@ define([
 							for (var s in equippedOffhand.stats) {
 								if (!compare.stats[s])
 									compare.stats[s] = 0;
-	
+
 								compare.stats[s] += equippedOffhand.stats[s]
 							}
 						}
@@ -530,7 +530,7 @@ define([
 
 						compare = equippedTwoHanded;
 					}
-				}				
+				}
 			}
 
 			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
@@ -589,18 +589,12 @@ define([
 
 			if (!item)
 				return;
-			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (item.level > playerLevel)))
+			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (!window.player.inventory.canEquipItem(item))))
 				return;
-			else if ((action == 'learnAbility') && (item.level > playerLevel))
+			else if ((action == 'learnAbility') && (!window.player.inventory.canEquipItem(item)))
 				return;
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
-			if ((item.factions) && (action == 'equip')) {
-				if (item.factions.some(function (f) {
-						return f.noEquip;
-					}))
-					return;
-			}
 
 			var cpn = 'inventory';
 			if (action == 'equip')

@@ -14,14 +14,20 @@ define([
 	var percentageStats = [
 		'addCritChance',
 		'addCritMultiplier',
+		'addAttackCritChance',
+		'addAttackCritMultiplier',
+		'addSpellCritChance',
+		'addSpellCritMultiplier',
 		'sprintChance',
-		'dmgPercent',
 		'xpIncrease',
 		'blockAttackChance',
 		'blockSpellChance',
+		'dodgeAttackChance',
+		'dodgeSpellChance',
 		'attackSpeed',
 		'castSpeed',
 		'itemQuantity',
+		'magicFind',
 		'catchChance',
 		'catchSpeed',
 		'fishRarity',
@@ -44,7 +50,14 @@ define([
 		},
 
 		onHideItemTooltip: function (item) {
-			if ((this.item != item) && (this.item.refItem) && (this.item.refItem != item))
+			if (
+				(!this.item) ||
+				(
+					(this.item != item) &&
+					(this.item.refItem) &&
+					(this.item.refItem != item)
+				)
+			)
 				return;
 
 			this.item = null;
@@ -132,6 +145,23 @@ define([
 				})
 				.join('');
 
+			var implicitStats = (item.implicitStats || []).map(function (s) {
+				var stat = s.stat;
+				var statName = statTranslations.translate(stat);
+				var value = s.value;
+
+				if (percentageStats.indexOf(stat) > -1)
+					value += '%';
+				else if ((stat.indexOf('element') == 0) && (stat.indexOf('Resist') == -1))
+					value += '%';
+
+				var row = value + ' ' + statName;
+				var rowClass = '';
+				row = '<div class="' + rowClass + '">' + row + '</div>';
+
+				return row;
+			}).join('');
+
 			var name = item.name;
 			if (item.quantity > 1)
 				name += ' x' + item.quantity;
@@ -145,8 +175,16 @@ define([
 				.replace('$QUALITY$', item.quality)
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
+				.replace('$IMPLICITSTATS$', implicitStats)
 				.replace('$STATS$', stats)
 				.replace('$LEVEL$', level);
+
+			if (item.requires) {
+				html = html
+					.replace('$ATTRIBUTE$', item.requires[0].stat)
+					.replace('$ATTRIBUTEVALUE$', item.requires[0].value);
+			}
+
 			if (item.power)
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
@@ -164,7 +202,7 @@ define([
 						}
 						delta = ~~((delta) * 100) / 100;
 						var rowClass = '';
-						if (delta > 0 ) {
+						if (delta > 0) {
 							rowClass = 'gainDamage';
 							delta = '+' + delta;
 						} else if (delta < 0) {
@@ -187,6 +225,19 @@ define([
 			else
 				this.tooltip.find('.level').show();
 
+			if (!item.implicitStats)
+				this.tooltip.find('.implicitStats').hide();
+			else
+				this.tooltip.find('.implicitStats').show();
+
+			if (!item.requires)
+				this.tooltip.find('.requires .stats').hide();
+			else
+				this.tooltip.find('.requires .stats').show();
+
+			if ((!item.stats) || (!Object.keys(item.stats).length))
+				this.tooltip.children('.stats').hide();
+
 			if ((!item.type) || (item.type == item.name))
 				this.tooltip.find('.type').hide();
 			else {
@@ -198,10 +249,11 @@ define([
 			if (item.power)
 				this.tooltip.find('.power').show();
 
-			var playerStats = window.player.stats.values;
-			var level = playerStats.originalLevel || playerStats.level;
-			if (item.level > level)
-				this.tooltip.find('.level').addClass('high-level');
+			var equipErrors = window.player.inventory.equipItemErrors(item);
+			equipErrors.forEach(function (e) {
+				this.tooltip.find('.requires').addClass('high-level');
+				this.tooltip.find('.requires .' + e).addClass('high-level');
+			}, this);
 
 			if ((item.material) || (item.quest)) {
 				this.tooltip.find('.level').hide();

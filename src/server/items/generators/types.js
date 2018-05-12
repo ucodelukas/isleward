@@ -26,8 +26,19 @@ define([
 			if (typeBlueprint.range)
 				item.range = typeBlueprint.range;
 
-			if ((typeBlueprint.material) && (blueprint.statMult.armor))
-				blueprint.statMult.armor *= armorMaterials[typeBlueprint.material].statMult.armor;
+			if (typeBlueprint.material) {
+				var material = armorMaterials[typeBlueprint.material];
+				blueprint.attrRequire = material.attrRequire;
+
+				if (blueprint.statMult.armor)
+					blueprint.statMult.armor *= material.statMult.armor
+			}
+
+			if (typeBlueprint.implicitStat)
+				blueprint.implicitStat = typeBlueprint.implicitStat;
+
+			if (typeBlueprint.attrRequire)
+				blueprint.attrRequire = typeBlueprint.attrRequire;
 
 			if (typeBlueprint.armorMult)
 				blueprint.statMult.armor = typeBlueprint.armorMult;

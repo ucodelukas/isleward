@@ -15,7 +15,7 @@ define([
 			items: [{
 				type: 'key',
 				name: 'Key to the world',
-				sprite: [2, 0],
+				sprite: [12, 0],
 				keyId: 'world'
 			}]
 		}]

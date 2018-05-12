@@ -19,7 +19,7 @@ requirejs([
 	'config/animations',
 	'config/skins',
 	'config/factions',
-	'config/classes',
+	'config/spirits',
 	'config/spellsConfig',
 	'config/spells',
 	'items/config/types',

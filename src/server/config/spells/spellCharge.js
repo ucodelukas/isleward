@@ -60,6 +60,14 @@ define([
 				type: 'stunned'
 			});
 
+			if (targetEffect) {
+				this.obj.instance.syncer.queue('onGetDamage', {
+					id: target.id,
+					event: true,
+					text: 'stunned'
+				});
+			}
+
 			var selfEffect = this.obj.effects.addEffect({
 				type: 'stunned',
 				noMsg: true

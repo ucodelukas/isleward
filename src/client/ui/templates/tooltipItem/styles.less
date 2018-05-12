@@ -28,9 +28,18 @@
 			}
 		}
 
-		.stats {
+		> .implicitStats {
 			color: darken(@white, 20%);
 			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 2px solid @blackA;
+		}
+
+		> .stats {
+			color: darken(@white, 20%);
+			margin-bottom: 8px;
+			padding-bottom: 8px;
+			border-bottom: 2px solid @blackA;
 
 			.gainStat {
 				color: @green;
@@ -55,12 +64,20 @@
 			margin-bottom: 8px;
 		}
 
-		.level {
+		.requires {
 			margin-top: 8px;
 			color: darken(@white, 40%);
 
 			&.high-level {
 				color: @red;
+			}
+
+			.high-level {
+				color: @red;
+			}
+
+			> *:not(.high-level) {
+				color: darken(@white, 40%);
 			}
 		}
 

@@ -9,11 +9,12 @@ define([
 	'items/generators/quantity',
 	'items/generators/spellbook',
 	'items/generators/currency',
-	'items/generators/effects'
+	'items/generators/effects',
+	'items/generators/attrRequire'
 ], function (
-	g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11
+	g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12
 ) {
-	var generators = [g1, g2, g3, g4, g5, g6, g11, g7];
+	var generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
 	var materialGenerators = [g6, g8];
 	var spellGenerators = [g1, g9, g7];
 	var currencyGenerators = [g10];

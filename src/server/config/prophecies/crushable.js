@@ -1,21 +1,21 @@
 define([
-	
-], function(
-	
+
+], function (
+
 ) {
 	return {
 		type: 'crushable',
 
-		init: function() {
-			
+		init: function () {
+
 		},
 
-		simplify: function() {
+		simplify: function () {
 			return this.type;
 		},
 
 		events: {
-			beforeTakeDamage: function(dmg, source) {
+			beforeTakeDamage: function (dmg, source) {
 				dmg.amount *= 4;
 			}
 		}

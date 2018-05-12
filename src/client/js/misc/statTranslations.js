@@ -12,14 +12,22 @@ define([
 		'int': 'intellect',
 		'dex': 'dexterity',
 		'armor': 'armor',
+
 		'blockAttackChance': 'chance to block attacks',
 		'blockSpellChance': 'chance to block spells',
-		'addCritChance': 'increased crit chance',
-		'addCritMultiplier': 'increased crit multiplier',
+
+		'dodgeAttackChance': 'chance to dodge attacks',
+		'dodgeSpellChance': 'chance to dodge spells',
+
+		'addCritChance': 'global crit chance',
+		'addCritMultiplier': 'global crit multiplier',
+		'addAttackCritChance': 'attack crit chance',
+		'addAttackCritMultiplier': 'attack crit multiplier',
+		'addSpellCritChance': 'spell crit chance',
+		'addSpellCritMultiplier': 'spell crit multiplier',
 		'magicFind': 'increased item quality',
 		'itemQuantity': 'increased item quantity',
 		'sprintChance': 'sprint chance',
-		'dmgPercent': 'to all damage',
 		'allAttributes': 'to all attributes',
 		'xpIncrease': 'additional xp per kill',
 		'lvlRequire': 'level requirement reduction',
@@ -29,6 +37,10 @@ define([
 		'elementFirePercent': 'increased fire damage',
 		'elementHolyPercent': 'increased holy damage',
 		'elementPoisonPercent': 'increased poison damage',
+		'physicalPercent': 'increased physical damage',
+
+		'elementPercent': 'increased elemental damage',
+		'spellPercent': 'increased spell damage',
 
 		'elementAllResist': 'all resistance',
 		'elementArcaneResist': 'arcane resistance',
@@ -40,6 +52,8 @@ define([
 
 		'attackSpeed': 'attack speed',
 		'castSpeed': 'cast speed',
+
+		'auraReserveMultiplier': 'aura mana reservation multiplier',
 
 		//This stat is used for gambling when you can't see the stats
 		'stats': 'stats',

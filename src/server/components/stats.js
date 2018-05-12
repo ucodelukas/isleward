@@ -1,6 +1,6 @@
 define([
 	'config/animations',
-	'config/classes',
+	'config/spirits',
 	'misc/scheduler'
 ], function (
 	animations,
@@ -26,16 +26,28 @@ define([
 		itemQuantity: 0,
 		regenHp: 0,
 		regenMana: 5,
+
 		addCritChance: 0,
 		addCritMultiplier: 0,
+		addAttackCritChance: 0,
+		addAttackCritMultiplier: 0,
+		addSpellCritChance: 0,
+		addSpellCritMultiplier: 0,
+
 		critChance: 5,
 		critMultiplier: 150,
+		attackCritChance: 0,
+		attackCritMultiplier: 0,
+		spellCritChance: 0,
+		spellCritMultiplier: 0,
+
 		armor: 0,
-		dmgPercent: 0,
 		vit: 0,
 
 		blockAttackChance: 0,
 		blockSpellChance: 0,
+		dodgeAttackChance: 0,
+		dodgeSpellChance: 0,
 
 		attackSpeed: 0,
 		castSpeed: 0,
@@ -45,6 +57,10 @@ define([
 		elementFirePercent: 0,
 		elementHolyPercent: 0,
 		elementPoisonPercent: 0,
+		physicalPercent: 0,
+
+		elementPercent: 0,
+		spellPercent: 0,
 
 		elementArcaneResist: 0,
 		elementFrostResist: 0,
@@ -72,7 +88,12 @@ define([
 		values: baseStats,
 		originalValues: null,
 
-		vitScale: 10,
+		statScales: {
+			vitToHp: 10,
+			strToArmor: 1,
+			intToMana: (1 / 6),
+			dexToDodge: (1 / 12)
+		},
 
 		syncer: null,
 
@@ -174,36 +195,49 @@ define([
 		},
 
 		addStat: function (stat, value) {
+			var values = this.values;
+
 			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
-				this.values[stat] += value;
+				values[stat] += value;
 
 			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
-			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, this.values[stat]);
+			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, values[stat]);
+			if (sendOnlyToSelf)
+				this.obj.syncer.setObject(false, 'stats', 'values', stat, values[stat]);
 
-			if (stat == 'addCritChance') {
-				this.values.critChance += (0.05 * value);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critChance', this.values.critChance);
-			} else if (stat == 'addCritMultiplier') {
-				this.values.critMultiplier += value;
-				this.obj.syncer.setObject(true, 'stats', 'values', 'critMultiplier', this.values.critMultiplier);
+			if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
+				this.addStat(morphStat, (0.05 * value));
+			} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
+				var morphStat = stat.substr(3);
+				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
+				this.addStat(morphStat, value);
 			} else if (stat == 'vit') {
-				this.values.hpMax += (value * this.vitScale);
-				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', this.values.hpMax);
-				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', this.values.hpMax);
+				this.addStat('hpMax', (value * this.statScales.vitToHp));
 			} else if (stat == 'allAttributes') {
 				['int', 'str', 'dex'].forEach(function (s) {
-					this.values[s] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', s, this.values[s]);
+					this.addStat(s, value)
 				}, this);
 			} else if (stat == 'elementAllResist') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
-
-					this.values[element] += value;
-					this.obj.syncer.setObject(true, 'stats', 'values', element, this.values[element]);
+					this.addStat(element, value);
 				}, this);
-			}
+			} else if (stat == 'elementPercent') {
+				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
+					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
+					this.addStat(element, value);
+				}, this);
+			} else if (stat == 'str')
+				this.addStat('armor', (value * this.statScales.strToArmor));
+			else if (stat == 'int')
+				this.addStat('manaMax', (value * this.statScales.intToMana));
+			else if (stat == 'dex')
+				this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
+
+			this.obj.equipment.unequipAttrRqrGear();
 		},
 
 		calcXpMax: function () {
@@ -260,6 +294,8 @@ define([
 					values.originalLevel++;
 				values.level++;
 
+				this.obj.fireEvent('onLevelUp', (this.originalValues || this.values).level);
+
 				if ((this.originalValues || this.values).level == 20)
 					values.xp = 0;
 
@@ -267,8 +303,7 @@ define([
 
 				var gainStats = classes.stats[this.obj.class].gainStats;
 				for (var s in gainStats) {
-					values[s] += gainStats[s];
-					this.obj.syncer.setObject(true, 'stats', 'values', s, values[s]);
+					this.addStat(s, gainStats[s]);
 				}
 
 				this.obj.spellbook.calcDps();
@@ -487,7 +522,7 @@ define([
 				recipients.push(this.obj.follower.master.serverId);
 
 			if (recipients.length > 0) {
-				if (!damage.blocked) {
+				if ((!damage.blocked) && (!damage.dodged)) {
 					this.syncer.queue('onGetDamage', {
 						id: this.obj.id,
 						source: source.id,
@@ -671,6 +706,7 @@ define([
 			return {
 				type: 'stats',
 				values: values,
+				originalValues: this.originalValues,
 				stats: this.stats,
 				vitScale: this.vitScale
 			};
@@ -700,15 +736,16 @@ define([
 
 			var oldValues = this.values;
 			var newValues = extend(true, {}, baseStats);
+			newValues.level = level;
+			newValues.originalLevel = (this.originalValues || oldValues).level;
+
 			this.values = newValues;
 
 			var gainStats = classes.stats[this.obj.class].gainStats;
 			for (var s in gainStats) {
-				newValues[s] += (gainStats[s] * level);
+				this.addStat(s, (gainStats[s] * level));
 			}
 
-			newValues.level = level;
-			newValues.originalLevel = (this.originalValues || oldValues).level;
 			newValues.hpMax = level * 32.7;
 			if (isMob)
 				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
@@ -730,6 +767,8 @@ define([
 
 				this.addStat(statName, addStats[p]);
 			}
+
+			this.obj.passives.applyPassives();
 
 			if (resetHp)
 				newValues.hp = newValues.hpMax;
