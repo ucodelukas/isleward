@@ -10,6 +10,11 @@ define([
 			if (!this.build())
 				return false;
 
+			var level = this.obj.instance.spawners.zone.level;
+			level = level[0];
+			var xp = ~~(level * 22 * this.getXpMultiplier());
+			this.xp = xp;
+
 			this.obj.syncer.setArray(true, 'quests', 'obtainQuests', this.simplify(true));
 
 			if (!hideMessage) {
