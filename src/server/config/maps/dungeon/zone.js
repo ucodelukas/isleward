@@ -229,5 +229,29 @@ module.exports = {
 				}
 			}]
 		}
+	},
+
+	objects: {
+		greencandle: {
+			components: {
+				cpnLight: {
+					simplify: function () {
+						return {
+							type: 'light',
+							blueprint: {
+								color: {
+									start: ['80f643'],
+									end: ['4ac441', '51fc9a', 'd07840']
+								},
+								lifetime: {
+									min: 2,
+									max: 6
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 };

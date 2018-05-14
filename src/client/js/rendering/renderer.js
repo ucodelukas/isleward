@@ -464,7 +464,10 @@ define([
                 if (!visible)
                     visible = !physics.isInPolygon(x, y, h.area);
 
-                h.container.visible = visible;
+                if ((!visible) && (h.discoverable))
+                    this.layers.hiders.removeChild(h.container);
+                else
+                    h.container.visible = visible;
             }
         },
 
