@@ -136,6 +136,7 @@ define([
 						statType: ['str', 'int'],
 						statMult: 0.76,
 						cdMax: 6,
+						castTimeMax: 0,
 						useWeaponRange: true,
 						random: {
 							damage: [1.5, 5.7]
@@ -153,7 +154,8 @@ define([
 			spells['harvest life'] = {
 				statType: ['str', 'int'],
 				statMult: 1,
-				cdMax: 12,
+				cdMax: 8,
+				castTimeMax: 4,
 				manaCost: 5,
 				range: 1,
 				random: {
@@ -165,7 +167,8 @@ define([
 			spells['summon skeleton'] = {
 				statType: ['str', 'int'],
 				statMult: 0.27,
-				cdMax: 7,
+				cdMax: 5,
+				castTimeMax: 2,
 				manaCost: 5,
 				range: 9,
 				random: {
@@ -177,7 +180,8 @@ define([
 			spells['blood barrier'] = {
 				statType: ['str', 'int'],
 				statMult: 0.1,
-				cdMax: 20,
+				cdMax: 15,
+				castTimeMax: 5,
 				manaCost: 5,
 				range: 9,
 				random: {

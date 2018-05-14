@@ -234,7 +234,8 @@ define([
 					statType: 'str',
 					statMult: 0.84,
 					threatMult: 4,
-					cdMax: 5,
+					cdMax: 6,
+					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
 						damage: [3, 11.4]
@@ -253,6 +254,7 @@ define([
 					statType: 'dex',
 					statMult: 0.88,
 					cdMax: 3,
+					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
 						damage: [1, 3.8]
@@ -272,6 +274,7 @@ define([
 					statMult: 1,
 					element: 'holy',
 					cdMax: 4,
+					castTimeMax: 0,
 					manaCost: 0,
 					range: 6,
 					random: {
@@ -293,7 +296,8 @@ define([
 					statType: 'str',
 					statMult: 0.84,
 					threatMult: 4,
-					cdMax: 5,
+					cdMax: 6,
+					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
 						damage: [3, 15.4]
@@ -314,6 +318,7 @@ define([
 					element: 'arcane',
 					auto: true,
 					cdMax: 7,
+					castTimeMax: 0,
 					manaCost: 0,
 					range: 9,
 					random: {
@@ -335,6 +340,7 @@ define([
 					statMult: 0.84,
 					threatMult: 4,
 					cdMax: 5,
+					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
 						damage: [3, 11.4]
