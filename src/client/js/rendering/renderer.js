@@ -570,6 +570,8 @@ define([
                             tile.visible = true;
                         }
 
+                        tile.z = k;
+
                         rendered.push(tile);
                     }
                 }
@@ -600,7 +602,7 @@ define([
             //Reorder
             if (addedSprite) {
                 container.children.sort(function (a, b) {
-                    return (a.sheetNum - b.sheetNum);
+                    return (a.z - b.z);
                 });
             }
         },
