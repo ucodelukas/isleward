@@ -23,6 +23,8 @@ define([
     var scaleMult = 5;
     var pixi = PIXI;
 
+    var mRandom = Math.random.bind(Math);
+
     return {
         stage: null,
         layers: {
@@ -376,6 +378,15 @@ define([
             var w = this.w = map.length;
             var h = this.h = map[0].length;
 
+            for (var i = 0; i < w; i++) {
+                for (var j = 0; j < h; j++) {
+                    if (!map[i][j].split)
+                        map[i][j] += '';
+
+                    map[i][j] = map[i][j].split(',');
+                }
+            }
+
             this.clean();
             spritePool.clean();
 
@@ -410,6 +421,7 @@ define([
             var hiddenTiles = msg.hiddenTiles;
 
             this.hiddenRooms = msg.hiddenRooms;
+            return;
             this.hiddenRooms.forEach(function (h) {
                 h.container = new pixi.Container();
                 this.layers.hiders.addChild(h.container);
@@ -443,6 +455,7 @@ define([
             }, this);
         },
         hideHiders: function () {
+            return;
             var player = window.player;
             if (!player)
                 return;
@@ -489,6 +502,8 @@ define([
                     }
                 }
 
+                console.log(i, visible);
+
                 if ((!visible) && (hi.discoverable))
                     this.layers.hiders.removeChild(hi.container);
                 else
@@ -526,6 +541,49 @@ define([
             return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
         },
 
+        isHidden: function (x, y) {
+            var player = window.player;
+            var px = player.x;
+            var py = player.y;
+
+            var hiddenRooms = this.hiddenRooms;
+            var hLen = hiddenRooms.length;
+            for (var i = 0; i < hLen; i++) {
+                var h = hiddenRooms[i];
+
+                var outsideHider = (
+                    (x < h.x) ||
+                    (x >= h.x + h.width) ||
+                    (y < h.y) ||
+                    (y >= h.y + h.height)
+                );
+
+                if (outsideHider)
+                    continue;
+
+                var inHider = physics.isInPolygon(x, y, h.area);
+
+                if (!inHider)
+                    continue;
+
+                outsideHider = (
+                    (px < h.x) ||
+                    (px >= h.x + h.width) ||
+                    (py < h.y) ||
+                    (py >= h.y + h.height)
+                );
+
+                if (outsideHider)
+                    return true;
+
+                inHider = physics.isInPolygon(px, py, h.area);
+
+                return !inHider;
+            }
+
+            return false;
+        },
+
         updateSprites: function () {
             if (this.titleScreen)
                 return;
@@ -557,18 +615,20 @@ define([
 
             var addedSprite = false;
 
+            var isHidden = this.isHidden.bind(this);
+
             for (var i = lowX; i < highX; i++) {
+                var mapRow = map[i];
+                var spriteRow = sprites[i];
                 for (var j = lowY; j < highY; j++) {
-                    cell = map[i][j];
+                    cell = mapRow[j];
                     if (!cell)
                         continue;
 
-                    var rendered = sprites[i][j];
-                    if (rendered.length > 0)
+                    var rendered = spriteRow[j];
+                    if ((rendered.length > 0) || (isHidden(i, j)))
                         continue;
-                    else if (!cell.split)
-                        cell += '';
-                    cell = cell.split(',');
+
                     for (var k = 0; k < cell.length; k++) {
                         var c = cell[k];
                         if (c == 0)
@@ -578,7 +638,7 @@ define([
 
                         var flipped = '';
                         if (tileOpacity.canFlip(c)) {
-                            if (Math.random() < 0.5)
+                            if (mRandom() < 0.5)
                                 flipped = 'flip';
                         }
 
@@ -610,19 +670,20 @@ define([
             highY = Math.min(h - 1, highY + 10);
 
             for (var i = lowX; i < highX; i++) {
+                var spriteRow = sprites[i];
                 var outside = ((i >= x - sw) && (i < x + sw));
                 for (var j = lowY; j < highY; j++) {
                     if ((outside) && (j >= y - sh) && (j < y + sh))
                         continue;
 
-                    var list = sprites[i][j];
+                    var list = spriteRow[j];
                     var lLen = list.length;
                     for (var k = 0; k < lLen; k++) {
                         var sprite = list[k];
                         sprite.visible = false;
                         spritePool.store(sprite);
                     }
-                    sprites[i][j] = [];
+                    spriteRow[j] = [];
                 }
             }
 
