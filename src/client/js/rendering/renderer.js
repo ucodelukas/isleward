@@ -453,21 +453,48 @@ define([
             var hiddenRooms = this.hiddenRooms;
             var hLen = hiddenRooms.length;
             for (var i = 0; i < hLen; i++) {
-                var h = hiddenRooms[i];
+                var hi = hiddenRooms[i];
                 var visible = (
-                    (x < h.x) ||
-                    (x >= h.x + h.width) ||
-                    (y < h.y) ||
-                    (y >= h.y + h.height)
+                    (x < hi.x) ||
+                    (x >= hi.x + hi.width) ||
+                    (y < hi.y) ||
+                    (y >= hi.y + hi.height)
                 );
 
                 if (!visible)
-                    visible = !physics.isInPolygon(x, y, h.area);
+                    visible = !physics.isInPolygon(x, y, hi.area);
 
-                if ((!visible) && (h.discoverable))
-                    this.layers.hiders.removeChild(h.container);
+                if (visible) {
+                    for (var j = 0; j < i; j++) {
+                        var hj = hiddenRooms[j];
+                        if (hj.visible)
+                            continue;
+
+                        if (
+                            (!(
+                                (hi.x + hi.width <= hj.x) ||
+                                (hi.x >= hj.x + hj.width) ||
+                                (hi.y + hi.height <= hj.y) ||
+                                (hi.y >= hj.y + hj.height)
+                            )) &&
+                            (
+                                (physics.isInPolygon(x, y, hj.area)) ||
+                                (physics.isInPolygon(x, y, hi.area))
+                            )
+                        ) {
+                            visible = false;
+                            console.log('f', i, visible);
+                            break;
+                        }
+                    }
+                }
+
+                if ((!visible) && (hi.discoverable))
+                    this.layers.hiders.removeChild(hi.container);
                 else
-                    h.container.visible = visible;
+                    hi.container.visible = visible;
+
+                hi.visible = visible;
             }
         },
 
