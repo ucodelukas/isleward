@@ -542,12 +542,16 @@ define([
         },
 
         isHidden: function (x, y) {
+            var hiddenRooms = this.hiddenRooms;
+            var hLen = hiddenRooms.length;
+            if (hLen == 0)
+                return false;
+
             var player = window.player;
             var px = player.x;
             var py = player.y;
 
-            var hiddenRooms = this.hiddenRooms;
-            var hLen = hiddenRooms.length;
+            var hidden = false;
             for (var i = 0; i < hLen; i++) {
                 var h = hiddenRooms[i];
 
@@ -573,15 +577,20 @@ define([
                     (py >= h.y + h.height)
                 );
 
-                if (outsideHider)
-                    return true;
+                if (outsideHider) {
+                    hidden = true;
+                    continue;
+                }
 
                 inHider = physics.isInPolygon(px, py, h.area);
 
-                return !inHider;
+                if (inHider)
+                    return false;
+                else
+                    hidden = true;
             }
 
-            return false;
+            return hidden;
         },
 
         updateSprites: function () {
