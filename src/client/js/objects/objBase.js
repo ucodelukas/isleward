@@ -123,6 +123,25 @@ define([
 
 			if (this.stats)
 				this.stats.updateHpSprite();
+
+			this.setVisible(renderer.sprites[this.x][this.y].length > 0);
+		},
+
+		setVisible: function (visible) {
+			this.sprite.visible = (renderer.sprites[this.x][this.y].length > 0);
+
+			['nameSprite', 'chatSprite'].forEach(function (s, i) {
+				var sprite = this[s];
+				if (!sprite)
+					return;
+
+				sprite.visible = visible;
+			}, this);
+
+			this.components.forEach(function (c) {
+				if (c.setVisible)
+					c.setVisible(visible);
+			});
 		},
 
 		destroy: function () {

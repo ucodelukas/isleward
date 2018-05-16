@@ -146,19 +146,6 @@ define([
 					obj[p] = value;
 			}
 
-			if (obj.sheetName) {
-				obj.sprite = renderer.buildObject(obj);
-				if (template.hidden) {
-					obj.sprite.visible = false;
-					if (obj.nameSprite)
-						obj.nameSprite.visible = false;
-					if ((obj.stats) && (obj.stats.hpSprite)) {
-						obj.stats.hpSprite.visible = false;
-						obj.stats.hpSpriteInner.visible = false;
-					}
-				}
-			}
-
 			components.forEach(function (c) {
 				//Map ids to objects
 				var keys = Object.keys(c).filter(function (k) {
@@ -176,6 +163,20 @@ define([
 
 				obj.addComponent(c.type, c);
 			}, this);
+
+			if (obj.sheetName) {
+				obj.sprite = renderer.buildObject(obj);
+				obj.setVisible(renderer.sprites[obj.x][obj.y].length > 0);
+				if (template.hidden) {
+					obj.sprite.visible = false;
+					if (obj.nameSprite)
+						obj.nameSprite.visible = false;
+					if ((obj.stats) && (obj.stats.hpSprite)) {
+						obj.stats.hpSprite.visible = false;
+						obj.stats.hpSpriteInner.visible = false;
+					}
+				}
+			}
 
 			this.objects.push(obj);
 
@@ -336,7 +337,7 @@ define([
 				for (var i = 0; i < oLen; i++) {
 					var obj = objects[i];
 					var ns = obj.nameSprite;
-					if ((!ns) || (obj.dead))
+					if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
 						continue;
 
 					ns.visible = showNames;

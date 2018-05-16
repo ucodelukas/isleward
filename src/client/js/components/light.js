@@ -1,7 +1,7 @@
 define([
 	'js/rendering/effects',
 	'js/rendering/renderer'
-], function(
+], function (
 	effects,
 	renderer
 ) {
@@ -17,7 +17,7 @@ define([
 
 		range: 3,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = this.blueprint || {};
 
 			var x = this.obj.x;
@@ -79,11 +79,18 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 
 		},
 
-		destroy: function() {
+		setVisible: function (visible) {
+			var emitters = this.emitters;
+			for (var p in emitters) {
+				emitters[p].emit = visible;
+			}
+		},
+
+		destroy: function () {
 			var keys = Object.keys(this.emitters);
 			for (var i = 0; i < keys.length; i++) {
 				var emitter = this.emitters[keys[i]];
