@@ -1,7 +1,7 @@
 define([
 	'js/rendering/renderer',
 	'picture'
-], function(
+], function (
 	renderer,
 	picture
 ) {
@@ -15,7 +15,7 @@ define([
 		patches: [],
 		rays: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = this.blueprint || {};
 
 			var obj = this.obj;
@@ -78,7 +78,7 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 			var rays = this.rays;
 			var rLen = rays.length;
 			for (var i = 0; i < rLen; i++) {
@@ -92,13 +92,23 @@ define([
 			}
 		},
 
-		destroy: function() {
-			this.patches.forEach(function(p) {
+		setVisible: function (visible) {
+			this.patches.forEach(function (p) {
+				p.visible = visible;
+			});
+
+			this.rays.forEach(function (r) {
+				r.visible = visible;
+			});
+		},
+
+		destroy: function () {
+			this.patches.forEach(function (p) {
 				p.parent.removeChild(p);
 			});
 			this.patches = [];
 
-			this.rays.forEach(function(r) {
+			this.rays.forEach(function (r) {
 				r.parent.removeChild(r);
 			});
 			this.rays = [];

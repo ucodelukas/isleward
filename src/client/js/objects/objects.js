@@ -171,8 +171,6 @@ define([
 
 			if (obj.sheetName) {
 				obj.sprite = renderer.buildObject(obj);
-				var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
-				obj.setVisible(isVisible, this.showNames);
 				if (template.hidden) {
 					obj.sprite.visible = false;
 					if (obj.nameSprite)
@@ -205,9 +203,10 @@ define([
 					x: (obj.x * scale) + (scale / 2),
 					y: (obj.y * scale) + scale
 				});
-				var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
-				obj.nameSprite.visible = ((this.showNames) && (isVisible));
 			}
+
+			var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
+			obj.setVisible(isVisible);
 
 			return obj;
 		},
@@ -365,8 +364,6 @@ define([
 			var oLen = objects.length;
 			for (var i = 0; i < oLen; i++) {
 				var o = objects[i];
-				if (!o.sprite)
-					continue;
 
 				var onPos = tiles.some(function (t) {
 					return ((t.x == o.x) && (t.y == o.y));

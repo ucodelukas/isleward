@@ -128,15 +128,16 @@ define([
 		},
 
 		setVisible: function (visible) {
-			this.sprite.visible = visible;
+			if (this.sprite)
+				this.sprite.visible = visible;
+
+			if (this.nameSprite)
+				this.nameSprite.visible = ((visible) && (config.showNames));
 
 			this.components.forEach(function (c) {
 				if (c.setVisible)
 					c.setVisible(visible);
 			});
-
-			if (this.nameSprite)
-				this.nameSprite.visible = ((visible) && (config.showNames));
 		},
 
 		destroy: function () {
