@@ -605,7 +605,7 @@ define([
 								if ((!a.threat) || (a.obj.serverId == null))
 									continue;
 
-								this.obj.inventory.dropBag(a.obj.serverId, killSource);
+								this.obj.inventory.dropBag(a.obj.name, killSource);
 							}
 						}
 					}

@@ -205,8 +205,10 @@ define([
 				});
 			}
 
-			var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
-			obj.setVisible(isVisible);
+			if (renderer.sprites) {
+				var isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
+				obj.setVisible(isVisible);
+			}
 
 			return obj;
 		},

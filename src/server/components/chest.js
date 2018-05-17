@@ -6,13 +6,13 @@ define([
 	return {
 		type: 'chest',
 
-		ownerId: -1,
+		ownerName: null,
 
 		ttl: -1,
 
 		init: function (blueprint) {
-			if (blueprint.ownerId != null)
-				this.ownerId = blueprint.ownerId;
+			if (blueprint.ownerName != null)
+				this.ownerName = blueprint.ownerName;
 
 			if (blueprint.ttl)
 				this.ttl = blueprint.ttl;
@@ -21,7 +21,7 @@ define([
 		simplify: function (self) {
 			return {
 				type: 'chest',
-				ownerId: this.ownerId
+				ownerName: this.ownerName
 			};
 		},
 
@@ -38,12 +38,12 @@ define([
 			if (!obj.player)
 				return;
 
-			var ownerId = this.ownerId;
-			if (ownerId != -1) {
-				if (ownerId instanceof Array) {
-					if (ownerId.indexOf(obj.serverId) == -1)
+			var ownerName = this.ownerName;
+			if (ownerName) {
+				if (ownerName instanceof Array) {
+					if (ownerName.indexOf(obj.name) == -1)
 						return;
-				} else if (ownerId != obj.serverId)
+				} else if (ownerName != obj.name)
 					return;
 			}
 

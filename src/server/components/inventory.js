@@ -609,10 +609,7 @@ define([
 			}, this);
 		},
 
-		createBag: function (x, y, items, ownerId) {
-			if (ownerId == null)
-				ownerId = -1;
-
+		createBag: function (x, y, items, ownerName) {
 			var bagCell = 50;
 
 			var topQuality = 0;
@@ -642,7 +639,7 @@ define([
 				y: y,
 				properties: {
 					cpnChest: {
-						ownerId: ownerId,
+						ownerName: ownerName,
 						ttl: this.obj.instance.instanced ? -1 : 1710
 					},
 					cpnInventory: {
@@ -852,12 +849,12 @@ define([
 			return item;
 		},
 
-		dropBag: function (ownerId, killSource) {
+		dropBag: function (ownerName, killSource) {
 			if (!this.blueprint)
 				return;
 
 			//Only drop loot if this player is in the zone
-			var playerObject = this.obj.instance.objects.find(o => o.serverId == ownerId);
+			var playerObject = this.obj.instance.objects.find(o => o.name == ownerName);
 			if (!playerObject)
 				return;
 
@@ -949,7 +946,7 @@ define([
 			this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 			if (this.items.length > 0)
-				this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
+				this.createBag(this.obj.x, this.obj.y, this.items, ownerName);
 
 			this.items = savedItems;
 		},
