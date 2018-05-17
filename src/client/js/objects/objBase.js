@@ -1,11 +1,13 @@
 define([
 	'js/components/components',
 	'js/rendering/renderer',
-	'js/system/events'
+	'js/system/events',
+	'js/config'
 ], function (
 	components,
 	renderer,
-	events
+	events,
+	config
 ) {
 	var scale = 40;
 	var scaleMult = 5;
@@ -123,25 +125,18 @@ define([
 
 			if (this.stats)
 				this.stats.updateHpSprite();
-
-			this.setVisible(renderer.sprites[this.x][this.y].length > 0);
 		},
 
 		setVisible: function (visible) {
-			this.sprite.visible = (renderer.sprites[this.x][this.y].length > 0);
-
-			['nameSprite', 'chatSprite'].forEach(function (s, i) {
-				var sprite = this[s];
-				if (!sprite)
-					return;
-
-				sprite.visible = visible;
-			}, this);
+			this.sprite.visible = visible;
 
 			this.components.forEach(function (c) {
 				if (c.setVisible)
 					c.setVisible(visible);
 			});
+
+			if (this.nameSprite)
+				this.nameSprite.visible = ((visible) && (config.showNames));
 		},
 
 		destroy: function () {

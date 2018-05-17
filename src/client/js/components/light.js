@@ -33,6 +33,7 @@ define([
 					var maxAlpha = (1 + ((halfRange * 2) - (Math.abs(halfRange - i) + Math.abs(halfRange - j)))) * 0.1;
 
 					this.emitters[n] = renderer.buildEmitter({
+						obj: this.obj,
 						pos: {
 							x: ((x + i - halfRange) * scale) + (scale / 2),
 							y: ((y + j - halfRange) * scale) + (scale / 2)

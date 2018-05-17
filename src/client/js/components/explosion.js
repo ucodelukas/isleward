@@ -1,6 +1,6 @@
 define([
 	'js/rendering/effects'
-], function(
+], function (
 	effects
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 		blueprint: null,
 		particles: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = {
 				new: true,
 				blueprint: $.extend(true, {
@@ -39,14 +39,14 @@ define([
 							max: 18
 						}
 					},
-					
+
 					particlesPerWave: 14,
-					particleSpacing: 0,	
+					particleSpacing: 0,
 					lifetime: {
 						min: 1,
 						max: 3
 					},
-					randomColor: true, 
+					randomColor: true,
 					randomScale: true,
 					randomSpeed: true,
 					frequency: 1
@@ -65,10 +65,10 @@ define([
 						}
 					}
 				})
-			};	
+			};
 		},
 
-		explode: function(blueprint) {
+		explode: function (blueprint) {
 			this.particles = this.obj.addComponent('particles', this.blueprint);
 
 			this.particles.emitter.update(0.2);

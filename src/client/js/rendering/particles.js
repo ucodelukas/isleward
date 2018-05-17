@@ -2,7 +2,7 @@ define([
 	'particles',
 	'js/rendering/particleDefaults',
 	'js/rendering/shaders/outline'
-], function(
+], function (
 	pixiParticles,
 	particleDefaults,
 	shaderOutline
@@ -15,17 +15,20 @@ define([
 
 		lastTick: null,
 
-		init: function(options) {
+		init: function (options) {
 			this.r = options.r;
 			this.renderer = options.renderer;
 			this.stage = options.stage;
 			this.lastTick = Date.now();
 		},
 
-		buildEmitter: function(config) {
+		buildEmitter: function (config) {
+			var obj = config.obj;
+			delete config.obj;
 			var options = $.extend(true, {}, particleDefaults, config);
 
 			var emitter = new PIXI.particles.Emitter(this.r.layers.particles, ['images/particles.png'], options);
+			emitter.obj = obj;
 			emitter.emit = true;
 
 			this.emitters.push(emitter);
@@ -33,11 +36,11 @@ define([
 			return emitter;
 		},
 
-		destroyEmitter: function(emitter) {
+		destroyEmitter: function (emitter) {
 			emitter.emit = false;
 		},
 
-		update: function() {
+		update: function () {
 			var renderer = this.r;
 			var now = Date.now();
 
@@ -47,11 +50,14 @@ define([
 				var e = emitters[i];
 
 				var visible = null;
-				var destroy = !e.emit;
+				var destroy = (
+					(!e.emit) &&
+					(e.obj.destroyed)
+				);
 				if (destroy) {
 					if (e.particleCount > 0) {
 						visible = renderer.isVisible(e.spawnPos.x, e.spawnPos.y);
-						if (visible) 
+						if (visible)
 							destroy = false;
 					}
 				}
@@ -64,7 +70,7 @@ define([
 					i--;
 					eLen--;
 					continue;
-				} 
+				}
 
 				if (visible === null)
 					visible = renderer.isVisible(e.spawnPos.x, e.spawnPos.y);
@@ -72,7 +78,7 @@ define([
 					continue;
 
 				var r = e.update((now - this.lastTick) * 0.001);
-				r.forEach(function(rr) {
+				r.forEach(function (rr) {
 					if (e.blendMode == 'overlay')
 						rr.pluginName = 'picture';
 				}, this);

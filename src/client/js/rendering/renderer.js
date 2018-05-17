@@ -393,7 +393,7 @@ define([
             this.stage.filters = [new PIXI.filters.VoidFilter()];
             this.stage.filterArea = new PIXI.Rectangle(0, 0, w * scale, h * scale);
 
-            this.buildHiddenRooms(msg);
+            this.hiddenRooms = msg.hiddenRooms;
 
             this.sprites = _.get2dArray(w, h, 'array');
 
@@ -416,108 +416,36 @@ define([
             }, this);
         },
 
-        buildHiddenRooms: function (msg) {
-            var hiddenWalls = msg.hiddenWalls;
-            var hiddenTiles = msg.hiddenTiles;
-
-            this.hiddenRooms = msg.hiddenRooms;
-            return;
-            this.hiddenRooms.forEach(function (h) {
-                h.container = new pixi.Container();
-                this.layers.hiders.addChild(h.container);
-                for (var i = h.x; i < h.x + h.width; i++) {
-                    for (var j = h.y; j < h.y + h.height; j++) {
-                        if (!physics.isInPolygon(i, j, h.area))
-                            continue;
-
-                        this.buildRectangle({
-                            x: i * scale,
-                            y: j * scale,
-                            w: scale,
-                            h: scale,
-                            color: 0x2d2136,
-                            alpha: (h.fog == 1) ? 0.8 : 1,
-                            parent: h.container
-                        });
-
-                        [hiddenTiles, hiddenWalls].forEach(function (k) {
-                            var cell = k[i][j];
-                            if (cell == 0)
-                                return;
-
-                            var tile = this.buildTile(cell - 1, i, j);
-                            tile.width = scale;
-                            tile.height = scale;
-                            h.container.addChild(tile);
-                        }, this);
-                    }
-                }
-            }, this);
-        },
-        hideHiders: function () {
-            return;
-            var player = window.player;
-            if (!player)
-                return;
-
-            var x = player.x;
-            var y = player.y;
-
-            var hiddenRooms = this.hiddenRooms;
-            var hLen = hiddenRooms.length;
-            for (var i = 0; i < hLen; i++) {
-                var hi = hiddenRooms[i];
-                var visible = (
-                    (x < hi.x) ||
-                    (x >= hi.x + hi.width) ||
-                    (y < hi.y) ||
-                    (y >= hi.y + hi.height)
-                );
-
-                if (!visible)
-                    visible = !physics.isInPolygon(x, y, hi.area);
-
-                if (visible) {
-                    for (var j = 0; j < i; j++) {
-                        var hj = hiddenRooms[j];
-                        if (hj.visible)
-                            continue;
-
-                        if (
-                            (!(
-                                (hi.x + hi.width <= hj.x) ||
-                                (hi.x >= hj.x + hj.width) ||
-                                (hi.y + hi.height <= hj.y) ||
-                                (hi.y >= hj.y + hj.height)
-                            )) &&
-                            (
-                                (physics.isInPolygon(x, y, hj.area)) ||
-                                (physics.isInPolygon(x, y, hi.area))
-                            )
-                        ) {
-                            visible = false;
-                            console.log('f', i, visible);
-                            break;
-                        }
-                    }
-                }
-
-                console.log(i, visible);
-
-                if ((!visible) && (hi.discoverable))
-                    this.layers.hiders.removeChild(hi.container);
-                else
-                    hi.container.visible = visible;
-
-                hi.visible = visible;
-            }
-        },
-
         setPosition: function (pos, instant) {
             pos.x += 16;
             pos.y += 16;
 
-            this.hideHiders();
+            var player = window.player;
+            if (player) {
+                var px = player.x;
+                var py = player.y;
+
+                var hiddenRooms = this.hiddenRooms;
+                var hLen = hiddenRooms.length;
+                for (var i = 0; i < hLen; i++) {
+                    var h = hiddenRooms[i];
+                    if (!h.discoverable)
+                        continue;
+
+                    if (
+                        (
+                            (px < h.x) ||
+                            (px >= h.x + h.width) ||
+                            (py < h.y) ||
+                            (py >= h.y + h.height)
+                        ) ||
+                        (!physics.isInPolygon(px, py, h.area))
+                    )
+                        continue;
+
+                    h.discovered = true;
+                }
+            }
 
             if (instant) {
                 this.moveTo = null;
@@ -569,6 +497,9 @@ define([
 
                 if (!inHider)
                     continue;
+
+                if (h.discovered)
+                    return false;
 
                 outsideHider = (
                     (px < h.x) ||
@@ -626,6 +557,9 @@ define([
 
             var isHidden = this.isHidden.bind(this);
 
+            var newVisible = [];
+            var newHidden = [];
+
             for (var i = lowX; i < highX; i++) {
                 var mapRow = map[i];
                 var spriteRow = sprites[i];
@@ -633,12 +567,40 @@ define([
                     cell = mapRow[j];
                     if (!cell)
                         continue;
+                    var cLen = cell.length;
+                    if (!cLen)
+                        return;
 
                     var rendered = spriteRow[j];
-                    if ((rendered.length > 0) || (isHidden(i, j)))
+                    var isHidden = this.isHidden(i, j);
+                    if (rendered.length > 0) {
+                        if (!isHidden)
+                            continue;
+                        else {
+                            newHidden.push({
+                                x: i,
+                                y: j
+                            });
+
+                            var rLen = rendered.length;
+                            for (var k = 0; k < rLen; k++) {
+                                var sprite = rendered[k];
+                                sprite.visible = false;
+                                spritePool.store(sprite);
+                            }
+                            spriteRow[j] = [];
+
+                            continue;
+                        }
+                    } else if (isHidden)
                         continue;
 
-                    for (var k = 0; k < cell.length; k++) {
+                    newVisible.push({
+                        x: i,
+                        y: j
+                    });
+
+                    for (var k = 0; k < cLen; k++) {
                         var c = cell[k];
                         if (c == 0)
                             continue;
@@ -696,7 +658,9 @@ define([
                 }
             }
 
-            //Reorder
+            events.emit('onTilesVisible', newVisible, true);
+            events.emit('onTilesVisible', newHidden, false);
+
             if (addedSprite) {
                 container.children.sort(function (a, b) {
                     return (a.z - b.z);
@@ -876,7 +840,9 @@ define([
         },
 
         buildEmitter: function (config) {
-            return particles.buildEmitter(config);
+            var emitter = particles.buildEmitter(config);
+
+            return emitter;
         },
 
         destroyEmitter: function (emitter) {

@@ -2,12 +2,14 @@ define([
 	'js/objects/objBase',
 	'js/system/events',
 	'js/rendering/renderer',
-	'js/sound/sound'
+	'js/sound/sound',
+	'js/config'
 ], function (
 	objBase,
 	events,
 	renderer,
-	sound
+	sound,
+	config
 ) {
 	var scale = 40;
 
@@ -22,10 +24,12 @@ define([
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
+			events.on('onTilesVisible', this.onTilesVisible.bind(this));
 
 			//Get saved value for showNames, or use the value set above
 			var showNames = window.localStorage.getItem('iwd_opt_shownames');
 			this.showNames = showNames ? (showNames == 'true') : this.showNames;
+			config.showNames = this.showNames;
 		},
 
 		getLocation: function (x, y) {
@@ -127,6 +131,7 @@ define([
 			else
 				this.updateObject(exists, obj);
 		},
+
 		buildObject: function (template) {
 			var obj = $.extend(true, {}, objBase);
 
@@ -166,7 +171,8 @@ define([
 
 			if (obj.sheetName) {
 				obj.sprite = renderer.buildObject(obj);
-				obj.setVisible(renderer.sprites[obj.x][obj.y].length > 0);
+				var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
+				obj.setVisible(isVisible, this.showNames);
 				if (template.hidden) {
 					obj.sprite.visible = false;
 					if (obj.nameSprite)
@@ -199,11 +205,13 @@ define([
 					x: (obj.x * scale) + (scale / 2),
 					y: (obj.y * scale) + scale
 				});
-				obj.nameSprite.visible = this.showNames;
+				var isVisible = ((obj.self) || (renderer.sprites[obj.x][obj.y].length > 0));
+				obj.nameSprite.visible = ((this.showNames) && (isVisible));
 			}
 
 			return obj;
 		},
+
 		updateObject: function (obj, template) {
 			var components = template.components || [];
 
@@ -300,8 +308,14 @@ define([
 				obj.nameSprite.visible = this.showNames;
 			}
 
+			if (obj.sprite) {
+				var isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
+				obj.setVisible(isVisible);
+			}
+
 			obj.setSpritePosition();
 		},
+
 		update: function () {
 			var objects = this.objects;
 			var len = objects.length;
@@ -329,6 +343,7 @@ define([
 
 				//Set new value in localStorage for showNames
 				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
+				config.showNames = this.showNames;
 
 				var showNames = this.showNames;
 
@@ -342,6 +357,24 @@ define([
 
 					ns.visible = showNames;
 				}
+			}
+		},
+
+		onTilesVisible: function (tiles, visible) {
+			var objects = this.objects;
+			var oLen = objects.length;
+			for (var i = 0; i < oLen; i++) {
+				var o = objects[i];
+				if (!o.sprite)
+					continue;
+
+				var onPos = tiles.some(function (t) {
+					return ((t.x == o.x) && (t.y == o.y));
+				});
+				if (!onPos)
+					continue;
+
+				o.setVisible(visible);
 			}
 		}
 	};
