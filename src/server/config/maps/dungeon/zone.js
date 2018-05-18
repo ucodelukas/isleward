@@ -35,6 +35,7 @@ module.exports = {
 	mobs: {
 		default: {
 			faction: 'hostile',
+			walkDistance: 0,
 			grantRep: {
 				gaekatla: 15
 			},

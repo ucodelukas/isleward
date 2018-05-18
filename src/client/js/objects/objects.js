@@ -40,7 +40,7 @@ define([
 			var mob = null;
 			for (var i = 0; i < oLen; i++) {
 				var o = objects[i];
-				if ((!o.stats) || (o.nonSelectable))
+				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
 					continue;
 
 				var dx = Math.abs(o.x - x);
@@ -61,7 +61,7 @@ define([
 			var oLen = objects.length;
 
 			var list = objects.filter(function (o) {
-				if ((!o.stats) || (o.nonSelectable) || (o == window.player))
+				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
 					return false;
 
 				var dx = Math.abs(o.x - x);

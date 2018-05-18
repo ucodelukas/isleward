@@ -55,6 +55,9 @@ define([
 			if (blueprint.patrol)
 				cpnMob.patrol = blueprint.patrol;
 
+			if (cpnMob.patrol)
+				cpnMob.walkDistance = 1;
+
 			var spells = extend(true, [], blueprint.spells);
 			spells.forEach(function (s) {
 				if (!s.animation) {

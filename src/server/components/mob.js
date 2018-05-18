@@ -127,19 +127,13 @@ define([
 				});
 			}
 
-			//We use goHometo force followers to follow us around but they should never stay in that state
+			//We use goHome to force followers to follow us around but they should never stay in that state
 			// since it messes with combat
 			if (obj.follower)
 				this.goHome = false;
 		},
 		fight: function (target) {
 			if (this.target != target) {
-				//Patrol mobs' home is wherever you initially aggroed them
-				if ((this.patrol) && (!this.target)) {
-					this.originX = this.obj.x;
-					this.originY = this.obj.y;
-				}
-
 				this.obj.clearQueue();
 				this.target = target;
 			}
