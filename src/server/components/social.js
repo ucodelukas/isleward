@@ -18,6 +18,8 @@ define([
 
 		messageHistory: [],
 
+		maxChatLength: 255,
+
 		init: function (blueprint) {
 			this.obj.extendComponent('social', 'socialCommands', {});
 		},
@@ -150,6 +152,8 @@ define([
 			}
 
 			var messageString = msg.data.message;
+			if (messageString.length > this.maxChatLength)
+				return;
 
 			var history = this.messageHistory;
 

@@ -21,6 +21,8 @@ define([
 		messages: [],
 		maxTtl: 500,
 
+		maxChatLength: 255,
+
 		shiftDown: false,
 		hoverItem: null,
 
@@ -35,6 +37,7 @@ define([
 
 			this.find('input')
 				.on('keydown', this.sendChat.bind(this))
+				.on('input', this.checkChatLength.bind(this))
 				.on('blur', this.toggle.bind(this, false, true));
 
 			this
@@ -44,6 +47,17 @@ define([
 				.on('click', this.onClickFilter.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
+		},
+
+		checkChatLength: function () {
+			var textbox = this.find('input');
+			var val = textbox.val();
+
+			if (val.length <= this.maxChatLength)
+				return;
+
+			val = val.substr(0, this.maxChatLength);
+			textbox.val(val);
 		},
 
 		onGetCustomChatChannels: function (channels) {
