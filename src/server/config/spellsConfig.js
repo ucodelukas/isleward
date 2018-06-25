@@ -60,6 +60,7 @@ define([
 		'smite': {
 			statType: 'int',
 			statMult: 1,
+			element: 'holy',
 			cdMax: 10,
 			range: 9,
 			manaCost: 4,
