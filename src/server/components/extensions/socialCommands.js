@@ -331,6 +331,9 @@ define([
 			if (config.name)
 				config.name = config.name.split('_').join(' ');
 
+			if (config.spellName)
+				config.spellName = config.spellName.split('_').join(' ');
+
 			if (config.type)
 				config.type = config.type.split('_').join(' ');
 
