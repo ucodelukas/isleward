@@ -71,8 +71,6 @@ define([
 				) ||
 				(
 					(player.dead) &&
-					(msg.method != 'performAction') &&
-					(msg.data.cpn != 'stats') &&
 					(msg.data.method != 'respawn')
 				)
 			)
