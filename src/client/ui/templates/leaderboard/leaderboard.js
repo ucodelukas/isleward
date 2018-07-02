@@ -55,6 +55,9 @@ define([
 			var prophecies = window.player.prophecies;
 			prophecies = prophecies ? prophecies.list : [];
 
+			this.prophecyFilter = [];
+			this.find('.prophecy').removeClass('selected');
+
 			prophecies.forEach(function (p) {
 				this.onProphecyClick({
 					currentTarget: this.find('.prophecy[prophecy="' + p + '"]')
