@@ -78,7 +78,7 @@ define([
 				var statValues = this.obj.stats.values;
 
 				var critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
-				var critMultiplier = isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier;
+				var critMultiplier = 100 + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
 				var attackSpeed = (statValues.attackSpeed / 100);
 				attackSpeed += 1;
 
