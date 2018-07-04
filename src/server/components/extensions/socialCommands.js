@@ -384,8 +384,11 @@ define([
 		},
 
 		getGold: function (amount) {
-			this.obj.trade.gold += ~~amount;
-			this.obj.syncer.set(true, 'trade', 'gold', this.obj.trade.gold);
+			var newGold = this.obj.trade.gold + ~~amount;
+			newGold = Math.max(-1000000000, Math.min(1000000000, newGold));
+
+			this.obj.trade.gold = newGold;
+			this.obj.syncer.set(true, 'trade', 'gold', newGold);
 		},
 
 		setLevel: function (level) {
