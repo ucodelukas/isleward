@@ -167,6 +167,10 @@ define([
 			if (!msg.item.effects)
 				reslot.removeClass('disabled');
 
+			var relevel = this.find('[action="relevel"]').addClass('disabled');
+			if (msg.item.slot == 'tool')
+				relevel.removeClass('disabled');
+
 			this.offEvent(this.eventClickInv);
 
 			$('.uiInventory').data('ui').toggle();

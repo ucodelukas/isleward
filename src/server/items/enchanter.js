@@ -81,6 +81,9 @@ define([
 				}
 				item.enchantedStats = enchantedStats;
 			} else if (msg.action == 'relevel') {
+				if (item.slot == 'tool')
+					return;
+
 				var offset = 1 + ~~(Math.random() * 2);
 
 				if (!item.originalLevel)
