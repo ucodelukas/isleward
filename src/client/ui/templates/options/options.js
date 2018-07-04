@@ -5,7 +5,8 @@ define([
 	'js/rendering/renderer',
 	'ui/factory',
 	'js/objects/objects',
-	'js/system/client'
+	'js/system/client',
+	'js/sound/sound'
 ], function (
 	events,
 	template,
@@ -13,7 +14,8 @@ define([
 	renderer,
 	factory,
 	objects,
-	client
+	client,
+	sound
 ) {
 	return {
 		tpl: template,
@@ -52,6 +54,7 @@ define([
 			renderer.clean();
 			objects.onRezone();
 			renderer.buildTitleScreen();
+			sound.unload();
 
 			events.emit('onShowCharacterSelect');
 			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
