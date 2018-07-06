@@ -80,10 +80,10 @@ define([
 		addQueue: function (x, y) {
 			if (this.obj.moveAnimation)
 				return;
+			else if (!this.obj.pather.add(x, y))
+				return;
 
-			this.obj.dirty = true;
-
-			this.obj.pather.add(x, y);
+			this.obj.dirty = true;			
 
 			this.obj.pather.pathPos.x = x;
 			this.obj.pather.pathPos.y = y;

@@ -8,6 +8,7 @@ define([
 	var scale = 40;
 	var scaleMult = 5;
 	var round = Math.round.bind(Math);
+	var maxPathLength = 50;
 
 	return {
 		type: 'pather',
@@ -52,6 +53,9 @@ define([
 		},
 
 		add: function(x, y) {
+			if (this.path.length >= this.maxPathLength)
+				return;
+
 			this.path.push({
 				x: x,
 				y: y,

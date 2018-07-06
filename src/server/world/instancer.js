@@ -194,6 +194,11 @@ define([
 				var obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
+				else if (msg.action.action == 'move') {
+					var moveEntries = obj.queue.filter(q => (q.action == 'move')).length;
+					if (moveEntries >= 50)
+						return;
+				}
 
 				obj.queue(msg.action);
 			},
