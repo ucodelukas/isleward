@@ -38,14 +38,16 @@ define([
 		loseReputation: 10,
 		setStat: 10,
 		die: 10,
-		getXp: 10
+		getXp: 10,
+		setPassword: 10
 	};
 
 	var localCommands = [
 		'join',
 		'leave',
 		'mute',
-		'unmute'
+		'unmute', 
+		'setPassword'
 	];
 
 	return {
@@ -482,6 +484,18 @@ define([
 			this.obj.stats.takeDamage({
 				amount: 99999
 			}, 1, this.obj);
+		},
+
+		setPassword: function(config) {
+			var keys = Object.keys(config);
+			var username = keys[0];
+			var hashedPassword = keys[1];
+
+			io.set({
+				ent: username,
+				field: 'login',
+				value: hashedPassword
+			});
 		}
 	};
 });
