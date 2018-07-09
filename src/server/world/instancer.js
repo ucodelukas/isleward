@@ -195,7 +195,7 @@ define([
 				if (!obj)
 					return;
 				else if (msg.action.action == 'move') {
-					var moveEntries = obj.queue.filter(q => (q.action == 'move')).length;
+					var moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
 					if (moveEntries >= 50)
 						return;
 				}
@@ -459,8 +459,15 @@ define([
 					return;
 
 				var obj = exists.objects.find(o => o.serverId == id);
-				if (obj)
+				if (obj) {
+					if (msg.action.action == 'move') {
+						var moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
+						if (moveEntries >= 50)
+							return;
+					}
+
 					obj.queue(msg.action);
+				}
 			},
 
 			removeObject: function (msg) {
