@@ -53,7 +53,7 @@ define([
 		},
 
 		add: function(x, y) {
-			if (this.path.length >= this.maxPathLength)
+			if (this.path.length >= maxPathLength)
 				return;
 
 			this.path.push({
@@ -69,6 +69,8 @@ define([
 					h: scale - (scaleMult * 2)
 				})
 			});
+
+			return true;
 		},
 
 		update: function() {
