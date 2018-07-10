@@ -118,6 +118,9 @@ define([
 			//If we don't do this, the atlas will try to remove it from the thread
 			player.zoneName = null;
 			player.name = null;
+
+			//A hack to allow us to actually call methods again (like retrieve the player list)
+			player.dead = false;
 		},
 		logOut: function (exclude) {
 			var players = this.players;

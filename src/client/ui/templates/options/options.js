@@ -24,7 +24,6 @@ define([
 		modal: true,
 
 		postRender: function () {
-			//this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
 			this.el.find('.btnScreen').on('click', this.toggleScreen.bind(this));
