@@ -23,10 +23,10 @@ define([
 		},
 
 		onGetPortrait: function (portrait) {
-			var spritesheet = portrait.spritesheet || '../../../images/portraitIcons.png';
+			let spritesheet = portrait.spritesheet || '../../../images/portraitIcons.png';
 
-			var x = portrait.x * -64;
-			var y = portrait.y * -64;
+			let x = portrait.x * -64;
+			let y = portrait.y * -64;
 
 			this.find('.portrait')
 				.css({
@@ -36,9 +36,9 @@ define([
 		},
 
 		build: function () {
-			var stats = this.stats;
+			let stats = this.stats;
 
-			var boxes = this.find('.statBox');
+			let boxes = this.find('.statBox');
 
 			[
 				stats.hp / stats.hpMax,
@@ -53,11 +53,7 @@ define([
 			boxes.eq(0).find('.text').html(Math.floor(stats.hp) + '/' + ~~stats.hpMax);
 			boxes.eq(1).find('.text').html(Math.floor(stats.mana) + '/' + ~~stats.manaMax);
 
-			var level = stats.level;
-			if ((stats.originalLevel) && (stats.originalLevel != level))
-				level = stats.originalLevel + ' (' + stats.level + ')';
-
-			boxes.eq(2).find('.text').html('level: ' + level);
+			boxes.eq(2).find('.text').html('level: ' + stats.level);
 		}
-	}
+	};
 });

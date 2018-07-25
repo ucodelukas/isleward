@@ -7,7 +7,7 @@ define([
 	classes,
 	scheduler
 ) {
-	var baseStats = {
+	let baseStats = {
 		mana: 20,
 		manaMax: 20,
 
@@ -86,7 +86,6 @@ define([
 		type: 'stats',
 
 		values: baseStats,
-		originalValues: null,
 
 		statScales: {
 			vitToHp: 10,
@@ -111,15 +110,13 @@ define([
 		init: function (blueprint, isTransfer) {
 			this.syncer = this.obj.instance.syncer;
 
-			var values = (blueprint || {}).values || {};
-			for (var v in values) {
+			let values = (blueprint || {}).values || {};
+			for (var v in values) 
 				this.values[v] = values[v];
-			}
 
-			var stats = (blueprint || {}).stats || {};
-			for (var v in stats) {
+			let stats = (blueprint || {}).stats || {};
+			for (var v in stats) 
 				this.stats[v] = stats[v];
-			}
 
 			this.calcXpMax();
 
@@ -128,7 +125,7 @@ define([
 		},
 
 		resetHp: function () {
-			var values = this.values;
+			let values = this.values;
 			values.hp = values.hpMax;
 
 			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
@@ -138,27 +135,27 @@ define([
 			if (((this.obj.mob) && (!this.obj.follower)) || (this.obj.dead))
 				return;
 
-			var values = this.values;
+			let values = this.values;
 
-			var manaMax = values.manaMax;
+			let manaMax = values.manaMax;
 			manaMax -= (manaMax * values.manaReservePercent);
 
-			var regen = {
+			let regen = {
 				success: true
 			};
 			this.obj.fireEvent('beforeRegen', regen);
 			if (!regen.success)
 				return;
 
-			var isInCombat = (this.obj.aggro.list.length > 0);
+			let isInCombat = (this.obj.aggro.list.length > 0);
 			if (this.obj.follower) {
 				isInCombat = (this.obj.follower.master.aggro.list.length > 0);
 				if (isInCombat)
 					return;
 			}
 
-			var regenHp = 0;
-			var regenMana = 0;
+			let regenHp = 0;
+			let regenMana = 0;
 
 			regenMana = values.regenMana / 50;
 
@@ -195,12 +192,12 @@ define([
 		},
 
 		addStat: function (stat, value) {
-			var values = this.values;
+			let values = this.values;
 
 			if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
 				values[stat] += value;
 
-			var sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
+			let sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
 
 			this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, values[stat]);
 			if (sendOnlyToSelf)
@@ -214,20 +211,20 @@ define([
 				var morphStat = stat.substr(3);
 				morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 				this.addStat(morphStat, value);
-			} else if (stat == 'vit') {
+			} else if (stat == 'vit') 
 				this.addStat('hpMax', (value * this.statScales.vitToHp));
-			} else if (stat == 'allAttributes') {
+			 else if (stat == 'allAttributes') {
 				['int', 'str', 'dex'].forEach(function (s) {
-					this.addStat(s, value)
+					this.addStat(s, value);
 				}, this);
 			} else if (stat == 'elementAllResist') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
-					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
+					let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
 					this.addStat(element, value);
 				}, this);
 			} else if (stat == 'elementPercent') {
 				['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
-					var element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
+					let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
 					this.addStat(element, value);
 				}, this);
 			} else if (stat == 'str')
@@ -241,7 +238,7 @@ define([
 		},
 
 		calcXpMax: function () {
-			var level = (this.originalValues || this.values).level;
+			let level = this.values.level;
 			this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
 
 			this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
@@ -250,13 +247,13 @@ define([
 		//Source is the object that caused you to gain xp (mostly yourself)
 		//Target is the source of the xp (a mob or quest)
 		getXp: function (amount, source, target) {
-			var obj = this.obj;
-			var values = this.values;
+			let obj = this.obj;
+			let values = this.values;
 
-			if ((this.originalValues || this.values).level == 20)
+			if (values.level == 20)
 				return;
 
-			var xpEvent = {
+			let xpEvent = {
 				source: source,
 				target: target,
 				amount: amount
@@ -279,32 +276,26 @@ define([
 				text: '+' + amount + ' xp'
 			});
 
-			var syncO = {};
-			var didLevelUp = false;
+			let syncO = {};
+			let didLevelUp = false;
 
 			while (values.xp >= values.xpMax) {
 				didLevelUp = true;
 				values.xp -= values.xpMax;
 				this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
-				if (this.originalValues) {
-					this.originalValues.level++;
-				}
 
-				if (values.originalLevel)
-					values.originalLevel++;
 				values.level++;
 
-				this.obj.fireEvent('onLevelUp', (this.originalValues || this.values).level);
+				this.obj.fireEvent('onLevelUp', this.values.level);
 
-				if ((this.originalValues || this.values).level == 20)
+				if (values.level == 20)
 					values.xp = 0;
 
 				values.hpMax = values.level * 32.7;
 
-				var gainStats = classes.stats[this.obj.class].gainStats;
-				for (var s in gainStats) {
+				let gainStats = classes.stats[this.obj.class].gainStats;
+				for (let s in gainStats) 
 					this.addStat(s, gainStats[s]);
-				}
 
 				this.obj.spellbook.calcDps();
 
@@ -314,13 +305,13 @@ define([
 					text: 'level up'
 				});
 
-				syncO.level = (this.originalValues || this.values).level;
+				syncO.level = values.level;
 
 				this.calcXpMax();
 			}
 
 			if (didLevelUp) {
-				var cellContents = obj.instance.physics.getCell(obj.x, obj.y);
+				let cellContents = obj.instance.physics.getCell(obj.x, obj.y);
 				cellContents.forEach(function (c) {
 					c.fireEvent('onCellPlayerLevelUp', obj);
 				});
@@ -335,24 +326,10 @@ define([
 			});
 
 			if (didLevelUp) {
-				var maxLevel = this.obj.instance.zone.level[1]
-				if (maxLevel < (this.originalValues || values).level) {
-					this.rescale(maxLevel, false);
-				} else {
-					this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'level', this.values.level);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
-					this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
-					this.obj.syncer.setObject(false, 'stats', 'values', 'level', this.values.level);
-					this.obj.syncer.setObject(true, 'stats', 'values', 'originalLevel', this.values.originalLevel);
-				}
-			}
-
-			var originalValues = this.originalValues;
-			if (originalValues) {
-				originalValues.xp = values.xp;
-				originalValues.xpMax = values.xpMax;
-				originalValues.xpTotal = values.xpTotal;
+				this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+				this.obj.syncer.setObject(true, 'stats', 'values', 'level', values.level);
+				this.obj.syncer.setObject(false, 'stats', 'values', 'hpMax', values.hpMax);
+				this.obj.syncer.setObject(false, 'stats', 'values', 'level', values.level);
 			}
 		},
 
@@ -360,29 +337,29 @@ define([
 			if (target.player)
 				return;
 
-			var level = target.stats.values.level;
-			var mobDiffMult = 1;
+			let level = target.stats.values.level;
+			let mobDiffMult = 1;
 			if (target.isRare)
 				mobDiffMult = 2;
 			else if (target.isChampion)
 				mobDiffMult = 5;
 
 			//Who should get xp?
-			var aggroList = target.aggro.list;
-			var hpMax = target.stats.values.hpMax;
-			var aLen = aggroList.length;
-			for (var i = 0; i < aLen; i++) {
+			let aggroList = target.aggro.list;
+			let hpMax = target.stats.values.hpMax;
+			let aLen = aggroList.length;
+			for (let i = 0; i < aLen; i++) {
 				var a = aggroList[i];
-				var dmg = a.damage;
+				let dmg = a.damage;
 				if (dmg <= 0)
 					continue;
 
-				var mult = 1;
+				let mult = 1;
 				//How many party members contributed
 				// Remember, maybe one of the aggro-ees might be a mob too
 				var party = a.obj.social ? a.obj.social.party : null;
 				if (party) {
-					var partySize = aggroList.filter(function (f) {
+					let partySize = aggroList.filter(function (f) {
 						return ((a.damage > 0) && (party.indexOf(f.obj.serverId) > -1));
 					}).length;
 					partySize--;
@@ -393,10 +370,10 @@ define([
 					//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 					//Mobs that are farther then 10 levels from you, give no xp
 					//We don't currently do this for quests/herb gathering
-					var sourceLevel = a.obj.stats.values.level;
-					var levelDelta = level - sourceLevel;
+					let sourceLevel = a.obj.stats.values.level;
+					let levelDelta = level - sourceLevel;
 
-					var amount = null;
+					let amount = null;
 					if (Math.abs(levelDelta) <= 10)
 						amount = ~~(((sourceLevel + levelDelta) * 10) * Math.pow(1 - (Math.abs(levelDelta) / 10), 2) * mult * mobDiffMult);
 					else
@@ -411,7 +388,7 @@ define([
 
 		die: function (source) {
 			var obj = this.obj;
-			var values = this.values;
+			let values = this.values;
 
 			this.syncer.queue('onGetDamage', {
 				id: obj.id,
@@ -422,14 +399,14 @@ define([
 			obj.syncer.set(true, null, 'dead', true);
 
 			var obj = obj;
-			var syncO = obj.syncer.o;
+			let syncO = obj.syncer.o;
 
 			obj.hidden = true;
 			obj.nonSelectable = true;
 			syncO.hidden = true;
 			syncO.nonSelectable = true;
 
-			var xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+			let xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
 
 			values.xp -= xpLoss;
 			obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
@@ -453,11 +430,11 @@ define([
 		respawn: function () {
 			this.obj.syncer.set(true, null, 'dead', false);
 
-			var obj = this.obj;
-			var syncO = obj.syncer.o;
+			let obj = this.obj;
+			let syncO = obj.syncer.o;
 
 			this.obj.dead = false;
-			var values = this.values;
+			let values = this.values;
 
 			values.hp = values.hpMax;
 			values.mana = values.manaMax;
@@ -503,7 +480,7 @@ define([
 			if (this.obj.destroyed)
 				return;
 
-			var amount = damage.amount;
+			let amount = damage.amount;
 
 			if (amount > this.values.hp)
 				amount = this.values.hp;
@@ -511,7 +488,7 @@ define([
 			damage.dealt = amount;
 
 			this.values.hp -= amount;
-			var recipients = [];
+			let recipients = [];
 			if (this.obj.serverId != null)
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
@@ -541,18 +518,18 @@ define([
 
 			this.obj.aggro.tryEngage(source, amount, threatMult);
 
-			var died = (this.values.hp <= 0);
+			let died = (this.values.hp <= 0);
 
 			if (died) {
-				var death = {
+				let death = {
 					success: true
 				};
 				this.obj.fireEvent('beforeDeath', death);
 
 				if (death.success) {
-					var deathEvent = {};
+					let deathEvent = {};
 
-					var killSource = source;
+					let killSource = source;
 
 					if (source.follower)
 						killSource = source.follower.master;
@@ -587,7 +564,7 @@ define([
 							this.obj.spellbook.die();
 						this.obj.destroyed = true;
 
-						var deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
+						let deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
 						if (deathAnimation) {
 							this.obj.instance.syncer.queue('onGetObject', {
 								x: this.obj.x,
@@ -597,10 +574,10 @@ define([
 						}
 
 						if (this.obj.inventory) {
-							var aggroList = this.obj.aggro.list;
-							var aLen = aggroList.length;
-							for (var i = 0; i < aLen; i++) {
-								var a = aggroList[i];
+							let aggroList = this.obj.aggro.list;
+							let aLen = aggroList.length;
+							for (let i = 0; i < aLen; i++) {
+								let a = aggroList[i];
 
 								if ((!a.threat) || (a.obj.serverId == null))
 									continue;
@@ -620,16 +597,16 @@ define([
 		},
 
 		getHp: function (heal, source) {
-			var amount = heal.amount;
+			let amount = heal.amount;
 			if (amount == 0)
 				return;
 
-			var threatMult = heal.threatMult;
+			let threatMult = heal.threatMult;
 			if (!heal.hasOwnProperty('threatMult'))
 				threatMult = 1;
 
-			var values = this.values;
-			var hpMax = values.hpMax;
+			let values = this.values;
+			let hpMax = values.hpMax;
 
 			if (values.hp >= hpMax)
 				return;
@@ -641,7 +618,7 @@ define([
 			if (values.hp > hpMax)
 				values.hp = hpMax;
 
-			var recipients = [];
+			let recipients = [];
 			if (this.obj.serverId != null)
 				recipients.push(this.obj.serverId);
 			if (source.serverId != null)
@@ -657,11 +634,11 @@ define([
 			}
 
 			//Add aggro to all our attackers
-			var threat = amount * 0.4 * threatMult;
-			var aggroList = this.obj.aggro.list;
-			var aLen = aggroList.length;
-			for (var i = 0; i < aLen; i++) {
-				var a = aggroList[i].obj;
+			let threat = amount * 0.4 * threatMult;
+			let aggroList = this.obj.aggro.list;
+			let aLen = aggroList.length;
+			for (let i = 0; i < aLen; i++) {
+				let a = aggroList[i].obj;
 				a.aggro.tryEngage(source, threat);
 			}
 
@@ -674,7 +651,7 @@ define([
 				delete this.sessionDuration;
 			}
 
-			var values = extend(true, {}, this.originalValues || this.values);
+			let values = extend(true, {}, this.values);
 			values.hp = this.values.hp;
 			values.mana = this.values.mana;
 
@@ -686,10 +663,10 @@ define([
 		},
 
 		simplify: function (self) {
-			var values = this.values;
+			let values = this.values;
 
 			if (!self) {
-				var result = {
+				let result = {
 					type: 'stats',
 					values: {
 						hp: values.hp,
@@ -700,127 +677,48 @@ define([
 					}
 				};
 
-				return result
+				return result;
 			}
 
 			return {
 				type: 'stats',
 				values: values,
-				originalValues: this.originalValues,
 				stats: this.stats,
 				vitScale: this.vitScale
 			};
 		},
 
 		onLogin: function () {
-			var stats = this.stats;
-			var time = scheduler.getTime();
+			let stats = this.stats;
+			let time = scheduler.getTime();
 			stats.lastLogin = time;
 
 			this.obj.instance.mail.getMail(this.obj.name);
 		},
 
-		rescale: function (level, isMob) {
-			if (level > this.values.level)
-				level = this.values.level;
-
-			var sync = this.obj.syncer.setObject.bind(this.obj.syncer);
-
-			var oldHp = this.values.hp;
-			var oldXp = this.values.xp;
-			var oldXpTotal = this.values.xpTotal;
-			var oldXpMax = this.values.xpMax;
-
-			if (!this.originalValues)
-				this.originalValues = extend(true, {}, this.values);
-
-			var oldValues = this.values;
-			var newValues = extend(true, {}, baseStats);
-			newValues.level = level;
-			newValues.originalLevel = (this.originalValues || oldValues).level;
-
-			this.values = newValues;
-
-			var gainStats = classes.stats[this.obj.class].gainStats;
-			for (var s in gainStats) {
-				this.addStat(s, (gainStats[s] * level));
-			}
-
-			newValues.hpMax = level * 32.7;
-			if (isMob)
-				newValues.hpMax = ~~(newValues.hpMax * (level / 10));
-
-			newValues.hp = oldHp;
-			var resetHp = false;
-			if (newValues.hp > newValues.hpMax) {
-				resetHp = true;
-				newValues.hp = newValues.hpMax;
-			}
-
-			newValues.xp = oldXp;
-			newValues.xpMax = oldXpMax;
-			newValues.xpTotal = oldXpTotal;
-
-			var addStats = this.obj.equipment.rescale(level);
-			for (var p in addStats) {
-				var statName = p;
-
-				this.addStat(statName, addStats[p]);
-			}
-
-			this.obj.passives.applyPassives();
-
-			if (resetHp)
-				newValues.hp = newValues.hpMax;
-
-			this.obj.spellbook.calcDps();
-
-			var publicStats = [
-				'hp',
-				'hpMax',
-				'mana',
-				'manaMax',
-				'level'
-			];
-
-			for (var p in newValues) {
-				sync(true, 'stats', 'values', p, newValues[p]);
-				if (publicStats.indexOf(p) > -1)
-					sync(false, 'stats', 'values', p, newValues[p]);
-			}
-		},
-
 		getKillStreakCoefficient: function (mobName) {
-			var killStreak = this.stats.mobKillStreaks[mobName];
+			let killStreak = this.stats.mobKillStreaks[mobName];
 			if (!killStreak)
 				return 1;
-			else
-				return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
+			return Math.max(0, (10000 - Math.pow(killStreak, 2)) / 10000);
 		},
 
 		canGetMobLoot: function (mob) {
 			if (!mob.inventory.dailyDrops)
 				return true;
 
-			var lootStats = this.stats.lootStats[mob.name];
-			var time = scheduler.getTime();
-			if (!lootStats) {
+			let lootStats = this.stats.lootStats[mob.name];
+			let time = scheduler.getTime();
+			if (!lootStats) 
 				this.stats.lootStats[mob.name] = time;
-			} else
+			 else
 				return ((lootStats.day != time.day), (lootStats.month != time.month));
 		},
 
 		events: {
-			transferComplete: function () {
-				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel > this.obj.stats.values.level)
-					maxLevel = this.obj.stats.values.level;
-				this.obj.stats.rescale(maxLevel);
-			},
-
 			afterKillMob: function (mob) {
-				var mobKillStreaks = this.stats.mobKillStreaks;
-				var mobName = mob.name;
+				let mobKillStreaks = this.stats.mobKillStreaks;
+				let mobName = mob.name;
 
 				if (!mobKillStreaks[mobName])
 					mobKillStreaks.mobName = 0;
@@ -828,7 +726,7 @@ define([
 				if (mobKillStreaks[mobName] < 100)
 					mobKillStreaks[mobName]++;
 
-				for (var p in mobKillStreaks) {
+				for (let p in mobKillStreaks) {
 					if (p == mobName)
 						continue;
 
@@ -856,9 +754,9 @@ define([
 			},
 
 			afterMove: function (event) {
-				var mobKillStreaks = this.stats.mobKillStreaks;
+				let mobKillStreaks = this.stats.mobKillStreaks;
 
-				for (var p in mobKillStreaks) {
+				for (let p in mobKillStreaks) {
 					mobKillStreaks[p] -= 0.085;
 					if (mobKillStreaks[p] <= 0)
 						delete mobKillStreaks[p];

@@ -20,7 +20,7 @@ define([
 		},
 
 		build: function (skipPush, clientObj) {
-			var o = extend(true, {}, objBase);
+			let o = extend(true, {}, objBase);
 
 			if (clientObj)
 				o.update = null;
@@ -37,39 +37,35 @@ define([
 		},
 
 		transferObject: function (o) {
-			var obj = this.build();
+			let obj = this.build();
 
-			var components = o.components;
+			let components = o.components;
 			delete o.components;
 			delete o.id;
 
-			for (var p in o) {
+			for (var p in o) 
 				obj[p] = o[p];
-			}
 
-			var cLen = components.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = components[i];
+			let cLen = components.length;
+			for (let i = 0; i < cLen; i++) {
+				let c = components[i];
 
-				var cpn = obj.addComponent(c.type, null, true);
+				let cpn = obj.addComponent(c.type, null, true);
 
-				for (var p in c) {
+				for (var p in c) 
 					cpn[p] = c[p];
-				}
 
 				if (cpn.transfer)
 					cpn.transfer();
 			}
 
-			obj.fireEvent('transferComplete');
-
 			return obj;
 		},
 
 		buildObjects: function (list, skipPush) {
-			var lLen = list.length;
-			for (var i = 0; i < lLen; i++) {
-				var l = list[i];
+			let lLen = list.length;
+			for (let i = 0; i < lLen; i++) {
+				let l = list[i];
 
 				var obj = this.build(skipPush, l.clientObj);
 
@@ -92,7 +88,7 @@ define([
 				//TODO: Clean this part up
 				var properties = extend(true, {}, l.properties);
 				['cpnMob'].forEach(function (c) {
-					var blueprint = properties[c] || null;
+					let blueprint = properties[c] || null;
 					if ((blueprint) && (typeof (blueprint) == 'string'))
 						blueprint = JSON.parse(blueprint);
 
@@ -101,7 +97,7 @@ define([
 
 					delete properties[c];
 
-					var type = c.replace('cpn', '').toLowerCase();
+					let type = c.replace('cpn', '').toLowerCase();
 
 					obj.addComponent(type, blueprint);
 				}, this);
@@ -112,29 +108,29 @@ define([
 						continue;
 					}
 
-					var type = p.replace('cpn', '');
+					let type = p.replace('cpn', '');
 					type = type[0].toLowerCase() + type.substr(1);
-					var blueprint = properties[p] || null;
+					let blueprint = properties[p] || null;
 					if ((blueprint) && (typeof (blueprint) == 'string'))
 						blueprint = JSON.parse(blueprint);
 
 					obj.addComponent(type, blueprint);
 				}
 
-				var extraProperties = l.extraProperties || {};
+				let extraProperties = l.extraProperties || {};
 				for (var p in extraProperties) {
-					var cpn = obj[p];
-					var e = extraProperties[p];
-					for (var pp in e) {
+					let cpn = obj[p];
+					let e = extraProperties[p];
+					for (let pp in e) 
 						cpn[pp] = e[pp];
-					}
+					
 					if (cpn.init)
 						cpn.init();
 				}
 
 				if ((this.physics) && (!obj.dead)) {
 					if (!obj.width)
-					this.physics.addObject(obj, obj.x, obj.y);
+						this.physics.addObject(obj, obj.x, obj.y);
 					else
 						this.physics.addRegion(obj);
 				}
@@ -152,14 +148,14 @@ define([
 		},
 
 		removeObject: function (obj, callback, useServerId) {
-			var objects = this.objects;
-			var oLen = objects.length
-			var found = null;
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
-				var match = false;
+			let objects = this.objects;
+			let oLen = objects.length;
+			let found = null;
+			for (let i = 0; i < oLen; i++) {
+				let o = objects[i];
+				let match = false;
 				if (useServerId)
-					match = (o.serverId == obj.id)
+					match = (o.serverId == obj.id);
 				else
 					match = (o.id == obj.id);
 
@@ -171,7 +167,7 @@ define([
 				}
 			}
 
-			var physics = this.physics;
+			let physics = this.physics;
 			if (physics) {
 				if (!found.width)
 					physics.removeObject(found, found.x, found.y);
@@ -183,26 +179,24 @@ define([
 		},
 
 		addObject: function (o, callback) {
-			var newO = this.build(true);
+			let newO = this.build(true);
 
-			var components = o.components;
+			let components = o.components;
 
 			delete o.components;
 
-			for (var p in o) {
+			for (var p in o) 
 				newO[p] = o[p];
-			}
 
-			var len = components.length;
-			for (var i = 0; i < len; i++) {
-				var c = components[i];
+			let len = components.length;
+			for (let i = 0; i < len; i++) {
+				let c = components[i];
 
 				newO.addComponent(c.type, c);
 
-				var newC = newO[c.type];
-				for (var p in c) {
+				let newC = newO[c.type];
+				for (var p in c) 
 					newC[p] = c[p];
-				}
 			}
 
 			this.objects.push(newO);
@@ -214,7 +208,7 @@ define([
 			return newO;
 		},
 		sendEvent: function (msg) {
-			var player = this.objects.find(p => p.id == msg.id);
+			let player = this.objects.find(p => p.id == msg.id);
 			if (!player)
 				return;
 
@@ -224,38 +218,39 @@ define([
 			});
 		},
 		sendEvents: function (msg) {
-			var players = {};
-			var objects = this.objects;
+			let players = {};
+			let objects = this.objects;
 
-			var data = msg.data;
-			for (var e in data) {
-				var event = data[e];
-				var eLen = event.length;
+			let data = msg.data;
+			for (let e in data) {
+				let event = data[e];
+				let eLen = event.length;
 
-				for (var j = 0; j < eLen; j++) {
-					var eventEntry = event[j];
+				for (let j = 0; j < eLen; j++) {
+					let eventEntry = event[j];
 
-					var obj = eventEntry.obj;
+					let obj = eventEntry.obj;
 
 					if (e != 'serverModule') {
-						var to = eventEntry.to;
-						var toLen = to.length;
-						for (var i = 0; i < toLen; i++) {
+						let to = eventEntry.to;
+						let toLen = to.length;
+						for (let i = 0; i < toLen; i++) {
 							var toId = to[i];
 
 							var player = players[toId];
 							if (!player) {
-								var findPlayer = objects.find(o => o.id == toId);
+								let findPlayer = objects.find(o => o.id == toId);
 								if (!findPlayer)
 									continue;
-								else
+								else {
 									player = (players[toId] = {
 										socket: findPlayer.socket,
 										events: {}
 									});
+								}
 							}
 
-							var eventList = player.events[e] || (player.events[e] = []);
+							let eventList = player.events[e] || (player.events[e] = []);
 							eventList.push(obj);
 						}
 					} else
@@ -263,20 +258,19 @@ define([
 				}
 			}
 
-			for (var p in players) {
+			for (let p in players) {
 				var player = players[p];
 				player.socket.emit('events', player.events);
 			}
 		},
 		updateObject: function (msg) {
-			var player = this.objects.find(p => p.id == msg.serverId);
+			let player = this.objects.find(p => p.id == msg.serverId);
 			if (!player)
 				return;
 
-			var obj = msg.obj;
-			for (var p in obj) {
+			let obj = msg.obj;
+			for (let p in obj) 
 				player[p] = obj[p];
-			}
 
 			if (obj.dead)
 				leaderboard.killCharacter(player.name);
@@ -309,11 +303,11 @@ define([
 		},
 
 		update: function () {
-			var objects = this.objects;
-			var len = objects.length;
+			let objects = this.objects;
+			let len = objects.length;
 
-			for (var i = 0; i < len; i++) {
-				var o = objects[i];
+			for (let i = 0; i < len; i++) {
+				let o = objects[i];
 
 				//Don't remove it from the list if it's destroyed, but don't update it either
 				//That's syncer's job
