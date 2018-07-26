@@ -1,4 +1,4 @@
-let itemGenerator = require('items/generator');
+let itemGenerator = require('../../items/generator');
 
 module.exports = {
 	mapFile: null,
@@ -11,7 +11,7 @@ module.exports = {
 	},
 
 	init: function () {
-		this.mapFile = require.nodeRequire('../../../mods/event-xmas/maps/fjolarok/map');
+		this.mapFile = require('./maps/fjolarok/map');
 		this.mapW = this.mapFile.width;
 		this.mapH = this.mapFile.height;
 

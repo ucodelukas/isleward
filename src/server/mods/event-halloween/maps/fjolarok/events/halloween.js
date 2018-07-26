@@ -1,5 +1,3 @@
-let mtx = require('mtx/mtx');
-
 let dropsConfig = {
 	//mtx
 	summonPumpkinSkeleton: {

@@ -1,6 +1,6 @@
-let animations = require('config/animations');
-let itemGenerator = require('items/generator');
-let combat = require('combat/combat');
+let animations = require('../config/animations');
+let itemGenerator = require('../items/generator');
+let combat = require('../combat/combat');
 
 module.exports = {
 	build: function (mob, blueprint, scaleDrops, type, zoneName) {

@@ -1,4 +1,4 @@
-let objects = require('objects/objects');
+let objects = require('../objects/objects');
 let physics = require('world/physics');
 let spawners = require('world/spawners');
 let resourceSpawner = require('world/resourceSpawner');

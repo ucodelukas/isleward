@@ -1,9 +1,9 @@
 let fileLister = require('../misc/fileLister');
 let childProcess = require('child_process');
-let objects = require('objects/objects');
-let mapList = require('config/maps/mapList');
-let connections = require('security/connections');
-let serverConfig = require('config/serverConfig');
+let objects = require('../objects/objects');
+let mapList = require('../config/maps/mapList');
+let connections = require('../security/connections');
+let serverConfig = require('../config/serverConfig');
 
 module.exports = {
 	nextId: 0,

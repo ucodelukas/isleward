@@ -1,15 +1,15 @@
-let g1 = require('items/generators/level'); 
-let g2 = require('items/generators/quality'); 
-let g3 = require('items/generators/slots'); 
-let g4 = require('items/generators/types'); 
-let g5 = require('items/generators/stats'); 
-let g6 = require('items/generators/names'); 
-let g7 = require('items/generators/worth'); 
-let g8 = require('items/generators/quantity'); 
-let g9 = require('items/generators/spellbook'); 
-let g10 = require('items/generators/currency'); 
-let g11 = require('items/generators/effects'); 
-let g12 = require('items/generators/attrRequire');
+let g1 = require('./generators/level'); 
+let g2 = require('./generators/quality'); 
+let g3 = require('./generators/slots'); 
+let g4 = require('./generators/types'); 
+let g5 = require('./generators/stats'); 
+let g6 = require('./generators/names'); 
+let g7 = require('./generators/worth'); 
+let g8 = require('./generators/quantity'); 
+let g9 = require('./generators/spellbook'); 
+let g10 = require('./generators/currency'); 
+let g11 = require('./generators/effects'); 
+let g12 = require('./generators/attrRequire');
 
 let generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
 let materialGenerators = [g6, g8];

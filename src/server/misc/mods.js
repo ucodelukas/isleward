@@ -1,8 +1,8 @@
-let fileLister = require('misc/fileLister');
-let events = require('misc/events');
+let fileLister = require('../misc/fileLister');
+let events = require('../misc/events');
 let util = require('util');
 
-var cbDone = cbDone;
+let cbDone = null;
 
 module.exports = {
 	waiting: {},
@@ -13,7 +13,8 @@ module.exports = {
 
 		modList.forEach(function (m) {
 			this.waiting[m] = 0;
-			require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
+			let mod = require('../mods/' + m + '/index');
+			this.onGetMod(m, mod);
 		}, this);
 	},
 
@@ -26,8 +27,10 @@ module.exports = {
 		let lLen = list.length;
 		this.waiting[name] = lLen;
 
-		for (let i = 0; i < lLen; i++) 
-			require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));
+		for (let i = 0; i < lLen; i++) {
+			let extra = require('../mods/' + name + '/' + list[i]);
+			this.onGetExtra.bind(name, mod, extra);
+		}
 
 		if (this.waiting[name] == 0) {
 			mod.init();

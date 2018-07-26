@@ -1,4 +1,4 @@
-let events = require('misc/events');
+let events = require('../misc/events');
 
 module.exports = {
 	mappings: {

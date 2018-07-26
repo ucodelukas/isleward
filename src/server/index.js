@@ -1,23 +1,23 @@
-let globals = require('globals');
-let server = require('server');
-let atlas = require('world/atlas');
-let components = require('components/components');
-let leaderboard = require('leaderboard/leaderboard');
-let io = require('security/io');
-let mods = require('misc/mods');
-let mtx = require('mtx/mtx');
-let animations = require('config/animations');
-let skins = require('config/skins');
-let factions = require('config/factions');
-let classes = require('config/spirits');
-let spellsConfig = require('config/spellsConfig');
-let spells = require('config/spells');
-let itemTypes = require('items/config/types');
-let sheets = require('security/sheets');
+let globals = require('./globals');
+let server = require('./server');
+let atlas = require('./world/atlas');
+let components = require('./components/components');
+let leaderboard = require('./leaderboard/leaderboard');
+let io = require('./security/io');
+let mods = require('./misc/mods');
+let mtx = require('./mtx/mtx');
+let animations = require('./config/animations');
+let skins = require('./config/skins');
+let factions = require('./config/factions');
+let classes = require('./config/spirits');
+let spellsConfig = require('./config/spellsConfig');
+let spells = require('./config/spells');
+let itemTypes = require('./items/config/types');
+let sheets = require('./security/sheets');
 
 global.io = true;
 
-module.exports = {
+var startup = {
 	init: function () {
 		io.init(this.onDbReady.bind(this));
 	},
@@ -55,6 +55,7 @@ module.exports = {
 	},
 
 	onError: function (e) {
+		console.log(e);
 		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 			return;
 
@@ -70,3 +71,5 @@ module.exports = {
 		});
 	}
 };
+
+startup.init();

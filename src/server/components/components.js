@@ -1,5 +1,5 @@
-let fileLister = require('misc/fileLister');
-let events = require('misc/events');
+let fileLister = require('../misc/fileLister');
+let events = require('../misc/events');
 let pathUtilities = require('path');
 
 let onReady = null;

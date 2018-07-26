@@ -1,12 +1,6 @@
-define([
-
-], function (
-
-) {
-	return [
-		'cave',
-		'estuary',
-		'sewer',
-		'fjolarok'
-	];
-});
+module.exports = [
+	'cave',
+	'estuary',
+	'sewer',
+	'fjolarok'
+];

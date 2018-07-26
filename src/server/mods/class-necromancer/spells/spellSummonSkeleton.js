@@ -1,4 +1,4 @@
-let mobBuilder = require('world/mobBuilder');
+let mobBuilder = require('../../../world/mobBuilder');
 
 module.exports = {
 	type: 'summonSkeleton',

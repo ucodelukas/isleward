@@ -1,6 +1,6 @@
 let map = require('world/map');
 let syncer = require('world/syncer');
-let objects = require('objects/objects');
+let objects = require('../objects/objects');
 let spawners = require('world/spawners');
 let physics = require('world/physics');
 let resourceSpawner = require('world/resourceSpawner');

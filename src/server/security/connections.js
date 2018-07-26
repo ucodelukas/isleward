@@ -1,4 +1,4 @@
-let objects = require('objects/objects');
+let objects = require('../objects/objects');
 
 module.exports = {
 	players: [],

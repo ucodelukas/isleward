@@ -1,8 +1,8 @@
 global.io = true;
 
 let extend = require('extend');
-let helpers = require('misc/helpers');
-let components = require('components/components');
+let helpers = require('../misc/helpers');
+let components = require('../components/components');
 let instancer = require('world/instancer');
 let io = require('security/io');
 let mods = require('misc/mods');

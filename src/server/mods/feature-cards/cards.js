@@ -1,4 +1,4 @@
-let itemGenerator = require('items/generator');
+let itemGenerator = require('../../items/generator');
 
 let config = {
 	'Runecrafter\'s Toil': {

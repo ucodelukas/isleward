@@ -1,4 +1,4 @@
-let cards = require('mods/feature-cards/cards');
+let cards = require('./cards');
 
 module.exports = {
 	name: 'Feature: Cards',

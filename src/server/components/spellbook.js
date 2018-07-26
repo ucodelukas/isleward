@@ -1,7 +1,7 @@
-let spellTemplate = require('./../config/spells/spellTemplate');
-let animations = require('./../config/animations');
-let playerSpells = require('./../config/spells');
-let playerSpellsConfig = require('./../config/spellsConfig');
+let spellTemplate = require('../config/spells/spellTemplate');
+let animations = require('../config/animations');
+let playerSpells = require('../config/spells');
+let playerSpellsConfig = require('../config/spellsConfig');
 
 module.exports = {
 	type: 'spellbook',

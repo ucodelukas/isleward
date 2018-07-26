@@ -1,5 +1,5 @@
-let config = require('config/serverConfig');
-let router = require('security/router');
+let config = require('./config/serverConfig');
+let router = require('./security/router');
 
 module.exports = {
 	init: function (callback) {

@@ -1,4 +1,4 @@
-let components = require('components/components');
+let components = require('../components/components');
 
 module.exports = {
 	components: [],
