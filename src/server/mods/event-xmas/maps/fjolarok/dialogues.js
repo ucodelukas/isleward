@@ -1,9 +1,3 @@
-define([
+module.exports = {
 
-], function (
-
-) {
-	return {
-
-	};
-});
+};

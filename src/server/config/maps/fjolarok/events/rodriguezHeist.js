@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'Rodriguez Heist',
-	description: `Rodriguez, the Hermit's only chicken companion, has been kidnapped by a band of imps. Who knows what they plan on doing with him.`,
+	description: 'Rodriguez, the Hermit\'s only chicken companion, has been kidnapped by a band of imps. Who knows what they plan on doing with him.',
 	distance: -1,
 	cron: '0 */2 * * *',
 	disabled: true,
@@ -66,17 +66,17 @@ module.exports = {
 		config: [{
 			type: 'mobTalk',
 			id: 'impthief-1',
-			text: `Boss! They're onto us!`,
+			text: 'Boss! They\'re onto us!',
 			delay: 10
 		}, {
 			type: 'mobTalk',
 			id: 'impthief-2',
-			text: `They'll take the chicken. We needs it!`,
+			text: 'They\'ll take the chicken. We needs it!',
 			delay: 10
 		}, {
 			type: 'mobTalk',
 			id: 'imp-kingpin',
-			text: `They'll never have her, she's ours now! Kill them!`,
+			text: 'They\'ll never have her, she\'s ours now! Kill them!',
 			delay: 10
 		}, {
 			type: 'addComponents',
@@ -94,7 +94,7 @@ module.exports = {
 		config: [{
 			type: 'mobTalk',
 			id: 'imp-kingpin',
-			text: `I have a thousand more imps. Come, I'll finish this now.`,
+			text: 'I have a thousand more imps. Come, I\'ll finish this now.',
 			delay: 10
 		}, {
 			type: 'addComponents',
@@ -117,7 +117,7 @@ module.exports = {
 		}, {
 			type: 'mobTalk',
 			id: 'imp-kingpin',
-			text: `Aargh, no! I must get to my lair!`,
+			text: 'Aargh, no! I must get to my lair!',
 			delay: 10
 		}]
 	}, {

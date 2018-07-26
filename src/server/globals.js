@@ -1,31 +1,21 @@
-define([
-	'extend',
-	'security/connections',
-	'misc/helpers',
-	'items/lootRoller',
-	'world/atlas',
-	'leaderboard/leaderboard',
-	'config/clientConfig'
-], function (
-	extend,
-	cons,
-	helpers,
-	lootRoller,
-	atlas,
-	leaderboard,
-	clientConfig
-) {
-	return {
-		init: function () {
-			global.extend = extend;
-			global.cons = cons;
-			global._ = helpers;
-			global.lootRoller = lootRoller;
-			global.atlas = atlas;
-			global.leaderboard = leaderboard;
-			global.clientConfig = clientConfig;
+let extend = require('extend');
+let cons = require('security/connections');
+let helpers = require('misc/helpers');
+let lootRoller = require('items/lootRoller');
+let atlas = require('world/atlas');
+let leaderboard = require('leaderboard/leaderboard');
+let clientConfig = require('config/clientConfig');
 
-			clientConfig.init();
-		}
-	};
-});
+module.exports = {
+	init: function () {
+		global.extend = extend;
+		global.cons = cons;
+		global._ = helpers;
+		global.lootRoller = lootRoller;
+		global.atlas = atlas;
+		global.leaderboard = leaderboard;
+		global.clientConfig = clientConfig;
+
+		clientConfig.init();
+	}
+};

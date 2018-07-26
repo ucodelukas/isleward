@@ -1,77 +1,71 @@
-define([
+module.exports = {
+	type: 'iceSpear',
 
-], function (
+	cdMax: 7,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'iceSpear',
+	range: 9,
 
-		cdMax: 7,
-		manaCost: 0,
+	speed: 70,
+	damage: 1,
 
-		range: 9,
+	freezeDuration: 10,
 
-		speed: 70,
-		damage: 1,
+	needLos: true,
 
-		freezeDuration: 10,
+	cast: function (action) {
+		let obj = this.obj;
+		let target = action.target;
 
-		needLos: true,
+		let ttl = Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed;
 
-		cast: function (action) {
-			var obj = this.obj;
-			var target = action.target;
+		let projectileConfig = {
+			caster: this.obj.id,
+			components: [{
+				idSource: this.obj.id,
+				idTarget: target.id,
+				type: 'projectile',
+				row: 3,
+				col: 0,
+				ttl: ttl,
+				particles: this.particles
+			}, {
+				type: 'attackAnimation',
+				layer: 'projectiles',
+				loop: -1,
+				row: 3,
+				col: 4
+			}]
+		};
 
-			var ttl = Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed;
+		this.obj.fireEvent('beforeSpawnProjectile', this, projectileConfig);
 
-			var projectileConfig = {
-				caster: this.obj.id,
-				components: [{
-					idSource: this.obj.id,
-					idTarget: target.id,
-					type: 'projectile',
-					row: 3,
-					col: 0,
-					ttl: ttl,
-					particles: this.particles
-				}, {
-					type: 'attackAnimation',
-					layer: 'projectiles',
-					loop: -1,
-					row: 3,
-					col: 4
-				}]
-			};
+		this.sendAnimation(projectileConfig);
 
-			this.obj.fireEvent('beforeSpawnProjectile', this, projectileConfig);
+		this.sendBump(target);
 
-			this.sendAnimation(projectileConfig);
+		this.queueCallback(this.explode.bind(this, target), ttl);
 
-			this.sendBump(target);
+		return true;
+	},
+	explode: function (target) {
+		if (this.obj.destroyed)
+			return;
 
-			this.queueCallback(this.explode.bind(this, target), ttl);
+		let targetEffect = target.effects.addEffect({
+			type: 'slowed',
+			ttl: this.freezeDuration
+		});
 
-			return true;
-		},
-		explode: function (target) {
-			if (this.obj.destroyed)
-				return;
-
-			var targetEffect = target.effects.addEffect({
-				type: 'slowed',
-				ttl: this.freezeDuration
+		if (targetEffect) {
+			this.obj.instance.syncer.queue('onGetDamage', {
+				id: target.id,
+				event: true,
+				text: 'slowed'
 			});
-
-			if (targetEffect) {
-				this.obj.instance.syncer.queue('onGetDamage', {
-					id: target.id,
-					event: true,
-					text: 'slowed'
-				});
-			}
-
-			var damage = this.getDamage(target);
-			target.stats.takeDamage(damage, this.threatMult, this.obj);
 		}
-	};
-});
+
+		let damage = this.getDamage(target);
+		target.stats.takeDamage(damage, this.threatMult, this.obj);
+	}
+};

@@ -1,84 +1,78 @@
-define([
-	'google-spreadsheet',
-	'./creds',
-	'./sheetsConfig'
-], function (
-	googleSheets,
-	creds,
-	sheetsConfig
-) {
-	return {
-		doc: null,
-		sheet: null,
+let googleSheets = require('google-spreadsheet');
+let creds = require('./creds');
+let sheetsConfig = require('./sheetsConfig');
 
-		records: null,
+module.exports = {
+	doc: null,
+	sheet: null,
 
-		init: function () {
-			if (sheetsConfig.roles) {
-				this.update = function () {};
-				this.onGetRows(null, sheetsConfig.roles);
-				return;
-			}
+	records: null,
 
-			this.doc = new googleSheets(sheetsConfig.sheetId);
-			this.doc.useServiceAccountAuth(creds, this.onAuth.bind(this));
-		},
+	init: function () {
+		if (sheetsConfig.roles) {
+			this.update = function () {};
+			this.onGetRows(null, sheetsConfig.roles);
+			return;
+		}
 
-		onAuth: function () {
-			this.doc.getInfo(this.onGetInfo.bind(this));
-		},
+		this.doc = new googleSheets(sheetsConfig.sheetId);
+		this.doc.useServiceAccountAuth(creds, this.onAuth.bind(this));
+	},
 
-		onGetInfo: function () {
-			if (!this.doc.worksheets) {
-				setTimeout(this.onAuth.bind(this), 300000);
-				return;
-			}
+	onAuth: function () {
+		this.doc.getInfo(this.onGetInfo.bind(this));
+	},
 
-			this.sheet = this.doc.worksheets[0];
+	onGetInfo: function () {
+		if (!this.doc.worksheets) {
+			setTimeout(this.onAuth.bind(this), 300000);
+			return;
+		}
 
-			this.update();
-		},
+		this.sheet = this.doc.worksheets[0];
 
-		getRecord: function (name) {
-			return (this.records || []).find(r => (r.username == name));
-		},
+		this.update();
+	},
 
-		onGetRows: function (err, rows) {
-			if (rows) {
-				try {
-					var records = (rows || []).map(function (r) {
-						var o = {};
-						Object.keys(r).forEach(function (p) {
-							if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
-								return;
+	getRecord: function (name) {
+		return (this.records || []).find(r => (r.username == name));
+	},
 
-							o[p] = r[p];
-						});
+	onGetRows: function (err, rows) {
+		if (rows) {
+			try {
+				let records = (rows || []).map(function (r) {
+					let o = {};
+					Object.keys(r).forEach(function (p) {
+						if (['id', 'app:edited', '_links', '_xml', 'save', 'del'].indexOf(p) > -1)
+							return;
 
-						o.messageStyle = o.messagestyle;
-						delete o.messagestyle;
-						o.messagePrefix = o.messageprefix;
-						delete o.messageprefix;
-
-						if (typeof (o.items) == 'string')
-							o.items = JSON.parse(o.items || "[]");
-						if (typeof (o.skins) == 'string')
-							o.skins = JSON.parse(o.skins || "[]");
-
-						return o;
+						o[p] = r[p];
 					});
 
-					this.records = records;
-				} catch (e) {
-					console.log('Sheets in error state');
-				}
+					o.messageStyle = o.messagestyle;
+					delete o.messagestyle;
+					o.messagePrefix = o.messageprefix;
+					delete o.messageprefix;
+
+					if (typeof (o.items) == 'string')
+						o.items = JSON.parse(o.items || '[]');
+					if (typeof (o.skins) == 'string')
+						o.skins = JSON.parse(o.skins || '[]');
+
+					return o;
+				});
+
+				this.records = records;
+			} catch (e) {
+				console.log('Sheets in error state');
 			}
-
-			setTimeout(this.update.bind(this), 300000)
-		},
-
-		update: function () {
-			this.sheet.getRows({}, this.onGetRows.bind(this));
 		}
-	};
-});
+
+		setTimeout(this.update.bind(this), 300000);
+	},
+
+	update: function () {
+		this.sheet.getRows({}, this.onGetRows.bind(this));
+	}
+};

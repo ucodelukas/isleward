@@ -1,55 +1,51 @@
-define([
-	'mods/feature-cards/cards'
-], function (
-	cards
-) {
-	return {
-		name: 'Feature: Cards',
+let cards = require('mods/feature-cards/cards');
 
-		extraScripts: [
-			'cards'
-		],
+module.exports = {
+	name: 'Feature: Cards',
 
-		init: function () {
-			cards.init();
+	extraScripts: [
+		'cards'
+	],
 
-			this.events.on('onBeforeDropBag', this.onBeforeDropBag.bind(this));
-			this.events.on('onGetCardSetReward', this.onGetCardSetReward.bind(this));
-			this.events.on('onBeforeGetItem', this.onBeforeGetItem.bind(this));
-		},
+	init: function () {
+		cards.init();
 
-		onBeforeDropBag: function (dropper, items, looter) {
-			if (!looter.player)
-				return;
+		this.events.on('onBeforeDropBag', this.onBeforeDropBag.bind(this));
+		this.events.on('onGetCardSetReward', this.onGetCardSetReward.bind(this));
+		this.events.on('onBeforeGetItem', this.onBeforeGetItem.bind(this));
+	},
 
-			var dropEvent = {
-				chanceMultiplier: 1,
-				source: dropper
-			};
-			looter.fireEvent('beforeGenerateLoot', dropEvent);
-			if (Math.random() >= dropEvent.chanceMultiplier)
-				return;
+	onBeforeDropBag: function (dropper, items, looter) {
+		if (!looter.player)
+			return;
 
-			var res = cards.getCard(looter, dropper);
-			if (!res)
-				return;
+		let dropEvent = {
+			chanceMultiplier: 1,
+			source: dropper
+		};
+		looter.fireEvent('beforeGenerateLoot', dropEvent);
+		if (Math.random() >= dropEvent.chanceMultiplier)
+			return;
 
-			items.push(res);
-		},
+		let res = cards.getCard(looter, dropper);
+		if (!res)
+			return;
 
-		onBeforeGetItem: function (item, obj) {
-			if ((!obj.player) && (item.type != 'Reward Card'))
-				return;
+		items.push(res);
+	},
 
-			cards.fixCard(item);
-		},
+	onBeforeGetItem: function (item, obj) {
+		if ((!obj.player) && (item.type != 'Reward Card'))
+			return;
 
-		onGetCardSetReward: function (set, obj) {
-			var reward = cards.getReward(obj, set);
-			if (!reward.push)
-				reward = [reward];
+		cards.fixCard(item);
+	},
 
-			reward.forEach(r => obj.inventory.getItem(r));
-		}
-	};
-});
+	onGetCardSetReward: function (set, obj) {
+		let reward = cards.getReward(obj, set);
+		if (!reward.push)
+			reward = [reward];
+
+		reward.forEach(r => obj.inventory.getItem(r));
+	}
+};

@@ -1,9 +1,3 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'rare'	
-	};
-});
+module.exports = {
+	type: 'rare'	
+};

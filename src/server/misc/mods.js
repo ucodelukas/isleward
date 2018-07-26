@@ -1,60 +1,53 @@
-define([
-	'misc/fileLister',
-	'misc/events',
-	'util'
-], function (
-	fileLister,
-	events,
-	util
-) {
-	var cbDone = cbDone;
+let fileLister = require('misc/fileLister');
+let events = require('misc/events');
+let util = require('util');
 
-	return {
-		waiting: {},
+var cbDone = cbDone;
 
-		init: function (_cbDone) {
-			cbDone = _cbDone;
-			var modList = fileLister.getFolderList('mods');
+module.exports = {
+	waiting: {},
 
-			modList.forEach(function (m) {
-				this.waiting[m] = 0;
-				require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
-			}, this);
-		},
+	init: function (_cbDone) {
+		cbDone = _cbDone;
+		let modList = fileLister.getFolderList('mods');
 
-		onGetMod: function (name, mod) {
-			mod.events = events;
-			mod.folderName = 'server/mods/' + name;
-			mod.relativeFolderName = 'mods/' + name;
+		modList.forEach(function (m) {
+			this.waiting[m] = 0;
+			require(['mods/' + m + '/index'], this.onGetMod.bind(this, m));
+		}, this);
+	},
 
-			var list = (mod.extraScripts || []);
-			var lLen = list.length;
-			this.waiting[name] = lLen;
+	onGetMod: function (name, mod) {
+		mod.events = events;
+		mod.folderName = 'server/mods/' + name;
+		mod.relativeFolderName = 'mods/' + name;
 
-			for (var i = 0; i < lLen; i++) {
-				require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));;
-			}
+		let list = (mod.extraScripts || []);
+		let lLen = list.length;
+		this.waiting[name] = lLen;
 
-			if (this.waiting[name] == 0) {
-				mod.init();
-				delete this.waiting[name];
+		for (let i = 0; i < lLen; i++) 
+			require(['mods/' + name + '/' + list[i]], this.onGetExtra.bind(this, name, mod));
 
-				if (Object.keys(this.waiting).length == 0)
-					cbDone();
-			}
-		},
+		if (this.waiting[name] == 0) {
+			mod.init();
+			delete this.waiting[name];
 
-		onGetExtra: function (name, mod, extra) {
-			extra.folderName = 'server/mods/' + name;
-
-			this.waiting[name]--;
-			if (this.waiting[name] == 0) {
-				mod.init();
-				delete this.waiting[name];
-
-				if (Object.keys(this.waiting).length == 0)
-					cbDone();
-			}
+			if (Object.keys(this.waiting).length == 0)
+				cbDone();
 		}
-	};
-});
+	},
+
+	onGetExtra: function (name, mod, extra) {
+		extra.folderName = 'server/mods/' + name;
+
+		this.waiting[name]--;
+		if (this.waiting[name] == 0) {
+			mod.init();
+			delete this.waiting[name];
+
+			if (Object.keys(this.waiting).length == 0)
+				cbDone();
+		}
+	}
+};

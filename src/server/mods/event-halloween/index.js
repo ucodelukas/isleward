@@ -141,7 +141,7 @@ define([
 
 		onBeforeGetAnimations: function (animations) {
 			//Skeleton animations
-			var mobsheet = `${this.folderName}/images/mobs.png`;
+			let mobsheet = `${this.folderName}/images/mobs.png`;
 			if (!animations.mobs[mobsheet])
 				animations.mobs[mobsheet] = {};
 
@@ -188,13 +188,13 @@ define([
 			if (info.map != 'fjolarok')
 				return;
 
-			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
+			let layer = this.mapFile.layers.find(l => (l.name == info.layer));
 			if (layer) {
-				var offset = this.mapOffset;
-				var mapScale = this.mapFile.tilesets[0].tileheight;
+				let offset = this.mapOffset;
+				let mapScale = this.mapFile.tilesets[0].tileheight;
 
 				layer.objects.forEach(function (l) {
-					var newO = extend(true, {}, l);
+					let newO = extend(true, {}, l);
 					newO.x += (offset.x * mapScale);
 					newO.y += (offset.y * mapScale);
 
@@ -207,16 +207,16 @@ define([
 			if (info.map != 'fjolarok')
 				return;
 
-			var offset = this.mapOffset;
+			let offset = this.mapOffset;
 
-			var x = info.x;
-			var y = info.y;
+			let x = info.x;
+			let y = info.y;
 
 			if ((x - offset.x < 0) || (y - offset.y < 0) || (x - offset.x >= this.mapW) || (y - offset.y >= this.mapH))
 				return;
 
-			var i = ((y - offset.y) * this.mapW) + (x - offset.x);
-			var layer = this.mapFile.layers.find(l => (l.name == info.layer));
+			let i = ((y - offset.y) * this.mapW) + (x - offset.x);
+			let layer = this.mapFile.layers.find(l => (l.name == info.layer));
 			if (layer)
 				info.cell = layer.data[i];
 		},
@@ -231,7 +231,7 @@ define([
 
 		onAfterGetZone: function (zone, config) {
 			try {
-				var modZone = require(this.relativeFolderName + '/maps/' + zone + '/zone.js');
+				let modZone = require(this.relativeFolderName + '/maps/' + zone + '/zone.js');
 				extend(true, config, modZone);
 			} catch (e) {
 
@@ -240,7 +240,7 @@ define([
 
 		onBeforeGetDialogue: function (zone, config) {
 			try {
-				var modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
+				let modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
 				extend(true, config, modDialogue);
 			} catch (e) {
 

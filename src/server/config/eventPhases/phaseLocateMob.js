@@ -1,56 +1,50 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		mobs: null,
+module.exports = {
+	mobs: null,
 
-		init: function() {
-			if (!this.mobs.push)
-				this.mobs = [ this.mobs ];
+	init: function () {
+		if (!this.mobs.push)
+			this.mobs = [ this.mobs ];
 
-			var mobs = this.mobs;
+		let mobs = this.mobs;
 
-			var objects = this.instance.objects.objects;
-			var oLen = objects.length;
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
-				var index = mobs.indexOf(o.id);
-				if (index == -1)
-					continue;
+		let objects = this.instance.objects.objects;
+		let oLen = objects.length;
+		for (let i = 0; i < oLen; i++) {
+			let o = objects[i];
+			let index = mobs.indexOf(o.id);
+			if (index == -1)
+				continue;
 
-				mobs.splice(index, 1, o);
-			}
-		},
+			mobs.splice(index, 1, o);
+		}
+	},
 
-		update: function() {
-			var players = this.instance.objects.objects.filter(function(o) {
-				return o.player;
-			});
-			var pLen = players.length;
+	update: function () {
+		let players = this.instance.objects.objects.filter(function (o) {
+			return o.player;
+		});
+		let pLen = players.length;
 
-			var distance = this.distance;
+		let distance = this.distance;
 
-			var mobs = this.mobs;
-			var mLen = mobs.length;
-			for (var i = 0; i < mLen; i++) {
-				var m = mobs[i];
+		let mobs = this.mobs;
+		let mLen = mobs.length;
+		for (let i = 0; i < mLen; i++) {
+			let m = mobs[i];
 
-				for (var j = 0; j < pLen; j++) {
-					var p = players[j];
+			for (let j = 0; j < pLen; j++) {
+				let p = players[j];
 
-					if ((Math.abs(p.x - m.x) <= distance) && (Math.abs(p.y - m.y) <= distance)) {
-						mobs.splice(i, 1);
-						mLen--;
-						i--;
-						break;
-					}
+				if ((Math.abs(p.x - m.x) <= distance) && (Math.abs(p.y - m.y) <= distance)) {
+					mobs.splice(i, 1);
+					mLen--;
+					i--;
+					break;
 				}
 			}
+		}
 
-			if (mobs.length == 0)
-				this.end = true;
-		}	
-	};
-});
+		if (mobs.length == 0)
+			this.end = true;
+	}	
+};

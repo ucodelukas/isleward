@@ -9,7 +9,7 @@ module.exports = {
 		msg: 'How will we ever get across?'
 	}],
 	'cultist veleif': [{
-		msg: `How about we try and jump?`
+		msg: 'How about we try and jump?'
 	}, {
 		msg: '*scratches his head*'
 	}, {
@@ -17,7 +17,7 @@ module.exports = {
 	}, {
 		msg: 'This is useless'
 	}],
-	'cultist': [{
+	cultist: [{
 		msg: '*pockets a small crystal*'
 	}, {
 		msg: '*sighs*'

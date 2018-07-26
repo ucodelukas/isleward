@@ -1,27 +1,21 @@
-define([
+module.exports = {
+	type: 'regenMana',
 
-], function (
+	amount: 1,
 
-) {
-	return {
-		type: 'regenMana',
+	init: function () {
+		this.obj.stats.addStat('regenMana', this.amount);
+	},
 
-		amount: 1,
+	destroy: function () {
+		this.obj.stats.addStat('regenMana', -this.amount);
+	},
 
-		init: function () {
-			this.obj.stats.addStat('regenMana', this.amount);
-		},
+	update: function () {
 
-		destroy: function () {
-			this.obj.stats.addStat('regenMana', -this.amount);
-		},
+	},
 
-		update: function () {
+	events: {
 
-		},
-
-		events: {
-
-		}
-	};
-});
+	}
+};

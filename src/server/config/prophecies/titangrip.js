@@ -1,42 +1,38 @@
-define([
-	'items/generators/stats'
-], function (
-	generatorStats
-) {
-	return {
-		type: 'titangrip',
+let generatorStats = require('items/generators/stats');
 
-		init: function () {
+module.exports = {
+	type: 'titangrip',
 
+	init: function () {
+
+	},
+
+	simplify: function () {
+		return this.type;
+	},
+
+	events: {
+		afterEquipItem: function (item) {
+			if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
+				return;
+
+			let stats = item.stats;
+			for (let s in stats) {
+				let val = stats[s];
+
+				this.obj.stats.addStat(s, val);
+			}
 		},
+		afterUnequipItem: function (item) {
+			if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
+				return;
 
-		simplify: function () {
-			return this.type;
-		},
+			let stats = item.stats;
+			for (let s in stats) {
+				let val = stats[s];
 
-		events: {
-			afterEquipItem: function (item) {
-				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
-					return;
-
-				let stats = item.stats;
-				for (let s in stats) {
-					let val = stats[s];
-
-					this.obj.stats.addStat(s, val);
-				}
-			},
-			afterUnequipItem: function (item) {
-				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
-					return;
-
-				let stats = item.stats;
-				for (let s in stats) {
-					let val = stats[s];
-
-					this.obj.stats.addStat(s, -val);
-				}
+				this.obj.stats.addStat(s, -val);
 			}
 		}
-	};
-});
+	}
+};

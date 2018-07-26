@@ -1,167 +1,161 @@
-define([
+let cpnSmokePatch = {
+	type: 'smokePatch',
 
-], function (
+	contents: [],
 
-) {
-	var cpnSmokePatch = {
-		type: 'smokePatch',
+	applyDamage: function (o, amount) {
+		o.stats.takeDamage(amount, 1, this.caster);
+	},
 
-		contents: [],
+	collisionEnter: function (o) {
+		if (!o.aggro)
+			return;
 
-		applyDamage: function (o, amount) {
-			o.stats.takeDamage(amount, 1, this.caster);
-		},
+		if (!this.caster.aggro.canAttack(o))
+			return;
 
-		collisionEnter: function (o) {
-			if (!o.aggro)
+		this.contents.push(o);
+	},
+
+	collisionExit: function (o) {
+		let contents = this.contents;
+		let cLen = contents.length;
+		for (let i = 0; i < cLen; i++) {
+			if (contents[i] == o) {
+				contents.splice(i, 1);
 				return;
-
-			if (!this.caster.aggro.canAttack(o))
-				return;
-
-			this.contents.push(o);
-		},
-
-		collisionExit: function (o) {
-			var contents = this.contents;
-			var cLen = contents.length;
-			for (var i = 0; i < cLen; i++) {
-				if (contents[i] == o) {
-					contents.splice(i, 1);
-					return;
-				}
-			}
-		},
-
-		update: function () {
-			if (this.caster.destroyed)
-				return;
-
-			var stats = this.caster.stats;
-
-			var contents = this.contents;
-			for (var i = 0; i < contents.length; i++) {
-				var c = contents[i];
-
-				if (!c) {
-					console.log('NO SMOKEBOMB TARGET');
-					console.log(this.obj.name, this.obj.x, this.obj.y);
-				} else {
-					var damage = this.getDamage(c);
-					this.applyDamage(c, damage);
-				}
 			}
 		}
-	};
+	},
 
-	return {
-		type: 'smokeBomb',
+	update: function () {
+		if (this.caster.destroyed)
+			return;
 
-		cdMax: 20,
-		manaCost: 0,
+		let stats = this.caster.stats;
 
-		damage: 1,
-		duration: 10,
+		let contents = this.contents;
+		for (let i = 0; i < contents.length; i++) {
+			let c = contents[i];
 
-		radius: 1,
-		targetGround: true,
-
-		update: function () {
-			var selfCast = this.selfCast;
-
-			if (!selfCast)
-				return;
-
-			if ((selfCast !== true) && (Math.random() >= selfCast))
-				return;
-
-			if (this.canCast()) {
-				this.cd = this.cdMax;
-				this.cast();
+			if (!c) {
+				console.log('NO SMOKEBOMB TARGET');
+				console.log(this.obj.name, this.obj.x, this.obj.y);
+			} else {
+				let damage = this.getDamage(c);
+				this.applyDamage(c, damage);
 			}
-		},
+		}
+	}
+};
 
-		cast: function (action) {
-			var obj = this.obj;
+module.exports = {
+	type: 'smokeBomb',
 
-			var radius = this.radius;
+	cdMax: 20,
+	manaCost: 0,
 
-			var repeat = this.repeat || 1;
+	damage: 1,
+	duration: 10,
 
-			for (var r = 0; r < repeat; r++) {
-				var x = obj.x;
-				var y = obj.y;
+	radius: 1,
+	targetGround: true,
 
-				if (this.randomPos) {
-					var range = this.range;
-					while ((x == obj.x) && (y == obj.y)) {
-						x = obj.x + ~~(Math.random() * range * 2) - range;
-						y = obj.y + ~~(Math.random() * range * 2) - range;
-					}
+	update: function () {
+		let selfCast = this.selfCast;
+
+		if (!selfCast)
+			return;
+
+		if ((selfCast !== true) && (Math.random() >= selfCast))
+			return;
+
+		if (this.canCast()) {
+			this.cd = this.cdMax;
+			this.cast();
+		}
+	},
+
+	cast: function (action) {
+		let obj = this.obj;
+
+		let radius = this.radius;
+
+		let repeat = this.repeat || 1;
+
+		for (let r = 0; r < repeat; r++) {
+			let x = obj.x;
+			let y = obj.y;
+
+			if (this.randomPos) {
+				let range = this.range;
+				while ((x == obj.x) && (y == obj.y)) {
+					x = obj.x + ~~(Math.random() * range * 2) - range;
+					y = obj.y + ~~(Math.random() * range * 2) - range;
 				}
+			}
 
-				var objects = this.obj.instance.objects;
-				var patches = [];
+			let objects = this.obj.instance.objects;
+			let patches = [];
 
-				var physics = this.obj.instance.physics;
+			let physics = this.obj.instance.physics;
 
-				for (var i = x - radius; i <= x + radius; i++) {
-					var dx = Math.abs(x - i);
-					for (var j = y - radius; j <= y + radius; j++) {
-						var distance = dx + Math.abs(j - y);
+			for (let i = x - radius; i <= x + radius; i++) {
+				let dx = Math.abs(x - i);
+				for (let j = y - radius; j <= y + radius; j++) {
+					let distance = dx + Math.abs(j - y);
 
-						if (distance > radius + 1)
-							continue;
+					if (distance > radius + 1)
+						continue;
 
-						if (!physics.hasLos(x, y, i, j))
-							continue;
+					if (!physics.hasLos(x, y, i, j))
+						continue;
 
-						var patch = objects.buildObjects([{
-							x: i,
-							y: j,
-							properties: {
-								cpnHealPatch: cpnSmokePatch,
-								cpnParticles: {
-									simplify: function () {
-										return {
-											type: 'particles',
-											blueprint: this.blueprint
-										};
-									},
-									blueprint: this.particles
-								}
-							},
-							extraProperties: {
-								smokePatch: {
-									caster: obj,
-									statType: this.statType,
-									getDamage: this.getDamage.bind(this)
-								}
+					let patch = objects.buildObjects([{
+						x: i,
+						y: j,
+						properties: {
+							cpnHealPatch: cpnSmokePatch,
+							cpnParticles: {
+								simplify: function () {
+									return {
+										type: 'particles',
+										blueprint: this.blueprint
+									};
+								},
+								blueprint: this.particles
 							}
-						}]);
+						},
+						extraProperties: {
+							smokePatch: {
+								caster: obj,
+								statType: this.statType,
+								getDamage: this.getDamage.bind(this)
+							}
+						}
+					}]);
 
-						patches.push(patch);
-					}
+					patches.push(patch);
 				}
-
-				if (!this.castEvent) {
-					this.sendBump({
-						x: x,
-						y: y - 1
-					});
-				}
-
-				this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 			}
 
-			return true;
-		},
-		endEffect: function (patches) {
-			var pLen = patches.length;
-			for (var i = 0; i < pLen; i++) {
-				patches[i].destroyed = true;
+			if (!this.castEvent) {
+				this.sendBump({
+					x: x,
+					y: y - 1
+				});
 			}
-			patches = null;
+
+			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 		}
-	};
-});
+
+		return true;
+	},
+	endEffect: function (patches) {
+		let pLen = patches.length;
+		for (let i = 0; i < pLen; i++) 
+			patches[i].destroyed = true;
+		
+		patches = null;
+	}
+};

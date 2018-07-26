@@ -1,195 +1,187 @@
-define([
-	'config/spells/spellCallbacks',
-	'combat/combat'
-], function (
-	spellCallbacks,
-	combat
-) {
-	return {
-		cd: 0,
-		cdMax: 0,
-		manaCost: 1,
-		threatMult: 1,
+let spellCallbacks = require('config/spells/spellCallbacks');
+let combat = require('combat/combat');
 
-		needLos: false,
+module.exports = {
+	cd: 0,
+	cdMax: 0,
+	manaCost: 1,
+	threatMult: 1,
 
-		pendingAttacks: [],
+	needLos: false,
 
-		castBase: function () {
-			if (this.cd > 0)
-				return false;
-			else if (this.manaCost > this.obj.stats.values.mana)
-				return false;
-			else
-				return true;
-		},
+	pendingAttacks: [],
 
-		canCast: function (target) {
-			if (this.cd > 0)
-				return false;
-			else if (this.manaCost > this.obj.stats.values.mana)
-				return false;
-			else if (!target)
-				return true;
-			else {
-				var inRange = true;
-				if (this.range != null) {
-					var obj = this.obj;
-					var distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
-					inRange = (distance <= this.range);
-				}
+	castBase: function () {
+		if (this.cd > 0)
+			return false;
+		else if (this.manaCost > this.obj.stats.values.mana)
+			return false;
+		return true;
+	},
 
-				return inRange;
-			}
-		},
+	canCast: function (target) {
+		if (this.cd > 0)
+			return false;
+		else if (this.manaCost > this.obj.stats.values.mana)
+			return false;
+		else if (!target)
+			return true;
+		
+		let inRange = true;
+		if (this.range != null) {
+			let obj = this.obj;
+			let distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
+			inRange = (distance <= this.range);
+		}
 
-		updateBase: function () {
-			if (this.cd > 0)
-				this.cd--;
-		},
+		return inRange;
+	},
 
-		calcDps: function (target, noSync) {
-			if ((!this.values) || (this.spellType == 'buff'))
-				return;
+	updateBase: function () {
+		if (this.cd > 0)
+			this.cd--;
+	},
 
-			if ((!this.damage) && (!this.healing))
-				delete this.values.dps;
-			else {
-				var noMitigate = !target;
+	calcDps: function (target, noSync) {
+		if ((!this.values) || (this.spellType == 'buff'))
+			return;
 
-				var dmg = combat.getDamage({
-					source: this.obj,
-					target: (target || {
-						stats: {
-							values: {}
-						}
-					}),
-					damage: (this.damage || this.healing) * (this.dmgMult || 1),
-					cd: this.cdMax,
-					element: this.element,
-					statType: this.statType,
-					statMult: this.statMult,
-					noMitigate: noMitigate,
-					noCrit: true
-				}).amount;
+		if ((!this.damage) && (!this.healing))
+			delete this.values.dps;
+		else {
+			let noMitigate = !target;
 
-				var isAttack = (this.type == 'melee');
-
-				var statValues = this.obj.stats.values;
-
-				var critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
-				var critMultiplier = 100 + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
-				var attackSpeed = (statValues.attackSpeed / 100);
-				attackSpeed += 1;
-
-				dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
-				var duration = this.values.duration;
-				if (duration) {
-					dmg *= duration;
-				}
-
-				dmg /= this.cdMax;
-
-				if (this.damage) {
-					this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
-				} else
-					this.values.heal = ~~(dmg * 100) / 100 + '/tick';
-
-				if (!noSync)
-					this.obj.syncer.setArray(true, 'spellbook', 'getSpells', this.simplify());
-			}
-		},
-
-		sendAnimation: function (blueprint) {
-			this.obj.instance.syncer.queue('onGetObject', blueprint);
-		},
-
-		sendBump: function (target) {
-			var x = this.obj.x;
-			var y = this.obj.y;
-
-			var tx = target.x;
-			var ty = target.y;
-
-			var deltaX = 0;
-			var deltaY = 0;
-
-			if (tx < x)
-				deltaX = -1;
-			else if (tx > x)
-				deltaX = 1;
-
-			if (ty < y)
-				deltaY = -1;
-			else if (ty > y)
-				deltaY = 1;
-
-			var components = [{
-				type: 'bumpAnimation',
-				deltaX: deltaX,
-				deltaY: deltaY
-			}];
-
-			if (this.animation) {
-				components.push({
-					type: 'animation',
-					template: this.animation
-				});
-			}
-
-			this.obj.instance.syncer.queue('onGetObject', {
-				id: this.obj.id,
-				components: components
-			});
-		},
-
-		simplify: function (self) {
-			var values = {};
-			for (var p in this) {
-				var value = this[p];
-				if ((typeof (value) == 'function') || (p == 'obj'))
-					continue;
-
-				values[p] = value;
-			}
-
-			if (this.animation)
-				values.animation = this.animation.name;
-			if (this.values)
-				values.values = this.values;
-
-			if (this.onAfterSimplify)
-				this.onAfterSimplify(values);
-
-			return values;
-		},
-
-		getDamage: function (target, noMitigate) {
-			var damage = {
+			let dmg = combat.getDamage({
 				source: this.obj,
-				target: target,
+				target: (target || {
+					stats: {
+						values: {}
+					}
+				}),
 				damage: (this.damage || this.healing) * (this.dmgMult || 1),
 				cd: this.cdMax,
 				element: this.element,
 				statType: this.statType,
 				statMult: this.statMult,
-				isAttack: (this.type == 'melee'),
-				noMitigate: noMitigate
-			};
+				noMitigate: noMitigate,
+				noCrit: true
+			}).amount;
 
-			this.obj.fireEvent('onBeforeCalculateDamage', damage);
+			let isAttack = (this.type == 'melee');
 
-			var damage = combat.getDamage(damage);
+			let statValues = this.obj.stats.values;
 
-			return damage;
-		},
+			let critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
+			let critMultiplier = 100 + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
+			let attackSpeed = (statValues.attackSpeed / 100);
+			attackSpeed += 1;
 
-		queueCallback: function (callback, delay, destroyCallback, target, destroyOnRezone) {
-			return this.obj.spellbook.registerCallback(this.obj.id, callback, delay, destroyCallback, target ? target.id : null, destroyOnRezone);
-		},
+			dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
+			let duration = this.values.duration;
+			if (duration) 
+				dmg *= duration;
 
-		die: function () {
-			this.obj.spellbook.unregisterCallback(this.obj.id);
+			dmg /= this.cdMax;
+
+			if (this.damage) 
+				this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
+			 else
+				this.values.heal = ~~(dmg * 100) / 100 + '/tick';
+
+			if (!noSync)
+				this.obj.syncer.setArray(true, 'spellbook', 'getSpells', this.simplify());
 		}
-	};
-});
+	},
+
+	sendAnimation: function (blueprint) {
+		this.obj.instance.syncer.queue('onGetObject', blueprint);
+	},
+
+	sendBump: function (target) {
+		let x = this.obj.x;
+		let y = this.obj.y;
+
+		let tx = target.x;
+		let ty = target.y;
+
+		let deltaX = 0;
+		let deltaY = 0;
+
+		if (tx < x)
+			deltaX = -1;
+		else if (tx > x)
+			deltaX = 1;
+
+		if (ty < y)
+			deltaY = -1;
+		else if (ty > y)
+			deltaY = 1;
+
+		let components = [{
+			type: 'bumpAnimation',
+			deltaX: deltaX,
+			deltaY: deltaY
+		}];
+
+		if (this.animation) {
+			components.push({
+				type: 'animation',
+				template: this.animation
+			});
+		}
+
+		this.obj.instance.syncer.queue('onGetObject', {
+			id: this.obj.id,
+			components: components
+		});
+	},
+
+	simplify: function (self) {
+		let values = {};
+		for (let p in this) {
+			let value = this[p];
+			if ((typeof (value) == 'function') || (p == 'obj'))
+				continue;
+
+			values[p] = value;
+		}
+
+		if (this.animation)
+			values.animation = this.animation.name;
+		if (this.values)
+			values.values = this.values;
+
+		if (this.onAfterSimplify)
+			this.onAfterSimplify(values);
+
+		return values;
+	},
+
+	getDamage: function (target, noMitigate) {
+		var damage = {
+			source: this.obj,
+			target: target,
+			damage: (this.damage || this.healing) * (this.dmgMult || 1),
+			cd: this.cdMax,
+			element: this.element,
+			statType: this.statType,
+			statMult: this.statMult,
+			isAttack: (this.type == 'melee'),
+			noMitigate: noMitigate
+		};
+
+		this.obj.fireEvent('onBeforeCalculateDamage', damage);
+
+		var damage = combat.getDamage(damage);
+
+		return damage;
+	},
+
+	queueCallback: function (callback, delay, destroyCallback, target, destroyOnRezone) {
+		return this.obj.spellbook.registerCallback(this.obj.id, callback, delay, destroyCallback, target ? target.id : null, destroyOnRezone);
+	},
+
+	die: function () {
+		this.obj.spellbook.unregisterCallback(this.obj.id);
+	}
+};

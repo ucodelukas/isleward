@@ -1,67 +1,43 @@
-define([
-
-], function (
-
-) {
-	return {
-		type: 'syncer',
-		o: {
+module.exports = {
+	type: 'syncer',
+	o: {
+		components: []
+	},
+	oSelf: {
+		components: []
+	},
+	reset: function () {
+		this.o = {
 			components: []
-		},
-		oSelf: {
+		};
+
+		this.oSelf = {
 			components: []
-		},
-		reset: function () {
-			this.o = {
-				components: []
-			};
+		};
+	},
+	get: function (self) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
 
-			this.oSelf = {
-				components: []
-			};
-		},
-		get: function (self) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
+		let keys = Object.keys(o);
+		if (o.components.length == 0) {
+			if (keys.length == 1)
+				return null;
+			delete o.components;
+		}
 
-			var keys = Object.keys(o);
-			if (o.components.length == 0) {
-				if (keys.length == 1)
-					return null;
-				else
-					delete o.components;
-			}
+		o.id = this.obj.id;
 
-			o.id = this.obj.id;
+		return o;
+	},
+	set: function (self, cpnType, property, value) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
 
-			return o;
-		},
-		set: function (self, cpnType, property, value) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
-
-			if (cpnType) {
-				var cpn = o.components.find(c => (c.type == cpnType))
-
-				if (!cpn) {
-					cpn = {
-						type: cpnType
-					};
-					o.components.push(cpn);
-				}
-
-				cpn[property] = value;
-			} else {
-				o[property] = value;
-			}
-		},
-		setObject: function (self, cpnType, object, property, value) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
-			var cpn = o.components.find(c => (c.type == cpnType))
+		if (cpnType) {
+			let cpn = o.components.find(c => (c.type == cpnType));
 
 			if (!cpn) {
 				cpn = {
@@ -70,62 +46,77 @@ define([
 				o.components.push(cpn);
 			}
 
-			var obj = cpn[object];
-			if (!obj) {
-				obj = {};
-				cpn[object] = obj;
-			}
+			cpn[property] = value;
+		} else 
+			o[property] = value;
+	},
+	setObject: function (self, cpnType, object, property, value) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
+		let cpn = o.components.find(c => (c.type == cpnType));
 
-			obj[property] = value;
-		},
-		setArray: function (self, cpnType, property, value, noDuplicate) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
-			var cpn = o.components.find(c => (c.type == cpnType))
+		if (!cpn) {
+			cpn = {
+				type: cpnType
+			};
+			o.components.push(cpn);
+		}
 
-			if (!cpn) {
-				cpn = {
-					type: cpnType
-				};
-				o.components.push(cpn);
-			}
+		let obj = cpn[object];
+		if (!obj) {
+			obj = {};
+			cpn[object] = obj;
+		}
 
-			if (cpn[property] == null)
-				cpn[property] = [];
+		obj[property] = value;
+	},
+	setArray: function (self, cpnType, property, value, noDuplicate) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
+		let cpn = o.components.find(c => (c.type == cpnType));
 
-			if ((noDuplicate) && (cpn[property].find(f => (f == value))))
+		if (!cpn) {
+			cpn = {
+				type: cpnType
+			};
+			o.components.push(cpn);
+		}
+
+		if (cpn[property] == null)
+			cpn[property] = [];
+
+		if ((noDuplicate) && (cpn[property].find(f => (f == value))))
+			return;
+
+		cpn[property].push(value);
+	},
+
+	setSelfArray: function (self, property, value) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
+
+		if (o[property] == null)
+			o[property] = [];
+
+		o[property].push(value);
+	},
+
+	delete: function (self, cpnType, property) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
+
+		if (cpnType) {
+			let cpn = o.components.find(c => (c.type == cpnType));
+
+			if (!cpn)
 				return;
 
-			cpn[property].push(value);
-		},
-
-		setSelfArray: function (self, property, value) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
-
-			if (o[property] == null)
-				o[property] = [];
-
-			o[property].push(value);
-		},
-
-		delete: function (self, cpnType, property) {
-			var o = this.o;
-			if (self)
-				o = this.oSelf;
-
-			if (cpnType) {
-				var cpn = o.components.find(c => (c.type == cpnType))
-
-				if (!cpn)
-					return;
-
-				delete cpn[property];
-			} else {
-				delete o[property];
-			}
-		}
-	};
-});
+			delete cpn[property];
+		} else 
+			delete o[property];
+	}
+};

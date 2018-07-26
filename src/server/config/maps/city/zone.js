@@ -31,7 +31,7 @@ module.exports = {
 				count: 0
 			}
 		},
-		'princess': {
+		princess: {
 			level: 100,
 			deathRep: -50,
 
@@ -86,7 +86,7 @@ module.exports = {
 			}
 		},
 
-		'priest': {
+		priest: {
 			level: 50,
 			deathRep: -15,
 			walkDistance: 0,
@@ -203,7 +203,7 @@ module.exports = {
 		greencandle: {
 			components: {
 				cpnLight: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'light',
 							blueprint: {
@@ -216,7 +216,7 @@ module.exports = {
 									max: 6
 								}
 							}
-						}
+						};
 					}
 				}
 			}
@@ -224,7 +224,7 @@ module.exports = {
 		alchgreenpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -268,7 +268,7 @@ module.exports = {
 									h: 8
 								}
 							}
-						}
+						};
 					}
 				}
 			}
@@ -276,7 +276,7 @@ module.exports = {
 		alchredpot: {
 			components: {
 				cpnParticles: {
-					simplify: function() {
+					simplify: function () {
 						return {
 							type: 'particles',
 							blueprint: {
@@ -320,7 +320,7 @@ module.exports = {
 									h: 8
 								}
 							}
-						}
+						};
 					}
 				}
 			}

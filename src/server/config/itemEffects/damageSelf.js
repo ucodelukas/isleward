@@ -1,41 +1,37 @@
-define([
-	'combat/combat'
-], function (
-	combat
-) {
-	return {
-		events: {
-			element: null,
+let combat = require('combat/combat');
 
-			onGetText: function (item) {
-				var rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
+module.exports = {
+	events: {
+		element: null,
 
-				return `you take ${rolls.percentage}% of the damage you deal`;
-			},
+		onGetText: function (item) {
+			let rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
 
-			afterDealDamage: function (item, damage, target) {
-				var effect = item.effects.find(e => (e.type == 'damageSelf'));
-				var rolls = effect.rolls;
+			return `you take ${rolls.percentage}% of the damage you deal`;
+		},
 
-				var amount = (damage.dealt / 100) * rolls.percentage;
+		afterDealDamage: function (item, damage, target) {
+			let effect = item.effects.find(e => (e.type == 'damageSelf'));
+			let rolls = effect.rolls;
 
-				var newDamage = combat.getDamage({
-					source: {
-						stats: {
-							values: {}
-						}
-					},
-					isAttack: false,
-					target: this,
-					damage: amount,
-					element: effect.properties.element,
-					noCrit: true
-				});
+			let amount = (damage.dealt / 100) * rolls.percentage;
 
-				newDamage.noEvents = true;
+			let newDamage = combat.getDamage({
+				source: {
+					stats: {
+						values: {}
+					}
+				},
+				isAttack: false,
+				target: this,
+				damage: amount,
+				element: effect.properties.element,
+				noCrit: true
+			});
 
-				this.stats.takeDamage(newDamage, 1, this);
-			}
+			newDamage.noEvents = true;
+
+			this.stats.takeDamage(newDamage, 1, this);
 		}
-	};
-});
+	}
+};

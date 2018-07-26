@@ -1,4 +1,4 @@
- module.exports = {
+module.exports = {
  	name: 'fjolarok',
  	level: [1, 10],
  	resources: {
@@ -152,7 +152,7 @@
  									h: 64
  								}
  							}
- 						}
+ 						};
  					}
  				}
  			}
@@ -173,7 +173,7 @@
  									max: 6
  								}
  							}
- 						}
+ 						};
  					}
  				}
  			}
@@ -225,7 +225,7 @@
  									h: 8
  								}
  							}
- 						}
+ 						};
  					}
  				}
  			}
@@ -277,7 +277,7 @@
  									h: 8
  								}
  							}
- 						}
+ 						};
  					}
  				}
  			}
@@ -329,7 +329,7 @@
  									h: 8
  								}
  							}
- 						}
+ 						};
  					}
  				}
  			}
@@ -412,7 +412,7 @@
  				name: 'Ironhorn'
  			},
  			questItem: {
- 				name: "Elk Antler",
+ 				name: 'Elk Antler',
  				sprite: [0, 2]
  			}
  		},
@@ -669,7 +669,7 @@
  							worth: 100,
  							infinite: true,
  							generate: true,
- 							name: `Cowl of Obscurity`,
+ 							name: 'Cowl of Obscurity',
  							level: [4, 13],
  							quality: 4,
  							noSpell: true,
@@ -677,7 +677,7 @@
  							sprite: [2, 0],
  							spritesheet: '../../../images/legendaryItems.png',
  							type: 'Silk Cowl',
- 							description: `Imbued with the powers of Gaekatla herself.`,
+ 							description: 'Imbued with the powers of Gaekatla herself.',
  							stats: ['hpMax', 'hpMax', 'int', 'int'],
  							effects: [{
  								type: 'healOnCrit',
@@ -704,4 +704,4 @@
  			}
  		}
  	}
- };
+};

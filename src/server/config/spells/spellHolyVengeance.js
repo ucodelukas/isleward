@@ -1,39 +1,33 @@
-define([
+module.exports = {
+	type: 'holyVengeance',
 
-], function(
+	cdMax: 0,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'holyVengeance',
+	duration: 10,
 
-		cdMax: 0,
-		manaCost: 0,
+	targetFriendly: true,
 
-		duration: 10,
+	cast: function (action) {
+		let target = action.target;
+		if (!target.effects)
+			target = this.obj;
 
-		targetFriendly: true,
-
-		cast: function(action) {
-			var target = action.target;
-			if (!target.effects)
-				target = this.obj;
-
-			if (this.animation) {
-				this.obj.instance.syncer.queue('onGetObject', {
-					id: this.obj.id,
-					components: [{
-						type: 'animation',
-						template: this.animation
-					}]
-				});
-			}
-
-			var selfEffect = target.effects.addEffect({
-				type: 'holyVengeance',
-				ttl: this.duration
+		if (this.animation) {
+			this.obj.instance.syncer.queue('onGetObject', {
+				id: this.obj.id,
+				components: [{
+					type: 'animation',
+					template: this.animation
+				}]
 			});
-
-			return true;
 		}
-	};
-});
+
+		let selfEffect = target.effects.addEffect({
+			type: 'holyVengeance',
+			ttl: this.duration
+		});
+
+		return true;
+	}
+};

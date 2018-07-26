@@ -170,7 +170,7 @@ module.exports = {
 			}]
 		},
 
-		'radulos': {
+		radulos: {
 			level: 18,
 			spawnCd: 1714,
 
@@ -208,7 +208,7 @@ module.exports = {
 					},
 					chance: 0.65,
 					randomScale: true,
-					randomColor: true,
+					randomColor: true
 				}
 			}, {
 				type: 'smokeBomb',
@@ -272,14 +272,14 @@ module.exports = {
 			attackable: false,
 			deathRep: -3
 		},
-		'biorn': {
+		biorn: {
 			level: 22,
 			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
-		'veleif': {
+		veleif: {
 			level: 22,
 			attackable: false,
 			walkDistance: 0,
@@ -408,7 +408,7 @@ module.exports = {
 									h: 60
 								}
 							}
-						}
+						};
 					}
 				}
 			}
@@ -460,7 +460,7 @@ module.exports = {
 									h: 40
 								}
 							}
-						}
+						};
 					}
 				},
 				cpnTrigger: {
@@ -473,9 +473,9 @@ module.exports = {
 						if (!o.player)
 							return;
 
-						var order = this.obj.order;
-						var triggerPuzzle = this.obj.instance.triggerPuzzle;
-						var activated = triggerPuzzle.activated;
+						let order = this.obj.order;
+						let triggerPuzzle = this.obj.instance.triggerPuzzle;
+						let activated = triggerPuzzle.activated;
 
 						if (this.obj.forceOpen) {
 							triggerPuzzle.activated = [];
@@ -484,8 +484,8 @@ module.exports = {
 						}
 
 						activated.push(order);
-						var valid = true;
-						for (var i = 0; i < activated.length; i++) {
+						let valid = true;
+						for (let i = 0; i < activated.length; i++) {
 							if (activated[i] != i) {
 								valid = false;
 								break;
@@ -498,7 +498,7 @@ module.exports = {
 							process.send({
 								method: 'events',
 								data: {
-									'onGetAnnouncement': [{
+									onGetAnnouncement: [{
 										obj: {
 											msg: 'nothing happens'
 										},
@@ -516,7 +516,7 @@ module.exports = {
 						process.send({
 							method: 'events',
 							data: {
-								'onGetAnnouncement': [{
+								onGetAnnouncement: [{
 									obj: {
 										msg: this.obj.message
 									},
@@ -526,9 +526,9 @@ module.exports = {
 						});
 					},
 					activate: function () {
-						var syncer = this.obj.instance.syncer;
-						var physics = this.obj.instance.physics;
-						var walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
+						let syncer = this.obj.instance.syncer;
+						let physics = this.obj.instance.physics;
+						let walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
 						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);
@@ -600,7 +600,7 @@ module.exports = {
 									h: 160
 								}
 							}
-						}
+						};
 					}
 				}
 			}
@@ -657,7 +657,7 @@ module.exports = {
 									h: 60
 								}
 							}
-						}
+						};
 					}
 				}
 			}

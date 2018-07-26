@@ -1,36 +1,30 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'resourceNode',
+module.exports = {
+	type: 'resourceNode',
 
-		collisionEnter: function(obj) {
-			if (!obj.player)
-				return;
+	collisionEnter: function (obj) {
+		if (!obj.player)
+			return;
 
-			obj.gatherer.enter(this.obj);
-		},
+		obj.gatherer.enter(this.obj);
+	},
 
-		collisionExit: function(obj) {
-			if (!obj.player)
-				return;
+	collisionExit: function (obj) {
+		if (!obj.player)
+			return;
 
-			obj.gatherer.exit(this.obj);
-		},
+		obj.gatherer.exit(this.obj);
+	},
 
-		gather: function() {
-			this.quantity--;
-			if (this.quantity <= 0)
-				this.obj.destroyed = true;
-		},
+	gather: function () {
+		this.quantity--;
+		if (this.quantity <= 0)
+			this.obj.destroyed = true;
+	},
 
-		simplify: function() {
-			return {
-				type: 'resourceNode',
-				nodeType: this.nodeType
-			};
-		}
-	};
-});
+	simplify: function () {
+		return {
+			type: 'resourceNode',
+			nodeType: this.nodeType
+		};
+	}
+};
