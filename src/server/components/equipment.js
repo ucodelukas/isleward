@@ -32,9 +32,9 @@ define([
 			if (!this.doAutoEq)
 				return;
 
-			var stats = this.obj.stats.values;
+			let stats = this.obj.stats.values;
 
-			var item = this.obj.inventory.findItem(itemId);
+			let item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
 			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
@@ -42,7 +42,7 @@ define([
 				return;
 			}
 
-			var currentEqId = this.eq[item.slot];
+			let currentEqId = this.eq[item.slot];
 			if (currentEqId == null) {
 				this.equip(itemId);
 				return true;
@@ -50,13 +50,13 @@ define([
 		},
 
 		equip: function (itemId) {
-			var slot = null;
+			let slot = null;
 			if (typeof (itemId) == 'object') {
 				slot = itemId.slot;
 				itemId = itemId.itemId;
 			}
 
-			var item = this.obj.inventory.findItem(itemId);
+			let item = this.obj.inventory.findItem(itemId);
 			if (!item)
 				return;
 			else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
@@ -81,7 +81,7 @@ define([
 				}
 			}
 
-			var equipMsg = {
+			let equipMsg = {
 				success: true,
 				item: item
 			};
@@ -103,8 +103,8 @@ define([
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
 			if (slot == 'finger') {
-				var f1 = (this.eq['finger-1'] != null);
-				var f2 = (this.eq['finger-2'] != null);
+				let f1 = (this.eq['finger-1'] != null);
+				let f2 = (this.eq['finger-2'] != null);
 
 				if ((f1) && (f2))
 					slot = 'finger-1';
@@ -114,7 +114,7 @@ define([
 					slot = 'finger-2';
 			}
 
-			var spellId = null;
+			let spellId = null;
 			var currentEqId = this.eq[slot];
 			var currentEq = this.obj.inventory.findItem(currentEqId);
 			if (currentEq == item)
@@ -124,15 +124,9 @@ define([
 				this.unequip(currentEqId);
 			}
 
-			var stats = item.stats;
-			if (this.obj.player) {
-				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < item.level)
-					stats = generatorStats.rescale(item, maxLevel);
-			}
-
-			for (var s in stats) {
-				var val = stats[s];
+			let stats = item.stats;
+			for (let s in stats) {
+				let val = stats[s];
 
 				this.obj.stats.addStat(s, val);
 			}
@@ -151,7 +145,7 @@ define([
 				if (item.spell)
 					this.obj.inventory.learnAbility(itemId, item.runeSlot);
 				else {
-					var result = item;
+					let result = item;
 					if (item.effects) {
 						result = extend(true, {}, item);
 						result.effects = result.effects.map(e => ({
@@ -159,14 +153,14 @@ define([
 							text: e.text,
 							properties: e.properties
 						}));
-						var reputation = this.obj.reputation;
+						let reputation = this.obj.reputation;
 
 						if (result.factions) {
 							result.factions = result.factions.map(function (f) {
-								var faction = reputation.getBlueprint(f.id);
-								var factionTier = reputation.getTier(f.id);
+								let faction = reputation.getBlueprint(f.id);
+								let factionTier = reputation.getTier(f.id);
 
-								var noEquip = null;
+								let noEquip = null;
 								if (factionTier < f.tier)
 									noEquip = true;
 
@@ -187,8 +181,8 @@ define([
 			this.obj.fireEvent('afterEquipItem', item);
 		},
 		unequip: function (itemId) {
-			var item = itemId;
-			var slot = null;
+			let item = itemId;
+			let slot = null;
 			if (typeof (itemId) == 'object') {
 				slot = itemId.slot;
 				itemId = itemId.itemId;
@@ -200,19 +194,14 @@ define([
 			if (!item)
 				return;
 
-			var stats = item.stats;
-			if (this.obj.player) {
-				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < item.level)
-					stats = generatorStats.rescale(item, maxLevel);
-			}
+			let stats = item.stats;
 
 			delete item.eq;
 			delete this.eq[item.equipSlot];
 			delete item.equipSlot;
 
-			for (var s in stats) {
-				var val = stats[s];
+			for (let s in stats) {
+				let val = stats[s];
 
 				this.obj.stats.addStat(s, -val);
 			}
@@ -226,38 +215,36 @@ define([
 			if (item.spell) {
 				item.eq = true;
 				this.obj.inventory.unlearnAbility(itemId, item.runeSlot);
-			} else {
-				if (!item.effects)
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				else {
-					var result = extend(true, {}, item);
-					result.effects = result.effects.map(e => ({
-						factionId: e.factionId,
-						text: e.text,
-						properties: e.properties
-					}));
-					var reputation = this.obj.reputation;
+			} else if (!item.effects)
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+			else {
+				let result = extend(true, {}, item);
+				result.effects = result.effects.map(e => ({
+					factionId: e.factionId,
+					text: e.text,
+					properties: e.properties
+				}));
+				let reputation = this.obj.reputation;
 
-					if (result.factions) {
-						result.factions = result.factions.map(function (f) {
-							var faction = reputation.getBlueprint(f.id);
-							var factionTier = reputation.getTier(f.id);
+				if (result.factions) {
+					result.factions = result.factions.map(function (f) {
+						let faction = reputation.getBlueprint(f.id);
+						let factionTier = reputation.getTier(f.id);
 
-							var noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
+						let noEquip = null;
+						if (factionTier < f.tier)
+							noEquip = true;
 
-							return {
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
+						return {
+							name: faction.name,
+							tier: f.tier,
+							tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+							noEquip: noEquip
+						};
+					}, this);
 				}
+
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
 			}
 
 			this.obj.spellbook.calcDps();
@@ -265,27 +252,27 @@ define([
 			this.obj.fireEvent('afterUnequipItem', item);
 		},
 		unequipAll: function () {
-			var eq = this.eq;
+			let eq = this.eq;
 			Object.keys(this.eq).forEach(function (slot) {
 				this.unequip(eq[slot]);
 			}, this);
 		},
 
 		unequipAttrRqrGear: function () {
-			var inventory = this.obj.inventory;
+			let inventory = this.obj.inventory;
 
-			var eq = this.eq;
+			let eq = this.eq;
 			Object.keys(this.eq).forEach(function (slot) {
-				var itemId = eq[slot];
-				var item = inventory.findItem(itemId);
+				let itemId = eq[slot];
+				let item = inventory.findItem(itemId);
 				if (!item)
 					return;
 
-				var errors = inventory.equipItemErrors(item);
+				let errors = inventory.equipItemErrors(item);
 				if (errors.length > 0) {
 					this.unequip(itemId);
 
-					var message = ({
+					let message = ({
 						int: `You suddenly feel too stupid to wear your ${item.name}`,
 						str: `Your weak body can no longer equip your ${item.name}`,
 						dex: `Your sluggish physique cannot possibly equip your ${item.name}`
@@ -304,18 +291,18 @@ define([
 		},
 
 		unequipFactionGear: function (factionId, tier) {
-			var inventory = this.obj.inventory;
+			let inventory = this.obj.inventory;
 
-			var eq = this.eq;
+			let eq = this.eq;
 			Object.keys(this.eq).forEach(function (slot) {
-				var itemId = eq[slot];
-				var item = inventory.findItem(itemId);
+				let itemId = eq[slot];
+				let item = inventory.findItem(itemId);
 
-				var factions = item.factions;
+				let factions = item.factions;
 				if (!factions)
 					return;
 
-				var findFaction = factions.find(f => f.id == factionId);
+				let findFaction = factions.find(f => f.id == factionId);
 				if (!findFaction)
 					return;
 
@@ -332,38 +319,6 @@ define([
 					}, [this.obj.serverId]);
 				}
 			}, this);
-		},
-
-		rescale: function (level) {
-			var items = this.obj.inventory.items;
-
-			var stats = {};
-
-			var eq = this.eq;
-			for (var p in eq) {
-				var item = items.find(i => (i.id == eq[p]));
-				if ((!item.slot) || (item.slot == 'tool')) {
-					continue;
-				}
-
-				var item = items.find(i => (i.id == eq[p]));
-				var nItemStats = item.stats;
-				if (item.level > level)
-					nItemStats = generatorStats.rescale(item, level);
-
-				var tempItem = extend(true, {}, item);
-				tempItem.stats = extend(true, {}, nItemStats);
-				this.obj.fireEvent('afterRescaleItemStats', tempItem);
-
-				for (var s in tempItem.stats) {
-					if (!stats[s])
-						stats[s] = 0;
-
-					stats[s] += tempItem.stats[s];
-				}
-			}
-
-			return stats;
 		}
 	};
 });

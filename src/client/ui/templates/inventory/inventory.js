@@ -15,7 +15,7 @@ define([
 	tplTooltip,
 	input
 ) {
-	var qualityColors = [{
+	let qualityColors = [{
 		r: 252,
 		g: 252,
 		b: 252
@@ -77,20 +77,20 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.grid')
+			let container = this.el.find('.grid')
 				.empty();
 
-			var items = this.items
+			let items = this.items
 				.filter(function (item) {
 					return !item.eq;
 				});
 
-			var iLen = Math.max(items.length, 50);
+			let iLen = Math.max(items.length, 50);
 
-			var rendered = [];
+			let rendered = [];
 
 			for (var i = 0; i < iLen; i++) {
-				var item = items.find(function (item) {
+				let item = items.find(function (item) {
 					return ((item.pos != null) && (item.pos == i));
 				});
 
@@ -106,17 +106,16 @@ define([
 						.remove();
 
 					continue;
-				} else {
+				} else 
 					rendered.push(item);
-				}
 
-				var imgX = -item.sprite[0] * 64;
-				var imgY = -item.sprite[1] * 64;
+				let imgX = -item.sprite[0] * 64;
+				let imgY = -item.sprite[1] * 64;
 
 				var itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = item.spritesheet || '../../../images/items.png';
+				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (!item.spritesheet) {
 					if (item.material)
 						spritesheet = '../../../images/materials.png';
@@ -152,7 +151,7 @@ define([
 		},
 
 		onClick: function (item) {
-			var msg = {
+			let msg = {
 				item: item,
 				success: true
 			};
@@ -190,26 +189,26 @@ define([
 				events.emit('onHideItemTooltip', this.hoverItem);
 				this.hoverItem = null;
 			} else if (this.dragItem) {
-				var method = 'moveItem';
+				let method = 'moveItem';
 
 				if ((this.hoverCell) && (this.hoverCell[0] != this.dragItem[0])) {
-					var placeholder = $('<div></div>')
+					let placeholder = $('<div></div>')
 						.insertAfter(this.dragItem);
 
 					this.dragItem.insertBefore(this.hoverCell);
 					this.hoverCell.insertBefore(placeholder);
 					placeholder.remove();
 
-					var msgs = [{
+					let msgs = [{
 						id: this.dragItem.data('item').id,
 						pos: this.dragItem.index()
 					}];
 
 					this.items.find(function (i) {
-						return (i.id == this.dragItem.data('item').id)
+						return (i.id == this.dragItem.data('item').id);
 					}, this).pos = this.dragItem.index();
 
-					var hoverCellItem = this.hoverCell.data('item');
+					let hoverCellItem = this.hoverCell.data('item');
 					if (hoverCellItem) {
 						if ((hoverCellItem.name != this.dragItem.data('item').name) || (!hoverCellItem.quantity)) {
 							msgs.push({
@@ -218,13 +217,13 @@ define([
 							});
 
 							this.items.find(function (i) {
-								return (i.id == hoverCellItem.id)
+								return (i.id == hoverCellItem.id);
 							}, this).pos = this.hoverCell.index();
 						} else {
 							method = 'combineStacks';
 							msgs = {
 								fromId: this.dragItem.data('item').id,
-								toId: hoverCellItem.id,
+								toId: hoverCellItem.id
 							};
 						}
 					}
@@ -254,7 +253,7 @@ define([
 			if (!this.dragEl)
 				return;
 
-			var offset = this.find('.grid').offset();
+			let offset = this.find('.grid').offset();
 
 			this.dragEl.css({
 				left: e.clientX - offset.left - 40,
@@ -264,7 +263,7 @@ define([
 		},
 
 		showContext: function (item, e) {
-			var menuItems = {
+			let menuItems = {
 				drop: {
 					text: 'drop',
 					callback: this.performItemAction.bind(this, item, 'dropItem')
@@ -320,7 +319,7 @@ define([
 			if (item.active)
 				menuItems.activate.text = 'deactivate';
 
-			var config = [];
+			let config = [];
 
 			if (item.ability)
 				config.push(menuItems.learn);
@@ -369,7 +368,7 @@ define([
 		},
 
 		splitStackStart: function (item) {
-			var box = this.find('.split-box').show();
+			let box = this.find('.split-box').show();
 			box.data('item', item);
 
 			box.find('.amount')
@@ -378,7 +377,7 @@ define([
 		},
 
 		splitStackEnd: function (cancel, e) {
-			var box = this.find('.split-box');
+			let box = this.find('.split-box');
 
 			if ((cancel) || (!e) || (e.target != box.find('.btnSplit')[0])) {
 				if ((cancel) && (!$(e.target).hasClass('button')))
@@ -404,8 +403,8 @@ define([
 		},
 
 		onChangeStackAmount: function (e, amount) {
-			var item = this.find('.split-box').data('item');
-			var delta = e ? ((e.originalEvent.deltaY > 0) ? -1 : 1) : amount;
+			let item = this.find('.split-box').data('item');
+			let delta = e ? ((e.originalEvent.deltaY > 0) ? -1 : 1) : amount;
 			if (this.shiftDown)
 				delta *= 10;
 			var amount = this.find('.split-box .amount');
@@ -414,12 +413,12 @@ define([
 		},
 
 		onEnterStackAmount: function (e) {
-			var el = this.find('.split-box .amount');
-			var val = el.val();
+			let el = this.find('.split-box .amount');
+			let val = el.val();
 			if (val != ~~val)
 				el.val('');
 			else if (val) {
-				var item = this.find('.split-box').data('item');
+				let item = this.find('.split-box').data('item');
 				if (val < 0)
 					val = '';
 				else if (val > item.quantity - 1)
@@ -454,7 +453,7 @@ define([
 			if (!item)
 				return;
 
-			var ttPos = null;
+			let ttPos = null;
 
 			if (el) {
 				if (el.hasClass('new')) {
@@ -463,14 +462,14 @@ define([
 					delete item.isNew;
 				}
 
-				var elOffset = el.offset();
+				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(e.clientX + 32),
 					y: ~~(e.clientY)
 				};
 			}
 
-			var compare = null;
+			let compare = null;
 			if (item.slot) {
 				compare = this.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
@@ -478,51 +477,50 @@ define([
 
 				// check special cases for mismatched weapon/offhand scenarios (only valid when comparing)
 				if ((!compare) && (this.shiftDown)) {
-					var equippedTwoHanded = this.items.find(function (i) {
+					let equippedTwoHanded = this.items.find(function (i) {
 						return ((i.eq) && (i.slot == 'twoHanded'));
 					});
 
-					var equippedOneHanded = this.items.find(function (i) {
+					let equippedOneHanded = this.items.find(function (i) {
 						return ((i.eq) && (i.slot == 'oneHanded'));
 					});
 
-					var equippedOffhand = this.items.find(function (i) {
+					let equippedOffhand = this.items.find(function (i) {
 						return ((i.eq) && (i.slot == 'offHand'));
 					});
 
 					if (item.slot == 'twoHanded') {
-						if (!equippedOneHanded) {
+						if (!equippedOneHanded) 
 							compare = equippedOffhand;
-						} else if (!equippedOffhand) {
+						 else if (!equippedOffhand) 
 							compare = equippedOneHanded;
-						} else {
+						 else {
 							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
 							compare = $.extend(true, {}, equippedOneHanded);
 							compare.refItem = equippedOneHanded;
 
-							for (var s in equippedOffhand.stats) {
+							for (let s in equippedOffhand.stats) {
 								if (!compare.stats[s])
 									compare.stats[s] = 0;
 
-								compare.stats[s] += equippedOffhand.stats[s]
+								compare.stats[s] += equippedOffhand.stats[s];
 							}
 						}
 					}
 
-					if (item.slot == 'oneHanded') {
+					if (item.slot == 'oneHanded') 
 						compare = equippedTwoHanded;
-					}
 
 					// this case is kind of ugly, but we don't want to go in when comparing an offHand to (oneHanded + empty offHand) - that should just use the normal compare which is offHand to empty
 					if ((item.slot == 'offHand') && (equippedTwoHanded)) {
 						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
 						// the player would lose by switching to the offhand (which would remove the twoHander)
 						// keep a reference to the original item for use in onHideToolTip
-						var spellClone = $.extend(true, {}, equippedTwoHanded.spell);
+						let spellClone = $.extend(true, {}, equippedTwoHanded.spell);
 						spellClone.name = '';
-						spellClone.values['damage'] = 0;
+						spellClone.values.damage = 0;
 
-						var clone = $.extend(true, {}, item, {
+						let clone = $.extend(true, {}, item, {
 							spell: spellClone
 						});
 						clone.refItem = item;
@@ -544,7 +542,7 @@ define([
 		},
 		onDestroyItems: function (itemIds) {
 			itemIds.forEach(function (id) {
-				var item = this.items.find(i => i.id == id);
+				let item = this.items.find(i => i.id == id);
 				if (item == this.hoverItem)
 					this.hideTooltip();
 
@@ -584,9 +582,6 @@ define([
 		},
 
 		performItemAction: function (item, action) {
-			var stats = window.player.stats.values;
-			var playerLevel = stats.originalLevel || stats.level;
-
 			if (!item)
 				return;
 			else if ((action == 'equip') && ((item.material) || (item.quest) || (item.type == 'mtx') || (!window.player.inventory.canEquipItem(item))))
@@ -596,7 +591,7 @@ define([
 			else if ((action == 'activateMtx') && (item.type != 'mtx'))
 				return;
 
-			var cpn = 'inventory';
+			let cpn = 'inventory';
 			if (action == 'equip')
 				cpn = 'equipment';
 

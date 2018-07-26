@@ -19,13 +19,9 @@ define([
 				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
 					return;
 
-				var stats = item.stats;
-				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < item.level)
-					stats = generatorStats.rescale(item, maxLevel);
-
-				for (var s in stats) {
-					var val = stats[s];
+				let stats = item.stats;
+				for (let s in stats) {
+					let val = stats[s];
 
 					this.obj.stats.addStat(s, val);
 				}
@@ -34,25 +30,11 @@ define([
 				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
 					return;
 
-				var stats = item.stats;
-				var maxLevel = this.obj.instance.zone.level[1];
-				if (maxLevel < item.level)
-					stats = generatorStats.rescale(item, maxLevel);
-
-				for (var s in stats) {
-					var val = stats[s];
+				let stats = item.stats;
+				for (let s in stats) {
+					let val = stats[s];
 
 					this.obj.stats.addStat(s, -val);
-				}
-			},
-
-			afterRescaleItemStats: function (item) {
-				if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
-					return;
-
-				var stats = item.stats;
-				for (var s in stats) {
-					stats[s] *= 2;
 				}
 			}
 		}

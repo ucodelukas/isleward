@@ -46,7 +46,7 @@ define([
 			map.init(args);
 
 			if (!map.instanced) {
-				var fakeInstance = {
+				let fakeInstance = {
 					objects: objects,
 					syncer: syncer,
 					physics: physics,
@@ -119,14 +119,14 @@ define([
 			},
 
 			addObject: function (msg) {
-				var obj = msg.obj;
+				let obj = msg.obj;
 				obj.serverId = obj.id;
 				delete obj.id;
 
 				if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
 					msg.keepPos = false;
 
-				var spawnPos = map.getSpawnPos(obj);
+				let spawnPos = map.getSpawnPos(obj);
 
 				if ((!msg.keepPos) || (obj.x == null)) {
 					obj.x = spawnPos.x;
@@ -140,21 +140,13 @@ define([
 				if (!msg.transfer)
 					objects.addObject(obj, this.onAddObject.bind(this));
 				else {
-					var o = objects.transferObject(obj);
+					let o = objects.transferObject(obj);
 					questBuilder.obtain(o);
-
-					var maxLevel = o.instance.zone.level[1];
-					if (maxLevel < o.stats.values.level)
-						o.stats.rescale(maxLevel);
 				}
 			},
 			onAddObject: function (obj) {
 				if (obj.player)
 					obj.stats.onLogin();
-
-				var maxLevel = obj.instance.zone.level[1];
-				if (maxLevel < obj.stats.values.level)
-					obj.stats.rescale(maxLevel);
 
 				questBuilder.obtain(obj);
 				obj.fireEvent('afterMove');
@@ -167,35 +159,33 @@ define([
 				}
 			},
 			updateObject: function (msg) {
-				var obj = objects.find(o => o.serverId == msg.id);
+				let obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
 
-				var msgObj = msg.obj;
+				let msgObj = msg.obj;
 
-				var components = msgObj.components || [];
+				let components = msgObj.components || [];
 				delete msgObj.components;
 
-				for (var p in msgObj) {
+				for (var p in msgObj) 
 					obj[p] = msgObj[p];
-				}
 
-				var cLen = components.length;
-				for (var i = 0; i < cLen; i++) {
-					var c = components[i];
-					var component = obj[c.type];
-					for (var p in c) {
+				let cLen = components.length;
+				for (let i = 0; i < cLen; i++) {
+					let c = components[i];
+					let component = obj[c.type];
+					for (var p in c) 
 						component[p] = c[p];
-					}
 				}
 			},
 
 			queueAction: function (msg) {
-				var obj = objects.find(o => o.serverId == msg.id);
+				let obj = objects.find(o => o.serverId == msg.id);
 				if (!obj)
 					return;
 				else if (msg.action.action == 'move') {
-					var moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
+					let moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
 					if (moveEntries >= 50)
 						return;
 				}
@@ -204,14 +194,14 @@ define([
 			},
 
 			performAction: function (msg) {
-				var obj = null;
-				var targetId = msg.action.targetId;
+				let obj = null;
+				let targetId = msg.action.targetId;
 				if (!targetId)
 					obj = objects.find(o => o.serverId == msg.id);
 				else {
 					obj = objects.find(o => o.id == targetId);
 					if (obj) {
-						var action = msg.action;
+						let action = msg.action;
 						if (!action.data)
 							action.data = {};
 						action.data.sourceId = msg.id;
@@ -225,7 +215,7 @@ define([
 			},
 
 			removeObject: function (msg) {
-				var obj = msg.obj;
+				let obj = msg.obj;
 				obj = objects.find(o => o.serverId == obj.id);
 				if (!obj) {
 					//We should probably never reach this
@@ -266,10 +256,10 @@ define([
 						this.ttlGen--;
 				}
 
-				var instances = this.instances;
-				var iLen = instances.length;
-				for (var i = 0; i < iLen; i++) {
-					var instance = instances[i];
+				let instances = this.instances;
+				let iLen = instances.length;
+				for (let i = 0; i < iLen; i++) {
+					let instance = instances[i];
 
 					instance.objects.update();
 					instance.spawners.update();
@@ -279,7 +269,7 @@ define([
 					instance.syncer.update();
 
 					if (instance.closeTtl != null) {
-						var hasPlayers = instance.objects.objects.some(o => o.player);
+						let hasPlayers = instance.objects.objects.some(o => o.player);
 						if (hasPlayers) {
 							delete instance.closeTtl;
 							continue;
@@ -292,7 +282,7 @@ define([
 							iLen--;
 						}
 					} else {
-						var isEmpty = !instance.objects.objects.some(o => o.player);
+						let isEmpty = !instance.objects.objects.some(o => o.player);
 						if (isEmpty) {
 							//Zones reset after being empty for 10 minutes
 							instance.closeTtl = 2;
@@ -304,19 +294,19 @@ define([
 			},
 
 			addObject: function (msg) {
-				var obj = msg.obj;
-				var instanceId = msg.instanceId;
+				let obj = msg.obj;
+				let instanceId = msg.instanceId;
 
 				//Maybe a party member is in here already?
-				var social = obj.components.find(c => c.type == 'social');
+				let social = obj.components.find(c => c.type == 'social');
 				if ((social) && (social.party)) {
-					var party = social.party;
-					var instances = this.instances;
-					var iLen = instances.length;
-					for (var i = 0; i < iLen; i++) {
-						var instance = instances[i];
+					let party = social.party;
+					let instances = this.instances;
+					let iLen = instances.length;
+					for (let i = 0; i < iLen; i++) {
+						let instance = instances[i];
 
-						var partyInside = instance.objects.objects.some(o => party.indexOf(o.serverId) > -1);
+						let partyInside = instance.objects.objects.some(o => party.indexOf(o.serverId) > -1);
 						if (partyInside) {
 							if (instance.id != obj.instanceId)
 								msg.keepPos = false;
@@ -331,7 +321,7 @@ define([
 				if (msg.transfer)
 					msg.keepPos = false;
 
-				var exists = this.instances.find(i => i.id == instanceId);
+				let exists = this.instances.find(i => i.id == instanceId);
 
 				if (exists) {
 					if ((msg.keepPos) && (!exists.physics.isValid(obj.x, obj.y)))
@@ -364,7 +354,7 @@ define([
 					if (!msg.transfer)
 						exists.objects.addObject(obj, this.onAddObject.bind(this, msg.keepPos));
 					else {
-						var newObj = exists.objects.transferObject(obj);
+						let newObj = exists.objects.transferObject(obj);
 						this.onAddObject(false, newObj);
 					}
 
@@ -380,7 +370,7 @@ define([
 			},
 			onAddObject: function (keepPos, obj) {
 				if (!keepPos) {
-					var spawnPos = obj.instance.map.getSpawnPos(obj);
+					let spawnPos = obj.instance.map.getSpawnPos(obj);
 
 					obj.x = spawnPos.x;
 					obj.y = spawnPos.y;
@@ -390,10 +380,6 @@ define([
 
 				if (obj.player)
 					obj.stats.onLogin();
-
-				var maxLevel = obj.instance.zone.level[1];
-				if (maxLevel < obj.stats.values.level)
-					obj.stats.rescale(maxLevel);
 
 				obj.fireEvent('afterMove');
 
@@ -405,45 +391,43 @@ define([
 				}
 			},
 			updateObject: function (msg) {
-				var id = msg.id;
-				var instanceId = msg.instanceId;
+				let id = msg.id;
+				let instanceId = msg.instanceId;
 
-				var exists = this.instances.find(i => i.id == instanceId);
+				let exists = this.instances.find(i => i.id == instanceId);
 				if (!exists)
 					return;
 
-				var obj = exists.objects.find(o => o.serverId == id);
+				let obj = exists.objects.find(o => o.serverId == id);
 				if (!obj)
 					return;
 
-				var msgObj = msg.obj;
+				let msgObj = msg.obj;
 
-				var components = msgObj.components || [];
+				let components = msgObj.components || [];
 				delete msgObj.components;
 
-				for (var p in msgObj) {
+				for (var p in msgObj) 
 					obj[p] = msgObj[p];
-				}
 
-				var cLen = components.length;
-				for (var i = 0; i < cLen; i++) {
-					var c = components[i];
-					var component = obj[c.type];
-					for (var p in c) {
+				let cLen = components.length;
+				for (let i = 0; i < cLen; i++) {
+					let c = components[i];
+					let component = obj[c.type];
+					for (var p in c) 
 						component[p] = c[p];
-					}
 				}
 			},
 
 			performAction: function (msg) {
-				var id = msg.id;
-				var instanceId = msg.instanceId;
+				let id = msg.id;
+				let instanceId = msg.instanceId;
 
-				var exists = this.instances.find(i => i.id == instanceId);
+				let exists = this.instances.find(i => i.id == instanceId);
 				if (!exists)
 					return;
 
-				var obj = exists.objects.find(o => o.serverId == id);
+				let obj = exists.objects.find(o => o.serverId == id);
 				if (!obj)
 					return;
 
@@ -451,17 +435,17 @@ define([
 			},
 
 			queueAction: function (msg) {
-				var id = msg.id;
-				var instanceId = msg.instanceId;
+				let id = msg.id;
+				let instanceId = msg.instanceId;
 
-				var exists = this.instances.find(i => i.id == instanceId);
+				let exists = this.instances.find(i => i.id == instanceId);
 				if (!exists)
 					return;
 
-				var obj = exists.objects.find(o => o.serverId == id);
+				let obj = exists.objects.find(o => o.serverId == id);
 				if (obj) {
 					if (msg.action.action == 'move') {
-						var moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
+						let moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
 						if (moveEntries >= 50)
 							return;
 					}
@@ -472,9 +456,9 @@ define([
 
 			removeObject: function (msg) {
 				var obj = msg.obj;
-				var instanceId = msg.instanceId;
+				let instanceId = msg.instanceId;
 
-				var exists = this.instances.find(i => i.id == instanceId);
+				let exists = this.instances.find(i => i.id == instanceId);
 				if (!exists)
 					return;
 
@@ -494,7 +478,7 @@ define([
 			},
 
 			createInstance: function (objToAdd, transfer) {
-				var newMap = {
+				let newMap = {
 					name: map.name,
 					spawn: extend(true, [], map.spawn),
 					clientMap: extend(true, {}, map.clientMap)
@@ -502,15 +486,15 @@ define([
 				newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
 
 				//Hack: We need to actually just always use the instanced eventEmitter
-				var eventQueue = eventEmitter.queue;
+				let eventQueue = eventEmitter.queue;
 				delete eventEmitter.queue;
-				var newEventEmitter = extend(true, {
+				let newEventEmitter = extend(true, {
 					queue: []
 				}, eventEmitter);
 				eventEmitter.queue = eventQueue;
 
-				var instance = {
-					id: objToAdd.name + '_' + (+new Date),
+				let instance = {
+					id: objToAdd.name + '_' + (+new Date()),
 					objects: extend(true, {}, objects),
 					spawners: extend(true, {}, spawners),
 					syncer: extend(true, {}, syncer),
@@ -532,7 +516,7 @@ define([
 
 				this.instances.push(instance);
 
-				var onDone = this.instanced.onCreateInstance.bind(this, instance, objToAdd, transfer);
+				let onDone = this.instanced.onCreateInstance.bind(this, instance, objToAdd, transfer);
 
 				if (map.custom) {
 					instance.customMap = extend(true, {}, customMap);
@@ -548,7 +532,7 @@ define([
 				objToAdd.serverId = objToAdd.id;
 				delete objToAdd.id;
 
-				var obj = null;
+				let obj = null;
 
 				instance.syncer.queue('onGetMap', instance.map.clientMap, [objToAdd.serverId]);
 
@@ -557,17 +541,13 @@ define([
 				else {
 					obj = instance.objects.transferObject(objToAdd);
 
-					var spawnPos = instance.map.getSpawnPos(obj);
+					let spawnPos = instance.map.getSpawnPos(obj);
 
 					obj.x = spawnPos.x;
 					obj.y = spawnPos.y;
 
 					instance.questBuilder.obtain(obj);
 				}
-
-				var maxLevel = obj.instance.zone.level[1];
-				if (maxLevel < obj.stats.values.level)
-					obj.stats.rescale(maxLevel);
 
 				process.send({
 					method: 'object',
@@ -586,6 +566,6 @@ define([
 
 				return obj;
 			}
-		},
+		}
 	};
 });

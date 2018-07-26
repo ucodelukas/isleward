@@ -86,7 +86,7 @@ define([
 
 			this.find('.slot').addClass('empty');
 
-			var skipSpellId = 0;
+			let skipSpellId = 0;
 
 			this.find('[slot]')
 				.removeData('item')
@@ -102,9 +102,9 @@ define([
 
 			this.find('[slot]').toArray().forEach(function (el) {
 				el = $(el);
-				var slot = el.attr('slot');
-				var newItems = window.player.inventory.items.some(function (i) {
-					var checkSlot = slot;
+				let slot = el.attr('slot');
+				let newItems = window.player.inventory.items.some(function (i) {
+					let checkSlot = slot;
 					if (slot.indexOf('finger') == 0)
 						slot = 'finger';
 					else if (slot == 'oneHanded')
@@ -119,29 +119,29 @@ define([
 
 			items
 				.filter(function (item) {
-					var runeSlot = item.runeSlot;
+					let runeSlot = item.runeSlot;
 					if ((runeSlot != null) && (item.slot))
 						skipSpellId = runeSlot;
 
 					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
 				}, this)
 				.forEach(function (item) {
-					var imgX = -item.sprite[0] * 64;
-					var imgY = -item.sprite[1] * 64;
+					let imgX = -item.sprite[0] * 64;
+					let imgY = -item.sprite[1] * 64;
 
-					var slot = item.slot;
+					let slot = item.slot;
 					if (!slot) {
-						var runeSlot = item.runeSlot;
+						let runeSlot = item.runeSlot;
 						if (runeSlot > skipSpellId)
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
 					}
 
-					var spritesheet = item.spritesheet || '../../../images/items.png';
+					let spritesheet = item.spritesheet || '../../../images/items.png';
 
 					slot = item.equipSlot || slot;
 
-					var elSlot = this.find('[slot="' + slot + '"]');
+					let elSlot = this.find('[slot="' + slot + '"]');
 					elSlot
 						.data('item', item)
 						.removeClass('empty show-default-icon')
@@ -158,26 +158,25 @@ define([
 			if (el.currentTarget)
 				el = $(el.currentTarget).parent();
 
-			var slot = el.attr('slot');
-			var isRune = (slot.indexOf('rune') == 0);
+			let slot = el.attr('slot');
+			let isRune = (slot.indexOf('rune') == 0);
 
-			var container = this.find('.itemList')
+			let container = this.find('.itemList')
 				.empty()
 				.show();
 
 			this.hoverCompare = el.data('item');
 
-			var items = this.items
+			let items = this.items
 				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
-					else {
-						var checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
-						if (slot == 'oneHanded')
-							return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
+					
+					let checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
+					if (slot == 'oneHanded')
+						return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
 
-						return ((item.slot == checkSlot) && (!item.eq));
-					}
+					return ((item.slot == checkSlot) && (!item.eq));
 				}, this);
 			items.splice(0, 0, {
 				name: 'None',
@@ -190,13 +189,13 @@ define([
 
 			items
 				.forEach(function (item) {
-					var sprite = item.sprite || [7, 0];
+					let sprite = item.sprite || [7, 0];
 
-					var spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
-					var imgX = -sprite[0] * 64;
-					var imgY = -sprite[1] * 64;
+					let spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
+					let imgX = -sprite[0] * 64;
+					let imgY = -sprite[1] * 64;
 
-					var el = $('<div class="slot"><div class="icon"></div></div>')
+					let el = $('<div class="slot"><div class="icon"></div></div>')
 						.appendTo(container);
 
 					el
@@ -217,7 +216,7 @@ define([
 		},
 
 		equipItem: function (item, slot) {
-			var isNew = window.player.inventory.items.some(function (i) {
+			let isNew = window.player.inventory.items.some(function (i) {
 				return ((i.equipSlot == slot) && (i.isNew));
 			});
 			if (!isNew)
@@ -228,9 +227,9 @@ define([
 				return;
 			}
 
-			var cpn = 'equipment';
-			var method = 'equip';
-			var data = item.id;
+			let cpn = 'equipment';
+			let method = 'equip';
+			let data = item.id;
 
 			if (item.empty)
 				method = 'unequip';
@@ -247,10 +246,9 @@ define([
 					if (!this.hoverCompare) {
 						this.find('.itemList').hide();
 						return;
-					} else {
-						method = 'unlearnAbility';
-						data.itemId = this.hoverCompare.id;
-					}
+					} 
+					method = 'unlearnAbility';
+					data.itemId = this.hoverCompare.id;
 				}
 			} else if (item.slot == 'finger') {
 				data = {
@@ -282,7 +280,7 @@ define([
 					el.find('.icon').removeClass('new');
 				}
 
-				var ttPos = null;
+				let ttPos = null;
 				if (e) {
 					ttPos = {
 						x: ~~(e.clientX + 32),
@@ -306,21 +304,17 @@ define([
 			if (!this.shown)
 				return;
 
-			var container = this.el.find('.stats');
+			let container = this.el.find('.stats');
 
 			container
 				.children('*:not(.tabs)')
 				.remove();
 
-			var xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			let xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			var level = stats.level;
-			if (stats.originalLevel)
-				level = stats.originalLevel + ' (' + stats.level + ')';
-
-			var newStats = {
+			let newStats = {
 				basic: {
-					level: level,
+					level: stats.level,
 					'next level': xpRemaining + 'xp',
 					gap1: '',
 					gold: window.player.trade.gold,
@@ -353,7 +347,7 @@ define([
 					'spell increase': stats.spellPercent + '%',
 					gap3: '',
 					'attack speed': (100 + stats.attackSpeed) + '%',
-					'cast speed': (100 + stats.castSpeed) + '%',
+					'cast speed': (100 + stats.castSpeed) + '%'
 				},
 				defense: {
 					armor: stats.armor,
@@ -381,18 +375,18 @@ define([
 				}
 			}[this.find('.tab.selected').html()];
 
-			for (var s in newStats) {
-				var label = s + ': ';
-				var value = newStats[s];
+			for (let s in newStats) {
+				let label = s + ': ';
+				let value = newStats[s];
 
-				var isGap = false;
+				let isGap = false;
 				if (label.indexOf('gap') == 0) {
 					isGap = true;
 					label = '';
 					value = '';
 				}
 
-				var row = $('<div class="stat"><font class="q0">' + label + '</font><font color="#999">' + value + '</font></div>')
+				let row = $('<div class="stat"><font class="q0">' + label + '</font><font color="#999">' + value + '</font></div>')
 					.appendTo(container);
 
 				if (s == 'gold')

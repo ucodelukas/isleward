@@ -12,7 +12,7 @@ define([
 			events.emit('onGetItems', this.items);
 		},
 		extend: function (blueprint) {
-			var rerender = false;
+			let rerender = false;
 
 			if (blueprint.destroyItems) {
 				rerender = true;
@@ -20,15 +20,15 @@ define([
 			}
 
 			if (blueprint.getItems) {
-				var items = this.items;
-				var newItems = blueprint.getItems || [];
-				var nLen = newItems.length;
+				let items = this.items;
+				let newItems = blueprint.getItems || [];
+				let nLen = newItems.length;
 
-				for (var i = 0; i < nLen; i++) {
-					var nItem = newItems[i];
+				for (let i = 0; i < nLen; i++) {
+					let nItem = newItems[i];
 					var nId = nItem.id;
 
-					var findItem = items.find(function (item) {
+					let findItem = items.find(function (item) {
 						return (item.id == nId);
 					});
 					if (findItem) {
@@ -40,9 +40,8 @@ define([
 							);
 						}
 
-						for (var p in findItem) {
+						for (let p in findItem) 
 							delete findItem[p];
-						}
 
 						$.extend(true, findItem, nItem);
 
@@ -62,21 +61,19 @@ define([
 		},
 
 		equipItemErrors: function (item) {
-			var errors = [];
-			var stats = this.obj.stats.values;
-			var originalValues = this.obj.stats.originalValues || this.obj.stats.values;
+			let errors = [];
+			let stats = this.obj.stats.values;
 
-			var playerLevel = (stats.originalLevel || stats.level);
-			if (item.level > playerLevel)
+			if (item.level > stats.level)
 				errors.push('level');
 
-			if ((item.requires) && (originalValues[item.requires[0].stat] < item.requires[0].value))
+			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
 				errors.push('stats');
 
 			if (item.factions) {
 				if (item.factions.some(function (f) {
-						return f.noEquip;
-					}))
+					return f.noEquip;
+				}))
 					errors.push('faction');
 			}
 
