@@ -59,7 +59,7 @@ module.exports = {
 				id: target.id,
 				event: true,
 				text: 'stunned'
-			});
+			}, -1);
 		}
 
 		let selfEffect = this.obj.effects.addEffect({
@@ -85,7 +85,7 @@ module.exports = {
 					type: 'animation',
 					template: this.animation
 				}]
-			});
+			}, -1);
 		}
 
 		physics.removeObject(obj, obj.x, obj.y);

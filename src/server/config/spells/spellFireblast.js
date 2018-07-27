@@ -33,7 +33,7 @@ module.exports = {
 				};
 
 				if ((i != x) || (j != y))
-					syncer.queue('onGetObject', effect);
+					syncer.queue('onGetObject', effect, -1);
 
 				let mobs = physics.getCell(i, j);
 				let mLen = mobs.length;

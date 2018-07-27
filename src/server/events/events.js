@@ -148,7 +148,7 @@ module.exports = {
 					row: 0,
 					col: 4
 				}]
-			});
+			}, -1);
 		}, this);
 
 		if (event.winText) {
@@ -157,7 +157,7 @@ module.exports = {
 					class: 'color-pinkB',
 					message: event.winText
 				}
-			});
+			}, -1);
 		}
 
 		event.phases.forEach(function (p) {
@@ -209,7 +209,7 @@ module.exports = {
 						class: 'color-pinkB',
 						message: n.msg
 					}
-				});
+				}, -1);
 
 				if (n.desc != null) {
 					event.config.descTimer = n.desc;

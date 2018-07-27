@@ -81,7 +81,7 @@ module.exports = {
 						toX: target.x,
 						toY: target.y
 					}]
-				});
+				}, -1);
 
 				this.spellbook.registerCallback(this.id, cbExplode.bind(this, target), 1);
 			}

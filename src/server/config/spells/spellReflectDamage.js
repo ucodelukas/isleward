@@ -23,7 +23,7 @@ module.exports = {
 					type: 'animation',
 					template: this.animation
 				}]
-			});
+			}, -1);
 		}
 
 		this.queueCallback(this.endEffect.bind(this, selfEffect), ttl - 50);

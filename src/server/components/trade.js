@@ -386,7 +386,7 @@ module.exports = {
 		if (callbackId == null)
 			return;
 
-		this.obj.instance.syncer.queue('serverModule', {
+		process.send({
 			module: 'atlas',
 			method: 'resolveCallback',
 			msg: {

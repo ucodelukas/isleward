@@ -12,7 +12,7 @@ module.exports = {
 				id: this.obj.id,
 				event: true,
 				text: 'reflect'
-			});
+			}, -1);
 		}
 	}
 };

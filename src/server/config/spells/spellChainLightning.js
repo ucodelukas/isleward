@@ -20,7 +20,7 @@ module.exports = {
 				toX: target.x,
 				toY: target.y
 			}]
-		});
+		}, -1);
 
 		this.queueCallback(this.explode.bind(this, target), 1);
 

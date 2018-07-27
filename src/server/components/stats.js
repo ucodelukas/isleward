@@ -269,7 +269,7 @@ module.exports = {
 			id: obj.id,
 			event: true,
 			text: '+' + amount + ' xp'
-		});
+		}, -1);
 
 		let syncO = {};
 		let didLevelUp = false;
@@ -298,7 +298,7 @@ module.exports = {
 				id: obj.id,
 				event: true,
 				text: 'level up'
-			});
+			}, -1);
 
 			syncO.level = values.level;
 
@@ -389,7 +389,7 @@ module.exports = {
 			id: obj.id,
 			event: true,
 			text: 'death'
-		});
+		}, -1);
 
 		obj.syncer.set(true, null, 'dead', true);
 
@@ -419,7 +419,7 @@ module.exports = {
 				row: 0,
 				col: 4
 			}]
-		});
+		}, -1);
 	},
 
 	respawn: function () {
@@ -458,7 +458,7 @@ module.exports = {
 				row: 0,
 				col: 4
 			}]
-		});
+		}, -1);
 
 		this.obj.player.respawn();
 	},
@@ -544,7 +544,7 @@ module.exports = {
 								class: 'color-redA',
 								message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
 							}
-						});
+						}, -1);
 
 						this.syncer.queue('onPermadeath', {
 							source: killSource.name
@@ -565,7 +565,7 @@ module.exports = {
 							x: this.obj.x,
 							y: this.obj.y,
 							components: [deathAnimation]
-						});
+						}, -1);
 					}
 
 					if (this.obj.inventory) {

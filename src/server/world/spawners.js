@@ -70,7 +70,7 @@ module.exports = {
 					id: obj.id,
 					performLast: true,
 					components: [spawnAnimation]
-				});
+				}, -1);
 			}
 		}
 
@@ -83,7 +83,7 @@ module.exports = {
 					row: 0,
 					col: 4
 				}]
-			});
+			}, -1);
 		}
 
 		if (spawner.amountLeft != -1)
@@ -114,7 +114,7 @@ module.exports = {
 							row: 0,
 							col: 4
 						}]
-					});
+					}, -1);
 
 					l.mob.destroyed = true;
 				}

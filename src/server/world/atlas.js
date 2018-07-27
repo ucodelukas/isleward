@@ -95,11 +95,11 @@ module.exports = {
 		return this.nextCallbackId - 1;
 	},
 	resolveCallback: function (msg) {
-		let callback = this.callbacks.spliceFirstWhere(c => c.id == msg.id);
+		let callback = this.callbacks.spliceFirstWhere(c => c.id == msg.msg.id);
 		if (!callback)
 			return;
 
-		callback.callback(msg.result);
+		callback.callback(msg.msg.result);
 	},
 
 	send: function (zone, msg) {

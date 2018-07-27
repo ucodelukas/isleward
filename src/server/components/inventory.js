@@ -539,7 +539,7 @@ module.exports = {
 		if (callbackId == null)
 			return;
 
-		this.obj.instance.syncer.queue('serverModule', {
+		process.send({
 			module: 'atlas',
 			method: 'resolveCallback',
 			msg: {
@@ -744,7 +744,7 @@ module.exports = {
 				id: this.obj.id,
 				event: true,
 				text: 'loot'
-			});
+			}, -1);
 
 			this.obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
@@ -957,25 +957,6 @@ module.exports = {
 		}
 
 		return true;
-	},
-
-	rollItems: function (party) {
-		let items = this.items;
-		let iLen = items.length;
-		for (let i = 0; i < iLen; i++) {
-			let item = items[i];
-
-			this.obj.instance.syncer.queue('serverModule', {
-				module: 'lootRoller',
-				method: 'enqueue',
-				msg: {
-					party: party,
-					item: item
-				}
-			});
-		}
-
-		this.items = [];
 	},
 
 	fireEvent: function (event, args) {

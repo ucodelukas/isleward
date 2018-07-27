@@ -78,7 +78,7 @@ module.exports = {
 			}]
 		};
 
-		syncer.queue('onGetObject', effect);
+		syncer.queue('onGetObject', effect, -1);
 
 		this.queueCallback(this.onWarningOver.bind(this, x, y), this.delay * 350);
 	},
@@ -101,7 +101,7 @@ module.exports = {
 			}]
 		};
 
-		syncer.queue('onGetObject', effect);
+		syncer.queue('onGetObject', effect, -1);
 
 		let mobs = physics.getCell(x, y);
 		let mLen = mobs.length;

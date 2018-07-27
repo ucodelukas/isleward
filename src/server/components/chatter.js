@@ -41,7 +41,7 @@ module.exports = {
 						class: 'color-pinkB',
 						message: this.obj.name + ': ' + pick.msg
 					}
-				});
+				}, -1);
 			}
 		} else if (this.cd > 0)
 			this.cd--;

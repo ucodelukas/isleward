@@ -133,7 +133,7 @@ module.exports = {
 					row: 0,
 					col: 4
 				}]
-			});
+			}, -1);
 		}
 
 		let inventory = obj.addComponent('inventory');

@@ -93,7 +93,7 @@ module.exports = {
 					type: 'animation',
 					template: this.animation
 				}]
-			});
+			}, -1);
 		}
 
 		return true;
@@ -130,7 +130,7 @@ module.exports = {
 					x: currentMinion.x,
 					y: currentMinion.y,
 					components: [deathAnimation]
-				});
+				}, -1);
 			} else {
 				this.obj.instance.syncer.queue('onGetObject', {
 					x: currentMinion.x,
@@ -140,7 +140,7 @@ module.exports = {
 						row: 0,
 						col: 4
 					}]
-				});
+				}, -1);
 			}
 		}
 	},

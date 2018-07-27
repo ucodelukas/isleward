@@ -20,7 +20,7 @@ module.exports = {
 					type: 'animation',
 					template: this.animation
 				}]
-			});
+			}, -1);
 		}
 
 		let selfEffect = target.effects.addEffect({

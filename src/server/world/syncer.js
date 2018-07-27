@@ -117,7 +117,7 @@ module.exports = {
 	},
 	queue: function (event, obj, to) {
 		//Send to all players in zone?
-		if (to === null || to === undefined) {
+		if (to === -1) {
 			//OPTIMIZE: Store a list of all players
 			let pList = this.objects.objects.filter(o => o.player);
 			to = pList.map(p => p.serverId);

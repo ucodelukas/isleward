@@ -50,7 +50,7 @@ module.exports = {
 						class: 'q4',
 						message: mob.name + ': ' + text
 					}
-				});
+				}, -1);
 			} else {
 				mob.addComponent('chatter');
 				mob.syncer.set(false, 'chatter', 'msg', text);

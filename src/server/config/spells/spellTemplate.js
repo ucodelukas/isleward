@@ -94,7 +94,7 @@ module.exports = {
 	},
 
 	sendAnimation: function (blueprint) {
-		this.obj.instance.syncer.queue('onGetObject', blueprint);
+		this.obj.instance.syncer.queue('onGetObject', blueprint, -1);
 	},
 
 	sendBump: function (target) {
@@ -133,7 +133,7 @@ module.exports = {
 		this.obj.instance.syncer.queue('onGetObject', {
 			id: this.obj.id,
 			components: components
-		});
+		}, -1);
 	},
 
 	simplify: function (self) {

@@ -62,7 +62,7 @@ module.exports = {
 				id: target.id,
 				event: true,
 				text: 'slowed'
-			});
+			}, -1);
 		}
 
 		let damage = this.getDamage(target);

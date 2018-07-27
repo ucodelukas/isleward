@@ -56,7 +56,7 @@ module.exports = {
 			id: target.id,
 			event: true,
 			text: 'cocooned'
-		});
+		}, -1);
 
 		target.aggro.tryEngage(this.obj, this.damage, this.threatMult);
 	}

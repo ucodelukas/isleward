@@ -180,7 +180,7 @@ module.exports = {
 				id: this.obj.id,
 				event: true,
 				text: '+' + options.type
-			});
+			}, -1);
 
 			this.obj.syncer.setArray(false, 'effects', 'addEffects', options.type);
 		}
@@ -200,7 +200,7 @@ module.exports = {
 			id: this.obj.id,
 			event: true,
 			text: '-' + type
-		});
+		}, -1);
 
 		this.obj.syncer.setArray(false, 'effects', 'removeEffects', type);
 	},

@@ -542,7 +542,7 @@ module.exports = {
 									row: 0,
 									col: 4
 								}]
-							});
+							}, -1);
 						}, this);
 					}
 				}

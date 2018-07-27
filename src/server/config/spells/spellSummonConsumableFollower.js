@@ -108,7 +108,7 @@ module.exports = {
 						row: 1,
 						col: 4
 					}]
-				});
+				}, -1);
 			} else 
 				m.mob.update = (this.walkCd == 0) ? m.mob.realUpdate : null;
 		}
