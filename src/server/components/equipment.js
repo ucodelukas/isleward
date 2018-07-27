@@ -40,7 +40,7 @@ module.exports = {
 		}
 
 		let currentEqId = this.eq[item.slot];
-		if (currentEqId === null) {
+		if (currentEqId == null) {
 			this.equip(itemId);
 			return true;
 		}
@@ -65,15 +65,15 @@ module.exports = {
 			slot = item.equipSlot || item.slot;
 		if (slot === 'twoHanded') {
 			let currentEqId = this.eq.offHand;
-			if (currentEqId !== null)
+			if (currentEqId != null)
 				this.unequip(currentEqId);
 
 			slot = 'oneHanded';
 		} else if (slot === 'offHand') {
 			let currentEqId = this.eq.oneHanded;
-			if (currentEqId !== null) {
+			if (currentEqId != null) {
 				let currentEq = this.obj.inventory.findItem(currentEqId);
-				if ((currentEq !== null) && (currentEq.slot === 'twoHanded'))
+				if ((currentEq != null) && (currentEq.slot === 'twoHanded'))
 					this.unequip(currentEqId);
 			}
 		}
@@ -100,8 +100,8 @@ module.exports = {
 		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
 		if (slot === 'finger') {
-			let f1 = (this.eq['finger-1'] !== null);
-			let f2 = (this.eq['finger-2'] !== null);
+			let f1 = (this.eq['finger-1'] != null);
+			let f2 = (this.eq['finger-2'] != null);
 
 			if ((f1) && (f2))
 				slot = 'finger-1';
@@ -116,7 +116,7 @@ module.exports = {
 		let currentEq = this.obj.inventory.findItem(currentEqId);
 		if (currentEq === item)
 			return;
-		if (currentEqId !== null) {
+		if (currentEqId != null) {
 			spellId = currentEq.spellId;
 			this.unequip(currentEqId);
 		}
@@ -185,7 +185,7 @@ module.exports = {
 			itemId = itemId.itemId;
 		}
 
-		if (item.id === null)
+		if (item.id == null)
 			item = this.obj.inventory.findItem(itemId);
 
 		if (!item)

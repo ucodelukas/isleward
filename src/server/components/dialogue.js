@@ -21,14 +21,14 @@ module.exports = {
 
 		let target = msg.target;
 
-		if ((target === null) && (!msg.targetName))
+		if ((target == null) && (!msg.targetName))
 			return false;
 
-		if ((target !== null) && (target.id === null)) {
+		if ((target != null) && (target.id == null)) {
 			target = this.obj.instance.objects.objects.find(o => o.id === target);
 			if (!target)
 				return false;
-		} else if (msg.targetName !== null) {
+		} else if (msg.targetName != null) {
 			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === msg.targetName.toLowerCase())));
 			if (!target)
 				return false;

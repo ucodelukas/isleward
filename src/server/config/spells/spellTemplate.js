@@ -28,7 +28,7 @@ module.exports = {
 			return true;
 		
 		let inRange = true;
-		if (this.range !== null) {
+		if (this.range != null) {
 			let obj = this.obj;
 			let distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
 			inRange = (distance <= this.range);

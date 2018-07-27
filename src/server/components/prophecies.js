@@ -12,7 +12,7 @@ module.exports = {
 				console.log(e);
 			}
 
-			if (template === null)
+			if (template == null)
 				return;
 			else if (this.list.some(l => (l.type === p)))
 				return;

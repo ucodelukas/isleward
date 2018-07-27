@@ -151,7 +151,6 @@ module.exports = {
 			return;
 		}
 
-		let channels = obj.auth.customChannels;
 		channels.spliceWhere(c => (c === value));
 
 		let charname = obj.auth.charname;

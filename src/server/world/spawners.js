@@ -170,7 +170,7 @@ module.exports = {
 			if (!l.zonePrint)
 				return;
 
-			if (l.zonePrint.level !== null)
+			if (l.zonePrint.level != null)
 				l.zonePrint.level = level;
 
 			if ((!l.mob) || (l.mob.destroyed))

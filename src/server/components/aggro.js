@@ -18,7 +18,7 @@ module.exports = {
 			this.faction = blueprint.faction;
 
 		//TODO: Why don't we move if faction is null?
-		if (this.faction === null)
+		if (this.faction == null)
 			return;
 
 		if (this.physics.width > 0)
@@ -145,7 +145,7 @@ module.exports = {
 			return false;
 
 		let faction = target.aggro.faction;
-		if ((faction === null) || (!this.faction))
+		if ((faction == null) || (!this.faction))
 			return false;
 
 		let rep = this.obj.reputation;
@@ -254,7 +254,7 @@ module.exports = {
 			if (l.obj !== obj)
 				continue;
 
-			if (amount === null) {
+			if (amount == null) {
 				list.splice(i, 1);
 				obj.aggro.unAggro(this.obj);
 				break;
@@ -305,7 +305,7 @@ module.exports = {
 			if (this.ignoreList.some(o => o === obj))
 				continue;
 
-			if ((highest === null) || (l.threat > highest.threat)) {
+			if ((highest == null) || (l.threat > highest.threat)) {
 				highest = l;
 				closest = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
 			} else if (l.threat === highest.threat) {

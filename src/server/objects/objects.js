@@ -144,24 +144,9 @@ module.exports = {
 	},
 
 	removeObject: function (obj, callback, useServerId) {
-		let objects = this.objects;
-		let oLen = objects.length;
-		let found = null;
-		for (let i = 0; i < oLen; i++) {
-			let o = objects[i];
-			let match = false;
-			if (useServerId)
-				match = (o.serverId === obj.id);
-			else
-				match = (o.id === obj.id);
-
-			if (match) {
-				o.destroy();
-				found = o;
-				objects.splice(i, 1);
-				break;
-			}
-		}
+		let found = this.objects.spliceFirstWhere(o => obj.id === (useServerId ? o.serverId : o.id));
+		if (!found)
+			return;
 
 		let physics = this.physics;
 		if (physics) {
@@ -170,6 +155,8 @@ module.exports = {
 			else
 				physics.removeRegion(found);
 		}
+
+		found.destroy();
 
 		if (callback)
 			callback(found);

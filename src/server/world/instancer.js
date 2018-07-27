@@ -108,7 +108,7 @@ module.exports = {
 
 			let spawnPos = map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x === null)) {
+			if ((!msg.keepPos) || (obj.x == null)) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}
@@ -245,7 +245,7 @@ module.exports = {
 
 				instance.syncer.update();
 
-				if (instance.closeTtl !== null) {
+				if (instance.closeTtl != null) {
 					let hasPlayers = instance.objects.objects.some(o => o.player);
 					if (hasPlayers) {
 						delete instance.closeTtl;
@@ -310,7 +310,7 @@ module.exports = {
 			if (exists)
 				spawnPos = exists.map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x === null)) {
+			if ((!msg.keepPos) || (obj.x == null)) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}

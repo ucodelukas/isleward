@@ -80,10 +80,10 @@ module.exports = {
 	startBuy: function (msg) {
 		let target = msg.target;
 
-		if ((target === null) && (!msg.targetName))
+		if ((target == null) && (!msg.targetName))
 			return false;
 
-		if ((target !== null) && (target.id === null))
+		if ((target != null) && (target.id == null))
 			target = this.obj.instance.objects.objects.find(o => o.id === target);
 		else if (msg.targetName)
 			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === msg.targetName.toLowerCase())));
@@ -276,12 +276,12 @@ module.exports = {
 		let target = msg.target;
 		let targetName = (msg.targetName || '').toLowerCase();
 
-		if ((target === null) && (!targetName))
+		if ((target == null) && (!targetName))
 			return false;
 
-		if ((target !== null) && (target.id === null))
+		if ((target != null) && (target.id == null))
 			target = this.obj.instance.objects.objects.find(o => o.id === target);
-		else if (targetName !== null)
+		else if (targetName != null)
 			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === targetName)));
 
 		this.target = null;
@@ -380,10 +380,10 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = (msg.callbackId !== null) ? msg.callbackId : msg;
+		let callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
 		result = result || [];
 
-		if (callbackId === null)
+		if (callbackId == null)
 			return;
 
 		process.send({

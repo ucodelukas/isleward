@@ -210,7 +210,7 @@ module.exports = {
 
 			let data = layer.data || layer.objects;
 			let firstItem = data[0];
-			if ((firstItem) && (firstItem.width !== null)) {
+			if ((firstItem) && (firstItem.width != null)) {
 				let info = {
 					map: this.name,
 					layer: layerName,
@@ -292,7 +292,7 @@ module.exports = {
 				let layer = this.layers;
 				if (this.oldLayers[layerName])
 					this.oldLayers[layerName][x][y] = cell;
-				layer[x][y] = (layer[x][y] === null) ? cell : layer[x][y] + ',' + cell;
+				layer[x][y] = (layer[x][y] == null) ? cell : layer[x][y] + ',' + cell;
 			} else if (layerName === 'hiddenWalls')
 				this.hiddenWalls[x][y] = cell;
 			else if (layerName === 'hiddenTiles')

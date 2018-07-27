@@ -98,7 +98,7 @@ module.exports = {
 		if (self)
 			o = this.oSelf;
 
-		if (o[property] === null)
+		if (o[property] == null)
 			o[property] = [];
 
 		o[property].push(value);

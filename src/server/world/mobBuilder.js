@@ -29,7 +29,7 @@ module.exports = {
 
 				if (typeDefinition.sheetName)
 					mob.sheetName = typeDefinition.sheetName;
-				if (typeDefinition.cell !== null)
+				if (typeDefinition.cell != null)
 					mob.cell = typeDefinition.cell;
 			}
 		}
