@@ -8,7 +8,6 @@ module.exports = {
 	zone: null,
 	physics: null,
 	map: null,
-	zone: null,
 
 	cdMax: 50,
 

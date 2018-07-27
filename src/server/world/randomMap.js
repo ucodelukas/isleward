@@ -66,7 +66,7 @@ module.exports = {
 						if (i + j + k == 0)
 							continue;
 
-						var flipped = extend(true, {
+						let flipped = extend(true, {
 							flipX: !!i,
 							flipY: !!j,
 							rotate: !!k
@@ -264,9 +264,9 @@ module.exports = {
 		let collisionMap = instance.map.clientMap.collisionMap;
 
 		for (let i = 0; i < template.width; i++) {
-			var x = room.x + i;
+			let x = room.x + i;
 			for (let j = 0; j < template.height; j++) {
-				var y = room.y + j;
+				let y = room.y + j;
 
 				let tile = template.map[i][j];
 				if (!tile)
@@ -331,8 +331,6 @@ module.exports = {
 		let template = room.template;
 		let spawners = instance.spawners;
 		let spawnCd = instance.map.mapFile.properties.spawnCd;
-
-		let collisionMap = instance.map.clientMap.collisionMap;
 
 		template.objects.forEach(function (o) {
 			o.x = o.x - template.x + room.x;

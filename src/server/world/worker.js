@@ -1,6 +1,6 @@
 global.io = true;
 
-let extend = require('extend');
+global.extend = require('extend');
 let helpers = require('../misc/helpers');
 let components = require('../components/components');
 let instancer = require('./instancer');
@@ -37,7 +37,6 @@ let onModsReady = function () {
 };
 
 let onDbReady = function () {
-	global.extend = extend;
 	global._ = helpers;
 	global.instancer = instancer;
 	require('../misc/random');

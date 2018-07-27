@@ -5,7 +5,7 @@ let Random = function (a) {
 };
 Random.prototype.init_by_array = function (a, c) {
 	let b, f, e; this.init_genrand(19650218); b = 1; f = 0; for (e = this.N > c ? this.N : c; e; e--) {
-		var d = this.mt[b - 1] ^ this.mt[b - 1] >>> 30; this.mt[b] = (this.mt[b] ^ (((d & 4294901760) >>> 16) * 1664525 << 16) + (d & 65535) * 1664525) + a[f] + f; this.mt[b] >>>= 0; b++; f++; b >= this.N && (this.mt[0] = this.mt[this.N - 1], b = 1); f >= c && (f = 0);
+		let d = this.mt[b - 1] ^ this.mt[b - 1] >>> 30; this.mt[b] = (this.mt[b] ^ (((d & 4294901760) >>> 16) * 1664525 << 16) + (d & 65535) * 1664525) + a[f] + f; this.mt[b] >>>= 0; b++; f++; b >= this.N && (this.mt[0] = this.mt[this.N - 1], b = 1); f >= c && (f = 0);
 	} for (e = this.N - 1; e; e--) {
 		d = this.mt[b - 1] ^ this.mt[b - 1] >>> 30, this.mt[b] = (this.mt[b] ^ (((d & 4294901760) >>> 16) * 1566083941 << 16) + (d & 65535) * 1566083941) - b, this.mt[b] >>>= 0, b++, b >= this.N && (this.mt[0] =
 this.mt[this.N - 1], b = 1);
@@ -33,12 +33,12 @@ Random.prototype.genrand_real3 = function () {
 Random.prototype.gamma = function (a, c) {
 	if (a > 1) {
 		for (let b = Math.sqrt(2 * a - 1), f = a - this.LOG4, e = a + b; ;) {
-			var d = this.random(); if (!(d < 1.0E-7 || g > 0.9999999)) {
-				var j = 1 - this.random(), i = Math.log(d / (1 - d)) / b, h = a * Math.exp(i), d = d * d * j, i = f + e * i - h; if (i + this.SG_MAGICCONST - 4.5 * d >= 0 || i >= Math.log(d)) return h * c;
+			let d = this.random(); if (!(d < 1.0E-7 || g > 0.9999999)) {
+				let j = 1 - this.random(), i = Math.log(d / (1 - d)) / b, h = a * Math.exp(i), d = d * d * j, i = f + e * i - h; if (i + this.SG_MAGICCONST - 4.5 * d >= 0 || i >= Math.log(d)) return h * c;
 			}
 		}
 	} else if (a == 1) {
-		for (var g = this.random(); g <= 1.0E-7;)g = this.random(); return -Math.log(g) * c;
+		for (let g = this.random(); g <= 1.0E-7;)g = this.random(); return -Math.log(g) * c;
 	} else {
 		for (;;) {
 			if (g = this.random(), h = (Math.E + a) / Math.E, g *= h, h = g <= 1 ? Math.pow(g, 1 / a) : -Math.log((h - g) / a), d = this.random(), g > 1) {
@@ -48,8 +48,8 @@ Random.prototype.gamma = function (a, c) {
 		} return h * c;
 	}
 }; Random.prototype.normal = function (a, c) {
-	var b = this.lastNormal; this.lastNormal = NaN; if (!b) {
-		var f = this.random() * 2 * Math.PI, e = Math.sqrt(-2 * Math.log(1 - this.random())), b = Math.cos(f) * e; this.lastNormal = Math.sin(f) * e;
+	let b = this.lastNormal; this.lastNormal = NaN; if (!b) {
+		let f = this.random() * 2 * Math.PI, e = Math.sqrt(-2 * Math.log(1 - this.random())), b = Math.cos(f) * e; this.lastNormal = Math.sin(f) * e;
 	} return a + b * c;
 }; Random.prototype.pareto = function (a) {
 	let c = this.random(); return 1 / Math.pow(1 - c, 1 / a);

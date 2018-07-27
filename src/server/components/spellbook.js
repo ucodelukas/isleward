@@ -328,10 +328,10 @@ module.exports = {
 			}
 		} else if (spell.range != null) {
 			//Distance Check
-			var fromX = this.obj.x;
-			var fromY = this.obj.y;
-			var toX = action.target.x;
-			var toY = action.target.y;
+			let fromX = this.obj.x;
+			let fromY = this.obj.y;
+			let toX = action.target.x;
+			let toY = action.target.y;
 			let distance = Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY));
 			let range = spell.range;
 			if ((spell.useWeaponRange) && (this.obj.player)) {
@@ -448,7 +448,7 @@ module.exports = {
 
 		let auto = this.auto;
 		let aLen = auto.length;
-		for (var i = 0; i < aLen; i++) {
+		for (let i = 0; i < aLen; i++) {
 			let a = auto[i];
 			if ((!a.target) || (a.target.destroyed)) {
 				auto.splice(i, 1);
@@ -464,7 +464,7 @@ module.exports = {
 
 		let callbacks = this.callbacks;
 		let cLen = callbacks.length;
-		for (var i = 0; i < cLen; i++) {
+		for (let i = 0; i < cLen; i++) {
 			let c = callbacks[i];
 
 			//If a spellCallback kills a mob he'll unregister his callbacks

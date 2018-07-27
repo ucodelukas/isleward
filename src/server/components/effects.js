@@ -134,7 +134,7 @@ module.exports = {
 			if (exists) {
 				exists.ttl += options.ttl;
 
-				for (var p in options) {
+				for (let p in options) {
 					if (p == 'ttl')
 						continue;
 
@@ -158,7 +158,7 @@ module.exports = {
 		}
 
 		let builtEffect = extend(true, {}, typeTemplate);
-		for (var p in options) 
+		for (let p in options) 
 			builtEffect[p] = options[p];
 		
 		builtEffect.obj = this.obj;

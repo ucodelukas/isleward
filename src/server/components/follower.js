@@ -107,14 +107,14 @@ module.exports = {
 		let maxDistance = this.maxDistance;
 		let distance = Math.max(Math.abs(obj.x - master.x), Math.abs(obj.y - master.y));
 
-		var doMove = (distance >= maxDistance);
+		let doMove = (distance >= maxDistance);
 		//When we're too far, just teleport
 		if ((!attacker) && (distance >= maxDistance * 2)) {
 			this.teleport();
 			return;
 		}
 
-		var doMove = false;
+		let doMove = false;
 		//If we're not too far from the master but the master is not in combat, move anyway
 		if (!attacker) {
 			let lastMasterPos = this.lastMasterPos;

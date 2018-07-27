@@ -65,7 +65,7 @@ module.exports = {
 				level: level
 			});
 
-			var id = 0;
+			let id = 0;
 			this.items.forEach(function (checkItem) {
 				if (checkItem.id >= id)
 					id = checkItem.id + 1;
@@ -141,7 +141,7 @@ module.exports = {
 
 		let canAfford = false;
 		if (item.worth.currency) {
-			var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+			let currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
 			canAfford = ((currencyItem) && (currencyItem.quantity >= item.worth.amount));
 		} else
 			canAfford = this.gold >= ~~(item.worth * markup);
@@ -189,7 +189,7 @@ module.exports = {
 			targetTrade.removeItem(msg.itemId, this.obj.name);
 
 		if (item.worth.currency) {
-			var currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+			let currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
 			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
 		} else {
 			targetTrade.gold += ~~(item.worth * markup);

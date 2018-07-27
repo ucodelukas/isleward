@@ -37,7 +37,7 @@ module.exports = {
 		});
 
 		if (msg.action == 'reroll') {
-			var enchantedStats = item.enchantedStats || {};
+			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
 			delete msg.addStatMsgs;
 
@@ -57,7 +57,7 @@ module.exports = {
 			generatorTypes.generate(item, bpt);
 			generatorStats.generate(item, bpt);
 
-			for (var p in enchantedStats) {
+			for (let p in enchantedStats) {
 				if (!item.stats[p])
 					item.stats[p] = 0;
 
@@ -90,7 +90,7 @@ module.exports = {
 			if (item.originalLevel)
 				item.level = item.originalLevel;
 
-			var enchantedStats = item.enchantedStats || {};
+			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
 			delete msg.addStatMsgs;
 
@@ -105,7 +105,7 @@ module.exports = {
 			delete item.stats;
 			delete item.spell;
 
-			for (var p in enchantedStats) {
+			for (let p in enchantedStats) {
 				if (!newItem.stats[p])
 					newItem.stats[p] = 0;
 
@@ -136,7 +136,7 @@ module.exports = {
 			if (!item.power)
 				return;
 
-			for (var p in item.enchantedStats) {
+			for (let p in item.enchantedStats) {
 				let value = item.enchantedStats[p];
 
 				if (item.stats[p]) {
@@ -195,7 +195,7 @@ module.exports = {
 		else {
 			let powerLevel = item.power || 0;
 			if (powerLevel < 3)
-				var mult = [5, 10, 20][powerLevel];
+				let mult = [5, 10, 20][powerLevel];
 			else
 				return;
 

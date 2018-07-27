@@ -106,11 +106,11 @@ module.exports = {
 		this.syncer = this.obj.instance.syncer;
 
 		let values = (blueprint || {}).values || {};
-		for (var v in values) 
+		for (let v in values) 
 			this.values[v] = values[v];
 
 		let stats = (blueprint || {}).stats || {};
-		for (var v in stats) 
+		for (let v in stats) 
 			this.stats[v] = stats[v];
 
 		this.calcXpMax();
@@ -172,7 +172,7 @@ module.exports = {
 		if (values.mana < manaMax) {
 			values.mana += regenMana;
 			//Show others what mana is?
-			var onlySelf = true;
+			let onlySelf = true;
 			if (this.obj.player)
 				onlySelf = false;
 			this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
@@ -199,11 +199,11 @@ module.exports = {
 			this.obj.syncer.setObject(false, 'stats', 'values', stat, values[stat]);
 
 		if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
-			var morphStat = stat.substr(3);
+			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 			this.addStat(morphStat, (0.05 * value));
 		} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
-			var morphStat = stat.substr(3);
+			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 			this.addStat(morphStat, value);
 		} else if (stat == 'vit') 
@@ -344,7 +344,7 @@ module.exports = {
 		let hpMax = target.stats.values.hpMax;
 		let aLen = aggroList.length;
 		for (let i = 0; i < aLen; i++) {
-			var a = aggroList[i];
+			let a = aggroList[i];
 			let dmg = a.damage;
 			if (dmg <= 0)
 				continue;
@@ -352,7 +352,7 @@ module.exports = {
 			let mult = 1;
 			//How many party members contributed
 			// Remember, maybe one of the aggro-ees might be a mob too
-			var party = a.obj.social ? a.obj.social.party : null;
+			let party = a.obj.social ? a.obj.social.party : null;
 			if (party) {
 				let partySize = aggroList.filter(function (f) {
 					return ((a.damage > 0) && (party.indexOf(f.obj.serverId) > -1));
@@ -382,7 +382,7 @@ module.exports = {
 	},
 
 	die: function (source) {
-		var obj = this.obj;
+		let obj = this.obj;
 		let values = this.values;
 
 		this.syncer.queue('onGetDamage', {
@@ -393,7 +393,7 @@ module.exports = {
 
 		obj.syncer.set(true, null, 'dead', true);
 
-		var obj = obj;
+		let obj = obj;
 		let syncO = obj.syncer.o;
 
 		obj.hidden = true;

@@ -50,7 +50,7 @@ module.exports = {
 			let picks = config[p];
 
 			while (total > 0) {
-				var pick = picks[~~(Math.random() * picks.length)];
+				let pick = picks[~~(Math.random() * picks.length)];
 				let amount = 1 + ~~(Math.random() * (total - 1));
 				total -= amount;
 

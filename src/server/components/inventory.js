@@ -29,8 +29,8 @@ module.exports = {
 			return (aId - bId);
 		});
 
-		for (var i = 0; i < iLen; i++) {
-			var item = items[i];
+		for (let i = 0; i < iLen; i++) {
+			let item = items[i];
 			if ((item.pos >= this.inventorySize) || (item.eq))
 				delete item.pos;
 
@@ -40,8 +40,8 @@ module.exports = {
 
 		this.hookItemEvents(items);
 
-		for (var i = 0; i < iLen; i++) {
-			var item = items[i];
+		for (let i = 0; i < iLen; i++) {
+			let item = items[i];
 			let pos = item.pos;
 
 			let newItem = this.getItem(item, true, true);
@@ -195,7 +195,7 @@ module.exports = {
 			runeSlot = 0;
 		else if (runeSlot == null) {
 			runeSlot = 4;
-			for (var i = 1; i <= 4; i++) {
+			for (let i = 1; i <= 4; i++) {
 				if (!this.items.some(j => (j.runeSlot == i))) {
 					runeSlot = i;
 					break;
@@ -471,10 +471,10 @@ module.exports = {
 	//Helpers
 
 	hookItemEvents: function (items) {
-		var items = items || this.items;
+		let items = items || this.items;
 		let iLen = items.length;
 		for (let i = 0; i < iLen; i++) {
-			var item = items[i];
+			let item = items[i];
 
 			if (item.effects) {
 				item.effects.forEach(function (e) {
@@ -497,8 +497,8 @@ module.exports = {
 			}
 
 			if ((item.pos == null) && (!item.eq)) {
-				var pos = i;
-				for (var j = 0; j < iLen; j++) {
+				let pos = i;
+				for (let j = 0; j < iLen; j++) {
 					if (!items.some(fj => (fj.pos == j))) {
 						pos = j;
 						break;
@@ -506,8 +506,8 @@ module.exports = {
 				}
 				item.pos = pos;
 			} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
-				var pos = item.pos;
-				for (var j = 0; j < iLen; j++) {
+				let pos = item.pos;
+				for (let j = 0; j < iLen; j++) {
 					if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
 						pos = j;
 						break;
@@ -524,7 +524,7 @@ module.exports = {
 			return;
 
 		let iSize = this.inventorySize;
-		for (var i = 0; i < iSize; i++) {
+		for (let i = 0; i < iSize; i++) {
 			if (!this.items.some(j => (j.pos == i))) {
 				item.pos = i;
 				break;
@@ -703,7 +703,7 @@ module.exports = {
 				return false;
 			}
 
-			for (var i = 0; i < iLen; i++) {
+			for (let i = 0; i < iLen; i++) {
 				let fItem = items[i];
 				if (fItem.id >= id) 
 					id = fItem.id + 1;
@@ -715,7 +715,7 @@ module.exports = {
 
 			if ((item.pos == null) && (!item.eq)) {
 				let pos = iLen;
-				for (var i = 0; i < iLen; i++) {
+				for (let i = 0; i < iLen; i++) {
 					if (!items.some(fi => (fi.pos == i))) {
 						pos = i;
 						break;
@@ -756,7 +756,7 @@ module.exports = {
 		if (item.stats) {
 			let stats = Object.keys(item.stats);
 			let sLen = stats.length;
-			for (var i = 0; i < sLen; i++) {
+			for (let i = 0; i < sLen; i++) {
 				let s = stats[i];
 				let val = item.stats[s];
 				if (s == 'maxHp') {
@@ -860,7 +860,7 @@ module.exports = {
 
 		let items = this.items;
 		let iLen = items.length;
-		for (var i = 0; i < iLen; i++) {
+		for (let i = 0; i < iLen; i++) {
 			delete items[i].eq;
 			delete items[i].pos;
 		}
@@ -878,7 +878,7 @@ module.exports = {
 		playerObject.fireEvent('beforeGenerateLoot', dropEvent);
 
 		if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
-			var magicFind = (blueprint.magicFind || 0);
+			let magicFind = (blueprint.magicFind || 0);
 			let bonusMagicFind = killSource.stats.values.magicFind;
 
 			let rolls = blueprint.rolls;
@@ -887,7 +887,7 @@ module.exports = {
 			if ((Math.random() * 100) < (itemQuantity % 100))
 				rolls++;
 
-			for (var i = 0; i < rolls; i++) {
+			for (let i = 0; i < rolls; i++) {
 				if (Math.random() * 100 >= (blueprint.chance || 35) * dropEvent.chanceMultiplier)
 					continue;
 
@@ -906,7 +906,7 @@ module.exports = {
 
 		if (blueprint.noRandom) {
 			let blueprints = blueprint.blueprints;
-			for (var i = 0; i < blueprints.length; i++) {
+			for (let i = 0; i < blueprints.length; i++) {
 				let drop = blueprints[i];
 				if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance * dropEvent.chanceMultiplier))
 					continue;

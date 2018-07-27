@@ -2,14 +2,6 @@ let mobBuilder = require('./mobBuilder');
 let animations = require('../config/animations');
 let scheduler = require('../misc/scheduler');
 
-let cSpawner = {
-	cd: -1,
-	cdMax: null,
-	blueprint: null,
-	mob: null,
-	amountLeft: -1
-};
-
 module.exports = {
 	list: [],
 	mobTypes: {},
@@ -123,7 +115,7 @@ module.exports = {
 			if (!l.cron) {
 				if (l.cd > 0) 
 					l.cd--;
-				 else if ((l.mob) && (l.mob.destroyed))
+				else if ((l.mob) && (l.mob.destroyed))
 					l.cd = l.cdMax;
 			}
 
@@ -178,7 +170,7 @@ module.exports = {
 			if (!l.zonePrint)
 				return;
 
-			if (l.zonePrint.level != null)
+			if (l.zonePrint.level !== null)
 				l.zonePrint.level = level;
 
 			if ((!l.mob) || (l.mob.destroyed))

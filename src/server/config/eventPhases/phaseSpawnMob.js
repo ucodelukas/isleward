@@ -47,7 +47,7 @@ module.exports = {
 				}
 
 				if (l.exists) {
-					var mob = objects.objects.find(o => (o.name == l.name));
+					let mob = objects.objects.find(o => (o.name == l.name));
 					mob.mob.walkDistance = 0;
 					this.spawnAnimation(mob);
 					mob.performMove({
@@ -60,7 +60,7 @@ module.exports = {
 					this.spawnAnimation(mob);
 					this.event.objects.push(mob);
 				} else {
-					var mob = objects.buildObjects([{
+					let mob = objects.buildObjects([{
 						x: x,
 						y: y,
 						sheetName: l.sheetName || 'mobs',

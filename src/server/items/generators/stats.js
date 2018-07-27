@@ -479,7 +479,7 @@ module.exports = {
 		//If we enchant something we don't add armor
 		if (!blueprint.statMult)
 			blueprint.statMult = {};
-		for (var s in blueprint.statMult) {
+		for (let s in blueprint.statMult) {
 			if (blueprint.statMult[s] > 0)
 				this.buildStat(item, blueprint, s);
 		}
@@ -487,8 +487,8 @@ module.exports = {
 		let statCount = blueprint.statCount || (item.quality + 1);
 
 		if (blueprint.forceStats) {
-			for (var i = 0; i < Math.min(statCount, blueprint.forceStats.length); i++) {
-				var choice = blueprint.forceStats[i];
+			for (let i = 0; i < Math.min(statCount, blueprint.forceStats.length); i++) {
+				let choice = blueprint.forceStats[i];
 				this.buildStat(item, blueprint, choice, result);
 				statCount--;
 			}
@@ -507,18 +507,18 @@ module.exports = {
 		if (blueprint.stats) {
 			let useStats = extend(true, [], blueprint.stats);
 			let addStats = Math.min(statCount, blueprint.stats.length);
-			for (var i = 0; i < addStats; i++) {
-				var choice = useStats[~~(Math.random() * useStats.length)];
+			for (let i = 0; i < addStats; i++) {
+				let choice = useStats[~~(Math.random() * useStats.length)];
 				useStats.spliceFirstWhere(s => s == choice);
 				this.buildStat(item, blueprint, choice, result);
 				statCount--;
 			}
 		}
 
-		for (var i = 0; i < statCount; i++) 
+		for (let i = 0; i < statCount; i++) 
 			this.buildStat(item, blueprint, null, result);
 
-		for (var s in item.stats) {
+		for (let s in item.stats) {
 			item.stats[s] = Math.ceil(item.stats[s]);
 			if (item.stats[s] == 0)
 				delete item.stats[s];

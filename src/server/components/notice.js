@@ -31,7 +31,7 @@ module.exports = {
 		if (action.targetId) {
 			let target = this.obj.instance.objects.find(o => o.id == action.targetId);
 			if (target) {
-				var cpn = target[action.cpn];
+				let cpn = target[action.cpn];
 				if ((cpn) && (cpn[action.method]))
 					cpn[action.method].call(cpn, obj, action.args);
 			}
@@ -39,7 +39,7 @@ module.exports = {
 			return;
 		}
 
-		var cpn = obj[action.cpn];
+		let cpn = obj[action.cpn];
 		if ((cpn) && (cpn[action.method]))
 			cpn[action.method].apply(cpn, action.args);
 	},

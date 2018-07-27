@@ -39,7 +39,7 @@ module.exports = {
 		delete o.components;
 		delete o.id;
 
-		for (var p in o) 
+		for (let p in o) 
 			obj[p] = o[p];
 
 		let cLen = components.length;
@@ -48,7 +48,7 @@ module.exports = {
 
 			let cpn = obj.addComponent(c.type, null, true);
 
-			for (var p in c) 
+			for (let p in c) 
 				cpn[p] = c[p];
 
 			if (cpn.transfer)
@@ -63,7 +63,7 @@ module.exports = {
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
 
-			var obj = this.build(skipPush, l.clientObj);
+			let obj = this.build(skipPush, l.clientObj);
 
 			obj.sheetName = l.sheetName;
 			obj.cell = l.cell;
@@ -82,7 +82,7 @@ module.exports = {
 
 			//Add components (certain ones need to happen first)
 			//TODO: Clean this part up
-			var properties = extend(true, {}, l.properties);
+			let properties = extend(true, {}, l.properties);
 			['cpnMob'].forEach(function (c) {
 				let blueprint = properties[c] || null;
 				if ((blueprint) && (typeof (blueprint) == 'string'))
@@ -98,7 +98,7 @@ module.exports = {
 				obj.addComponent(type, blueprint);
 			}, this);
 
-			for (var p in properties) {
+			for (let p in properties) {
 				if (p.indexOf('cpn') == -1) {
 					obj[p] = properties[p];
 					continue;
@@ -114,7 +114,7 @@ module.exports = {
 			}
 
 			let extraProperties = l.extraProperties || {};
-			for (var p in extraProperties) {
+			for (let p in extraProperties) {
 				let cpn = obj[p];
 				let e = extraProperties[p];
 				for (let pp in e) 
@@ -181,7 +181,7 @@ module.exports = {
 
 		delete o.components;
 
-		for (var p in o) 
+		for (let p in o) 
 			newO[p] = o[p];
 
 		let len = components.length;
@@ -191,7 +191,7 @@ module.exports = {
 			newO.addComponent(c.type, c);
 
 			let newC = newO[c.type];
-			for (var p in c) 
+			for (let p in c) 
 				newC[p] = c[p];
 		}
 
@@ -231,9 +231,9 @@ module.exports = {
 					let to = eventEntry.to;
 					let toLen = to.length;
 					for (let i = 0; i < toLen; i++) {
-						var toId = to[i];
+						let toId = to[i];
 
-						var player = players[toId];
+						let player = players[toId];
 						if (!player) {
 							let findPlayer = objects.find(o => o.id == toId);
 							if (!findPlayer)
@@ -255,7 +255,7 @@ module.exports = {
 		}
 
 		for (let p in players) {
-			var player = players[p];
+			let player = players[p];
 			player.socket.emit('events', player.events);
 		}
 	},

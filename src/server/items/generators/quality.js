@@ -26,7 +26,7 @@ module.exports = {
 		let bonusMagicFind = blueprint.bonusMagicFind || 0;
 
 		let mLen = magicFind.length;
-		for (var i = 0; i < mLen; i++) {
+		for (let i = 0; i < mLen; i++) {
 			qualities[i] = Math.max(0, qualities[i] - magicFind[i]);
 			if (qualities[i] > 0) {
 				if (i == 0) {
@@ -43,7 +43,7 @@ module.exports = {
 		let gen = ~~(Math.random() * max);
 
 		let total = 0;
-		for (var i = 0; i < qualities.length; i++) {
+		for (let i = 0; i < qualities.length; i++) {
 			total += qualities[i];
 
 			if (gen < total) {

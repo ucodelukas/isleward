@@ -62,7 +62,7 @@ module.exports = {
 
 	getSkins: function (account) {
 		let skins = [];
-		var account = this.getAccount(account) || {
+		let account = this.getAccount(account) || {
 			skins: []
 		};
 		(account.skins || []).forEach(function (s) {

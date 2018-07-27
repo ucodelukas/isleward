@@ -50,8 +50,8 @@ module.exports = {
 
 		result.forEach(function (r) {
 			if (r.removeAll) {
-				for (var i = 0; i < inventory.items.length; i++) {
-					var item = inventory.items[i];
+				for (let i = 0; i < inventory.items.length; i++) {
+					let item = inventory.items[i];
 					if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
 						inventory.destroyItem(item.id, item.quantity ? item.quantity : null);
 						i--;
@@ -59,8 +59,8 @@ module.exports = {
 				}
 
 				if (stash) {
-					for (var i = 0; i < stash.items.length; i++) {
-						var item = stash.items[i];
+					for (let i = 0; i < stash.items.length; i++) {
+						let item = stash.items[i];
 						if ((r.nameLike) && (item.name.indexOf(r.nameLike) > -1)) {
 							stash.destroyItem(item.id);
 							i--;

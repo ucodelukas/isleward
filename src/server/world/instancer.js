@@ -151,14 +151,14 @@ module.exports = {
 			let components = msgObj.components || [];
 			delete msgObj.components;
 
-			for (var p in msgObj) 
+			for (let p in msgObj) 
 				obj[p] = msgObj[p];
 
 			let cLen = components.length;
 			for (let i = 0; i < cLen; i++) {
 				let c = components[i];
 				let component = obj[c.type];
-				for (var p in c) 
+				for (let p in c) 
 					component[p] = c[p];
 			}
 		},
@@ -311,7 +311,7 @@ module.exports = {
 					msg.keepPos = false;
 			}
 
-			var spawnPos = map.getSpawnPos(obj);
+			let spawnPos = map.getSpawnPos(obj);
 
 			if (exists)
 				spawnPos = exists.map.getSpawnPos(obj);
@@ -328,7 +328,7 @@ module.exports = {
 				obj.serverId = obj.id;
 				delete obj.id;
 
-				var spawnPos = exists.map.getSpawnPos(obj);
+				let spawnPos = exists.map.getSpawnPos(obj);
 
 				obj.spawn = exists.map.spawn;
 
@@ -390,14 +390,14 @@ module.exports = {
 			let components = msgObj.components || [];
 			delete msgObj.components;
 
-			for (var p in msgObj) 
+			for (let p in msgObj) 
 				obj[p] = msgObj[p];
 
 			let cLen = components.length;
 			for (let i = 0; i < cLen; i++) {
 				let c = components[i];
 				let component = obj[c.type];
-				for (var p in c) 
+				for (let p in c) 
 					component[p] = c[p];
 			}
 		},
@@ -438,14 +438,14 @@ module.exports = {
 		},
 
 		removeObject: function (msg) {
-			var obj = msg.obj;
+			let obj = msg.obj;
 			let instanceId = msg.instanceId;
 
 			let exists = this.instances.find(i => i.id == instanceId);
 			if (!exists)
 				return;
 
-			var obj = msg.obj;
+			let obj = msg.obj;
 			obj = exists.objects.find(o => o.serverId == obj.id);
 
 			if (!obj)

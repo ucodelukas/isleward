@@ -107,7 +107,7 @@ module.exports = {
 		this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
 		if (isFish) {
-			var rod = this.obj.equipment.eq.tool;
+			let rod = this.obj.equipment.eq.tool;
 			rod = this.obj.inventory.findItem(rod);
 
 			let catchChance = 40 + this.obj.stats.values.catchChance;
@@ -156,7 +156,7 @@ module.exports = {
 		}
 
 		if (isFish) {
-			var rod = this.obj.equipment.eq.tool;
+			let rod = this.obj.equipment.eq.tool;
 			rod = this.obj.inventory.findItem(rod);
 			let itemChance = 1 + this.obj.stats.values.fishItems;
 			if (~~(Math.random() * 100) < itemChance) {

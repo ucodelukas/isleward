@@ -5,9 +5,9 @@ module.exports = {
 
 	init: function (blueprint) {
 		(blueprint.list || []).forEach(function (p) {
-			var template = null;
+			let template = null;
 			try {
-				var template = require('config/prophecies/' + p);
+				let template = require('config/prophecies/' + p);
 			} catch (e) {
 				console.log(e);
 			}
@@ -17,7 +17,7 @@ module.exports = {
 			else if (this.list.some(l => (l.type == p)))
 				return;
 
-			var p = extend(true, {}, template);
+			let p = extend(true, {}, template);
 			p.obj = this.obj;
 			p.init();
 

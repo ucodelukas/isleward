@@ -24,7 +24,7 @@ module.exports = {
 					let rProphecies = r.prophecies || [];
 
 					let match = true;
-					for (var i = 0; i < pLen; i++) {
+					for (let i = 0; i < pLen; i++) {
 						if (!rProphecies.some(rp => rp == prophecyFilter[i])) {
 							match = false;
 							break;

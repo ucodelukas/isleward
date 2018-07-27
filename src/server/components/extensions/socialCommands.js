@@ -136,7 +136,7 @@ module.exports = {
 
 		let obj = this.obj;
 
-		var channels = obj.auth.customChannels;
+		let channels = obj.auth.customChannels;
 		if (!channels.some(c => (c == value))) {
 			obj.socket.emit('events', {
 				onGetMessages: [{
@@ -151,7 +151,7 @@ module.exports = {
 			return;
 		}
 
-		var channels = obj.auth.customChannels;
+		let channels = obj.auth.customChannels;
 		channels.spliceWhere(c => (c == value));
 
 		let charname = obj.auth.charname;

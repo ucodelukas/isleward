@@ -6,7 +6,7 @@ module.exports = {
 	actionQueue: [],
 
 	addComponent: function (type, blueprint, isTransfer) {
-		var cpn = this[type];
+		let cpn = this[type];
 		if (!cpn) {
 			let template = components.components[type];
 			if (!template) {
@@ -15,7 +15,7 @@ module.exports = {
 				}, blueprint || {});
 			}
 
-			var cpn = extend(true, {}, template);
+			let cpn = extend(true, {}, template);
 			cpn.obj = this;
 
 			this.components.push(cpn);
@@ -58,7 +58,7 @@ module.exports = {
 		let components = this.components;
 		let len = components.length;
 		for (let i = 0; i < len; i++) {
-			var c = components[i];
+			let c = components[i];
 
 			if (c.destroyed) {
 				this.syncer.setSelfArray(false, 'removeComponents', c.type);
@@ -224,13 +224,13 @@ module.exports = {
 					q.isDouble = true;
 				}
 			}
-			var success = this.performMove(q);
+			let success = this.performMove(q);
 			if (!success) 
 				this.clearQueue();
 		} else if (q.action == 'clearQueue')
 			this.clearQueue();
 		else if (q.action == 'spell') {
-			var success = this.spellbook.cast(q);
+			let success = this.spellbook.cast(q);
 			if (!success)
 				this.performQueue();
 		}

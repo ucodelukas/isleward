@@ -59,11 +59,11 @@ module.exports = {
 		// this only counts for mobs, players can have multiple attackers
 		let list = this.list;
 		if (obj.isMob) {
-			var lLen = list.length;
-			for (var i = 0; i < lLen; i++) {
+			let lLen = list.length;
+			for (let i = 0; i < lLen; i++) {
 				let l = list[i];
 
-				var lThreat = l.obj.aggro.getHighest();
+				let lThreat = l.obj.aggro.getHighest();
 				if (lThreat) {
 					l.obj.aggro.list.forEach(function (a) {
 						a.obj.aggro.unIgnore(lThreat);
@@ -75,8 +75,8 @@ module.exports = {
 					return;
 			}
 		} else {
-			var lLen = list.length;
-			for (var i = 0; i < lLen; i++) {
+			let lLen = list.length;
+			for (let i = 0; i < lLen; i++) {
 				let targetAggro = list[i].obj.aggro;
 				//Maybe the aggro component has been removed?
 				if (targetAggro)
@@ -96,7 +96,7 @@ module.exports = {
 			return;
 
 		let iLen = inRange.length;
-		for (var i = 0; i < iLen; i++) {
+		for (let i = 0; i < iLen; i++) {
 			let enemy = inRange[i];
 
 			//The length could change
@@ -300,7 +300,7 @@ module.exports = {
 
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
-			var obj = l.obj;
+			let obj = l.obj;
 
 			if (this.ignoreList.some(o => o == obj))
 				continue;

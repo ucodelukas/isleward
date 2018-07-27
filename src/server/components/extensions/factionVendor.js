@@ -100,12 +100,12 @@ module.exports = {
 		let statGenerator = faction.uniqueStat;
 
 		let itemCount = blueprint.items.min + ~~(Math.random() * (blueprint.items.max - blueprint.items.min));
-		for (var i = 0; i < itemCount; i++) {
+		for (let i = 0; i < itemCount; i++) {
 			let minLevel = blueprint.items.minLevel || Math.max(1, list.level * 0.75);
 			let maxLevel = blueprint.items.maxLevel || (list.level * 1.25);
 			let level = ~~(minLevel + (Math.random() * (maxLevel - minLevel)));
 
-			var item = generator.generate({
+			let item = generator.generate({
 				noSpell: true,
 				magicFind: 150,
 				slot: blueprint.items.slot,
@@ -115,7 +115,7 @@ module.exports = {
 			let randomQuality = ~~(Math.random() * 5);
 			item.worth = Math.pow(item.level, 1.5) + (Math.pow((randomQuality + 1), 2) * 10);
 
-			var id = 0;
+			let id = 0;
 			list.items.forEach(function (checkItem) {
 				if (checkItem.id >= id)
 					id = checkItem.id + 1;
@@ -135,7 +135,7 @@ module.exports = {
 
 		let baseItems = this.baseItems;
 		let bLen = baseItems.length;
-		for (var i = 0; i < bLen; i++) 
+		for (let i = 0; i < bLen; i++) 
 			list.items.push(baseItems[i]);
 
 		let extra = blueprint.items.extra;
@@ -143,10 +143,10 @@ module.exports = {
 			return;
 
 		let eLen = extra.length;
-		for (var i = 0; i < eLen; i++) {
+		for (let i = 0; i < eLen; i++) {
 			let e = extra[i];
 
-			var item = extend(true, {}, e);
+			let item = extend(true, {}, e);
 
 			if (item.type == 'skin') {
 				let skinBlueprint = skins.getBlueprint(item.id);
@@ -166,7 +166,7 @@ module.exports = {
 				item = generated;
 			}
 
-			var id = 0;
+			let id = 0;
 			list.items.forEach(function (checkItem) {
 				if (checkItem.id >= id)
 					id = checkItem.id + 1;

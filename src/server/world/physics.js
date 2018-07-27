@@ -395,7 +395,7 @@ module.exports = {
 			let x2 = toX + c;
 			let y2 = toY + c;
 
-			var lowX, lowY, highX, highY, incX, incY;
+			let lowX, lowY, highX, highY, incX, incY;
 
 			if (reverseX) {
 				incX = -1;
@@ -498,7 +498,7 @@ module.exports = {
 		let grid = this.graph.grid;
 		if (!grid[x][y]) 
 			grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
-		 else {
+		else {
 			grid[x][y].weight = collides ? 0 : 1;
 			pathfinder.astar.cleanNode(grid[x][y]);
 		}

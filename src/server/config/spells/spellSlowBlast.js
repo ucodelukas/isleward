@@ -39,8 +39,8 @@ module.exports = {
 
 			let obj = this.obj;
 
-			var x = obj.x;
-			var y = obj.y;
+			let x = obj.x;
+			let y = obj.y;
 
 			let physics = obj.instance.physics;
 			let syncer = obj.instance.syncer;

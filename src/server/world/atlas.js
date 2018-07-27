@@ -165,7 +165,7 @@ module.exports = {
 			let obj = connections.players.find(p => (p.name == message.playerName));
 			if (!obj)
 				return;
-			var thread = this.getThreadFromName(obj.zoneName);
+			let thread = this.getThreadFromName(obj.zoneName);
 			if (!thread)
 				return;
 
@@ -184,7 +184,7 @@ module.exports = {
 			let serverObj = objects.objects.find(o => o.id == obj.id);
 			serverObj.zoneName = obj.zoneName;
 
-			var thread = this.getThreadFromName(obj.zoneName);
+			let thread = this.getThreadFromName(obj.zoneName);
 
 			if (!thread) {
 				thread = this.getThreadFromName(serverConfig.defaultZone);

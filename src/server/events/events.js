@@ -172,8 +172,8 @@ module.exports = {
 
 	updateEvent: function (event) {
 		let objects = event.objects;
-		var oLen = objects.length;
-		for (var i = 0; i < oLen; i++) {
+		let oLen = objects.length;
+		for (let i = 0; i < oLen; i++) {
 			if (objects[i].destroyed) {
 				objects.splice(i, 1);
 				i--;
@@ -184,8 +184,8 @@ module.exports = {
 		let currentPhases = event.phases;
 		let cLen = currentPhases.length;
 		let stillBusy = false;
-		for (var i = 0; i < cLen; i++) {
-			var phase = currentPhases[i];
+		for (let i = 0; i < cLen; i++) {
+			let phase = currentPhases[i];
 			if (!phase.destroyed) {
 				if ((phase.end) || (phase.endMark <= event.age)) {
 					if ((phase.destroy) && (!phase.destroyed))
@@ -232,12 +232,12 @@ module.exports = {
 
 		let phases = config.phases;
 		let pLen = phases.length;
-		for (var i = event.nextPhase; i < pLen; i++) {
+		for (let i = event.nextPhase; i < pLen; i++) {
 			let p = phases[i];
 
 			let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
 			let typeTemplate = require('../config/eventPhases/' + phaseFile);
-			var phase = extend(true, {
+			let phase = extend(true, {
 				instance: this.instance,
 				event: event
 			}, phaseTemplate, typeTemplate, p);
@@ -258,8 +258,8 @@ module.exports = {
 			event.done = true;
 
 		let oList = this.instance.objects.objects;
-		var oLen = oList.length;
-		for (var i = 0; i < oLen; i++) {
+		let oLen = oList.length;
+		for (let i = 0; i < oLen; i++) {
 			let o = oList[i];
 			if (!o.player)
 				continue;
@@ -283,7 +283,7 @@ module.exports = {
 			if (!event)
 				continue;
 
-			var exists = event.participators.find(p => (p.name == obj.name));
+			let exists = event.participators.find(p => (p.name == obj.name));
 			if (exists) {
 				event.participators.spliceWhere(p => (p == exists));
 				event.participators.push(obj);
@@ -296,7 +296,7 @@ module.exports = {
 				event.participators.push(obj);
 				result.push(event);
 
-				var rList = [{
+				let rList = [{
 					nameLike: 'Ancient Carp',
 					removeAll: true
 				}];
@@ -322,7 +322,7 @@ module.exports = {
 					event.participators.push(obj);
 					result.push(event);
 
-					var rList = [{
+					let rList = [{
 						nameLike: 'Ancient Carp',
 						removeAll: true
 					}];

@@ -101,7 +101,7 @@ module.exports = {
 
 								obj.reputation.getReputation('theWinterMan', 100);
 
-								var chances = {
+								let chances = {
 									'Bottomless Eggnog': 3,
 									'Sprig of Mistletoe': 50,
 									'Merrywinter Play Script': 20,
@@ -146,13 +146,13 @@ module.exports = {
 									quantity: 1
 								}];
 
-								var pool = [];
+								let pool = [];
 								Object.keys(chances).forEach(function (c) {
 									for (let i = 0; i < chances[c]; i++) 
 										pool.push(c);
 								});
 
-								var pick = pool[~~(Math.random() * pool.length)];
+								let pick = pool[~~(Math.random() * pool.length)];
 								let blueprint = rewards.find(r => (r.name == pick));
 
 								inventory.getItem(extend(true, {}, blueprint));

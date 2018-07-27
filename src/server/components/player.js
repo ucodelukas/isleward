@@ -50,14 +50,14 @@ module.exports = {
 		if (!blueprintStats.values.hp)
 			blueprintStats.values.hp = blueprintStats.values.hpMax;
 		let stats = obj.addComponent('stats');
-		for (var s in blueprintStats.values) 
+		for (let s in blueprintStats.values) 
 			stats.values[s] = blueprintStats.values[s];
 		
-		for (var s in blueprintStats.stats) 
+		for (let s in blueprintStats.stats) 
 			stats.stats[s] = blueprintStats.stats[s];
 
 		let gainStats = classes.stats[character.class].gainStats;
-		for (var s in gainStats) 
+		for (let s in gainStats) 
 			stats.values[s] += (gainStats[s] * stats.values.level);
 
 		obj.portrait = classes.portraits[character.class];

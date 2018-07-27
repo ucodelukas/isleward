@@ -182,7 +182,7 @@ module.exports = {
 		let characters = JSON.parse(result || '[]');
 		this.characterList = characters;
 
-		var result = characters
+		let result = characters
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)
@@ -592,7 +592,7 @@ module.exports = {
 		leaderboard.deleteCharacter(msg.data.name);
 	},
 	onRemoveFromList: function (msg, result) {
-		var result = this.characterList
+		let result = this.characterList
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)

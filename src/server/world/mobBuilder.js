@@ -1,6 +1,5 @@
 let animations = require('../config/animations');
 let itemGenerator = require('../items/generator');
-let combat = require('../combat/combat');
 
 module.exports = {
 	build: function (mob, blueprint, scaleDrops, type, zoneName) {
@@ -181,7 +180,7 @@ module.exports = {
 		statValues.hp = statValues.hpMax;
 		statValues.mana = statValues.manaMax;
 
-		mob.spellbook.spells.forEach(function (s, i) {
+		mob.spellbook.spells.forEach(function (s) {
 			s.dmgMult = dmgMult;
 			s.statType = preferStat;
 			s.element = elementType;

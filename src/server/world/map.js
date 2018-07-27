@@ -211,7 +211,7 @@ module.exports = {
 			let data = layer.data || layer.objects;
 			let firstItem = data[0];
 			if ((firstItem) && (firstItem.width != null)) {
-				var info = {
+				let info = {
 					map: this.name,
 					layer: layerName,
 					objects: data
@@ -229,7 +229,7 @@ module.exports = {
 					let y = ~~(j / this.size.w);
 					let x = j - (y * this.size.w);
 
-					var info = {
+					let info = {
 						map: this.name,
 						layer: layerName,
 						cell: cell,
@@ -282,7 +282,7 @@ module.exports = {
 
 			let cellInfo = this.builders.getCellInfo(cell);
 			let sheetName = cellInfo.sheetName;
-			var cell = cellInfo.cell;
+			let cell = cellInfo.cell;
 			if (sheetName == 'walls')
 				cell += 192;
 			else if (sheetName == 'objects')
@@ -349,7 +349,7 @@ module.exports = {
 
 			if (layerName == 'rooms') {
 				if (blueprint.properties.exit) {
-					var room = this.rooms.find(function (r) {
+					let room = this.rooms.find(function (r) {
 						return (!(
 							(blueprint.x + blueprint.width < r.x) ||
 							(blueprint.y + blueprint.height < r.y) ||
@@ -372,7 +372,7 @@ module.exports = {
 				if (!mapFile.properties.isRandom)
 					spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 				else {
-					var room = this.rooms.find(function (r) {
+					let room = this.rooms.find(function (r) {
 						return (!(
 							(blueprint.x < r.x) ||
 							(blueprint.y < r.y) ||

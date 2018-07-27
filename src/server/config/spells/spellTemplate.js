@@ -158,7 +158,7 @@ module.exports = {
 	},
 
 	getDamage: function (target, noMitigate) {
-		var damage = {
+		let damage = {
 			source: this.obj,
 			target: target,
 			damage: (this.damage || this.healing) * (this.dmgMult || 1),
@@ -172,7 +172,7 @@ module.exports = {
 
 		this.obj.fireEvent('onBeforeCalculateDamage', damage);
 
-		var damage = combat.getDamage(damage);
+		let damage = combat.getDamage(damage);
 
 		return damage;
 	},

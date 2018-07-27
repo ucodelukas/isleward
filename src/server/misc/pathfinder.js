@@ -32,7 +32,7 @@
 		});
 	}
 
-	var astar = {
+	let astar = {
 		/**
 		* Perform an A* Search on a graph given a start and end node.
 		* @param {Graph} graph
@@ -368,7 +368,7 @@
 				let child1N = child2N - 1;
 				// This is used to store the new position of the element, if any.
 				let swap = null;
-				var child1Score;
+				let child1Score;
 				// If the first child exists (is inside the array)...
 				if (child1N < length) {
 					// Look it up and compute its score.

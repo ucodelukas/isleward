@@ -69,7 +69,7 @@ module.exports = {
 				mobs = [mobs];
 			let mLen = mobs.length;
 
-			for (var i = 0; i < mLen; i++) {
+			for (let i = 0; i < mLen; i++) {
 				let mob = objects.find(o => (o.id == mobs[i]));
 				for (let j = 0; j < cLen; j++) {
 					let c = components[j];
@@ -90,7 +90,7 @@ module.exports = {
 				mobs = [mobs];
 			let mLen = mobs.length;
 
-			for (var i = 0; i < mLen; i++) {
+			for (let i = 0; i < mLen; i++) {
 				let mob = objects.find(o => (o.id == mobs[i]));
 				for (let j = 0; j < cLen; j++) 
 					mob.removeComponent(components[j]);

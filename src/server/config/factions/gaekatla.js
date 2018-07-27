@@ -57,7 +57,7 @@ module.exports = {
 					return;
 
 				//Spawn a mob
-				var mob = mob.instance.spawners.spawn({
+				let mob = mob.instance.spawners.spawn({
 					amountLeft: 1,
 					blueprint: {
 						x: mob.x,

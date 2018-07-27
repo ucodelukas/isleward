@@ -35,7 +35,7 @@ module.exports = {
 				continue;
 			}
 
-			for (var o in source) {
+			for (let o in source) {
 				let targetOptions = target.msg[0].options;
 				if (targetOptions.options)
 					targetOptions.spliceWhere(t => (t == o));
