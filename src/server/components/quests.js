@@ -1,5 +1,3 @@
-let a = require('a');
-
 module.exports = {
 	type: 'quests',
 	quests: [],

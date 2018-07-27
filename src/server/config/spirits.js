@@ -58,6 +58,6 @@ module.exports = {
 	},
 
 	init: function () {
-		events.emit('onBeforeGetSpirits', spirits);
+		events.emit('onBeforeGetSpirits', this);
 	}
 };

@@ -1,6 +1,6 @@
-let animations = require('config/animations');
-let classes = require('config/spirits');
-let scheduler = require('misc/scheduler');
+let animations = require('../config/animations');
+let classes = require('../config/spirits');
+let scheduler = require('../misc/scheduler');
 
 let baseStats = {
 	mana: 20,

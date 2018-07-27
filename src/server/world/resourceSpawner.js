@@ -1,4 +1,4 @@
-let herbs = require('config/herbs');
+let herbs = require('../config/herbs');
 
 module.exports = {
 	nodes: [],

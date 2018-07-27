@@ -1,4 +1,4 @@
-let io = require('security/io');
+let io = require('../security/io');
 
 module.exports = {
 	instance: null,

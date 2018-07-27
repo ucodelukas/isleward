@@ -1,4 +1,4 @@
-let roles = require('config/roles');
+let roles = require('../config/roles');
 
 module.exports = {
 	type: 'portal',

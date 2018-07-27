@@ -86,7 +86,7 @@ module.exports = {
 		};
 		this.obj.instance.eventEmitter.emit('onBeforeGetSpellTemplate', typeTemplate);
 		if (!typeTemplate.template)
-			typeTemplate.template = require('./config/spells/spell' + type);
+			typeTemplate.template = require('../config/spells/spell' + type);
 
 		let builtSpell = extend(true, {}, spellTemplate, typeTemplate.template, options);
 		builtSpell.obj = this.obj;

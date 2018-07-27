@@ -1,4 +1,4 @@
-let passiveTree = require('config/passiveTree');
+let passiveTree = require('../config/passiveTree');
 
 module.exports = {
 	type: 'passives',

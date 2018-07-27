@@ -1,6 +1,6 @@
-let generator = require('items/generator');
-let statGenerator = require('items/generators/stats');
-let skins = require('config/skins');
+let generator = require('../items/generator');
+let statGenerator = require('../items/generators/stats');
+let skins = require('../config/skins');
 
 module.exports = {
 	type: 'trade',

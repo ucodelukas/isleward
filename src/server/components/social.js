@@ -1,6 +1,6 @@
-let atlas = require('world/atlas');
-let roles = require('config/roles');
-let events = require('misc/events');
+let atlas = require('../world/atlas');
+let roles = require('../config/roles');
+let events = require('../misc/events');
 
 module.exports = {
 	type: 'social',

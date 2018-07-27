@@ -1,6 +1,6 @@
-let mobBuilder = require('world/mobBuilder');
-let animations = require('config/animations');
-let scheduler = require('misc/scheduler');
+let mobBuilder = require('./mobBuilder');
+let animations = require('../config/animations');
+let scheduler = require('../misc/scheduler');
 
 let cSpawner = {
 	cd: -1,

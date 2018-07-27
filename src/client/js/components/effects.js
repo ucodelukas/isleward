@@ -3,9 +3,9 @@ define([
 ], function (
 	renderer
 ) {
-	var scale = 40;
+	let scale = 40;
 
-	var auras = {
+	let auras = {
 		reflectDamage: 0,
 		stealth: 1,
 		regenHp: 9,
@@ -29,7 +29,7 @@ define([
 		effects: [],
 
 		init: function (blueprint) {
-			var sprite = this.obj.sprite;
+			let sprite = this.obj.sprite;
 
 			this.effects = this.effects
 				.filter(function (e) {
@@ -47,7 +47,7 @@ define([
 							h: scale * 2,
 							cell: auras[e]
 						})
-					}
+					};
 				}, this);
 		},
 		extend: function (blueprint) {
@@ -68,14 +68,14 @@ define([
 								h: scale * 2,
 								cell: auras[e]
 							})
-						}
+						};
 					}, this);
 
 				this.effects.push.apply(this.effects, blueprint.addEffects || []);
 			}
 			if (blueprint.removeEffects) {
 				blueprint.removeEffects.forEach(function (r) {
-					var effect = this.effects.find(function (e) {
+					let effect = this.effects.find(function (e) {
 						return (e.name == r);
 					});
 
@@ -104,10 +104,10 @@ define([
 				this.alphaDir *= -1;
 			}
 
-			var x = (this.obj.x - 0.5) * scale;
-			var y = (this.obj.y - 0.5) * scale;
+			let x = (this.obj.x - 0.5) * scale;
+			let y = (this.obj.y - 0.5) * scale;
 
-			var useAlpha = this.alpha;
+			let useAlpha = this.alpha;
 			if (useAlpha < this.alphaCutoff)
 				useAlpha = 0;
 			else {

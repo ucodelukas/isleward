@@ -1,18 +1,18 @@
-let map = require('world/map');
-let syncer = require('world/syncer');
+let map = require('./map');
+let syncer = require('./syncer');
 let objects = require('../objects/objects');
-let spawners = require('world/spawners');
-let physics = require('world/physics');
-let resourceSpawner = require('world/resourceSpawner');
-let spellCallbacks = require('config/spells/spellCallbacks');
-let questBuilder = require('config/quests/questBuilder');
-let randomMap = require('world/randomMap');
-let customMap = require('world/customMap');
-let events = require('events/events');
-let scheduler = require('misc/scheduler');
-let mail = require('misc/mail');
-let herbs = require('config/herbs');
-let eventEmitter = require('misc/events');
+let spawners = require('./spawners');
+let physics = require('./physics');
+let resourceSpawner = require('./resourceSpawner');
+let spellCallbacks = require('../config/spells/spellCallbacks');
+let questBuilder = require('../config/quests/questBuilder');
+let randomMap = require('./randomMap');
+let customMap = require('./customMap');
+let events = require('../events/events');
+let scheduler = require('../misc/scheduler');
+let mail = require('../misc/mail');
+let herbs = require('../config/herbs');
+let eventEmitter = require('../misc/events');
 
 module.exports = {
 	instances: [],

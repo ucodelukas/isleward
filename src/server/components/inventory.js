@@ -1,11 +1,11 @@
-let generator = require('items/generator');
-let salvager = require('items/salvager');
-let enchanter = require('items/enchanter');
+let generator = require('../items/generator');
+let salvager = require('../items/salvager');
+let enchanter = require('../items/enchanter');
 let objects = require('../objects/objects');
-let classes = require('config/spirits');
-let mtx = require('mtx/mtx');
-let factions = require('config/factions');
-let itemEffects = require('items/itemEffects');
+let classes = require('../config/spirits');
+let mtx = require('../mtx/mtx');
+let factions = require('../config/factions');
+let itemEffects = require('../items/itemEffects');
 
 module.exports = {
 	//Properties

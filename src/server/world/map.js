@@ -1,10 +1,10 @@
 let objects = require('../objects/objects');
-let physics = require('world/physics');
-let spawners = require('world/spawners');
-let resourceSpawner = require('world/resourceSpawner');
-let globalZone = require('config/zoneBase');
-let randomMap = require('world/randomMap');
-let events = require('misc/events');
+let physics = require('./physics');
+let spawners = require('./spawners');
+let resourceSpawner = require('./resourceSpawner');
+let globalZone = require('../config/zoneBase');
+let randomMap = require('./randomMap');
+let events = require('../misc/events');
 
 let mapFile = null;
 let mapscale = 38;

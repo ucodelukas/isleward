@@ -1,7 +1,7 @@
-let atlas = require('world/atlas');
-let classes = require('config/spirits');
-let roles = require('config/roles');
-let serverConfig = require('config/serverConfig');
+let atlas = require('../world/atlas');
+let classes = require('../config/spirits');
+let roles = require('../config/roles');
+let serverConfig = require('../config/serverConfig');
 
 module.exports = {
 	type: 'player',

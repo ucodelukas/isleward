@@ -6,7 +6,6 @@ let onReady = null;
 
 module.exports = {
 	components: {},
-	waiting: [],
 
 	init: function (callback) {
 		onReady = callback;
@@ -23,24 +22,20 @@ module.exports = {
 		));
 		let fLen = files.length;
 		for (let i = 0; i < fLen; i++) 
-			this.getComponentFile(`./components/${files[i]}`);
+			this.getComponentFile(`./${files[i]}`);
+
+		onReady();
 	},
 
 	getComponentFile: function (path) {
 		let fileName = pathUtilities.basename(path);
 		fileName = fileName.replace('.js', '');
-		this.waiting.push(fileName);
-		require([ path ], this.onGetComponent.bind(this));
+
+		let cpn = require(path);
+		this.onGetComponent(cpn);
 	},
 
 	onGetComponent: function (template) {
-		this.waiting.spliceWhere(w => w == template.type);
-
 		this.components[template.type] = template;
-
-		if (this.waiting.length == 0) {
-			delete this.waiting;
-			onReady();
-		}
 	}
 };

@@ -1,5 +1,5 @@
-let factionBase = require('config/factionBase');
-let factions = require('config/factions');
+let factionBase = require('../config/factionBase');
+let factions = require('../config/factions');
 
 module.exports = {
 	type: 'reputation',

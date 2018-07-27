@@ -1,5 +1,5 @@
-let spellCallbacks = require('config/spells/spellCallbacks');
-let combat = require('combat/combat');
+let spellCallbacks = require('./spellCallbacks');
+let combat = require('../../combat/combat');
 
 module.exports = {
 	cd: 0,

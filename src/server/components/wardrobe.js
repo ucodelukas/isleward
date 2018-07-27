@@ -1,4 +1,4 @@
-let skins = require('config/skins');
+let skins = require('../config/skins');
 
 module.exports = {
 	type: 'wardrobe',

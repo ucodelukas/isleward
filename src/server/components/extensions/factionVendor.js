@@ -1,7 +1,7 @@
-let generator = require('items/generator');
-let skins = require('config/skins');
-let factions = require('config/factions');
-let itemEffects = require('items/itemEffects');
+let generator = require('../../items/generator');
+let skins = require('../../config/skins');
+let factions = require('../../config/factions');
+let itemEffects = require('../../items/itemEffects');
 
 module.exports = {
 	baseItems: [],

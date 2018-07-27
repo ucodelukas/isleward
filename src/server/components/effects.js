@@ -150,7 +150,7 @@ module.exports = {
 			let type = options.type[0].toUpperCase() + options.type.substr(1);
 			let result = {
 				type: type,
-				url: 'config/effects/effect' + type + '.js'
+				url: '../config/effects/effect' + type + '.js'
 			};
 			this.obj.instance.eventEmitter.emit('onBeforeGetEffect', result);
 

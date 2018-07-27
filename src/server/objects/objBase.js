@@ -41,7 +41,7 @@ module.exports = {
 	},
 
 	extendComponent: function (ext, type, blueprint) {
-		let template = require('./components/extensions/' + type);
+		let template = require('../components/extensions/' + type);
 		let cpn = this[ext];
 
 		extend(true, cpn, template);

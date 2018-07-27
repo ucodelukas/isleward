@@ -1,4 +1,4 @@
-let qualityGenerator = require('items/generators/quality');
+let qualityGenerator = require('../items/generators/quality');
 
 module.exports = {
 	type: 'gatherer',

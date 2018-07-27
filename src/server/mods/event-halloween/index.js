@@ -17,7 +17,7 @@ module.exports = {
 	mapH: null,
 
 	init: function () {
-		this.mapFile = require.nodeRequire('../../../mods/event-halloween/maps/fjolarok/map');
+		this.mapFile = require('./maps/fjolarok/map');
 		this.mapW = this.mapFile.width;
 		this.mapH = this.mapFile.height;
 

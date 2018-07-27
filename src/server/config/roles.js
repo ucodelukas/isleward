@@ -1,4 +1,4 @@
-let sheets = require('security/sheets');
+let sheets = require('../security/sheets');
 
 module.exports = {
 	getAccount: function (name) {

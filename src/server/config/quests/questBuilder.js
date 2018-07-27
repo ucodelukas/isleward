@@ -1,5 +1,5 @@
-let questTemplate = require('config/quests/templates/questTemplate');
-let globalQuests = require('config/questsBase');
+let questTemplate = require('./templates/questTemplate');
+let globalQuests = require('../questsBase');
 
 module.exports = {
 	instance: null,

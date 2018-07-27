@@ -1,5 +1,5 @@
-let io = require('security/io');
-let configSkins = require('config/skins');
+let io = require('../security/io');
+let configSkins = require('../config/skins');
 
 module.exports = {
 	fixCharacter: function (player) {

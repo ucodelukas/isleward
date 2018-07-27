@@ -1,14 +1,14 @@
 let bcrypt = require('bcrypt-nodejs');
-let io = require('security/io');
-let messages = require('misc/messages');
-let connections = require('security/connections');
+let io = require('../security/io');
+let messages = require('../misc/messages');
+let connections = require('../security/connections');
 let leaderboard = require('../leaderboard/leaderboard');
-let skins = require('config/skins');
-let roles = require('config/roles');
-let profanities = require('misc/profanities');
-let fixes = require('fixes/fixes');
-let loginRewards = require('config/loginRewards');
-let mail = require('misc/mail');
+let skins = require('../config/skins');
+let roles = require('../config/roles');
+let profanities = require('../misc/profanities');
+let fixes = require('../fixes/fixes');
+let loginRewards = require('../config/loginRewards');
+let mail = require('../misc/mail');
 
 module.exports = {
 	type: 'auth',

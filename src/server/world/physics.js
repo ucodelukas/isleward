@@ -1,4 +1,4 @@
-let pathfinder = require('misc/pathfinder');
+let pathfinder = require('../misc/pathfinder');
 
 let sqrt = Math.sqrt.bind(Math);
 let ceil = Math.ceil.bind(Math);

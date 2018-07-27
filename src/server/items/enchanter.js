@@ -1,11 +1,11 @@
-let generatorStats = require('items/generators/stats');
-let generatorSlots = require('items/generators/slots');
-let generatorTypes = require('items/generators/types');
-let generatorSpells = require('items/generators/spellbook');
-let salvager = require('items/salvager');
-let configCurrencies = require('items/config/currencies');
-let configSlots = require('items/config/slots');
-let generator = require('items/generator');
+let generatorStats = require('./generators/stats');
+let generatorSlots = require('./generators/slots');
+let generatorTypes = require('./generators/types');
+let generatorSpells = require('./generators/spellbook');
+let salvager = require('./salvager');
+let configCurrencies = require('./config/currencies');
+let configSlots = require('./config/slots');
+let generator = require('./generator');
 
 module.exports = {
 	enchant: function (obj, item, msg) {
