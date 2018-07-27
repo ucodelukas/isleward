@@ -156,7 +156,7 @@ module.exports = {
 			objects.sendEvent(message);
 		},
 		events: function (thread, message) {
-			console.log(message);
+			console.log(message.data.onGetObject[0]);
 			objects.sendEvents(message);
 		},
 		object: function (thread, message) {
