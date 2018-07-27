@@ -1,11 +1,11 @@
-let roles = require('config/roles');
-let atlas = require('world/atlas');
-let generator = require('items/generator');
-let random = require('misc/random');
-let configSlots = require('items/config/slots');
-let io = require('security/io');
-let factions = require('config/factions');
-let connections = require('security/connections');
+let roles = require('../../config/roles');
+let atlas = require('../../world/atlas');
+let generator = require('../../items/generator');
+let random = require('../../misc/random');
+let configSlots = require('../../items/config/slots');
+let io = require('../../security/io');
+let factions = require('../../config/factions');
+let connections = require('../../security/connections');
 
 let commandRoles = {
 	//Regular players

@@ -447,7 +447,7 @@ module.exports = {
 
 		delete item.pos;
 
-		let io = require('security/io');
+		let io = require('../security/io');
 		io.get({
 			ent: msg.recipient,
 			field: 'character',
@@ -773,12 +773,12 @@ module.exports = {
 			item.effects.forEach(function (e) {
 				if (e.mtx) {
 					let mtxUrl = mtx.get(e.mtx);
-					let mtxModule = require(mtxUrl);
+					let mtxModule = require('../' + mtxUrl);
 
 					e.events = mtxModule.events;
 				} else if (e.type) {
 					let effectUrl = itemEffects.get(e.type);
-					let effectModule = require(effectUrl);
+					let effectModule = require('../' + effectUrl);
 
 					e.text = effectModule.events.onGetText(item);
 

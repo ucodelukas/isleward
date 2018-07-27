@@ -44,7 +44,7 @@ module.exports = {
 	checkLoginReward: function (data, character) {
 		let accountInfo = this.accountInfo;
 
-		let scheduler = require('misc/scheduler');
+		let scheduler = require('../misc/scheduler');
 		let time = scheduler.getTime();
 		let lastLogin = accountInfo.lastLogin;
 		if ((!lastLogin) || (lastLogin.day != time.day)) {
