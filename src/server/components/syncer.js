@@ -84,7 +84,7 @@ module.exports = {
 			o.components.push(cpn);
 		}
 
-		if (cpn[property] === null)
+		if (!cpn[property])
 			cpn[property] = [];
 
 		if ((noDuplicate) && (cpn[property].find(f => (f === value))))
