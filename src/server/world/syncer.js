@@ -105,7 +105,7 @@ module.exports = {
 
 				if (sendTo)
 					queueFunction(sync, toList);
-				if (sendComplete)
+				if (sendComplete) 
 					queueFunction(completeObj, completeList);
 			}
 		}
@@ -117,11 +117,13 @@ module.exports = {
 	},
 	queue: function (event, obj, to) {
 		//Send to all players in zone?
-		if (to === null) {
+		if (to === null || to === undefined) {
 			//OPTIMIZE: Store a list of all players
 			let pList = this.objects.objects.filter(o => o.player);
 			to = pList.map(p => p.serverId);
 		}
+		if (!to.length)
+			return;
 
 		this.dirty = true;
 
