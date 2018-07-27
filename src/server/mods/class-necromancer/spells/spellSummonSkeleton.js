@@ -122,7 +122,7 @@ module.exports = {
 			currentMinion.destroyed = true;
 			this.minions = [];
 
-			let animations = require('config/animations');
+			let animations = require('../../../config/animations');
 
 			let deathAnimation = _.getDeepProperty(animations, ['mobs', currentMinion.sheetName, currentMinion.cell, 'death']);
 			if (deathAnimation) {

@@ -105,11 +105,11 @@ module.exports = {
 
 	beforeGetSpellTemplate: function (spell) {
 		if (spell.type == 'HarvestLife')
-			spell.template = require(`${this.relativeFolderName}/spells/spellHarvestLife`);
+			spell.template = require('./spells/spellHarvestLife');
 		else if (spell.type == 'SummonSkeleton')
-			spell.template = require(`${this.relativeFolderName}/spells/spellSummonSkeleton`);
+			spell.template = require('./spells/spellSummonSkeleton');
 		else if (spell.type == 'BloodBarrier')
-			spell.template = require(`${this.relativeFolderName}/spells/spellBloodBarrier`);
+			spell.template = require('./spells/spellBloodBarrier');
 	},
 
 	beforeGetSkins: function (skins) {

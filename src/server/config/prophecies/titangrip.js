@@ -1,4 +1,4 @@
-let generatorStats = require('items/generators/stats');
+let generatorStats = require('../../items/generators/stats');
 
 module.exports = {
 	type: 'titangrip',

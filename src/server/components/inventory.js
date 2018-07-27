@@ -480,7 +480,7 @@ module.exports = {
 				item.effects.forEach(function (e) {
 					if (e.mtx) {
 						let mtxUrl = mtx.get(e.mtx);
-						let mtxModule = require(mtxUrl);
+						let mtxModule = require('../' + mtxUrl);
 
 						e.events = mtxModule.events;
 					} else if (e.factionId) {
@@ -489,7 +489,7 @@ module.exports = {
 						statGenerator.generate(item);
 					} else {
 						let effectUrl = itemEffects.get(e.type);
-						let effectModule = require(effectUrl);
+						let effectModule = require('../' + effectUrl);
 
 						e.events = effectModule.events;
 					}

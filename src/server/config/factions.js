@@ -12,7 +12,7 @@ module.exports = {
 	getFaction: function (id) {
 		let mapping = this.mappings[id];
 		if (mapping)
-			return require(mapping);
-		return require('config/factions/' + id);
+			return require('../' + mapping);
+		return require('./factions/' + id);
 	}
 };

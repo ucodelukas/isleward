@@ -236,7 +236,7 @@ module.exports = {
 			let p = phases[i];
 
 			let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
-			let typeTemplate = require('config/eventPhases/' + phaseFile);
+			let typeTemplate = require('../config/eventPhases/' + phaseFile);
 			var phase = extend(true, {
 				instance: this.instance,
 				event: event

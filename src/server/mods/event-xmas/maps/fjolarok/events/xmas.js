@@ -242,7 +242,7 @@ module.exports = {
 
 			onBeforeBuildMob: function (zone, mobName, blueprint) {
 				try {
-					let zoneFile = require('mods/event-xmas/maps/' + zone + '/zone.js');
+					let zoneFile = require('../../' + zone + '/zone.js');
 					let override = _.getDeepProperty(zoneFile, ['mobs', mobName]);
 					if (override)
 						extend(true, blueprint, override);

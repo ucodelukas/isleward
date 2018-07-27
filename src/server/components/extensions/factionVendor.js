@@ -58,7 +58,7 @@ module.exports = {
 								};
 							} 
 							let effectUrl = itemEffects.get(e.type);
-							let effectModule = require(effectUrl);
+							let effectModule = require('../../' + effectUrl);
 
 							return {
 								text: effectModule.events.onGetText(item)

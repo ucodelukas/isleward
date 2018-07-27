@@ -1,4 +1,4 @@
-let slots = require('items/generators/slots');
+let slots = require('../../../items/generators/slots');
 
 module.exports = {
 	type: 'gatherResource',

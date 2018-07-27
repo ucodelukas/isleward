@@ -249,7 +249,7 @@ module.exports = {
 
 	onAfterGetZone: function (zone, config) {
 		try {
-			let modZone = require(this.relativeFolderName + '/maps/' + zone + '/zone.js');
+			let modZone = require('./maps/' + zone + '/zone.js');
 			extend(true, config, modZone);
 		} catch (e) {
 
@@ -331,7 +331,7 @@ module.exports = {
 
 	onBeforeGetDialogue: function (zone, config) {
 		try {
-			let modDialogue = require(this.relativeFolderName + '/maps/' + zone + '/dialogues.js');
+			let modDialogue = require('./maps/' + zone + '/dialogues.js');
 			extend(true, config, modDialogue);
 		} catch (e) {
 

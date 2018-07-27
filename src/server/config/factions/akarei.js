@@ -1,6 +1,6 @@
-let spawners = require('world/spawners');
-let mobBuilder = require('world/mobBuilder');
-let combat = require('combat/combat');
+let spawners = require('../../world/spawners');
+let mobBuilder = require('../../world/mobBuilder');
+let combat = require('../../combat/combat');
 
 module.exports = {
 	id: 'akarei',

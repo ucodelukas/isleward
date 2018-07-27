@@ -16,7 +16,7 @@ module.exports = {
 		let zoneTemplate = null;
 
 		try {
-			zoneTemplate = require('config/maps/' + zoneName + '/quests.js');
+			zoneTemplate = require('../../config/maps/' + zoneName + '/quests.js');
 		} catch (e) {
 			zoneTemplate = globalQuests;
 		}
@@ -36,7 +36,7 @@ module.exports = {
 		if (!pickQuest)
 			pickQuest = config.infini[~~(Math.random() * config.infini.length)];
 		let pickType = pickQuest.type[0].toUpperCase() + pickQuest.type.substr(1);
-		let questClass = require('config/quests/templates/quest' + pickType);
+		let questClass = require('../../config/quests/templates/quest' + pickType);
 
 		let quest = extend(true, {}, pickQuest, questTemplate, questClass, template);
 

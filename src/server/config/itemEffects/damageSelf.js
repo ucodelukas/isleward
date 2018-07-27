@@ -1,4 +1,4 @@
-let combat = require('combat/combat');
+let combat = require('../../combat/combat');
 
 module.exports = {
 	events: {

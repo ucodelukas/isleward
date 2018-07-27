@@ -1,4 +1,4 @@
-let slots = require('items/config/slots');
+let slots = require('../../../items/config/slots');
 
 module.exports = {
 	slot: null,

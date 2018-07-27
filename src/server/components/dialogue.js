@@ -190,7 +190,7 @@ module.exports = {
 	teleport: function (msg) {
 		this.obj.syncer.set(true, 'dialogue', 'state', null);
 
-		let portal = extend(true, {}, require('./components/portal'), msg);
+		let portal = extend(true, {}, require('./portal'), msg);
 		portal.collisionEnter(this.obj);
 	},
 
