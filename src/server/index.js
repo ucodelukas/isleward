@@ -17,7 +17,7 @@ let sheets = require('./security/sheets');
 
 global.io = true;
 
-var startup = {
+let startup = {
 	init: function () {
 		io.init(this.onDbReady.bind(this));
 	},

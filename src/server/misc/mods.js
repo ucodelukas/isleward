@@ -29,7 +29,7 @@ module.exports = {
 
 		for (let i = 0; i < lLen; i++) {
 			let extra = require('../mods/' + name + '/' + list[i]);
-			this.onGetExtra.bind(name, mod, extra);
+			this.onGetExtra(name, mod, extra);
 		}
 
 		if (this.waiting[name] == 0) {
