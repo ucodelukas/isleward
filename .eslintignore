@@ -1,2 +1,2 @@
 node_modules/*
-src/server/misc/random.js
+/src/server/misc/random.js
