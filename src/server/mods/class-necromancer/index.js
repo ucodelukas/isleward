@@ -19,7 +19,7 @@ module.exports = {
 	},
 
 	onAfterGetZone: function (zone, config) {
-		if (zone != 'fjolarok')
+		if (zone !== 'fjolarok')
 			return;
 
 		let newRunes = [{
@@ -104,11 +104,11 @@ module.exports = {
 	},
 
 	beforeGetSpellTemplate: function (spell) {
-		if (spell.type == 'HarvestLife')
+		if (spell.type === 'HarvestLife')
 			spell.template = require('./spells/spellHarvestLife');
-		else if (spell.type == 'SummonSkeleton')
+		else if (spell.type === 'SummonSkeleton')
 			spell.template = require('./spells/spellSummonSkeleton');
-		else if (spell.type == 'BloodBarrier')
+		else if (spell.type === 'BloodBarrier')
 			spell.template = require('./spells/spellBloodBarrier');
 	},
 

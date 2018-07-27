@@ -8,7 +8,7 @@ module.exports = {
 		global.io = require('socket.io')(server);
 
 		app.use(function (req, res, next) {
-			if ((req.url.indexOf('/server') != 0) && (req.url.indexOf('/mods') != 0))
+			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
 				req.url = '/client/' + req.url;
 
 			next();
@@ -72,12 +72,12 @@ module.exports = {
 	requests: {
 		root: function (req, res) {
 			//let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-			//if (ip != '::1')
+			//if (ip !== '::1')
 			//	return;
 
 			res.sendFile('index.html');
 		},
-		default: function (req, res, next) {
+		default: function (req, res) {
 			let root = req.url.split('/')[1];
 			let file = req.params[0];
 

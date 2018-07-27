@@ -107,7 +107,6 @@ module.exports = {
 		let maxDistance = this.maxDistance;
 		let distance = Math.max(Math.abs(obj.x - master.x), Math.abs(obj.y - master.y));
 
-		let doMove = (distance >= maxDistance);
 		//When we're too far, just teleport
 		if ((!attacker) && (distance >= maxDistance * 2)) {
 			this.teleport();
@@ -119,7 +118,7 @@ module.exports = {
 		if (!attacker) {
 			let lastMasterPos = this.lastMasterPos;
 
-			if ((master.x != lastMasterPos.x) || (master.y != lastMasterPos.y)) {
+			if ((master.x !== lastMasterPos.x) || (master.y !== lastMasterPos.y)) {
 				doMove = true;
 				lastMasterPos.x = master.x;
 				lastMasterPos.y = master.y;

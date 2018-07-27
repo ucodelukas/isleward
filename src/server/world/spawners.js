@@ -31,7 +31,7 @@ module.exports = {
 
 		this.list.push(spawner);
 
-		if ((blueprint.sheetName != 'mobs') && (blueprint.sheetName != 'bosses'))
+		if ((blueprint.sheetName !== 'mobs') && (blueprint.sheetName !== 'bosses'))
 			return;
 
 		let name = blueprint.name.toLowerCase();
@@ -44,7 +44,7 @@ module.exports = {
 	},
 
 	spawn: function (spawner) {
-		if (spawner.amountLeft == 0)
+		if (spawner.amountLeft === 0)
 			return;
 
 		let blueprint = spawner.blueprint;
@@ -78,7 +78,7 @@ module.exports = {
 			}, -1);
 		}
 
-		if (spawner.amountLeft != -1)
+		if (spawner.amountLeft !== -1)
 			spawner.amountLeft--;
 
 		return obj;
@@ -131,7 +131,7 @@ module.exports = {
 				) ||
 				(
 					(!l.cron) &&
-					(l.cd == 0)
+					(l.cd === 0)
 				) ||
 				(
 					(!l.mob) &&
@@ -149,7 +149,7 @@ module.exports = {
 
 				let name = (l.blueprint.objZoneName || l.blueprint.name).toLowerCase();
 
-				if ((l.blueprint.sheetName == 'mobs') || (l.blueprint.sheetName == 'bosses'))
+				if ((l.blueprint.sheetName === 'mobs') || (l.blueprint.sheetName === 'bosses'))
 					this.setupMob(mob, l.zonePrint, l.blueprint.scaleDrops);
 				else {
 					let blueprint = extend(true, {}, this.zone.objects.default, this.zone.objects[name] || {});
@@ -189,7 +189,7 @@ module.exports = {
 				(l.mob) &&
 				(!l.mob.destroyed) &&
 				(l.mob.isRare) &&
-				(l.mob.baseName == mob.name)
+				(l.mob.baseName === mob.name)
 			));
 			if (rareCount.length < blueprint.rare.count) {
 				let roll = Math.random() * 100;

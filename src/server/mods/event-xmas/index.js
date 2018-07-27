@@ -56,7 +56,7 @@ module.exports = {
 	},
 
 	onBeforeGetEffect: function (result) {
-		if (result.type.toLowerCase() == 'merry')
+		if (result.type.toLowerCase() === 'merry')
 			result.url = `${this.relativeFolderName}/effects/effectMerry.js`;
 	},
 
@@ -103,7 +103,7 @@ module.exports = {
 				let ox = obj.x;
 				let oy = obj.y;
 
-				let objects = obj.instance.objects.objects.filter(o => (((o.mob) || (o.player)) && (o.name) && (o != obj)));
+				let objects = obj.instance.objects.objects.filter(o => (((o.mob) || (o.player)) && (o.name) && (o !== obj)));
 				let closestDistance = 999;
 				let closest = null;
 				let oLen = objects.length;
@@ -208,10 +208,10 @@ module.exports = {
 	},
 
 	onAfterGetLayerObjects: function (info) {
-		if (info.map != 'fjolarok')
+		if (info.map !== 'fjolarok')
 			return;
 
-		let layer = this.mapFile.layers.find(l => (l.name == info.layer));
+		let layer = this.mapFile.layers.find(l => (l.name === info.layer));
 		if (layer) {
 			let offset = this.mapOffset;
 			let mapScale = this.mapFile.tilesets[0].tileheight;
@@ -227,7 +227,7 @@ module.exports = {
 	},
 
 	onBeforeBuildLayerTile: function (info) {
-		if (info.map != 'fjolarok')
+		if (info.map !== 'fjolarok')
 			return;
 
 		let offset = this.mapOffset;
@@ -239,7 +239,7 @@ module.exports = {
 			return;
 
 		let i = ((y - offset.y) * this.mapW) + (x - offset.x);
-		let layer = this.mapFile.layers.find(l => (l.name == info.layer));
+		let layer = this.mapFile.layers.find(l => (l.name === info.layer));
 		if (layer) {
 			let cell = layer.data[i];
 			if (cell)
@@ -286,7 +286,7 @@ module.exports = {
 	},
 
 	onBeforeGetCardReward: function (msg) {
-		if (msg.reward == 'Rare Festive Spear') {
+		if (msg.reward === 'Rare Festive Spear') {
 			msg.handler = function (card) {
 				return itemGenerator.generate({
 					name: 'Festive Spear',
@@ -300,7 +300,7 @@ module.exports = {
 					sprite: [0, 0]
 				});
 			};
-		} else if (msg.reward == 'Scented Beard Oil') {
+		} else if (msg.reward === 'Scented Beard Oil') {
 			msg.handler = function (card) {
 				return {
 					name: 'Scented Beard Oil',
@@ -323,7 +323,7 @@ module.exports = {
 	},
 
 	onBeforeGetEventList: function (zone, list) {
-		if (zone != 'fjolarok')
+		if (zone !== 'fjolarok')
 			return;
 
 		list.push(this.relativeFolderName + '/maps/fjolarok/events/xmas.js');

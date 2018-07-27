@@ -12,7 +12,7 @@ module.exports = {
 		for (let i = 0; i < oLen; i++) {
 			let o = objects[i];
 			let index = mobs.indexOf(o.id);
-			if (index == -1)
+			if (index === -1)
 				continue;
 
 			mobs.splice(index, 1, o);
@@ -44,7 +44,7 @@ module.exports = {
 			}
 		}
 
-		if (mobs.length == 0)
+		if (mobs.length === 0)
 			this.end = true;
 	}	
 };

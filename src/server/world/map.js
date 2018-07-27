@@ -7,7 +7,7 @@ let randomMap = require('./randomMap');
 let events = require('../misc/events');
 
 let mapFile = null;
-let mapscale = 38;
+let mapScale = null;
 let padding = null;
 
 module.exports = {
@@ -87,7 +87,7 @@ module.exports = {
 		this.instanced = mapFile.properties.instanced;
 		this.custom = mapFile.properties.custom;
 		if (this.instanced)
-			this.instanced = (this.instanced == '1');
+			this.instanced = (this.instanced === '1');
 
 		if (mapFile.properties.spawn) {
 			this.spawn = JSON.parse(mapFile.properties.spawn);
@@ -134,7 +134,7 @@ module.exports = {
 					newCell += newC;
 
 					//Wall?
-					if ((c >= 160) && (c <= 352) && (newC == 0)) 
+					if ((c >= 160) && (c <= 352) && (newC === 0)) 
 						this.collisionMap[i][j] = 0;
 
 					if (k < cLen - 1)
@@ -210,7 +210,7 @@ module.exports = {
 
 			let data = layer.data || layer.objects;
 			let firstItem = data[0];
-			if ((firstItem) && (firstItem.width != null)) {
+			if ((firstItem) && (firstItem.width !== null)) {
 				let info = {
 					map: this.name,
 					layer: layerName,
@@ -273,8 +273,8 @@ module.exports = {
 			let y = ~~(i / this.size.w);
 			let x = i - (y * this.size.w);
 
-			if (cell == 0) {
-				if (layerName == 'tiles')
+			if (cell === 0) {
+				if (layerName === 'tiles')
 					this.collisionMap[x][y] = 1;
 
 				return;
@@ -282,31 +282,31 @@ module.exports = {
 
 			let cellInfo = this.builders.getCellInfo(cell);
 			let sheetName = cellInfo.sheetName;
-			let cell = cellInfo.cell;
-			if (sheetName == 'walls')
+			cell = cellInfo.cell;
+			if (sheetName === 'walls')
 				cell += 192;
-			else if (sheetName == 'objects')
+			else if (sheetName === 'objects')
 				cell += 448;
 
-			if ((layerName != 'hiddenWalls') && (layerName != 'hiddenTiles')) {
+			if ((layerName !== 'hiddenWalls') && (layerName !== 'hiddenTiles')) {
 				let layer = this.layers;
 				if (this.oldLayers[layerName])
 					this.oldLayers[layerName][x][y] = cell;
-				layer[x][y] = (layer[x][y] == null) ? cell : layer[x][y] + ',' + cell;
-			} else if (layerName == 'hiddenWalls')
+				layer[x][y] = (layer[x][y] === null) ? cell : layer[x][y] + ',' + cell;
+			} else if (layerName === 'hiddenWalls')
 				this.hiddenWalls[x][y] = cell;
-			else if (layerName == 'hiddenTiles')
+			else if (layerName === 'hiddenTiles')
 				this.hiddenTiles[x][y] = cell;
 
 			if (layerName.indexOf('walls') > -1)
 				this.collisionMap[x][y] = 1;
 			else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
-				if ((cell == 6) || (cell == 7) || (cell == 54) || (cell == 55) || (cell == 62) || (cell == 63) || (cell == 154) || (cell == 189) || (cell == 190))
+				if ((cell === 6) || (cell === 7) || (cell === 54) || (cell === 55) || (cell === 62) || (cell === 63) || (cell === 154) || (cell === 189) || (cell === 190))
 					this.collisionMap[x][y] = 1;
 			}
 		},
-		object: function (layerName, cell, i) {
-			let clientObj = (layerName == 'clientObjects');
+		object: function (layerName, cell) {
+			let clientObj = (layerName === 'clientObjects');
 			let cellInfo = this.builders.getCellInfo(cell.gid);
 
 			let name = (cell.name || '');
@@ -327,7 +327,7 @@ module.exports = {
 				properties: cell.properties || {}
 			};
 
-			if (objZoneName != name)
+			if (objZoneName !== name)
 				blueprint.objZoneName = objZoneName;
 
 			if (this.zone) {
@@ -340,14 +340,14 @@ module.exports = {
 			if (blueprint.blocking)
 				this.collisionMap[blueprint.x][blueprint.y] = 1;
 
-			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName == 'rooms') || (layerName == 'hiddenRooms')) {
+			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName === 'rooms') || (layerName === 'hiddenRooms')) {
 				blueprint.y++;
 				blueprint.width = cell.width / mapScale;
 				blueprint.height = cell.height / mapScale;
-			} else if (cell.width == 24)
+			} else if (cell.width === 24)
 				blueprint.x++;
 
-			if (layerName == 'rooms') {
+			if (layerName === 'rooms') {
 				if (blueprint.properties.exit) {
 					let room = this.rooms.find(function (r) {
 						return (!(
@@ -366,9 +366,9 @@ module.exports = {
 					blueprint.objects = [];
 					this.rooms.push(blueprint);
 				}
-			} else if (layerName == 'hiddenRooms') 
+			} else if (layerName === 'hiddenRooms') 
 				this.hiddenRooms.push(blueprint);
-			 else if (!clientObj) {
+			else if (!clientObj) {
 				if (!mapFile.properties.isRandom)
 					spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 				else {
@@ -390,7 +390,7 @@ module.exports = {
 	},
 
 	getSpawnPos: function (obj) {
-		let stats = obj.components.find(c => (c.type == 'stats'));
+		let stats = obj.components.find(c => (c.type === 'stats'));
 		let level = stats.values.level;
 
 		let spawns = this.spawn.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));

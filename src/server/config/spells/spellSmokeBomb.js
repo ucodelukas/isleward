@@ -21,7 +21,7 @@ let cpnSmokePatch = {
 		let contents = this.contents;
 		let cLen = contents.length;
 		for (let i = 0; i < cLen; i++) {
-			if (contents[i] == o) {
+			if (contents[i] === o) {
 				contents.splice(i, 1);
 				return;
 			}
@@ -89,7 +89,7 @@ module.exports = {
 
 			if (this.randomPos) {
 				let range = this.range;
-				while ((x == obj.x) && (y == obj.y)) {
+				while ((x === obj.x) && (y === obj.y)) {
 					x = obj.x + ~~(Math.random() * range * 2) - range;
 					y = obj.y + ~~(Math.random() * range * 2) - range;
 				}

@@ -88,15 +88,15 @@ module.exports = {
 						method: function (obj) {
 							let inventory = obj.inventory;
 
-							let snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+							let snowflakes = inventory.items.find(i => (i.name === 'Snowflake'));
 							if ((!snowflakes) || (snowflakes.quantity < 15))
 								return 'Sorry, please come back when you have at least fifteen.';
 
 							while (true) {
-								snowflakes = inventory.items.find(i => (i.name == 'Snowflake'));
+								snowflakes = inventory.items.find(i => (i.name === 'Snowflake'));
 								if ((!snowflakes) || (snowflakes.quantity < 15))
 									return;
-								else if ((!inventory.hasSpace()) && (snowflakes.quantity != 15))
+								else if ((!inventory.hasSpace()) && (snowflakes.quantity !== 15))
 									return 'Sorry, it seems you don\'t have enough space to accept my gifts.';
 
 								obj.reputation.getReputation('theWinterMan', 100);
@@ -153,7 +153,7 @@ module.exports = {
 								});
 
 								let pick = pool[~~(Math.random() * pool.length)];
-								let blueprint = rewards.find(r => (r.name == pick));
+								let blueprint = rewards.find(r => (r.name === pick));
 
 								inventory.getItem(extend(true, {}, blueprint));
 
@@ -251,12 +251,12 @@ module.exports = {
 
 			beforeGatherResource: function (gatherResult, gatherer) {
 				let itemName = gatherResult.blueprint.itemName;
-				if ((!itemName) || (itemName.toLowerCase() != 'snowflake'))
+				if ((!itemName) || (itemName.toLowerCase() !== 'snowflake'))
 					return;
 
 				gatherer.reputation.getReputation('theWinterMan', 40);
 
-				if ((gatherResult.name != 'Gilded Gift') || (Math.random() >= 0.05))
+				if ((gatherResult.name !== 'Gilded Gift') || (Math.random() >= 0.05))
 					return;
 
 				gatherResult.items.push({

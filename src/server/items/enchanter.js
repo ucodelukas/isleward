@@ -14,7 +14,7 @@ module.exports = {
 
 		let success = true;
 		config.materials.forEach(function (m) {
-			let hasMaterial = inventory.items.find(i => i.name == m.name);
+			let hasMaterial = inventory.items.find(i => i.name === m.name);
 			if (hasMaterial)
 				hasMaterial = hasMaterial.quantity >= m.quantity;
 			if (!hasMaterial)
@@ -32,11 +32,11 @@ module.exports = {
 		};
 
 		config.materials.forEach(function (m) {
-			let invMaterial = inventory.items.find(i => i.name == m.name);
+			let invMaterial = inventory.items.find(i => i.name === m.name);
 			inventory.destroyItem(invMaterial.id, m.quantity);
 		});
 
-		if (msg.action == 'reroll') {
+		if (msg.action === 'reroll') {
 			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
 			delete msg.addStatMsgs;
@@ -63,15 +63,15 @@ module.exports = {
 
 				item.stats[p] += enchantedStats[p];
 
-				if (p == 'lvlRequire') {
+				if (p === 'lvlRequire') {
 					item.level -= enchantedStats[p];
 					if (item.level < 1)
 						item.level = 1;
 				}
 			}
 			item.enchantedStats = enchantedStats;
-		} else if (msg.action == 'relevel') {
-			if (item.slot == 'tool')
+		} else if (msg.action === 'relevel') {
+			if (item.slot === 'tool')
 				return;
 
 			let offset = 1 + ~~(Math.random() * 2);
@@ -83,7 +83,7 @@ module.exports = {
 				item.originalLevel = Math.min(20, item.originalLevel + offset);
 				item.level = Math.min(20, item.level + offset);
 			}
-		} else if (msg.action == 'reslot') {
+		} else if (msg.action === 'reslot') {
 			if (item.effects)
 				return;
 
@@ -111,7 +111,7 @@ module.exports = {
 
 				newItem.stats[p] += enchantedStats[p];
 
-				if (p == 'lvlRequire') {
+				if (p === 'lvlRequire') {
 					newItem.level -= enchantedStats[p];
 					if (newItem.level < 1)
 						newItem.level = 1;
@@ -120,7 +120,7 @@ module.exports = {
 			newItem.enchantedStats = enchantedStats;
 
 			extend(true, item, newItem);
-		} else if (msg.action == 'reforge') {
+		} else if (msg.action === 'reforge') {
 			if (!item.spell)
 				return;
 
@@ -132,7 +132,7 @@ module.exports = {
 				spellName: spellName
 			});
 			item.spell = extend(true, oldSpell, item.spell);
-		} else if (msg.action == 'scour') {
+		} else if (msg.action === 'scour') {
 			if (!item.power)
 				return;
 
@@ -148,7 +148,7 @@ module.exports = {
 					if (item.stats[p] <= 0)
 						delete item.stats[p];
 
-					if (p == 'lvlRequire') {
+					if (p === 'lvlRequire') {
 						item.level += value;
 						delete item.originalLevel;
 					}
@@ -182,20 +182,21 @@ module.exports = {
 	getEnchantMaterials: function (item, action) {
 		let result = null;
 
-		if (action == 'reroll')
+		if (action === 'reroll')
 			result = [configCurrencies.getCurrencyFromAction('reroll')];
-		else if (action == 'relevel')
+		else if (action === 'relevel')
 			result = [configCurrencies.getCurrencyFromAction('relevel')];
-		else if (action == 'reslot')
+		else if (action === 'reslot')
 			result = [configCurrencies.getCurrencyFromAction('reslot')];
-		else if (action == 'reforge')
+		else if (action === 'reforge')
 			result = [configCurrencies.getCurrencyFromAction('reforge')];
-		else if (action == 'scour')
+		else if (action === 'scour')
 			result = [configCurrencies.getCurrencyFromAction('scour')];
 		else {
 			let powerLevel = item.power || 0;
+			let mult = null;
 			if (powerLevel < 3)
-				let mult = [5, 10, 20][powerLevel];
+				mult = [5, 10, 20][powerLevel];
 			else
 				return;
 

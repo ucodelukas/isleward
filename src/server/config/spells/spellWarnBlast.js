@@ -47,7 +47,7 @@ module.exports = {
 
 				if (!physics.hasLos(x, y, i, j))
 					continue;
-				else if ((attackTemplate) && (attackTemplate[count] == 'x'))
+				else if ((attackTemplate) && (attackTemplate[count] === 'x'))
 					continue;
 
 				if ((attackTemplate) && (~~attackTemplate[count] > 0)) {

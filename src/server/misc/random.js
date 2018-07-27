@@ -13,7 +13,7 @@ this.mt[this.N - 1], b = 1);
 };
 Random.prototype.genrand_int32 = function () {
 	let a, c = [0, this.MATRIX_A]; if (this.mti >= this.N) {
-		let b; this.mti == this.N + 1 && this.init_genrand(5489); for (b = 0; b < this.N - this.M; b++)a = this.mt[b] & this.UPPER_MASK | this.mt[b + 1] & this.LOWER_MASK, this.mt[b] = this.mt[b + this.M] ^ a >>> 1 ^ c[a & 1]; for (;b < this.N - 1; b++)a = this.mt[b] & this.UPPER_MASK | this.mt[b + 1] & this.LOWER_MASK, this.mt[b] = this.mt[b + (this.M - this.N)] ^ a >>> 1 ^ c[a & 1]; a = this.mt[this.N - 1] & this.UPPER_MASK | this.mt[0] & this.LOWER_MASK; this.mt[this.N - 1] = this.mt[this.M - 1] ^ a >>> 1 ^
+		let b; this.mti === this.N + 1 && this.init_genrand(5489); for (b = 0; b < this.N - this.M; b++)a = this.mt[b] & this.UPPER_MASK | this.mt[b + 1] & this.LOWER_MASK, this.mt[b] = this.mt[b + this.M] ^ a >>> 1 ^ c[a & 1]; for (;b < this.N - 1; b++)a = this.mt[b] & this.UPPER_MASK | this.mt[b + 1] & this.LOWER_MASK, this.mt[b] = this.mt[b + (this.M - this.N)] ^ a >>> 1 ^ c[a & 1]; a = this.mt[this.N - 1] & this.UPPER_MASK | this.mt[0] & this.LOWER_MASK; this.mt[this.N - 1] = this.mt[this.M - 1] ^ a >>> 1 ^
 c[a & 1]; this.mti = 0;
 	}a = this.mt[this.mti++]; a ^= a >>> 11; a ^= a << 7 & 2636928640; a ^= a << 15 & 4022730752; a ^= a >>> 18; return a >>> 0;
 }; Random.prototype.genrand_int31 = function () {
@@ -37,7 +37,7 @@ Random.prototype.gamma = function (a, c) {
 				let j = 1 - this.random(), i = Math.log(d / (1 - d)) / b, h = a * Math.exp(i), d = d * d * j, i = f + e * i - h; if (i + this.SG_MAGICCONST - 4.5 * d >= 0 || i >= Math.log(d)) return h * c;
 			}
 		}
-	} else if (a == 1) {
+	} else if (a === 1) {
 		for (let g = this.random(); g <= 1.0E-7;)g = this.random(); return -Math.log(g) * c;
 	} else {
 		for (;;) {

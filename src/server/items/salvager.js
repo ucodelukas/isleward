@@ -113,7 +113,7 @@ module.exports = {
 		temp.forEach(function (t) {
 			let mats = t.materials;
 			mats.forEach(function (m) {
-				let exists = materials.find(mf => (mf.name == m.name));
+				let exists = materials.find(mf => (mf.name === m.name));
 				if (exists) {
 					exists.chance = Math.max(exists.chance, m.chance);
 					exists.quantity = Math.max(exists.quantity, m.quantity);
@@ -146,7 +146,7 @@ module.exports = {
 			if (m.qualityName) {
 				newItem.quality = item.quality;
 				newItem.name = m.qualityName[item.quality];
-			} else if (m.quality != null)
+			} else if (m.quality !== null)
 				newItem.quality = m.quality;
 
 			newItem.sprite = materialItems[newItem.name].sprite;

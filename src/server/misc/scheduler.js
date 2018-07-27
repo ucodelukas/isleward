@@ -13,7 +13,7 @@ module.exports = {
 
 	shouldRun: function (c) {
 		let cron = c.cron.split(' ');
-		if (cron.length != 5) {
+		if (cron.length !== 5) {
 			console.log('Invalid Cron Format: ' + cron.join(' '));
 			return false;
 		}
@@ -23,7 +23,7 @@ module.exports = {
 
 		let lastRun = c.lastRun;
 		if (lastRun) {
-			if (Object.keys(lastRun).every(e => (lastRun[e] == time[e])))
+			if (Object.keys(lastRun).every(e => (lastRun[e] === time[e])))
 				return false;
 		}
 
@@ -32,7 +32,7 @@ module.exports = {
 		let run = ['minute', 'hour', 'day', 'month', 'weekday'].every(function (t, i) {
 			let tCheck = cron[i];
 
-			if (tCheck == '*')
+			if (tCheck === '*')
 				return true;
 			
 			let overflow = timeOverflows[i];
@@ -53,11 +53,11 @@ module.exports = {
 
 					return tCheck.some(function (f) {
 						f = f.split('-');
-						if (f.length == 1) {
+						if (f.length === 1) {
 							f = f[0].split('/');
-							if (f.length == 1)
-								return (useTime == f[0]);
-							return ((useTime % f[1]) == 0);
+							if (f.length === 1)
+								return (useTime === f[0]);
+							return ((useTime % f[1]) === 0);
 						}
 						return ((useTime >= f[0]) && (useTime <= f[1]));
 					});

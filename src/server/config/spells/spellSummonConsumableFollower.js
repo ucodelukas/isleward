@@ -110,7 +110,7 @@ module.exports = {
 					}]
 				}, -1);
 			} else 
-				m.mob.update = (this.walkCd == 0) ? m.mob.realUpdate : null;
+				m.mob.update = (this.walkCd === 0) ? m.mob.realUpdate : null;
 		}
 	},
 

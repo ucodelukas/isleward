@@ -34,8 +34,8 @@ module.exports = {
 	},
 
 	isValidDungeon: function () {
-		let endRooms = this.rooms.filter(r => r.connections.length == 0);
-		let endDistanceReached = endRooms.find(r => r.distance == this.maxDistance, this);
+		let endRooms = this.rooms.filter(r => r.connections.length === 0);
+		let endDistanceReached = endRooms.find(r => r.distance === this.maxDistance, this);
 
 		if (!endDistanceReached)
 			return false;
@@ -63,7 +63,7 @@ module.exports = {
 			for (let i = 0; i < 2; i++) {
 				for (let j = 0; j < 2; j++) {
 					for (let k = 0; k < 2; k++) {
-						if (i + j + k == 0)
+						if (i + j + k === 0)
 							continue;
 
 						let flipped = extend(true, {
@@ -285,7 +285,7 @@ module.exports = {
 					template.objects.spliceWhere(function (o) {
 						let ox = o.x - template.x + room.x;
 						let oy = o.y - template.y + room.y;
-						return ((ox == x) && (oy == y));
+						return ((ox === x) && (oy === y));
 					});
 				}
 
@@ -379,9 +379,9 @@ module.exports = {
 				this.setupConnection(room, !isHallway);
 		}
 
-		if ((isHallway) && (room.connections.length == 0)) {
-			this.rooms.spliceWhere(r => r == room);
-			room.parent.connections.spliceWhere(c => c == room);
+		if ((isHallway) && (room.connections.length === 0)) {
+			this.rooms.spliceWhere(r => r === room);
+			room.parent.connections.spliceWhere(c => c === room);
 			return false;
 		}
 
@@ -389,7 +389,7 @@ module.exports = {
 	},
 
 	setupConnection: function (fromRoom, isHallway) {
-		if (fromRoom.template.exits.length == 0)
+		if (fromRoom.template.exits.length === 0)
 			return true;
 
 		let fromExit = fromRoom.template.exits.splice(this.randInt(0, fromRoom.template.exits.length), 1)[0];
@@ -397,27 +397,27 @@ module.exports = {
 		let templates = this.templates.filter(function (t) {
 			if (
 				(t.properties.mapping) ||
-				(!!t.properties.hallway != isHallway) ||
+				(!!t.properties.hallway !== isHallway) ||
 				(t.properties.start) ||
 				(
 					(t.properties.end) &&
-					(fromRoom.distance + 1 != this.maxDistance)
+					(fromRoom.distance + 1 !== this.maxDistance)
 				)
 			)
 				return false;
 			
 			let isValid = t.exits.some(function (e) {
 				let direction = JSON.parse(e.properties.exit);
-				return ((direction[0] == -exitDirection[0]) && (direction[1] == -exitDirection[1]));
+				return ((direction[0] === -exitDirection[0]) && (direction[1] === -exitDirection[1]));
 			});
 
 			if ((isValid) && (t.properties.maxOccur)) {
-				let occurs = this.rooms.filter(r => (r.template.typeId == t.typeId)).length;
+				let occurs = this.rooms.filter(r => (r.template.typeId === t.typeId)).length;
 				if (occurs >= ~~t.properties.maxOccur)
 					isValid = false;
 			}
 
-			if ((isValid) && (fromRoom.distance + 1 == this.maxDistance)) {
+			if ((isValid) && (fromRoom.distance + 1 === this.maxDistance)) {
 				//If there is an exit available, rather use that
 				if (!t.properties.end) {
 					let endsAvailable = this.templates.filter(function (tt) {
@@ -425,7 +425,7 @@ module.exports = {
 							return false;
 						else if (!~~tt.properties.maxOccur)
 							return true;
-						else if (this.rooms.filter(r => r.template.typeId == tt.typeId).length < ~~tt.properties.maxOccur)
+						else if (this.rooms.filter(r => r.template.typeId === tt.typeId).length < ~~tt.properties.maxOccur)
 							return true;
 					}, this);
 
@@ -437,7 +437,7 @@ module.exports = {
 			return isValid;
 		}, this);
 
-		if (templates.length == 0) {
+		if (templates.length === 0) {
 			fromRoom.template.exits.push(fromExit);
 			return false;
 		}
@@ -446,10 +446,10 @@ module.exports = {
 
 		let templateExit = template.exits.filter(function (e) {
 			let direction = JSON.parse(e.properties.exit);
-			return ((direction[0] == -exitDirection[0]) && (direction[1] == -exitDirection[1]));
+			return ((direction[0] === -exitDirection[0]) && (direction[1] === -exitDirection[1]));
 		});
 		templateExit = templateExit[this.randInt(0, templateExit.length)];
-		let exitIndex = template.exits.firstIndex(e => e == templateExit);
+		let exitIndex = template.exits.firstIndex(e => e === templateExit);
 
 		template.exits.splice(exitIndex, 1);
 
@@ -489,7 +489,7 @@ module.exports = {
 	doesCollide: function (room, ignore) {
 		for (let i = 0; i < this.rooms.length; i++) {
 			let r = this.rooms[i];
-			if (r == ignore)
+			if (r === ignore)
 				continue;
 
 			let collides = (!(

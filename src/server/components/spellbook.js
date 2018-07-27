@@ -100,9 +100,9 @@ module.exports = {
 			let sheetName = this.obj.sheetName || '../../../images/characters.png';
 			let animationName = builtSpell.animation;
 
-			if (sheetName == 'mobs')
+			if (sheetName === 'mobs')
 				animation = animations.mobs;
-			else if (sheetName == 'bosses')
+			else if (sheetName === 'bosses')
 				animation = animations.bosses;
 			else if (sheetName.indexOf('/') > -1)
 				animation = animations.mobs[sheetName];
@@ -116,12 +116,12 @@ module.exports = {
 				builtSpell.animation = null;
 		}
 
-		if ((this.closestRange == -1) || (builtSpell.range < this.closestRange))
+		if ((this.closestRange === -1) || (builtSpell.range < this.closestRange))
 			this.closestRange = builtSpell.range;
-		if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
+		if ((this.furthestRange === -1) || (builtSpell.range > this.furthestRange))
 			this.furthestRange = builtSpell.range;
 
-		if ((options.id == null) && (spellId == null)) {
+		if ((options.id === null) && (spellId === null)) {
 			spellId = 0;
 			this.spells.forEach(function (s) {
 				if (s.id >= spellId)
@@ -129,7 +129,7 @@ module.exports = {
 			});
 		}
 
-		builtSpell.id = (options.id == null) ? spellId : options.id;
+		builtSpell.id = (options.id === null) ? spellId : options.id;
 		this.spells.push(builtSpell);
 		this.spells.sort(function (a, b) {
 			return (a.id - b.id);
@@ -147,7 +147,7 @@ module.exports = {
 
 	addSpellFromRune: function (runeSpell, spellId) {
 		let type = runeSpell.type;
-		let playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() == runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type == type));
+		let playerSpell = playerSpells.spells.find(s => (s.name.toLowerCase() === runeSpell.name.toLowerCase())) || playerSpells.spells.find(s => (s.type === type));
 		let playerSpellConfig = playerSpellsConfig.spells[runeSpell.name.toLowerCase()] || playerSpellsConfig.spells[runeSpell.type];
 		if (!playerSpellConfig)
 			return -1;
@@ -167,7 +167,7 @@ module.exports = {
 			let roll = runeSpell.rolls[r] || 0;
 			runeSpell.rolls[r] = roll;
 
-			let int = r.indexOf('i_') == 0;
+			let int = r.indexOf('i_') === 0;
 
 			let val = range[0] + ((range[1] - range[0]) * roll);
 			if (int) {
@@ -200,7 +200,7 @@ module.exports = {
 	},
 
 	removeSpellById: function (id) {
-		let exists = this.spells.spliceFirstWhere(s => (s.id == id));
+		let exists = this.spells.spliceFirstWhere(s => (s.id === id));
 
 		if (exists) {
 			if ((exists.manaReserve) && (exists.active)) {
@@ -214,7 +214,7 @@ module.exports = {
 			exists.unlearn && exists.unlearn();
 
 			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
-			this.auto.spliceWhere(a => a.spell == id);
+			this.auto.spliceWhere(a => a.spell === id);
 		}
 	},
 
@@ -222,7 +222,7 @@ module.exports = {
 		if (!action.auto)
 			return true;
 
-		let exists = this.auto.find(a => (a.spell == action.spell));
+		let exists = this.auto.find(a => (a.spell === action.spell));
 		if (!exists) {
 			this.auto.push({
 				spell: action.spell,
@@ -244,12 +244,12 @@ module.exports = {
 		return null;
 	},
 	cast: function (action, isAuto) {
-		if (action.spell == null) {
+		if (action.spell === null) {
 			this.auto = [];
 			return true;
 		}
 
-		let spell = this.spells.find(s => (s.id == action.spell));
+		let spell = this.spells.find(s => (s.id === action.spell));
 
 		if (!spell)
 			return false;
@@ -261,22 +261,22 @@ module.exports = {
 					x: this.obj.x,
 					y: this.obj.y
 				};
-			} else if (spell.spellType == 'buff') 
+			} else if (spell.spellType === 'buff') 
 				action.target = this.obj;
 		}
 
 		if ((!spell.aura) && (!spell.targetGround)) {
 			//Did we pass in the target id?
-			if ((action.target != null) && (action.target.id == null)) {
-				action.target = this.objects.objects.find(o => o.id == action.target);
+			if ((action.target !== null) && (action.target.id === null)) {
+				action.target = this.objects.objects.find(o => o.id === action.target);
 				if (!action.target)
 					return false;
 			}
 
-			if ((action.target == this.obj) && (spell.noTargetSelf))
+			if ((action.target === this.obj) && (spell.noTargetSelf))
 				action.target = null;
 
-			if ((action.target == null) || (!action.target.player)) {
+			if ((action.target === null) || (!action.target.player)) {
 				if (spell.autoTargetFollower) {
 					action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
 					if (action.target)
@@ -286,8 +286,8 @@ module.exports = {
 				}
 			}
 
-			if (spell.spellType == 'buff') {
-				if (this.obj.aggro.faction != action.target.aggro.faction)
+			if (spell.spellType === 'buff') {
+				if (this.obj.aggro.faction !== action.target.aggro.faction)
 					return;
 			} else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
 				if (this.obj.player)
@@ -326,7 +326,7 @@ module.exports = {
 				} else
 					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
 			}
-		} else if (spell.range != null) {
+		} else if (spell.range !== null) {
 			//Distance Check
 			let fromX = this.obj.x;
 			let fromY = this.obj.y;
@@ -380,7 +380,7 @@ module.exports = {
 				cd: spell.cdMax
 			};
 
-			let isAttack = (spell.type == 'melee');
+			let isAttack = (spell.type === 'melee');
 			if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
 				cd.cd = 1;
 
@@ -420,7 +420,7 @@ module.exports = {
 			if ((spell.range > furthest) && (spell.canCast()))
 				furthest = spell.range;
 		}
-		if (furthest == 0)
+		if (furthest === 0)
 			furthest = this.furthestRange;
 
 		return furthest;
@@ -432,7 +432,7 @@ module.exports = {
 			s => cds.push({
 				cd: s.cd,
 				cdMax: s.cdMax,
-				canCast: ((s.manaCost <= this.obj.stats.values.mana) && (s.cd == 0))
+				canCast: ((s.manaCost <= this.obj.stats.values.mana) && (s.cd === 0))
 			}), this);
 
 		return cds;
@@ -512,9 +512,9 @@ module.exports = {
 
 			let match = false;
 			if (!target)
-				match = (c.sourceId == sourceId);
+				match = (c.sourceId === sourceId);
 			else 
-				match = (c.targetId == sourceId);
+				match = (c.targetId === sourceId);
 
 			if (match) {
 				if (c.destroyCallback)
@@ -555,7 +555,7 @@ module.exports = {
 				callback.apply(s, args);
 			}
 
-			if (s.castEvent == event)
+			if (s.castEvent === event)
 				s.cast();
 		}
 	},

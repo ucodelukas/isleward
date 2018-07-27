@@ -16,11 +16,11 @@ module.exports = {
 	},
 
 	gather: function () {
-		if (this.gathering != null)
+		if (this.gathering !== null)
 			return;
 
 		let nodes = this.nodes;
-		if (nodes.length == 0)
+		if (nodes.length === 0)
 			return;
 
 		let firstNode = nodes[0];
@@ -29,7 +29,7 @@ module.exports = {
 
 		let ttlMax = firstNode.resourceNode.ttl || this.defaultTtlMax;
 
-		if (firstNode.resourceNode.nodeType == 'fish') {
+		if (firstNode.resourceNode.nodeType === 'fish') {
 			let rod = this.obj.equipment.eq.tool;
 			if (!rod) {
 				process.send({
@@ -73,10 +73,10 @@ module.exports = {
 			return;
 		}
 
-		let isFish = (gathering.resourceNode.nodeType == 'fish');
+		let isFish = (gathering.resourceNode.nodeType === 'fish');
 
 		if (this.gatheringTtl > 0) {
-			if ((this.gatheringTtl == this.gatheringTtlMax) && (gathering.width)) {
+			if ((this.gatheringTtl === this.gatheringTtlMax) && (gathering.width)) {
 				['x', 'y', 'width', 'height'].forEach(function (p) {
 					this.obj.syncer.set(false, 'gatherer', p, gathering[p]);
 				}, this);
@@ -175,7 +175,7 @@ module.exports = {
 		gatherResult.items.forEach(function (item, i) {
 			delete item.pos;
 
-			if (i == 0) {
+			if (i === 0) {
 				if (blueprint.itemName)
 					item.name = blueprint.itemName;
 				if (blueprint.itemAmount)
@@ -208,7 +208,7 @@ module.exports = {
 				});
 			}
 
-			this.nodes.spliceWhere(n => (n == gathering));
+			this.nodes.spliceWhere(n => (n === gathering));
 		}
 
 		this.gathering = null;
@@ -228,9 +228,9 @@ module.exports = {
 		}[nodeType]);
 
 		let success = true;
-		if (nodeType == 'fish') {
+		if (nodeType === 'fish') {
 			let rod = this.obj.equipment.eq.tool;
-			if (rod == null) {
+			if (rod === null) {
 				success = false;
 				msg = 'You need a fishing rod to fish';
 			}
@@ -248,12 +248,12 @@ module.exports = {
 			}
 		});
 
-		this.nodes.spliceWhere(n => (n == node));
+		this.nodes.spliceWhere(n => (n === node));
 		this.nodes.push(node);
 	},
 
 	exit: function (node) {
-		this.nodes.spliceWhere(n => (n == node));
+		this.nodes.spliceWhere(n => (n === node));
 	},
 
 	events: {
@@ -272,7 +272,7 @@ module.exports = {
 			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
 			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
-			if (this.gathering.resourceNode.nodeType == 'fish')
+			if (this.gathering.resourceNode.nodeType === 'fish')
 				this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 			this.gathering = null;
@@ -284,12 +284,12 @@ module.exports = {
 
 			for (let i = 0; i < nLen; i++) {
 				let node = nodes[i];
-				if (item.slot != 'tool')
+				if (item.slot !== 'tool')
 					continue;
 
-				if (node.resourceNode.nodeType == 'fish') {
+				if (node.resourceNode.nodeType === 'fish') {
 					let rod = this.obj.equipment.eq.tool;
-					if (rod == null) {
+					if (rod === null) {
 						process.send({
 							method: 'events',
 							data: {
@@ -302,8 +302,8 @@ module.exports = {
 							}
 						});
 
-						if (this.gathering == node) {
-							if (this.gathering.resourceNode.nodeType == 'fish')
+						if (this.gathering === node) {
+							if (this.gathering.resourceNode.nodeType === 'fish')
 								this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
 
 							this.gathering = null;

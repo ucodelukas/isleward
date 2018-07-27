@@ -72,7 +72,7 @@ module.exports = {
 		for (let i = 0; i < w; i++) {
 			let inner = [];
 			for (let j = 0; j < h; j++) {
-				if (def == 'array')
+				if (def === 'array')
 					inner.push([]);
 				else
 					inner.push(def);

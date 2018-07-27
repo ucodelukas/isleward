@@ -68,10 +68,10 @@ module.exports = {
 	},
 
 	open: function (msg) {
-		if (msg.sourceId == null)
+		if (msg.sourceId === null)
 			return;
 
-		let obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
 		if ((!obj) || (!obj.player))
 			return;
 
@@ -85,7 +85,7 @@ module.exports = {
 	},
 
 	apply: function (msg) {
-		let obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
 		if (!obj)
 			return;
 

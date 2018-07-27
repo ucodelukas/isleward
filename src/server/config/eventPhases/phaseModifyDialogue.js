@@ -1,6 +1,6 @@
 module.exports = {
 	init: function () {
-		let mob = this.instance.objects.objects.find(m => (m.id == this.mobId));
+		let mob = this.instance.objects.objects.find(m => (m.id === this.mobId));
 		let states = mob.dialogue.states;
 
 		this.addStates(states, this.dialogue.add || {});
@@ -30,7 +30,7 @@ module.exports = {
 
 			if (!target)
 				continue;
-			else if (source == null) {
+			else if (source === null) {
 				delete dialogue[s];
 				continue;
 			}
@@ -38,7 +38,7 @@ module.exports = {
 			for (let o in source) {
 				let targetOptions = target.msg[0].options;
 				if (targetOptions.options)
-					targetOptions.spliceWhere(t => (t == o));
+					targetOptions.spliceWhere(t => (t === o));
 
 				delete target.options[o];
 			}

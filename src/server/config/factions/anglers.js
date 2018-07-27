@@ -15,7 +15,7 @@ module.exports = {
 
 			let result = null;
 			if (item.effects)
-				result = item.effects.find(e => (e.factionId == 'anglers'));
+				result = item.effects.find(e => (e.factionId === 'anglers'));
 
 			if (!result) {
 				if (!item.effects)
@@ -42,7 +42,7 @@ module.exports = {
 
 		events: {
 			beforeGatherResource: function (item, gatherResult, source) {
-				let effect = item.effects.find(e => (e.factionId == 'anglers'));
+				let effect = item.effects.find(e => (e.factionId === 'anglers'));
 
 				let roll = Math.random() * 100;
 				if (roll >= effect.chance)

@@ -25,7 +25,7 @@ module.exports = {
 		for (let i = 0; i < cLen; i++) {
 			let c = callbacks[i];
 
-			if (c.sourceId == sourceId) {
+			if (c.sourceId === sourceId) {
 				if (c.destroyCallback)
 					c.destroyCallback();
 				callbacks.splice(i, 1);

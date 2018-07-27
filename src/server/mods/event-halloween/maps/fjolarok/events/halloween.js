@@ -52,7 +52,7 @@ module.exports = {
 		events: {
 			beforeGatherResource: function (gatherResult, gatherer) {
 				let itemName = gatherResult.blueprint.itemName;
-				if ((!itemName) || (itemName.toLowerCase() != 'candy corn'))
+				if ((!itemName) || (itemName.toLowerCase() !== 'candy corn'))
 					return;
 
 				gatherer.reputation.getReputation('pumpkinSailor', 40);

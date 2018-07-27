@@ -52,7 +52,7 @@ module.exports = {
 
 	getCurrencyFromAction: function (action) {
 		let currencies = this.currencies;
-		let pick = Object.keys(currencies).find(o => (currencies[o].action == action));
+		let pick = Object.keys(currencies).find(o => (currencies[o].action === action));
 
 		return extend(true, {
 			name: pick

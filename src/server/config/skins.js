@@ -117,7 +117,7 @@ module.exports = {
 	getSkinList: function (skins) {
 		let list = Object.keys(config)
 			.filter(function (s) {
-				return ((config[s].default) || (skins.some(f => ((f == s) || (f == '*')))));
+				return ((config[s].default) || (skins.some(f => ((f === s) || (f === '*')))));
 			})
 			.map(function (s) {
 				let res = extend(true, {}, config[s]);

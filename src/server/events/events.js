@@ -25,7 +25,7 @@ module.exports = {
 	},
 
 	getEvent: function (name) {
-		return this.configs.find(c => (c.name == name)).event.config;
+		return this.configs.find(c => (c.name === name)).event.config;
 	},
 	setEventDescription: function (name, desc) {
 		let config = this.getEvent(name);
@@ -202,7 +202,7 @@ module.exports = {
 		}
 
 		if (event.config.notifications) {
-			let n = event.config.notifications.find(f => (f.mark == event.age));
+			let n = event.config.notifications.find(f => (f.mark === event.age));
 			if (n) {
 				this.instance.syncer.queue('onGetMessages', {
 					messages: {
@@ -211,7 +211,7 @@ module.exports = {
 					}
 				}, -1);
 
-				if (n.desc != null) {
+				if (n.desc !== null) {
 					event.config.descTimer = n.desc;
 					this.setEventDescription(event.config.name);
 				}
@@ -220,9 +220,9 @@ module.exports = {
 
 		event.age++;
 
-		if (event.age == event.config.duration)
+		if (event.age === event.config.duration)
 			event.done = true;
-		else if ((event.config.prizeTime) && (event.age == event.config.prizeTime))
+		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime))
 			this.giveRewards(event.config);
 
 		if (stillBusy)
@@ -258,7 +258,7 @@ module.exports = {
 			event.done = true;
 
 		let oList = this.instance.objects.objects;
-		let oLen = oList.length;
+		oLen = oList.length;
 		for (let i = 0; i < oLen; i++) {
 			let o = oList[i];
 			if (!o.player)
@@ -283,16 +283,16 @@ module.exports = {
 			if (!event)
 				continue;
 
-			let exists = event.participators.find(p => (p.name == obj.name));
+			let exists = event.participators.find(p => (p.name === obj.name));
 			if (exists) {
-				event.participators.spliceWhere(p => (p == exists));
+				event.participators.spliceWhere(p => (p === exists));
 				event.participators.push(obj);
 				result.push(event);
 				continue;
 			}
 
 			let distance = event.config.distance;
-			if (distance == -1) {
+			if (distance === -1) {
 				event.participators.push(obj);
 				result.push(event);
 
@@ -312,7 +312,7 @@ module.exports = {
 				let o = objects[j];
 
 				if (
-					(distance == -1) ||
+					(distance === -1) ||
 					(!distance) ||
 					(
 						(Math.abs(x - o.x) < distance) &&

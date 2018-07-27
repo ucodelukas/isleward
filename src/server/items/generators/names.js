@@ -33,7 +33,7 @@ module.exports = {
 
 			if (item.stats.armor)
 				list = list.concat(prefixes.armor);
-			else if (item.slot == 'twoHanded')
+			else if (item.slot === 'twoHanded')
 				list = list.concat(prefixes.weapons);
 
 			let pick = list[~~(Math.random() * list.length)];
@@ -48,14 +48,14 @@ module.exports = {
 		gSuffix: function (item, blueprint) {
 			let list = null;
 
-			if (item.slot == 'tool') 
+			if (item.slot === 'tool') 
 				list = suffixes.slots.tool;
 			 else {
 				list = suffixes.generic.concat(suffixes.slots[item.slot] || []);
 
 				if (item.stats.armor)
 					list = list.concat(suffixes.armor);
-				else if (item.slot == 'twoHanded')
+				else if (item.slot === 'twoHanded')
 					list = list.concat(suffixes.weapons);
 			}
 

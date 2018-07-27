@@ -85,7 +85,7 @@ module.exports = {
 			let properties = extend(true, {}, l.properties);
 			['cpnMob'].forEach(function (c) {
 				let blueprint = properties[c] || null;
-				if ((blueprint) && (typeof (blueprint) == 'string'))
+				if ((blueprint) && (typeof (blueprint) === 'string'))
 					blueprint = JSON.parse(blueprint);
 
 				if (!blueprint)
@@ -99,7 +99,7 @@ module.exports = {
 			}, this);
 
 			for (let p in properties) {
-				if (p.indexOf('cpn') == -1) {
+				if (p.indexOf('cpn') === -1) {
 					obj[p] = properties[p];
 					continue;
 				}
@@ -107,7 +107,7 @@ module.exports = {
 				let type = p.replace('cpn', '');
 				type = type[0].toLowerCase() + type.substr(1);
 				let blueprint = properties[p] || null;
-				if ((blueprint) && (typeof (blueprint) == 'string'))
+				if ((blueprint) && (typeof (blueprint) === 'string'))
 					blueprint = JSON.parse(blueprint);
 
 				obj.addComponent(type, blueprint);
@@ -134,7 +134,7 @@ module.exports = {
 			if (obj.aggro)
 				obj.aggro.move();
 
-			if (lLen == 1)
+			if (lLen === 1)
 				return obj;
 		}
 	},
@@ -151,9 +151,9 @@ module.exports = {
 			let o = objects[i];
 			let match = false;
 			if (useServerId)
-				match = (o.serverId == obj.id);
+				match = (o.serverId === obj.id);
 			else
-				match = (o.id == obj.id);
+				match = (o.id === obj.id);
 
 			if (match) {
 				o.destroy();
@@ -171,7 +171,8 @@ module.exports = {
 				physics.removeRegion(found);
 		}
 
-		callback && callback(found);
+		if (callback)
+			callback(found);
 	},
 
 	addObject: function (o, callback) {
@@ -204,7 +205,7 @@ module.exports = {
 		return newO;
 	},
 	sendEvent: function (msg) {
-		let player = this.objects.find(p => p.id == msg.id);
+		let player = this.objects.find(p => p.id === msg.id);
 		if (!player)
 			return;
 
@@ -227,7 +228,7 @@ module.exports = {
 
 				let obj = eventEntry.obj;
 
-				if (e != 'serverModule') {
+				if (e !== 'serverModule') {
 					let to = eventEntry.to;
 					let toLen = to.length;
 					for (let i = 0; i < toLen; i++) {
@@ -235,7 +236,7 @@ module.exports = {
 
 						let player = players[toId];
 						if (!player) {
-							let findPlayer = objects.find(o => o.id == toId);
+							let findPlayer = objects.find(o => o.id === toId);
 							if (!findPlayer)
 								continue;
 							else {
@@ -260,7 +261,7 @@ module.exports = {
 		}
 	},
 	updateObject: function (msg) {
-		let player = this.objects.find(p => p.id == msg.serverId);
+		let player = this.objects.find(p => p.id === msg.serverId);
 		if (!player)
 			return;
 

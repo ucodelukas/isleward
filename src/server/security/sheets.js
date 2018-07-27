@@ -35,7 +35,7 @@ module.exports = {
 	},
 
 	getRecord: function (name) {
-		return (this.records || []).find(r => (r.username == name));
+		return (this.records || []).find(r => (r.username === name));
 	},
 
 	onGetRows: function (err, rows) {
@@ -55,9 +55,9 @@ module.exports = {
 					o.messagePrefix = o.messageprefix;
 					delete o.messageprefix;
 
-					if (typeof (o.items) == 'string')
+					if (typeof (o.items) === 'string')
 						o.items = JSON.parse(o.items || '[]');
-					if (typeof (o.skins) == 'string')
+					if (typeof (o.skins) === 'string')
 						o.skins = JSON.parse(o.skins || '[]');
 
 					return o;

@@ -1,7 +1,7 @@
 module.exports = {
 	events: {
 		onGetText: function (item) {
-			let rolls = item.effects.find(e => (e.type == 'healOnCrit')).rolls;
+			let rolls = item.effects.find(e => (e.type === 'healOnCrit')).rolls;
 			let chance = rolls.chance || 100;
 			let amount = rolls.amount;
 			let percentage = rolls.percentage;
@@ -25,7 +25,7 @@ module.exports = {
 			if (!damage.crit)
 				return;
 
-			let rolls = item.effects.find(e => (e.type == 'healOnCrit')).rolls;
+			let rolls = item.effects.find(e => (e.type === 'healOnCrit')).rolls;
 
 			let chanceRoll = Math.random() * 100;
 			if (chanceRoll >= (rolls.chance || 100))

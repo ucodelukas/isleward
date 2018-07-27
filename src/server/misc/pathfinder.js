@@ -73,7 +73,7 @@
 
 				if (!onWall) {
 					if (distance) {
-						if (currentNode.h == distance)
+						if (currentNode.h === distance)
 							return pathTo(currentNode);
 					} else {
 						// End case -- result has been found, return the traced path.
@@ -277,7 +277,7 @@
 
 	GridNode.prototype.getCost = function (fromNeighbor) {
 		// Take diagonal weight into consideration.
-		if (fromNeighbor && fromNeighbor.x != this.x && fromNeighbor.y != this.y) 
+		if (fromNeighbor && fromNeighbor.x !== this.x && fromNeighbor.y !== this.y) 
 			return this.weight * 1.41421;
 		
 		return this.weight;

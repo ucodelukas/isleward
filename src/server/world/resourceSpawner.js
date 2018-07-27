@@ -21,7 +21,7 @@ module.exports = {
 	},
 
 	register: function (name, blueprint) {
-		let exists = this.nodes.find(n => (n.blueprint.name == name));
+		let exists = this.nodes.find(n => (n.blueprint.name === name));
 		if (exists) {
 			if (!exists.blueprint.positions) {
 				exists.blueprint.positions = [{
@@ -69,7 +69,7 @@ module.exports = {
 
 		let position = null;
 
-		if (blueprint.type == 'herb') {
+		if (blueprint.type === 'herb') {
 			x = ~~(Math.random() * w);
 			y = ~~(Math.random() * h);
 
@@ -86,7 +86,7 @@ module.exports = {
 			let endTile = path[path.length - 1];
 			if (!endTile)
 				return false;
-			else if ((endTile.x != x) || (endTile.y != y))
+			else if ((endTile.x !== x) || (endTile.y !== y))
 				return false;
 			
 				//Don't spawn in rooms or on objects/other resources
@@ -98,8 +98,8 @@ module.exports = {
 			blueprint.y = y;
 		} else if (blueprint.positions) {
 			//Find all possible positions in which a node hasn't spawned yet
-			position = blueprint.positions.filter(f => !node.spawns.some(s => ((s.x == f.x) && (s.y == f.y))));
-			if (position.length == 0)
+			position = blueprint.positions.filter(f => !node.spawns.some(s => ((s.x === f.x) && (s.y === f.y))));
+			if (position.length === 0)
 				return false;
 
 			position = position[~~(Math.random() * position.length)];
@@ -123,7 +123,7 @@ module.exports = {
 		let obj = this.objects.buildObjects([objBlueprint]);
 		delete obj.ttl;
 
-		if (blueprint.type == 'herb') {
+		if (blueprint.type === 'herb') {
 			this.syncer.queue('onGetObject', {
 				x: obj.x,
 				y: obj.y,
@@ -145,14 +145,14 @@ module.exports = {
 			type: node.type,
 			sprite: node.blueprint.itemSprite,
 			name: node.blueprint.name,
-			quantity: (blueprint.type != 'fish') ? 1 : null,
+			quantity: (blueprint.type !== 'fish') ? 1 : null,
 			quality: 0
 		};
 
 		if (blueprint.itemSheet)
 			item.spritesheet = blueprint.itemSheet;
 
-		if (blueprint.type == 'fish')
+		if (blueprint.type === 'fish')
 			item.noStack = true;
 
 		inventory.getItem(item);
@@ -183,7 +183,7 @@ module.exports = {
 				}
 			}
 
-			if ((sLen < node.max) && (node.cd == 0)) {
+			if ((sLen < node.max) && (node.cd === 0)) {
 				if (this.spawn(node)) {
 					node.cd = this.cdMax;
 					break;

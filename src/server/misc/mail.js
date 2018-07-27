@@ -9,7 +9,7 @@ module.exports = {
 	},
 
 	getMail: function (playerName) {
-		let player = this.instance.objects.objects.find(o => (o.name == playerName));
+		let player = this.instance.objects.objects.find(o => (o.name === playerName));
 		if (!player) {
 			process.send({
 				method: 'callDifferentThread',
@@ -32,12 +32,12 @@ module.exports = {
 		});
 	},
 	onGetMail: function (player, result) {
-		if (result == 'null')
+		if (result === 'null')
 			result = null;
 		else if (result) {
 			result = result.split('`').join('\'');
 			//Hack for weird google datastore error
-			if (result[0] == '<')
+			if (result[0] === '<')
 				return;
 		}
 
@@ -69,7 +69,7 @@ module.exports = {
 				} else 
 					console.log(player.name + ' has no stash');
 			} else {
-				if ((r.msg) && (!sentMessages.some(s => (s == r.msg)))) {
+				if ((r.msg) && (!sentMessages.some(s => (s === r.msg)))) {
 					player.instance.syncer.queue('onGetMessages', {
 						id: player.id,
 						messages: [{
@@ -124,7 +124,7 @@ module.exports = {
 
 		let player = null;
 		if (this.instance)
-			player = this.instance.objects.objects.find(o => (o.name == playerName));
+			player = this.instance.objects.objects.find(o => (o.name === playerName));
 
 		io.get({
 			ent: playerName,
@@ -133,7 +133,7 @@ module.exports = {
 		});
 	},
 	doSendMail: function (playerName, items, callback, result) {
-		if (result == 'null')
+		if (result === 'null')
 			result = null;
 
 		result = JSON.parse(result || '[]');

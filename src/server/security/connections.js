@@ -12,14 +12,14 @@ module.exports = {
 		this.players.push(p);
 	},
 	onDisconnect: function (socket) {
-		let player = this.players.find(p => p.socket.id == socket.id);
+		let player = this.players.find(p => p.socket.id === socket.id);
 
 		if (!player)
 			return;
 
 		let sessionDuration = 0;
 
-		if (player.id != null) {
+		if (player.id !== null) {
 			if (player.social)
 				player.social.dc();
 			sessionDuration = ~~(((+new Date()) - player.player.sessionStart) / 1000);
@@ -44,21 +44,21 @@ module.exports = {
 			});
 		}
 
-		this.players.spliceWhere(p => p.socket.id == socket.id);
+		this.players.spliceWhere(p => p.socket.id === socket.id);
 	},
 	route: function (socket, msg) {
 		let player = null;
 
-		if (msg.id != null) {
-			player = this.players.find(p => p.id == msg.id);
-			let source = this.players.find(p => p.socket.id == socket.id);
+		if (msg.id !== null) {
+			player = this.players.find(p => p.id === msg.id);
+			let source = this.players.find(p => p.socket.id === socket.id);
 			if (!source)
 				return;
 			if (!msg.data)
 				msg.data = {};
 			msg.data.sourceId = source.id;
 		} else
-			player = this.players.find(p => p.socket.id == socket.id);
+			player = this.players.find(p => p.socket.id === socket.id);
 
 		if (
 			(!player) ||
@@ -68,7 +68,7 @@ module.exports = {
 			) ||
 			(
 				(player.dead) &&
-				(msg.data.method != 'respawn')
+				(msg.data.method !== 'respawn')
 			)
 		)
 			return;
@@ -82,7 +82,7 @@ module.exports = {
 	},
 	unzone: function (msg) {
 		let socket = msg.socket;
-		let player = this.players.find(p => p.socket.id == socket.id);
+		let player = this.players.find(p => p.socket.id === socket.id);
 
 		if (!player)
 			return;
@@ -94,9 +94,9 @@ module.exports = {
 		let keys = Object.keys(player);
 		keys.forEach(function (k) {
 			let val = player[k];
-			if ((val != null) && (typeof (val) == 'object') && (val.type)) {
+			if ((val !== null) && (typeof (val) === 'object') && (val.type)) {
 				let type = val.type;
-				if ((type != 'player') && (type != 'auth') && (type != 'syncer')) 
+				if ((type !== 'player') && (type !== 'auth') && (type !== 'syncer')) 
 					delete player[k];
 			}
 		});
@@ -124,15 +124,15 @@ module.exports = {
 		for (let i = 0; i < pLen; i++) {
 			let p = players[i];
 
-			if ((!p) || (p == exclude) || (!p.auth))
+			if ((!p) || (p === exclude) || (!p.auth))
 				continue;
 
-			if (p.auth.username == exclude.auth.username)
+			if (p.auth.username === exclude.auth.username)
 				p.socket.emit('dc', {});
 		}
 	},
 
-	getCharacterList: function (msg) {
+	getCharacterList: function () {
 		let result = [];
 		let players = this.players;
 		let pLen = players.length;

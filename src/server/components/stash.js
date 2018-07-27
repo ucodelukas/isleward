@@ -20,7 +20,7 @@ module.exports = {
 		//Material?
 		let exists = false;
 		if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses)) {
-			let existItem = this.items.find(i => i.name == item.name);
+			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
 				if (!existItem.quantity)
@@ -64,11 +64,11 @@ module.exports = {
 	},
 
 	destroyItem: function (id) {
-		let item = this.items.find(i => i.id == id);
+		let item = this.items.find(i => i.id === id);
 		if (!item)
 			return;
 
-		this.items.spliceWhere(i => i == item);
+		this.items.spliceWhere(i => i === item);
 
 		this.obj.syncer.setArray(true, 'stash', 'destroyItems', id);
 
@@ -79,12 +79,12 @@ module.exports = {
 		if (!this.active)
 			return;
 
-		let item = this.items.find(i => i.id == id);
+		let item = this.items.find(i => i.id === id);
 		if (!item)
 			return;
 
 		this.obj.inventory.getItem(item);
-		this.items.spliceWhere(i => i == item);
+		this.items.spliceWhere(i => i === item);
 
 		this.obj.syncer.setArray(true, 'stash', 'destroyItems', id);
 

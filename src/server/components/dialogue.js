@@ -21,15 +21,15 @@ module.exports = {
 
 		let target = msg.target;
 
-		if ((target == null) && (!msg.targetName))
+		if ((target === null) && (!msg.targetName))
 			return false;
 
-		if ((target != null) && (target.id == null)) {
-			target = this.obj.instance.objects.objects.find(o => o.id == target);
+		if ((target !== null) && (target.id === null)) {
+			target = this.obj.instance.objects.objects.find(o => o.id === target);
 			if (!target)
 				return false;
-		} else if (msg.targetName != null) {
-			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
+		} else if (msg.targetName !== null) {
+			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === msg.targetName.toLowerCase())));
 			if (!target)
 				return false;
 		}
@@ -145,7 +145,7 @@ module.exports = {
 		}
 
 		if (!(result.options instanceof Array)) {
-			if (result.options[0] == '$')
+			if (result.options[0] === '$')
 				result.options = this.states[result.options.replace('$', '')].options;
 
 			result.options = Object.keys(result.options);
@@ -196,7 +196,7 @@ module.exports = {
 
 	getItem: function (msg, source) {
 		let inventory = this.obj.inventory;
-		let exists = inventory.items.find(i => (i.name == msg.item.name));
+		let exists = inventory.items.find(i => (i.name === msg.item.name));
 		if (!exists) {
 			inventory.getItem(msg.item);
 			return msg.successMsg || false;

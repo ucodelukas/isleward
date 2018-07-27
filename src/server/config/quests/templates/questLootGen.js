@@ -18,14 +18,14 @@ module.exports = {
 				let mobBlueprint = mobTypes[m];
 
 				return (
-					(m != 'default') &&
+					(m !== 'default') &&
 					(mobBlueprint.questItem) &&
 					(mobBlueprint.level <= (this.obj.stats.values.level * 1.35))
 				);
 			}, this);
 
 			//No level appropriate mobs found
-			if (keys.length == 0)
+			if (keys.length === 0)
 				return false;
 
 			this.mobType = keys[~~(Math.random() * keys.length)];
@@ -51,14 +51,14 @@ module.exports = {
 
 	oComplete: function () {
 		let inventory = this.obj.inventory;
-		let item = inventory.items.find((i => i.name == this.item.name).bind(this));
+		let item = inventory.items.find((i => i.name === this.item.name).bind(this));
 		if (item)
 			this.obj.inventory.destroyItem(item.id, this.need);
 	},
 
 	events: {
 		beforeTargetDeath: function (target, dropItems) {
-			if ((this.obj.zoneName != this.zoneName) || (target.name.toLowerCase() != this.mobType) || (this.have >= this.need))
+			if ((this.obj.zoneName !== this.zoneName) || (target.name.toLowerCase() !== this.mobType) || (this.have >= this.need))
 				return;
 
 			let roll = Math.random();
@@ -76,11 +76,11 @@ module.exports = {
 		},
 
 		afterLootMobItem: function (item) {
-			if ((this.obj.zoneName != this.zoneName) || (item.name.toLowerCase() != this.item.name.toLowerCase()))
+			if ((this.obj.zoneName !== this.zoneName) || (item.name.toLowerCase() !== this.item.name.toLowerCase()))
 				return;
 
 			this.have++;
-			if (this.have == this.need)
+			if (this.have === this.need)
 				this.ready();
 
 			this.description = 'Loot ' + this.have + '/' + this.need + ' ' + this.item.name + ' from ' + this.mobName;
@@ -88,7 +88,7 @@ module.exports = {
 		},
 
 		afterDestroyItem: function (item, quantity) {
-			if (item.name.toLowerCase() != this.item.name.toLowerCase())
+			if (item.name.toLowerCase() !== this.item.name.toLowerCase())
 				return;
 
 			this.have -= quantity;

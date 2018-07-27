@@ -10,7 +10,7 @@ module.exports = {
 	obtain: function (obj, template) {
 		let zoneName = template ? template.zoneName : obj.zoneName;
 		let oQuests = obj.quests;
-		if (oQuests.quests.filter(q => q.zoneName == zoneName).length > 0)
+		if (oQuests.quests.filter(q => q.zoneName === zoneName).length > 0)
 			return;
 
 		let zoneTemplate = null;
@@ -26,12 +26,12 @@ module.exports = {
 
 		let config = extend(true, {}, zoneTemplate);
 		this.instance.eventEmitter.emit('onBeforeGetQuests', config);
-		if (config.infini.length == 0)
+		if (config.infini.length === 0)
 			return;
 
 		let pickQuest = null;
 		if ((template) && (template.type))
-			pickQuest = config.infini.find(c => c.type == template.type);
+			pickQuest = config.infini.find(c => c.type === template.type);
 
 		if (!pickQuest)
 			pickQuest = config.infini[~~(Math.random() * config.infini.length)];

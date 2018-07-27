@@ -29,7 +29,7 @@ module.exports = {
 	},
 
 	unregisterEvent: function (event) {
-		this.list.spliceWhere(l => (l == event));
+		this.list.spliceWhere(l => (l === event));
 
 		this.obj.syncer.setArray(true, 'events', 'removeList', {
 			id: event.id
@@ -54,7 +54,7 @@ module.exports = {
 				return;
 
 			closeEvents.forEach(function (c) {
-				if (this.list.some(l => (l == c)))
+				if (this.list.some(l => (l === c)))
 					return;
 
 				this.list.push(c);

@@ -12,23 +12,23 @@ module.exports = {
 				console.log(e);
 			}
 
-			if (template == null)
+			if (template === null)
 				return;
-			else if (this.list.some(l => (l.type == p)))
+			else if (this.list.some(l => (l.type === p)))
 				return;
 
-			let p = extend(true, {}, template);
-			p.obj = this.obj;
-			p.init();
+			let prophecy = extend(true, {}, template);
+			prophecy.obj = this.obj;
+			prophecy.init();
 
-			this.list.push(p);
+			this.list.push(prophecy);
 		}, this);
 
 		delete blueprint.list;
 	},
 
 	hasProphecy: function (type) {
-		return this.list.some(l => (l.type == type));
+		return this.list.some(l => (l.type === type));
 	},
 
 	transfer: function () {

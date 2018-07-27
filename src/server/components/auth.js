@@ -23,7 +23,7 @@ module.exports = {
 	customChannels: [],
 
 	play: function (data) {
-		if (this.username == null)
+		if (this.username === null)
 			return;
 
 		let character = this.characters[data.data.name];
@@ -47,7 +47,7 @@ module.exports = {
 		let scheduler = require('../misc/scheduler');
 		let time = scheduler.getTime();
 		let lastLogin = accountInfo.lastLogin;
-		if ((!lastLogin) || (lastLogin.day != time.day)) {
+		if ((!lastLogin) || (lastLogin.day !== time.day)) {
 			let daysSkipped = 1;
 			if (lastLogin) {
 				if (time.day > lastLogin.day)
@@ -61,7 +61,7 @@ module.exports = {
 				}
 			}
 
-			if (daysSkipped == 1) {
+			if (daysSkipped === 1) {
 				accountInfo.loginStreak++;
 				if (accountInfo.loginStreak > 21)
 					accountInfo.loginStreak = 21;
@@ -100,12 +100,12 @@ module.exports = {
 
 	doSave: function (extensionObj) {
 		let simple = this.obj.getSimple(true, true);
-		simple.components.spliceWhere(c => c.type == 'stash');
+		simple.components.spliceWhere(c => c.type === 'stash');
 
-		let stats = simple.components.find(c => c.type == 'stats');
+		let stats = simple.components.find(c => c.type === 'stats');
 		stats.values = extend(true, {}, stats.values);
 
-		let social = simple.components.find(c => c.type == 'social');
+		let social = simple.components.find(c => c.type === 'social');
 		delete social.party;
 		delete social.customChannels;
 
@@ -116,11 +116,11 @@ module.exports = {
 			if (
 				(
 					(s.indexOf('xp') > -1) &&
-					(s != 'xpIncrease')
+					(s !== 'xpIncrease')
 				) ||
-				(s == 'level') ||
-				(s == 'hp') ||
-				(s == 'mana')
+				(s === 'level') ||
+				(s === 'hp') ||
+				(s === 'mana')
 			)
 				continue;
 
@@ -129,7 +129,7 @@ module.exports = {
 
 		//Calculate and store the ttl for effects
 		let time = +new Date();
-		simple.components.find(e => e.type == 'effects').effects.forEach(function (e) {
+		simple.components.find(e => e.type === 'effects').effects.forEach(function (e) {
 			if (e.expire)
 				return;
 
@@ -169,7 +169,7 @@ module.exports = {
 	},
 
 	getCharacterList: function (data) {
-		if (this.username == null)
+		if (this.username === null)
 			return;
 
 		io.get({
@@ -182,7 +182,7 @@ module.exports = {
 		let characters = JSON.parse(result || '[]');
 		this.characterList = characters;
 
-		let result = characters
+		result = characters
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)
@@ -193,7 +193,7 @@ module.exports = {
 
 	getCharacter: function (data) {
 		let name = data.data.name;
-		if (!this.characterList.some(c => ((c.name == name) || (c == name))))
+		if (!this.characterList.some(c => ((c.name === name) || (c === name))))
 			return;
 
 		io.get({
@@ -237,14 +237,14 @@ module.exports = {
 	onGetCustomChannels: function (data, character, result) {
 		this.customChannels = JSON
 			.parse(result || '[]')
-			.filter(c => (typeof (c) == 'string'))
+			.filter(c => (typeof (c) === 'string'))
 			.map(c => c.split(' ').join(''))
 			.filter(c => (c.length > 0));
 
 		this.customChannels = this.customChannels
-			.filter((c, i) => (this.customChannels.indexOf(c) == i));
+			.filter((c, i) => (this.customChannels.indexOf(c) === i));
 
-		let social = character.components.find(c => (c.type == 'social'));
+		let social = character.components.find(c => (c.type === 'social'));
 		if (social)
 			social.customChannels = this.customChannels;
 
@@ -269,7 +269,7 @@ module.exports = {
 
 		fixes.fixStash(this.stash);
 
-		if (this.skins != null) {
+		if (this.skins !== null) {
 			this.verifySkin(character);
 			data.callback(character);
 		} else {
@@ -328,7 +328,7 @@ module.exports = {
 		let list = [...this.skins, ...roles.getSkins(this.username)];
 		let skinList = skins.getSkinList(list);
 
-		if (!skinList.some(s => (s.id == character.skinId))) {
+		if (!skinList.some(s => (s.id === character.skinId))) {
 			character.skinId = '1.0';
 
 			character.cell = skins.getCell(character.skinId);
@@ -337,13 +337,13 @@ module.exports = {
 	},
 
 	doesOwnSkin: function (skinId) {
-		return this.skins.some(s => s == skinId);
+		return this.skins.some(s => s === skinId);
 	},
 
 	login: function (msg) {
 		let credentials = msg.data;
 
-		if ((credentials.username == '') | (credentials.password == '')) {
+		if ((credentials.username === '') | (credentials.password === '')) {
 			msg.callback(messages.login.allFields);
 			return;
 		}
@@ -366,7 +366,7 @@ module.exports = {
 			msg.callback(messages.login.incorrect);
 		else if (compareResult) { //If stored password matches the hashed password entered by the user, log them in directly
 			this.onLoginVerified(msg);
-		} else if (msg.data.password == storedPassword) { //If the stored password matches a plaintext password entered by the user; In that case the password gets hashed for the future
+		} else if (msg.data.password === storedPassword) { //If the stored password matches a plaintext password entered by the user; In that case the password gets hashed for the future
 			this.onUnhashedLogin(msg);
 		} else
 			msg.callback(messages.login.incorrect);
@@ -409,7 +409,7 @@ module.exports = {
 	register: function (msg) {
 		let credentials = msg.data;
 
-		if ((credentials.username == '') || (credentials.password == '')) {
+		if ((credentials.username === '') || (credentials.password === '')) {
 			msg.callback(messages.login.allFields);
 			return;
 		}
@@ -490,7 +490,7 @@ module.exports = {
 				'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 			];
 
-			if (valid.indexOf(char) == -1) {
+			if (valid.indexOf(char) === -1) {
 				msg.callback(messages.login.invalid);
 				return;
 			}
@@ -521,7 +521,7 @@ module.exports = {
 
 		let simple = this.obj.getSimple(true);
 		let prophecies = data.prophecies || [];
-		prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) == i));
+		prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) === i));
 		simple.components.push({
 			type: 'prophecies',
 			list: prophecies
@@ -563,7 +563,7 @@ module.exports = {
 		if ((!data.name) || (!this.username))
 			return;
 
-		if (!this.characterList.some(c => ((c.name == data.name) || (c == data.name)))) {
+		if (!this.characterList.some(c => ((c.name === data.name) || (c === data.name)))) {
 			msg.callback([]);
 			return;
 		}
@@ -575,7 +575,7 @@ module.exports = {
 		});
 	},
 	onDeleteCharacter: function (msg, result) {
-		this.characterList.spliceWhere(c => ((c.name == msg.data.name) || (c == msg.data.name)));
+		this.characterList.spliceWhere(c => ((c.name === msg.data.name) || (c === msg.data.name)));
 		let characterList = this.characterList
 			.map(c => ({
 				name: c.name ? c.name : c,
@@ -592,7 +592,7 @@ module.exports = {
 		leaderboard.deleteCharacter(msg.data.name);
 	},
 	onRemoveFromList: function (msg, result) {
-		let result = this.characterList
+		result = this.characterList
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)

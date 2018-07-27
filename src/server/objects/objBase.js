@@ -15,14 +15,14 @@ module.exports = {
 				}, blueprint || {});
 			}
 
-			let cpn = extend(true, {}, template);
+			cpn = extend(true, {}, template);
 			cpn.obj = this;
 
 			this.components.push(cpn);
 			this[cpn.type] = cpn;
 		}
 
-		if ((cpn.init) && (this.instance != null))
+		if ((cpn.init) && (this.instance !== null))
 			cpn.init(blueprint || {}, isTransfer);
 		else {
 			for (let p in blueprint) 
@@ -55,14 +55,14 @@ module.exports = {
 	update: function () {
 		let usedTurn = false;
 
-		let components = this.components;
-		let len = components.length;
+		let cpns = this.components;
+		let len = cpns.length;
 		for (let i = 0; i < len; i++) {
-			let c = components[i];
+			let c = cpns[i];
 
 			if (c.destroyed) {
 				this.syncer.setSelfArray(false, 'removeComponents', c.type);
-				this.components.spliceWhere(f => (f == c));
+				cpns.spliceWhere(f => (f === c));
 				delete this[c.type];
 				len--;
 				i--;
@@ -82,9 +82,9 @@ module.exports = {
 
 		if ((self) && (!isSave)) {
 			let syncer = this.syncer;
-			if (this.syncer) {
+			if (syncer) {
 				//Add things that have been queued by the syncer (that aren't tied to server-side components)
-				let components = this.syncer.oSelf.components
+				syncer.oSelf.components
 					.filter((c => !this[c.type]), this)
 					.forEach(c => s.components.push(c));
 			}
@@ -103,13 +103,13 @@ module.exports = {
 
 		for (let p in o) {
 			let value = o[p];
-			if (value == null)
+			if (value === null)
 				continue;
 
 			let type = typeof (value);
 
 			//build component
-			if (type == 'object') {
+			if (type === 'object') {
 				if (value.type) {
 					if (!value.simplify) {
 						if (self) {
@@ -140,7 +140,7 @@ module.exports = {
 					}
 				} else if (syncTypes.indexOf(p) > -1) 
 					result[p] = value;
-			} else if (type != 'function')
+			} else if (type !== 'function')
 				result[p] = value;
 		}
 
@@ -180,13 +180,13 @@ module.exports = {
 			this.actionQueue.push(action);
 	},
 	dequeue: function () {
-		if (this.actionQueue.length == 0)
+		if (this.actionQueue.length === 0)
 			return null;
 
 		return this.actionQueue.splice(0, 1)[0];
 	},
 	clearQueue: function () {
-		if (this.serverId != null) {
+		if (this.serverId !== null) {
 			this.instance.syncer.queue('onClearQueue', {
 				id: this.id
 			}, [this.serverId]);
@@ -215,8 +215,8 @@ module.exports = {
 		if (!q) 
 			return;
 
-		if (q.action == 'move') {
-			if ((this.actionQueue[0]) && (this.actionQueue[0].action == 'move')) {
+		if (q.action === 'move') {
+			if ((this.actionQueue[0]) && (this.actionQueue[0].action === 'move')) {
 				let sprintChance = this.stats.values.sprintChance || 0;
 				let physics = this.instance.physics;
 				if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
@@ -227,9 +227,9 @@ module.exports = {
 			let success = this.performMove(q);
 			if (!success) 
 				this.clearQueue();
-		} else if (q.action == 'clearQueue')
+		} else if (q.action === 'clearQueue')
 			this.clearQueue();
-		else if (q.action == 'spell') {
+		else if (q.action === 'spell') {
 			let success = this.spellbook.cast(q);
 			if (!success)
 				this.performQueue();
@@ -245,7 +245,7 @@ module.exports = {
 
 			data.success = true;
 			this.fireEvent('beforeMove', data);
-			if (data.success == false) {
+			if (data.success === false) {
 				action.priority = true;
 				this.queue(action);
 				return true;
@@ -261,8 +261,8 @@ module.exports = {
 					(deltaY > maxDistance)
 				) ||
 				(
-					(deltaX == 0) &&
-					(deltaY == 0)
+					(deltaX === 0) &&
+					(deltaY === 0)
 				)
 			)
 				return false;
@@ -297,10 +297,10 @@ module.exports = {
 	},
 
 	collisionEnter: function (obj) {
-		let components = this.components;
-		let cLen = components.length;
+		let cpns = this.components;
+		let cLen = cpns.length;
 		for (let i = 0; i < cLen; i++) {
-			let c = components[i];
+			let c = cpns[i];
 			if (c.collisionEnter) {
 				if (c.collisionEnter(obj))
 					return true;
@@ -308,10 +308,10 @@ module.exports = {
 		}
 	},
 	collisionExit: function (obj) {
-		let components = this.components;
-		let cLen = components.length;
+		let cpns = this.components;
+		let cLen = cpns.length;
 		for (let i = 0; i < cLen; i++) {
-			let c = components[i];
+			let c = cpns[i];
 			if (c.collisionExit)
 				c.collisionExit(obj);
 		}
@@ -320,10 +320,10 @@ module.exports = {
 	fireEvent: function (event) {
 		let args = [].slice.call(arguments, 1);
 
-		let components = this.components;
-		let cLen = components.length;
+		let cpns = this.components;
+		let cLen = cpns.length;
 		for (let i = 0; i < cLen; i++) {
-			let cpn = components[i];
+			let cpn = cpns[i];
 			let events = cpn.events;
 			if (!events)
 				continue;
@@ -348,14 +348,14 @@ module.exports = {
 	},
 
 	destroy: function () {
-		let components = this.components;
-		let len = components.length;
+		let cpns = this.components;
+		let len = cpns.length;
 		for (let i = 0; i < len; i++) {
-			let c = components[i];
+			let c = cpns[i];
 			if (c.destroy)
 				c.destroy();
 		}
 
-		components = null;
+		this.components = null;
 	}
 };

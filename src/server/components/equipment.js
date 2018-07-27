@@ -40,7 +40,7 @@ module.exports = {
 		}
 
 		let currentEqId = this.eq[item.slot];
-		if (currentEqId == null) {
+		if (currentEqId === null) {
 			this.equip(itemId);
 			return true;
 		}
@@ -48,7 +48,7 @@ module.exports = {
 
 	equip: function (itemId) {
 		let slot = null;
-		if (typeof (itemId) == 'object') {
+		if (typeof (itemId) === 'object') {
 			slot = itemId.slot;
 			itemId = itemId.itemId;
 		}
@@ -63,17 +63,17 @@ module.exports = {
 
 		if (!slot)
 			slot = item.equipSlot || item.slot;
-		if (slot == 'twoHanded') {
+		if (slot === 'twoHanded') {
 			let currentEqId = this.eq.offHand;
-			if (currentEqId != null)
+			if (currentEqId !== null)
 				this.unequip(currentEqId);
 
 			slot = 'oneHanded';
-		} else if (slot == 'offHand') {
+		} else if (slot === 'offHand') {
 			let currentEqId = this.eq.oneHanded;
-			if (currentEqId != null) {
+			if (currentEqId !== null) {
 				let currentEq = this.obj.inventory.findItem(currentEqId);
-				if ((currentEq != null) && (currentEq.slot == 'twoHanded'))
+				if ((currentEq !== null) && (currentEq.slot === 'twoHanded'))
 					this.unequip(currentEqId);
 			}
 		}
@@ -99,9 +99,9 @@ module.exports = {
 		delete item.pos;
 		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
-		if (slot == 'finger') {
-			let f1 = (this.eq['finger-1'] != null);
-			let f2 = (this.eq['finger-2'] != null);
+		if (slot === 'finger') {
+			let f1 = (this.eq['finger-1'] !== null);
+			let f2 = (this.eq['finger-2'] !== null);
 
 			if ((f1) && (f2))
 				slot = 'finger-1';
@@ -114,9 +114,9 @@ module.exports = {
 		let spellId = null;
 		let currentEqId = this.eq[slot];
 		let currentEq = this.obj.inventory.findItem(currentEqId);
-		if (currentEq == item)
+		if (currentEq === item)
 			return;
-		if (currentEqId != null) {
+		if (currentEqId !== null) {
 			spellId = currentEq.spellId;
 			this.unequip(currentEqId);
 		}
@@ -180,12 +180,12 @@ module.exports = {
 	unequip: function (itemId) {
 		let item = itemId;
 		let slot = null;
-		if (typeof (itemId) == 'object') {
+		if (typeof (itemId) === 'object') {
 			slot = itemId.slot;
 			itemId = itemId.itemId;
 		}
 
-		if (item.id == null)
+		if (item.id === null)
 			item = this.obj.inventory.findItem(itemId);
 
 		if (!item)
@@ -299,7 +299,7 @@ module.exports = {
 			if (!factions)
 				return;
 
-			let findFaction = factions.find(f => f.id == factionId);
+			let findFaction = factions.find(f => f.id === factionId);
 			if (!findFaction)
 				return;
 

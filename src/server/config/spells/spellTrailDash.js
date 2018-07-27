@@ -18,7 +18,7 @@ let cpnSpikePatch = {
 		let contents = this.contents;
 		let cLen = contents.length;
 		for (let i = 0; i < cLen; i++) {
-			if (contents[i] == o) {
+			if (contents[i] === o) {
 				contents.splice(i, 1);
 				return;
 			}
@@ -83,8 +83,8 @@ module.exports = {
 
 		if (this.obj.instance.physics.isTileBlocking(x, y)) 
 			this.distance = 7;
-			 else if ((x != this.obj.x) || (y != this.obj.y)) {
-			//if ((x != this.targetX) || (y != this.targetY)) {
+			 else if ((x !== this.obj.x) || (y !== this.obj.y)) {
+			//if ((x !== this.targetX) || (y !== this.targetY)) {
 			let particles = this.particles;
 
 			let spike = this.obj.instance.objects.buildObjects([{

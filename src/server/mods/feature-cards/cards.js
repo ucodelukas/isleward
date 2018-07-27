@@ -68,18 +68,18 @@ module.exports = {
 			if (rqrLevel) {
 				if ((rqrLevel.push) && ((mobLevel < rqrLevel[0]) || (mobLevel > rqrLevel[1])))
 					return;
-				else if ((!rqrLevel.push) && (mobLevel != rqrLevel))
+				else if ((!rqrLevel.push) && (mobLevel !== rqrLevel))
 					return;
 			}
 			let mobName = card.mobName;
 			if (mobName) {
-				if ((mobName.toLowerCase) && (mob.name.toLowerCase() != mobName.toLowerCase()))
+				if ((mobName.toLowerCase) && (mob.name.toLowerCase() !== mobName.toLowerCase()))
 					return;
-				else if ((mobName.push) && (!mobName.some(m => (m.toLowerCase() == mob.name.toLowerCase()))))
+				else if ((mobName.push) && (!mobName.some(m => (m.toLowerCase() === mob.name.toLowerCase()))))
 					return;
 			}
 
-			if ((card.zone) && (looter.zoneName != card.zone))
+			if ((card.zone) && (looter.zoneName !== card.zone))
 				return;
 
 			if (Math.random() >= card.chance)
@@ -88,7 +88,7 @@ module.exports = {
 			pool.push(c);
 		}, this);
 
-		if (pool.length == 0)
+		if (pool.length === 0)
 			return;
 
 		let pickName = pool[~~(Math.random() * pool.length)];
@@ -125,7 +125,7 @@ module.exports = {
 	},
 
 	rewards: {
-		'Level 10 Rune': function (obj) {
+		'Level 10 Rune': function () {
 			return itemGenerator.generate({
 				level: 10,
 				spell: true
@@ -163,7 +163,6 @@ module.exports = {
 				sprite: [0, 0],
 				spritesheet: '../../../images/legendaryItems.png',
 				type: 'Trident',
-				spellName: 'magic missile',
 				description: 'Summoned from the ancient depths of the ocean by the Benthic Incantation.',
 				stats: ['elementFrostPercent', 'elementFrostPercent', 'elementFrostPercent'],
 				effects: [{
@@ -209,7 +208,6 @@ module.exports = {
 				sprite: [1, 0],
 				spritesheet: '../../../images/legendaryItems.png',
 				type: 'Curved Dagger',
-				spellName: 'double slash',
 				description: 'The blade seems to be made of some kind of bone and steel alloy.',
 				stats: ['dex', 'dex', 'addCritMultiplier', 'addCritMultiplier'],
 				effects: [{

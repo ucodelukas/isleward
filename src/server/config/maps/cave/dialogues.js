@@ -29,7 +29,7 @@ module.exports = {
 				1.6: {
 					msg: 'I have some crystals for you.',
 					prereq: function (obj) {
-						let crystals = obj.inventory.items.find(i => (i.name == 'Digested Crystal'));
+						let crystals = obj.inventory.items.find(i => (i.name === 'Digested Crystal'));
 						return !!crystals;
 					},
 					goto: 'giveCrystals'
@@ -226,7 +226,7 @@ module.exports = {
 			method: function (obj) {
 				let inventory = obj.inventory;
 
-				let crystals = inventory.items.find(i => (i.name == 'Digested Crystal'));
+				let crystals = inventory.items.find(i => (i.name === 'Digested Crystal'));
 				if (!crystals)
 					return;
 				obj.reputation.getReputation('akarei', (crystals.quantity || 1) * 15);

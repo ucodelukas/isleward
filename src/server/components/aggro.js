@@ -18,7 +18,7 @@ module.exports = {
 			this.faction = blueprint.faction;
 
 		//TODO: Why don't we move if faction is null?
-		if (this.faction == null)
+		if (this.faction === null)
 			return;
 
 		if (this.physics.width > 0)
@@ -92,7 +92,7 @@ module.exports = {
 		let faction = this.faction;
 		let inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
-		if (inRange.length == 0)
+		if (inRange.length === 0)
 			return;
 
 		let iLen = inRange.length;
@@ -103,7 +103,7 @@ module.exports = {
 			lLen = list.length;
 			for (let j = 0; j < lLen; j++) {
 				//Set the enemy to null so we need we need to continue
-				if (list[j].obj == enemy)
+				if (list[j].obj === enemy)
 					enemy = null;
 			}
 			if (!enemy)
@@ -120,32 +120,32 @@ module.exports = {
 
 	canAttack: function (target) {
 		let obj = this.obj;
-		if (target == obj)
+		if (target === obj)
 			return false;
 		else if ((target.player) && (obj.player)) {
 			let hasButcher = (obj.prophecies.hasProphecy('butcher')) && (target.prophecies.hasProphecy('butcher'));
 
 			if ((!target.social.party) || (!obj.social.party))
 				return hasButcher;
-			else if (target.social.partyLeaderId != obj.social.partyLeaderId)
+			else if (target.social.partyLeaderId !== obj.social.partyLeaderId)
 				return hasButcher;
 			return false;
 		} else if ((target.follower) && (target.follower.master.player) && (obj.player))
 			return false;
 		else if (obj.player)
 			return true;
-		else if (target.aggro.faction != obj.aggro.faction)
+		else if (target.aggro.faction !== obj.aggro.faction)
 			return true;
-		else if (!!target.player != !!obj.player)
+		else if (!!target.player !== !!obj.player)
 			return true;
 	},
 
 	willAutoAttack: function (target) {
-		if (this.obj == target)
+		if (this.obj === target)
 			return false;
 
 		let faction = target.aggro.faction;
-		if ((faction == null) || (!this.faction))
+		if ((faction === null) || (!this.faction))
 			return false;
 
 		let rep = this.obj.reputation;
@@ -160,17 +160,17 @@ module.exports = {
 	},
 
 	ignore: function (obj) {
-		this.ignoreList.spliceWhere(o => o == obj);
+		this.ignoreList.spliceWhere(o => o === obj);
 		this.ignoreList.push(obj);
 	},
 
 	unIgnore: function (obj) {
-		this.ignoreList.spliceWhere(o => o == obj);
+		this.ignoreList.spliceWhere(o => o === obj);
 	},
 
 	tryEngage: function (obj, amount, threatMult) {
 		//Don't aggro yourself, stupid
-		if (obj == this.obj)
+		if (obj === this.obj)
 			return;
 
 		let result = {
@@ -185,7 +185,7 @@ module.exports = {
 		if (!mob)
 			mob = obj.mob;
 		if (mob) {
-			let notMob = (obj == mob) ? this.obj : obj;
+			let notMob = (obj === mob) ? this.obj : obj;
 			if (!mob.canChase(notMob))
 				return false;
 		}
@@ -196,7 +196,7 @@ module.exports = {
 		amount = amount || 0;
 		threatMult = threatMult || 1;
 
-		let exists = list.find(l => l.obj.id == oId);
+		let exists = list.find(l => l.obj.id === oId);
 		if (exists) {
 			exists.damage += amount;
 			exists.threat += amount * threatMult;
@@ -251,10 +251,10 @@ module.exports = {
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
 
-			if (l.obj != obj)
+			if (l.obj !== obj)
 				continue;
 
-			if (amount == null) {
+			if (amount === null) {
 				list.splice(i, 1);
 				obj.aggro.unAggro(this.obj);
 				break;
@@ -268,13 +268,13 @@ module.exports = {
 			}
 		}
 
-		this.ignoreList.spliceWhere(o => o == obj);
+		this.ignoreList.spliceWhere(o => o === obj);
 
 		//Stuff like cocoons don't have spellbooks
 		if (this.obj.spellbook)
 			this.obj.spellbook.unregisterCallback(obj.id, true);
 
-		if ((this.list.length == 0) && (this.obj.mob) && (!this.obj.follower))
+		if ((this.list.length === 0) && (this.obj.mob) && (!this.obj.follower))
 			this.obj.stats.resetHp();
 	},
 
@@ -285,7 +285,7 @@ module.exports = {
 	},
 
 	getHighest: function () {
-		if (this.list.length == 0)
+		if (this.list.length === 0)
 			return null;
 
 		let list = this.list;
@@ -302,13 +302,13 @@ module.exports = {
 			let l = list[i];
 			let obj = l.obj;
 
-			if (this.ignoreList.some(o => o == obj))
+			if (this.ignoreList.some(o => o === obj))
 				continue;
 
-			if ((highest == null) || (l.threat > highest.threat)) {
+			if ((highest === null) || (l.threat > highest.threat)) {
 				highest = l;
 				closest = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
-			} else if (l.threat == highest.threat) {
+			} else if (l.threat === highest.threat) {
 				let distance = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
 				if (distance < closest) {
 					highest = l;

@@ -35,7 +35,7 @@ module.exports = {
 	},
 
 	onBeforeGetItem: function (item, obj) {
-		if ((!obj.player) && (item.type != 'Reward Card'))
+		if ((!obj.player) && (item.type !== 'Reward Card'))
 			return;
 
 		cards.fixCard(item);

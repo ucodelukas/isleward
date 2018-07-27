@@ -9,7 +9,7 @@ let cpnPumpkinChunk = {
 	update: function () {
 		this.ttl--;
 
-		if (this.ttl == 0)
+		if (this.ttl === 0)
 			this.obj.destroyed = true;
 	},
 
@@ -20,7 +20,7 @@ let cpnPumpkinChunk = {
 		this.obj.destroyed = true;
 
 		if (this.isRotten) {
-			let drainCounts = this.caster.spellbook.spells.find(s => (s.type == 'scatterPumpkinPieces')).drainCounts;
+			let drainCounts = this.caster.spellbook.spells.find(s => (s.type === 'scatterPumpkinPieces')).drainCounts;
 			if (drainCounts[o.name])
 				drainCounts[o.name] += 2;
 			else 

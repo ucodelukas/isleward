@@ -41,8 +41,7 @@ module.exports = {
 				mail: mail,
 				map: map,
 				scheduler: scheduler,
-				eventEmitter: eventEmitter,
-				zone: map.zone
+				eventEmitter: eventEmitter
 			};
 
 			this.instances.push(fakeInstance);
@@ -61,7 +60,6 @@ module.exports = {
 			this.queueAction = this.nonInstanced.queueAction.bind(this);
 			this.performAction = this.nonInstanced.performAction.bind(this);
 			this.removeObject = this.nonInstanced.removeObject.bind(this);
-			this.onRemoveObject = this.nonInstanced.onRemoveObject.bind(this);
 
 			this.tick = this.nonInstanced.tick.bind(this);
 			this.tick();
@@ -79,7 +77,6 @@ module.exports = {
 			this.queueAction = this.instanced.queueAction.bind(this);
 			this.performAction = this.instanced.performAction.bind(this);
 			this.removeObject = this.instanced.removeObject.bind(this);
-			this.onRemoveObject = this.instanced.onRemoveObject.bind(this);
 
 			if (map.mapFile.properties.isRandom)
 				this.ttlGen = 0;
@@ -111,7 +108,7 @@ module.exports = {
 
 			let spawnPos = map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x == null)) {
+			if ((!msg.keepPos) || (obj.x === null)) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}
@@ -142,7 +139,7 @@ module.exports = {
 			}
 		},
 		updateObject: function (msg) {
-			let obj = objects.find(o => o.serverId == msg.id);
+			let obj = objects.find(o => o.serverId === msg.id);
 			if (!obj)
 				return;
 
@@ -164,11 +161,11 @@ module.exports = {
 		},
 
 		queueAction: function (msg) {
-			let obj = objects.find(o => o.serverId == msg.id);
+			let obj = objects.find(o => o.serverId === msg.id);
 			if (!obj)
 				return;
-			else if (msg.action.action == 'move') {
-				let moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
+			else if (msg.action.action === 'move') {
+				let moveEntries = obj.actionQueue.filter(q => (q.action === 'move')).length;
 				if (moveEntries >= 50)
 					return;
 			}
@@ -180,9 +177,9 @@ module.exports = {
 			let obj = null;
 			let targetId = msg.action.targetId;
 			if (!targetId)
-				obj = objects.find(o => o.serverId == msg.id);
+				obj = objects.find(o => o.serverId === msg.id);
 			else {
-				obj = objects.find(o => o.id == targetId);
+				obj = objects.find(o => o.id === targetId);
 				if (obj) {
 					let action = msg.action;
 					if (!action.data)
@@ -199,7 +196,7 @@ module.exports = {
 
 		removeObject: function (msg) {
 			let obj = msg.obj;
-			obj = objects.find(o => o.serverId == obj.id);
+			obj = objects.find(o => o.serverId === obj.id);
 			if (!obj) {
 				//We should probably never reach this
 				return;
@@ -212,9 +209,6 @@ module.exports = {
 				obj.fireEvent('beforeRezone');
 
 			obj.destroyed = true;
-		},
-		onRemoveObject: function (obj) {
-
 		}
 	},
 	instanced: {
@@ -251,7 +245,7 @@ module.exports = {
 
 				instance.syncer.update();
 
-				if (instance.closeTtl != null) {
+				if (instance.closeTtl !== null) {
 					let hasPlayers = instance.objects.objects.some(o => o.player);
 					if (hasPlayers) {
 						delete instance.closeTtl;
@@ -281,7 +275,7 @@ module.exports = {
 			let instanceId = msg.instanceId;
 
 			//Maybe a party member is in here already?
-			let social = obj.components.find(c => c.type == 'social');
+			let social = obj.components.find(c => c.type === 'social');
 			if ((social) && (social.party)) {
 				let party = social.party;
 				let instances = this.instances;
@@ -291,7 +285,7 @@ module.exports = {
 
 					let partyInside = instance.objects.objects.some(o => party.indexOf(o.serverId) > -1);
 					if (partyInside) {
-						if (instance.id != obj.instanceId)
+						if (instance.id !== obj.instanceId)
 							msg.keepPos = false;
 						obj.instanceId = instance.id;
 						obj.instance = instance;
@@ -304,7 +298,7 @@ module.exports = {
 			if (msg.transfer)
 				msg.keepPos = false;
 
-			let exists = this.instances.find(i => i.id == instanceId);
+			let exists = this.instances.find(i => i.id === instanceId);
 
 			if (exists) {
 				if ((msg.keepPos) && (!exists.physics.isValid(obj.x, obj.y)))
@@ -316,7 +310,7 @@ module.exports = {
 			if (exists)
 				spawnPos = exists.map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x == null)) {
+			if ((!msg.keepPos) || (obj.x === null)) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}
@@ -327,8 +321,6 @@ module.exports = {
 				//Keep track of what the connection id is (sent from the server)
 				obj.serverId = obj.id;
 				delete obj.id;
-
-				let spawnPos = exists.map.getSpawnPos(obj);
 
 				obj.spawn = exists.map.spawn;
 
@@ -377,11 +369,11 @@ module.exports = {
 			let id = msg.id;
 			let instanceId = msg.instanceId;
 
-			let exists = this.instances.find(i => i.id == instanceId);
+			let exists = this.instances.find(i => i.id === instanceId);
 			if (!exists)
 				return;
 
-			let obj = exists.objects.find(o => o.serverId == id);
+			let obj = exists.objects.find(o => o.serverId === id);
 			if (!obj)
 				return;
 
@@ -406,11 +398,11 @@ module.exports = {
 			let id = msg.id;
 			let instanceId = msg.instanceId;
 
-			let exists = this.instances.find(i => i.id == instanceId);
+			let exists = this.instances.find(i => i.id === instanceId);
 			if (!exists)
 				return;
 
-			let obj = exists.objects.find(o => o.serverId == id);
+			let obj = exists.objects.find(o => o.serverId === id);
 			if (!obj)
 				return;
 
@@ -421,14 +413,14 @@ module.exports = {
 			let id = msg.id;
 			let instanceId = msg.instanceId;
 
-			let exists = this.instances.find(i => i.id == instanceId);
+			let exists = this.instances.find(i => i.id === instanceId);
 			if (!exists)
 				return;
 
-			let obj = exists.objects.find(o => o.serverId == id);
+			let obj = exists.objects.find(o => o.serverId === id);
 			if (obj) {
-				if (msg.action.action == 'move') {
-					let moveEntries = obj.actionQueue.filter(q => (q.action == 'move')).length;
+				if (msg.action.action === 'move') {
+					let moveEntries = obj.actionQueue.filter(q => (q.action === 'move')).length;
 					if (moveEntries >= 50)
 						return;
 				}
@@ -441,12 +433,11 @@ module.exports = {
 			let obj = msg.obj;
 			let instanceId = msg.instanceId;
 
-			let exists = this.instances.find(i => i.id == instanceId);
+			let exists = this.instances.find(i => i.id === instanceId);
 			if (!exists)
 				return;
 
-			let obj = msg.obj;
-			obj = exists.objects.find(o => o.serverId == obj.id);
+			obj = exists.objects.find(o => o.serverId === obj.id);
 
 			if (!obj)
 				return;
@@ -455,9 +446,6 @@ module.exports = {
 				obj.auth.doSave();
 
 			obj.destroyed = true;
-		},
-		onRemoveObject: function (obj) {
-
 		},
 
 		createInstance: function (objToAdd, transfer) {

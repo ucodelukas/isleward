@@ -29,7 +29,7 @@ module.exports = {
 			return;
 
 		if (action.targetId) {
-			let target = this.obj.instance.objects.find(o => o.id == action.targetId);
+			let target = this.obj.instance.objects.find(o => o.id === action.targetId);
 			if (target) {
 				let cpn = target[action.cpn];
 				if ((cpn) && (cpn[action.method]))
@@ -80,7 +80,7 @@ module.exports = {
 				return;
 		}
 
-		this.contents.spliceWhere(c => (c == obj));
+		this.contents.spliceWhere(c => (c === obj));
 
 		this.callAction(obj, 'exit');
 

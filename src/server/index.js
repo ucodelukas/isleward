@@ -15,8 +15,6 @@ let spells = require('./config/spells');
 let itemTypes = require('./items/config/types');
 let sheets = require('./security/sheets');
 
-global.io = true;
-
 let startup = {
 	init: function () {
 		io.init(this.onDbReady.bind(this));

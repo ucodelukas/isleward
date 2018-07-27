@@ -9,12 +9,12 @@ module.exports = {
 	build: function () {
 		//If we're not in the correct zone, don't do this check, it'll just crash the server
 		// since the mob won't be available (most likely) in the zoneFile
-		if (this.obj.zoneName == this.zoneName) {
+		if (this.obj.zoneName === this.zoneName) {
 			let mobTypes = this.obj.instance.spawners.zone.mobs;
 			if (this.mobName) {
 				let mobType = mobTypes[this.mobName.toLowerCase()];
 				//Maybe the zoneFile changed in the meantime. If so, regenerate
-				if ((!mobType) || (mobType.attackable == false))
+				if ((!mobType) || (mobType.attackable === false))
 					this.mobName = null;
 			}
 
@@ -24,10 +24,10 @@ module.exports = {
 					let mobBlueprint = mobTypes[m];
 
 					return (
-						(m != 'default') &&
+						(m !== 'default') &&
 						(
 							(mobBlueprint.attackable) ||
-							(mobBlueprint.attackable == null)
+							(mobBlueprint.attackable === null)
 						) &&
 						(mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35)) &&
 						(mobCounts[m] > 1)
@@ -35,7 +35,7 @@ module.exports = {
 				}, this);
 
 				//No level appropriate mobs found
-				if (keys.length == 0)
+				if (keys.length === 0)
 					return false;
 
 				this.mobType = keys[~~(Math.random() * keys.length)];
@@ -59,7 +59,7 @@ module.exports = {
 
 	events: {
 		afterKillMob: function (mob) {
-			if ((mob.name.toLowerCase() != this.mobName.toLowerCase()) || (this.have >= this.need))
+			if ((mob.name.toLowerCase() !== this.mobName.toLowerCase()) || (this.have >= this.need))
 				return;
 
 			this.have++;

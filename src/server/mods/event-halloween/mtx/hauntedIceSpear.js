@@ -1,10 +1,10 @@
 module.exports = {
 	events: {
 		beforeSpawnProjectile: function (item, spell, projectileConfig) {
-			if (spell.name.toLowerCase() != 'ice spear')
+			if (spell.name.toLowerCase() !== 'ice spear')
 				return;
 
-			let cpnProjectile = projectileConfig.components.find(c => (c.type == 'projectile'));
+			let cpnProjectile = projectileConfig.components.find(c => (c.type === 'projectile'));
 			cpnProjectile.particles = {
 				color: {
 					start: ['51fc9a', '48edff'],

@@ -42,7 +42,7 @@ module.exports = {
 	updateActive: function () {
 		let o = this.obj;
 		let amount = 0;
-		if (this.name == 'Innervation')
+		if (this.name === 'Innervation')
 			amount = ~~((o.stats.values.hpMax / 100) * this.values.regenPercentage);
 		else
 			amount = this.values.regenPercentage || this.values.chance;
@@ -103,7 +103,7 @@ module.exports = {
 			if (!effect)
 				return;
 
-			let obj = objects.find(o => (o.serverId == m));
+			let obj = objects.find(o => (o.serverId === m));
 			if (!obj) {
 				delete effects[m];
 				return;

@@ -8,15 +8,15 @@ module.exports = {
 
 	init: function (blueprint) {
 		this.selected = ((blueprint || {}).selected || []);
-		this.selected.spliceWhere(s => (passiveTree.nodes.some(n => ((n.id == s) && (n.spiritStart)))));
+		this.selected.spliceWhere(s => (passiveTree.nodes.some(n => ((n.id === s) && (n.spiritStart)))));
 
-		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
+		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 
 		let points = this.calcPoints();
 
 		if (points + this.selected.length < this.selected.length) {
 			this.selected = [];
-			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
+			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 			blueprint.selected = this.selected;
 			points = this.calcPoints();
 		}
@@ -27,7 +27,7 @@ module.exports = {
 		let stats = this.obj.stats;
 
 		this.selected.forEach(function (id) {
-			let node = passiveTree.nodes.find(n => (n.id == id));
+			let node = passiveTree.nodes.find(n => (n.id === id));
 			if (node) {
 				for (let p in node.stats) 
 					stats.addStat(p, node.stats[p]);
@@ -48,7 +48,7 @@ module.exports = {
 	applyPassives: function () {
 		let stats = this.obj.stats;
 		this.selected.forEach(function (id) {
-			let node = passiveTree.nodes.find(n => (n.id == id));
+			let node = passiveTree.nodes.find(n => (n.id === id));
 			if (node) {
 				for (let p in node.stats) 
 					stats.addStat(p, node.stats[p]);
@@ -59,17 +59,17 @@ module.exports = {
 	tickNode: function (msg) {
 		if (this.points <= 0)
 			return;
-		else if (this.selected.some(s => (s == msg.nodeId)))
+		else if (this.selected.some(s => (s === msg.nodeId)))
 			return;
 
 		let nodeId = msg.nodeId;
-		let node = passiveTree.nodes.find(n => (n.id == nodeId));
+		let node = passiveTree.nodes.find(n => (n.id === nodeId));
 
 		if (node.spiritStart)
 			return;
 
 		let linked = passiveTree.links.some(function (l) {
-			if ((l.from.id != node.id) && (l.to.id != node.id))
+			if ((l.from.id !== node.id) && (l.to.id !== node.id))
 				return false;
 
 			return (
@@ -99,7 +99,7 @@ module.exports = {
 		let stats = this.obj.stats;
 
 		this.selected.forEach(function (s) {
-			let node = passiveTree.nodes.find(n => (n.id == s));
+			let node = passiveTree.nodes.find(n => (n.id === s));
 			if (node.spiritStart)
 				return;
 
@@ -115,7 +115,7 @@ module.exports = {
 		}, this);
 
 		this.selected = [];
-		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
+		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 
 		this.obj.spellbook.calcDps();
 	},

@@ -45,7 +45,7 @@ module.exports = {
 	init: function (blueprint) {
 		if (this.customChannels) {
 			this.customChannels = this.customChannels
-				.filter((c, i) => (this.customChannels.indexOf(c) == i));
+				.filter((c, i) => (this.customChannels.indexOf(c) === i));
 		}
 
 		this.roleLevel = roles.getRoleLevel(this.obj);
@@ -53,12 +53,12 @@ module.exports = {
 
 	onBeforeChat: function (msg) {
 		let messageText = msg.message;
-		if (messageText[0] != '/')
+		if (messageText[0] !== '/')
 			return;
 
 		messageText = messageText.substr(1).split(' ');
 		let actionName = messageText.splice(0, 1)[0].toLowerCase();
-		actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() == actionName));
+		actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() === actionName));
 
 		if (!actionName)
 			return;
@@ -68,7 +68,7 @@ module.exports = {
 		msg.ignore = true;
 
 		let config = {};
-		if ((messageText.length == 1) && (messageText[0].indexOf('=') == -1))
+		if ((messageText.length === 1) && (messageText[0].indexOf('=') === -1))
 			config = messageText[0];
 		else {
 			messageText.forEach(function (m) {
@@ -90,17 +90,17 @@ module.exports = {
 
 	//actions
 	join: function (value) {
-		if (typeof (value) != 'string')
+		if (typeof (value) !== 'string')
 			return;
 
 		value = value.split(' ').join('');
-		if (value.lengh == 0)
+		if (value.lengh === 0)
 			return;
 
 		let obj = this.obj;
 
 		let channels = obj.auth.customChannels;
-		if (!channels.some(c => (c == value)))
+		if (!channels.some(c => (c === value)))
 			channels.push(value);
 		else
 			return;
@@ -131,13 +131,13 @@ module.exports = {
 	},
 
 	leave: function (value) {
-		if (typeof (value) != 'string')
+		if (typeof (value) !== 'string')
 			return;
 
 		let obj = this.obj;
 
 		let channels = obj.auth.customChannels;
-		if (!channels.some(c => (c == value))) {
+		if (!channels.some(c => (c === value))) {
 			obj.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
@@ -152,7 +152,7 @@ module.exports = {
 		}
 
 		let channels = obj.auth.customChannels;
-		channels.spliceWhere(c => (c == value));
+		channels.spliceWhere(c => (c === value));
 
 		let charname = obj.auth.charname;
 		io.set({
@@ -178,7 +178,7 @@ module.exports = {
 	},
 
 	isInChannel: function (character, channel) {
-		return character.auth.customChannels.some(c => (c == channel));
+		return character.auth.customChannels.some(c => (c === channel));
 	},
 
 	unEq: function () {
@@ -189,16 +189,16 @@ module.exports = {
 	},
 
 	mute: function (target, reason) {
-		if (typeof (target) == 'object') {
+		if (typeof (target) === 'object') {
 			let keys = Object.keys(target);
 			target = keys[0];
 			reason = keys[1];
 		}
 
-		if (target == this.obj.name)
+		if (target === this.obj.name)
 			return;
 
-		let o = connections.players.find(o => (o.name == target));
+		let o = connections.players.find(o => (o.name === target));
 		if (!o)
 			return;
 
@@ -240,16 +240,16 @@ module.exports = {
 	},
 
 	unmute: function (target, reason) {
-		if (typeof (target) == 'object') {
+		if (typeof (target) === 'object') {
 			let keys = Object.keys(target);
 			target = keys[0];
 			reason = keys[1];
 		}
 
-		if (target == this.obj.name)
+		if (target === this.obj.name)
 			return;
 
-		let o = connections.players.find(o => (o.name == target));
+		let o = connections.players.find(o => (o.name === target));
 		if (!o)
 			return;
 
@@ -300,9 +300,9 @@ module.exports = {
 	},
 
 	getItem: function (config) {
-		if (config.slot == 'set') {
+		if (config.slot === 'set') {
 			configSlots.slots.forEach(function (s) {
-				if (s == 'tool')
+				if (s === 'tool')
 					return;
 
 				let newConfig = extend(true, {}, config, {
@@ -351,7 +351,7 @@ module.exports = {
 		}
 
 		factions.forEach(function (f) {
-			if (f == '')
+			if (f === '')
 				return;
 
 			let faction = factions.getFaction(f);
@@ -453,14 +453,14 @@ module.exports = {
 	},
 
 	getReputation: function (faction) {
-		if (typeof (faction) != 'string')
+		if (typeof (faction) !== 'string')
 			return;
 
 		this.obj.reputation.getReputation(faction, 50000);
 	},
 
 	loseReputation: function (faction) {
-		if (typeof (faction) != 'string')
+		if (typeof (faction) !== 'string')
 			return;
 
 		this.obj.reputation.getReputation(faction, -50000);

@@ -16,14 +16,14 @@ module.exports = {
 		}
 
 		let spell = spellsConfig.spells[spellName];
-		let spellAesthetic = spells.spells.find(s => s.name.toLowerCase() == spellName) || {};
+		let spellAesthetic = spells.spells.find(s => s.name.toLowerCase() === spellName) || {};
 
 		if (!item.slot) {
 			let sprite = [10, 0];
 			let statType = spell.statType;
-			if (statType == 'dex')
+			if (statType === 'dex')
 				sprite = [10, 1];
-			else if (statType == 'str')
+			else if (statType === 'str')
 				sprite = [10, 2];
 			else if (statType instanceof Array) {
 				if ((statType.indexOf('dex') > -1) && (statType.indexOf('int') > -1))
@@ -35,7 +35,7 @@ module.exports = {
 			item.name = 'Rune of ' + spellAesthetic.name;
 			item.ability = true;
 			item.sprite = sprite;
-		} else if (spellQuality == 'basic')
+		} else if (spellQuality === 'basic')
 			item.stats = {};
 
 		if (blueprint.spellConfig)
@@ -68,14 +68,14 @@ module.exports = {
 			let max = Math.min(20, item.level) / 20;
 
 			let roll = random.expNorm(0, max);
-			if (spellQuality == 'basic')
+			if (spellQuality === 'basic')
 				roll = 0;
-			else if (spellQuality == 'mid')
+			else if (spellQuality === 'mid')
 				roll = 0.5;
 
 			item.spell.rolls[r] = roll;
 
-			let int = r.indexOf('i_') == 0;
+			let int = r.indexOf('i_') === 0;
 			let val = range[0] + ((range[1] - range[0]) * roll);
 
 			if (int) {

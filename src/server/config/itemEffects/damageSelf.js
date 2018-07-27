@@ -5,13 +5,13 @@ module.exports = {
 		element: null,
 
 		onGetText: function (item) {
-			let rolls = item.effects.find(e => (e.type == 'damageSelf')).rolls;
+			let rolls = item.effects.find(e => (e.type === 'damageSelf')).rolls;
 
 			return `you take ${rolls.percentage}% of the damage you deal`;
 		},
 
 		afterDealDamage: function (item, damage, target) {
-			let effect = item.effects.find(e => (e.type == 'damageSelf'));
+			let effect = item.effects.find(e => (e.type === 'damageSelf'));
 			let rolls = effect.rolls;
 
 			let amount = (damage.dealt / 100) * rolls.percentage;

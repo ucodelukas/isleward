@@ -225,12 +225,12 @@ module.exports = {
 
 				let sets = items.filter(function (i) {
 					return (
-						(i.type == 'Reward Card') &&
+						(i.type === 'Reward Card') &&
 						(i.quantity >= i.setSize)
 					);
 				});
 
-				if (sets.length == 0)
+				if (sets.length === 0)
 					return 'Sorry, you don\'t have any completed sets.';
 
 				sets.forEach(function (s) {

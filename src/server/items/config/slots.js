@@ -50,7 +50,7 @@ module.exports = {
 	getRandomSlot: function (exclude) {
 		let chances = [];
 		for (let c in this.chance) {
-			if (c == exclude)
+			if (c === exclude)
 				continue;
 
 			let rolls = this.chance[c];

@@ -28,7 +28,7 @@ module.exports = {
 			return true;
 		
 		let inRange = true;
-		if (this.range != null) {
+		if (this.range !== null) {
 			let obj = this.obj;
 			let distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
 			inRange = (distance <= this.range);
@@ -43,7 +43,7 @@ module.exports = {
 	},
 
 	calcDps: function (target, noSync) {
-		if ((!this.values) || (this.spellType == 'buff'))
+		if ((!this.values) || (this.spellType === 'buff'))
 			return;
 
 		if ((!this.damage) && (!this.healing))
@@ -67,7 +67,7 @@ module.exports = {
 				noCrit: true
 			}).amount;
 
-			let isAttack = (this.type == 'melee');
+			let isAttack = (this.type === 'melee');
 
 			let statValues = this.obj.stats.values;
 
@@ -140,7 +140,7 @@ module.exports = {
 		let values = {};
 		for (let p in this) {
 			let value = this[p];
-			if ((typeof (value) == 'function') || (p == 'obj'))
+			if ((typeof (value) === 'function') || (p === 'obj'))
 				continue;
 
 			values[p] = value;
@@ -158,7 +158,7 @@ module.exports = {
 	},
 
 	getDamage: function (target, noMitigate) {
-		let damage = {
+		let config = {
 			source: this.obj,
 			target: target,
 			damage: (this.damage || this.healing) * (this.dmgMult || 1),
@@ -166,13 +166,13 @@ module.exports = {
 			element: this.element,
 			statType: this.statType,
 			statMult: this.statMult,
-			isAttack: (this.type == 'melee'),
+			isAttack: (this.type === 'melee'),
 			noMitigate: noMitigate
 		};
 
-		this.obj.fireEvent('onBeforeCalculateDamage', damage);
+		this.obj.fireEvent('onBeforeCalculateDamage', config);
 
-		let damage = combat.getDamage(damage);
+		let damage = combat.getDamage(config);
 
 		return damage;
 	},

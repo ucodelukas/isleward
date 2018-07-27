@@ -73,7 +73,7 @@ module.exports = {
 		let values = {};
 		for (let p in this) {
 			let value = this[p];
-			if ((typeof (value) == 'function') || (p == 'obj'))
+			if ((typeof (value) === 'function') || (p === 'obj'))
 				continue;
 
 			values[p] = value;

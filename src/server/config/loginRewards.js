@@ -54,7 +54,7 @@ module.exports = {
 				let amount = 1 + ~~(Math.random() * (total - 1));
 				total -= amount;
 
-				let item = items.find(f => (f.name == pick.name));
+				let item = items.find(f => (f.name === pick.name));
 				if (!item) {
 					item = extend(true, {
 						material: true,

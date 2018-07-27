@@ -47,7 +47,7 @@ module.exports = {
 				}
 
 				if (l.exists) {
-					let mob = objects.objects.find(o => (o.name == l.name));
+					let mob = objects.objects.find(o => (o.name === l.name));
 					mob.mob.walkDistance = 0;
 					this.spawnAnimation(mob);
 					mob.performMove({

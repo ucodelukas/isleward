@@ -9,7 +9,7 @@ module.exports = {
 		let account = obj.account;
 		let config = this.getAccount(account) || {};
 		if (config.items) {
-			let blueprintInventory = blueprint.components.find(c => (c.type == 'inventory'));
+			let blueprintInventory = blueprint.components.find(c => (c.type === 'inventory'));
 			if (!blueprintInventory) {
 				blueprint.components.push({
 					type: 'inventory',
@@ -22,7 +22,7 @@ module.exports = {
 
 			let items = blueprintInventory.items;
 			config.items.forEach(function (item) {
-				let hasItem = items.find(i => (i.name == item.name));
+				let hasItem = items.find(i => (i.name === item.name));
 				if (hasItem)
 					return;
 
@@ -62,14 +62,14 @@ module.exports = {
 
 	getSkins: function (account) {
 		let skins = [];
-		let account = this.getAccount(account) || {
+		account = this.getAccount(account) || {
 			skins: []
 		};
 		(account.skins || []).forEach(function (s) {
 			skins.push(s);
 		});
 
-		skins = skins.filter((s, i) => (skins.indexOf(s) == i));
+		skins = skins.filter((s, i) => (skins.indexOf(s) === i));
 		return skins;
 	},
 

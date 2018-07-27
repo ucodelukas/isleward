@@ -36,7 +36,7 @@ module.exports = {
 			factionBlueprint = factions.getFaction(factionId);
 		} catch (e) {}
 
-		if (factionBlueprint == null) {
+		if (factionBlueprint === null) {
 			console.log('No faction blueprint found');
 			return;
 		}
@@ -49,10 +49,10 @@ module.exports = {
 	},
 
 	getTier: function (factionId) {
-		let faction = this.list.find(l => l.id == factionId);
+		let faction = this.list.find(l => l.id === factionId);
 		if (!faction) {
 			this.discoverFaction(factionId);
-			faction = this.list.find(l => l.id == factionId);
+			faction = this.list.find(l => l.id === factionId);
 		}
 
 		return (faction || {
@@ -75,7 +75,7 @@ module.exports = {
 	calculateTier: function (factionId) {
 		let blueprint = this.getBlueprint(factionId);
 
-		let faction = this.list.find(l => l.id == factionId);
+		let faction = this.list.find(l => l.id === factionId);
 		let rep = faction.rep;
 
 		let tier = 0;
@@ -87,7 +87,7 @@ module.exports = {
 
 			if (t.rep > rep)
 				break;
-			else if (i == tLen - 1)
+			else if (i === tLen - 1)
 				tier = i;
 		}
 
@@ -100,10 +100,10 @@ module.exports = {
 	},
 
 	getReputation: function (factionId, gain) {
-		let fullSync = (this.factions[factionId] == null);
+		let fullSync = (this.factions[factionId] === null);
 		let blueprint = this.getBlueprint(factionId);
 
-		let faction = this.list.find(l => l.id == factionId);
+		let faction = this.list.find(l => l.id === factionId);
 		if (!faction) {
 			this.list.push({
 				id: factionId,
@@ -125,13 +125,13 @@ module.exports = {
 		this.obj.instance.syncer.queue('onGetMessages', {
 			id: this.obj.id,
 			messages: [{
-				class: (action == 'gained') ? 'color-greenB' : 'color-redA',
+				class: (action === 'gained') ? 'color-greenB' : 'color-redA',
 				message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
 				type: 'rep'
 			}]
 		}, [this.obj.serverId]);
 
-		if (faction.tier != oldTier) {
+		if (faction.tier !== oldTier) {
 			this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name, (faction.tier > oldTier));
 			this.obj.equipment.unequipFactionGear(faction.id, faction.tier);
 		}
@@ -151,10 +151,10 @@ module.exports = {
 	},
 
 	discoverFaction (factionId) {
-		if (this.list.some(l => l.id == factionId))
+		if (this.list.some(l => l.id === factionId))
 			return;
 
-		let fullSync = (this.factions[factionId] == null);
+		let fullSync = (this.factions[factionId] === null);
 		let blueprint = this.getBlueprint(factionId);
 
 		if (!blueprint)
@@ -209,7 +209,7 @@ module.exports = {
 	},
 
 	syncFaction: function (factionId, full) {
-		let l = this.list.find(l => (l.id == factionId));
+		let l = this.list.find(l => (l.id === factionId));
 		let faction = {
 			id: factionId,
 			rep: l.rep,

@@ -13,7 +13,7 @@ module.exports = {
 
 	events: {
 		afterEquipItem: function (item) {
-			if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
+			if (['oneHanded', 'twoHanded'].indexOf(item.slot) === -1)
 				return;
 
 			let stats = item.stats;
@@ -24,7 +24,7 @@ module.exports = {
 			}
 		},
 		afterUnequipItem: function (item) {
-			if (['oneHanded', 'twoHanded'].indexOf(item.slot) == -1)
+			if (['oneHanded', 'twoHanded'].indexOf(item.slot) === -1)
 				return;
 
 			let stats = item.stats;

@@ -30,7 +30,7 @@ module.exports = {
 		for (let i = 0; i < oLen; i++) {
 			let o = objects[i];
 			let index = mobs.indexOf(o.id);
-			if (index == -1)
+			if (index === -1)
 				continue;
 
 			if (percentage) {
@@ -52,7 +52,7 @@ module.exports = {
 			let m = mobs[i];
 			let destroyed = m.destroyed;
 			if (!destroyed) {
-				let deathStopper = m.components.find(c => (c.type == 'deathStopper'));
+				let deathStopper = m.components.find(c => (c.type === 'deathStopper'));
 				if (deathStopper)
 					destroyed = deathStopper.end;
 			}
@@ -64,7 +64,7 @@ module.exports = {
 			}
 		}
 
-		if (mobs.length == 0)
+		if (mobs.length === 0)
 			this.end = true;
 	}
 };

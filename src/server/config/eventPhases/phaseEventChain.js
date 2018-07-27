@@ -9,7 +9,7 @@ module.exports = {
 	},
 
 	update: function () {
-		if (this.cd == 0) {
+		if (this.cd === 0) {
 			if (this.state < this.config.length - 1) {
 				this.state++;
 				let stateConfig = this.config[this.state];
@@ -41,7 +41,7 @@ module.exports = {
 
 	events: {
 		mobTalk: function (config) {
-			let mob = this.instance.objects.objects.find(o => (o.id == config.id));
+			let mob = this.instance.objects.objects.find(o => (o.id === config.id));
 			let text = (config.text instanceof Array) ? config.text[config.oldRepeat - config.repeat - 1] : config.text;
 
 			if (config.zone) {
@@ -70,7 +70,7 @@ module.exports = {
 			let mLen = mobs.length;
 
 			for (let i = 0; i < mLen; i++) {
-				let mob = objects.find(o => (o.id == mobs[i]));
+				let mob = objects.find(o => (o.id === mobs[i]));
 				for (let j = 0; j < cLen; j++) {
 					let c = components[j];
 					mob.addComponent(c.type, components[j]);
@@ -91,7 +91,7 @@ module.exports = {
 			let mLen = mobs.length;
 
 			for (let i = 0; i < mLen; i++) {
-				let mob = objects.find(o => (o.id == mobs[i]));
+				let mob = objects.find(o => (o.id === mobs[i]));
 				for (let j = 0; j < cLen; j++) 
 					mob.removeComponent(components[j]);
 			}

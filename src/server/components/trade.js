@@ -31,7 +31,7 @@ module.exports = {
 					id = checkItem.id + 1;
 			});
 
-			if (item.type == 'skin') {
+			if (item.type === 'skin') {
 				let skinBlueprint = skins.getBlueprint(item.id);
 				item.name = skinBlueprint.name;
 				item.sprite = skinBlueprint.sprite;
@@ -80,13 +80,13 @@ module.exports = {
 	startBuy: function (msg) {
 		let target = msg.target;
 
-		if ((target == null) && (!msg.targetName))
+		if ((target === null) && (!msg.targetName))
 			return false;
 
-		if ((target != null) && (target.id == null))
-			target = this.obj.instance.objects.objects.find(o => o.id == target);
+		if ((target !== null) && (target.id === null))
+			target = this.obj.instance.objects.objects.find(o => o.id === target);
 		else if (msg.targetName)
-			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == msg.targetName.toLowerCase())));
+			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === msg.targetName.toLowerCase())));
 
 		this.target = null;
 
@@ -98,7 +98,7 @@ module.exports = {
 		let itemList = target.trade.getItems(this.obj);
 		let markup = target.trade.markup.sell;
 
-		if (msg.action == 'buyback') {
+		if (msg.action === 'buyback') {
 			itemList = target.trade.buyback[this.obj.name] || [];
 			markup = target.trade.markup.buy;
 		}
@@ -106,16 +106,16 @@ module.exports = {
 		this.obj.syncer.set(true, 'trade', 'buyList', {
 			markup: markup,
 			items: itemList,
-			buyback: (msg.action == 'buyback')
+			buyback: (msg.action === 'buyback')
 		});
 	},
 
 	buySell: function (msg) {
-		if (msg.action == 'buy')
+		if (msg.action === 'buy')
 			this.buy(msg);
-		else if (msg.action == 'sell')
+		else if (msg.action === 'sell')
 			this.sell(msg);
-		else if (msg.action == 'buyback')
+		else if (msg.action === 'buyback')
 			this.buyback(msg);
 	},
 
@@ -128,7 +128,7 @@ module.exports = {
 		let targetTrade = target.trade;
 		let markup = targetTrade.markup.sell;
 
-		if (msg.action == 'buyback') {
+		if (msg.action === 'buyback') {
 			item = targetTrade.findBuyback(msg.itemId, this.obj.name);
 			markup = targetTrade.markup.buy;
 		} else
@@ -141,7 +141,7 @@ module.exports = {
 
 		let canAfford = false;
 		if (item.worth.currency) {
-			let currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
 			canAfford = ((currencyItem) && (currencyItem.quantity >= item.worth.amount));
 		} else
 			canAfford = this.gold >= ~~(item.worth * markup);
@@ -165,7 +165,7 @@ module.exports = {
 			return;
 		}
 
-		if (item.type == 'skin') {
+		if (item.type === 'skin') {
 			let haveSkin = this.obj.auth.doesOwnSkin(item.skinId);
 
 			if (haveSkin) {
@@ -183,13 +183,13 @@ module.exports = {
 			}
 		}
 
-		if (msg.action == 'buyback')
+		if (msg.action === 'buyback')
 			targetTrade.removeBuyback(msg.itemId, this.obj.name);
-		else if ((item.type != 'skin') && (!item.infinite))
+		else if ((item.type !== 'skin') && (!item.infinite))
 			targetTrade.removeItem(msg.itemId, this.obj.name);
 
 		if (item.worth.currency) {
-			let currencyItem = this.obj.inventory.items.find(i => (i.name == item.worth.currency));
+			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
 			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
 		} else {
 			targetTrade.gold += ~~(item.worth * markup);
@@ -197,7 +197,7 @@ module.exports = {
 			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 		}
 
-		if (item.type != 'skin') {
+		if (item.type !== 'skin') {
 			if (!item.infinite)
 				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 
@@ -276,13 +276,13 @@ module.exports = {
 		let target = msg.target;
 		let targetName = (msg.targetName || '').toLowerCase();
 
-		if ((target == null) && (!targetName))
+		if ((target === null) && (!targetName))
 			return false;
 
-		if ((target != null) && (target.id == null))
-			target = this.obj.instance.objects.objects.find(o => o.id == target);
-		else if (targetName != null)
-			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() == targetName)));
+		if ((target !== null) && (target.id === null))
+			target = this.obj.instance.objects.objects.find(o => o.id === target);
+		else if (targetName !== null)
+			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === targetName)));
 
 		this.target = null;
 
@@ -330,11 +330,11 @@ module.exports = {
 	},
 
 	removeItem: function (itemId) {
-		return this.items.spliceFirstWhere(i => i.id == itemId);
+		return this.items.spliceFirstWhere(i => i.id === itemId);
 	},
 
 	removeBuyback: function (itemId, name) {
-		return (this.buyback[name] || []).spliceFirstWhere(i => i.id == itemId);
+		return (this.buyback[name] || []).spliceFirstWhere(i => i.id === itemId);
 	},
 
 	getItems: function (requestedBy) {
@@ -372,18 +372,18 @@ module.exports = {
 	},
 
 	findItem: function (itemId, sourceName) {
-		return this.items.find(i => i.id == itemId);
+		return this.items.find(i => i.id === itemId);
 	},
 
 	findBuyback: function (itemId, sourceName) {
-		return (this.buyback[sourceName] || []).find(i => i.id == itemId);
+		return (this.buyback[sourceName] || []).find(i => i.id === itemId);
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
+		let callbackId = (msg.callbackId !== null) ? msg.callbackId : msg;
 		result = result || [];
 
-		if (callbackId == null)
+		if (callbackId === null)
 			return;
 
 		process.send({

@@ -7,56 +7,56 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
 			return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
 		},
 
 		addCritMultiplier: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			let max = (level * 15) * div;
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
 			return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
 		},
 
 		addCritChance: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			let max = (level - 3) * 50 * div;
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
 			return max * perfection * (blueprint.statMult.addCritChance || 1);
 		},
 
 		vit: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			let max = ((-0.6340155 + (13.68923 * level) - (0.34383 * Math.pow(level, 2)) + (0.06754871 * Math.pow(level, 3)) + (0.000174046 * Math.pow(level, 4)) + (0.000007675887 * Math.pow(level, 5))) / 10) * div;
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.vit || 1);
 			return max * perfection * (blueprint.statMult.vit || 1);
 		},
 
 		mainStat: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			let min = (level / 15) * div;
@@ -64,7 +64,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return ((calcPerfection - min) / (max - min));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.mainStat || 1);
 		},
@@ -74,31 +74,31 @@ module.exports = {
 
 			if (calcPerfection)
 				return ((calcPerfection - min) / (max - min));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(min, max) * blueprint.statMult.armor;
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 		},
 		elementResist: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			if (calcPerfection)
 				return (calcPerfection / (100 * div));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 			return ~~((1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div);
 		},
 		regenHp: function (item, level, blueprint, perfection, calcPerfection) {
 			let div = 1 / 11;
-			if (item.slot == 'twoHanded')
+			if (item.slot === 'twoHanded')
 				div *= 2;
 
 			let max = (-0.05426729 + (3.477385 * level) - (0.03890282 * Math.pow(level, 2)) + (0.009244822 * Math.pow(level, 3)) + (0.0001700915 * Math.pow(level, 4)) - (0.00000138085 * Math.pow(level, 5))) * div;
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
 			return max * perfection * (blueprint.statMult.regenHp || 1);
 		},
@@ -107,7 +107,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
 			return max * perfection * (blueprint.statMult.lvlRequire || 1);
 		}
@@ -465,7 +465,7 @@ module.exports = {
 	},
 
 	generate: function (item, blueprint, result) {
-		if (item.slot == 'tool') {
+		if (item.slot === 'tool') {
 			statsFishingRod.generate(item, blueprint, result);
 			return;
 		}
@@ -509,7 +509,7 @@ module.exports = {
 			let addStats = Math.min(statCount, blueprint.stats.length);
 			for (let i = 0; i < addStats; i++) {
 				let choice = useStats[~~(Math.random() * useStats.length)];
-				useStats.spliceFirstWhere(s => s == choice);
+				useStats.spliceFirstWhere(s => s === choice);
 				this.buildStat(item, blueprint, choice, result);
 				statCount--;
 			}
@@ -520,7 +520,7 @@ module.exports = {
 
 		for (let s in item.stats) {
 			item.stats[s] = Math.ceil(item.stats[s]);
-			if (item.stats[s] == 0)
+			if (item.stats[s] === 0)
 				delete item.stats[s];
 		}
 	},
@@ -584,7 +584,7 @@ module.exports = {
 				item.enchantedStats[stat] = value;
 		}
 
-		if (stat == 'lvlRequire') {
+		if (stat === 'lvlRequire') {
 			if (!item.originalLevel)
 				item.originalLevel = item.level;
 

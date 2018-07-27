@@ -24,23 +24,23 @@ module.exports = {
 	},
 
 	obtain: function (quest, hideMessage) {
-		quest.active = (this.obj.zoneName == quest.zoneName);
+		quest.active = (this.obj.zoneName === quest.zoneName);
 
 		this.quests.push(quest);
 		if (!quest.init(hideMessage)) {
-			this.quests.spliceWhere(q => (q == quest));
+			this.quests.spliceWhere(q => (q === quest));
 			return false;
 		} return true;
 	},
 
 	complete: function (id) {
-		let quest = this.quests.find(q => q.id == id);
+		let quest = this.quests.find(q => q.id === id);
 		if ((!quest) || (!quest.isReady))
 			return;
 
 		quest.complete();
 
-		this.quests.spliceWhere(q => q == quest);
+		this.quests.spliceWhere(q => q === quest);
 
 		this.obj.instance.questBuilder.obtain(this.obj);
 	},

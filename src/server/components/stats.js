@@ -189,10 +189,10 @@ module.exports = {
 	addStat: function (stat, value) {
 		let values = this.values;
 
-		if (['lvlRequire', 'allAttributes'].indexOf(stat) == -1)
+		if (['lvlRequire', 'allAttributes'].indexOf(stat) === -1)
 			values[stat] += value;
 
-		let sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) == -1);
+		let sendOnlyToSelf = (['hp', 'hpMax', 'mana', 'manaMax', 'vit'].indexOf(stat) === -1);
 
 		this.obj.syncer.setObject(sendOnlyToSelf, 'stats', 'values', stat, values[stat]);
 		if (sendOnlyToSelf)
@@ -206,27 +206,27 @@ module.exports = {
 			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
 			this.addStat(morphStat, value);
-		} else if (stat == 'vit') 
+		} else if (stat === 'vit') 
 			this.addStat('hpMax', (value * this.statScales.vitToHp));
-		 else if (stat == 'allAttributes') {
+		 else if (stat === 'allAttributes') {
 			['int', 'str', 'dex'].forEach(function (s) {
 				this.addStat(s, value);
 			}, this);
-		} else if (stat == 'elementAllResist') {
+		} else if (stat === 'elementAllResist') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
 				this.addStat(element, value);
 			}, this);
-		} else if (stat == 'elementPercent') {
+		} else if (stat === 'elementPercent') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
 				this.addStat(element, value);
 			}, this);
-		} else if (stat == 'str')
+		} else if (stat === 'str')
 			this.addStat('armor', (value * this.statScales.strToArmor));
-		else if (stat == 'int')
+		else if (stat === 'int')
 			this.addStat('manaMax', (value * this.statScales.intToMana));
-		else if (stat == 'dex')
+		else if (stat === 'dex')
 			this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
 
 		this.obj.equipment.unequipAttrRqrGear();
@@ -245,7 +245,7 @@ module.exports = {
 		let obj = this.obj;
 		let values = this.values;
 
-		if (values.level == 20)
+		if (values.level === 20)
 			return;
 
 		let xpEvent = {
@@ -255,7 +255,7 @@ module.exports = {
 		};
 
 		this.obj.fireEvent('beforeGetXp', xpEvent);
-		if (xpEvent.amount == 0)
+		if (xpEvent.amount === 0)
 			return;
 
 		amount = ~~(xpEvent.amount * (1 + (values.xpIncrease / 100)));
@@ -283,7 +283,7 @@ module.exports = {
 
 			this.obj.fireEvent('onLevelUp', this.values.level);
 
-			if (values.level == 20)
+			if (values.level === 20)
 				values.xp = 0;
 
 			values.hpMax = values.level * 32.7;
@@ -393,7 +393,6 @@ module.exports = {
 
 		obj.syncer.set(true, null, 'dead', true);
 
-		let obj = obj;
 		let syncO = obj.syncer.o;
 
 		obj.hidden = true;
@@ -484,9 +483,9 @@ module.exports = {
 
 		this.values.hp -= amount;
 		let recipients = [];
-		if (this.obj.serverId != null)
+		if (this.obj.serverId !== null)
 			recipients.push(this.obj.serverId);
-		if (source.serverId != null)
+		if (source.serverId !== null)
 			recipients.push(source.serverId);
 		if ((source.follower) && (source.follower.master.serverId))
 			recipients.push(source.follower.master.serverId);
@@ -574,7 +573,7 @@ module.exports = {
 						for (let i = 0; i < aLen; i++) {
 							let a = aggroList[i];
 
-							if ((!a.threat) || (a.obj.serverId == null))
+							if ((!a.threat) || (a.obj.serverId === null))
 								continue;
 
 							this.obj.inventory.dropBag(a.obj.serverId, killSource);
@@ -593,7 +592,7 @@ module.exports = {
 
 	getHp: function (heal, source) {
 		let amount = heal.amount;
-		if (amount == 0)
+		if (amount === 0)
 			return;
 
 		let threatMult = heal.threatMult;
@@ -614,9 +613,9 @@ module.exports = {
 			values.hp = hpMax;
 
 		let recipients = [];
-		if (this.obj.serverId != null)
+		if (this.obj.serverId !== null)
 			recipients.push(this.obj.serverId);
-		if (source.serverId != null)
+		if (source.serverId !== null)
 			recipients.push(source.serverId);
 		if (recipients.length > 0) {
 			this.syncer.queue('onGetDamage', {
@@ -707,7 +706,7 @@ module.exports = {
 		if (!lootStats) 
 			this.stats.lootStats[mob.name] = time;
 		 else
-			return ((lootStats.day != time.day), (lootStats.month != time.month));
+			return ((lootStats.day !== time.day), (lootStats.month !== time.month));
 	},
 
 	events: {
@@ -722,7 +721,7 @@ module.exports = {
 				mobKillStreaks[mobName]++;
 
 			for (let p in mobKillStreaks) {
-				if (p == mobName)
+				if (p === mobName)
 					continue;
 
 				mobKillStreaks[p]--;

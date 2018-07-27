@@ -21,7 +21,7 @@ module.exports = {
 
 			let result = null;
 			if (item.effects)
-				result = item.effects.find(e => (e.factionId == 'akarei'));
+				result = item.effects.find(e => (e.factionId === 'akarei'));
 
 			if (!result) {
 				if (!item.effects)
@@ -53,7 +53,7 @@ module.exports = {
 				if (!damage.crit)
 					return;
 
-				let effect = item.effects.find(e => (e.factionId == 'akarei'));
+				let effect = item.effects.find(e => (e.factionId === 'akarei'));
 
 				let roll = Math.random() * 100;
 				if (roll >= effect.properties.chance)

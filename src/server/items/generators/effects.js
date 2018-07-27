@@ -7,7 +7,7 @@ module.exports = {
 			let rolls = e.rolls;
 			let newRolls = {};
 			for (let p in rolls) {
-				let isInt = (p.indexOf('i_') == 0);
+				let isInt = (p.indexOf('i_') === 0);
 				let fieldName = p.replace('i_', '');
 
 				let range = rolls[p];

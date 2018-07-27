@@ -44,7 +44,7 @@ module.exports = {
 
 		roles.onBeforePlayerEnterGame(obj, character);
 
-		let blueprintStats = character.components.find(c => c.type == 'stats') || {};
+		let blueprintStats = character.components.find(c => c.type === 'stats') || {};
 		extend(true, blueprintStats, classes.stats[obj.class]);
 		blueprintStats.values.hpMax = (blueprintStats.values.level || 1) * 32.7;
 		if (!blueprintStats.values.hp)
@@ -65,10 +65,10 @@ module.exports = {
 		obj.addComponent('spellbook');
 
 		obj.addComponent('dialogue');
-		obj.addComponent('trade', character.components.find(c => c.type == 'trade'));
-		obj.addComponent('reputation', character.components.find(c => c.type == 'reputation'));
+		obj.addComponent('trade', character.components.find(c => c.type === 'trade'));
+		obj.addComponent('reputation', character.components.find(c => c.type === 'reputation'));
 
-		let social = character.components.find(c => c.type == 'social');
+		let social = character.components.find(c => c.type === 'social');
 		if (social)
 			delete social.party;
 		obj.addComponent('social', social);
@@ -82,7 +82,7 @@ module.exports = {
 			items: character.stash
 		});
 
-		let blueprintEffects = character.components.find(c => c.type == 'effects') || {};
+		let blueprintEffects = character.components.find(c => c.type === 'effects') || {};
 		if (blueprintEffects.effects) {
 			//Calculate ttl of effects
 			let time = +new Date();
@@ -97,15 +97,15 @@ module.exports = {
 		}
 		obj.addComponent('effects', blueprintEffects);
 
-		let prophecies = character.components.find(c => c.type == 'prophecies');
+		let prophecies = character.components.find(c => c.type === 'prophecies');
 		if (prophecies)
 			obj.addComponent('prophecies', prophecies);
 
-		obj.addComponent('equipment', character.components.find(c => c.type == 'equipment'));
-		obj.addComponent('inventory', character.components.find(c => c.type == 'inventory'));
-		obj.addComponent('passives', character.components.find(c => c.type == 'passives'));
-		obj.addComponent('quests', character.components.find(c => c.type == 'quests'));
-		obj.addComponent('events', character.components.find(c => c.type == 'events'));
+		obj.addComponent('equipment', character.components.find(c => c.type === 'equipment'));
+		obj.addComponent('inventory', character.components.find(c => c.type === 'inventory'));
+		obj.addComponent('passives', character.components.find(c => c.type === 'passives'));
+		obj.addComponent('quests', character.components.find(c => c.type === 'quests'));
+		obj.addComponent('events', character.components.find(c => c.type === 'events'));
 
 		obj.xp = stats.values.xp;
 		obj.level = stats.values.level;
@@ -150,7 +150,7 @@ module.exports = {
 		this.seen.push(id);
 	},
 	unsee: function (id) {
-		this.seen.spliceWhere(s => s == id);
+		this.seen.spliceWhere(s => s === id);
 	},
 
 	die: function (source, permadeath) {
@@ -167,10 +167,10 @@ module.exports = {
 			let level = this.obj.stats.values.level;
 			let spawns = this.obj.spawn;
 			let spawnPos = spawns.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
-			if ((spawnPos.length == 0) || (!source.name))
+			if ((spawnPos.length === 0) || (!source.name))
 				spawnPos = spawns[0];
 			else if (source.name) {
-				let sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() == source.name.toLowerCase())));
+				let sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() === source.name.toLowerCase())));
 				if (sourceSpawnPos)
 					spawnPos = sourceSpawnPos;
 				else

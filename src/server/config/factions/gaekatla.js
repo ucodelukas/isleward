@@ -18,7 +18,7 @@ module.exports = {
 
 			let result = null;
 			if (item.effects)
-				result = item.effects.find(e => (e.factionId == 'gaekatla'));
+				result = item.effects.find(e => (e.factionId === 'gaekatla'));
 
 			if (!result) {
 				if (!item.effects)
@@ -50,7 +50,7 @@ module.exports = {
 
 		events: {
 			afterKillMob: function (item, mob) {
-				let effect = item.effects.find(e => (e.factionId == 'gaekatla'));
+				let effect = item.effects.find(e => (e.factionId === 'gaekatla'));
 
 				let roll = Math.random() * 100;
 				if (roll >= effect.chance)

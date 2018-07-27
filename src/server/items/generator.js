@@ -57,7 +57,7 @@ module.exports = {
 			item.noSalvage = blueprint.noSalvage;
 			item.noDestroy = blueprint.noDestroy;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
-		} else if (blueprint.type == 'mtx') {
+		} else if (blueprint.type === 'mtx') {
 			item = extend(true, {}, blueprint);
 			delete item.chance;
 		} else {
@@ -81,7 +81,7 @@ module.exports = {
 	removeStat: function (item, stat) {
 		if (!stat) {
 			stat = Object.keys(item.stats)
-				.filter(s => (s != 'armor'));
+				.filter(s => (s !== 'armor'));
 
 			stat = stat[~~(Math.random() * stat.length)];
 		}

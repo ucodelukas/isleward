@@ -60,7 +60,7 @@ module.exports = {
 		let message = msg.data.message.substr(1);
 
 		this.party.forEach(function (p) {
-			let player = cons.players.find(c => c.id == p);
+			let player = cons.players.find(c => c.id === p);
 
 			player.socket.emit('events', {
 				onGetMessages: [{
@@ -134,7 +134,7 @@ module.exports = {
 		if (!msg.data.message)
 			return;
 
-		if (msg.data.message.trim() == '')
+		if (msg.data.message.trim() === '')
 			return;
 
 		this.onBeforeChat(msg.data);
@@ -156,7 +156,7 @@ module.exports = {
 		history.spliceWhere(h => ((time - h.time) > 5000));
 
 		if (history.length > 0) {
-			if (history[history.length - 1].msg == messageString) {
+			if (history[history.length - 1].msg === messageString) {
 				this.sendMessage('You have already sent that message', 'color-redA');
 				return;
 			} else if (history.length >= 3) {
@@ -180,10 +180,10 @@ module.exports = {
 		};
 		events.emit('onBeforeSendMessage', msgEvent);
 		messageString = msgEvent.msg;
-		if (messageString[0] == '@') {
+		if (messageString[0] === '@') {
 			let playerName = '';
 			//Check if there's a space in the name
-			if (messageString[1] == "'") {
+			if (messageString[1] === "'") {
 				playerName = messageString.substring(2, messageString.indexOf("'", 2));
 				messageString = messageString.replace("@'" + playerName + "' ", '');
 			} else {
@@ -191,10 +191,10 @@ module.exports = {
 				messageString = messageString.replace('@' + playerName + ' ', '');
 			}
 
-			if (playerName == this.obj.name)
+			if (playerName === this.obj.name)
 				return;
 
-			let target = cons.players.find(p => p.name == playerName);
+			let target = cons.players.find(p => p.name === playerName);
 			if (!target)
 				return;
 
@@ -219,9 +219,9 @@ module.exports = {
 					}]
 				}
 			});
-		} else if (messageString[0] == '$') 
+		} else if (messageString[0] === '$') 
 			this.sendCustomChannelMessage(msg);
-		 else if (messageString[0] == '%') 
+		 else if (messageString[0] === '%') 
 			this.sendPartyMessage(msg);
 		 else {
 			let prefix = roles.getRoleMessagePrefix(this.obj) || '';
@@ -255,10 +255,10 @@ module.exports = {
 		let obj = this.obj;
 		let sourceId = msg.data.sourceId;
 
-		if (sourceId == obj.id)
+		if (sourceId === obj.id)
 			return;
 
-		let source = cons.players.find(c => c.id == sourceId);
+		let source = cons.players.find(c => c.id === sourceId);
 		if (!source)
 			return;
 
@@ -274,7 +274,7 @@ module.exports = {
 	//This gets called on the player that initiated the invite
 	acceptInvite: function (msg) {
 		let sourceId = msg.data.sourceId;
-		let source = cons.players.find(c => c.id == sourceId);
+		let source = cons.players.find(c => c.id === sourceId);
 		if (!source)
 			return;
 
@@ -291,12 +291,12 @@ module.exports = {
 		this.updatePartyOnThread();
 
 		this.party.forEach(function (p) {
-			let player = cons.players.find(c => c.id == p);
+			let player = cons.players.find(c => c.id === p);
 			player.social.party = this.party;
 			player.social.updatePartyOnThread();
 
 			let msg = source.name + ' has joined the party';
-			if (p == sourceId)
+			if (p === sourceId)
 				msg = 'you have joined a party';
 			player.social.sendMessage(msg, 'color-yellowB');
 
@@ -309,7 +309,7 @@ module.exports = {
 	},
 	declineInvite: function (msg) {
 		let targetId = msg.data.targetId;
-		let target = cons.players.find(c => c.id == targetId);
+		let target = cons.players.find(c => c.id === targetId);
 		if (!target)
 			return;
 
@@ -320,17 +320,17 @@ module.exports = {
 	leaveParty: function (msg) {
 		let name = this.obj.name;
 
-		this.party.spliceWhere(p => p == this.obj.id);
+		this.party.spliceWhere(p => p === this.obj.id);
 
 		this.party.forEach(function (p) {
-			let player = cons.players.find(c => c.id == p);
+			let player = cons.players.find(c => c.id === p);
 
 			let messages = [{
 				class: 'q0',
 				message: name + ' has left the party'
 			}];
 			let party = this.party;
-			if (this.party.length == 1) {
+			if (this.party.length === 1) {
 				messages.push({
 					class: 'q0',
 					message: 'your group has been disbanded'
@@ -369,14 +369,14 @@ module.exports = {
 		});
 
 		if ((this.isPartyLeader) && (this.party.length >= 2)) {
-			let newLeader = cons.players.find(c => c.id == this.party[0]).social;
+			let newLeader = cons.players.find(c => c.id === this.party[0]).social;
 			newLeader.isPartyLeader = true;
 			this.party.forEach(function (p) {
 				let msg = newLeader.obj.name + ' is now the party leader';
-				if (p == newLeader.obj.id)
+				if (p === newLeader.obj.id)
 					msg = 'you are now the party leader';
 
-				cons.players.find(c => c.id == p).socket.emit('events', {
+				cons.players.find(c => c.id === p).socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
 							class: 'q0',
@@ -398,14 +398,14 @@ module.exports = {
 			return;
 		}
 
-		let target = cons.players.find(c => c.id == msg.data);
+		let target = cons.players.find(c => c.id === msg.data);
 		if (!target)
 			return;
 
-		this.party.spliceWhere(p => p == target.id);
+		this.party.spliceWhere(p => p === target.id);
 
 		this.party.forEach(function (p) {
-			cons.players.find(c => c.id == p)
+			cons.players.find(c => c.id === p)
 				.socket.emit('events', {
 					onGetParty: [this.party],
 					onGetMessages: [{
@@ -431,7 +431,7 @@ module.exports = {
 		target.social.isPartyLeader = false;
 		target.social.updatePartyOnThread();
 
-		if (this.party.length == 1) {
+		if (this.party.length === 1) {
 			this.party = null;
 			this.isPartyLeader = null;
 			this.updatePartyOnThread();

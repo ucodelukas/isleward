@@ -8,10 +8,10 @@ module.exports = {
 
 	build: function () {
 		let slotNames = slots.slots
-			.filter(s => (s != 'tool'));
+			.filter(s => (s !== 'tool'));
 
 		if (this.slot) {
-			if (!slotNames.some(s => (s == this.slot)))
+			if (!slotNames.some(s => (s === this.slot)))
 				this.slot = null;
 		}
 
@@ -20,9 +20,9 @@ module.exports = {
 				this.quality = 1 + ~~(Math.random() * 2);
 				this.slotName = '';
 
-				if (this.quality == 1) {
+				if (this.quality === 1) {
 					let roll = ~~(Math.random() * 2);
-					if (roll == 0)
+					if (roll === 0)
 						this.slotName = 'Magic Armor';
 					else
 						this.slotName = 'Magic Accessory';
@@ -66,9 +66,9 @@ module.exports = {
 
 		if (!this.quality)
 			multiplier *= 8;
-		else if (this.quality == 2)
+		else if (this.quality === 2)
 			multiplier *= 6;
-		else if (this.quality == 1)
+		else if (this.quality === 1)
 			multiplier *= 4;
 
 		return multiplier;
@@ -78,18 +78,18 @@ module.exports = {
 		afterLootMobItem: function (item) {
 			if (
 				(this.isReady) ||
-				(this.obj.zoneName != this.zoneName) ||
+				(this.obj.zoneName !== this.zoneName) ||
 				(
 					(this.quality) &&
 					(item.quality < this.quality)
 				) ||
 				(
 					(this.slot.indexOf) &&
-					(this.slot.indexOf(item.slot) == -1)
+					(this.slot.indexOf(item.slot) === -1)
 				) ||
 				(
 					(!this.slot.indexOf) &&
-					(this.slot != item.slot)
+					(this.slot !== item.slot)
 				)
 			)
 				return;

@@ -32,7 +32,7 @@ module.exports = {
 
 			this.items[name] = list;
 			this.regenList(list);
-		} else if (list.level != requestLevel)
+		} else if (list.level !== requestLevel)
 			this.regenList(list);
 
 		let reputation = requestedBy.reputation;
@@ -148,7 +148,7 @@ module.exports = {
 
 			let item = extend(true, {}, e);
 
-			if (item.type == 'skin') {
+			if (item.type === 'skin') {
 				let skinBlueprint = skins.getBlueprint(item.id);
 				item.skinId = item.id;
 				item.name = skinBlueprint.name;
@@ -180,9 +180,9 @@ module.exports = {
 
 	canBuy: function (itemId, requestedBy, action) {
 		let item = null;
-		if (action == 'buy')
+		if (action === 'buy')
 			item = this.findItem(itemId, requestedBy.name);
-		else if (action == 'buyback')
+		else if (action === 'buyback')
 			item = this.findBuyback(itemId, requestedBy.name);
 
 		let result = true;
@@ -208,7 +208,7 @@ module.exports = {
 		if (!list)
 			return null;
 
-		return list.items.find(i => i.id == itemId);
+		return list.items.find(i => i.id === itemId);
 	},
 
 	removeItem: function (itemId, sourceName) {
@@ -216,6 +216,6 @@ module.exports = {
 		if (!sourceName)
 			return null;
 
-		return list.items.spliceFirstWhere(i => i.id == itemId);
+		return list.items.spliceFirstWhere(i => i.id === itemId);
 	}
 };

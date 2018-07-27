@@ -3,7 +3,7 @@ let configSkins = require('../config/skins');
 
 module.exports = {
 	fixCharacter: function (player) {
-		let inv = player.components.find(c => (c.type == 'inventory'));
+		let inv = player.components.find(c => (c.type === 'inventory'));
 		if ((inv) && (inv.items))
 			this.fixItems(inv.items);
 	},
@@ -14,7 +14,7 @@ module.exports = {
 
 	fixItems: function (items) {
 		items
-			.filter(i => ((i.name == 'Cowl of Obscurity') && (!i.factions)))
+			.filter(i => ((i.name === 'Cowl of Obscurity') && (!i.factions)))
 			.forEach(function (i) {
 				i.factions = [{
 					id: 'gaekatla',
@@ -23,7 +23,7 @@ module.exports = {
 			});
 
 		items
-			.filter(i => (i.name == 'Steelclaw\'s Bite'))
+			.filter(i => (i.name === 'Steelclaw\'s Bite'))
 			.forEach(function (i) {
 				let effect = i.effects[0];
 
@@ -36,7 +36,7 @@ module.exports = {
 			});
 
 		items
-			.filter(f => ((f.effects) && (f.effects[0].factionId == 'akarei') && (!f.effects[0].properties)))
+			.filter(f => ((f.effects) && (f.effects[0].factionId === 'akarei') && (!f.effects[0].properties)))
 			.forEach(function (i) {
 				let effect = i.effects[0];
 				let chance = parseFloat(effect.text.split(' ')[0].replace('%', ''));
@@ -63,7 +63,7 @@ module.exports = {
 		let length = skins.length;
 		skins = skins.filter(s => !!configSkins.getBlueprint(s));
 
-		if (length != skins.length) {
+		if (length !== skins.length) {
 			io.set({
 				ent: username,
 				field: 'skins',

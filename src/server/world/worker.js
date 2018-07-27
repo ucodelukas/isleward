@@ -1,10 +1,9 @@
-global.io = true;
-
 global.extend = require('extend');
-let helpers = require('../misc/helpers');
+global.io = require('../security/io');
+global._ = require('../misc/helpers');
+global.instancer = require('./instancer');
+
 let components = require('../components/components');
-let instancer = require('./instancer');
-let io = require('../security/io');
 let mods = require('../misc/mods');
 let mtx = require('../mtx/mtx');
 let animations = require('../config/animations');
@@ -37,8 +36,6 @@ let onModsReady = function () {
 };
 
 let onDbReady = function () {
-	global._ = helpers;
-	global.instancer = instancer;
 	require('../misc/random');
 
 	mods.init(onModsReady);

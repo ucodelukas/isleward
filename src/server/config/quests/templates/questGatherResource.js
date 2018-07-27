@@ -14,7 +14,7 @@ module.exports = {
 
 			this.gatherType = ['herb', 'fish'][~~(Math.random() * 2)];
 
-			if (this.gatherType == 'fish') {
+			if (this.gatherType === 'fish') {
 				this.name = 'Lure of the Sea';
 
 				let isQualityQ = (Math.random() < 0.3);
@@ -25,10 +25,10 @@ module.exports = {
 			}
 		}
 
-		if (['herb', 'fish'].indexOf(this.gatherType) == -1)
+		if (['herb', 'fish'].indexOf(this.gatherType) === -1)
 			this.gatherType = 'herb';
 
-		this.typeName = (this.gatherType == 'herb') ? 'herbs' : 'fish';
+		this.typeName = (this.gatherType === 'herb') ? 'herbs' : 'fish';
 
 		this.updateDescription();
 
@@ -36,9 +36,9 @@ module.exports = {
 	},
 
 	getXpMultiplier: function () {
-		if (this.requiredQuality == 2)
+		if (this.requiredQuality === 2)
 			return 8;
-		else if (this.requiredQuality == 1)
+		else if (this.requiredQuality === 1)
 			return 6;
 		return this.need;
 	},
@@ -58,12 +58,12 @@ module.exports = {
 
 	events: {
 		afterGatherResource: function (gatherResult) {
-			if (gatherResult.nodeType != this.gatherType)
+			if (gatherResult.nodeType !== this.gatherType)
 				return;
 			else if ((this.requiredQuality) && (gatherResult.items[0].quality < this.requiredQuality))
 				return;
 
-			if ((this.obj.zoneName != this.zoneName) || (this.have >= this.need))
+			if ((this.obj.zoneName !== this.zoneName) || (this.have >= this.need))
 				return;
 
 			this.have++;

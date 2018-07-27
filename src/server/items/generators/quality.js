@@ -10,7 +10,7 @@ module.exports = {
 	magicFindMult: 7,
 
 	generate: function (item, blueprint) {
-		if (blueprint.quality != null) {
+		if (blueprint.quality !== null) {
 			item.quality = ~~blueprint.quality;
 			return;
 		}
@@ -29,7 +29,7 @@ module.exports = {
 		for (let i = 0; i < mLen; i++) {
 			qualities[i] = Math.max(0, qualities[i] - magicFind[i]);
 			if (qualities[i] > 0) {
-				if (i == 0) {
+				if (i === 0) {
 					qualities[i] -= (bonusMagicFind * this.magicFindMult);
 					if (qualities[i] < 0)
 						qualities[i] = 0;

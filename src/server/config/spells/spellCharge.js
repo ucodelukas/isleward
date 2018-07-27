@@ -23,11 +23,11 @@ module.exports = {
 
 		//We need to stop just short of the target
 		let offsetX = 0;
-		if (dx != 0)
+		if (dx !== 0)
 			offsetX = dx / Math.abs(dx);
 
 		let offsetY = 0;
-		if (dy != 0)
+		if (dy !== 0)
 			offsetY = dy / Math.abs(dy);
 
 		let targetPos = {

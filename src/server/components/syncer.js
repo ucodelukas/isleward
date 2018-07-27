@@ -21,8 +21,8 @@ module.exports = {
 			o = this.oSelf;
 
 		let keys = Object.keys(o);
-		if (o.components.length == 0) {
-			if (keys.length == 1)
+		if (o.components.length === 0) {
+			if (keys.length === 1)
 				return null;
 			delete o.components;
 		}
@@ -37,7 +37,7 @@ module.exports = {
 			o = this.oSelf;
 
 		if (cpnType) {
-			let cpn = o.components.find(c => (c.type == cpnType));
+			let cpn = o.components.find(c => (c.type === cpnType));
 
 			if (!cpn) {
 				cpn = {
@@ -54,7 +54,7 @@ module.exports = {
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
-		let cpn = o.components.find(c => (c.type == cpnType));
+		let cpn = o.components.find(c => (c.type === cpnType));
 
 		if (!cpn) {
 			cpn = {
@@ -75,7 +75,7 @@ module.exports = {
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
-		let cpn = o.components.find(c => (c.type == cpnType));
+		let cpn = o.components.find(c => (c.type === cpnType));
 
 		if (!cpn) {
 			cpn = {
@@ -84,10 +84,10 @@ module.exports = {
 			o.components.push(cpn);
 		}
 
-		if (cpn[property] == null)
+		if (cpn[property] === null)
 			cpn[property] = [];
 
-		if ((noDuplicate) && (cpn[property].find(f => (f == value))))
+		if ((noDuplicate) && (cpn[property].find(f => (f === value))))
 			return;
 
 		cpn[property].push(value);
@@ -98,7 +98,7 @@ module.exports = {
 		if (self)
 			o = this.oSelf;
 
-		if (o[property] == null)
+		if (o[property] === null)
 			o[property] = [];
 
 		o[property].push(value);
@@ -110,7 +110,7 @@ module.exports = {
 			o = this.oSelf;
 
 		if (cpnType) {
-			let cpn = o.components.find(c => (c.type == cpnType));
+			let cpn = o.components.find(c => (c.type === cpnType));
 
 			if (!cpn)
 				return;

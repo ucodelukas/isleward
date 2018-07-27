@@ -1,4 +1,3 @@
-let fileLister = require('../misc/fileLister');
 let childProcess = require('child_process');
 let objects = require('../objects/objects');
 let mapList = require('../config/maps/mapList');
@@ -19,7 +18,7 @@ module.exports = {
 		let thread = this.getThreadFromName(obj.zoneName);
 
 		let instanceId = obj.instanceId;
-		if ((!thread) || (obj.zoneName != thread.name))
+		if ((!thread) || (obj.zoneName !== thread.name))
 			instanceId = -1;
 
 		if (!thread) {
@@ -95,7 +94,7 @@ module.exports = {
 		return this.nextCallbackId - 1;
 	},
 	resolveCallback: function (msg) {
-		let callback = this.callbacks.spliceFirstWhere(c => c.id == msg.msg.id);
+		let callback = this.callbacks.spliceFirstWhere(c => c.id === msg.msg.id);
 		if (!callback)
 			return;
 
@@ -109,10 +108,10 @@ module.exports = {
 	},
 
 	getThreadFromId: function (id) {
-		return this.threads.find(t => t.id == id);
+		return this.threads.find(t => t.id === id);
 	},
 	getThreadFromName: function (name) {
-		return this.threads.find(t => t.name == name);
+		return this.threads.find(t => t.name === name);
 	},
 
 	getMapFiles: function () {
@@ -136,7 +135,7 @@ module.exports = {
 	onMessage: function (thread, message) {
 		if (message.module)
 			global[message.module][message.method](message);
-		else if (message.event == 'onCrashed') {
+		else if (message.event === 'onCrashed') {
 			thread.worker.kill();
 			process.exit();
 		} else
@@ -162,14 +161,14 @@ module.exports = {
 			objects.updateObject(message);
 		},
 		callDifferentThread: function (thread, message) {
-			let obj = connections.players.find(p => (p.name == message.playerName));
+			let obj = connections.players.find(p => (p.name === message.playerName));
 			if (!obj)
 				return;
-			let thread = this.getThreadFromName(obj.zoneName);
-			if (!thread)
+			let newThread = this.getThreadFromName(obj.zoneName);
+			if (!newThread)
 				return;
 
-			thread.worker.send({
+			newThread.worker.send({
 				module: message.data.module,
 				method: message.data.method,
 				args: message.data.args
@@ -181,19 +180,19 @@ module.exports = {
 			obj.zoneName = message.args.newZone;
 			obj.id = obj.serverId;
 
-			let serverObj = objects.objects.find(o => o.id == obj.id);
+			let serverObj = objects.objects.find(o => o.id === obj.id);
 			serverObj.zoneName = obj.zoneName;
 
-			let thread = this.getThreadFromName(obj.zoneName);
+			let newThread = this.getThreadFromName(obj.zoneName);
 
-			if (!thread) {
-				thread = this.getThreadFromName(serverConfig.defaultZone);
-				obj.zoneName = thread.name;
-				serverObj.zoneName = thread.name;
+			if (!newThread) {
+				newThread = this.getThreadFromName(serverConfig.defaultZone);
+				obj.zoneName = newThread.name;
+				serverObj.zoneName = newThread.name;
 			}
 
-			serverObj.zone = thread.id;
-			obj.zone = thread.id;
+			serverObj.zone = newThread.id;
+			obj.zone = newThread.id;
 
 			serverObj.player.broadcastSelf();
 

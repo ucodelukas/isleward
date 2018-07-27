@@ -73,7 +73,7 @@ module.exports = {
 
 			let fish = [];
 			tempFish.forEach(function (t) {
-				if (!fish.some(f => (f.owner == t.owner)))
+				if (!fish.some(f => (f.owner === t.owner)))
 					fish.push(t);
 			});
 
@@ -128,10 +128,10 @@ module.exports = {
 			let ranks = event.ranks;
 
 			let winText = 'Angler Nayla: ';
-			let winners = Object.keys(ranks).filter(r => (ranks[r] == 1));
+			let winners = Object.keys(ranks).filter(r => (ranks[r] === 1));
 			let wLen = winners.length;
 			winners.forEach(function (w, i) {
-				winText += ((wLen > 1) && (i == wLen - 1)) ? `and ${w} ` : `${w} `;
+				winText += ((wLen > 1) && (i === wLen - 1)) ? `and ${w} ` : `${w} `;
 			});
 
 			winText += 'won!';
@@ -147,7 +147,7 @@ module.exports = {
 				.filter(i => (i.name.indexOf('Ancient Carp') > -1))
 				.sort((a, b) => (b.stats.weight - a.stats.weight))
 				.forEach(function (f, i) {
-					if (i == 0) {
+					if (i === 0) {
 						f.owner = source.name;
 						tgtInventory.getItem(extend(true, {}, f));
 					}
@@ -340,10 +340,10 @@ module.exports = {
 		auto: true,
 		events: {
 			beforeGatherResource: function (gatherResult, gatherer) {
-				if (gatherResult.nodeType != 'fish')
+				if (gatherResult.nodeType !== 'fish')
 					return;
 
-				let hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
+				let hasCompRod = gatherer.inventory.items.some(i => ((i.name === 'Competition Rod') && (i.eq)));
 				if (!hasCompRod)
 					return;
 
@@ -357,7 +357,7 @@ module.exports = {
 			},
 
 			beforeEnterPool: function (gatherResult, gatherer) {
-				if (gatherResult.nodeName == 'Sun Carp')
+				if (gatherResult.nodeName === 'Sun Carp')
 					gatherResult.nodeName = 'Ancient Carp';
 			}
 		}
@@ -398,7 +398,7 @@ module.exports = {
 						let newRank = helpers.getRank(event, obj.name);
 						helpers.updateDescription(event, this.instance.events);
 
-						if (oldRank != newRank) {
+						if (oldRank !== newRank) {
 							helpers.updateWinText(event, this.instance.events);
 
 							return {
@@ -406,7 +406,7 @@ module.exports = {
 								2: 'Nice catch. You took second place!',
 								3: 'Not bad at all. You took third place!'
 							}[newRank];
-						} else if (newRank == 1)
+						} else if (newRank === 1)
 							return 'Great, you\'re still in first place!';
 						return 'Not quite heavy enough, keep trying!';
 					}

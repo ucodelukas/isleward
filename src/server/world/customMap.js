@@ -1,5 +1,3 @@
-let io = require('../security/io');
-
 module.exports = {
 	instance: null,
 	ent: null,
@@ -9,7 +7,7 @@ module.exports = {
 	load: function (instance, objToAdd, callback) {
 		this.instance = instance;
 
-		this.ent = instance.zone.name + '-' + objToAdd.components.find(c => c.type == 'auth').username;
+		this.ent = instance.zone.name + '-' + objToAdd.components.find(c => c.type === 'auth').username;
 
 		io.get({
 			ent: this.ent,
@@ -24,30 +22,20 @@ module.exports = {
 	},
 
 	save: function () {
-		//this.tiles = [];
-
 		io.set({
 			ent: this.ent,
 			field: 'customMap',
-			value: JSON.stringify(this.tiles),
-			callback: this.onSave.bind(this)
+			value: JSON.stringify(this.tiles)
 		});
-	},
-	onSave: function (result) {
-
 	},
 
 	build: function (callback) {
 		let map = this.instance.map.clientMap.map;
-		let w = map.length;
-		let h = map[0].length;
 
 		this.tiles.forEach(function (t) {
 			t = t.split('|');
 			this.customize(t[0], t[1], t[2], true);
 		}, this);
-
-		//this.customize(~~(Math.random() * w), ~~(Math.random() * h), 52);
 
 		this.save();
 
@@ -56,7 +44,7 @@ module.exports = {
 
 	customize: function (x, y, tile, noStore) {
 		let action = null;
-		if (arguments.length == 1) {
+		if (arguments.length === 1) {
 			action = x;
 			let obj = action.obj;
 			tile = action.tile;
@@ -74,19 +62,18 @@ module.exports = {
 		if (!noStore) {
 			let exists = this.tiles.find(function (t) {
 				t = t.split('|');
-				if ((t[0] == x) && (t[1] == y))
+				if ((t[0] === x) && (t[1] === y))
 					return true;
 			});
 			if (exists) {
 				tile = this.oldTiles[x + '|' + y];
 				collide = false;
 
-				this.tiles.spliceWhere(t => t == exists);
-			}
-			//Can't build on natural collisions
-			else if (this.instance.map.clientMap.collisionMap[x][y])
+				this.tiles.spliceWhere(t => t === exists);
+			} else if (this.instance.map.clientMap.collisionMap[x][y]) {
+				//Can't build on natural collisions
 				return;
-			else
+			} else
 				this.tiles.push(x + '|' + y + '|' + tile);
 		}
 

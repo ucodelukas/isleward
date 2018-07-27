@@ -17,7 +17,7 @@ module.exports = {
 
 		mob.addComponent('effects');
 		if (type) {
-			if (type != 'regular') {
+			if (type !== 'regular') {
 				mob.effects.addEffect({
 					type: type
 				});
@@ -29,7 +29,7 @@ module.exports = {
 
 				if (typeDefinition.sheetName)
 					mob.sheetName = typeDefinition.sheetName;
-				if (typeDefinition.cell != null)
+				if (typeDefinition.cell !== null)
 					mob.cell = typeDefinition.cell;
 			}
 		}
@@ -50,7 +50,7 @@ module.exports = {
 		let spells = extend(true, [], blueprint.spells);
 		spells.forEach(function (s) {
 			if (!s.animation) {
-				if ((mob.sheetName == 'mobs') && (animations.mobs[mob.cell])) 
+				if ((mob.sheetName === 'mobs') && (animations.mobs[mob.cell])) 
 					s.animation = 'basic';
 			}
 		});
@@ -142,7 +142,7 @@ module.exports = {
 			drops.blueprints.forEach(function (d) {
 				let drop = extend(true, {}, d);
 				d.level = level;
-				if (drop.type == 'key')
+				if (drop.type === 'key')
 					return;
 
 				mob.inventory.getItem(itemGenerator.generate(drop));

@@ -15,7 +15,7 @@ let cpnArcanePatch = {
 		let isPlayer = !!this.caster.player;
 		let isTargetPlayer = !!o.player;
 
-		if ((this.caster.aggro.canAttack(o)) || (isPlayer != isTargetPlayer))
+		if ((this.caster.aggro.canAttack(o)) || (isPlayer !== isTargetPlayer))
 			return;
 
 		this.contents.push(o);
@@ -25,7 +25,7 @@ let cpnArcanePatch = {
 		let contents = this.contents;
 		let cLen = contents.length;
 		for (let i = 0; i < cLen; i++) {
-			if (contents[i] == o) {
+			if (contents[i] === o) {
 				contents.splice(i, 1);
 				return;
 			}

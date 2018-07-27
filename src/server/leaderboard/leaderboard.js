@@ -25,7 +25,7 @@ module.exports = {
 
 					let match = true;
 					for (let i = 0; i < pLen; i++) {
-						if (!rProphecies.some(rp => rp == prophecyFilter[i])) {
+						if (!rProphecies.some(rp => rp === prophecyFilter[i])) {
 							match = false;
 							break;
 						}
@@ -90,7 +90,7 @@ module.exports = {
 		let doSave = false;
 
 		this.waiting.forEach(function (w) {
-			if (!this.list.some(l => l.name == w.name)) {
+			if (!this.list.some(l => l.name === w.name)) {
 				this.list.push(w);
 				doSave = true;
 			}
@@ -106,7 +106,7 @@ module.exports = {
 		if (!this.list)
 			return null;
 
-		let result = this.list.find(l => (l.name == name));
+		let result = this.list.find(l => (l.name === name));
 		if (result)
 			return result.level;
 		return null;
@@ -123,9 +123,9 @@ module.exports = {
 			return;
 		}
 
-		let exists = this.list.find(l => l.name == name);
+		let exists = this.list.find(l => l.name === name);
 		if (exists) {
-			if (exists.level != level) {
+			if (exists.level !== level) {
 				exists.level = level;
 
 				this.save();
@@ -142,12 +142,12 @@ module.exports = {
 	},
 
 	deleteCharacter: function (name) {
-		this.list.spliceWhere(l => (l.name == name));
+		this.list.spliceWhere(l => (l.name === name));
 		this.save();
 	},
 
 	killCharacter: function (name) {
-		let character = this.list.find(l => (l.name == name));
+		let character = this.list.find(l => (l.name === name));
 		if (!character)
 			return;
 

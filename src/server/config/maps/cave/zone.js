@@ -486,7 +486,7 @@ module.exports = {
 						activated.push(order);
 						let valid = true;
 						for (let i = 0; i < activated.length; i++) {
-							if (activated[i] != i) {
+							if (activated[i] !== i) {
 								valid = false;
 								break;
 							}
@@ -508,7 +508,7 @@ module.exports = {
 							});
 
 							return;
-						} else if (activated.length == 4) {
+						} else if (activated.length === 4) {
 							triggerPuzzle.activated = [];
 							this.activate();
 						}
@@ -528,7 +528,7 @@ module.exports = {
 					activate: function () {
 						let syncer = this.obj.instance.syncer;
 						let physics = this.obj.instance.physics;
-						let walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName == 'redWall'));
+						let walls = this.obj.instance.objects.objects.filter(o => (o.objZoneName === 'redWall'));
 						walls.forEach(function (w) {
 							w.destroyed = true;
 							physics.setCollision(w.x, w.y, false);

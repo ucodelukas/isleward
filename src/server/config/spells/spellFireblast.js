@@ -32,7 +32,7 @@ module.exports = {
 					}]
 				};
 
-				if ((i != x) || (j != y))
+				if ((i !== x) || (j !== y))
 					syncer.queue('onGetObject', effect, -1);
 
 				let mobs = physics.getCell(i, j);
@@ -66,7 +66,7 @@ module.exports = {
 					let dx = m.x - obj.x;
 					let dy = m.y - obj.y;
 
-					while ((dx == 0) && (dy == 0)) {
+					while ((dx === 0) && (dy === 0)) {
 						dx = ~~(Math.random() * 2) - 1;
 						dy = ~~(Math.random() * 2) - 1;
 					}

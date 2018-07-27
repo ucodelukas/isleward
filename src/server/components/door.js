@@ -72,7 +72,7 @@ module.exports = {
 
 		if (this.closed) {
 			if (this.locked) {
-				let key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
+				let key = obj.inventory.items.find(i => ((i.keyId === this.key) || (i.keyId === 'world')));
 				if (!key) {
 					canAction = false;
 					msg = 'You don\'t have the key to unlock this door';
@@ -99,17 +99,17 @@ module.exports = {
 	},
 
 	unlock: function (msg) {
-		if (msg.sourceId == null)
+		if (msg.sourceId === null)
 			return;
 
-		let obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
 		if ((!obj) || (!obj.player))
 			return;
 
 		let thisObj = this.obj;
 		if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
 			return;
-		else if ((thisObj.x == obj.x) && (thisObj.y == obj.y))
+		else if ((thisObj.x === obj.x) && (thisObj.y === obj.y))
 			return;
 
 		let syncO = thisObj.syncer.o;
@@ -118,11 +118,11 @@ module.exports = {
 			if (this.autoClose)
 				this.autoCloseCd = this.autoClose;
 
-			let key = obj.inventory.items.find(i => ((i.keyId == this.key) || (i.keyId == 'world')));
+			let key = obj.inventory.items.find(i => ((i.keyId === this.key) || (i.keyId === 'world')));
 			if (!key)
 				return;
 
-			if (((key.singleUse) || (this.destroyKey)) && (key.keyId != 'world')) {
+			if (((key.singleUse) || (this.destroyKey)) && (key.keyId !== 'world')) {
 				obj.inventory.destroyItem(key.id, 1);
 
 				obj.instance.syncer.queue('onGetMessages', {
@@ -161,7 +161,7 @@ module.exports = {
 
 		this.autoCloseCd--;
 
-		if (this.autoCloseCd == 0) {
+		if (this.autoCloseCd === 0) {
 			this.obj.cell = this.closedSprite;
 			this.obj.syncer.o.cell = this.closedSprite;
 			this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, true);

@@ -6,7 +6,7 @@ module.exports = {
 	ttl: -1,
 
 	init: function (blueprint) {
-		if (blueprint.ownerId != null)
+		if (blueprint.ownerId !== null)
 			this.ownerId = blueprint.ownerId;
 
 		if (blueprint.ttl)
@@ -24,7 +24,7 @@ module.exports = {
 		if (this.ttl > 0) {
 			this.ttl--;
 
-			if (this.ttl == 0)
+			if (this.ttl === 0)
 				this.obj.destroyed = true;
 		}
 	},
@@ -34,11 +34,11 @@ module.exports = {
 			return;
 
 		let ownerId = this.ownerId;
-		if (ownerId != -1) {
+		if (ownerId !== -1) {
 			if (ownerId instanceof Array) {
-				if (ownerId.indexOf(obj.serverId) == -1)
+				if (ownerId.indexOf(obj.serverId) === -1)
 					return;
-			} else if (ownerId != obj.serverId)
+			} else if (ownerId !== obj.serverId)
 				return;
 		}
 

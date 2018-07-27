@@ -87,7 +87,7 @@ module.exports = {
 	},
 
 	beforeGetSpellTemplate: function (spell) {
-		if (spell.type == 'ScatterPumpkinPieces')
+		if (spell.type === 'ScatterPumpkinPieces')
 			spell.template = require('./spells/spellScatterPumpkinPieces.js');
 	},
 
@@ -180,10 +180,10 @@ module.exports = {
 	},
 
 	onAfterGetLayerObjects: function (info) {
-		if (info.map != 'fjolarok')
+		if (info.map !== 'fjolarok')
 			return;
 
-		let layer = this.mapFile.layers.find(l => (l.name == info.layer));
+		let layer = this.mapFile.layers.find(l => (l.name === info.layer));
 		if (layer) {
 			let offset = this.mapOffset;
 			let mapScale = this.mapFile.tilesets[0].tileheight;
@@ -199,7 +199,7 @@ module.exports = {
 	},
 
 	onBeforeBuildLayerTile: function (info) {
-		if (info.map != 'fjolarok')
+		if (info.map !== 'fjolarok')
 			return;
 
 		let offset = this.mapOffset;
@@ -211,13 +211,13 @@ module.exports = {
 			return;
 
 		let i = ((y - offset.y) * this.mapW) + (x - offset.x);
-		let layer = this.mapFile.layers.find(l => (l.name == info.layer));
+		let layer = this.mapFile.layers.find(l => (l.name === info.layer));
 		if (layer)
 			info.cell = layer.data[i];
 	},
 
 	onBeforeGetEventList: function (zone, list) {
-		if (zone != 'fjolarok')
+		if (zone !== 'fjolarok')
 			return;
 
 		list.push(this.relativeFolderName + '/maps/fjolarok/events/halloween.js');

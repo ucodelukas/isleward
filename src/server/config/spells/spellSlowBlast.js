@@ -61,7 +61,7 @@ module.exports = {
 						continue;
 
 					let distance = ~~Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if (distance != radius)
+					if (distance !== radius)
 						continue;
 
 					if (!physics.hasLos(x, y, i, j))

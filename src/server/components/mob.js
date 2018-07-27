@@ -50,7 +50,7 @@ module.exports = {
 
 		if (!this.goHome) {
 			//Are we in fight mode?
-			if ((target) && (target != obj) && ((!obj.follower) || (obj.follower.master != target))) {
+			if ((target) && (target !== obj) && ((!obj.follower) || (obj.follower.master !== target))) {
 				this.fight(target);
 				return;
 			}
@@ -108,12 +108,12 @@ module.exports = {
 			this.goHome = false;
 	},
 	fight: function (target) {
-		if (this.target != target) {
+		if (this.target !== target) {
 			this.obj.clearQueue();
 			this.target = target;
 		}
 		//If the target is true, it means we can't reach the target and should wait for a new one
-		if (this.target == true)
+		if (this.target === true)
 			return;
 
 		let obj = this.obj;
@@ -140,7 +140,7 @@ module.exports = {
 							target: target
 						});
 						//null means we don't have LoS
-						if (success != null)
+						if (success !== null)
 							return;
 						hasLos = false;
 					} else
@@ -159,17 +159,17 @@ module.exports = {
 		let newDistance = max(abs(targetPos.x - tx), abs(targetPos.y - ty));
 
 		if ((newDistance >= distance) && (newDistance > furthestRange)) {
-			if (hasLos == null)
+			if (hasLos === null)
 				hasLos = this.physics.hasLos(x, y, tx, ty);
 			if (hasLos) {
-				if (doesCollide == null)
+				if (doesCollide === null)
 					doesCollide = this.physics.mobsCollide(x, y, obj);
 				if (!doesCollide) {
 					obj.aggro.ignore(target);
 					return;
 				}
 			} else {
-				if (doesCollide == null)
+				if (doesCollide === null)
 					doesCollide = this.physics.mobsCollide(x, y, obj);
 				if (!doesCollide) {
 					obj.aggro.ignore(target);
@@ -185,7 +185,7 @@ module.exports = {
 			x: targetPos.x,
 			y: targetPos.y
 		});
-		if (path.length == 0) {
+		if (path.length === 0) {
 			obj.aggro.ignore(target);
 			//TODO: Don't skip a turn
 			return;

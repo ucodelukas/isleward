@@ -16,9 +16,9 @@ module.exports = {
 	getComponentFolder: function () {
 		let files = fileLister.getFolder('./components/');
 		files = files.filter(w => (
-			(w.indexOf('components') == -1) &&
-			(w.indexOf('cpnBase') == -1) &&
-			(w.indexOf('projectile') == -1)
+			(w.indexOf('components') === -1) &&
+			(w.indexOf('cpnBase') === -1) &&
+			(w.indexOf('projectile') === -1)
 		));
 		let fLen = files.length;
 		for (let i = 0; i < fLen; i++) 

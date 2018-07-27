@@ -24,8 +24,8 @@ module.exports = {
 
 		//Spells should be sorted so they're EQ'd in the right order
 		items.sort(function (a, b) {
-			let aId = (a.spellId != null) ? ~~a.spellId : 9999;
-			let bId = (b.spellId != null) ? ~~b.spellId : 9999;
+			let aId = (a.spellId !== null) ? ~~a.spellId : 9999;
+			let bId = (b.spellId !== null) ? ~~b.spellId : 9999;
 			return (aId - bId);
 		});
 
@@ -48,7 +48,7 @@ module.exports = {
 			newItem.pos = pos;
 		}
 
-		if ((this.obj.player) && (!isTransfer) && (this.obj.stats.values.level == 1))
+		if ((this.obj.player) && (!isTransfer) && (this.obj.stats.values.level === 1))
 			this.getDefaultAbilities();
 
 		delete blueprint.items;
@@ -135,7 +135,7 @@ module.exports = {
 
 	enchantItem: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action == 'scour') && (item.power == 0))) {
+		if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action === 'scour') && (item.power === 0))) {
 			this.resolveCallback(msg);
 			return;
 		}
@@ -153,7 +153,7 @@ module.exports = {
 	},
 
 	learnAbility: function (itemId, runeSlot) {
-		if (itemId.itemId != null) {
+		if (itemId.itemId !== null) {
 			let msg = itemId;
 			itemId = msg.itemId;
 			runeSlot = msg.slot;
@@ -191,19 +191,19 @@ module.exports = {
 
 		let spellbook = this.obj.spellbook;
 
-		if ((item.slot == 'twoHanded') || (item.slot == 'oneHanded'))
+		if ((item.slot === 'twoHanded') || (item.slot === 'oneHanded'))
 			runeSlot = 0;
-		else if (runeSlot == null) {
+		else if (runeSlot === null) {
 			runeSlot = 4;
 			for (let i = 1; i <= 4; i++) {
-				if (!this.items.some(j => (j.runeSlot == i))) {
+				if (!this.items.some(j => (j.runeSlot === i))) {
 					runeSlot = i;
 					break;
 				}
 			}
 		}
 
-		let currentEq = this.items.find(i => (i.runeSlot == runeSlot));
+		let currentEq = this.items.find(i => (i.runeSlot === runeSlot));
 		if (currentEq) {
 			spellbook.removeSpellById(runeSlot);
 			delete currentEq.eq;
@@ -224,7 +224,7 @@ module.exports = {
 		let item = this.findItem(itemId);
 		if (!item)
 			return;
-		else if (item.type != 'mtx') {
+		else if (item.type !== 'mtx') {
 			delete item.active;
 			return;
 		}
@@ -290,7 +290,7 @@ module.exports = {
 
 			//Find similar items and put them on cooldown too
 			this.items.forEach(function (i) {
-				if ((i.name == item.name) && (i.cdMax == item.cdMax))
+				if ((i.name === item.name) && (i.cdMax === item.cdMax))
 					i.cd = i.cdMax;
 			});
 		}
@@ -298,7 +298,7 @@ module.exports = {
 		let result = {};
 		this.obj.instance.eventEmitter.emit('onBeforeUseItem', this.obj, item, result);
 
-		if (item.type == 'consumable') {
+		if (item.type === 'consumable') {
 			if (item.uses) {
 				item.uses--;
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
@@ -309,7 +309,7 @@ module.exports = {
 	},
 
 	unlearnAbility: function (itemId) {
-		if (itemId.itemId != null)
+		if (itemId.itemId !== null)
 			itemId = itemId.itemId;
 
 		let item = this.findItem(itemId);
@@ -390,12 +390,12 @@ module.exports = {
 		if ((item.quantity) && (amount)) {
 			item.quantity -= amount;
 			if (item.quantity <= 0) {
-				this.items.spliceWhere(i => i.id == id);
+				this.items.spliceWhere(i => i.id === id);
 				this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
 			} else
 				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		} else {
-			this.items.spliceWhere(i => i.id == id);
+			this.items.spliceWhere(i => i.id === id);
 			this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
 		}
 
@@ -421,7 +421,7 @@ module.exports = {
 		if (item.eq)
 			this.obj.equipment.unequip(id);
 
-		this.items.spliceWhere(i => i.id == id);
+		this.items.spliceWhere(i => i.id === id);
 
 		this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
 
@@ -471,7 +471,7 @@ module.exports = {
 	//Helpers
 
 	hookItemEvents: function (items) {
-		let items = items || this.items;
+		items = items || this.items;
 		let iLen = items.length;
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
@@ -496,19 +496,19 @@ module.exports = {
 				});
 			}
 
-			if ((item.pos == null) && (!item.eq)) {
+			if ((item.pos === null) && (!item.eq)) {
 				let pos = i;
 				for (let j = 0; j < iLen; j++) {
-					if (!items.some(fj => (fj.pos == j))) {
+					if (!items.some(fj => (fj.pos === j))) {
 						pos = j;
 						break;
 					}
 				}
 				item.pos = pos;
-			} else if ((!item.eq) && (items.some(ii => ((ii != item) && (ii.pos == item.pos))))) {
+			} else if ((!item.eq) && (items.some(ii => ((ii !== item) && (ii.pos === item.pos))))) {
 				let pos = item.pos;
 				for (let j = 0; j < iLen; j++) {
-					if (!items.some(fi => ((fi != item) && (fi.pos == j)))) {
+					if (!items.some(fi => ((fi !== item) && (fi.pos === j)))) {
 						pos = j;
 						break;
 					}
@@ -525,7 +525,7 @@ module.exports = {
 
 		let iSize = this.inventorySize;
 		for (let i = 0; i < iSize; i++) {
-			if (!this.items.some(j => (j.pos == i))) {
+			if (!this.items.some(j => (j.pos === i))) {
 				item.pos = i;
 				break;
 			}
@@ -533,10 +533,10 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
+		let callbackId = (msg.callbackId !== null) ? msg.callbackId : msg;
 		result = result || [];
 
-		if (callbackId == null)
+		if (callbackId === null)
 			return;
 
 		process.send({
@@ -550,10 +550,10 @@ module.exports = {
 	},
 
 	findItem: function (id) {
-		if (id == null)
+		if (id === null)
 			return null;
 
-		return this.items.find(i => i.id == id);
+		return this.items.find(i => i.id === id);
 	},
 
 	getDefaultAbilities: function () {
@@ -561,8 +561,8 @@ module.exports = {
 			return (
 				(i.spell) &&
 				(i.spell.rolls) &&
-				(i.spell.rolls.damage != null) &&
-				((i.slot == 'twoHanded') || (i.slot == 'oneHanded'))
+				(i.spell.rolls.damage !== null) &&
+				((i.slot === 'twoHanded') || (i.slot === 'oneHanded'))
 			);
 		});
 
@@ -581,7 +581,7 @@ module.exports = {
 			let hasSpell = this.items.some(function (i) {
 				return (
 					(i.spell) &&
-					(i.spell.name.toLowerCase() == spellName)
+					(i.spell.name.toLowerCase() === spellName)
 				);
 			});
 
@@ -599,7 +599,7 @@ module.exports = {
 	},
 
 	createBag: function (x, y, items, ownerId) {
-		if (ownerId == null)
+		if (ownerId === null)
 			ownerId = -1;
 
 		let bagCell = 50;
@@ -613,13 +613,13 @@ module.exports = {
 				topQuality = quality;
 		}
 
-		if (topQuality == 0)
+		if (topQuality === 0)
 			bagCell = 50;
-		else if (topQuality == 1)
+		else if (topQuality === 1)
 			bagCell = 51;
-		else if (topQuality == 2)
+		else if (topQuality === 2)
 			bagCell = 128;
-		else if (topQuality == 3)
+		else if (topQuality === 3)
 			bagCell = 52;
 		else
 			bagCell = 53;
@@ -644,7 +644,7 @@ module.exports = {
 	},
 
 	hasSpace: function () {
-		if (this.inventorySize != -1) {
+		if (this.inventorySize !== -1) {
 			let nonEqItems = this.items.filter(f => !f.eq).length;
 			return (nonEqItems < this.inventorySize);
 		} return true;
@@ -656,7 +656,7 @@ module.exports = {
 		//We need to know if a mob dropped it for quest purposes
 		let fromMob = item.fromMob;
 
-		if (item.quality == null)
+		if (item.quality === null)
 			item.quality = 0;
 
 		//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
@@ -668,7 +668,7 @@ module.exports = {
 
 		let exists = false;
 		if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses) && (!noStack)) {
-			let existItem = this.items.find(i => (i.name == item.name));
+			let existItem = this.items.find(i => (i.name === item.name));
 			if (existItem) {
 				exists = true;
 				if (!existItem.quantity)
@@ -713,10 +713,10 @@ module.exports = {
 			if (item.eq)
 				delete item.pos;
 
-			if ((item.pos == null) && (!item.eq)) {
+			if ((item.pos === null) && (!item.eq)) {
 				let pos = iLen;
 				for (let i = 0; i < iLen; i++) {
-					if (!items.some(fi => (fi.pos == i))) {
+					if (!items.some(fi => (fi.pos === i))) {
 						pos = i;
 						break;
 					}
@@ -759,10 +759,10 @@ module.exports = {
 			for (let i = 0; i < sLen; i++) {
 				let s = stats[i];
 				let val = item.stats[s];
-				if (s == 'maxHp') {
+				if (s === 'maxHp') {
 					delete item.stats[s];
 					item.stats.hpMax = val;
-				} else if (s == 'maxMana') {
+				} else if (s === 'maxMana') {
 					delete item.stats[s];
 					item.stats.manaMax = val;
 				}
@@ -842,7 +842,7 @@ module.exports = {
 			return;
 
 		//Only drop loot if this player is in the zone
-		let playerObject = this.obj.instance.objects.find(o => o.serverId == ownerId);
+		let playerObject = this.obj.instance.objects.find(o => o.serverId === ownerId);
 		if (!playerObject)
 			return;
 
@@ -853,7 +853,7 @@ module.exports = {
 			if (!(spellStatType instanceof Array))
 				spellStatType = [spellStatType];
 			spellStatType.forEach(function (ss) {
-				if (stats.indexOf(ss) == -1)
+				if (stats.indexOf(ss) === -1)
 					stats.push(ss);
 			});
 		});
@@ -919,7 +919,7 @@ module.exports = {
 				drop.magicFind = magicFind;
 
 				let item = drop;
-				if ((!item.quest) && (item.type != 'key'))
+				if ((!item.quest) && (item.type !== 'key'))
 					item = generator.generate(drop);
 
 				if (!item.slot)
@@ -1015,6 +1015,6 @@ module.exports = {
 	},
 
 	canEquipItem: function (item) {
-		return (this.equipItemErrors(item).length == 0);
+		return (this.equipItemErrors(item).length === 0);
 	}
 };
