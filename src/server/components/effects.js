@@ -1,3 +1,5 @@
+const effectTemplate = require('../config/effects/effectTemplate');
+
 module.exports = {
 	type: 'effects',
 
@@ -157,7 +159,7 @@ module.exports = {
 			typeTemplate = require('../' + result.url);
 		}
 
-		let builtEffect = extend(true, {}, typeTemplate);
+		let builtEffect = extend(true, {}, effectTemplate, typeTemplate);
 		for (let p in options) 
 			builtEffect[p] = options[p];
 		

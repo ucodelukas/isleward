@@ -51,7 +51,8 @@ define([
 				'reputation',
 				'mail',
 				'wardrobe',
-				'passives'
+				'passives',
+				'workbenchAlchemy'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);

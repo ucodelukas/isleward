@@ -333,6 +333,59 @@ module.exports = {
  					}
  				}
  			}
+ 		},
+ 		'alchemy workbench': {
+ 			components: {
+ 				cpnParticles: {
+ 					simplify: function () {
+ 						return {
+ 							type: 'particles',
+ 							blueprint: {
+ 								color: {
+ 									start: ['ff4252', 'ff4252'],
+ 									end: ['a82841', 'a82841']
+ 								},
+ 								scale: {
+ 									start: {
+ 										min: 2,
+ 										max: 10
+ 									},
+ 									end: {
+ 										min: 0,
+ 										max: 2
+ 									}
+ 								},
+ 								speed: {
+ 									start: {
+ 										min: 4,
+ 										max: 16
+ 									},
+ 									end: {
+ 										min: 2,
+ 										max: 8
+ 									}
+ 								},
+ 								lifetime: {
+ 									min: 1,
+ 									max: 4
+ 								},
+ 								randomScale: true,
+ 								randomSpeed: true,
+ 								chance: 0.2,
+ 								randomColor: true,
+ 								spawnType: 'rect',
+ 								spawnRect: {
+ 									x: -15,
+ 									y: -28,
+ 									w: 30,
+ 									h: 8
+ 								}
+ 							}
+ 						};
+ 					}
+ 				},
+ 				cpnWorkbenchAlchemy: {}
+ 			}
  		}
  	},
  	mobs: {

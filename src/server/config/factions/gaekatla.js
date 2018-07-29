@@ -57,7 +57,7 @@ module.exports = {
 					return;
 
 				//Spawn a mob
-				let mob = mob.instance.spawners.spawn({
+				let spawnedMob = mob.instance.spawners.spawn({
 					amountLeft: 1,
 					blueprint: {
 						x: mob.x,
@@ -78,7 +78,7 @@ module.exports = {
 					}
 				});
 
-				mobBuilder.build(mob, {
+				mobBuilder.build(spawnedMob, {
 					level: item.level,
 					faction: this.aggro.faction,
 					walkDistance: 2,
@@ -94,7 +94,7 @@ module.exports = {
 					}]
 				}, false, 'regular');
 
-				mob.follower.bindEvents();
+				spawnedMob.follower.bindEvents();
 			}
 		}
 	},

@@ -1312,7 +1312,7 @@
                  "visible":true,
                  "width":8,
                  "x":792,
-                 "y":336
+                 "y":312
                 }, 
                 {
                  "gid":673,
@@ -2067,7 +2067,7 @@
                  "visible":true,
                  "width":48,
                  "x":752,
-                 "y":320
+                 "y":312
                 }, 
                 {
                  "height":8,
@@ -2078,7 +2078,7 @@
                  "visible":true,
                  "width":48,
                  "x":752,
-                 "y":320
+                 "y":328
                 }, 
                 {
                  "height":24,
@@ -2153,6 +2153,18 @@
                  "width":32,
                  "x":1552,
                  "y":912
+                }, 
+                {
+                 "gid":572,
+                 "height":8,
+                 "id":860,
+                 "name":"alchemy workbench",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":792,
+                 "y":336
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3519,7 +3531,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":860,
+ "nextobjectid":861,
  "orientation":"orthogonal",
  "properties":
     {

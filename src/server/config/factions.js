@@ -11,8 +11,12 @@ module.exports = {
 
 	getFaction: function (id) {
 		let mapping = this.mappings[id];
+		let faction = null;
 		if (mapping)
-			return require('../' + mapping);
-		return require('./factions/' + id);
+			faction = require('./' + mapping);
+		else
+			faction = require('./factions/' + id);
+
+		return faction;
 	}
 };
