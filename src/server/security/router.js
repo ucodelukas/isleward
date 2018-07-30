@@ -25,7 +25,7 @@ module.exports = {
 			wardrobe: ['open', 'apply'],
 			stats: ['respawn'],
 			passives: ['tickNode', 'untickNode'],
-			workbenchAlchemy: ['open', 'craft']
+			workbench: ['open', 'craft', 'getRecipe']
 		};
 
 		return ((secondaryAllowed[msg.data.cpn]) && (secondaryAllowed[msg.data.cpn].indexOf(msg.data.method) > -1));

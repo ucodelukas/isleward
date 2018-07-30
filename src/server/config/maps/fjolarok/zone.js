@@ -384,7 +384,9 @@ module.exports = {
  						};
  					}
  				},
- 				cpnWorkbenchAlchemy: {}
+ 				cpnWorkbench: {
+ 					type: 'alchemy'
+ 				}
  			}
  		}
  	},

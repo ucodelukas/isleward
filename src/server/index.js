@@ -13,6 +13,7 @@ let classes = require('./config/spirits');
 let spellsConfig = require('./config/spellsConfig');
 let spells = require('./config/spells');
 let itemTypes = require('./items/config/types');
+let recipes = require('./config/recipes/recipes');
 let sheets = require('./security/sheets');
 
 let startup = {
@@ -36,6 +37,7 @@ let startup = {
 		classes.init();
 		spellsConfig.init();
 		spells.init();
+		recipes.init();
 		itemTypes.init();
 		components.init(this.onComponentsReady.bind(this));
 	},

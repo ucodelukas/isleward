@@ -88,7 +88,7 @@
     "curly": [2,"multi-or-nest"],
     "dot-notation": 2,
     "dot-location": [2,"property"],
-    "eqeqeq": [2,"smart", {"null": "ignore"}],
+    "eqeqeq": [2,"always", {"null": "ignore"}],
     "no-alert": 2,
     "no-caller": 2,
     "no-else-return": 2,

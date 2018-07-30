@@ -12,6 +12,7 @@ let factions = require('../config/factions');
 let classes = require('../config/spirits');
 let spellsConfig = require('../config/spellsConfig');
 let spells = require('../config/spells');
+let recipes = require('../config/recipes/recipes');
 let itemTypes = require('../items/config/types');
 let sheets = require('../security/sheets');
 
@@ -24,6 +25,7 @@ let onCpnsReady = function () {
 	spellsConfig.init();
 	spells.init();
 	itemTypes.init();
+	recipes.init();
 	sheets.init();
 
 	process.send({
