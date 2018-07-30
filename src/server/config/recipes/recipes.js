@@ -20,5 +20,9 @@ module.exports = {
 	getList: function (type) {
 		return recipes[type]
 			.map(r => r.item.name);
+	},
+
+	getRecipe: function(type, name) {
+		return (recipes[type] || []).find(r => r.item.name == name);
 	}
 };

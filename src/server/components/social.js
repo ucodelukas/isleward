@@ -226,7 +226,7 @@ module.exports = {
 		 else {
 			let prefix = roles.getRoleMessagePrefix(this.obj) || '';
 
-			global.io.sockets.emit('event', {
+			cons.emit('event', {
 				event: 'onGetMessages',
 				data: {
 					messages: [{

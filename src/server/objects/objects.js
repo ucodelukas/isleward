@@ -262,7 +262,7 @@ module.exports = {
 		if (obj.level) {
 			leaderboard.setLevel(player.name, obj.level);
 
-			io.sockets.emit('events', {
+			cons.emit('events', {
 				onGetMessages: [{
 					messages: [{
 						class: 'color-blueB',

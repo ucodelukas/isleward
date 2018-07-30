@@ -114,7 +114,7 @@ module.exports = {
 
 		atlas.addObject(this.obj, true);
 
-		io.sockets.emit('events', {
+		cons.emit('events', {
 			onGetMessages: [{
 				messages: [{
 					class: 'color-blueB',

@@ -3,6 +3,8 @@ let objects = require('../objects/objects');
 module.exports = {
 	players: [],
 
+	sockets: null,
+
 	onHandshake: function (socket) {
 		let p = objects.build();
 		p.socket = socket;
@@ -33,7 +35,7 @@ module.exports = {
 		}
 
 		if (player.name) {
-			io.sockets.emit('events', {
+			this.emit('events', {
 				onGetMessages: [{
 					messages: [{
 						class: 'color-blueB',
@@ -101,7 +103,7 @@ module.exports = {
 			}
 		});
 
-		io.sockets.emit('events', {
+		this.emit('events', {
 			onGetMessages: [{
 				messages: [{
 					class: 'color-blueB',
@@ -130,6 +132,10 @@ module.exports = {
 			if (p.auth.username === exclude.auth.username)
 				p.socket.emit('dc', {});
 		}
+	},
+
+	emit: function (event, msg) {
+		this.sockets.emit(event, msg);
 	},
 
 	getCharacterList: function () {

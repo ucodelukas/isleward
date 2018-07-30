@@ -7,12 +7,14 @@ let clientConfig = require('./config/clientConfig');
 
 module.exports = {
 	init: function () {
-		global.extend = extend;
-		global.cons = cons;
-		global._ = helpers;
-		global.atlas = atlas;
-		global.leaderboard = leaderboard;
-		global.clientConfig = clientConfig;
+		global.io =  require('./security/io');
+		
+		global.extend = require('extend');
+		global.cons = require('./security/connections');
+		global._ = require('./misc/helpers');
+		global.atlas = require('./world/atlas');
+		global.leaderboard = require('./leaderboard/leaderboard');
+		global.clientConfig = require('./config/clientConfig');
 
 		clientConfig.init();
 	}

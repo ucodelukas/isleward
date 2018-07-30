@@ -29,6 +29,25 @@ module.exports = {
 				}
 			}
 		},
+		shopestrid: {
+			properties: {
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'dialogue',
+							method: 'talk',
+							args: [{
+								targetName: 'estrid'
+							}]
+						},
+						exit: {
+							cpn: 'dialogue',
+							method: 'stopTalk'
+						}
+					}
+				}
+			}
+		},
 		shophermit: {
 			properties: {
 				cpnNotice: {
@@ -558,7 +577,7 @@ module.exports = {
 			}
 		},
 		estrid: {
-			level: 25,
+			level: 15,
 			attackable: false,
 			walkDistance: 5,
 

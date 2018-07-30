@@ -73,9 +73,12 @@ define([
 			this.find('.title').html(recipe.item.name);
 			this.find('.description').html(recipe.item.description);
 
-			let container = this.find('.materialList .material')
-				.remove()
-				.parent();
+			this.find('.materialList .material').remove();
+
+			let container = this.find('.materialList')
+				.css({
+					visibility: 'visible'
+				});
 
 			let canCraft = true;
 
@@ -92,7 +95,7 @@ define([
 			this.find('.btnCraft')
 				.removeClass('disabled');
 
-			if (canCraft) {
+			if (!canCraft) {
 				this.find('.btnCraft')
 					.addClass('disabled');
 			}

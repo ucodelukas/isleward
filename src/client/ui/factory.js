@@ -52,7 +52,7 @@ define([
 				'mail',
 				'wardrobe',
 				'passives',
-				'workbenchAlchemy'
+				'workbench'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);

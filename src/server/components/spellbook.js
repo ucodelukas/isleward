@@ -327,12 +327,7 @@ module.exports = {
 					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
 			}
 		} else if (spell.range != null) {
-			//Distance Check
-			let fromX = this.obj.x;
-			let fromY = this.obj.y;
-			let toX = action.target.x;
-			let toY = action.target.y;
-			let distance = Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY));
+			let distance = Math.max(Math.abs(action.target.x - this.obj.x), Math.abs(action.target.y - this.obj.y));
 			let range = spell.range;
 			if ((spell.useWeaponRange) && (this.obj.player)) {
 				let weapon = this.obj.inventory.findItem(this.obj.equipment.eq.oneHanded) || this.obj.inventory.findItem(this.obj.equipment.eq.twoHanded);
@@ -350,7 +345,7 @@ module.exports = {
 		//LoS check
 		//Null means we don't have LoS and as such, we should move
 		if ((spell.needLos) && (success)) {
-			if (!this.physics.hasLos(~~fromX, ~~fromY, ~~toX, ~~toY)) {
+			if (!this.physics.hasLos(~~this.obj.x, ~~this.obj.y, ~~action.target.x, ~~action.target.y)) {
 				if (!isAuto)
 					this.sendAnnouncement('Target not in line of sight');
 				action.auto = false;

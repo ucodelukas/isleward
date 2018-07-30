@@ -95,15 +95,15 @@ module.exports = {
 		if ((!obj) || (!obj.player))
 			return;
 
-		let recipe = recipes.getRecipe(msg.data.name);
+		let recipe = recipes.getRecipe(this.craftType, msg.name);
 		if (!recipe)
 			return;
 
 		const items = obj.inventory.items;
 
 		let sendRecipe = extend(true, {}, recipe);
-		(recipe.materials || []).forEach(function (m) {
-			m.need = items.some(i => (i.name === m.name && i.quantity >= m.quantity));
+		(sendRecipe.materials || []).forEach(function (m) {
+			m.need = !items.some(i => (i.name === m.name && i.quantity >= m.quantity));
 		});
 
 		this.resolveCallback(msg, sendRecipe);
@@ -114,7 +114,7 @@ module.exports = {
 		if ((!obj) || (!obj.player))
 			return;
 
-		let recipe = recipes.getRecipe(msg.data.name);
+		let recipe = recipes.getRecipe(this.craftType, msg.name);
 		if (!recipe)
 			return;
 

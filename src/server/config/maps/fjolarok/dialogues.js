@@ -107,7 +107,7 @@ module.exports = {
 			}]
 		}
 	},
-	/*estrid: {
+	estrid: {
 		'1': {
 			msg: [{
 				msg: `Is there anything I can help you with today?`,
@@ -117,10 +117,6 @@ module.exports = {
 				'1.1': {
 					msg: `How long have you been working here?`,
 					goto: 2
-				},
-				'1.2': {
-					msg: `Why do you sell equipment instead of potions?`,
-					goto: 3
 				},
 				'1.3': {
 					msg: `I'd like to browse your wares.`,
@@ -158,15 +154,6 @@ module.exports = {
 				}
 			}
 		},
-		'3': {
-			msg: `The developer hasn't added alchemy or potions yet. Hopefully he'll do that soon.`,
-			options: {
-				'3.1': {
-					msg: `I'd like to ask something else.`,
-					goto: 1
-				}
-			}
-		},
 		tradeBuy: {
 			cpn: 'trade',
 			method: 'startBuy',
@@ -188,7 +175,7 @@ module.exports = {
 				targetName: 'estrid'
 			}]
 		}
-	},*/
+	},
 	vikar: {
 		1: {
 			msg: [{

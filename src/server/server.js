@@ -5,7 +5,9 @@ module.exports = {
 	init: function (callback) {
 		let app = require('express')();
 		let server = require('http').createServer(app);
-		global.io = require('socket.io')(server);
+		let io = require('socket.io')(server);
+
+		global.cons.sockets = io.sockets;
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
