@@ -47,7 +47,7 @@ module.exports = {
 
 			return Array
 				.apply(null, Array(1 + timeT - lastTimeT))
-				.map((i, j) => (j + lastTimeT))
+				.map((j, k) => (k + lastTimeT))
 				.some(function (s) {
 					let useTime = (s >= overflow) ? (s - overflow) : s;
 

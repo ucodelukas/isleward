@@ -50,7 +50,7 @@ module.exports = {
 
 			if (item.slot === 'tool') 
 				list = suffixes.slots.tool;
-			 else {
+			else {
 				list = suffixes.generic.concat(suffixes.slots[item.slot] || []);
 
 				if (item.stats.armor)

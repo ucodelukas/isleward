@@ -148,12 +148,6 @@ module.exports = {
 			generator: 'mainStat'
 		},
 
-		elementAllResist: {
-			level: {
-				min: 25
-			},
-			generator: 'elementResist'
-		},
 		elementArcaneResist: {
 			level: {
 				min: 15

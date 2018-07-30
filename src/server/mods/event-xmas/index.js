@@ -62,7 +62,7 @@ module.exports = {
 
 	onBeforeUseItem: function (obj, item, result) {
 		let handler = {
-			'Merrywinter Play Script': function (obj, item, result) {
+			'Merrywinter Play Script': function () {
 				let lines = [
 					'A catch, a catch, our lines are taut, somebody grab the wheel',
 					'And when the catch was on the ship, all three stood \'round in awe',
@@ -99,7 +99,7 @@ module.exports = {
 
 				obj.syncer.set(false, 'chatter', 'msg', lines[pick] + '\r\n' + lines[pick + 1]);
 			},
-			'Sprig of Mistletoe': function (obj, item, result) {
+			'Sprig of Mistletoe': function () {
 				let ox = obj.x;
 				let oy = obj.y;
 
@@ -183,13 +183,13 @@ module.exports = {
 					}
 				}]);
 			},
-			'Bottomless Eggnog': function (obj, item, result) {
+			'Bottomless Eggnog': function () {
 				obj.effects.addEffect({
 					type: 'merry',
 					ttl: 514
 				});
 			},
-			'Scented Beard Oil': function (obj, item, result) {
+			'Scented Beard Oil': function () {
 				obj.syncer.set(false, 'chatter', 'color', 0xfc66f7);
 				obj.syncer.set(false, 'chatter', 'msg', '...Rubs his beard throughtfully...');
 			}
@@ -198,7 +198,7 @@ module.exports = {
 		if (!handler)
 			return;
 
-		handler(obj, item, result);
+		handler();
 	},
 
 	onBeforeGetFactions: function (mappings) {

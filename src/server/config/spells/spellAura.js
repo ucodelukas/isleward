@@ -57,7 +57,7 @@ module.exports = {
 		members.forEach(function (m) {
 			let effect = effects[m];
 
-			let obj = objects.find(o => (o.serverId === m));
+			let obj = objects.find(f => (f.serverId === m));
 			if (!obj) {
 				if (effect)
 					delete effects[m];
@@ -103,7 +103,7 @@ module.exports = {
 			if (!effect)
 				return;
 
-			let obj = objects.find(o => (o.serverId === m));
+			let obj = objects.find(f => (f.serverId === m));
 			if (!obj) {
 				delete effects[m];
 				return;

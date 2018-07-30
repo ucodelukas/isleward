@@ -94,7 +94,7 @@ module.exports = {
 		let pickName = pool[~~(Math.random() * pool.length)];
 		let pick = configs[pickName];
 
-		let card = {
+		let builtCard = {
 			name: pickName,
 			spritesheet: pick.spritesheet || `${this.folderName}/images/items.png`,
 			type: 'Reward Card',
@@ -106,7 +106,7 @@ module.exports = {
 			setSize: pick.setSize
 		};
 
-		return card;
+		return builtCard;
 	},
 
 	getReward: function (looter, set) {

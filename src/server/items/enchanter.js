@@ -201,7 +201,9 @@ module.exports = {
 				return;
 
 			result = salvager.salvage(item, true);
-			result.forEach(r => r.quantity = Math.max(1, ~~(r.quantity * mult)));
+			result.forEach(r => {
+				r.quantity = Math.max(1, ~~(r.quantity * mult));
+			});
 		}
 
 		return {

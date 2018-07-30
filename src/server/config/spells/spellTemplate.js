@@ -85,7 +85,7 @@ module.exports = {
 
 			if (this.damage) 
 				this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
-			 else
+			else
 				this.values.heal = ~~(dmg * 100) / 100 + '/tick';
 
 			if (!noSync)

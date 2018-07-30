@@ -124,7 +124,7 @@ module.exports = {
 		if (!canCraft)
 			return;
 
-		recipe.materials.forEach(m => obj.inventory.removeItem(m.name, m.quantity));
+		recipe.materials.forEach(m => obj.inventory.destroyItem(m.name, m.quantity));
 
 		let item = extend(true, {}, recipe.item);
 		item.description += `<br /><br />(Crafted by ${obj.name})`;

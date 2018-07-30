@@ -40,7 +40,7 @@ module.exports = {
 		if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y - offsetY)) {
 			if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y)) 
 				targetPos.y -= offsetY;
-			 else 
+			else 
 				targetPos.x -= offsetX;
 		} else {
 			targetPos.x -= offsetX;

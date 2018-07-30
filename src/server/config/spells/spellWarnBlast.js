@@ -1,8 +1,6 @@
 module.exports = {
 	type: 'warnBlast',
 
-	needLos: false,
-
 	range: 100,
 
 	castingEffect: null,

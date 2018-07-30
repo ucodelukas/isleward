@@ -78,7 +78,7 @@ module.exports = {
 							if (physics.isTileBlocking(targetPos.x + dx, targetPos.y)) {
 								if (physics.isTileBlocking(targetPos.x, targetPos.y + dy)) 
 									break;
-								 else {
+								else {
 									dx = 0;
 									targetPos.y += dy;
 								}

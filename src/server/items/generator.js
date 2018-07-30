@@ -50,7 +50,7 @@ module.exports = {
 			spellGenerators.forEach(g => g.generate(item, blueprint));
 		else if (isCurrency) 
 			currencyGenerators.forEach(g => g.generate(item, blueprint));
-		 else if (blueprint.material) {
+		else if (blueprint.material) {
 			item.material = true;
 			item.sprite = blueprint.sprite;
 			item.noDrop = blueprint.noDrop;

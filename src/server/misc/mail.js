@@ -1,5 +1,3 @@
-let io = require('../security/io');
-
 module.exports = {
 	queue: {},
 	busy: {},

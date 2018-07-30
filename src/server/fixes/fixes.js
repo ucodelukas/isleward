@@ -1,4 +1,3 @@
-let io = require('../security/io');
 let configSkins = require('../config/skins');
 
 module.exports = {

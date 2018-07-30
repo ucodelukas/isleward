@@ -83,7 +83,7 @@ module.exports = {
 
 		if (this.obj.instance.physics.isTileBlocking(x, y)) 
 			this.distance = 7;
-			 else if ((x !== this.obj.x) || (y !== this.obj.y)) {
+		else if ((x !== this.obj.x) || (y !== this.obj.y)) {
 			//if ((x !== this.targetX) || (y !== this.targetY)) {
 			let particles = this.particles;
 

@@ -230,14 +230,12 @@ let spells = [{
 	name: 'Charge',
 	type: 'charge',
 	description: 'Charges at a foe, dealing damage and stunning them for a short period.',
-	type: 'charge',
 	icon: [3, 1],
 	animation: 'raiseShield'
 }, {
 	name: 'Reflect Damage',
 	type: 'reflectdamage',
 	description: 'Gain an ethereal shield that reflects damage until the buff wears off.',
-	type: 'reflectDamage',
 	icon: [3, 2],
 	animation: 'raiseShield'
 }, {
@@ -325,7 +323,7 @@ let spells = [{
 					chance: 0.4
 				}
 			}*/
-		 {
+{
 	name: 'Crystal Spikes',
 	description: 'Jagged crystals break through the ground at your target destination',
 	type: 'warnBlast',

@@ -3,7 +3,7 @@ let events = require('../misc/events');
 let list = {
 
 };
- 	
+
 module.exports = {
 	init: function () {
 		events.emit('onBeforeGetItemEffectList', list);
