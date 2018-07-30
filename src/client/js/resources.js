@@ -28,6 +28,7 @@ define([
 			'animBoss',
 			'white',
 			'ray',
+			'consumables',
 			'images/skins/0001.png',
 			'images/skins/0010.png'
 		],

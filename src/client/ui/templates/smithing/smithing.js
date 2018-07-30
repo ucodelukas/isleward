@@ -247,6 +247,8 @@ define([
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
+			 else if (item.type == 'consumable')
+				spritesheet = '../../../images/consumables.png';
 
 			var el = $(templateItem)
 				.appendTo(container);

@@ -84,11 +84,10 @@ module.exports = {
 
 	craft: function(msg) {
 		let potions = [{
-			name: 'Lesser Healing Potion',
+			name: 'Minor Healing Potion',
 			type: 'consumable',
-			sprite: [3, 1],
-			spritesheet: 'server/mods/event-xmas/images/items.png',
-			description: 'Sometimes you need an amount of health that exceeds the amount a Minor Healing Potion would afford but less than a regular Healing Potion would restore. This potion has you covered.',
+			sprite: [0, 1],
+			description: 'Does not affect emotional scars.',
 			worth: 0,
 			noSalvage: true,
 			noAugment: true,
@@ -99,6 +98,9 @@ module.exports = {
 		if ((!obj) || (!obj.player))
 			return;
 
-		obj.inventory.getItem(extend(true, {}, potions[0]));
+		let item = extend(true, {}, potions[0]);
+		item.description += `<br /><br />(Crafted by ${obj.name})`;
+
+		obj.inventory.getItem(item);
 	}
 };

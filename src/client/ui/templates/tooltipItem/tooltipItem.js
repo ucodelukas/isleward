@@ -230,8 +230,12 @@ define([
 			else
 				this.tooltip.find('.implicitStats').show();
 
-			if (!item.requires)
-				this.tooltip.find('.requires .stats').hide();
+			if (!item.requires) {
+				if (!item.level)
+					this.tooltip.find('.requires').hide();
+				else
+					this.tooltip.find('.requires .stats').hide();
+			}
 			else
 				this.tooltip.find('.requires .stats').show();
 
