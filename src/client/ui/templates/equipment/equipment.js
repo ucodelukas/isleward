@@ -123,19 +123,20 @@ define([
 					if ((runeSlot != null) && (item.slot))
 						skipSpellId = runeSlot;
 
-					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
+					return (item.quickSlot != null || (item.eq && (item.slot || item.runeSlot != null)));
 				}, this)
 				.forEach(function (item) {
 					let imgX = -item.sprite[0] * 64;
 					let imgY = -item.sprite[1] * 64;
 
 					let slot = item.slot;
-					if (!slot) {
+					if (item.runeSlot != null) {
 						let runeSlot = item.runeSlot;
 						if (runeSlot > skipSpellId)
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
-					}
+					} else if (item.quickSlot != null)
+						slot = 'quick-' item.quickSlot;
 
 					let spritesheet = item.spritesheet || '../../../images/items.png';
 
@@ -160,6 +161,7 @@ define([
 
 			let slot = el.attr('slot');
 			let isRune = (slot.indexOf('rune') == 0);
+			const isConsumable = (slot.indexOf('quick') == 0);
 
 			let container = this.find('.itemList')
 				.empty()
@@ -171,6 +173,8 @@ define([
 				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
+					else if (isConsumable)
+						return (item.type === 'consumable');
 					
 					let checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
 					if (slot == 'oneHanded')
@@ -254,6 +258,13 @@ define([
 				data = {
 					itemId: item.id,
 					slot: slot
+				};
+			} else if (item.type === 'consumable') {
+				cpn = 'equipment';
+				method = 'setQuickSlot';
+				data = {
+					itemId: item.id,
+					slot: ~~slot.replace('quick-', '') + 1
 				};
 			}
 

@@ -6,6 +6,8 @@ module.exports = {
 	eq: {},
 	doAutoEq: true,
 
+	quickSlots: {},
+
 	init: function (blueprint) {
 
 	},
@@ -253,6 +255,28 @@ module.exports = {
 		Object.keys(this.eq).forEach(function (slot) {
 			this.unequip(eq[slot]);
 		}, this);
+	},
+
+	setQuickSlot: function (msg) {
+		let obj = this.obj;
+
+		let item = obj.inventory.findItem(msg.itemId);
+		if (!item)
+			return;
+
+		let currentQuickId = this.quickSlots[msg.slot];
+		if (currentQuickId) {
+			let currentQuickItem = obj.inventory.findItem(currentQuickId);
+			if (currentQuickItem) {
+				delete currentQuickItem.quickSlot;
+				obj.syncer.setArray(true, 'inventory', 'getItems', currentQuickItem);
+			}
+		}
+
+		this.quickSlots[msg.slot] = msg.itemId;
+
+		item.quickSlot = msg.slot;
+		obj.syncer.setArray(true, 'inventory', 'getItems', item);
 	},
 
 	unequipAttrRqrGear: function () {

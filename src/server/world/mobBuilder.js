@@ -42,11 +42,13 @@ module.exports = {
 		});
 
 		let cpnMob = mob.addComponent('mob');
-		cpnMob.walkDistance = blueprint.walkDistance;
-		cpnMob.hpMult = blueprint.hpMult || typeDefinition.hpMult;
-		cpnMob.dmgMult = blueprint.dmgMult || typeDefinition.dmgMult;
-		cpnMob.grantRep = blueprint.grantRep;
-		cpnMob.deathRep = blueprint.deathRep;
+		extend(true, cpnMob, {
+			walkDistance: blueprint.walkDistance,
+			hpMult: blueprint.hpMult || typeDefinition.hpMult,
+			dmgMult: blueprint.dmgMult || typeDefinition.dmgMult,
+			grantRep: blueprint.grantRep,
+			deathRep: blueprint.deathRep
+		});
 
 		let spells = extend(true, [], blueprint.spells);
 		spells.forEach(function (s) {

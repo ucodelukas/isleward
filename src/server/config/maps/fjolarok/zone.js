@@ -387,6 +387,13 @@ module.exports = {
 					type: 'alchemy'
 				}
 			}
+		},
+		fireplace: {
+			components: {
+				cpnWorkbench: {
+					type: 'cooking'
+				}
+			}
 		}
 	},
 	mobs: {
@@ -534,6 +541,12 @@ module.exports = {
 						sprite: [11, 0],
 						infinite: true,
 						noSalvage: true
+					}, {
+						name: 'Skewering Stick',
+						material: true,
+						sprite: [0, 7],
+						worth: 2,
+						infinite: true
 					}],
 					level: {
 						min: 1,
@@ -574,7 +587,8 @@ module.exports = {
 							name: 'Empty Vial',
 							material: true,
 							sprite: [0, 9],
-							worth: 10
+							worth: 10,
+							infinite: true
 						}]
 					},
 					faction: {

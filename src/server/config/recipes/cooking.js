@@ -13,7 +13,7 @@ module.exports = [{
 		name: 'Sun Carp',
 		quantity: 1
 	}, {
-		name: 'Stick',
+		name: 'Skewering Stick',
 		quantity: 1
 	}]
 }];

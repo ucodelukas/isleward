@@ -301,7 +301,8 @@ module.exports = {
 			if (layerName.indexOf('walls') > -1)
 				this.collisionMap[x][y] = 1;
 			else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
-				if ((cell === 6) || (cell === 7) || (cell === 54) || (cell === 55) || (cell === 62) || (cell === 63) || (cell === 154) || (cell === 189) || (cell === 190))
+				//Check for water and water-like tiles
+				if ([6, 7, 54, 55, 62, 63, 154, 189, 190].indexOf(cell) > -1)
 					this.collisionMap[x][y] = 1;
 			}
 		},
