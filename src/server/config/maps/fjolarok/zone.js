@@ -21,13 +21,6 @@ module.exports = {
 			type: 'fish',
 			quantity: [6, 12]
 		},
-		estriddoor: {
-			properties: {
-				cpnDoor: {
-					
-				}
-			}
-		},
 		shopestrid: {
 			properties: {
 				cpnNotice: {

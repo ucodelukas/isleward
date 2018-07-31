@@ -277,6 +277,9 @@ module.exports = {
 
 		item.quickSlot = msg.slot;
 		obj.syncer.setArray(true, 'inventory', 'getItems', item);
+
+		console.log(item);
+		console.log(this.quickSlots);
 	},
 
 	unequipAttrRqrGear: function () {

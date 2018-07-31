@@ -136,9 +136,11 @@ define([
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
 					} else if (item.quickSlot != null)
-						slot = 'quick-' item.quickSlot;
+						slot = 'quick-' + item.quickSlot;
 
 					let spritesheet = item.spritesheet || '../../../images/items.png';
+					if (item.type === 'consumable')
+						spritesheet = '../../../images/consumables.png';
 
 					slot = item.equipSlot || slot;
 
@@ -182,6 +184,12 @@ define([
 
 					return ((item.slot == checkSlot) && (!item.eq));
 				}, this);
+
+			items = items
+				.filter(function (item, i) {
+					return (items.firstIndex(f => f.name == item.name) == i);
+				});
+
 			items.splice(0, 0, {
 				name: 'None',
 				slot: this.hoverCompare ? this.hoverCompare.slot : null,
@@ -196,6 +204,8 @@ define([
 					let sprite = item.sprite || [7, 0];
 
 					let spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
+					if (item.type === 'consumable')
+						spriteSheet = '../../../images/consumables.png';
 					let imgX = -sprite[0] * 64;
 					let imgY = -sprite[1] * 64;
 
@@ -238,7 +248,14 @@ define([
 			if (item.empty)
 				method = 'unequip';
 
-			if (!item.slot) {
+			if (item.type === 'consumable') {
+				cpn = 'equipment';
+				method = 'setQuickSlot';
+				data = {
+					itemId: item.id,
+					slot: ~~slot.replace('quick-', '')
+				};
+			} else if (!item.slot) {
 				cpn = 'inventory';
 				method = 'learnAbility';
 				data = {
@@ -258,13 +275,6 @@ define([
 				data = {
 					itemId: item.id,
 					slot: slot
-				};
-			} else if (item.type === 'consumable') {
-				cpn = 'equipment';
-				method = 'setQuickSlot';
-				data = {
-					itemId: item.id,
-					slot: ~~slot.replace('quick-', '') + 1
 				};
 			}
 
