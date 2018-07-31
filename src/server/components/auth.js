@@ -1,8 +1,6 @@
 let bcrypt = require('bcrypt-nodejs');
-let io = require('../security/io');
 let messages = require('../misc/messages');
 let connections = require('../security/connections');
-let leaderboard = require('../leaderboard/leaderboard');
 let skins = require('../config/skins');
 let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
@@ -364,9 +362,11 @@ module.exports = {
 	onLogin: function (msg, storedPassword, err, compareResult) {
 		if (!storedPassword)
 			msg.callback(messages.login.incorrect);
-		else if (compareResult) { //If stored password matches the hashed password entered by the user, log them in directly
+		else if (compareResult) {
+			//If stored password matches the hashed password entered by the user, log them in directly
 			this.onLoginVerified(msg);
-		} else if (msg.data.password === storedPassword) { //If the stored password matches a plaintext password entered by the user; In that case the password gets hashed for the future
+		} else if (msg.data.password === storedPassword) {
+			//If the stored password matches a plaintext password entered by the user; In that case the password gets hashed for the future
 			this.onUnhashedLogin(msg);
 		} else
 			msg.callback(messages.login.incorrect);

@@ -1,9 +1,7 @@
 let roles = require('../../config/roles');
-let atlas = require('../../world/atlas');
 let generator = require('../../items/generator');
 let random = require('../../misc/random');
 let configSlots = require('../../items/config/slots');
-let io = require('../../security/io');
 let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
@@ -78,8 +76,8 @@ module.exports = {
 		}
 
 		if (localCommands.indexOf(actionName) > -1) 
-			this[actionName].call(this, config);
-		 else {
+			this[actionName](config);
+		else {
 			atlas.performAction(this.obj, {
 				cpn: 'social',
 				method: actionName,
@@ -197,7 +195,7 @@ module.exports = {
 		if (target === this.obj.name)
 			return;
 
-		let o = connections.players.find(o => (o.name === target));
+		let o = connections.players.find(f => (f.name === target));
 		if (!o)
 			return;
 
@@ -248,7 +246,7 @@ module.exports = {
 		if (target === this.obj.name)
 			return;
 
-		let o = connections.players.find(o => (o.name === target));
+		let o = connections.players.find(f => (f.name === target));
 		if (!o)
 			return;
 
@@ -332,7 +330,7 @@ module.exports = {
 		let spritesheet = config.spritesheet;
 		delete config.spritesheet;
 
-		let factions = (config.factions || '').split(',');
+		let factionList = (config.factions || '').split(',');
 		delete config.factions;
 
 		let safe = config.safe;
@@ -349,7 +347,7 @@ module.exports = {
 			item.noSalvage = true;
 		}
 
-		factions.forEach(function (f) {
+		factionList.forEach(function (f) {
 			if (f === '')
 				return;
 

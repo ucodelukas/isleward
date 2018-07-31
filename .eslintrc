@@ -5,8 +5,7 @@
 
   "env": {
     "es6": true,
-    "node": true,
-    "jest": true
+    "node": true
   },
 
   "plugins": [
@@ -51,12 +50,15 @@
     "window": false,
     "XMLHttpRequest": false,
     "pit": false,
-    "extend": true,
-    "_": true,
-    "io": true,
-    "cons": true,
-    "atlas": true,
-    "instancer": true
+
+    "extend": false,
+    "_": false,
+    "io": false,
+    "cons": false,
+    "atlas": false,
+    "instancer": false,
+    "leaderboard": false,
+    "clientConfig": false
   },
 
   "rules": {

@@ -108,48 +108,48 @@ module.exports = {
 		}
 	},
 	estrid: {
-		'1': {
+		1: {
 			msg: [{
-				msg: `Is there anything I can help you with today?`,
+				msg: 'Is there anything I can help you with today?',
 				options: [1.1, 1.2, 1.3, 1.4, 1.5]
 			}],
 			options: {
-				'1.1': {
-					msg: `How long have you been working here?`,
+				1.1: {
+					msg: 'How long have you been working here?',
 					goto: 2
 				},
-				'1.3': {
-					msg: `I'd like to browse your wares.`,
+				1.3: {
+					msg: 'I\'d like to browse your wares.',
 					goto: 'tradeBuy'
 				},
-				'1.4': {
-					msg: `I have some items to sell`,
+				1.4: {
+					msg: 'I have some items to sell',
 					goto: 'tradeSell'
 				},
-				'1.5': {
-					msg: `I want to buy something back`,
+				1.5: {
+					msg: 'I want to buy something back',
 					goto: 'tradeBuyback'
 				}
 			}
 		},
-		'2': {
-			msg: `I haven't been working here long, but I was born and raised here by my mother. She ran the shop before me.`,
+		2: {
+			msg: 'I haven\'t been working here long, but I was born and raised here by my mother. She ran the shop before me.',
 			options: {
-				'2.1': {
-					msg: `Where is your mother now?`,
+				2.1: {
+					msg: 'Where is your mother now?',
 					goto: '2-1'
 				},
-				'2.2': {
-					msg: `I'd like to ask something else.`,
+				2.2: {
+					msg: 'I\'d like to ask something else.',
 					goto: 1
 				}
 			}
 		},
 		'2-1': {
-			msg: `A few months ago, she...took ill. She's been bedridden upstairs ever since.`,
+			msg: 'A few months ago, she...took ill. She\'s been bedridden upstairs ever since.',
 			options: {
 				'2-1.1': {
-					msg: `I'd like to ask something else.`,
+					msg: 'I\'d like to ask something else.',
 					goto: 1
 				}
 			}

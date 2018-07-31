@@ -7,7 +7,7 @@ module.exports = {
 		(blueprint.list || []).forEach(function (p) {
 			let template = null;
 			try {
-				let template = require('../config/prophecies/' + p);
+				template = require('../config/prophecies/' + p);
 			} catch (e) {
 				console.log(e);
 			}

@@ -1,4 +1,3 @@
-let atlas = require('../world/atlas');
 let roles = require('../config/roles');
 let events = require('../misc/events');
 
@@ -221,9 +220,9 @@ module.exports = {
 			});
 		} else if (messageString[0] === '$') 
 			this.sendCustomChannelMessage(msg);
-		 else if (messageString[0] === '%') 
+		else if (messageString[0] === '%') 
 			this.sendPartyMessage(msg);
-		 else {
+		else {
 			let prefix = roles.getRoleMessagePrefix(this.obj) || '';
 
 			cons.emit('event', {
@@ -295,10 +294,10 @@ module.exports = {
 			player.social.party = this.party;
 			player.social.updatePartyOnThread();
 
-			let msg = source.name + ' has joined the party';
+			let returnMsg = source.name + ' has joined the party';
 			if (p === sourceId)
-				msg = 'you have joined a party';
-			player.social.sendMessage(msg, 'color-yellowB');
+				returnMsg = 'you have joined a party';
+			player.social.sendMessage(returnMsg, 'color-yellowB');
 
 			player
 				.socket.emit('event', {
@@ -372,15 +371,15 @@ module.exports = {
 			let newLeader = cons.players.find(c => c.id === this.party[0]).social;
 			newLeader.isPartyLeader = true;
 			this.party.forEach(function (p) {
-				let msg = newLeader.obj.name + ' is now the party leader';
+				let returnMsg = newLeader.obj.name + ' is now the party leader';
 				if (p === newLeader.obj.id)
-					msg = 'you are now the party leader';
+					returnMsg = 'you are now the party leader';
 
 				cons.players.find(c => c.id === p).socket.emit('events', {
 					onGetMessages: [{
 						messages: [{
 							class: 'q0',
-							message: msg
+							message: returnMsg
 						}]
 					}]
 				});

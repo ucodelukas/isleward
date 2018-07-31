@@ -114,10 +114,10 @@ module.exports = {
 		});
 	},
 
-	onGetSkins: function (obj, skins) {
+	onGetSkins: function (obj, result) {
 		this.obj.instance.syncer.queue('onGetWardrobeSkins', {
 			id: this.obj.id,
-			skins: skins
+			skins: result
 		}, [obj.serverId]);
 	}
 };

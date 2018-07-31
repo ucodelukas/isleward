@@ -28,18 +28,20 @@ module.exports = {
 		if (!action)
 			return;
 
+		let cpn = null;
+
 		if (action.targetId) {
 			let target = this.obj.instance.objects.find(o => o.id === action.targetId);
 			if (target) {
-				let cpn = target[action.cpn];
+				cpn = target[action.cpn];
 				if ((cpn) && (cpn[action.method]))
-					cpn[action.method].call(cpn, obj, action.args);
+					cpn[action.method](cpn, obj, action.args);
 			}
 
 			return;
 		}
 
-		let cpn = obj[action.cpn];
+		cpn = obj[action.cpn];
 		if ((cpn) && (cpn[action.method]))
 			cpn[action.method].apply(cpn, action.args);
 	},

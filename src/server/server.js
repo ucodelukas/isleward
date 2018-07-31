@@ -5,9 +5,9 @@ module.exports = {
 	init: function (callback) {
 		let app = require('express')();
 		let server = require('http').createServer(app);
-		let io = require('socket.io')(server);
+		let socketServer = require('socket.io')(server);
 
-		global.cons.sockets = io.sockets;
+		global.cons.sockets = socketServer.sockets;
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
@@ -27,7 +27,7 @@ module.exports = {
 		app.get('/', this.requests.root.bind(this));
 		app.get(/^(.*)$/, this.requests.default.bind(this));
 
-		io.on('connection', this.listeners.onConnection.bind(this));
+		socketServer.on('connection', this.listeners.onConnection.bind(this));
 
 		let port = process.env.PORT || config.port || 4000;
 		server.listen(port, function () {
@@ -73,10 +73,6 @@ module.exports = {
 	},
 	requests: {
 		root: function (req, res) {
-			//let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-			//if (ip !== '::1')
-			//	return;
-
 			res.sendFile('index.html');
 		},
 		default: function (req, res) {

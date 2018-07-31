@@ -95,9 +95,6 @@ module.exports = {
 
 		'crystal whelk': {
 			level: 16,
-			spells: [{
-				type: 'melee'
-			}],
 
 			regular: {
 				drops: {

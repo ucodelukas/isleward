@@ -66,25 +66,6 @@ module.exports = {
 				}
 			}
 		},
-		shopestrid: {
-			properties: {
-				cpnNotice: {
-					actions: {
-						enter: {
-							cpn: 'dialogue',
-							method: 'talk',
-							args: [{
-								targetName: 'estrid'
-							}]
-						},
-						exit: {
-							cpn: 'dialogue',
-							method: 'stopTalk'
-						}
-					}
-				}
-			}
-		},
 		shopvikar: {
 			properties: {
 				cpnNotice: {

@@ -447,7 +447,6 @@ module.exports = {
 
 		delete item.pos;
 
-		let io = require('../security/io');
 		io.get({
 			ent: msg.recipient,
 			field: 'character',

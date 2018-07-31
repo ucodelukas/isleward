@@ -55,6 +55,8 @@ module.exports = {
 	},
 
 	getState: function (sourceObj, state) {
+		let result = null;
+
 		state = state || 1;
 
 		//Goto?
@@ -93,7 +95,7 @@ module.exports = {
 			let cpn = sourceObj[stateConfig.cpn];
 			let newArgs = extend(true, [], stateConfig.args);
 			newArgs.push(this.obj);
-			let result = cpn[stateConfig.method].apply(cpn, newArgs);
+			result = cpn[stateConfig.method].apply(cpn, newArgs);
 
 			if (stateConfig.goto) {
 				if (result)
@@ -116,7 +118,7 @@ module.exports = {
 				return;
 		}
 
-		let result = {
+		result = {
 			id: this.obj.id,
 			msg: null,
 			from: this.obj.name,

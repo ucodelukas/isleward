@@ -38,8 +38,8 @@ module.exports = {
 		let e = {
 			type: 'effects',
 			effects: this.effects
-				.map(e => e.save())
-				.filter(e => e != null)
+				.map(f => f.save())
+				.filter(f => f != null)
 		};
 
 		return e;
@@ -53,8 +53,8 @@ module.exports = {
 		let effects = this.effects;
 		if ((effects.length > 0) && (effects[0].obj)) {
 			effects = effects
-				.map(e => e.simplify())
-				.filter(e => e != null);
+				.map(f => f.simplify())
+				.filter(f => f != null);
 		}
 		e.effects = effects;
 

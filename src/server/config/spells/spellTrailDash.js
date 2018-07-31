@@ -148,15 +148,10 @@ module.exports = {
 	},
 
 	cast: function (action) {
-		while (true) {
+		do {
 			this.targetX = action.target.x + ~~(Math.random() * 6) - 3;
 			this.targetY = action.target.y + ~~(Math.random() * 6) - 3;
-
-			if (this.obj.instance.physics.isTileBlocking(this.targetX, this.targetY))
-				continue;
-			else
-				break;
-		}
+		} while (this.obj.instance.physics.isTileBlocking(this.targetX, this.targetY));
 
 		this.currentX = this.obj.x;
 		this.currentY = this.obj.y;

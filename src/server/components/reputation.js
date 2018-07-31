@@ -61,10 +61,10 @@ module.exports = {
 	},
 
 	canEquipItem: function (item) {
-		let factions = item.factions;
-		let fLen = factions.length;
+		let itemFactions = item.factions;
+		let fLen = itemFactions.length;
 		for (let i = 0; i < fLen; i++) {
-			let f = factions[i];
+			let f = itemFactions[i];
 			if (this.getTier(f.id) < f.tier)
 				return false;
 		}
@@ -209,7 +209,7 @@ module.exports = {
 	},
 
 	syncFaction: function (factionId, full) {
-		let l = this.list.find(l => (l.id === factionId));
+		let l = this.list.find(f => (f.id === factionId));
 		let faction = {
 			id: factionId,
 			rep: l.rep,

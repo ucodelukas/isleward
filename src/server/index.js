@@ -1,9 +1,6 @@
 let globals = require('./globals');
 let server = require('./server');
-let atlas = require('./world/atlas');
 let components = require('./components/components');
-let leaderboard = require('./leaderboard/leaderboard');
-let io = require('./security/io');
 let mods = require('./misc/mods');
 let mtx = require('./mtx/mtx');
 let animations = require('./config/animations');
@@ -33,7 +30,6 @@ let startup = {
 	},
 
 	onModsLoaded: function () {
-		globals.init();
 		classes.init();
 		spellsConfig.init();
 		spells.init();

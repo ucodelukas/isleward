@@ -32,9 +32,8 @@ module.exports = {
 				};
 
 				item.effects.push(result);
-			}
-			//This is a hack for items that were never generated properly
-			else if (!result.chance) {
+			} else if (!result.chance) {
+				//This is a hack for items that were never generated properly
 				result.chance = chanceRoll;
 				result.text = chanceRoll + '% chance on kill to summon a critter to assist you in battle';
 			}

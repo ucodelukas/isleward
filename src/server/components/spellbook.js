@@ -64,7 +64,7 @@ module.exports = {
 
 		let spells = this.spells;
 		if ((spells.length > 0) && (spells[0].obj)) 
-			spells = spells.map(s => s.simplify());
+			spells = spells.map(f => f.simplify());
 		
 		s.spells = spells;
 
@@ -211,7 +211,8 @@ module.exports = {
 					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
 			}
 
-			exists.unlearn && exists.unlearn();
+			if (exists.unlearn)
+				exists.unlearn();
 
 			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
 			this.auto.spliceWhere(a => a.spell === id);
@@ -521,7 +522,7 @@ module.exports = {
 		}
 	},
 
-	sendAnnouncement: function (msg, global) {
+	sendAnnouncement: function (msg) {
 		process.send({
 			method: 'events',
 			data: {

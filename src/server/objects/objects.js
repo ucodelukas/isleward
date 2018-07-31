@@ -1,5 +1,4 @@
 let objBase = require('./objBase');
-let leaderboard = require('../leaderboard/leaderboard');
 
 module.exports = {
 	nextId: 0,

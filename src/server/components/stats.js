@@ -208,7 +208,7 @@ module.exports = {
 			this.addStat(morphStat, value);
 		} else if (stat === 'vit') 
 			this.addStat('hpMax', (value * this.statScales.vitToHp));
-		 else if (stat === 'allAttributes') {
+		else if (stat === 'allAttributes') {
 			['int', 'str', 'dex'].forEach(function (s) {
 				this.addStat(s, value);
 			}, this);
@@ -705,7 +705,7 @@ module.exports = {
 		let time = scheduler.getTime();
 		if (!lootStats) 
 			this.stats.lootStats[mob.name] = time;
-		 else
+		else
 			return ((lootStats.day !== time.day), (lootStats.month !== time.month));
 	},
 

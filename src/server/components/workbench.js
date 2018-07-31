@@ -103,7 +103,7 @@ module.exports = {
 
 		let sendRecipe = extend(true, {}, recipe);
 		(sendRecipe.materials || []).forEach(function (m) {
-			m.need = !items.some(i => (i.name === m.name && (m.quantity == 1 || i.quantity >= m.quantity)));
+			m.need = !items.some(i => (i.name === m.name && (m.quantity === 1 || i.quantity >= m.quantity)));
 		});
 
 		this.resolveCallback(msg, sendRecipe);
@@ -119,7 +119,7 @@ module.exports = {
 			return;
 
 		const items = obj.inventory.items;
-		let canCraft = recipe.materials.every(m => (items.some(i => i.name == m.name && (m.quantity == 1 || i.quantity >= m.quantity))));
+		let canCraft = recipe.materials.every(m => (items.some(i => i.name === m.name && (m.quantity === 1 || i.quantity >= m.quantity))));
 
 		if (!canCraft)
 			return;

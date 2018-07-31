@@ -64,17 +64,17 @@ module.exports = {
 		if (!slot)
 			slot = item.equipSlot || item.slot;
 		if (slot === 'twoHanded') {
-			let currentEqId = this.eq.offHand;
-			if (currentEqId != null)
-				this.unequip(currentEqId);
+			let offHandEqId = this.eq.offHand;
+			if (offHandEqId != null)
+				this.unequip(offHandEqId);
 
 			slot = 'oneHanded';
 		} else if (slot === 'offHand') {
-			let currentEqId = this.eq.oneHanded;
-			if (currentEqId != null) {
-				let currentEq = this.obj.inventory.findItem(currentEqId);
-				if ((currentEq != null) && (currentEq.slot === 'twoHanded'))
-					this.unequip(currentEqId);
+			let oneHandedEqId = this.eq.oneHanded;
+			if (oneHandedEqId != null) {
+				let oneHandedEq = this.obj.inventory.findItem(oneHandedEqId);
+				if (oneHandedEq && oneHandedEq.slot === 'twoHanded')
+					this.unequip(oneHandedEqId);
 			}
 		}
 

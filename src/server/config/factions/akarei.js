@@ -59,19 +59,19 @@ module.exports = {
 				if (roll >= effect.properties.chance)
 					return;
 
-				let cbExplode = function (target) {
-					if ((this.destroyed) || (target.destroyed))
+				let cbExplode = function (boundTarget) {
+					if ((this.destroyed) || (boundTarget.destroyed))
 						return;
 
-					let damage = combat.getDamage({
+					let damageConfig = combat.getDamage({
 						source: this,
-						target: target,
+						target: boundTarget,
 						damage: item.level * 5,
 						element: 'arcane',
 						noCrit: true
 					});
 
-					target.stats.takeDamage(damage, 1, this);
+					boundTarget.stats.takeDamage(damageConfig, 1, this);
 				};
 
 				this.instance.syncer.queue('onGetObject', {

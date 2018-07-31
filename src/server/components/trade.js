@@ -6,7 +6,7 @@ module.exports = {
 	type: 'trade',
 
 	items: [],
-	buyback: {},
+	buybackList: {},
 
 	maxBuyback: 10,
 
@@ -99,7 +99,7 @@ module.exports = {
 		let markup = target.trade.markup.sell;
 
 		if (msg.action === 'buyback') {
-			itemList = target.trade.buyback[this.obj.name] || [];
+			itemList = target.trade.buybackList[this.obj.name] || [];
 			markup = target.trade.markup.buy;
 		}
 
@@ -262,14 +262,14 @@ module.exports = {
 		this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 		this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 
-		let buyback = this.buyback;
+		let buybackList = this.buybackList;
 		let name = this.obj.name;
-		if (!buyback[name])
-			buyback[name] = [];
+		if (!buybackList[name])
+			buybackList[name] = [];
 
-		buyback[name].push(item);
-		if (buyback[name].length > this.maxBuyback)
-			buyback[name].splice(0, 1);
+		buybackList[name].push(item);
+		if (buybackList[name].length > this.maxBuyback)
+			buybackList[name].splice(0, 1);
 	},
 
 	startSell: function (msg) {
@@ -334,7 +334,7 @@ module.exports = {
 	},
 
 	removeBuyback: function (itemId, name) {
-		return (this.buyback[name] || []).spliceFirstWhere(i => i.id === itemId);
+		return (this.buybackList[name] || []).spliceFirstWhere(i => i.id === itemId);
 	},
 
 	getItems: function (requestedBy) {
@@ -376,7 +376,7 @@ module.exports = {
 	},
 
 	findBuyback: function (itemId, sourceName) {
-		return (this.buyback[sourceName] || []).find(i => i.id === itemId);
+		return (this.buybackList[sourceName] || []).find(i => i.id === itemId);
 	},
 
 	resolveCallback: function (msg, result) {

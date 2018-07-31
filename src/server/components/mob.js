@@ -49,13 +49,12 @@ module.exports = {
 		}
 
 		if (!this.goHome) {
-			//Are we in fight mode?
 			if ((target) && (target !== obj) && ((!obj.follower) || (obj.follower.master !== target))) {
+				//Are we in fight mode?
 				this.fight(target);
 				return;
-			}
-			//Is fight mode over?
-			else if ((!target) && (this.target)) {
+			} else if ((!target) && (this.target)) {
+				//Is fight mode over?
 				this.target = null;
 				obj.clearQueue();
 				this.goHome = true;

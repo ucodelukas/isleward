@@ -21,16 +21,6 @@ module.exports = {
 				count: 0
 			}
 		},
-		'royal guard': {
-			level: 50,
-			deathRep: -15,
-
-			walkDistance: 0,
-
-			rare: {
-				count: 0
-			}
-		},
 		princess: {
 			level: 100,
 			deathRep: -50,

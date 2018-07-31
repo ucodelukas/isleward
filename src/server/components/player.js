@@ -1,4 +1,3 @@
-let atlas = require('../world/atlas');
 let classes = require('../config/spirits');
 let roles = require('../config/roles');
 let serverConfig = require('../config/serverConfig');
