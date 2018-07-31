@@ -9,5 +9,11 @@ module.exports = [{
 		noAugment: true,
 		uses: 1
 	},
-	materials: []
+	materials: [{
+		name: 'Skyblossom',
+		quantity: 3
+	}, {
+		name: 'Empty Vial',
+		quantity: 1
+	}]
 }];

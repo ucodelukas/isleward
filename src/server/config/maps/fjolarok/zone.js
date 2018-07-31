@@ -24,8 +24,7 @@ module.exports = {
 		estriddoor: {
 			properties: {
 				cpnDoor: {
-					locked: true,
-					key: 'estrid'
+					
 				}
 			}
 		},
@@ -588,12 +587,18 @@ module.exports = {
 			properties: {
 				cpnTrade: {
 					items: {
-						min: 5,
-						max: 10
+						min: 0,
+						max: 0,
+						extra: [{
+							name: 'Empty Vial',
+							material: true,
+							sprite: [0, 9],
+							worth: 10
+						}]
 					},
-					level: {
-						min: 5,
-						max: 15
+					faction: {
+						id: 'fjolgard',
+						tier: 5
 					},
 					markup: {
 						buy: 0.25,
