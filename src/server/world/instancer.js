@@ -245,7 +245,7 @@ module.exports = {
 
 				instance.syncer.update();
 
-				if (instance.closeTtl != null) {
+				if (instance.closeTtl) {
 					let hasPlayers = instance.objects.objects.some(o => o.player);
 					if (hasPlayers) {
 						delete instance.closeTtl;
@@ -261,8 +261,8 @@ module.exports = {
 				} else {
 					let isEmpty = !instance.objects.objects.some(o => o.player);
 					if (isEmpty) {
-						//Zones reset after being empty for 10 minutes
-						instance.closeTtl = 2;
+						//Zones reset after being empty for 2 minutes (about 342 ticks)
+						instance.closeTtl = 342;
 					}
 				}
 			}

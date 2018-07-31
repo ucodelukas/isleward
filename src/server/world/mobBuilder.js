@@ -29,7 +29,8 @@ module.exports = {
 
 				if (typeDefinition.sheetName)
 					mob.sheetName = typeDefinition.sheetName;
-				if (typeDefinition.cell != null)
+
+				if (typeDefinition.cell)
 					mob.cell = typeDefinition.cell;
 			}
 		}
@@ -61,7 +62,7 @@ module.exports = {
 		});
 
 		let attackable = blueprint.attackable;
-		if ((attackable === undefined) || (attackable === true)) {
+		if (attackable !== false) {
 			mob.addComponent('aggro', {
 				faction: blueprint.faction
 			});

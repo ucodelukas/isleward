@@ -170,10 +170,9 @@ module.exports = {
 			if (!l.zonePrint)
 				return;
 
-			if (l.zonePrint.level != null)
-				l.zonePrint.level = level;
+			l.zonePrint.level = level;
 
-			if ((!l.mob) || (l.mob.destroyed))
+			if (!l.mob || l.mob.destroyed)
 				return;
 
 			this.mobBuilder.scale(l.mob, level);

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 module.exports = {
 	type: 'service_account',
 	project_id: '',

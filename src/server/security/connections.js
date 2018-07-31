@@ -51,7 +51,7 @@ module.exports = {
 	route: function (socket, msg) {
 		let player = null;
 
-		if (msg.id != null) {
+		if (msg.id) {
 			player = this.players.find(p => p.id === msg.id);
 			let source = this.players.find(p => p.socket.id === socket.id);
 			if (!source)
@@ -96,9 +96,8 @@ module.exports = {
 		let keys = Object.keys(player);
 		keys.forEach(function (k) {
 			let val = player[k];
-			if ((val != null) && (typeof (val) === 'object') && (val.type)) {
-				let type = val.type;
-				if ((type !== 'player') && (type !== 'auth') && (type !== 'syncer')) 
+			if (val && val.type) {
+				if (['player', 'auth', 'syncer'].indexOf(type) === -1)
 					delete player[k];
 			}
 		});

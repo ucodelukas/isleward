@@ -1,7 +1,7 @@
 let objBase = require('./objBase');
 
 module.exports = {
-	nextId: 0,
+	lastId: 0,
 
 	objects: [],
 
@@ -11,7 +11,7 @@ module.exports = {
 	},
 
 	getNextId: function () {
-		return this.nextId++;
+		return ++this.lastId;
 	},
 
 	build: function (skipPush, clientObj) {
@@ -20,7 +20,7 @@ module.exports = {
 		if (clientObj)
 			o.update = null;
 		else {
-			o.id = this.nextId++;
+			o.id = this.getNextId();
 			o.addComponent('syncer');
 			o.instance = this.instance;
 
