@@ -64,8 +64,7 @@ module.exports = {
 							i--;
 						}
 					}
-				} else 
-					console.log(player.name + ' has no stash');
+				}
 			} else {
 				if ((r.msg) && (!sentMessages.some(s => (s === r.msg)))) {
 					player.instance.syncer.queue('onGetMessages', {
@@ -119,10 +118,6 @@ module.exports = {
 
 		if (!items.push)
 			items = [items];
-
-		let player = null;
-		if (this.instance)
-			player = this.instance.objects.objects.find(o => (o.name === playerName));
 
 		io.get({
 			ent: playerName,

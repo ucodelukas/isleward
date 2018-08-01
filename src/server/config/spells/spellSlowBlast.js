@@ -1,14 +1,3 @@
-let cpnFirePatch = {
-	type: 'firePatch',
-
-	collisionEnter: function (o) {
-		if ((o.player) || (!o.stats))
-			return;
-
-		o.stats.takeDamage(amount, 1, this.caster);
-	}
-};
-
 module.exports = {
 	type: 'slowBlast',
 
@@ -33,14 +22,14 @@ module.exports = {
 			return;
 		} this.intCd = this.intCdMax;
 
+		let obj = this.obj;
+
+		let x = obj.x;
+		let y = obj.y;
+
 		for (let a = 0; a < this.thickness; a++) {
 			this.radius++;
 			let radius = this.radius;
-
-			let obj = this.obj;
-
-			let x = obj.x;
-			let y = obj.y;
 
 			let physics = obj.instance.physics;
 			let syncer = obj.instance.syncer;

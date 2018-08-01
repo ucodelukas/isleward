@@ -1,4 +1,3 @@
-let spawners = require('../../world/spawners');
 let mobBuilder = require('../../world/mobBuilder');
 
 module.exports = {

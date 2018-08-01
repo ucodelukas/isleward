@@ -1,5 +1,3 @@
-let slots = require('../../../items/generators/slots');
-
 module.exports = {
 	type: 'lootGen',
 
@@ -13,7 +11,7 @@ module.exports = {
 	build: function () {
 		if ((!this.mobName) || (!this.item)) {
 			let mobTypes = this.obj.instance.spawners.zone.mobs;
-			let mobCounts = this.obj.instance.spawners.mobTypes;
+
 			let keys = Object.keys(mobTypes).filter(function (m) {
 				let mobBlueprint = mobTypes[m];
 

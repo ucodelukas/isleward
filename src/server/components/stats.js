@@ -171,18 +171,12 @@ module.exports = {
 
 		if (values.mana < manaMax) {
 			values.mana += regenMana;
-			//Show others what mana is?
-			let onlySelf = true;
-			if (this.obj.player)
-				onlySelf = false;
-			this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
+			this.obj.syncer.setObject(!this.obj.player, 'stats', 'values', 'mana', values.mana);
 		}
 
 		if (values.mana > manaMax) {
 			values.mana = manaMax;
-			if (this.obj.player)
-				onlySelf = false;
-			this.obj.syncer.setObject(onlySelf, 'stats', 'values', 'mana', values.mana);
+			this.obj.syncer.setObject(!this.obj.player, 'stats', 'values', 'mana', values.mana);
 		}
 	},
 
@@ -341,7 +335,6 @@ module.exports = {
 
 		//Who should get xp?
 		let aggroList = target.aggro.list;
-		let hpMax = target.stats.values.hpMax;
 		let aLen = aggroList.length;
 		for (let i = 0; i < aLen; i++) {
 			let a = aggroList[i];

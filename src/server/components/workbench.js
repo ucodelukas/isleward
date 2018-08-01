@@ -8,7 +8,7 @@ module.exports = {
 	init: function (blueprint) {
 		this.craftType = blueprint.type;
 
-		let o = this.obj.instance.objects.buildObjects([{
+		this.obj.instance.objects.buildObjects([{
 			properties: {
 				x: this.obj.x - 1,
 				y: this.obj.y - 1,

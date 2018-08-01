@@ -158,10 +158,10 @@ module.exports = {
 
 		getRank: function (event, playerName) {
 			let ranks = event.ranks;
-			if (!event.ranks)
+			if (!ranks)
 				return -1;
 
-			return (event.ranks[playerName] || -1);
+			return (ranks[playerName] || -1);
 		}
 	},
 

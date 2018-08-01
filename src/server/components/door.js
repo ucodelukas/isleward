@@ -23,7 +23,7 @@ module.exports = {
 			this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, true);
 		}
 
-		let o = this.obj.instance.objects.buildObjects([{
+		this.obj.instance.objects.buildObjects([{
 			properties: {
 				x: this.obj.x - 1,
 				y: this.obj.y - 1,

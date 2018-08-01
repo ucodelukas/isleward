@@ -44,7 +44,7 @@ module.exports = {
 		let damage = this.getDamage(target);
 		target.stats.takeDamage(damage, this.threatMult, this.obj);
 
-		let targetEffect = target.effects.addEffect({
+		target.effects.addEffect({
 			type: 'stunned',
 			ttl: this.stunDuration
 		});

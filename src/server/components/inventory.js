@@ -1,7 +1,6 @@
 let generator = require('../items/generator');
 let salvager = require('../items/salvager');
 let enchanter = require('../items/enchanter');
-let objects = require('../objects/objects');
 let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
@@ -865,9 +864,9 @@ module.exports = {
 		}
 
 		let blueprint = this.blueprint;
+		let magicFind = (blueprint.magicFind || 0);
 
 		let savedItems = extend(true, [], this.items);
-		let instancedItems = extend(true, [], this.items);
 		this.items = [];
 
 		let dropEvent = {
@@ -877,7 +876,6 @@ module.exports = {
 		playerObject.fireEvent('beforeGenerateLoot', dropEvent);
 
 		if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
-			let magicFind = (blueprint.magicFind || 0);
 			let bonusMagicFind = killSource.stats.values.magicFind;
 
 			let rolls = blueprint.rolls;
@@ -897,7 +895,7 @@ module.exports = {
 				};
 
 				let statValues = this.obj.stats.values;
-				useItem = generator.generate(itemBlueprint, statValues.level);
+				let useItem = generator.generate(itemBlueprint, statValues.level);
 
 				this.getItem(useItem);
 			}
@@ -939,8 +937,6 @@ module.exports = {
 
 	giveItems: function (obj, hideMessage) {
 		let objInventory = obj.inventory;
-
-		let messages = [];
 
 		let items = this.items;
 		let iLen = items.length;

@@ -1,5 +1,3 @@
-let generatorStats = require('../items/generators/stats');
-
 module.exports = {
 	type: 'equipment',
 
@@ -30,8 +28,6 @@ module.exports = {
 	autoEquip: function (itemId) {
 		if (!this.doAutoEq)
 			return;
-
-		let stats = this.obj.stats.values;
 
 		let item = this.obj.inventory.findItem(itemId);
 		if (!item)
@@ -113,15 +109,12 @@ module.exports = {
 				slot = 'finger-2';
 		}
 
-		let spellId = null;
 		let currentEqId = this.eq[slot];
 		let currentEq = this.obj.inventory.findItem(currentEqId);
 		if (currentEq === item)
 			return;
-		if (currentEqId != null) {
-			spellId = currentEq.spellId;
+		if (currentEqId != null)
 			this.unequip(currentEqId);
-		}
 
 		let stats = item.stats;
 		for (let s in stats) {
@@ -181,11 +174,8 @@ module.exports = {
 	},
 	unequip: function (itemId) {
 		let item = itemId;
-		let slot = null;
-		if (typeof (itemId) === 'object') {
-			slot = itemId.slot;
+		if (typeof (itemId) === 'object')
 			itemId = itemId.itemId;
-		}
 
 		if (item.id == null)
 			item = this.obj.inventory.findItem(itemId);

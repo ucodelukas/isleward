@@ -2,7 +2,7 @@ let pathfinder = require('../misc/pathfinder');
 
 let sqrt = Math.sqrt.bind(Math);
 let ceil = Math.ceil.bind(Math);
-let random = Math.random.bind(Math);
+let mathRand = Math.random.bind(Math);
 
 module.exports = {
 	graph: null,
@@ -277,8 +277,8 @@ module.exports = {
 
 		if (!to) {
 			to = {
-				x: ~~(random() * grid.length),
-				y: ~~(random() * grid[0].length)
+				x: ~~(mathRand() * grid.length),
+				y: ~~(mathRand() * grid[0].length)
 			};
 		}
 

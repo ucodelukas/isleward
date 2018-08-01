@@ -1,6 +1,7 @@
 let fileLister = require('../misc/fileLister');
 let events = require('../misc/events');
 let pathUtilities = require('path');
+const componentBase = require('./componentBase');
 
 let onReady = null;
 
@@ -28,14 +29,12 @@ module.exports = {
 	},
 
 	getComponentFile: function (path) {
-		let fileName = pathUtilities.basename(path);
-		fileName = fileName.replace('.js', '');
-
 		let cpn = require(path);
 		this.onGetComponent(cpn);
 	},
 
 	onGetComponent: function (template) {
+		template = extend(true, {}, componentBase, template);
 		this.components[template.type] = template;
 	}
 };

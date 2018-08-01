@@ -89,7 +89,6 @@ module.exports = {
 
 		//find mobs in range
 		let range = this.range;
-		let faction = this.faction;
 		let inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
 
 		if (inRange.length === 0)
@@ -100,7 +99,7 @@ module.exports = {
 			let enemy = inRange[i];
 
 			//The length could change
-			lLen = list.length;
+			let lLen = list.length;
 			for (let j = 0; j < lLen; j++) {
 				//Set the enemy to null so we need we need to continue
 				if (list[j].obj === enemy)
@@ -244,7 +243,6 @@ module.exports = {
 		this.list = [];
 	},
 	unAggro: function (obj, amount) {
-		let oId = obj.id;
 		let list = this.list;
 		let lLen = list.length;
 

@@ -1,8 +1,8 @@
-let globals = require('./globals');
+require('./globals');
+
 let server = require('./server');
 let components = require('./components/components');
 let mods = require('./misc/mods');
-let mtx = require('./mtx/mtx');
 let animations = require('./config/animations');
 let skins = require('./config/skins');
 let factions = require('./config/factions');

@@ -40,8 +40,6 @@ module.exports = {
 	die: function () {
 		this.auto = [];
 
-		let mana = this.obj.stats.values.mana;
-
 		this.spells.forEach(function (s) {
 			let reserve = s.manaReserve;
 
@@ -204,7 +202,6 @@ module.exports = {
 
 		if (exists) {
 			if ((exists.manaReserve) && (exists.active)) {
-				let mana = this.obj.stats.values.mana;
 				let reserve = exists.manaReserve;
 
 				if (reserve.percentage)
@@ -314,7 +311,6 @@ module.exports = {
 				this.sendAnnouncement('Insufficient mana to cast spell');
 			success = false;
 		} else if (spell.manaReserve) {
-			let mana = this.obj.stats.values.mana;
 			let reserve = spell.manaReserve;
 
 			if (reserve.percentage) {
@@ -453,7 +449,6 @@ module.exports = {
 				continue;
 			}
 
-			let spell = this.spells[a.spell];
 			if (this.cast(a, true))
 				didCast = true;
 		}

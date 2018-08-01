@@ -1,37 +1,3 @@
-let dropsConfig = {
-	//mtx
-	summonPumpkinSkeleton: {
-		name: 'Summon Pumpkin Skeleton',
-		type: 'mtx',
-		effects: [{
-			mtx: 'summonPumpkinSkeleton'
-		}],
-		spritesheet: 'FOLDERNAME/images/items.png',
-		sprite: [3, 0],
-		noDrop: true,
-		noDestroy: true,
-		noSalvage: true
-	},
-
-	hauntedIceSpear: {
-		name: 'Haunted Ice Spear',
-		type: 'mtx',
-		effects: [{
-			mtx: 'hauntedIceSpear'
-		}],
-		spritesheet: 'FOLDERNAME/images/items.png',
-		sprite: [3, 0],
-		noDrop: true,
-		noDestroy: true,
-		noSalvage: true
-	}
-};
-
-let gatherDrops = {
-	summonPumpkinSkeleton: 0.001,
-	hauntedIceSpear: 0.001
-};
-
 module.exports = {
 	name: 'Soul\'s Moor',
 	description: 'The Pumpkin Sailor has returned to the shores of the living.',

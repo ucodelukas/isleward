@@ -107,9 +107,6 @@ module.exports = {
 		this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
 		if (isFish) {
-			let rod = this.obj.equipment.eq.tool;
-			rod = this.obj.inventory.findItem(rod);
-
 			let catchChance = 40 + this.obj.stats.values.catchChance;
 			if (~~(Math.random() * 100) >= catchChance) {
 				process.send({
@@ -156,8 +153,6 @@ module.exports = {
 		}
 
 		if (isFish) {
-			let rod = this.obj.equipment.eq.tool;
-			rod = this.obj.inventory.findItem(rod);
 			let itemChance = 1 + this.obj.stats.values.fishItems;
 			if (~~(Math.random() * 100) < itemChance) {
 				gatherResult.items = [{
@@ -227,13 +222,10 @@ module.exports = {
 			fish: 'fish for'
 		}[nodeType]);
 
-		let success = true;
 		if (nodeType === 'fish') {
 			let rod = this.obj.equipment.eq.tool;
-			if (rod == null) {
-				success = false;
+			if (rod == null)
 				msg = 'You need a fishing rod to fish';
-			}
 		}
 
 		process.send({

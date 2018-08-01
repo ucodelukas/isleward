@@ -162,7 +162,7 @@ module.exports = {
 
 		particles.chance = 0.1;
 
-		let obj = this.obj.instance.objects.buildObjects([{
+		this.obj.instance.objects.buildObjects([{
 			sheetName: `${this.folderName}/images/mobs.png`,
 			cell: cell,
 			x: pos.x,

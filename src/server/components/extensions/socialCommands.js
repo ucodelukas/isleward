@@ -1,6 +1,5 @@
 let roles = require('../../config/roles');
 let generator = require('../../items/generator');
-let random = require('../../misc/random');
 let configSlots = require('../../items/config/slots');
 let factions = require('../../config/factions');
 let connections = require('../../security/connections');

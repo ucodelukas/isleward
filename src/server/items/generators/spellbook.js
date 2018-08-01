@@ -2,8 +2,6 @@ let spells = require('../../config/spells');
 let spellsConfig = require('../../config/spellsConfig');
 let configTypes = require('../config/types');
 
-let maxQuality = 5;
-
 module.exports = {
 	generate: function (item, blueprint) {
 		blueprint = blueprint || {};

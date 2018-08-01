@@ -58,7 +58,8 @@
     "atlas": false,
     "instancer": false,
     "leaderboard": false,
-    "clientConfig": false
+    "clientConfig": false,
+    "random": false
   },
 
   "rules": {
@@ -133,7 +134,7 @@
     "no-undef-init": 2,
     "no-undef": 1,
     "no-undefined": 1,
-    "no-unused-vars": 1,
+    "no-unused-vars": [1, {"args": "none"}],
     "no-use-before-define": 2,
     "no-mixed-requires": [2,false],
     "no-new-require": 2,

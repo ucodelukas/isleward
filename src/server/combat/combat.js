@@ -34,7 +34,7 @@ module.exports = {
 				let statType = config.statType;
 				if (!(statType instanceof Array))
 					statType = [statType];
-				let dmg = 0;
+
 				statType.forEach(function (s) {
 					statValue += srcValues[s];
 				});

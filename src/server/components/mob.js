@@ -1,5 +1,3 @@
-let itemGenerator = require('../items/generator');
-
 let abs = Math.abs.bind(Math);
 let rnd = Math.random.bind(Math);
 let max = Math.max.bind(Math);

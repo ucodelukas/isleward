@@ -4,7 +4,7 @@ module.exports = {
 	type: 'wardrobe',
 
 	init: function (blueprint) {
-		let o = this.obj.instance.objects.buildObjects([{
+		this.obj.instance.objects.buildObjects([{
 			properties: {
 				x: this.obj.x - 1,
 				y: this.obj.y - 1,

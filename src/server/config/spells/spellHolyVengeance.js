@@ -23,7 +23,7 @@ module.exports = {
 			}, -1);
 		}
 
-		let selfEffect = target.effects.addEffect({
+		target.effects.addEffect({
 			type: 'holyVengeance',
 			ttl: this.duration
 		});

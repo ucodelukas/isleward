@@ -30,8 +30,6 @@ module.exports = {
 	},
 
 	build: function (callback) {
-		let map = this.instance.map.clientMap.map;
-
 		this.tiles.forEach(function (t) {
 			t = t.split('|');
 			this.customize(t[0], t[1], t[2], true);

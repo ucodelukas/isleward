@@ -97,7 +97,7 @@ module.exports = {
 		keys.forEach(function (k) {
 			let val = player[k];
 			if (val && val.type) {
-				if (['player', 'auth', 'syncer'].indexOf(type) === -1)
+				if (['player', 'auth', 'syncer'].indexOf(val.type) === -1)
 					delete player[k];
 			}
 		});

@@ -1,6 +1,5 @@
 let fileLister = require('../misc/fileLister');
 let events = require('../misc/events');
-let util = require('util');
 
 let cbDone = null;
 

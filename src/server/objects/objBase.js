@@ -357,5 +357,30 @@ module.exports = {
 		}
 
 		this.components = null;
+	},
+
+	toString: function () {
+		let res = {};
+
+		for (let p in this) {
+			if (['components', 'syncer'].indexOf(p) > -1)
+				continue;
+
+			let val = this[p];
+			
+			let stringVal = (val && val.toString) ? val.toString() : val;
+			const type = typeof(val);
+
+			if (
+				type !== 'function' && 
+				(
+					type !== 'object' ||
+					val.type
+				)
+			) 
+				res[p] = stringVal;
+		}
+
+		return JSON.stringify(res, null, 4).split('"').join('') + '\r\n';
 	}
 };

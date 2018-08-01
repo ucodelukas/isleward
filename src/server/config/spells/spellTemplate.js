@@ -1,4 +1,3 @@
-let spellCallbacks = require('./spellCallbacks');
 let combat = require('../../combat/combat');
 
 module.exports = {

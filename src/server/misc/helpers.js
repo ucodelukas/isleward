@@ -1,68 +1,77 @@
-Array.prototype.firstIndex = function (callback, thisArg) {
-	let T = thisArg;
-	let O = Object(this);
-	let len = O.length >>> 0;
+Object.defineProperty(Array.prototype, 'firstIndex', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
 
-	let k = 0;
+		let k = 0;
 
-	while (k < len) {
-		let kValue;
+		while (k < len) {
+			let kValue;
 
-		if (k in O) {
-			kValue = O[k];
+			if (k in O) {
+				kValue = O[k];
 
-			if (callback.call(T, kValue, k, O))
-				return k;
-		}
-		k++;
-	}
-
-	return -1;
-};
-
-Array.prototype.spliceWhere = function (callback, thisArg) {
-	let T = thisArg;
-	let O = Object(this);
-	let len = O.length >>> 0;
-
-	let k = 0;
-
-	while (k < len) {
-		let kValue;
-
-		if (k in O) {
-			kValue = O[k];
-
-			if (callback.call(T, kValue, k, O)) {
-				O.splice(k, 1);
-				k--;
+				if (callback.call(T, kValue, k, O))
+					return k;
 			}
+			k++;
 		}
-		k++;
-	}
-};
 
-Array.prototype.spliceFirstWhere = function (callback, thisArg) {
-	let T = thisArg;
-	let O = Object(this);
-	let len = O.length >>> 0;
+		return -1;
+	} 
+});
 
-	let k = 0;
+Object.defineProperty(Array.prototype, 'spliceWhere', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
 
-	while (k < len) {
-		let kValue;
+		let k = 0;
 
-		if (k in O) {
-			kValue = O[k];
+		while (k < len) {
+			let kValue;
 
-			if (callback.call(T, kValue, k, O)) {
-				O.splice(k, 1);
-				return kValue;
+			if (k in O) {
+				kValue = O[k];
+
+				if (callback.call(T, kValue, k, O)) {
+					O.splice(k, 1);
+					k--;
+				}
 			}
+			k++;
 		}
-		k++;
-	}
-};
+	} 
+});
+
+Object.defineProperty(Array.prototype, 'spliceFirstWhere', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
+
+		let k = 0;
+
+		while (k < len) {
+			let kValue;
+
+			if (k in O) {
+				kValue = O[k];
+
+				if (callback.call(T, kValue, k, O)) {
+					O.splice(k, 1);
+					return kValue;
+				}
+			}
+			k++;
+		}
+	} 
+});
 	
 module.exports = {
 	get2dArray: function (w, h, def) {

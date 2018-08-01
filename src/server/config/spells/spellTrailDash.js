@@ -29,8 +29,6 @@ let cpnSpikePatch = {
 		if (this.caster.destroyed)
 			return;
 
-		let stats = this.caster.stats;
-
 		let contents = this.contents;
 		let cLen = contents.length;
 		for (let i = 0; i < cLen; i++) {

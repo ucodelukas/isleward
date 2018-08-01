@@ -33,8 +33,6 @@ let cpnArcanePatch = {
 	},
 
 	update: function () {
-		let stats = this.caster.stats;
-
 		let contents = this.contents;
 		let cLen = contents.length;
 		for (let i = 0; i < cLen; i++) {
@@ -66,10 +64,10 @@ module.exports = {
 		let x = target.x;
 		let y = target.y;
 
-		let objects = this.obj.instance.objects;
+		let objects = obj.instance.objects;
 		let patches = [];
 
-		let physics = this.obj.instance.physics;
+		let physics = obj.instance.physics;
 
 		for (let i = x - radius; i <= x + radius; i++) {
 			let dx = Math.abs(x - i);
@@ -99,7 +97,7 @@ module.exports = {
 					},
 					extraProperties: {
 						arcanePatch: {
-							caster: this.obj,
+							caster: obj,
 							spell: this
 						}
 					}

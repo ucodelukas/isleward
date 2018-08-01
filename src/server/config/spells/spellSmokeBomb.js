@@ -32,8 +32,6 @@ let cpnSmokePatch = {
 		if (this.caster.destroyed)
 			return;
 
-		let stats = this.caster.stats;
-
 		let contents = this.contents;
 		for (let i = 0; i < contents.length; i++) {
 			let c = contents[i];

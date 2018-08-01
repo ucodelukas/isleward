@@ -46,7 +46,7 @@ module.exports = {
 		if (this.obj.destroyed)
 			return;
 
-		let targetEffect = target.effects.addEffect({
+		target.effects.addEffect({
 			type: 'cocoon',
 			ttl: this.ttl,
 			source: this.obj
