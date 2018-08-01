@@ -2,17 +2,13 @@ module.exports = {
 	name: 'fjolarok',
 	level: [1, 10],
 	resources: {
-		Moonbell: {
-			type: 'herb',
-			max: 5
-		},
 		Skyblossom: {
 			type: 'herb',
-			max: 3
+			max: 7
 		},
 		Emberleaf: {
 			type: 'herb',
-			max: 1
+			max: 0
 		}
 	},
 	objects: {
@@ -537,7 +533,7 @@ module.exports = {
 					}, {
 						name: 'Skewering Stick',
 						material: true,
-						sprite: [0, 7],
+						sprite: [11, 7],
 						worth: 2,
 						infinite: true
 					}],
@@ -553,7 +549,7 @@ module.exports = {
 			}
 		},
 		guard: {
-			level: 50,
+			level: 20,
 			attackable: false,
 
 			walkDistance: 0,

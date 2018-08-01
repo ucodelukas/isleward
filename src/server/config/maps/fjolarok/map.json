@@ -1333,11 +1333,11 @@
                  "name":"Door",
                  "properties":
                     {
-                     "ccpnDoor":"{}"
+                     "cpnDoor":""
                     },
                  "propertytypes":
                     {
-                     "ccpnDoor":"string"
+                     "cpnDoor":"string"
                     },
                  "rotation":0,
                  "type":"",

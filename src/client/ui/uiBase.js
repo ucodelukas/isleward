@@ -91,6 +91,9 @@ define([
 
 			this.shown = true;
 			this.el.show();
+
+			if (this.onAfterShow)
+				this.onAfterShow();
 		},
 		hide: function () {
 			if (this.beforeHide)

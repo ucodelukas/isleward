@@ -23,6 +23,7 @@ module.exports = {
 	},
 
 	getRecipe: function (type, name) {
-		return (recipes[type] || []).find(r => r.item.name === name);
+		let recipe = (recipes[type] || []).find(r => r.item.name === name);
+		return recipe;
 	}
 };

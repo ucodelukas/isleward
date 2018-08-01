@@ -111,7 +111,7 @@ module.exports = {
 		1: {
 			msg: [{
 				msg: 'Is there anything I can help you with today?',
-				options: [1.1, 1.2, 1.3, 1.4, 1.5]
+				options: [1.1, 1.3, 1.4, 1.5]
 			}],
 			options: {
 				1.1: {

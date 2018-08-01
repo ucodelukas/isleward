@@ -54,7 +54,7 @@ module.exports = {
 		if (!obj.player)
 			return;
 
-		let msg = 'Press U to access the alchemy station';
+		let msg = `Press U to access the ${this.obj.name}`;
 
 		obj.syncer.setArray(true, 'serverActions', 'addActions', {
 			key: 'u',
@@ -103,7 +103,16 @@ module.exports = {
 
 		let sendRecipe = extend(true, {}, recipe);
 		(sendRecipe.materials || []).forEach(function (m) {
-			m.need = !items.some(i => (i.name === m.name && (m.quantity === 1 || i.quantity >= m.quantity)));
+			m.need = !items.some(i => (
+				(
+					i.name === m.name ||
+					i.name.indexOf(m.nameLike) > -1
+				) && 
+				(
+					m.quantity === 1 || 
+					i.quantity >= m.quantity
+				)
+			));
 		});
 
 		this.resolveCallback(msg, sendRecipe);
@@ -119,12 +128,27 @@ module.exports = {
 			return;
 
 		const items = obj.inventory.items;
-		let canCraft = recipe.materials.every(m => (items.some(i => i.name === m.name && (m.quantity === 1 || i.quantity >= m.quantity))));
+		let canCraft = recipe.materials.every(m => (items.some(i => (
+			(
+				i.name === m.name ||
+				i.name.indexOf(m.nameLike) > -1
+			) &&
+			(
+				m.quantity === 1 || 
+				i.quantity >= m.quantity
+			)
+		))));
 
 		if (!canCraft)
 			return;
 
-		recipe.materials.forEach(m => obj.inventory.destroyItem(m.name, m.quantity));
+		recipe.materials.forEach(m => {
+			let findItem = obj.inventory.items.find(f => (
+				f.name === m.name ||
+				f.name.indexOf(m.nameLike) > -1
+			));
+			obj.inventory.destroyItem(findItem.id, m.quantity);
+		});
 
 		let item = extend(true, {}, recipe.item);
 		item.description += `<br /><br />(Crafted by ${obj.name})`;

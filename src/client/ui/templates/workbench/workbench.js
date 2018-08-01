@@ -19,6 +19,7 @@ define([
 		workbenchId: null,
 
 		recipes: null,
+		currentRecipe: null,
 
 		postRender: function () {
 			this.onEvent('onOpenWorkbench', this.onOpenWorkbench.bind(this));
@@ -70,6 +71,8 @@ define([
 		},
 
 		onGetRecipe: function (recipe) {
+			this.currentRecipe = recipe;
+
 			this.find('.title').html(recipe.item.name);
 			this.find('.description').html(recipe.item.description);
 
@@ -83,7 +86,7 @@ define([
 			let canCraft = true;
 
 			recipe.materials.forEach(function (m) {
-				let el = $('<div class="material">' + m.quantity + 'x ' + m.name + '</div>')
+				let el = $('<div class="material">' + m.quantity + 'x ' + (m.nameLike || m.name) + '</div>')
 					.appendTo(container);
 
 				if (m.need) {
@@ -104,6 +107,8 @@ define([
 		craft: function () {
 			let selectedRecipe = this.find('.list .item.selected').html();
 
+			this.clear();
+
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -116,6 +121,23 @@ define([
 					}
 				}
 			});
+		},
+
+		onAfterShow: function() {
+			this.clear();
+		},
+
+		clear: function() {
+			this.find('.left .list .selected').removeClass('selected');
+			this.find('.title').html('');
+			this.find('.description').html('');
+			this.find('.materialList .material').remove();
+			let container = this.find('.materialList')
+				.css({
+					visibility: 'hidden'
+				});
+
+			this.find('.btnCraft').addClass('disabled');
 		}
 	};
 });

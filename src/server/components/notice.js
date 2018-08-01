@@ -28,6 +28,8 @@ module.exports = {
 		if (!action)
 			return;
 
+		let args = action.args || [];
+
 		let cpn = null;
 
 		if (action.targetId) {
@@ -35,7 +37,7 @@ module.exports = {
 			if (target) {
 				cpn = target[action.cpn];
 				if ((cpn) && (cpn[action.method]))
-					cpn[action.method](cpn, obj, action.args);
+					cpn[action.method](obj, ...args);
 			}
 
 			return;
@@ -43,7 +45,7 @@ module.exports = {
 
 		cpn = obj[action.cpn];
 		if ((cpn) && (cpn[action.method]))
-			cpn[action.method].apply(cpn, action.args);
+			cpn[action.method](...args);
 	},
 
 	collisionEnter: function (obj) {
