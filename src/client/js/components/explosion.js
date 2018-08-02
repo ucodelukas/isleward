@@ -1,6 +1,6 @@
 define([
 	'js/rendering/effects'
-], function(
+], function (
 	effects
 ) {
 	return {
@@ -11,7 +11,7 @@ define([
 		blueprint: null,
 		particles: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = {
 				new: true,
 				blueprint: $.extend(true, {
@@ -68,7 +68,7 @@ define([
 			};	
 		},
 
-		explode: function(blueprint) {
+		explode: function (blueprint) {
 			this.particles = this.obj.addComponent('particles', this.blueprint);
 
 			this.particles.emitter.update(0.2);

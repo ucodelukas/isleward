@@ -47,9 +47,9 @@ define([
 		},
 
 		onDeath: function (event) {
-			if (!event.source) {
+			if (!event.source) 
 				this.find('.msg').html('you are dead');
-			} else
+			 else
 				this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
 			this.find('.penalty')
 				.html('you lost ' + event.xpLoss + ' experience')

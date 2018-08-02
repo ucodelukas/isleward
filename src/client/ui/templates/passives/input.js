@@ -16,23 +16,23 @@ define([
 		},
 
 		mappings: {
-			'8': 'backspace',
-			'9': 'tab',
-			'13': 'enter',
-			'16': 'shift',
-			'17': 'ctrl',
-			'27': 'esc',
-			'37': 'left',
-			'38': 'up',
-			'39': 'right',
-			'40': 'down',
-			'46': 'del',
+			8: 'backspace',
+			9: 'tab',
+			13: 'enter',
+			16: 'shift',
+			17: 'ctrl',
+			27: 'esc',
+			37: 'left',
+			38: 'up',
+			39: 'right',
+			40: 'down',
+			46: 'del',
 
 			//hacks for mac cmd key
-			'17': 'ctrl',
-			'224': 'ctrl',
-			'91': 'ctrl',
-			'93': 'ctrl'
+			17: 'ctrl',
+			224: 'ctrl',
+			91: 'ctrl',
+			93: 'ctrl'
 		},
 
 		mouse: {
@@ -54,9 +54,8 @@ define([
 		},
 
 		resetKeys: function () {
-			for (var k in this.keys) {
+			for (let k in this.keys) 
 				events.emit('onKeyUp', k);
-			}
 
 			this.keys = {};
 		},
@@ -69,27 +68,24 @@ define([
 				this.mappings[charCode] ||
 				String.fromCharCode(charCode).toLowerCase()
 			);
-
 		},
 
 		isKeyDown: function (key, noConsume) {
-			var down = this.keys[key];
+			let down = this.keys[key];
 			if (down != null) {
 				if (noConsume)
 					return true;
-				else {
-					this.keys[key] = 2;
-					return (down == 1);
-				}
-			} else
-				return false;
+				
+				this.keys[key] = 2;
+				return (down == 1);
+			} return false;
 		},
 		getAxis: function (name) {
-			var axis = this.axes[name];
+			let axis = this.axes[name];
 			if (!axis)
 				return 0;
 
-			var result = 0;
+			let result = 0;
 
 			for (var i = 0; i < axis.negative.length; i++) {
 				if (this.keys[axis.negative[i]]) {
@@ -119,7 +115,7 @@ define([
 					if ((e.keyCode == 9) || (e.keyCode == 8) || (e.keyCode == 122))
 						e.preventDefault();
 
-					var key = this.getMapping(e.which);
+					let key = this.getMapping(e.which);
 
 					if (this.keys[key] != null)
 						this.keys[key] = 2;
@@ -140,7 +136,7 @@ define([
 					if (e.target != document.body)
 						return;
 
-					var key = this.getMapping(e.which);
+					let key = this.getMapping(e.which);
 
 					delete this.keys[key];
 
@@ -149,11 +145,11 @@ define([
 			},
 			mouse: {
 				mouseDown: function (e) {
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var button = e.button;
+					let button = e.button;
 					this.mouse.button = button;
 					this.mouse.down = true;
 					this.mouse.event = e;
@@ -162,11 +158,11 @@ define([
 					events.emit('uiMouseDown', this.mouse);
 				},
 				mouseUp: function (e) {
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var button = e.button;
+					let button = e.button;
 					this.mouse.button = null;
 					this.mouse.down = false;
 					this.mouse.raw = e;
@@ -182,7 +178,7 @@ define([
 					if (!e)
 						return;
 
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 

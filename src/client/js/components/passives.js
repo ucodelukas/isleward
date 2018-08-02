@@ -15,7 +15,7 @@ define([
 		},
 
 		extend: function (blueprint) {
-			var rerender = false;
+			let rerender = false;
 
 			if (blueprint.tickNodes) {
 				blueprint.tickNodes.forEach(function (n) {

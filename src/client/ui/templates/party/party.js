@@ -34,7 +34,7 @@ define([
 		},
 
 		onGetConnectedPlayer: function (msg) {
-			var party = this.party;
+			let party = this.party;
 			if (!party)
 				return;
 
@@ -45,21 +45,21 @@ define([
 				if (party.indexOf(m.id) == -1)
 					return;
 
-				var zone = m.zone;
+				let zone = m.zone;
 				if (m.id == window.player.serverId) {
 					party.forEach(function (p) {
-						var player = globals.onlineList.find(function (o) {
-							return (o.id == p)
+						let player = globals.onlineList.find(function (o) {
+							return (o.id == p);
 						});
 
-						var el = this.find('.member[memberId="' + p + '"]');
+						let el = this.find('.member[memberId="' + p + '"]');
 						el.removeClass('differentZone');
 
 						if (player.zone != zone)
 							el.addClass('differentZone');
 					}, this);
 				} else {
-					var el = this.find('.member[memberId="' + m.id + '"]');
+					let el = this.find('.member[memberId="' + m.id + '"]');
 					el.removeClass('differentZone');
 
 					if (m.zone != window.player.zone)
@@ -71,27 +71,26 @@ define([
 		},
 
 		onGetPartyStats: function (id, stats) {
-			var party = this.party;
+			let party = this.party;
 			if (!party)
 				return;
 
-			var el = this.find('.member[memberId="' + id + '"]');
+			let el = this.find('.member[memberId="' + id + '"]');
 			if (el.length == 0)
 				return;
 
 			if ((stats.hp != null) && (stats.hpMax != null)) {
-				var hpPercentage = Math.min(100, (stats.hp / stats.hpMax) * 100);
+				let hpPercentage = Math.min(100, (stats.hp / stats.hpMax) * 100);
 				el.find('.statHp').css('width', hpPercentage + '%');
 			}
 
 			if ((stats.mana != null) && (stats.manaMax != null)) {
-				var manaPercentage = Math.min((stats.mana / stats.manaMax) * 100, 100);
+				let manaPercentage = Math.min((stats.mana / stats.manaMax) * 100, 100);
 				el.find('.statMana').css('width', manaPercentage + '%');
 			}
 
-			if (stats.level != null) {
+			if (stats.level != null) 
 				el.find('.txtLevel').html('level: ' + stats.level);
-			}
 		},
 
 		onPartyDisband: function () {
@@ -104,7 +103,7 @@ define([
 			if (this.invite)
 				this.destroyInvite();
 
-			var container = this.find('.party .list')
+			let container = this.find('.party .list')
 				.empty();
 
 			this.party = party;
@@ -115,17 +114,17 @@ define([
 				if (p == window.player.serverId)
 					return;
 
-				var player = globals.onlineList.find(function (o) {
-					return (o.id == p)
+				let player = globals.onlineList.find(function (o) {
+					return (o.id == p);
 				});
-				var name = player ? player.name : 'unknown';
-				var level = 'level: ' + (player ? player.level : '?');
+				let name = player ? player.name : 'unknown';
+				let level = 'level: ' + (player ? player.level : '?');
 
-				var html = templatePartyMember
+				let html = templatePartyMember
 					.replace('$NAME$', name)
 					.replace('$LEVEL$', level);
 
-				var el = $(html)
+				let el = $(html)
 					.appendTo(container)
 					.attr('memberId', p)
 					.on('contextmenu', this.showContext.bind(this, name, p));
@@ -134,7 +133,7 @@ define([
 					el.addClass('differentZone');
 
 				//Find stats
-				var memberObj = objects.objects.find(function (o) {
+				let memberObj = objects.objects.find(function (o) {
 					return (o.serverId == p);
 				});
 				if ((memberObj) && (memberObj.stats))
@@ -162,14 +161,14 @@ define([
 			if (this.invite)
 				this.destroyInvite();
 
-			var sourcePlayer = globals.onlineList.find(function (o) {
-				return (o.id == sourceId)
+			let sourcePlayer = globals.onlineList.find(function (o) {
+				return (o.id == sourceId);
 			});
 
-			var html = templateInvite
+			let html = templateInvite
 				.replace('$NAME$', sourcePlayer.name);
 
-			var el = $(html)
+			let el = $(html)
 				.appendTo(this.el);
 			el
 				.find('[class^="btn"]')
@@ -227,5 +226,5 @@ define([
 				method: 'leaveParty'
 			});
 		}
-	}
+	};
 });

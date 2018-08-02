@@ -28,22 +28,22 @@ define([
 
 		update: function (x, y) {
 			this.sounds.forEach(function (s) {
-				var dx = Math.abs(s.x - x);
+				let dx = Math.abs(s.x - x);
 				if (dx > 10) {
 					if (s.sound)
 						s.sound.volume(0);
 					return;
 				}
-				var dy = Math.abs(s.y - y);
+				let dy = Math.abs(s.y - y);
 				if (dy > 10) {
 					if (s.sound)
 						s.sound.volume(0);
 					return;
 				}
 
-				var dist = 10 - Math.max(dx, dy);
+				let dist = 10 - Math.max(dx, dy);
 				dist = (dist * dist) / 100;
-				var volume = 0.3 * dist;
+				let volume = 0.3 * dist;
 
 				if (!s.sound) {
 					s.sound = new Howl({
@@ -59,7 +59,7 @@ define([
 		},
 
 		addSound: function (file, x, y) {
-			var sound = {
+			let sound = {
 				file: file,
 				x: x,
 				y: y,

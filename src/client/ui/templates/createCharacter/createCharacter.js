@@ -72,25 +72,25 @@ define([
 		},
 
 		onProphecyHover: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 
-			var pos = {
+			let pos = {
 				x: e.clientX + 25,
 				y: e.clientY
 			};
 
-			var text = el.attr('tooltip');
+			let text = el.attr('tooltip');
 
 			events.emit('onShowTooltip', text, el[0], pos);
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
 		onProphecyUnhover: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 			events.emit('onHideTooltip', el[0]);
 		},
 		onProphecyClick: function (e) {
-			var el = $(e.currentTarget);
-			var pName = el.attr('prophecy');
+			let el = $(e.currentTarget);
+			let pName = el.attr('prophecy');
 
 			if (el.hasClass('active')) {
 				this.prophecies.spliceWhere(function (p) {
@@ -143,32 +143,32 @@ define([
 		},
 
 		onClassHover: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 
-			var pos = {
+			let pos = {
 				x: e.clientX + 25,
 				y: e.clientY
 			};
 
-			var text = ({
-				owl: `The wise Owl guides you; granting you the focus needed to cast spells. <br /><br />Upon level up, you gain 1 Intellect.`,
-				bear: `The towering Bear strenghtens you; lending force to your blows. <br /><br />Upon level up, you gain 1 Strength.`,
-				lynx: `The nimble Lynx hastens you; allowing your strikes to land true. <br /><br />Upon level up, you gain 1 Dexterity.`
+			let text = ({
+				owl: 'The wise Owl guides you; granting you the focus needed to cast spells. <br /><br />Upon level up, you gain 1 Intellect.',
+				bear: 'The towering Bear strenghtens you; lending force to your blows. <br /><br />Upon level up, you gain 1 Strength.',
+				lynx: 'The nimble Lynx hastens you; allowing your strikes to land true. <br /><br />Upon level up, you gain 1 Dexterity.'
 			})[this.class];
 
 			events.emit('onShowTooltip', text, el[0], pos, 200);
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
 		onClassUnhover: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 			events.emit('onHideTooltip', el[0]);
 		},
 		changeClass: function (e) {
-			var el = $(e.target);
-			var classes = ['owl', 'bear', 'lynx'];
-			var nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
+			let el = $(e.target);
+			let classes = ['owl', 'bear', 'lynx'];
+			let nextIndex = (classes.indexOf(this.class) + 1) % classes.length;
 
-			var newClass = classes[nextIndex];
+			let newClass = classes[nextIndex];
 
 			el.html(newClass[0].toUpperCase() + newClass.substr(1));
 
@@ -178,9 +178,9 @@ define([
 		},
 
 		changeCostume: function (e) {
-			var el = $(e.target);
+			let el = $(e.target);
 
-			var spriteList = this.classSprites;
+			let spriteList = this.classSprites;
 			if (!spriteList)
 				return;
 
@@ -193,12 +193,12 @@ define([
 		},
 
 		setSprite: function () {
-			var classSprite = this.classSprites[this.costume];
-			var costume = classSprite.sprite.split(',');
-			var spirteX = -costume[0] * 8;
-			var spriteY = -costume[1] * 8;
+			let classSprite = this.classSprites[this.costume];
+			let costume = classSprite.sprite.split(',');
+			let spirteX = -costume[0] * 8;
+			let spriteY = -costume[1] * 8;
 
-			var spritesheet = classSprite.spritesheet || '../../../images/characters.png';
+			let spritesheet = classSprite.spritesheet || '../../../images/characters.png';
 
 			this.find('.sprite')
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px');

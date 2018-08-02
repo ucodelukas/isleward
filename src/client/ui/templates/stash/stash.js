@@ -31,28 +31,28 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.grid')
+			let container = this.el.find('.grid')
 				.empty();
 
-			var items = this.items;
-			var iLen = items.length;
+			let items = this.items;
+			let iLen = items.length;
 
-			var remainder = iLen % 8;
-			var startNoPad = ~~(iLen / 8);
+			let remainder = iLen % 8;
+			let startNoPad = ~~(iLen / 8);
 			if (remainder == 0)
 				startNoPad--;
 			startNoPad *= 8;
 
-			for (var i = 0; i < iLen; i++) {
-				var item = items[i];
+			for (let i = 0; i < iLen; i++) {
+				let item = items[i];
 
-				var imgX = -item.sprite[0] * 64;
-				var imgY = -item.sprite[1] * 64;
+				let imgX = -item.sprite[0] * 64;
+				let imgY = -item.sprite[1] * 64;
 
-				var itemEl = $(tplItem)
+				let itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = item.spritesheet || '../../../images/items.png';
+				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (!item.spritesheet) {
 					if (item.material)
 						spritesheet = '../../../images/materials.png';
@@ -107,20 +107,20 @@ define([
 			else
 				item = this.hoverItem;
 
-			var ttPos = null;
+			let ttPos = null;
 
 			if (el) {
 				el.removeClass('new');
 				delete item.isNew;
 
-				var elOffset = el.offset();
+				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(elOffset.left + 74),
 					y: ~~(elOffset.top + 4)
 				};
 			}
 
-			var compare = null;
+			let compare = null;
 			if (this.shiftDown) {
 				compare = window.player.inventory.items.find(function (i) {
 					return ((i.eq) && (i.slot == item.slot));
@@ -154,14 +154,12 @@ define([
 							return 0;
 						else if (a.name > b.name)
 							return 1;
-					} else {
-						if ((a.type || '') < (b.type || ''))
-							return -1;
-						else if ((a.type || '') == (b.type || ''))
-							return 0;
-						else if ((a.type || '') > (b.type || ''))
-							return 1;
-					}
+					} else if ((a.type || '') < (b.type || ''))
+						return -1;
+					else if ((a.type || '') == (b.type || ''))
+						return 0;
+					else if ((a.type || '') > (b.type || ''))
+						return 1;
 				} else if ((a.quest) && (!b.quest))
 					return -1;
 				else if ((b.quest) && (!a.quest))
@@ -174,9 +172,8 @@ define([
 					return -1;
 				else if (a.slot < b.slot)
 					return 1;
-				else {
+				else 
 					return b.id - a.id;
-				}
 			});
 
 			if (this.shown)
@@ -184,10 +181,9 @@ define([
 		},
 		onDestroyStashItems: function (itemIds) {
 			itemIds.forEach(function (id) {
-				var item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) {
+				let item = this.items.find(i => i.id == id);
+				if (item == this.hoverItem) 
 					this.hideTooltip();
-				}
 
 				this.items.spliceWhere(i => i.id == id);
 			}, this);

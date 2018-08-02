@@ -11,7 +11,7 @@ define([
 	tplTooltip,
 	statTranslations
 ) {
-	var percentageStats = [
+	let percentageStats = [
 		'addCritChance',
 		'addCritMultiplier',
 		'addAttackCritChance',
@@ -67,12 +67,12 @@ define([
 		onShowItemTooltip: function (item, pos, compare, bottomAlign, shiftDown) {
 			this.item = item;
 
-			var tempStats = $.extend(true, {}, item.stats);
-			var enchantedStats = item.enchantedStats || {};
+			let tempStats = $.extend(true, {}, item.stats);
+			let enchantedStats = item.enchantedStats || {};
 
 			if ((compare) && (shiftDown)) {
 				if (!item.eq) {
-					var compareStats = compare.stats;
+					let compareStats = compare.stats;
 					for (var s in tempStats) {
 						if (compareStats[s]) {
 							var delta = tempStats[s] - compareStats[s];
@@ -84,9 +84,8 @@ define([
 							tempStats[s] = '+' + tempStats[s];
 					}
 					for (var s in compareStats) {
-						if (!tempStats[s]) {
+						if (!tempStats[s]) 
 							tempStats[s] = -compareStats[s];
-						}
 					}
 				}
 			} else {
@@ -103,21 +102,21 @@ define([
 
 			stats = Object.keys(tempStats)
 				.map(function (s) {
-					var isEnchanted = (s[0] == '_');
-					var statName = s;
+					let isEnchanted = (s[0] == '_');
+					let statName = s;
 					if (isEnchanted)
 						statName = statName.substr(1);
 
 					statName = statTranslations.translate(statName);
-					var value = tempStats[s];
+					let value = tempStats[s];
 
 					if (percentageStats.indexOf(s) > -1)
 						value += '%';
 					else if ((s.indexOf('element') == 0) && (s.indexOf('Resist') == -1))
 						value += '%';
 
-					var row = value + ' ' + statName;
-					var rowClass = '';
+					let row = value + ' ' + statName;
+					let rowClass = '';
 
 					if (compare) {
 						if (row.indexOf('-') > -1)
@@ -140,37 +139,36 @@ define([
 						return 1;
 					else if ((a.indexOf('enchanted') == -1) && (b.indexOf('enchanted') > -1))
 						return -1;
-					else
-						return 0;
+					return 0;
 				})
 				.join('');
 
-			var implicitStats = (item.implicitStats || []).map(function (s) {
-				var stat = s.stat;
-				var statName = statTranslations.translate(stat);
-				var value = s.value;
+			let implicitStats = (item.implicitStats || []).map(function (s) {
+				let stat = s.stat;
+				let statName = statTranslations.translate(stat);
+				let value = s.value;
 
 				if (percentageStats.indexOf(stat) > -1)
 					value += '%';
 				else if ((stat.indexOf('element') == 0) && (stat.indexOf('Resist') == -1))
 					value += '%';
 
-				var row = value + ' ' + statName;
-				var rowClass = '';
+				let row = value + ' ' + statName;
+				let rowClass = '';
 				row = '<div class="' + rowClass + '">' + row + '</div>';
 
 				return row;
 			}).join('');
 
-			var name = item.name;
+			let name = item.name;
 			if (item.quantity > 1)
 				name += ' x' + item.quantity;
 
-			var level = null;
+			let level = null;
 			if (item.level)
 				level = item.level.push ? item.level[0] + ' - ' + item.level[1] : item.level;
 
-			var html = tplTooltip
+			let html = tplTooltip
 				.replace('$NAME$', name)
 				.replace('$QUALITY$', item.quality)
 				.replace('$TYPE$', item.type)
@@ -189,29 +187,28 @@ define([
 				html = html.replace('$POWER$', ' ' + (new Array(item.power + 1)).join('+'));
 
 			if ((item.spell) && (item.spell.values)) {
-				var abilityValues = '';
-				for (var p in item.spell.values) {
+				let abilityValues = '';
+				for (let p in item.spell.values) {
 					if ((compare) && (shiftDown)) {
 						var delta = item.spell.values[p] - compare.spell.values[p];
 						// adjust by EPSILON to handle float point imprecision, otherwise 3.15 - 2 = 1.14 or 2 - 3.15 = -1.14
 						// have to move away from zero by EPSILON, not a simple add
-						if (delta >= 0) {
+						if (delta >= 0) 
 							delta += Number.EPSILON;
-						} else {
+						 else 
 							delta -= Number.EPSILON;
-						}
+						
 						delta = ~~((delta) * 100) / 100;
-						var rowClass = '';
+						let rowClass = '';
 						if (delta > 0) {
 							rowClass = 'gainDamage';
 							delta = '+' + delta;
-						} else if (delta < 0) {
+						} else if (delta < 0) 
 							rowClass = 'loseDamage';
-						}
+						
 						abilityValues += '<div class="' + rowClass + '">' + p + ': ' + delta + '</div>';
-					} else {
+					} else 
 						abilityValues += p + ': ' + item.spell.values[p] + '<br/>';
-					}
 				}
 				if (!item.ability)
 					abilityValues = abilityValues;
@@ -235,8 +232,7 @@ define([
 					this.tooltip.find('.requires').hide();
 				else
 					this.tooltip.find('.requires .stats').hide();
-			}
-			else
+			} else
 				this.tooltip.find('.requires .stats').show();
 
 			if ((!item.stats) || (!Object.keys(item.stats).length))
@@ -253,7 +249,7 @@ define([
 			if (item.power)
 				this.tooltip.find('.power').show();
 
-			var equipErrors = window.player.inventory.equipItemErrors(item);
+			let equipErrors = window.player.inventory.equipItemErrors(item);
 			equipErrors.forEach(function (e) {
 				this.tooltip.find('.requires').addClass('high-level');
 				this.tooltip.find('.requires .' + e).addClass('high-level');
@@ -270,9 +266,9 @@ define([
 			} else if (item.eq)
 				this.tooltip.find('.info').hide();
 
-			if (!item.ability) {
+			if (!item.ability) 
 				this.tooltip.find('.damage').hide();
-			} else
+			 else
 				this.tooltip.find('.info').hide();
 
 			if (item.spell) {
@@ -290,7 +286,7 @@ define([
 			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
 			if ((item.effects) && (item.type != 'mtx')) {
-				var htmlEffects = '';
+				let htmlEffects = '';
 
 				item.effects.forEach(function (e, i) {
 					htmlEffects += e.text;
@@ -315,10 +311,10 @@ define([
 			}
 
 			if (item.factions) {
-				var htmlFactions = '';
+				let htmlFactions = '';
 
 				item.factions.forEach(function (f, i) {
-					var htmlF = f.name + ': ' + f.tierName;
+					let htmlF = f.name + ': ' + f.tierName;
 					if (f.noEquip)
 						htmlF = '<font class="color-red">' + htmlF + '</font>';
 

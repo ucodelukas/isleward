@@ -123,11 +123,11 @@ define([
 			});
 		},
 
-		onAfterShow: function() {
+		onAfterShow: function () {
 			this.clear();
 		},
 
-		clear: function() {
+		clear: function () {
 			this.find('.left .list .selected').removeClass('selected');
 			this.find('.title').html('');
 			this.find('.description').html('');

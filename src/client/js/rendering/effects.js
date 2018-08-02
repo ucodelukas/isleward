@@ -1,6 +1,6 @@
 define([
 	
-], function(
+], function (
 	
 ) {
 	return {
@@ -8,15 +8,15 @@ define([
 		particles: [],
 		fog: [],
 
-		register: function(cpn) {
+		register: function (cpn) {
 			this.list.push(cpn);
 		},
-		unregister: function(cpn) {
-			var list = this.list;
-			var lLen = list.length;
+		unregister: function (cpn) {
+			let list = this.list;
+			let lLen = list.length;
 
-			for (var i = 0; i < lLen; i++) {
-				var l = list[i];
+			for (let i = 0; i < lLen; i++) {
+				let l = list[i];
 
 				if (l == cpn) {
 					list.splice(i, 1);
@@ -25,12 +25,12 @@ define([
 			}
 		},
 
-		render: function() {
-			var list = this.list;
-			var lLen = list.length;
+		render: function () {
+			let list = this.list;
+			let lLen = list.length;
 
-			for (var i = 0; i < lLen; i++) {
-				var l = list[i];
+			for (let i = 0; i < lLen; i++) {
+				let l = list[i];
 
 				if ((l.destroyed) || (!l.obj) || (l.obj.destroyed)) {
 					if (((l.destroyManual) && (!l.destroyManual())) || (!l.destroyManual)) {

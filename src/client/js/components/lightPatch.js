@@ -1,12 +1,12 @@
 define([
 	'js/rendering/renderer',
 	'picture'
-], function(
+], function (
 	renderer,
 	picture
 ) {
-	var scale = 40;
-	var scaleMult = 5;
+	let scale = 40;
+	let scaleMult = 5;
 
 	return {
 		type: 'lightPatch',
@@ -15,21 +15,21 @@ define([
 		patches: [],
 		rays: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = this.blueprint || {};
 
-			var obj = this.obj;
+			let obj = this.obj;
 
-			var x = obj.x;
-			var y = obj.y;
+			let x = obj.x;
+			let y = obj.y;
 
-			var maxDistance = Math.sqrt(Math.pow(obj.width / 2, 2) + Math.pow(obj.height / 2, 2));
+			let maxDistance = Math.sqrt(Math.pow(obj.width / 2, 2) + Math.pow(obj.height / 2, 2));
 			for (var i = 0; i < obj.width; i++) {
 				for (var j = 0; j < obj.height; j++) {
-					var distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - i, 2));
-					var alpha = distance / maxDistance;
+					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - i, 2));
+					let alpha = distance / maxDistance;
 
-					var sprite = renderer.buildObject({
+					let sprite = renderer.buildObject({
 						x: (x + i),
 						y: (y + j),
 						sheetName: 'white',
@@ -46,21 +46,21 @@ define([
 				}
 			}
 
-			var rCount = ((obj.width * obj.height) / 10) + ~~(Math.random() + 2);
+			let rCount = ((obj.width * obj.height) / 10) + ~~(Math.random() + 2);
 			for (var i = 0; i < rCount; i++) {
-				var nx = x + 3 + ~~(Math.random() * (obj.width - 1));
-				var ny = y - 4 + ~~(Math.random() * (obj.height));
-				var w = 1 + ~~(Math.random() * 2);
-				var h = 6 + ~~(Math.random() * 13);
-				var hm = 2;
+				let nx = x + 3 + ~~(Math.random() * (obj.width - 1));
+				let ny = y - 4 + ~~(Math.random() * (obj.height));
+				let w = 1 + ~~(Math.random() * 2);
+				let h = 6 + ~~(Math.random() * 13);
+				let hm = 2;
 
-				var rContainer = renderer.buildContainer({
+				let rContainer = renderer.buildContainer({
 					layerName: 'lightBeams'
 				});
 				this.rays.push(rContainer);
 
 				for (var j = 0; j < h; j++) {
-					var ray = renderer.buildObject({
+					let ray = renderer.buildObject({
 						x: nx,
 						y: ny,
 						cell: 0,
@@ -78,11 +78,11 @@ define([
 			}
 		},
 
-		update: function() {
-			var rays = this.rays;
-			var rLen = rays.length;
-			for (var i = 0; i < rLen; i++) {
-				var r = rays[i];
+		update: function () {
+			let rays = this.rays;
+			let rLen = rays.length;
+			for (let i = 0; i < rLen; i++) {
+				let r = rays[i];
 
 				r.alpha += (Math.random() * 0.03) - 0.015;
 				if (r.alpha < 0.3)
@@ -92,13 +92,13 @@ define([
 			}
 		},
 
-		destroy: function() {
-			this.patches.forEach(function(p) {
+		destroy: function () {
+			this.patches.forEach(function (p) {
 				p.parent.removeChild(p);
 			});
 			this.patches = [];
 
-			this.rays.forEach(function(r) {
+			this.rays.forEach(function (r) {
 				r.parent.removeChild(r);
 			});
 			this.rays = [];

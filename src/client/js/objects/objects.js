@@ -9,7 +9,7 @@ define([
 	renderer,
 	sound
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		showNames: false,
@@ -24,24 +24,24 @@ define([
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
 
 			//Get saved value for showNames, or use the value set above
-			var showNames = window.localStorage.getItem('iwd_opt_shownames');
+			let showNames = window.localStorage.getItem('iwd_opt_shownames');
 			this.showNames = showNames ? (showNames == 'true') : this.showNames;
 		},
 
 		getLocation: function (x, y) {
-			var objects = this.objects;
-			var oLen = objects.length;
+			let objects = this.objects;
+			let oLen = objects.length;
 
-			var closest = 999;
-			var mob = null;
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
+			let closest = 999;
+			let mob = null;
+			for (let i = 0; i < oLen; i++) {
+				let o = objects[i];
 				if ((!o.stats) || (o.nonSelectable))
 					continue;
 
-				var dx = Math.abs(o.x - x);
+				let dx = Math.abs(o.x - x);
 				if ((dx < 3) && (dx < closest)) {
-					var dy = Math.abs(o.y - y);
+					let dy = Math.abs(o.y - y);
 					if ((dy < 3) && (dy < closest)) {
 						mob = o;
 						closest = Math.max(dx, dy);
@@ -53,16 +53,16 @@ define([
 		},
 
 		getClosest: function (x, y, maxDistance, reverse, fromMob) {
-			var objects = this.objects;
-			var oLen = objects.length;
+			let objects = this.objects;
+			let oLen = objects.length;
 
-			var list = objects.filter(function (o) {
+			let list = objects.filter(function (o) {
 				if ((!o.stats) || (o.nonSelectable) || (o == window.player))
 					return false;
 
-				var dx = Math.abs(o.x - x);
+				let dx = Math.abs(o.x - x);
 				if (dx < maxDistance) {
-					var dy = Math.abs(o.y - y);
+					let dy = Math.abs(o.y - y);
 					if (dy < maxDistance)
 						return true;
 				}
@@ -72,35 +72,34 @@ define([
 				return null;
 
 			list.sort(function (a, b) {
-				var aDistance = Math.max(Math.abs(x - a.x), Math.abs(y - a.y));
-				var bDistance = Math.max(Math.abs(x - b.x), Math.abs(y - b.y));
+				let aDistance = Math.max(Math.abs(x - a.x), Math.abs(y - a.y));
+				let bDistance = Math.max(Math.abs(x - b.x), Math.abs(y - b.y));
 
 				return (aDistance - bDistance);
 			});
 
-			list = list.filter((o) => ((o.aggro) && (o.aggro.faction != window.player.aggro.faction)));
+			list = list.filter(o => ((o.aggro) && (o.aggro.faction != window.player.aggro.faction)));
 
 			if (!fromMob)
 				return list[0];
 
-			var fromIndex = list.firstIndex(function (l) {
+			let fromIndex = list.firstIndex(function (l) {
 				return (l.id == fromMob.id);
 			});
 
-			if (reverse) {
+			if (reverse) 
 				fromIndex = (fromIndex === 0 ? list.length : fromIndex) - 1;
-			} else {
+			 else 
 				fromIndex = (fromIndex + 1) % list.length;
-			}
 
 			return list[fromIndex];
 		},
 
 		onRezone: function (oldZone) {
-			var objects = this.objects;
-			var oLen = objects.length
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
+			let objects = this.objects;
+			let oLen = objects.length;
+			for (let i = 0; i < oLen; i++) {
+				let o = objects[i];
 
 				if (oldZone == null)
 					o.destroy();
@@ -115,7 +114,7 @@ define([
 			this.dirty = true;
 
 			//Things like attacks don't have ids
-			var exists = null;
+			let exists = null;
 			if (obj.id != null) {
 				exists = this.objects.find(function (o) {
 					return ((o.id == obj.id) && (!o.destroyed));
@@ -128,16 +127,16 @@ define([
 				this.updateObject(exists, obj);
 		},
 		buildObject: function (template) {
-			var obj = $.extend(true, {}, objBase);
+			let obj = $.extend(true, {}, objBase);
 
-			var components = template.components || [];
+			let components = template.components || [];
 			delete template.components;
 
-			var syncTypes = ['portrait'];
+			let syncTypes = ['portrait'];
 
-			for (var p in template) {
-				var value = template[p];
-				var type = typeof (value);
+			for (let p in template) {
+				let value = template[p];
+				let type = typeof (value);
 
 				if (type == 'object') {
 					if (syncTypes.indexOf(p) > -1)
@@ -161,12 +160,12 @@ define([
 
 			components.forEach(function (c) {
 				//Map ids to objects
-				var keys = Object.keys(c).filter(function (k) {
+				let keys = Object.keys(c).filter(function (k) {
 					return ((k.indexOf('id') == 0) && (k.length > 2));
 				});
 				keys.forEach(function (k) {
-					var value = c[k];
-					var newKey = k.substr(2, k.length).toLowerCase();
+					let value = c[k];
+					let newKey = k.substr(2, k.length).toLowerCase();
 
 					c[newKey] = this.objects.find(function (o) {
 						return (o.id == value);
@@ -204,16 +203,16 @@ define([
 			return obj;
 		},
 		updateObject: function (obj, template) {
-			var components = template.components || [];
+			let components = template.components || [];
 
 			components.forEach(function (c) {
 				//Map ids to objects
-				var keys = Object.keys(c).filter(function (k) {
+				let keys = Object.keys(c).filter(function (k) {
 					return ((k.indexOf('id') == 0) && (k.length > 2));
 				});
 				keys.forEach(function (k) {
-					var value = c[k];
-					var newKey = k.substr(2, k.length).toLowerCase();
+					let value = c[k];
+					let newKey = k.substr(2, k.length).toLowerCase();
 
 					c[newKey] = this.objects.find(function (o) {
 						return (o.id == value);
@@ -233,13 +232,13 @@ define([
 				delete template.removeComponents;
 			}
 
-			var oldX = obj.x;
+			let oldX = obj.x;
 
-			var sprite = obj.sprite;
-			var moved = false;
-			for (var p in template) {
-				var value = template[p];
-				var type = typeof (value);
+			let sprite = obj.sprite;
+			let moved = false;
+			for (let p in template) {
+				let value = template[p];
+				let type = typeof (value);
 
 				if (type != 'object')
 					obj[p] = value;
@@ -295,11 +294,11 @@ define([
 			obj.setSpritePosition();
 		},
 		update: function () {
-			var objects = this.objects;
-			var len = objects.length;
+			let objects = this.objects;
+			let len = objects.length;
 
-			for (var i = 0; i < len; i++) {
-				var o = objects[i];
+			for (let i = 0; i < len; i++) {
+				let o = objects[i];
 
 				if (o.destroyed) {
 					o.destroy();
@@ -322,13 +321,13 @@ define([
 				//Set new value in localStorage for showNames
 				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
 
-				var showNames = this.showNames;
+				let showNames = this.showNames;
 
-				var objects = this.objects;
-				var oLen = objects.length;
-				for (var i = 0; i < oLen; i++) {
-					var obj = objects[i];
-					var ns = obj.nameSprite;
+				let objects = this.objects;
+				let oLen = objects.length;
+				for (let i = 0; i < oLen; i++) {
+					let obj = objects[i];
+					let ns = obj.nameSprite;
 					if ((!ns) || (obj.dead))
 						continue;
 

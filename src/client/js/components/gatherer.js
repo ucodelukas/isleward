@@ -21,8 +21,8 @@ define([
 				if (this.effect)
 					this.effect.destroyed = true;
 
-				var x = 0;
-				var y = 0;
+				let x = 0;
+				let y = 0;
 				while (true) {
 					x = msg.x + ~~(Math.random() * msg.width);
 					y = msg.y + ~~(Math.random() * msg.height);

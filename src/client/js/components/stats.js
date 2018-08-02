@@ -5,7 +5,7 @@ define([
 	events,
 	renderer
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'stats',
@@ -19,13 +19,13 @@ define([
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			var serverId = this.obj.serverId;
+			let serverId = this.obj.serverId;
 			if (serverId != null)
 				events.emit('onGetPartyStats', serverId, this.values);
 
-			var obj = this.obj;
+			let obj = this.obj;
 
-			var yOffset = -12;
+			let yOffset = -12;
 			if (obj.isChampion)
 				yOffset = -18;
 
@@ -54,14 +54,14 @@ define([
 			if (this.obj.dead)
 				return;
 
-			var obj = this.obj;
+			let obj = this.obj;
 
-			var yOffset = -12;
+			let yOffset = -12;
 			if (obj.isChampion)
 				yOffset = -18;
 
-			var x = obj.x * scale;
-			var y = (obj.y * scale) + yOffset;
+			let x = obj.x * scale;
+			let y = (obj.y * scale) + yOffset;
 
 			renderer.moveRectangle({
 				sprite: this.hpSprite,
@@ -84,18 +84,17 @@ define([
 		},
 
 		extend: function (blueprint) {
-			var bValues = blueprint.values || {};
+			let bValues = blueprint.values || {};
 
-			var values = this.values;
+			let values = this.values;
 
-			for (var b in bValues) {
+			for (let b in bValues) 
 				values[b] = bValues[b];
-			}
 
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			var serverId = this.obj.serverId;
+			let serverId = this.obj.serverId;
 			if (serverId != null)
 				events.emit('onGetPartyStats', serverId, this.values);
 

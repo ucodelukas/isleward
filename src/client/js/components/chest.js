@@ -1,9 +1,9 @@
 define([
 
-], function(
+], function (
 
 ) {
-	var colors = [
+	let colors = [
 		'929398',
 		'3fa7dd',
 		'faac45',
@@ -11,7 +11,7 @@ define([
 		'ffeb38'
 	];
 
-	var chances = [
+	let chances = [
 		0.0075,
 		0.02,
 		0.04,
@@ -19,12 +19,12 @@ define([
 		0.095
 	];
 
-	var indices = {
-		'50': 0,
-		'51': 1,
-		'128': 2,
-		'52': 3,
-		'53': 4
+	let indices = {
+		50: 0,
+		51: 1,
+		128: 2,
+		52: 3,
+		53: 4
 	};
 
 	return {
@@ -32,7 +32,7 @@ define([
 
 		ownerId: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if (this.ownerId != -1) {
 				if (!window.player) {
 					this.hideSprite();
@@ -45,9 +45,9 @@ define([
 				}
 			}
 
-			var index = indices[this.obj.cell];
+			let index = indices[this.obj.cell];
 
-			var color = colors[index];
+			let color = colors[index];
 
 			this.obj.addComponent('particles', {
 				chance: chances[index],
@@ -75,7 +75,7 @@ define([
 			});
 		},
 
-		hideSprite: function() {
+		hideSprite: function () {
 			if (this.obj.sprite)
 				this.obj.sprite.visible = false;
 		}

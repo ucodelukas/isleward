@@ -1,9 +1,9 @@
 define([
 	'js/misc/physics'
-], function(
+], function (
 	physics
 ) {
-	var bptParticles = {
+	let bptParticles = {
 		chance: 0.1,
 		blueprint: {
 			color: {
@@ -25,21 +25,20 @@ define([
 		}
 	};
 
-
 	return {
 		type: 'resourceNode',
 
-		init: function() {
-			var x = this.obj.x;
-			var y = this.obj.y;
-			var w = this.obj.width || 1;
-			var h = this.obj.height || 1;
+		init: function () {
+			let x = this.obj.x;
+			let y = this.obj.y;
+			let w = this.obj.width || 1;
+			let h = this.obj.height || 1;
 
-			var isFish = (this.nodeType == 'fish');
+			let isFish = (this.nodeType == 'fish');
 
-			for (var i = x; i < x + w; i++) {
-				for (var j = y; j < y + h; j++) {
-					var bpt = $.extend(true, {}, bptParticles, {
+			for (let i = x; i < x + w; i++) {
+				for (let j = y; j < y + h; j++) {
+					let bpt = $.extend(true, {}, bptParticles, {
 						new: true
 					});
 

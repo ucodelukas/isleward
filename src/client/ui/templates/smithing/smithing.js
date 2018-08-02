@@ -43,11 +43,11 @@ define([
 		},
 
 		clickAction: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 			this.find('.col-btn').removeClass('selected');
 
-			var action = el.attr('action');
-			var changed = (action != this.action);
+			let action = el.attr('action');
+			let changed = (action != this.action);
 			this.action = action;
 
 			el.addClass('selected');
@@ -77,7 +77,7 @@ define([
 		onSmith: function (item, result) {
 			this.setDisabled(false);
 
-			var msg = {
+			let msg = {
 				msg: 'Item Enhancement Succeeded',
 				type: 'success',
 				zIndex: 9999999,
@@ -101,7 +101,7 @@ define([
 
 			this.getMaterials(this.item);
 
-			var augment = this.find('[action="augment"]').addClass('disabled');
+			let augment = this.find('[action="augment"]').addClass('disabled');
 			if ((result.item.power || 0) < 3)
 				augment.removeClass('disabled');
 			else
@@ -155,19 +155,19 @@ define([
 			this.find('[action="augment"]').addClass('selected');
 			this.action = 'augment';
 
-			var augment = this.find('[action="augment"]').addClass('disabled');
+			let augment = this.find('[action="augment"]').addClass('disabled');
 			if ((msg.item.power || 0) < 3)
 				augment.removeClass('disabled');
 
-			var reforge = this.find('[action="reforge"]').addClass('disabled');
+			let reforge = this.find('[action="reforge"]').addClass('disabled');
 			if (msg.item.spell)
 				reforge.removeClass('disabled');
 
-			var reslot = this.find('[action="reslot"]').addClass('disabled');
+			let reslot = this.find('[action="reslot"]').addClass('disabled');
 			if (!msg.item.effects)
 				reslot.removeClass('disabled');
 
-			var relevel = this.find('[action="relevel"]').addClass('disabled');
+			let relevel = this.find('[action="relevel"]').addClass('disabled');
 			if (msg.item.slot == 'tool')
 				relevel.removeClass('disabled');
 
@@ -212,9 +212,9 @@ define([
 			this.find('.actionButton').removeClass('disabled').addClass('disabled');
 
 			if (result.materials) {
-				var material = result.materials[0];
+				let material = result.materials[0];
 				if (material) {
-					var hasMaterials = window.player.inventory.items.find(function (i) {
+					let hasMaterials = window.player.inventory.items.find(function (i) {
 						return (i.name == material.name);
 					});
 					if (hasMaterials) {
@@ -239,10 +239,10 @@ define([
 		drawItem: function (container, item, redQuantity) {
 			container.find('.icon').hide();
 
-			var imgX = -item.sprite[0] * 64;
-			var imgY = -item.sprite[1] * 64;
+			let imgX = -item.sprite[0] * 64;
+			let imgY = -item.sprite[1] * 64;
 
-			var spritesheet = item.spritesheet || '../../../images/items.png';
+			let spritesheet = item.spritesheet || '../../../images/items.png';
 			if (item.material)
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
@@ -250,7 +250,7 @@ define([
 			 else if (item.type == 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
-			var el = $(templateItem)
+			let el = $(templateItem)
 				.appendTo(container);
 
 			el
@@ -261,7 +261,7 @@ define([
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
 			if (item.quantity) {
-				var quantityText = item.quantityText;
+				let quantityText = item.quantityText;
 				el.find('.quantity').html(quantityText);
 				if (redQuantity)
 					el.find('.quantity').addClass('red');
@@ -274,10 +274,10 @@ define([
 			else
 				item = this.hoverItem;
 
-			var ttPos = null;
+			let ttPos = null;
 
 			if (el) {
-				var elOffset = el.offset();
+				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(e.clientX + 32),
 					y: ~~(e.clientY)

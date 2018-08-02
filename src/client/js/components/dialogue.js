@@ -2,7 +2,7 @@ define([
 	'js/system/client',
 	'js/system/events',
 	'ui/factory'
-], function(
+], function (
 	client,
 	events,
 	factory
@@ -10,11 +10,11 @@ define([
 	return {
 		type: 'dialogue',
 
-		init: function() {
+		init: function () {
 
 		},
 
-		talk: function(target) {
+		talk: function (target) {
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -28,7 +28,7 @@ define([
 			});
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			events.emit('onGetTalk', blueprint.state);
 		}
 	};

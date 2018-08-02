@@ -38,7 +38,7 @@ define([
 		},
 
 		redirect: function (e) {
-			var location = $(e.target).attr('location');
+			let location = $(e.target).attr('location');
 			window.open(location, '_blank');
 		},
 

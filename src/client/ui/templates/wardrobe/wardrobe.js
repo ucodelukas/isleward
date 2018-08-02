@@ -28,15 +28,15 @@ define([
 		},
 
 		onGetWardrobeSkins: function (msg) {
-			var list = msg.skins;
+			let list = msg.skins;
 			this.wardrobeId = msg.id;
 
-			var container = this.find('.list').empty();
+			let container = this.find('.list').empty();
 
 			list.forEach(function (l) {
-				var html = '<div class="skinName">' + l.name + '</div>';
+				let html = '<div class="skinName">' + l.name + '</div>';
 
-				var el = $(html)
+				let el = $(html)
 					.appendTo(container);
 
 				el.on('click', this.setPreview.bind(this, l, el));
@@ -57,11 +57,11 @@ define([
 
 			this.skin = skin;
 
-			var costume = skin.sprite.split(',');
-			var spirteX = -costume[0] * 8;
-			var spriteY = -costume[1] * 8;
+			let costume = skin.sprite.split(',');
+			let spirteX = -costume[0] * 8;
+			let spriteY = -costume[1] * 8;
 
-			var spritesheet = skin.spritesheet || '../../../images/characters.png';
+			let spritesheet = skin.spritesheet || '../../../images/characters.png';
 
 			this.find('.sprite')
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px');
@@ -81,5 +81,5 @@ define([
 				}
 			});
 		}
-	}
+	};
 });

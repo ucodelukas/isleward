@@ -3,15 +3,15 @@ define([
 ], function (
 
 ) {
-	var events = {
+	let events = {
 		events: {},
 		queue: [],
 		on: function (event, callback) {
-			var list = this.events[event] || (this.events[event] = []);
+			let list = this.events[event] || (this.events[event] = []);
 			list.push(callback);
 
-			for (var i = 0; i < this.queue.length; i++) {
-				var q = this.queue[i];
+			for (let i = 0; i < this.queue.length; i++) {
+				let q = this.queue[i];
 				if (q.event != event)
 					continue;
 
@@ -32,9 +32,9 @@ define([
 			});
 		},
 		off: function (event, callback) {
-			var list = this.events[event] || [];
-			var lLen = list.length;
-			for (var i = 0; i < lLen; i++) {
+			let list = this.events[event] || [];
+			let lLen = list.length;
+			for (let i = 0; i < lLen; i++) {
 				if (list[i] == callback) {
 					list.splice(i, 1);
 					i--;
@@ -46,9 +46,9 @@ define([
 				delete this.events[event];
 		},
 		emit: function (event) {
-			var args = [].slice.call(arguments, 1);
+			let args = [].slice.call(arguments, 1);
 
-			var list = this.events[event];
+			let list = this.events[event];
 			if (!list) {
 				this.queue.push({
 					event: event,
@@ -58,9 +58,9 @@ define([
 				return;
 			}
 
-			var len = list.length
-			for (var i = 0; i < len; i++) {
-				var l = list[i];
+			let len = list.length;
+			for (let i = 0; i < len; i++) {
+				let l = list[i];
 				l.apply(null, args);
 			}
 		}

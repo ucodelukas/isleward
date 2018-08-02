@@ -95,11 +95,11 @@ define([
 
 			this.renderers.clear.call(this);
 
-			var links = this.data.links;
-			var nodes = this.data.nodes;
+			let links = this.data.links;
+			let nodes = this.data.nodes;
 
 			links.forEach(function (l) {
-				var linked = (
+				let linked = (
 					nodes.find(function (n) {
 						return (n.id == l.from.id);
 					}).selected &&
@@ -120,7 +120,7 @@ define([
 
 			if (this.shown) {
 				//Calculate midpoint
-				var start = this.data.nodes.find(function (n) {
+				let start = this.data.nodes.find(function (n) {
 					return (n.spiritStart == window.player.class);
 				});
 
@@ -150,7 +150,7 @@ define([
 
 		renderers: {
 			clear: function () {
-				var pos = this.oldPos || this.pos;
+				let pos = this.oldPos || this.pos;
 
 				this.ctx.clearRect(0, 0, this.size.w, this.size.h);
 
@@ -158,7 +158,7 @@ define([
 			},
 
 			node: function (node) {
-				var color = (node.color >= 0) ? (node.color + 1) : -1;
+				let color = (node.color >= 0) ? (node.color + 1) : -1;
 				if (((!node.stats) || (Object.keys(node.stats).length == 0)) && (!node.spiritStart))
 					color = 0;
 
@@ -178,15 +178,15 @@ define([
 					'#44cb95',
 					'#fafcfc'
 				])[color];
-				var size = ([
+				let size = ([
 					constants.blockSize,
 					constants.blockSize * 2,
 					constants.blockSize * 3
 				])[node.size];
-				var x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.x;
-				var y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.y;
+				let x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.x;
+				let y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.y;
 
-				var linked = this.data.links.some(function (l) {
+				let linked = this.data.links.some(function (l) {
 					if ((l.from.id != node.id) && (l.to.id != node.id))
 						return false;
 
@@ -225,12 +225,11 @@ define([
 
 				if (!linked)
 					this.ctx.globalAlpha = 1;
-
 			},
 
 			line: function (fromNode, toNode, linked) {
-				var ctx = this.ctx;
-				var halfSize = constants.blockSize / 2;
+				let ctx = this.ctx;
+				let halfSize = constants.blockSize / 2;
 
 				fromNode = this.data.nodes.find(function (n) {
 					return (n.id == fromNode.id);
@@ -240,11 +239,11 @@ define([
 					return (n.id == toNode.id);
 				});
 
-				var fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
-				var fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
+				let fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				let fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
-				var toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
-				var toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
+				let toX = (toNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
+				let toY = (toNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
 
 				if ((!linked) && (!fromNode.selected) && (!toNode.selected))
 					this.ctx.globalAlpha = 0.25;
@@ -271,12 +270,12 @@ define([
 					y: pos.y
 				};
 
-				var cell = {
+				let cell = {
 					x: ~~((this.pos.x + this.mouse.x) / constants.gridSize),
 					y: ~~((this.pos.y + this.mouse.y) / constants.gridSize)
 				};
 
-				var node = this.hoverNode = this.data.nodes.find(function (n) {
+				let node = this.hoverNode = this.data.nodes.find(function (n) {
 					return (
 						(n.pos.x == cell.x) &&
 						(n.pos.y == cell.y)
@@ -284,7 +283,7 @@ define([
 				});
 
 				if (node) {
-					var percentageStats = [
+					let percentageStats = [
 						'addCritChance',
 						'addCritMultiplier',
 						'sprintChance',
@@ -301,11 +300,11 @@ define([
 						'fishItems'
 					];
 
-					var text = Object.keys(node.stats)
+					let text = Object.keys(node.stats)
 						.map(function (s) {
-							var statName = statTranslations.translate(s);
-							var statValue = node.stats[s];
-							var negative = ((statValue + '')[0] == '-');
+							let statName = statTranslations.translate(s);
+							let statValue = node.stats[s];
+							let negative = ((statValue + '')[0] == '-');
 							if (percentageStats.indexOf(s) > -1)
 								statValue += '%';
 
@@ -353,8 +352,8 @@ define([
 					};
 				}
 
-				var zoomPanMultiplier = this.currentZoom;
-				var scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
+				let zoomPanMultiplier = this.currentZoom;
+				let scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
 
 				this.pos.x += (this.panOrigin.x - e.raw.clientX) * scrollSpeed;
 				this.pos.y += (this.panOrigin.y - e.raw.clientY) * scrollSpeed;
@@ -399,7 +398,7 @@ define([
 			},
 
 			onGetPassivePoints: function (points) {
-				var el = this.find('.points')
+				let el = this.find('.points')
 					.html('Points Available: ' + points);
 			},
 
@@ -417,5 +416,5 @@ define([
 				});
 			}
 		}
-	}
+	};
 });

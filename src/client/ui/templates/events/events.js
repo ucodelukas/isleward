@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/events/template',
 	'html!ui/templates/events/templateEvent',
 	'css!ui/templates/events/styles'
-], function(
+], function (
 	client,
 	events,
 	tpl,
@@ -18,7 +18,7 @@ define([
 
 		container: '.right',
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainEvent', this.onObtainEvent.bind(this));
@@ -27,13 +27,13 @@ define([
 			this.onEvent('onCompleteEvent', this.onCompleteEvent.bind(this));
 		},
 
-		onRezone: function() {
+		onRezone: function () {
 			this.list = [];
 			this.el.find('.list').empty();
 		},
 
-		onRemoveEvent: function(id) {
-			var l = this.list.spliceFirstWhere(function(l) {
+		onRemoveEvent: function (id) {
+			let l = this.list.spliceFirstWhere(function (l) {
 				return (l.id == id);
 			});
 
@@ -41,8 +41,8 @@ define([
 				l.el.remove();
 		},
 
-		onObtainEvent: function(event) {
-			var exists = this.list.find(function(l) {
+		onObtainEvent: function (event) {
+			let exists = this.list.find(function (l) {
 				return (l.id == event.id);
 			});
 			if (exists) {
@@ -51,13 +51,13 @@ define([
 				return;
 			}
 
-			var container = this.el.find('.list');
+			let container = this.el.find('.list');
 
-			var html = templateEvent
+			let html = templateEvent
 				.replace('$NAME$', event.name)
 				.replace('$DESCRIPTION$', event.description);
 
-			var el = $(html).appendTo(container);
+			let el = $(html).appendTo(container);
 
 			if (event.isReady)
 				el.addClass('ready');
@@ -71,7 +71,7 @@ define([
 			var event = container.find('.event');
 
 			event
-				.sort(function(a, b) {
+				.sort(function (a, b) {
 					a = $(a).hasClass('active') ? 1 : 0;
 					b = $(b).hasClass('active') ? 1 : 0;
 					return b - a;
@@ -79,8 +79,8 @@ define([
 				.appendTo(container);
 		},
 
-		onUpdateEvent: function(event) {
-			var e = this.list.find(function(l) {
+		onUpdateEvent: function (event) {
+			let e = this.list.find(function (l) {
 				return (l.id == event.id);
 			});
 
@@ -95,8 +95,8 @@ define([
 			}
 		},
 
-		onCompleteEvent: function(id) {
-			var e = this.list.find(function(l) {
+		onCompleteEvent: function (id) {
+			let e = this.list.find(function (l) {
 				return (l.id == id);
 			});
 
@@ -104,9 +104,9 @@ define([
 				return;
 
 			e.el.remove();
-			this.list.spliceWhere(function(l) {
+			this.list.spliceWhere(function (l) {
 				return (l.id == id);
 			});
 		}
-	}
+	};
 });

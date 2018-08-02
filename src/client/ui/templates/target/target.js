@@ -21,13 +21,13 @@ define([
 		},
 
 		onContextMenu: function (e) {
-			var target = this.target;
+			let target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
 			if ((e.button != 2) || (!target) || (!target.dialogue) || (target == window.player) || (target.prophecies))
 				return;
 
-			var context = [
+			let context = [
 				target.name,
 				'----------', {
 					text: 'talk',
@@ -54,13 +54,13 @@ define([
 				this.lastLevel = null;
 				this.el.hide();
 			} else {
-				var el = this.el;
+				let el = this.el;
 				el.find('.infoName').html(target.name);
 				el.find('.infoLevel')
 					.html('(' + target.stats.values.level + ')')
 					.removeClass('high-level');
 
-				var crushing = (target.stats.values.level - 5 >= window.player.stats.values.level);
+				let crushing = (target.stats.values.level - 5 >= window.player.stats.values.level);
 				if (crushing)
 					el.find('.infoLevel').addClass('high-level');
 
@@ -72,16 +72,16 @@ define([
 		},
 
 		buildBar: function (barIndex, value, max) {
-			var box = this.el.find('.statBox').eq(barIndex);
+			let box = this.el.find('.statBox').eq(barIndex);
 
-			var w = ~~((value / max) * 100);
+			let w = ~~((value / max) * 100);
 			box.find('[class^="stat"]').css('width', w + '%');
 
 			box.find('.text').html(Math.floor(value) + '/' + Math.floor(max));
 		},
 
 		update: function () {
-			var target = this.target;
+			let target = this.target;
 
 			if (!target)
 				return;
@@ -91,14 +91,14 @@ define([
 				return;
 			}
 
-			var stats = target.stats.values;
+			let stats = target.stats.values;
 
 			if (stats.level != this.lastLevel) {
 				this.el.find('.infoLevel')
 					.html('(' + stats.level + ')')
 					.removeClass('high-level');
 
-				var crushing = (stats.level - 5 >= window.player.stats.level);
+				let crushing = (stats.level - 5 >= window.player.stats.level);
 				if (crushing)
 					this.el.find('.infoLevel').addClass('high-level');
 			}
@@ -113,5 +113,5 @@ define([
 				this.lastMana = stats.mana;
 			}
 		}
-	}
+	};
 });

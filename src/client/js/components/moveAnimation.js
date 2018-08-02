@@ -1,6 +1,6 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
 	return {
@@ -17,7 +17,7 @@ define([
 
 		particles: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.particles = this.obj.addComponent('particles', {
 				blueprint: {
 					scale: {
@@ -58,29 +58,29 @@ define([
 				}
 			});
 
-			this.endTime = +new Date + this.ttl;
+			this.endTime = +new Date() + this.ttl;
 
-			var obj = this.obj;
+			let obj = this.obj;
 			this.x = obj.x;
 			this.y = obj.y;
 
-			if (this.targetX > this.x) {
+			if (this.targetX > this.x) 
 				this.obj.flipX = false;
-			}
+			
 			else if (this.targetX < this.x)
 				this.obj.flipX = true;
 
 			this.obj.setSpritePosition();
 		},
 
-		update: function() {
-			var source = this.obj;
-			var target = this.target;
+		update: function () {
+			let source = this.obj;
+			let target = this.target;
 
-			var dx = this.targetX - this.x;
-			var dy = this.targetY - this.y;
+			let dx = this.targetX - this.x;
+			let dy = this.targetY - this.y;
 
-			var ticksLeft = ~~((this.endTime - (+new Date)) / 16);
+			let ticksLeft = ~~((this.endTime - (+new Date())) / 16);
 
 			if (ticksLeft <= 0) {
 				this.obj.x = this.targetX;

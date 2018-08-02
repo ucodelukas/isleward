@@ -7,8 +7,8 @@ define([
 	objects,
 	renderer
 ) {
-	var scale = 40;
-	var scaleMult = 5;
+	let scale = 40;
+	let scaleMult = 5;
 
 	return {
 		list: [],
@@ -18,17 +18,17 @@ define([
 		},
 
 		onGetDamage: function (msg) {
-			var target = objects.objects.find(function (o) {
+			let target = objects.objects.find(function (o) {
 				return (o.id == msg.id);
 			});
 			if (!target)
 				return;
 
-			var addY = msg.event ? scale : -(scale * 0.75);
+			let addY = msg.event ? scale : -(scale * 0.75);
 
-			var ttl = 35;
+			let ttl = 35;
 
-			var numberObj = {
+			let numberObj = {
 				obj: target,
 				amount: msg.amount,
 				x: (target.x * scale),
@@ -41,17 +41,17 @@ define([
 				heal: msg.heal
 			};
 
-			if (numberObj.event) {
+			if (numberObj.event) 
 				numberObj.y += (scale / 2);
-			} else if (numberObj.heal)
+			 else if (numberObj.heal)
 				numberObj.x -= scale;
 			else
 				numberObj.x += scale;
 
-			var text = numberObj.text;
+			let text = numberObj.text;
 			if (!numberObj.event) {
-				var amount = numberObj.amount;
-				var div = ((~~(amount * 10) / 10) > 0) ? 10 : 100;
+				let amount = numberObj.amount;
+				let div = ((~~(amount * 10) / 10) > 0) ? 10 : 100;
 				text = (numberObj.heal ? '+' : '') + (~~(amount * div) / div);
 			}
 
@@ -67,11 +67,11 @@ define([
 		},
 
 		render: function () {
-			var list = this.list;
-			var lLen = list.length;
+			let list = this.list;
+			let lLen = list.length;
 
-			for (var i = 0; i < lLen; i++) {
-				var l = list[i];
+			for (let i = 0; i < lLen; i++) {
+				let l = list[i];
 				l.ttl--;
 
 				if (l.ttl == 0) {
@@ -90,7 +90,7 @@ define([
 				else
 					l.y -= 1;
 
-				var alpha = l.ttl / l.ttlMax;
+				let alpha = l.ttl / l.ttlMax;
 
 				l.sprite.x = ~~(l.x / scaleMult) * scaleMult;
 				l.sprite.y = ~~(l.y / scaleMult) * scaleMult;

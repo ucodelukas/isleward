@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
 	'js/system/client'
-], function(
+], function (
 	events,
 	client
 ) {
@@ -10,12 +10,12 @@ define([
 
 		actions: [],
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			events.on('onKeyUp', this.onKeyUp.bind(this));
 		},
 
-		onKeyUp: function(key) {
-			this.actions.forEach(function(a) {
+		onKeyUp: function (key) {
+			this.actions.forEach(function (a) {
 				if (a.key != key)
 					return;
 
@@ -27,10 +27,10 @@ define([
 			}, this);
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.addActions) {
-				blueprint.addActions.forEach(function(a) {
-					var exists = this.actions.some(function(ta) {
+				blueprint.addActions.forEach(function (a) {
+					let exists = this.actions.some(function (ta) {
 						return ((ta.targetId == a.targetId) && (ta.cpn == a.cpn) && (ta.method == a.method));
 					});
 					if (exists)
@@ -43,8 +43,8 @@ define([
 			}
 
 			if (blueprint.removeActions) {
-				blueprint.removeActions.forEach(function(a) {
-				this.actions.spliceWhere(function(ta) {
+				blueprint.removeActions.forEach(function (a) {
+					this.actions.spliceWhere(function (ta) {
 						return ((ta.targetId == a.targetId) && (ta.cpn == a.cpn) && (ta.method == a.method));
 					});
 				}, this);

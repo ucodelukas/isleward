@@ -1,7 +1,7 @@
 define([
 	'js/rendering/lightningBuilder',
 	'js/rendering/effects'
-], function(
+], function (
 	lightningBuilder,
 	effects
 ) {
@@ -20,16 +20,16 @@ define([
 		lineShrink: false,
 		shrinking: false,
 
-		init: function() {
+		init: function () {
 			effects.register(this);
 
-			var xOffset = (this.toX >= this.obj.x) ? 1 : 0;
+			let xOffset = (this.toX >= this.obj.x) ? 1 : 0;
 
-			var fromX = this.obj.x + xOffset;
-			var fromY = this.obj.y + 0.5;
+			let fromX = this.obj.x + xOffset;
+			let fromY = this.obj.y + 0.5;
 
-			var toX = this.lineGrow ? fromX : this.toX + 0.5;
-			var toY = this.lineGrow ? fromY : this.toY + 0.5;
+			let toX = this.lineGrow ? fromX : this.toX + 0.5;
+			let toY = this.lineGrow ? fromY : this.toY + 0.5;
 
 			this.effect = lightningBuilder.build({
 				fromX: fromX,
@@ -42,8 +42,8 @@ define([
 			});
 		},
 
-		renderManual: function() {
-			var cdMax = this.cdMax;
+		renderManual: function () {
+			let cdMax = this.cdMax;
 			if (((this.lineGrow) && (this.linePercentage < 1)) || ((this.shrinking) && (this.linePercentage > 0)))
 				cdMax = 1;
 
@@ -65,15 +65,15 @@ define([
 				}
 			}
 
-			var xOffset = (this.toX >= this.obj.x) ? 1 : 0;
+			let xOffset = (this.toX >= this.obj.x) ? 1 : 0;
 
-			var fromX = this.obj.x + xOffset;
-			var fromY = this.obj.y + 0.5;
+			let fromX = this.obj.x + xOffset;
+			let fromY = this.obj.y + 0.5;
 
-			var toX = this.toX + 0.5;
-			var toY = this.toY + 0.5;
+			let toX = this.toX + 0.5;
+			let toY = this.toY + 0.5;
 
-			var changeTo = (
+			let changeTo = (
 				(
 					(this.lineGrow) && 
 					(this.linePercentage < 1)
@@ -86,17 +86,17 @@ define([
 
 			if (changeTo) {
 				var linePercentage = this.linePercentage;
-				if (this.shrinking) {
+				if (this.shrinking) 
 					linePercentage /= 1.5;
-				} else {
+				 else {
 					linePercentage *= 1.5;
 					if (linePercentage > 1)
 						linePercentage = 1;
 				}
 				this.linePercentage = linePercentage;
 
-				var angle = Math.atan2(toY - fromY, toX - fromX);
-				var distance = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
+				let angle = Math.atan2(toY - fromY, toX - fromX);
+				let distance = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
 				toX = fromX + (Math.cos(angle) * distance * this.linePercentage);
 				toY = fromY + (Math.sin(angle) * distance * this.linePercentage);
 			}
@@ -115,7 +115,7 @@ define([
 				this.destroyed = true;
 		},
 
-		destroyManual: function() {
+		destroyManual: function () {
 			if ((!this.lineShrink) || (this.shrinking)) {
 				if (this.effect)
 					lightningBuilder.destroy(this.effect);

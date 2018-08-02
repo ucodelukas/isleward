@@ -1,4 +1,4 @@
-var components = [
+let components = [
 	'keyboardMover',
 	'mouseMover',
 	'player',
@@ -38,7 +38,7 @@ var components = [
 });
 
 define(components, function () {
-	var templates = {};
+	let templates = {};
 
 	[].forEach.call(arguments, function (t) {
 		templates[t.type] = t;

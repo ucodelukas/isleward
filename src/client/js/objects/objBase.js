@@ -7,8 +7,8 @@ define([
 	renderer,
 	events
 ) {
-	var scale = 40;
-	var scaleMult = 5;
+	let scale = 40;
+	let scaleMult = 5;
 
 	return {
 		components: [],
@@ -17,19 +17,18 @@ define([
 		eventCallbacks: {},
 
 		addComponent: function (type, options) {
-			var c = this[type];
+			let c = this[type];
 
 			if ((!c) || (options.new)) {
-				var template = components.getTemplate(type);
+				let template = components.getTemplate(type);
 				if (!template)
 					return;
 
 				c = $.extend(true, {}, template);
 				c.obj = this;
 
-				for (var o in options) {
+				for (let o in options) 
 					c[o] = options[o];
-				}
 
 				//Only use component to initialize other components?
 				if ((c.init) && (c.init(options)))
@@ -39,16 +38,15 @@ define([
 				this.components.push(c);
 
 				return c;
-			} else {
-				if (c.extend)
-					c.extend(options);
+			} 
+			if (c.extend)
+				c.extend(options);
 
-				return c;
-			}
+			return c;
 		},
 
 		removeComponent: function (type) {
-			var cpn = this[type];
+			let cpn = this[type];
 			if (!cpn)
 				return;
 
@@ -60,10 +58,10 @@ define([
 		},
 
 		update: function () {
-			var components = this.components;
-			var len = components.length;
-			for (var i = 0; i < len; i++) {
-				var c = components[i];
+			let components = this.components;
+			let len = components.length;
+			for (let i = 0; i < len; i++) {
+				let c = components[i];
 				if (c.update)
 					c.update();
 
@@ -80,7 +78,7 @@ define([
 		},
 
 		on: function (event, callback) {
-			var list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
+			let list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
 			list.push(events.on(event, callback));
 		},
 
@@ -89,7 +87,7 @@ define([
 				return;
 
 			this.sprite.x = (this.x * scale) + (this.flipX ? scale : 0) + this.offsetX;
-			var oldY = this.sprite.x;
+			let oldY = this.sprite.x;
 			this.sprite.y = (this.y * scale) + this.offsetY;
 
 			if (this.sprite.width > scale) {
@@ -107,11 +105,11 @@ define([
 			this.sprite.scale.x = (this.flipX ? -scaleMult : scaleMult);
 
 			['nameSprite', 'chatSprite'].forEach(function (s, i) {
-				var sprite = this[s];
+				let sprite = this[s];
 				if (!sprite)
 					return;
 
-				var yAdd = scale;
+				let yAdd = scale;
 				if (i == 1) {
 					yAdd *= -0.8;
 					yAdd -= (this.chatter.msg.split('\r\n').length - 1) * scale * 0.8;
@@ -128,16 +126,17 @@ define([
 		destroy: function () {
 			if (this.sprite)
 				renderer.destroyObject(this);
-			if (this.nameSprite)
+			if (this.nameSprite) {
 				renderer.destroyObject({
 					layerName: 'effects',
 					sprite: this.nameSprite
 				});
+			}
 
-			var components = this.components;
-			var cLen = components.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = components[i];
+			let components = this.components;
+			let cLen = components.length;
+			for (let i = 0; i < cLen; i++) {
+				let c = components[i];
 				if (c.destroy)
 					c.destroy();
 			}

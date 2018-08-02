@@ -60,8 +60,8 @@ define([
 
 		build: function (type, options) {
 			//Don't make doubles?
-			var className = 'ui' + type[0].toUpperCase() + type.substr(1);
-			var el = $('.' + className);
+			let className = 'ui' + type[0].toUpperCase() + type.substr(1);
+			let el = $('.' + className);
 			if (el.length > 0)
 				return;
 
@@ -71,7 +71,7 @@ define([
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
 		onGetTemplate: function (options, template) {
-			var ui = _.create(uiBase, template);
+			let ui = _.create(uiBase, template);
 			ui.setOptions(options);
 			ui.render();
 			ui.el.data('ui', ui);
@@ -102,10 +102,10 @@ define([
 		},
 
 		update: function () {
-			var uis = this.uis;
-			var uLen = uis.length;
-			for (var i = 0; i < uLen; i++) {
-				var u = uis[i];
+			let uis = this.uis;
+			let uLen = uis.length;
+			for (let i = 0; i < uLen; i++) {
+				let u = uis[i];
 				if (u.update)
 					u.update();
 			}

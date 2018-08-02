@@ -2,7 +2,7 @@ define([
 	'js/system/events',
 	'html!ui/templates/help/template',
 	'css!ui/templates/help/styles'
-], function(
+], function (
 	events,
 	template,
 	styles
@@ -13,18 +13,17 @@ define([
 
 		modal: true,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onShowHelp', this.toggle.bind(this));
 		},
 
-		onKeyDown: function(key) {
-			if (key == 'h') {
+		onKeyDown: function (key) {
+			if (key == 'h') 
 				this.toggle();
-			}
 		},
 
-		toggle: function() {
+		toggle: function () {
 			this.shown = !this.el.is(':visible');
 
 			if (this.shown)

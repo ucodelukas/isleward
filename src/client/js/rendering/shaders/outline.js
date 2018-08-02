@@ -2,12 +2,12 @@ define([
 	'pixi',
 	'js/rendering/shaders/outline/vert',
 	'js/rendering/shaders/outline/frag'
-], function(
+], function (
 	pixi,
 	vert,
 	frag
 ) {
-	var OutlineFilter = function(viewWidth, viewHeight, thickness, color) {
+	let OutlineFilter = function (viewWidth, viewHeight, thickness, color) {
 		thickness = thickness || 1;
 		pixi.Filter.call(this,
 			vert,
@@ -19,9 +19,8 @@ define([
 		this.uniforms.thickness = thickness;
 		this.uniforms.outlineColor = new Float32Array([0, 0, 0, 1]);
 		this.alpha = 0;
-		if (color) {
+		if (color) 
 			this.color = color;
-		}
 	};
 
 	OutlineFilter.prototype = Object.create(pixi.Filter.prototype);
@@ -29,34 +28,34 @@ define([
 
 	Object.defineProperties(OutlineFilter.prototype, {
 		color: {
-			get: function() {
+			get: function () {
 				return pixi.utils.rgb2hex(this.uniforms.outlineColor);
 			},
-			set: function(value) {
+			set: function (value) {
 				pixi.utils.hex2rgb(value, this.uniforms.outlineColor);
 			}
 		},
 
 		alpha: {
-			set: function(value) {
+			set: function (value) {
 				this.uniforms.alpha = value;
 			}
 		},
 
 		viewWidth: {
-			get: function() {
+			get: function () {
 				return 1 / this.uniforms.pixelWidth;
 			},
-			set: function(value) {
+			set: function (value) {
 				this.uniforms.pixelWidth = 1 / value;
 			}
 		},
 
 		viewHeight: {
-			get: function() {
+			get: function () {
 				return 1 / this.uniforms.pixelHeight;
 			},
-			set: function(value) {
+			set: function (value) {
 				this.uniforms.pixelHeight = 1 / value;
 			}
 		}

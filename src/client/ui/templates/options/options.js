@@ -57,7 +57,7 @@ define([
 
 			events.emit('onShowCharacterSelect');
 			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
-				var ui = $(el).data('ui');
+				let ui = $(el).data('ui');
 				if ((ui) && (ui.destroy))
 					ui.destroy();
 			});
@@ -69,7 +69,7 @@ define([
 		},
 
 		onResize: function () {
-			var isFullscreen = (window.innerHeight == screen.height);
+			let isFullscreen = (window.innerHeight == screen.height);
 			if (isFullscreen)
 				this.el.find('.btnScreen').html('Windowed');
 			else
@@ -98,5 +98,5 @@ define([
 			if (key == 'esc')
 				this.toggle();
 		}
-	}
+	};
 });

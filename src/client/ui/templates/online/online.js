@@ -50,10 +50,10 @@ define([
 			if (!list.length)
 				list = [list];
 
-			var onlineList = this.onlineList;
+			let onlineList = this.onlineList;
 
 			list.forEach(function (l) {
-				var exists = onlineList.find(function (o) {
+				let exists = onlineList.find(function (o) {
 					return (o.name == l.name);
 				});
 				if (exists)
@@ -67,10 +67,8 @@ define([
 					if (a.level == b.level) {
 						if (a.name > b.name)
 							return 1;
-						else
-							return -1;
-					} else
-						return b.level - a.level;
+						return -1;
+					} return b.level - a.level;
 				});
 
 			if (this.shown)
@@ -78,7 +76,7 @@ define([
 		},
 
 		onGetDisconnectedPlayer: function (name) {
-			var onlineList = this.onlineList;
+			let onlineList = this.onlineList;
 
 			onlineList.spliceWhere(function (o) {
 				return (o.name == name);
@@ -89,13 +87,13 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.list');
+			let container = this.el.find('.list');
 			container
 				.children(':not(.heading)')
 				.remove();
 
 			this.onlineList.forEach(function (l) {
-				var html = templateListItem
+				let html = templateListItem
 					.replace('$NAME$', l.name)
 					.replace('$LEVEL$', l.level)
 					.replace('$CLASS$', l.class);

@@ -35,19 +35,19 @@ define([
 
 			this.find('.heading-text').html(action);
 
-			var uiInventory = $('.uiInventory').data('ui');
+			let uiInventory = $('.uiInventory').data('ui');
 
-			var container = this.el.find('.grid')
+			let container = this.el.find('.grid')
 				.empty();
 
-			var buyItems = itemList.items;
+			let buyItems = itemList.items;
 
 			buyItems.forEach(function (item) {
 				if ((item == this.hoverItem))
 					this.onHover(null, item);
 			}, this);
 
-			var iLen = Math.max(buyItems.length, 50);
+			let iLen = Math.max(buyItems.length, 50);
 			for (var i = 0; i < iLen; i++) {
 				var item = buyItems[i];
 
@@ -65,13 +65,13 @@ define([
 
 				item = $.extend(true, {}, item);
 
-				var size = 64;
-				var offset = 0;
+				let size = 64;
+				let offset = 0;
 
-				var itemEl = $(tplItem)
+				let itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = item.spritesheet || '../../../images/items.png';
+				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (item.material)
 					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
@@ -85,8 +85,8 @@ define([
 						spritesheet = '../../../images/characters.png';
 				}
 
-				var imgX = (-item.sprite[0] * size) + offset;
-				var imgY = (-item.sprite[1] * size) + offset;
+				let imgX = (-item.sprite[0] * size) + offset;
+				let imgY = (-item.sprite[1] * size) + offset;
 
 				itemEl
 					.data('item', item)
@@ -103,14 +103,14 @@ define([
 					itemEl.find('.quantity').html('EQ');
 
 				if (action == 'buy') {
-					var noAfford = false;
+					let noAfford = false;
 					if (item.worth.currency) {
-						var currencyItems = window.player.inventory.items.find(function (i) {
+						let currencyItems = window.player.inventory.items.find(function (i) {
 							return (i.name == item.worth.currency);
 						});
 						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
 					} else
-						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold)
+						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);
 
 					if ((!noAfford) && (item.factions)) {
 						noAfford = item.factions.some(function (f) {
@@ -156,26 +156,26 @@ define([
 				callback: this.onServerRespond.bind(this, el)
 			});
 
-			var uiInventory = $('.uiInventory').data('ui');
+			let uiInventory = $('.uiInventory').data('ui');
 			uiInventory.hideTooltip(el, item, e);
 		},
 
 		onHover: function (el, item, action, e) {
-			var uiInventory = $('.uiInventory').data('ui');
+			let uiInventory = $('.uiInventory').data('ui');
 			uiInventory.onHover(el, item, e);
 
-			var canAfford = true;
+			let canAfford = true;
 			if (action == 'buy') {
 				if (item.worth.currency) {
-					var currencyItems = window.player.inventory.items.find(function (i) {
+					let currencyItems = window.player.inventory.items.find(function (i) {
 						return (i.name == item.worth.currency);
 					});
 					canAfford = ((currencyItems) && (currencyItems.quantity >= item.worth.amount));
 				} else
-					canAfford = (item.worth * this.itemList.markup <= window.player.trade.gold)
+					canAfford = (item.worth * this.itemList.markup <= window.player.trade.gold);
 			}
 
-			var uiTooltipItem = $('.uiTooltipItem').data('ui');
+			let uiTooltipItem = $('.uiTooltipItem').data('ui');
 			uiTooltipItem.showWorth(canAfford);
 		},
 

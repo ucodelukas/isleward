@@ -39,8 +39,8 @@ define([
 		},
 
 		onPage: function (e) {
-			var el = $(e.currentTarget);
-			var offset = ~~el.attr('offset');
+			let el = $(e.currentTarget);
+			let offset = ~~el.attr('offset');
 
 			this.offset += offset;
 			if (this.offset < 0)
@@ -52,7 +52,7 @@ define([
 		},
 
 		onMine: function () {
-			var prophecies = window.player.prophecies;
+			let prophecies = window.player.prophecies;
 			prophecies = prophecies ? prophecies.list : [];
 
 			this.prophecyFilter = [];
@@ -75,13 +75,13 @@ define([
 		},
 
 		onProphecyClick: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 
 			el.toggleClass('selected');
 
-			var prophecyName = el.attr('prophecy');
+			let prophecyName = el.attr('prophecy');
 
-			var exists = this.prophecyFilter.some(function (p) {
+			let exists = this.prophecyFilter.some(function (p) {
 				return (p == prophecyName);
 			}, this);
 
@@ -97,7 +97,7 @@ define([
 			this.el.addClass('disabled');
 
 			if (!this.prophecyFilter) {
-				var prophecies = window.player.prophecies;
+				let prophecies = window.player.prophecies;
 				this.prophecyFilter = prophecies ? prophecies.list : [];
 				this.prophecyFilter = $.extend(true, [], this.prophecyFilter);
 			}
@@ -119,30 +119,30 @@ define([
 			if (!keepOffset) {
 				this.offset = 0;
 
-				var foundIndex = this.records.list.firstIndex(function (r) {
+				let foundIndex = this.records.list.firstIndex(function (r) {
 					return (r.name == window.player.name);
 				}, this);
 				if (foundIndex != -1)
 					this.offset = ~~(foundIndex / this.pageSize);
 			}
 
-			var container = this.find('.list').empty();
+			let container = this.find('.list').empty();
 
-			var low = this.offset * this.pageSize;
-			var high = Math.min(result.length, low + this.pageSize);
+			let low = this.offset * this.pageSize;
+			let high = Math.min(result.length, low + this.pageSize);
 			this.maxOffset = Math.ceil(result.length / this.pageSize) - 1;
 
-			for (var i = 0; i < this.records.list.length; i++) {
+			for (let i = 0; i < this.records.list.length; i++) {
 				var r = this.records.list[i];
 
-				var html = '<div class="row"><div class="col">' + r.level + '</div><div class="col">' + r.name + '</div></div>';
-				var el = $(html)
+				let html = '<div class="row"><div class="col">' + r.level + '</div><div class="col">' + r.name + '</div></div>';
+				let el = $(html)
 					.appendTo(container);
 
 				if (r.name == window.player.name)
 					el.addClass('self');
 				else {
-					var online = globals.onlineList.some(function (o) {
+					let online = globals.onlineList.some(function (o) {
 						return (o.name == r.name);
 					});
 					if (online)
@@ -169,11 +169,11 @@ define([
 		},
 
 		toggle: function () {
-			var shown = !this.el.is(':visible');
+			let shown = !this.el.is(':visible');
 
 			if (shown) {
 				this.find('.prophecy[prophecy]').removeClass('selected');
-				var prophecies = window.player.prophecies;
+				let prophecies = window.player.prophecies;
 				prophecies = prophecies ? prophecies.list : [];
 				prophecies.forEach(function (p) {
 					this.find('.prophecy[prophecy="' + p + '"]').addClass('selected');

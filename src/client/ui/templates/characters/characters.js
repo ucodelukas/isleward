@@ -31,7 +31,7 @@ define([
 		},
 
 		onPlayClick: function () {
-			var char = this.selected;
+			let char = this.selected;
 			if (!char)
 				return;
 
@@ -72,7 +72,7 @@ define([
 
 			this.el.removeClass('disabled');
 
-			var list = this.find('.left')
+			let list = this.find('.left')
 				.empty();
 
 			characters
@@ -80,14 +80,14 @@ define([
 					return (b.level - a.level);
 				})
 				.forEach(function (c, i) {
-					var name = c.name;
+					let name = c.name;
 					if (c.level != null)
-						name += '<font class="color-yellowB"> (' + c.level + ')</font>'
+						name += '<font class="color-yellowB"> (' + c.level + ')</font>';
 
-					var html = templateListItem
+					let html = templateListItem
 						.replace('$NAME$', name);
 
-					var li = $(html)
+					let li = $(html)
 						.appendTo(list);
 
 					li.on('click', this.onCharacterClick.bind(this, c.name));
@@ -99,11 +99,11 @@ define([
 		onCharacterClick: function (name, e) {
 			this.el.addClass('disabled');
 
-			var el = $(e.target);
+			let el = $(e.target);
 			el.parent().find('.selected').removeClass('selected');
 			el.addClass('selected');
 
-			var charInfo = this.characterInfo[name];
+			let charInfo = this.characterInfo[name];
 			if (charInfo) {
 				this.onGetCharacter(name, charInfo);
 
@@ -122,13 +122,13 @@ define([
 		onGetCharacter: function (name, result) {
 			this.find('.button').removeClass('disabled');
 
-			var spriteY = ~~(result.cell / 8);
-			var spirteX = result.cell - (spriteY * 8);
+			let spriteY = ~~(result.cell / 8);
+			let spirteX = result.cell - (spriteY * 8);
 
 			spirteX = -(spirteX * 8);
 			spriteY = -(spriteY * 8);
 
-			var spritesheet = result.sheetName;
+			let spritesheet = result.sheetName;
 			if (spritesheet == 'characters')
 				spritesheet = '../../../images/characters.png';
 
@@ -137,7 +137,7 @@ define([
 				.show();
 
 			this.find('.name').html(name);
-			var stats = result.components.find(function (c) {
+			let stats = result.components.find(function (c) {
 				return (c.type == 'stats');
 			});
 			if (stats) {
@@ -146,16 +146,15 @@ define([
 					' ' +
 					result.class[0].toUpperCase() + result.class.substr(1)
 				);
-			} else {
+			} else 
 				this.find('.class').html('');
-			}
 
 			this.el.removeClass('disabled');
 
 			this.characterInfo[name] = result;
 			this.selected = name;
 
-			var prophecies = result.components.find(function (c) {
+			let prophecies = result.components.find(function (c) {
 				return (c.type == 'prophecies');
 			});
 
@@ -186,7 +185,7 @@ define([
 				this.find('.btnDelete')
 					.removeClass('deleting')
 					.addClass('deleting')
-					.html('delete (' + (4 - this.deleteCount) + ')')
+					.html('delete (' + (4 - this.deleteCount) + ')');
 
 				return;
 			}

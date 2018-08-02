@@ -28,7 +28,7 @@ define([
 			if (!this.item)
 				return;
 
-			var recipient = this.find('.txtRecipient').val();
+			let recipient = this.find('.txtRecipient').val();
 			if (recipient.length == 0)
 				return;
 
@@ -63,12 +63,12 @@ define([
 			this.toggle();
 			this.item = msg.item;
 
-			var item = msg.item;
+			let item = msg.item;
 
-			var imgX = -item.sprite[0] * 64;
-			var imgY = -item.sprite[1] * 64;
+			let imgX = -item.sprite[0] * 64;
+			let imgY = -item.sprite[1] * 64;
 
-			var spritesheet = item.spritesheet || '../../../images/items.png';
+			let spritesheet = item.spritesheet || '../../../images/items.png';
 			if (item.material)
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
@@ -76,7 +76,7 @@ define([
 			 else if (item.type == 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
-			var el = this.find('.item');
+			let el = this.find('.item');
 
 			el
 				.data('item', item)
@@ -84,7 +84,7 @@ define([
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
 			if (item.quantity) {
-				var quantityText = item.quantity;
+				let quantityText = item.quantity;
 				el.find('.quantity').html(item.quantity);
 			} else
 				el.find('.quantity').html('');
@@ -101,5 +101,5 @@ define([
 			} else
 				this.hide();
 		}
-	}
+	};
 });

@@ -29,26 +29,26 @@ define([
 
 			this.spells = spells;
 
-			for (var i = 0; i < spells.length; i++) {
-				var icon = spells[i].icon;
-				var x = -(icon[0] * 64);
-				var y = -(icon[1] * 64);
+			for (let i = 0; i < spells.length; i++) {
+				let icon = spells[i].icon;
+				let x = -(icon[0] * 64);
+				let y = -(icon[1] * 64);
 
-				var hotkey = (spells[i].id == 0) ? 'space' : spells[i].id;
+				let hotkey = (spells[i].id == 0) ? 'space' : spells[i].id;
 
-				var html = templateSpell
+				let html = templateSpell
 					.replace('$HOTKEY$', hotkey);
 
-				var el = $(html)
+				let el = $(html)
 					.appendTo(this.el);
 				el
 					.on('mouseover', this.onShowTooltip.bind(this, el, spells[i]))
 					.on('mouseleave', this.onHideTooltip.bind(this, el));
 
-				var spritesheet = spells[i].spritesheet || '../../../images/abilityIcons.png';
+				let spritesheet = spells[i].spritesheet || '../../../images/abilityIcons.png';
 				el
 					.find('.icon').css({
-						'background': 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px'
+						background: 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px'
 					})
 					.next().html(hotkey);
 
@@ -60,25 +60,25 @@ define([
 		},
 
 		onShowTooltip: function (el, spell) {
-			var pos = el.offset();
+			let pos = el.offset();
 			pos = {
 				x: pos.left + 56,
 				y: pos.top + el.height() + 16
 			};
 
-			var cd = ~~((spell.cdMax * 350) / 1000);
+			let cd = ~~((spell.cdMax * 350) / 1000);
 
-			var values = Object.keys(spell.values).filter(function (v) {
+			let values = Object.keys(spell.values).filter(function (v) {
 				return ((v != 'damage') && (v != 'healing'));
 			}).map(function (v) {
 				return v + ': ' + spell.values[v];
 			}).join('<br />');
 
-			var manaCost = spell.manaCost;
+			let manaCost = spell.manaCost;
 			if (spell.manaReserve)
 				manaCost = ~~(spell.manaReserve.percentage * 100) + '% reserved';
 
-			var tooltip = templateTooltip
+			let tooltip = templateTooltip
 				.replace('$NAME$', spell.name)
 				.replace('$DESCRIPTION$', spell.description)
 				.replace('$MANA$', manaCost)
@@ -101,24 +101,24 @@ define([
 		},
 
 		onGetSpellCooldowns: function (options) {
-			var spell = this.spells.find(function (s) {
+			let spell = this.spells.find(function (s) {
 				return (s.id == options.spell);
 			});
 			spell.ttl = options.cd;
-			spell.ttlStart = +new Date;
+			spell.ttlStart = +new Date();
 		},
 
 		onGetStats: function (stats) {
-			var mana = stats.mana;
+			let mana = stats.mana;
 
-			var spells = this.spells;
+			let spells = this.spells;
 			if (!spells)
 				return;
 
-			for (var i = 0; i < spells.length; i++) {
-				var spell = spells[i];
+			for (let i = 0; i < spells.length; i++) {
+				let spell = spells[i];
 
-				var el = this.el.children('div').eq(i).find('.hotkey');
+				let el = this.el.children('div').eq(i).find('.hotkey');
 				el.removeClass('no-mana');
 				if (spell.manaCost > mana)
 					el.addClass('no-mana');
@@ -126,14 +126,14 @@ define([
 		},
 
 		update: function () {
-			var spells = this.spells;
+			let spells = this.spells;
 			if (!spells)
 				return;
 
-			var time = +new Date;
+			let time = +new Date();
 
-			for (var i = 0; i < spells.length; i++) {
-				var spell = spells[i];
+			for (let i = 0; i < spells.length; i++) {
+				let spell = spells[i];
 
 				if (!spell.ttl) {
 					this.el.children('div').eq(i).find('.cooldown').css({
@@ -142,8 +142,8 @@ define([
 					continue;
 				}
 
-				var elapsed = time - spell.ttlStart;
-				var width = 1 - (elapsed / spell.ttl);
+				let elapsed = time - spell.ttlStart;
+				let width = 1 - (elapsed / spell.ttl);
 				if (width <= 0) {
 					delete spell.ttl;
 					width = 0;
@@ -156,5 +156,5 @@ define([
 				});
 			}
 		}
-	}
+	};
 });

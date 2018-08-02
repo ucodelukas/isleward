@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -10,24 +10,24 @@ define([
 
 		items: null,
 
-		init: function() {
+		init: function () {
 			events.emit('onGetStashItems', this.items);
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.active != null)
 				this.active = blueprint.active;
 
 			if (blueprint.getItems) {
-				var items = this.items;
-				var newItems = blueprint.getItems || [];
-				var nLen = newItems.length;
+				let items = this.items;
+				let newItems = blueprint.getItems || [];
+				let nLen = newItems.length;
 
-				for (var i = 0; i < nLen; i++) {
-					var nItem = newItems[i];
+				for (let i = 0; i < nLen; i++) {
+					let nItem = newItems[i];
 					var nId = nItem.id;
 
-					var findItem = items.find(function(item) {
+					let findItem = items.find(function (item) {
 						return (item.id == nId);
 					});
 					if (findItem) {
@@ -44,9 +44,8 @@ define([
 				events.emit('onGetStashItems', this.items);
 			}
 
-			if (blueprint.destroyItems) {
+			if (blueprint.destroyItems) 
 				events.emit('onDestroyStashItems', blueprint.destroyItems);
-			}
 		}
 	};
 });

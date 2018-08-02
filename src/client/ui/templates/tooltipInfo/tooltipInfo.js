@@ -26,11 +26,11 @@ define([
 				return;
 			}
 
-			var values = mob.stats.values;
+			let values = mob.stats.values;
 			this.lastHp = values.hp;
 			this.lastHpMax = values.hpMax;
 
-			var html = mob.name + ' (' + mob.stats.values.level + ')';
+			let html = mob.name + ' (' + mob.stats.values.level + ')';
 			if (mob.stats.values.level - 5 >= window.player.stats.values.level)
 				html = '<font class="color-red">' + html + '</font>';
 			if (mob.aggro) {
@@ -45,7 +45,7 @@ define([
 		},
 
 		update: function () {
-			var mob = this.mob;
+			let mob = this.mob;
 			if (!mob)
 				return;
 
@@ -53,12 +53,12 @@ define([
 				this.mob = null;
 				this.el.hide();
 			} else {
-				var values = mob.stats.values;
+				let values = mob.stats.values;
 				if (values.hp != this.lastHp)
 					this.onMobHover(mob);
 				else if (values.hpMax != this.lastHpMax)
 					this.onMobHover(mob);
 			}
 		}
-	}
+	};
 });

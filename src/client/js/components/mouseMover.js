@@ -11,7 +11,7 @@ define([
 	input,
 	objects
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'mouseMover',
@@ -49,7 +49,7 @@ define([
 					renderer.destroyObject({
 						sprite: p.sprite,
 						layerName: 'effects'
-					})
+					});
 				}
 			});
 
@@ -67,8 +67,8 @@ define([
 			if ((e.button != null) && (e.button != 0))
 				return;
 
-			var tileX = ~~(e.x / scale);
-			var tileY = ~~(e.y / scale);
+			let tileX = ~~(e.x / scale);
+			let tileY = ~~(e.y / scale);
 
 			if ((tileX == this.hoverTile.x) && (tileY == this.hoverTile.y))
 				return;
@@ -94,7 +94,7 @@ define([
 					return {
 						x: p.x,
 						y: p.y
-					}
+					};
 				})
 			});
 

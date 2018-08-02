@@ -1,34 +1,32 @@
 define([
 	
-], function(
+], function (
 	
 ) {
 	return {
 		pool: {},
 
-		clean: function() {
+		clean: function () {
 			this.pool = {};
 		},
 
-		getSprite: function(type) {
-			var list = this.pool[type];
+		getSprite: function (type) {
+			let list = this.pool[type];
 			if (!list)
 				return null;
 			else if (list.length == 0)
 				return null;
-			else
-				return list.pop();
+			return list.pop();
 		},
 
-		store: function(sprite) {
-			var pool = this.pool;
-			var type = sprite.type;
+		store: function (sprite) {
+			let pool = this.pool;
+			let type = sprite.type;
 			if (sprite.scale.x < 0)
 				type = 'flip' + type;
-			var list = pool[type];
-			if (!list) {
+			let list = pool[type];
+			if (!list) 
 				list = pool[type] = [];
-			}
 
 			list.push(sprite);
 		}

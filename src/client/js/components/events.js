@@ -1,23 +1,23 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
 		type: 'events',
 		list: [],
 
-		init: function() {
-			this.list.forEach(function(q) {
+		init: function () {
+			this.list.forEach(function (q) {
 				events.emit('onObtainEvent', q);
 			});
 		},
 
-		extend: function(blueprint) {
+		extend: function (blueprint) {
 			if (blueprint.updateList) {
-				blueprint.updateList.forEach(function(q) {
+				blueprint.updateList.forEach(function (q) {
 					events.emit('onObtainEvent', q);
-					this.list.spliceWhere(function(l) {
+					this.list.spliceWhere(function (l) {
 						return (l.id == q.id);
 					});
 					this.list.push(q);
@@ -25,9 +25,9 @@ define([
 			}
 
 			if (blueprint.removeList) {
-				blueprint.removeList.forEach(function(q) {
+				blueprint.removeList.forEach(function (q) {
 					events.emit('onRemoveEvent', q.id);
-					this.list.spliceWhere(function(l) {
+					this.list.spliceWhere(function (l) {
 						return (l.id == q.id);
 					});
 				}, this);
