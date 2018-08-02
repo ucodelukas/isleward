@@ -29,7 +29,7 @@ define([
 				return;
 
 			let recipient = this.find('.txtRecipient').val();
-			if (recipient.length == 0)
+			if (recipient.length === 0)
 				return;
 
 			client.request({
@@ -73,7 +73,7 @@ define([
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
-			 else if (item.type == 'consumable')
+			 else if (item.type === 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
 			let el = this.find('.item');

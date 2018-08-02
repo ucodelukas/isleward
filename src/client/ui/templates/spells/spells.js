@@ -34,7 +34,7 @@ define([
 				let x = -(icon[0] * 64);
 				let y = -(icon[1] * 64);
 
-				let hotkey = (spells[i].id == 0) ? 'space' : spells[i].id;
+				let hotkey = (spells[i].id === 0) ? 'space' : spells[i].id;
 
 				let html = templateSpell
 					.replace('$HOTKEY$', hotkey);
@@ -69,7 +69,7 @@ define([
 			let cd = ~~((spell.cdMax * 350) / 1000);
 
 			let values = Object.keys(spell.values).filter(function (v) {
-				return ((v != 'damage') && (v != 'healing'));
+				return ((v !== 'damage') && (v !== 'healing'));
 			}).map(function (v) {
 				return v + ': ' + spell.values[v];
 			}).join('<br />');
@@ -102,7 +102,7 @@ define([
 
 		onGetSpellCooldowns: function (options) {
 			let spell = this.spells.find(function (s) {
-				return (s.id == options.spell);
+				return (s.id === options.spell);
 			});
 			spell.ttl = options.cd;
 			spell.ttlStart = +new Date();

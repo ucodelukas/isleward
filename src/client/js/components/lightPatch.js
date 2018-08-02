@@ -24,8 +24,8 @@ define([
 			let y = obj.y;
 
 			let maxDistance = Math.sqrt(Math.pow(obj.width / 2, 2) + Math.pow(obj.height / 2, 2));
-			for (var i = 0; i < obj.width; i++) {
-				for (var j = 0; j < obj.height; j++) {
+			for (let i = 0; i < obj.width; i++) {
+				for (let j = 0; j < obj.height; j++) {
 					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - i, 2));
 					let alpha = distance / maxDistance;
 
@@ -47,7 +47,7 @@ define([
 			}
 
 			let rCount = ((obj.width * obj.height) / 10) + ~~(Math.random() + 2);
-			for (var i = 0; i < rCount; i++) {
+			for (let i = 0; i < rCount; i++) {
 				let nx = x + 3 + ~~(Math.random() * (obj.width - 1));
 				let ny = y - 4 + ~~(Math.random() * (obj.height));
 				let w = 1 + ~~(Math.random() * 2);
@@ -59,7 +59,7 @@ define([
 				});
 				this.rays.push(rContainer);
 
-				for (var j = 0; j < h; j++) {
+				for (let j = 0; j < h; j++) {
 					let ray = renderer.buildObject({
 						x: nx,
 						y: ny,

@@ -20,7 +20,7 @@ define([
 				events.emit('onGetStats', this.values);
 
 			let serverId = this.obj.serverId;
-			if (serverId != null)
+			if (serverId !== null)
 				events.emit('onGetPartyStats', serverId, this.values);
 
 			let obj = this.obj;
@@ -95,7 +95,7 @@ define([
 				events.emit('onGetStats', this.values);
 
 			let serverId = this.obj.serverId;
-			if (serverId != null)
+			if (serverId !== null)
 				events.emit('onGetPartyStats', serverId, this.values);
 
 			this.updateHpSprite();

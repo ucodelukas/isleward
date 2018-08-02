@@ -47,7 +47,7 @@ define([
 			this.find('.col-btn').removeClass('selected');
 
 			let action = el.attr('action');
-			let changed = (action != this.action);
+			let changed = (action !== this.action);
 			this.action = action;
 
 			el.addClass('selected');
@@ -83,11 +83,11 @@ define([
 				zIndex: 9999999,
 				top: 100
 			};
-			if (this.action == 'reroll')
+			if (this.action === 'reroll')
 				msg.msg = 'Item Reroll Succeeded';
-			else if (this.action == 'relevel')
+			else if (this.action === 'relevel')
 				msg.msg = 'Item Relevel Succeeded';
-			else if (this.action == 'reslot')
+			else if (this.action === 'reslot')
 				msg.msg = 'Item Reslot Succeeded';
 
 			result.addStatMsgs.forEach(function (a) {
@@ -130,7 +130,7 @@ define([
 				this.offEvent(this.eventClickInv);
 				return;
 			} else if ((!msg.item.slot) || (msg.item.noAugment)) {
-				var msg = {
+				let msg = {
 					msg: 'Incorrect Item Type',
 					type: 'failure',
 					zIndex: 9999999,
@@ -140,7 +140,7 @@ define([
 
 				return;
 			} else if (msg.item.eq) {
-				var msg = {
+				let msg = {
 					msg: 'Cannot augment equipped items',
 					type: 'failure',
 					zIndex: 9999999,
@@ -168,7 +168,7 @@ define([
 				reslot.removeClass('disabled');
 
 			let relevel = this.find('[action="relevel"]').addClass('disabled');
-			if (msg.item.slot == 'tool')
+			if (msg.item.slot === 'tool')
 				relevel.removeClass('disabled');
 
 			this.offEvent(this.eventClickInv);
@@ -215,7 +215,7 @@ define([
 				let material = result.materials[0];
 				if (material) {
 					let hasMaterials = window.player.inventory.items.find(function (i) {
-						return (i.name == material.name);
+						return (i.name === material.name);
 					});
 					if (hasMaterials) {
 						material.quantityText = hasMaterials.quantity + '/' + material.quantity;
@@ -247,7 +247,7 @@ define([
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
-			 else if (item.type == 'consumable')
+			 else if (item.type === 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
 			let el = $(templateItem)
@@ -309,7 +309,7 @@ define([
 				this.hide();
 		},
 		onKeyDown: function (key) {
-			if (key == 'm')
+			if (key === 'm')
 				this.toggle();
 		}
 	};

@@ -34,7 +34,7 @@ define([
 
 		onRemoveEvent: function (id) {
 			let l = this.list.spliceFirstWhere(function (l) {
-				return (l.id == id);
+				return (l.id === id);
 			});
 
 			if (l)
@@ -43,7 +43,7 @@ define([
 
 		onObtainEvent: function (event) {
 			let exists = this.list.find(function (l) {
-				return (l.id == event.id);
+				return (l.id === event.id);
 			});
 			if (exists) {
 				exists.el.find('.name').html(event.name);
@@ -68,7 +68,7 @@ define([
 				event: event
 			});
 
-			var event = container.find('.event');
+			let event = container.find('.event');
 
 			event
 				.sort(function (a, b) {
@@ -81,7 +81,7 @@ define([
 
 		onUpdateEvent: function (event) {
 			let e = this.list.find(function (l) {
-				return (l.id == event.id);
+				return (l.id === event.id);
 			});
 
 			e.event.isReady = event.isReady;
@@ -97,7 +97,7 @@ define([
 
 		onCompleteEvent: function (id) {
 			let e = this.list.find(function (l) {
-				return (l.id == id);
+				return (l.id === id);
 			});
 
 			if (!e)
@@ -105,7 +105,7 @@ define([
 
 			e.el.remove();
 			this.list.spliceWhere(function (l) {
-				return (l.id == id);
+				return (l.id === id);
 			});
 		}
 	};

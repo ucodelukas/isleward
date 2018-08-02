@@ -42,27 +42,27 @@ define([
 				msg = [msg];
 
 			msg.forEach(function (m) {
-				if (party.indexOf(m.id) == -1)
+				if (party.indexOf(m.id) === -1)
 					return;
 
 				let zone = m.zone;
-				if (m.id == window.player.serverId) {
+				if (m.id === window.player.serverId) {
 					party.forEach(function (p) {
 						let player = globals.onlineList.find(function (o) {
-							return (o.id == p);
+							return (o.id === p);
 						});
 
 						let el = this.find('.member[memberId="' + p + '"]');
 						el.removeClass('differentZone');
 
-						if (player.zone != zone)
+						if (player.zone !== zone)
 							el.addClass('differentZone');
 					}, this);
 				} else {
 					let el = this.find('.member[memberId="' + m.id + '"]');
 					el.removeClass('differentZone');
 
-					if (m.zone != window.player.zone)
+					if (m.zone !== window.player.zone)
 						el.addClass('differentZone');
 
 					el.find('.txtLevel').html('level: ' + m.level);
@@ -76,20 +76,20 @@ define([
 				return;
 
 			let el = this.find('.member[memberId="' + id + '"]');
-			if (el.length == 0)
+			if (el.length === 0)
 				return;
 
-			if ((stats.hp != null) && (stats.hpMax != null)) {
+			if ((stats.hp !== null) && (stats.hpMax !== null)) {
 				let hpPercentage = Math.min(100, (stats.hp / stats.hpMax) * 100);
 				el.find('.statHp').css('width', hpPercentage + '%');
 			}
 
-			if ((stats.mana != null) && (stats.manaMax != null)) {
+			if ((stats.mana !== null) && (stats.manaMax !== null)) {
 				let manaPercentage = Math.min((stats.mana / stats.manaMax) * 100, 100);
 				el.find('.statMana').css('width', manaPercentage + '%');
 			}
 
-			if (stats.level != null) 
+			if (stats.level !== null) 
 				el.find('.txtLevel').html('level: ' + stats.level);
 		},
 
@@ -111,11 +111,11 @@ define([
 				return;
 
 			party.forEach(function (p) {
-				if (p == window.player.serverId)
+				if (p === window.player.serverId)
 					return;
 
 				let player = globals.onlineList.find(function (o) {
-					return (o.id == p);
+					return (o.id === p);
 				});
 				let name = player ? player.name : 'unknown';
 				let level = 'level: ' + (player ? player.level : '?');
@@ -129,12 +129,12 @@ define([
 					.attr('memberId', p)
 					.on('contextmenu', this.showContext.bind(this, name, p));
 
-				if (player.zone != window.player.zone)
+				if (player.zone !== window.player.zone)
 					el.addClass('differentZone');
 
 				//Find stats
 				let memberObj = objects.objects.find(function (o) {
-					return (o.serverId == p);
+					return (o.serverId === p);
 				});
 				if ((memberObj) && (memberObj.stats))
 					this.onGetPartyStats(p, memberObj.stats.values);
@@ -162,7 +162,7 @@ define([
 				this.destroyInvite();
 
 			let sourcePlayer = globals.onlineList.find(function (o) {
-				return (o.id == sourceId);
+				return (o.id === sourceId);
 			});
 
 			let html = templateInvite

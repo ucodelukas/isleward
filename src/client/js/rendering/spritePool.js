@@ -14,7 +14,7 @@ define([
 			let list = this.pool[type];
 			if (!list)
 				return null;
-			else if (list.length == 0)
+			else if (list.length === 0)
 				return null;
 			return list.pop();
 		},

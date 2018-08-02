@@ -18,7 +18,7 @@ define([
 				blueprint.updateQuests.forEach(function (q) {
 					events.emit('onUpdateQuest', q);
 					let index = this.quests.firstIndex(function (qq) {
-						return (qq.id == q.id);
+						return (qq.id === q.id);
 					});
 					this.quests.splice(index, 1, q);
 				}, this);
@@ -27,7 +27,7 @@ define([
 				blueprint.completeQuests.forEach(function (q) {
 					events.emit('onCompleteQuest', q);
 					this.quests.spliceWhere(function (qq) {
-						return (qq.id == q);
+						return (qq.id === q);
 					});
 				}, this);
 			}

@@ -18,7 +18,7 @@ define([
 				blueprint.updateList.forEach(function (q) {
 					events.emit('onObtainEvent', q);
 					this.list.spliceWhere(function (l) {
-						return (l.id == q.id);
+						return (l.id === q.id);
 					});
 					this.list.push(q);
 				}, this);
@@ -28,7 +28,7 @@ define([
 				blueprint.removeList.forEach(function (q) {
 					events.emit('onRemoveEvent', q.id);
 					this.list.spliceWhere(function (l) {
-						return (l.id == q.id);
+						return (l.id === q.id);
 					});
 				}, this);
 			}

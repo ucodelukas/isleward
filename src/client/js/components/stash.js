@@ -15,7 +15,7 @@ define([
 		},
 
 		extend: function (blueprint) {
-			if (blueprint.active != null)
+			if (blueprint.active !== null)
 				this.active = blueprint.active;
 
 			if (blueprint.getItems) {
@@ -25,10 +25,10 @@ define([
 
 				for (let i = 0; i < nLen; i++) {
 					let nItem = newItems[i];
-					var nId = nItem.id;
+					let nId = nItem.id;
 
 					let findItem = items.find(function (item) {
-						return (item.id == nId);
+						return (item.id === nId);
 					});
 					if (findItem) {
 						$.extend(true, findItem, nItem);

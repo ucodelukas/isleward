@@ -63,7 +63,7 @@ define([
 			if (blueprint.removeSpells) {
 				blueprint.removeSpells.forEach(function (spellId) {
 					this.spells.spliceWhere(function (s) {
-						return (s.id == spellId);
+						return (s.id === spellId);
 					});
 				}, this);
 
@@ -73,7 +73,7 @@ define([
 			if (blueprint.getSpells) {
 				blueprint.getSpells.forEach(function (s) {
 					let existIndex = this.spells.firstIndex(function (spell) {
-						return (spell.id == s.id);
+						return (spell.id === s.id);
 					});
 
 					if (existIndex > -1) {
@@ -93,10 +93,10 @@ define([
 		},
 
 		getSpell: function (number) {
-			let spellNumber = (number == ' ') ? 0 : number;
+			let spellNumber = (number === ' ') ? 0 : number;
 
 			let spell = this.spells.find(function (s) {
-				return (s.id == spellNumber);
+				return (s.id === spellNumber);
 			});
 			if (!spell)
 				return null;
@@ -160,18 +160,18 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'b') {
+			if (key === 'b') {
 				this.build();
 				return;
-			} else if (key == 'n') {
+			} else if (key === 'n') {
 				this.build(true);
 				return;
 			}
 
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = true;
 				return;
-			} else if (key == 'tab') {
+			} else if (key === 'tab') {
 				this.tabTarget();
 				return;
 			}
@@ -199,7 +199,7 @@ define([
 			if (this.shiftDown)
 				this.target = oldTarget;
 
-			if ((target == this.obj) && (spell.noTargetSelf))
+			if ((target === this.obj) && (spell.noTargetSelf))
 				return;
 
 			client.request({
@@ -217,7 +217,7 @@ define([
 		},
 
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				return;
 			}
@@ -243,7 +243,7 @@ define([
 			else {
 				this.reticleCd = this.reticleCdMax;
 				this.reticleState++;
-				if (this.reticleState == 4)
+				if (this.reticleState === 4)
 					this.reticleState = 0;
 			}
 
@@ -275,7 +275,7 @@ define([
 			else {
 				this.reticleCd = this.reticleCdMax;
 				this.reticleState++;
-				if (this.reticleState == 4)
+				if (this.reticleState === 4)
 					this.reticleState = 0;
 			}
 

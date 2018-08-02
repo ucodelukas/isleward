@@ -53,7 +53,7 @@ define([
 						let y = j * tileSize;
 
 						let cell = map[i][j];
-						if (cell == 0)
+						if (cell === 0)
 							continue;
 
 						cell--;

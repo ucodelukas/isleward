@@ -25,7 +25,7 @@ define([
 
 			//Get saved value for showNames, or use the value set above
 			let showNames = window.localStorage.getItem('iwd_opt_shownames');
-			this.showNames = showNames ? (showNames == 'true') : this.showNames;
+			this.showNames = showNames ? (showNames === 'true') : this.showNames;
 		},
 
 		getLocation: function (x, y) {
@@ -57,7 +57,7 @@ define([
 			let oLen = objects.length;
 
 			let list = objects.filter(function (o) {
-				if ((!o.stats) || (o.nonSelectable) || (o == window.player))
+				if ((!o.stats) || (o.nonSelectable) || (o === window.player))
 					return false;
 
 				let dx = Math.abs(o.x - x);
@@ -68,7 +68,7 @@ define([
 				}
 			});
 
-			if (list.length == 0)
+			if (list.length === 0)
 				return null;
 
 			list.sort(function (a, b) {
@@ -78,13 +78,13 @@ define([
 				return (aDistance - bDistance);
 			});
 
-			list = list.filter(o => ((o.aggro) && (o.aggro.faction != window.player.aggro.faction)));
+			list = list.filter(o => ((o.aggro) && (o.aggro.faction !== window.player.aggro.faction)));
 
 			if (!fromMob)
 				return list[0];
 
 			let fromIndex = list.firstIndex(function (l) {
-				return (l.id == fromMob.id);
+				return (l.id === fromMob.id);
 			});
 
 			if (reverse) 
@@ -101,9 +101,9 @@ define([
 			for (let i = 0; i < oLen; i++) {
 				let o = objects[i];
 
-				if (oldZone == null)
+				if (oldZone === null)
 					o.destroy();
-				else if ((o.zoneId == oldZone) && (o.player == null))
+				else if ((o.zoneId === oldZone) && (o.player === null))
 					o.destroy();
 			}
 
@@ -115,9 +115,9 @@ define([
 
 			//Things like attacks don't have ids
 			let exists = null;
-			if (obj.id != null) {
+			if (obj.id !== null) {
 				exists = this.objects.find(function (o) {
-					return ((o.id == obj.id) && (!o.destroyed));
+					return ((o.id === obj.id) && (!o.destroyed));
 				});
 			}
 
@@ -138,7 +138,7 @@ define([
 				let value = template[p];
 				let type = typeof (value);
 
-				if (type == 'object') {
+				if (type === 'object') {
 					if (syncTypes.indexOf(p) > -1)
 						obj[p] = value;
 				} else
@@ -161,14 +161,14 @@ define([
 			components.forEach(function (c) {
 				//Map ids to objects
 				let keys = Object.keys(c).filter(function (k) {
-					return ((k.indexOf('id') == 0) && (k.length > 2));
+					return ((k.indexOf('id') === 0) && (k.length > 2));
 				});
 				keys.forEach(function (k) {
 					let value = c[k];
 					let newKey = k.substr(2, k.length).toLowerCase();
 
 					c[newKey] = this.objects.find(function (o) {
-						return (o.id == value);
+						return (o.id === value);
 					});
 					delete c[k];
 				}, this);
@@ -208,14 +208,14 @@ define([
 			components.forEach(function (c) {
 				//Map ids to objects
 				let keys = Object.keys(c).filter(function (k) {
-					return ((k.indexOf('id') == 0) && (k.length > 2));
+					return ((k.indexOf('id') === 0) && (k.length > 2));
 				});
 				keys.forEach(function (k) {
 					let value = c[k];
 					let newKey = k.substr(2, k.length).toLowerCase();
 
 					c[newKey] = this.objects.find(function (o) {
-						return (o.id == value);
+						return (o.id === value);
 					});
 					delete c[k];
 				}, this);
@@ -240,14 +240,14 @@ define([
 				let value = template[p];
 				let type = typeof (value);
 
-				if (type != 'object')
+				if (type !== 'object')
 					obj[p] = value;
 
-				if ((p == 'x') || (p == 'y'))
+				if ((p === 'x') || (p === 'y'))
 					moved = true;
 
 				if (sprite) {
-					if (p == 'x') {
+					if (p === 'x') {
 						if (obj.x < oldX)
 							obj.flipX = true;
 						else if (obj.x > oldX)
@@ -262,7 +262,7 @@ define([
 			if (((template.sheetName) || (template.cell)) && (sprite))
 				renderer.setSprite(obj);
 			if (sprite) {
-				if (template.hidden != null) {
+				if (template.hidden !== null) {
 					sprite.visible = !template.hidden;
 					if (obj.nameSprite)
 						obj.nameSprite.visible = this.showNames;
@@ -273,7 +273,7 @@ define([
 				}
 			}
 
-			if ((template.x != 0) || (template.y != 0)) {
+			if ((template.x !== 0) || (template.y !== 0)) {
 				if (obj.stats)
 					obj.stats.updateHpSprite();
 			}
@@ -315,7 +315,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'v') {
+			if (key === 'v') {
 				this.showNames = !this.showNames;
 
 				//Set new value in localStorage for showNames

@@ -18,7 +18,7 @@ define([
 			for (let i = 0; i < lLen; i++) {
 				let l = list[i];
 
-				if (l == cpn) {
+				if (l === cpn) {
 					list.splice(i, 1);
 					return;
 				}

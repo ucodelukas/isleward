@@ -33,7 +33,7 @@ define([
 
 			this.effects = this.effects
 				.filter(function (e) {
-					return (auras[e] != null);
+					return (auras[e] !== null);
 				}, this)
 				.map(function (e) {
 					return {
@@ -54,7 +54,7 @@ define([
 			if (blueprint.addEffects) {
 				blueprint.addEffects = blueprint.addEffects
 					.filter(function (e) {
-						return (auras[e] != null);
+						return (auras[e] !== null);
 					})
 					.map(function (e) {
 						return {
@@ -76,7 +76,7 @@ define([
 			if (blueprint.removeEffects) {
 				blueprint.removeEffects.forEach(function (r) {
 					let effect = this.effects.find(function (e) {
-						return (e.name == r);
+						return (e.name === r);
 					});
 
 					if (!effect)
@@ -88,7 +88,7 @@ define([
 					});
 
 					this.effects.spliceFirstWhere(function (e) {
-						return (e.name == r);
+						return (e.name === r);
 					});
 				}, this);
 			}

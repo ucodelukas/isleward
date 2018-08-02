@@ -86,7 +86,7 @@ define([
 
 		onUpdateQuest: function (quest) {
 			let q = this.quests.find(function (q) {
-				return (q.id == quest.id);
+				return (q.id === quest.id);
 			});
 
 			q.quest.isReady = quest.isReady;
@@ -102,7 +102,7 @@ define([
 
 		onCompleteQuest: function (id) {
 			let q = this.quests.find(function (q) {
-				return (q.id == id);
+				return (q.id === id);
 			});
 
 			if (!q)
@@ -110,7 +110,7 @@ define([
 
 			q.el.remove();
 			this.quests.spliceWhere(function (q) {
-				return (q.id == id);
+				return (q.id === id);
 			});
 		}
 	};

@@ -33,7 +33,7 @@ define([
 			let obj = this.obj;
 			let oldPos = this.oldPos;
 
-			if ((oldPos.x == obj.x) && (oldPos.y == obj.y))
+			if ((oldPos.x === obj.x) && (oldPos.y === obj.y))
 				return;
 
 			let dx = obj.x - oldPos.x;
@@ -43,9 +43,9 @@ define([
 			if ((dx > 5) || (dy > 5))
 				instant = true;
 
-			if (dx != 0)
+			if (dx !== 0)
 				dx = dx / Math.abs(dx);
-			if (dy != 0)
+			if (dy !== 0)
 				dy = dy / Math.abs(dy);
 
 			this.oldPos.x = this.obj.x;

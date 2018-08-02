@@ -29,7 +29,7 @@ define([
 			this.find('.info .description').html('');
 			this.find('.bar-outer').hide();
 
-			if (list.length == 0)
+			if (list.length === 0)
 				this.find('.heading-bottom').html("you haven't discovered any factions yet");
 			else
 				this.find('.heading-bottom').html('select a faction to see more info');
@@ -61,7 +61,7 @@ define([
 			let tier = faction.tier;
 			let tiers = faction.tiers;
 			let prevTier = tiers[tier];
-			let nextTier = (tier == tiers.length - 1) ? tiers[tiers.length - 1] : tiers[tier + 1];
+			let nextTier = (tier === tiers.length - 1) ? tiers[tiers.length - 1] : tiers[tier + 1];
 
 			let percentage = (rep - prevTier.rep) / (nextTier.rep - prevTier.rep) * 100;
 			this.find('.bar-outer').show();

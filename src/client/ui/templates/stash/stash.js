@@ -39,7 +39,7 @@ define([
 
 			let remainder = iLen % 8;
 			let startNoPad = ~~(iLen / 8);
-			if (remainder == 0)
+			if (remainder === 0)
 				startNoPad--;
 			startNoPad *= 8;
 
@@ -58,7 +58,7 @@ define([
 						spritesheet = '../../../images/materials.png';
 					else if (item.quest)
 						spritesheet = '../../../images/questItems.png';
-					 else if (item.type == 'consumable')
+					 else if (item.type === 'consumable')
 						spritesheet = '../../../images/consumables.png';
 				}
 
@@ -79,7 +79,7 @@ define([
 					itemEl.addClass('new');
 
 				if (i >= startNoPad) {
-					if (i == iLen - 1)
+					if (i === iLen - 1)
 						itemEl.css('margin', '0px 0px 0px 0px');
 					else
 						itemEl.css('margin', '0px 8px 0px 0px');
@@ -123,7 +123,7 @@ define([
 			let compare = null;
 			if (this.shiftDown) {
 				compare = window.player.inventory.items.find(function (i) {
-					return ((i.eq) && (i.slot == item.slot));
+					return ((i.eq) && (i.slot === item.slot));
 				});
 			}
 
@@ -146,17 +146,17 @@ define([
 
 			//Sort by slot
 			this.items.sort(function (a, b) {
-				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot != null) && (a.slot == b.slot))) {
-					if (a.type == b.type) {
+				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot !== null) && (a.slot === b.slot))) {
+					if (a.type === b.type) {
 						if (a.name < b.name)
 							return -1;
-						else if (a.name == b.name)
+						else if (a.name === b.name)
 							return 0;
 						else if (a.name > b.name)
 							return 1;
 					} else if ((a.type || '') < (b.type || ''))
 						return -1;
-					else if ((a.type || '') == (b.type || ''))
+					else if ((a.type || '') === (b.type || ''))
 						return 0;
 					else if ((a.type || '') > (b.type || ''))
 						return 1;
@@ -181,11 +181,11 @@ define([
 		},
 		onDestroyStashItems: function (itemIds) {
 			itemIds.forEach(function (id) {
-				let item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) 
+				let item = this.items.find(i => i.id === id);
+				if (item === this.hoverItem) 
 					this.hideTooltip();
 
-				this.items.spliceWhere(i => i.id == id);
+				this.items.spliceWhere(i => i.id === id);
 			}, this);
 
 			if (this.shown)
@@ -233,17 +233,17 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'u')
+			if (key === 'u')
 				this.toggle();
-			else if (key == 'shift') {
+			else if (key === 'shift') {
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHover();
-			} else if ((key == 'esc') && (this.shown))
+			} else if ((key === 'esc') && (this.shown))
 				this.toggle();
 		},
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHover();

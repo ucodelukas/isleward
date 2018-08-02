@@ -26,17 +26,17 @@ define([
 
 				for (let i = 0; i < nLen; i++) {
 					let nItem = newItems[i];
-					var nId = nItem.id;
+					let nId = nItem.id;
 
 					let findItem = items.find(function (item) {
-						return (item.id == nId);
+						return (item.id === nId);
 					});
 					if (findItem) {
 						if (!rerender) {
 							rerender = (
-								(findItem.pos != nItem.pos) ||
-								(findItem.eq != nItem.eq) ||
-								(findItem.quantity != nItem.quantity)
+								(findItem.pos !== nItem.pos) ||
+								(findItem.eq !== nItem.eq) ||
+								(findItem.quantity !== nItem.quantity)
 							);
 						}
 
@@ -81,7 +81,7 @@ define([
 		},
 
 		canEquipItem: function (item) {
-			return (this.equipItemErrors(item).length == 0);
+			return (this.equipItemErrors(item).length === 0);
 		}
 	};
 });

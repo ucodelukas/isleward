@@ -54,9 +54,9 @@ define([
 			else {
 				this.frameDelayCd = this.frameDelay;
 				this.frame++;
-				if (this.frame == this.frames) {
+				if (this.frame === this.frames) {
 					this.loopCounter++;
-					if (this.loopCounter == this.loop) {
+					if (this.loopCounter === this.loop) {
 						this.destroyed = true;
 						return;
 					}

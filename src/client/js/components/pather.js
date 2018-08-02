@@ -77,12 +77,12 @@ define([
 			let x = this.obj.x;
 			let y = this.obj.y;
 
-			if (this.path.length == 0) {
+			if (this.path.length === 0) {
 				this.pathPos.x = round(x);
 				this.pathPos.y = round(y);
 			}
 
-			if ((x == this.lastX) && (y == this.lastY))
+			if ((x === this.lastX) && (y === this.lastY))
 				return;
 
 			this.lastX = x;
@@ -91,7 +91,7 @@ define([
 			for (let i = 0; i < this.path.length; i++) {
 				let p = this.path[i];
 
-				if ((p.x == x) && (p.y == y)) {
+				if ((p.x === x) && (p.y === y)) {
 					for (let j = 0; j <= i; j++) {
 						renderer.destroyObject({
 							layerName: 'effects',

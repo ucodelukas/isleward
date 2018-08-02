@@ -117,7 +117,7 @@ define([
 			let tilesheet = [this.tiles, this.walls, this.objects][sheetNum];
 
 			let alpha = (tilesheet[tile] || tilesheet.default);
-			if (tilesheet.max != null) {
+			if (tilesheet.max !== null) {
 				alpha = alpha + (Math.random() * (alpha * 0.2));
 				alpha = Math.min(1, alpha);
 			}
@@ -139,7 +139,7 @@ define([
 			}
 
 			let tilesheet = [this.tilesNoFlip, this.wallsNoFlip, this.objectsNoFlip][sheetNum];
-			return (tilesheet.indexOf(tile) == -1);
+			return (tilesheet.indexOf(tile) === -1);
 		}
 	};
 });

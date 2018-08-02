@@ -35,7 +35,7 @@ define([
 				html = '<font class="color-red">' + html + '</font>';
 			if (mob.aggro) {
 				//TODO: Figure this out some other wayh since factions interact in different ways now
-				if (mob.aggro.faction != window.player.aggro.faction)
+				if (mob.aggro.faction !== window.player.aggro.faction)
 					html += '<br />aggressive';
 			}
 			html += '<br />hp: ' + Math.floor(mob.stats.values.hp) + '/' + Math.floor(mob.stats.values.hpMax);
@@ -54,9 +54,9 @@ define([
 				this.el.hide();
 			} else {
 				let values = mob.stats.values;
-				if (values.hp != this.lastHp)
+				if (values.hp !== this.lastHp)
 					this.onMobHover(mob);
-				else if (values.hpMax != this.lastHpMax)
+				else if (values.hpMax !== this.lastHpMax)
 					this.onMobHover(mob);
 			}
 		}

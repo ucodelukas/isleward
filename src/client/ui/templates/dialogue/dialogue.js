@@ -22,7 +22,7 @@ define([
 
 		onGetDialogue: function (msg) {
 			this.text.spliceWhere(function (t) {
-				return (t.src == msg.src);
+				return (t.src === msg.src);
 			});
 
 			this.text.push(msg);
@@ -31,7 +31,7 @@ define([
 
 		onRemoveDialogue: function (msg) {
 			this.text.spliceWhere(function (t) {
-				return (t.src == msg.src);
+				return (t.src === msg.src);
 			});
 
 			this.setText();
@@ -49,7 +49,7 @@ define([
 			
 			this.find('.textBox').html(text);
 
-			if (text != '') 
+			if (text !== '') 
 				this.show();
 			
 			else

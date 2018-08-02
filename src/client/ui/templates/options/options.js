@@ -69,7 +69,7 @@ define([
 		},
 
 		onResize: function () {
-			let isFullscreen = (window.innerHeight == screen.height);
+			let isFullscreen = (window.innerHeight === screen.height);
 			if (isFullscreen)
 				this.el.find('.btnScreen').html('Windowed');
 			else
@@ -95,7 +95,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'esc')
+			if (key === 'esc')
 				this.toggle();
 		}
 	};

@@ -64,13 +64,13 @@ define([
 		},
 
 		showPath: function (e) {
-			if ((e.button != null) && (e.button != 0))
+			if ((e.button !== null) && (e.button !== 0))
 				return;
 
 			let tileX = ~~(e.x / scale);
 			let tileY = ~~(e.y / scale);
 
-			if ((tileX == this.hoverTile.x) && (tileY == this.hoverTile.y))
+			if ((tileX === this.hoverTile.x) && (tileY === this.hoverTile.y))
 				return;
 
 			events.emit('onChangeHoverTile', tileX, tileY);
@@ -84,7 +84,7 @@ define([
 		queuePath: function (e) {
 			this.mouseDown = false;
 
-			if ((this.path.length == 0) || (e.down))
+			if ((this.path.length === 0) || (e.down))
 				return;
 
 			client.request({

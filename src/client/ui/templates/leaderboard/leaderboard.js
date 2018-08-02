@@ -82,12 +82,12 @@ define([
 			let prophecyName = el.attr('prophecy');
 
 			let exists = this.prophecyFilter.some(function (p) {
-				return (p == prophecyName);
+				return (p === prophecyName);
 			}, this);
 
 			if (exists) {
 				this.prophecyFilter.spliceWhere(function (p) {
-					return (p == prophecyName);
+					return (p === prophecyName);
 				}, this);
 			} else
 				this.prophecyFilter.push(prophecyName);
@@ -120,9 +120,9 @@ define([
 				this.offset = 0;
 
 				let foundIndex = this.records.list.firstIndex(function (r) {
-					return (r.name == window.player.name);
+					return (r.name === window.player.name);
 				}, this);
-				if (foundIndex != -1)
+				if (foundIndex !== -1)
 					this.offset = ~~(foundIndex / this.pageSize);
 			}
 
@@ -133,17 +133,17 @@ define([
 			this.maxOffset = Math.ceil(result.length / this.pageSize) - 1;
 
 			for (let i = 0; i < this.records.list.length; i++) {
-				var r = this.records.list[i];
+				let r = this.records.list[i];
 
 				let html = '<div class="row"><div class="col">' + r.level + '</div><div class="col">' + r.name + '</div></div>';
 				let el = $(html)
 					.appendTo(container);
 
-				if (r.name == window.player.name)
+				if (r.name === window.player.name)
 					el.addClass('self');
 				else {
 					let online = globals.onlineList.some(function (o) {
-						return (o.name == r.name);
+						return (o.name === r.name);
 					});
 					if (online)
 						el.addClass('online');
@@ -161,7 +161,7 @@ define([
 		updatePaging: function () {
 			this.find('.buttons .btn').removeClass('disabled');
 
-			if (this.offset == 0)
+			if (this.offset === 0)
 				this.find('.btn-first, .btn-prev').addClass('disabled');
 
 			if (this.offset >= this.maxOffset)

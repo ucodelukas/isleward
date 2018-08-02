@@ -16,7 +16,7 @@ define([
 
 		onKeyUp: function (key) {
 			this.actions.forEach(function (a) {
-				if (a.key != key)
+				if (a.key !== key)
 					return;
 
 				client.request({
@@ -31,7 +31,7 @@ define([
 			if (blueprint.addActions) {
 				blueprint.addActions.forEach(function (a) {
 					let exists = this.actions.some(function (ta) {
-						return ((ta.targetId == a.targetId) && (ta.cpn == a.cpn) && (ta.method == a.method));
+						return ((ta.targetId === a.targetId) && (ta.cpn === a.cpn) && (ta.method === a.method));
 					});
 					if (exists)
 						return;
@@ -45,7 +45,7 @@ define([
 			if (blueprint.removeActions) {
 				blueprint.removeActions.forEach(function (a) {
 					this.actions.spliceWhere(function (ta) {
-						return ((ta.targetId == a.targetId) && (ta.cpn == a.cpn) && (ta.method == a.method));
+						return ((ta.targetId === a.targetId) && (ta.cpn === a.cpn) && (ta.method === a.method));
 					});
 				}, this);
 

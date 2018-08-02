@@ -28,7 +28,8 @@ define([
 			if (this.modal)
 				this.el.addClass('modal');
 
-			this.postRender && this.postRender();
+			if (this.postRender)
+				this.postRender();
 
 			if (this.centered) {
 				this.centeredX = true;
@@ -65,9 +66,9 @@ define([
 			return this.el.find(selector);
 		},
 		center: function (x, y) {
-			if (x == null)
+			if (x === null)
 				x = true;
-			if (y == null)
+			if (y === null)
 				y = true;
 
 			this.centeredX = x;
@@ -130,16 +131,16 @@ define([
 		},
 
 		offEvent: function (eventCallback) {
-			for (var e in this.eventCallbacks) {
+			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
-					if (c == eventCallback)
+					if (c === eventCallback)
 						events.off(e, c);
 				}, this);
 			}
 		},
 
 		offEvents: function () {
-			for (var e in this.eventCallbacks) {
+			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
 					events.off(e, c);
 				}, this);

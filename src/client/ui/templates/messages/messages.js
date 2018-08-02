@@ -95,7 +95,7 @@ define([
 			let filter = el.attr('filter');
 			let method = (el.hasClass('active') ? 'show' : 'hide');
 
-			if (method == 'show')
+			if (method === 'show')
 				this.find('.list').addClass(filter);
 			else
 				this.find('.list').removeClass(filter);
@@ -105,7 +105,7 @@ define([
 		},
 
 		onKeyDown: function (key, state) {
-			if (key == 'enter')
+			if (key === 'enter')
 				this.toggle(true);
 		},
 
@@ -135,7 +135,7 @@ define([
 				let el = $('<div class="list-message ' + m.class + '">' + message + '</div>')
 					.appendTo(container);
 
-				if (m.type != null)
+				if (m.type !== null)
 					el.addClass(m.type);
 				else
 					el.addClass('info');
@@ -147,7 +147,7 @@ define([
 				}
 
 				if (m.type) {
-					let isChannel = (['info', 'chat', 'loot', 'rep'].indexOf(m.type) == -1);
+					let isChannel = (['info', 'chat', 'loot', 'rep'].indexOf(m.type) === -1);
 					if (isChannel) {
 						if (this.find('.filter[filter="' + m.type + '"]').hasClass('active'))
 							el.show();
@@ -211,10 +211,10 @@ define([
 		},
 
 		sendChat: function (e) {
-			if (e.which == 27)
+			if (e.which === 27)
 				this.toggle(false);
 
-			if (e.which != 13)
+			if (e.which !== 13)
 				return;
 
 			if (!this.el.hasClass('typing')) {
@@ -231,7 +231,7 @@ define([
 
 			textbox.blur();
 
-			if (val.trim() == '')
+			if (val.trim() === '')
 				return;
 
 			client.request({

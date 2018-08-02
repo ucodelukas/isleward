@@ -46,7 +46,7 @@ define(components, function () {
 
 	return {
 		getTemplate: function (type) {
-			if (type == 'lightpatch')
+			if (type === 'lightpatch')
 				type = 'lightPatch';
 
 			return templates[type];

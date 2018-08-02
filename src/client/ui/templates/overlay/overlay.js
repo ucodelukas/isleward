@@ -29,7 +29,7 @@ define([
 			if (!this.focusEl)
 				return;
 			
-			if (focusEl[0] != this.focusEl[0])
+			if (focusEl[0] !== this.focusEl[0])
 				return;
 
 			this.focusEl.css('z-index', this.lastZIndex);

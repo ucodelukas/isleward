@@ -21,7 +21,7 @@ define([
 		},
 
 		update: function () {
-			if (this.ttl != null) {
+			if (this.ttl !== null) {
 				this.ttl--;
 				if (this.ttl <= 0) {
 					if (this.destroyObject)

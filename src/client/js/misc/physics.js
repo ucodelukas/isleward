@@ -88,7 +88,7 @@ define([
 			for (let i = 0; i < cLen; i++) {
 				let c = cell[i];
 
-				if (c.id != oId) {
+				if (c.id !== oId) {
 					//If we have toX and toY, check if the target cell doesn't contain the same obj (like a notice area)
 					if ((c.width) && (toX)) {
 						if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
@@ -206,7 +206,7 @@ define([
 						continue;
 
 					let cell = row[j];
-					if (cell.length == 0) {
+					if (cell.length === 0) {
 						return {
 							x: i,
 							y: j
@@ -262,13 +262,13 @@ define([
 
 			let node = this.graph.grid[x][y];
 
-			return ((!node) || (node.weight == 0));
+			return ((!node) || (node.weight === 0));
 		},
 		isCellOpen: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
-			return (this.cells[x][y].length == 0);
+			return (this.cells[x][y].length === 0);
 		},
 		hasLos: function (fromX, fromY, toX, toY) {
 			if ((fromX < 0) || (fromY < 0) || (fromX >= this.width) | (fromY >= this.height) || (toX < 0) || (toY < 0) || (toX >= this.width) | (toY >= this.height))
@@ -304,7 +304,7 @@ define([
 
 				if (!graphGrid[x][y])
 					return false;
-				else if ((x == toX) && (y == toY))
+				else if ((x === toX) && (y === toY))
 					return true;
 			}
 
@@ -331,7 +331,7 @@ define([
 				let x2 = toX + c;
 				let y2 = toY + c;
 
-				var lowX, lowY, highX, highY, incX, incY;
+				let lowX, lowY, highX, highY, incX, incY;
 
 				if (reverseX) {
 					incX = -1;
@@ -353,7 +353,7 @@ define([
 					highY = y2 + 1;
 				}
 
-				for (let i = lowX; i != highX; i += incX) {
+				for (let i = lowX; i !== highX; i += incX) {
 					if ((i < 0) || (i >= width))
 						continue;
 
@@ -364,14 +364,14 @@ define([
 					if (!t) 
 						t = tried[i] = {};
 
-					for (let j = lowY; j != highY; j += incY) {
+					for (let j = lowY; j !== highY; j += incY) {
 						if (t[j])
 							continue;
 
 						t[j] = 1;
 
 						if (
-							((i == toX) && (j == toY)) ||
+							((i === toX) && (j === toY)) ||
 							((j < 0) || (j >= height)) ||
 							(row[j])
 						)
@@ -383,7 +383,7 @@ define([
 						for (let k = 0; k < cLen; k++) {
 							let aggro = cell[k].aggro;
 							if (aggro) {
-								blocking = aggro.list.some(a => a.obj == target);
+								blocking = aggro.list.some(a => a.obj === target);
 								if (blocking)
 									break;
 							}
@@ -409,14 +409,14 @@ define([
 			let cell = this.cells[x][y];
 			let cLen = cell.length;
 
-			if (cLen == 1)
+			if (cLen === 1)
 				return false;
 
 			let found = false;
 			for (let i = 0; i < cLen; i++) {
 				let c = cell[i];
 				if (c.aggro) {
-					if ((!found) && (c == obj))
+					if ((!found) && (c === obj))
 						found = true;
 					else
 						return true;

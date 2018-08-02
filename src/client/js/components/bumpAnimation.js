@@ -23,7 +23,7 @@ define([
 		init: function (blueprint) {
 			//Only allow one bumper at a time
 			if (this.obj.components.filter(function (c) {
-				c.type == this.type;
+				c.type === this.type;
 			}) > 1)
 				return true;
 		},
@@ -44,10 +44,10 @@ define([
 				this.updateCd = this.updateCdMax;
 				this.durationCounter++;
 
-				if (this.durationCounter == this.duration) {
+				if (this.durationCounter === this.duration) {
 					this.durationCounter = 0;
 					this.direction *= -1;
-					if ((this.direction == 1) && (!this.infinite))
+					if ((this.direction === 1) && (!this.infinite))
 						this.destroyed = true;
 					else
 						this.obj.dirty = true;

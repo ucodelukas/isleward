@@ -19,7 +19,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'h') 
+			if (key === 'h') 
 				this.toggle();
 		},
 

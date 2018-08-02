@@ -22,14 +22,14 @@ define([
 
 		onShowProgress: function (text, percentage) {
 			let bar = this.bars.find(function (b) {
-				return (b.text == text);
+				return (b.text === text);
 			});
 
 			if (bar) {
 				if (percentage >= 100) {
 					bar.el.remove();
 					this.bars.spliceWhere(function (b) {
-						return (b == bar);
+						return (b === bar);
 					});
 				} else
 					bar.el.find('.bar').css('width', percentage + '%');

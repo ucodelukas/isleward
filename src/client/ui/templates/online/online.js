@@ -32,7 +32,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'o')
+			if (key === 'o')
 				this.toggle();
 		},
 
@@ -54,7 +54,7 @@ define([
 
 			list.forEach(function (l) {
 				let exists = onlineList.find(function (o) {
-					return (o.name == l.name);
+					return (o.name === l.name);
 				});
 				if (exists)
 					$.extend(true, exists, l);
@@ -64,7 +64,7 @@ define([
 
 			onlineList
 				.sort(function (a, b) {
-					if (a.level == b.level) {
+					if (a.level === b.level) {
 						if (a.name > b.name)
 							return 1;
 						return -1;
@@ -79,7 +79,7 @@ define([
 			let onlineList = this.onlineList;
 
 			onlineList.spliceWhere(function (o) {
-				return (o.name == name);
+				return (o.name === name);
 			});
 
 			if (this.shown)
@@ -105,7 +105,7 @@ define([
 		},
 
 		showContext: function (char, e) {
-			if (char.name != window.player.name) {
+			if (char.name !== window.player.name) {
 				events.emit('onContextMenu', [{
 					text: 'invite to party',
 					callback: this.invite.bind(this, char.id)

@@ -41,7 +41,7 @@ define([
 
 				el.on('click', this.setPreview.bind(this, l, el));
 
-				if (l.id == window.player.skinId) {
+				if (l.id === window.player.skinId) {
 					el.addClass('current');
 					this.setPreview(l, el);
 				}

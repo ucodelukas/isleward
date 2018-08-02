@@ -34,7 +34,7 @@ define([
 			let w = this.obj.width || 1;
 			let h = this.obj.height || 1;
 
-			let isFish = (this.nodeType == 'fish');
+			let isFish = (this.nodeType === 'fish');
 
 			for (let i = x; i < x + w; i++) {
 				for (let j = y; j < y + h; j++) {

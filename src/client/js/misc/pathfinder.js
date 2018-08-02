@@ -32,7 +32,7 @@
 		});
 	}
 
-	var astar = {
+	let astar = {
 		/**
 		* Perform an A* Search on a graph given a start and end node.
 		* @param {Graph} graph
@@ -76,7 +76,7 @@
 
 				if (!onWall) {
 					if (distance) {
-						if (currentNode.h == distance)
+						if (currentNode.h === distance)
 							return pathTo(currentNode);
 					} else {
 						// End case -- result has been found, return the traced path.
@@ -280,7 +280,7 @@
 
 	GridNode.prototype.getCost = function (fromNeighbor) {
 		// Take diagonal weight into consideration.
-		if (fromNeighbor && fromNeighbor.x != this.x && fromNeighbor.y != this.y) 
+		if (fromNeighbor && fromNeighbor.x !== this.x && fromNeighbor.y !== this.y) 
 			return this.weight * 1.41421;
 		
 		return this.weight;
@@ -371,7 +371,7 @@
 				let child1N = child2N - 1;
 				// This is used to store the new position of the element, if any.
 				let swap = null;
-				var child1Score;
+				let child1Score;
 				// If the first child exists (is inside the array)...
 				if (child1N < length) {
 					// Look it up and compute its score.

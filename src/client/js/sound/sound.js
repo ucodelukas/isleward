@@ -9,7 +9,7 @@ define([
 		init: function (zone) {
 			this.unload();
 
-			if (zone != 'fjolarok')
+			if (zone !== 'fjolarok')
 				return;
 
 			this.addSound('fire.ogg', 123, 123);

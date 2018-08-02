@@ -53,9 +53,9 @@ define([
 			if (
 				(!this.item) ||
 				(
-					(this.item != item) &&
+					(this.item !== item) &&
 					(this.item.refItem) &&
-					(this.item.refItem != item)
+					(this.item.refItem !== item)
 				)
 			)
 				return;
@@ -73,9 +73,9 @@ define([
 			if ((compare) && (shiftDown)) {
 				if (!item.eq) {
 					let compareStats = compare.stats;
-					for (var s in tempStats) {
+					for (let s in tempStats) {
 						if (compareStats[s]) {
-							var delta = tempStats[s] - compareStats[s];
+							let delta = tempStats[s] - compareStats[s];
 							if (delta > 0)
 								tempStats[s] = '+' + delta;
 							else if (delta < 0)
@@ -83,7 +83,7 @@ define([
 						} else
 							tempStats[s] = '+' + tempStats[s];
 					}
-					for (var s in compareStats) {
+					for (let s in compareStats) {
 						if (!tempStats[s]) 
 							tempStats[s] = -compareStats[s];
 					}
@@ -102,7 +102,7 @@ define([
 
 			stats = Object.keys(tempStats)
 				.map(function (s) {
-					let isEnchanted = (s[0] == '_');
+					let isEnchanted = (s[0] === '_');
 					let statName = s;
 					if (isEnchanted)
 						statName = statName.substr(1);
@@ -112,7 +112,7 @@ define([
 
 					if (percentageStats.indexOf(s) > -1)
 						value += '%';
-					else if ((s.indexOf('element') == 0) && (s.indexOf('Resist') == -1))
+					else if ((s.indexOf('element') === 0) && (s.indexOf('Resist') === -1))
 						value += '%';
 
 					let row = value + ' ' + statName;
@@ -135,9 +135,9 @@ define([
 					return (a.replace(' enchanted', '').length - b.replace(' enchanted', '').length);
 				})
 				.sort(function (a, b) {
-					if ((a.indexOf('enchanted') > -1) && (b.indexOf('enchanted') == -1))
+					if ((a.indexOf('enchanted') > -1) && (b.indexOf('enchanted') === -1))
 						return 1;
-					else if ((a.indexOf('enchanted') == -1) && (b.indexOf('enchanted') > -1))
+					else if ((a.indexOf('enchanted') === -1) && (b.indexOf('enchanted') > -1))
 						return -1;
 					return 0;
 				})
@@ -150,7 +150,7 @@ define([
 
 				if (percentageStats.indexOf(stat) > -1)
 					value += '%';
-				else if ((stat.indexOf('element') == 0) && (stat.indexOf('Resist') == -1))
+				else if ((stat.indexOf('element') === 0) && (stat.indexOf('Resist') === -1))
 					value += '%';
 
 				let row = value + ' ' + statName;
@@ -190,7 +190,7 @@ define([
 				let abilityValues = '';
 				for (let p in item.spell.values) {
 					if ((compare) && (shiftDown)) {
-						var delta = item.spell.values[p] - compare.spell.values[p];
+						let delta = item.spell.values[p] - compare.spell.values[p];
 						// adjust by EPSILON to handle float point imprecision, otherwise 3.15 - 2 = 1.14 or 2 - 3.15 = -1.14
 						// have to move away from zero by EPSILON, not a simple add
 						if (delta >= 0) 
@@ -238,7 +238,7 @@ define([
 			if ((!item.stats) || (!Object.keys(item.stats).length))
 				this.tooltip.children('.stats').hide();
 
-			if ((!item.type) || (item.type == item.name))
+			if ((!item.type) || (item.type === item.name))
 				this.tooltip.find('.type').hide();
 			else {
 				this.tooltip.find('.type')
@@ -285,7 +285,7 @@ define([
 
 			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
-			if ((item.effects) && (item.type != 'mtx')) {
+			if ((item.effects) && (item.type !== 'mtx')) {
 				let htmlEffects = '';
 
 				item.effects.forEach(function (e, i) {
@@ -304,7 +304,7 @@ define([
 			} else
 				this.find('.effects').hide();
 
-			if (item.type == 'Reward Card') {
+			if (item.type === 'Reward Card') {
 				this.find('.spellName')
 					.html('Set Size: ' + item.setSize)
 					.show();

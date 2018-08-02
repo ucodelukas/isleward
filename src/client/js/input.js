@@ -78,12 +78,12 @@ define([
 
 		isKeyDown: function (key, noConsume) {
 			let down = this.keys[key];
-			if (down != null) {
+			if (down !== null) {
 				if (noConsume)
 					return true;
 				
 				this.keys[key] = 2;
-				return (down == 1);
+				return (down === 1);
 			} return false;
 		},
 		getAxis: function (name) {
@@ -93,14 +93,14 @@ define([
 
 			let result = 0;
 
-			for (var i = 0; i < axis.negative.length; i++) {
+			for (let i = 0; i < axis.negative.length; i++) {
 				if (this.keys[axis.negative[i]]) {
 					result--;
 					break;
 				}
 			}
 
-			for (var i = 0; i < axis.positive.length; i++) {
+			for (let i = 0; i < axis.positive.length; i++) {
 				if (this.keys[axis.positive[i]]) {
 					result++;
 					break;
@@ -116,30 +116,30 @@ define([
 					if (!this.enabled)
 						return;
 
-					if (e.target != document.body)
+					if (e.target !== document.body)
 						return true;
-					if ((e.keyCode == 9) || (e.keyCode == 8) || (e.keyCode == 122))
+					if ((e.keyCode === 9) || (e.keyCode === 8) || (e.keyCode === 122))
 						e.preventDefault();
 
 					let key = this.getMapping(e.which);
 
-					if (this.keys[key] != null)
+					if (this.keys[key] !== null)
 						this.keys[key] = 2;
 					else {
 						this.keys[key] = 1;
 						events.emit('onKeyDown', key);
 					}
 
-					if (key == 'backspace')
+					if (key === 'backspace')
 						return false;
-					else if (e.key == 'F11')
+					else if (e.key === 'F11')
 						events.emit('onToggleFullscreen');
 				},
 				keyUp: function (e) {
 					if (!this.enabled)
 						return;
 
-					if (e.target != document.body)
+					if (e.target !== document.body)
 						return;
 
 					let key = this.getMapping(e.which);

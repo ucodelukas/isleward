@@ -51,7 +51,7 @@ define([
 				return;
 
 			this.components.spliceWhere(function (c) {
-				return (c == cpn);
+				return (c === cpn);
 			});
 
 			delete this[type];
@@ -99,7 +99,7 @@ define([
 				this.sprite.y -= (scale * 2);
 			}
 
-			if (oldY != this.sprite.y)
+			if (oldY !== this.sprite.y)
 				renderer.reorder();
 
 			this.sprite.scale.x = (this.flipX ? -scaleMult : scaleMult);
@@ -110,7 +110,7 @@ define([
 					return;
 
 				let yAdd = scale;
-				if (i == 1) {
+				if (i === 1) {
 					yAdd *= -0.8;
 					yAdd -= (this.chatter.msg.split('\r\n').length - 1) * scale * 0.8;
 				}
@@ -150,7 +150,7 @@ define([
 			if (this.pather)
 				this.pather.onDeath();
 
-			for (var e in this.eventCallbacks) {
+			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
 					events.off(e, c);
 				}, this);

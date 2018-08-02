@@ -97,7 +97,7 @@ define([
 
 			let layers = this.layers;
 			Object.keys(layers).forEach(function (l) {
-				if (l == 'tileSprites') {
+				if (l === 'tileSprites') {
 					layers[l] = new pixi.Container();
 					layers[l].layer = 'tiles';
 				} else {
@@ -155,16 +155,16 @@ define([
 		toggleScreen: function () {
 			let screenMode = 0;
 
-			let isFullscreen = (window.innerHeight == screen.height);
+			let isFullscreen = (window.innerHeight === screen.height);
 			if (isFullscreen)
 				screenMode = 0;
 			else
 				screenMode = 1;
 
-			if (screenMode == 0) {
+			if (screenMode === 0) {
 				(document.cancelFullscreen || document.msCancelFullscreen || document.mozCancelFullscreen || document.webkitCancelFullScreen).call(document);
 				return 'Windowed';
-			} else if (screenMode == 1) {
+			} else if (screenMode === 1) {
 				let el = $('body')[0];
 				(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
 				return 'Fullscreen';
@@ -188,7 +188,7 @@ define([
 				for (let j = 0; j < h; j++) {
 					let ii = i / 10;
 					let alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
-					var tile = 5;
+					let tile = 5;
 					if (j < 7)
 						tile = 5;
 					else if (alpha < -0.2)
@@ -200,13 +200,13 @@ define([
 
 					alpha = Math.random();
 
-					if (tile == 5)
+					if (tile === 5)
 						alpha *= 2;
-					else if (tile == 3)
+					else if (tile === 3)
 						alpha *= 1;
-					else if (tile == 4)
+					else if (tile === 4)
 						alpha *= 1;
-					else if (tile == 53)
+					else if (tile === 53)
 						alpha *= 2;
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
@@ -221,20 +221,20 @@ define([
 						}[tile];
 					}
 
-					var tile = new pixi.Sprite(this.getTexture('sprites', tile));
+					let sprite = new pixi.Sprite(this.getTexture('sprites', tile));
 
-					tile.alpha = alpha;
-					tile.position.x = i * scale;
-					tile.position.y = j * scale;
-					tile.width = scale;
-					tile.height = scale;
+					sprite.alpha = alpha;
+					sprite.position.x = i * scale;
+					sprite.position.y = j * scale;
+					sprite.width = scale;
+					sprite.height = scale;
 
 					if (Math.random() < 0.5) {
-						tile.position.x += scale;
-						tile.scale.x = -scaleMult;
+						sprite.position.x += scale;
+						sprite.scale.x = -scaleMult;
 					}
 
-					container.addChild(tile);
+					container.addChild(sprite);
 				}
 			}
 		},
@@ -296,13 +296,13 @@ define([
 			this.stage.addChild(container);
 
 			this.stage.children.sort(function (a, b) {
-				if (a.layer == 'hiders')
+				if (a.layer === 'hiders')
 					return 1;
-				else if (b.layer == 'hiders')
+				else if (b.layer === 'hiders')
 					return -1;
-				else if (a.layer == 'tiles')
+				else if (a.layer === 'tiles')
 					return -1;
-				else if (b.layer == 'tiles')
+				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
 			}, this);
@@ -319,7 +319,7 @@ define([
 					let cx = c.x;
 					if (c.scale.x < 0)
 						cx -= scale;
-					if ((cx == x) && (c.y == y)) {
+					if ((cx === x) && (c.y === y)) {
 						c.parent.removeChild(c);
 						break;
 					}
@@ -386,14 +386,14 @@ define([
 			this.sprites = _.get2dArray(w, h, 'array');
 
 			this.stage.children.sort(function (a, b) {
-				if (a.layer == 'tiles')
+				if (a.layer === 'tiles')
 					return -1;
-				else if (b.layer == 'tiles')
+				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
 			}, this);
 
-			if (this.zoneId != null)
+			if (this.zoneId !== null)
 				events.emit('onRezone', this.zoneId);
 			this.zoneId = msg.zoneId;
 
@@ -419,11 +419,11 @@ define([
 					color: 0x2d2136,
 					parent: h.container
 				});
-				for (var i = h.x; i < h.x + h.width; i++) {
-					for (var j = h.y; j < h.y + h.height; j++) {
+				for (let i = h.x; i < h.x + h.width; i++) {
+					for (let j = h.y; j < h.y + h.height; j++) {
 						[hiddenTiles, hiddenWalls].forEach(function (k) {
 							let cell = k[i][j];
-							if (cell == 0)
+							if (cell === 0)
 								return;
 
 							let tile = this.buildTile(cell - 1, i, j);
@@ -515,9 +515,9 @@ define([
 
 			let addedSprite = false;
 
-			for (var i = lowX; i < highX; i++) {
-				for (var j = lowY; j < highY; j++) {
-					cell = map[i][j];
+			for (let i = lowX; i < highX; i++) {
+				for (let j = lowY; j < highY; j++) {
+					let cell = map[i][j];
 					if (!cell)
 						continue;
 
@@ -527,9 +527,9 @@ define([
 					else if (!cell.split)
 						cell += '';
 					cell = cell.split(',');
-					for (var k = 0; k < cell.length; k++) {
+					for (let k = 0; k < cell.length; k++) {
 						let c = cell[k];
-						if (c == 0)
+						if (c === '0')
 							continue;
 
 						c--;
@@ -550,7 +550,7 @@ define([
 						} else {
 							tile.position.x = i * scale;
 							tile.position.y = j * scale;
-							if (flipped != '')
+							if (flipped !== '')
 								tile.position.x += scale;
 							tile.visible = true;
 						}
@@ -565,15 +565,15 @@ define([
 			highX = Math.min(w - 1, highX + 10);
 			highY = Math.min(h - 1, highY + 10);
 
-			for (var i = lowX; i < highX; i++) {
+			for (let i = lowX; i < highX; i++) {
 				let outside = ((i >= x - sw) && (i < x + sw));
-				for (var j = lowY; j < highY; j++) {
+				for (let j = lowY; j < highY; j++) {
 					if ((outside) && (j >= y - sh) && (j < y + sh))
 						continue;
 
 					let list = sprites[i][j];
 					let lLen = list.length;
-					for (var k = 0; k < lLen; k++) {
+					for (let k = 0; k < lLen; k++) {
 						let sprite = list[k];
 						sprite.visible = false;
 						spritePool.store(sprite);
@@ -597,7 +597,7 @@ define([
 				let deltaX = this.moveTo.x - this.pos.x;
 				let deltaY = this.moveTo.y - this.pos.y;
 
-				if ((deltaX != 0) || (deltaY != 0)) {
+				if ((deltaX !== 0) || (deltaY !== 0)) {
 					let moveSpeed = this.moveSpeed;
 					let distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
@@ -648,11 +648,11 @@ define([
 			let graphics = new pixi.Graphics();
 
 			let alpha = obj.alpha;
-			if (alpha != null)
+			if (alpha !== null)
 				graphics.alpha = alpha;
 
 			let fillAlpha = obj.fillAlpha;
-			if (fillAlpha == null)
+			if (fillAlpha === null)
 				fillAlpha = 1;
 
 			graphics.beginFill(obj.color || '0x48edff', fillAlpha);
@@ -770,11 +770,6 @@ define([
 		},
 
 		setSprite: function (obj) {
-			let cell = obj.cell;
-			let y = ~~(cell / 8);
-			let x = cell - (y * 8);
-
-			let baseTex = this.textures[obj.sheetName];
 			obj.sprite.texture = this.getTexture(obj.sheetName, obj.cell, obj.sprite.width / scaleMult);
 		},
 

@@ -33,13 +33,13 @@ define([
 		ownerId: null,
 
 		init: function (blueprint) {
-			if (this.ownerId != -1) {
+			if (this.ownerId !== -1) {
 				if (!window.player) {
 					this.hideSprite();
 					return;
 				}
 
-				if (this.ownerId != window.player.serverId) {
+				if (this.ownerId !== window.player.serverId) {
 					this.hideSprite();
 					return;
 				}

@@ -16,7 +16,7 @@ define([
 		extend: function (blueprint) {
 			if (blueprint.modifyRep) {
 				blueprint.modifyRep.forEach(function (m) {
-					let exists = this.list.find(l => (l.id == m.id));
+					let exists = this.list.find(l => (l.id === m.id));
 					if (!exists)
 						this.list.push(m);
 					else {

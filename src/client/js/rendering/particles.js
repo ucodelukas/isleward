@@ -44,7 +44,7 @@ define([
 			let emitters = this.emitters;
 			let eLen = emitters.length;
 			for (let i = 0; i < eLen; i++) {
-				var e = emitters[i];
+				let e = emitters[i];
 
 				let visible = null;
 				let destroy = !e.emit;
@@ -73,7 +73,7 @@ define([
 
 				let r = e.update((now - this.lastTick) * 0.001);
 				r.forEach(function (rr) {
-					if (e.blendMode == 'overlay')
+					if (e.blendMode === 'overlay')
 						rr.pluginName = 'picture';
 				}, this);
 			}

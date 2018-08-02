@@ -79,7 +79,7 @@ Obj.defineProperty(Array.prototype, 'spliceFirstWhere', {
 Obj.defineProperty(Object.prototype, 'has', {
 	enumerable: false,
 	value: function (prop) {
-		return (this.hasOwnProperty(prop) && this[prop] !== null);
+		return (this.hasOwnProperty(prop) && this[prop] !== undefined && this[prop] !== null);
 	}
 });
 	

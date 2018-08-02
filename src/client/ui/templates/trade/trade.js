@@ -43,17 +43,17 @@ define([
 			let buyItems = itemList.items;
 
 			buyItems.forEach(function (item) {
-				if ((item == this.hoverItem))
+				if ((item === this.hoverItem))
 					this.onHover(null, item);
 			}, this);
 
 			let iLen = Math.max(buyItems.length, 50);
-			for (var i = 0; i < iLen; i++) {
-				var item = buyItems[i];
+			for (let i = 0; i < iLen; i++) {
+				let item = buyItems[i];
 
-				if (action == 'sell') {
+				if (action === 'sell') {
 					item = buyItems.find(function (b) {
-						return (b.pos == i);
+						return (b.pos === i);
 					});
 				}
 
@@ -76,9 +76,9 @@ define([
 					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
 					spritesheet = '../../../images/questItems.png';
-				 else if (item.type == 'consumable')
+				 else if (item.type === 'consumable')
 					spritesheet = '../../../images/consumables.png';
-				else if (item.type == 'skin') {
+				else if (item.type === 'skin') {
 					offset = 4;
 					size = 8;
 					if (!item.spritesheet)
@@ -102,11 +102,11 @@ define([
 				else if (item.eq)
 					itemEl.find('.quantity').html('EQ');
 
-				if (action == 'buy') {
+				if (action === 'buy') {
 					let noAfford = false;
 					if (item.worth.currency) {
 						let currencyItems = window.player.inventory.items.find(function (i) {
-							return (i.name == item.worth.currency);
+							return (i.name === item.worth.currency);
 						});
 						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
 					} else
@@ -165,10 +165,10 @@ define([
 			uiInventory.onHover(el, item, e);
 
 			let canAfford = true;
-			if (action == 'buy') {
+			if (action === 'buy') {
 				if (item.worth.currency) {
 					let currencyItems = window.player.inventory.items.find(function (i) {
-						return (i.name == item.worth.currency);
+						return (i.name === item.worth.currency);
 					});
 					canAfford = ((currencyItems) && (currencyItems.quantity >= item.worth.amount));
 				} else

@@ -94,7 +94,7 @@ define([
 
 			if (el.hasClass('active')) {
 				this.prophecies.spliceWhere(function (p) {
-					return (p == pName);
+					return (p === pName);
 				});
 				el.removeClass('active');
 			} else {

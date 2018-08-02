@@ -59,7 +59,7 @@ define([
 
 			if (!this.shrinking) {
 				this.ttl--;
-				if (this.ttl == 0) {
+				if (this.ttl === 0) {
 					this.destroyed = true;
 					return;
 				}
@@ -85,7 +85,7 @@ define([
 			);
 
 			if (changeTo) {
-				var linePercentage = this.linePercentage;
+				let linePercentage = this.linePercentage;
 				if (this.shrinking) 
 					linePercentage /= 1.5;
 				 else {

@@ -88,7 +88,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'esc') {
+			if (key === 'esc') {
 				this.uis.forEach(function (u) {
 					if (!u.modal)
 						return;

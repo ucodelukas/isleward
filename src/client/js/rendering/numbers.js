@@ -19,7 +19,7 @@ define([
 
 		onGetDamage: function (msg) {
 			let target = objects.objects.find(function (o) {
-				return (o.id == msg.id);
+				return (o.id === msg.id);
 			});
 			if (!target)
 				return;
@@ -74,7 +74,7 @@ define([
 				let l = list[i];
 				l.ttl--;
 
-				if (l.ttl == 0) {
+				if (l.ttl === 0) {
 					renderer.destroyObject({
 						layerName: 'effects',
 						sprite: l.sprite

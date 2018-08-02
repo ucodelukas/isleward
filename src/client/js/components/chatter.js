@@ -24,7 +24,7 @@ define([
 
 			if (this.cd > 0) 
 				this.cd--;
-			 else if (this.cd == 0) {
+			 else if (this.cd === 0) {
 				renderer.destroyObject({
 					sprite: chatSprite
 				});
@@ -45,7 +45,7 @@ define([
 			}
 
 			let color = this.color;
-			if (msg[0] == '*')
+			if (msg[0] === '*')
 				color = 0xffeb38;
 
 			let yOffset = (msg.split('\r\n').length - 1);

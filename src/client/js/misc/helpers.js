@@ -6,7 +6,7 @@ Array.prototype.firstIndex = function (callback, thisArg) {
 	let k = 0;
 
 	while (k < len) {
-		var kValue;
+		let kValue;
 
 		if (k in O) {
 			kValue = O[k];
@@ -28,7 +28,7 @@ Array.prototype.spliceWhere = function (callback, thisArg) {
 	let k = 0;
 
 	while (k < len) {
-		var kValue;
+		let kValue;
 
 		if (k in O) {
 			kValue = O[k];
@@ -50,7 +50,7 @@ Array.prototype.spliceFirstWhere = function (callback, thisArg) {
 	let k = 0;
 
 	while (k < len) {
-		var kValue;
+		let kValue;
 
 		if (k in O) {
 			kValue = O[k];
@@ -81,7 +81,7 @@ window._ = {
 		for (let i = 0; i < w; i++) {
 			let inner = [];
 			for (let j = 0; j < h; j++) {
-				if (def == 'array')
+				if (def === 'array')
 					inner.push([]);
 				else
 					inner.push(def);

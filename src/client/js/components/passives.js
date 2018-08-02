@@ -28,7 +28,7 @@ define([
 			if (blueprint.untickNodes) {
 				blueprint.untickNodes.forEach(function (n) {
 					this.selected.spliceWhere(function (s) {
-						return (s == n);
+						return (s === n);
 					});
 				}, this);
 
@@ -38,7 +38,7 @@ define([
 			if (rerender)
 				events.emit('onGetPassives', this.selected);
 
-			if (blueprint.points != null) {
+			if (blueprint.points !== null) {
 				this.points = blueprint.points;
 				events.emit('onGetPassivePoints', this.points);
 			}

@@ -38,7 +38,7 @@ define([
 				let ntx = fx + (Math.cos(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
 				let nty = fy + (Math.sin(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
 
-				if (i == divisions - 1) {
+				if (i === divisions - 1) {
 					ntx = tx;
 					nty = ty;
 				}
@@ -50,7 +50,7 @@ define([
 
 				for (let j = 0; j < steps; j++) {
 					let alpha = 1;
-					if ((config.colors) && (i == divisions - 1) && (j > (steps * 0.75)))
+					if ((config.colors) && (i === divisions - 1) && (j > (steps * 0.75)))
 						alpha = 1 - (j / steps);
 
 					let c = (config.colors || [0xffeb38, 0xfaac45, 0xfafcfc])[~~(Math.random() * (config.colors ? config.colors.length : 3))];
@@ -102,7 +102,7 @@ define([
 		toHex: function rgbToHex (r, g, b) {
 			let componentToHex = function (c) {
 				let hex = c.toString(16);
-				return hex.length == 1 ? '0' + hex : hex;
+				return hex.length === 1 ? '0' + hex : hex;
 			};
 
 			return '0x' + componentToHex(r) + componentToHex(g) + componentToHex(b);

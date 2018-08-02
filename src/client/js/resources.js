@@ -59,7 +59,7 @@ define([
 					readyCount++;
 			}
 
-			if (readyCount == this.spriteNames.length)
+			if (readyCount === this.spriteNames.length)
 				this.onReady();
 		},
 		onReady: function () {

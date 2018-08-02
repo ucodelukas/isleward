@@ -56,13 +56,13 @@ define([
 				});
 				oList.spliceWhere(function (o) {
 					return prepend.some(function (p) {
-						return p == o;
+						return p === o;
 					});
 				});
 				oList.unshift.apply(oList, prepend);
 			}
 
-			for (var e in response) {
+			for (let e in response) {
 				let r = response[e];
 
 				//Certain messages expect to be performed last (because the object they act on hasn't been greated when they get queued)

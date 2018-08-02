@@ -81,7 +81,7 @@ define([
 				})
 				.forEach(function (c, i) {
 					let name = c.name;
-					if (c.level != null)
+					if (c.level !== null)
 						name += '<font class="color-yellowB"> (' + c.level + ')</font>';
 
 					let html = templateListItem
@@ -92,7 +92,7 @@ define([
 
 					li.on('click', this.onCharacterClick.bind(this, c.name));
 
-					if (i == 0)
+					if (i === 0)
 						li.click();
 				}, this);
 		},
@@ -129,7 +129,7 @@ define([
 			spriteY = -(spriteY * 8);
 
 			let spritesheet = result.sheetName;
-			if (spritesheet == 'characters')
+			if (spritesheet === 'characters')
 				spritesheet = '../../../images/characters.png';
 
 			this.find('.sprite')
@@ -138,7 +138,7 @@ define([
 
 			this.find('.name').html(name);
 			let stats = result.components.find(function (c) {
-				return (c.type == 'stats');
+				return (c.type === 'stats');
 			});
 			if (stats) {
 				this.find('.class').html(
@@ -155,7 +155,7 @@ define([
 			this.selected = name;
 
 			let prophecies = result.components.find(function (c) {
-				return (c.type == 'prophecies');
+				return (c.type === 'prophecies');
 			});
 
 			if ((prophecies) && (prophecies.list.indexOf('hardcore') > -1))
@@ -180,7 +180,7 @@ define([
 			if (this.deleteCount < 3) {
 				this.deleteCount++;
 
-				this.setMessage('click delete ' + (4 - this.deleteCount) + ' more time' + ((this.deleteCount == 3) ? '' : 's') + ' to confirm');
+				this.setMessage('click delete ' + (4 - this.deleteCount) + ' more time' + ((this.deleteCount === 3) ? '' : 's') + ' to confirm');
 
 				this.find('.btnDelete')
 					.removeClass('deleting')

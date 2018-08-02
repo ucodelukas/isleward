@@ -24,7 +24,7 @@ define([
 			let target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
-			if ((e.button != 2) || (!target) || (!target.dialogue) || (target == window.player) || (target.prophecies))
+			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies))
 				return;
 
 			let context = [
@@ -67,7 +67,7 @@ define([
 				el.show();
 			}
 
-			if ((e) && (e.button == 2) && (this.target))
+			if ((e) && (e.button === 2) && (this.target))
 				this.onContextMenu(e);
 		},
 
@@ -93,7 +93,7 @@ define([
 
 			let stats = target.stats.values;
 
-			if (stats.level != this.lastLevel) {
+			if (stats.level !== this.lastLevel) {
 				this.el.find('.infoLevel')
 					.html('(' + stats.level + ')')
 					.removeClass('high-level');
@@ -103,12 +103,12 @@ define([
 					this.el.find('.infoLevel').addClass('high-level');
 			}
 
-			if (stats.hp != this.lastHp) {
+			if (stats.hp !== this.lastHp) {
 				this.buildBar(0, stats.hp, stats.hpMax);
 				this.lastHp = stats.hp;
 			}
 
-			if (stats.mana != this.lastMana) {
+			if (stats.mana !== this.lastMana) {
 				this.buildBar(1, stats.mana, stats.manaMax);
 				this.lastMana = stats.mana;
 			}
