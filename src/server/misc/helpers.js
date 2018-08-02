@@ -121,5 +121,12 @@ module.exports = {
 		}
 
 		return o;
+	},
+
+	//Only use this method for official logging. Temporary logs should use console.log
+	// so those instances can be reported by eslint
+	log: function (msg) {
+		//eslint-disable-next-line no-console
+		console.log(msg);
 	}
 };

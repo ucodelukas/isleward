@@ -172,7 +172,7 @@ module.exports = {
 
 		mapFile = null;
 
-		console.log('(M ' + this.name + '): Ready');
+		_.log('(M ' + this.name + '): Ready');
 	},
 
 	build: function () {

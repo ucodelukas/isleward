@@ -29,10 +29,10 @@ module.exports = {
 
 		socketServer.on('connection', this.listeners.onConnection.bind(this));
 
-		let port = process.env.PORT || config.port || 4000;
+		let port = config.port || 4000;
 		server.listen(port, function () {
 			let message = config.startupMessage || 'Server: Ready';
-			console.log(message);
+			_.log(message);
 
 			callback();
 		});

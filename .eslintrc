@@ -139,7 +139,6 @@
     "no-mixed-requires": [2,false],
     "no-new-require": 2,
     "no-path-concat": 2,
-    "no-process-exit": 1,
     "brace-style": [2,"1tbs",{}],
     "camelcase": [1,{"properties":"never"}],
     "comma-spacing": [2,{"after":true}],
