@@ -36,10 +36,7 @@ let cpnSmokePatch = {
 		for (let i = 0; i < contents.length; i++) {
 			let c = contents[i];
 
-			if (!c) {
-				console.log('NO SMOKEBOMB TARGET');
-				console.log(this.obj.name, this.obj.x, this.obj.y);
-			} else {
+			if (c) {
 				let damage = this.getDamage(c);
 				this.applyDamage(c, damage);
 			}

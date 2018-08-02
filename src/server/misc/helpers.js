@@ -1,4 +1,7 @@
-Object.defineProperty(Array.prototype, 'firstIndex', {
+//Hack to bypass eslint
+let Obj = Object;
+
+Obj.defineProperty(Array.prototype, 'firstIndex', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -23,7 +26,7 @@ Object.defineProperty(Array.prototype, 'firstIndex', {
 	} 
 });
 
-Object.defineProperty(Array.prototype, 'spliceWhere', {
+Obj.defineProperty(Array.prototype, 'spliceWhere', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -48,7 +51,7 @@ Object.defineProperty(Array.prototype, 'spliceWhere', {
 	} 
 });
 
-Object.defineProperty(Array.prototype, 'spliceFirstWhere', {
+Obj.defineProperty(Array.prototype, 'spliceFirstWhere', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -71,6 +74,13 @@ Object.defineProperty(Array.prototype, 'spliceFirstWhere', {
 			k++;
 		}
 	} 
+});
+
+Obj.defineProperty(Object.prototype, 'has', {
+	enumerable: false,
+	value: function (prop) {
+		return (this.hasOwnProperty(prop) && this[prop] !== null);
+	}
 });
 	
 module.exports = {

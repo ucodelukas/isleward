@@ -22,7 +22,7 @@ module.exports = {
 			this[cpn.type] = cpn;
 		}
 
-		if ((cpn.init) && (this.instance != null))
+		if (cpn.init && this.has('instance'))
 			cpn.init(blueprint || {}, isTransfer);
 		else {
 			for (let p in blueprint) 
@@ -103,7 +103,7 @@ module.exports = {
 
 		for (let p in o) {
 			let value = o[p];
-			if (value == null)
+			if (value === null)
 				continue;
 
 			let type = typeof (value);
@@ -186,7 +186,7 @@ module.exports = {
 		return this.actionQueue.splice(0, 1)[0];
 	},
 	clearQueue: function () {
-		if (this.serverId != null) {
+		if (this.has('serverId')) {
 			this.instance.syncer.queue('onClearQueue', {
 				id: this.id
 			}, [this.serverId]);
@@ -196,12 +196,8 @@ module.exports = {
 	},
 
 	performAction: function (action) {
-		if (action.instanceModule) {
-			/*action.data.obj = this;
-			this.instance[action.instanceModule][action.method](action.data);
-			this.inventory.resolveCallback(action.data, action.data.result);*/
+		if (action.instanceModule)
 			return;
-		}
 
 		let cpn = this[action.cpn];
 		if (!cpn)

@@ -8,11 +8,9 @@ module.exports = {
 			let template = null;
 			try {
 				template = require('../config/prophecies/' + p);
-			} catch (e) {
-				console.log(e);
-			}
+			} catch (e) {}
 
-			if (template == null)
+			if (!template)
 				return;
 			else if (this.list.some(l => (l.type === p)))
 				return;

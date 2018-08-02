@@ -341,12 +341,6 @@ module.exports = {
 				party = null;
 			}
 
-			if (!player) {
-				console.log('no player');
-				console.log(this.party);
-				console.log(this.obj.name);
-			}
-
 			player.socket.emit('events', {
 				onGetParty: [party],
 				onGetMessages: [{

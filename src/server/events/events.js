@@ -211,7 +211,7 @@ module.exports = {
 					}
 				}, -1);
 
-				if (n.desc != null) {
+				if (n.has('desc')) {
 					event.config.descTimer = n.desc;
 					this.setEventDescription(event.config.name);
 				}

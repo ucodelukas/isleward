@@ -7,7 +7,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
 			return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
 		},
@@ -21,7 +21,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
 			return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
 		},
@@ -35,7 +35,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
 			return max * perfection * (blueprint.statMult.addCritChance || 1);
 		},
@@ -49,7 +49,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.vit || 1);
 			return max * perfection * (blueprint.statMult.vit || 1);
 		},
@@ -64,7 +64,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return ((calcPerfection - min) / (max - min));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.mainStat || 1);
 		},
@@ -74,7 +74,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return ((calcPerfection - min) / (max - min));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(min, max) * blueprint.statMult.armor;
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 		},
@@ -85,7 +85,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / (100 * div));
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
 			return ~~((1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div);
 		},
@@ -98,7 +98,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
 			return max * perfection * (blueprint.statMult.regenHp || 1);
 		},
@@ -107,7 +107,7 @@ module.exports = {
 
 			if (calcPerfection)
 				return (calcPerfection / max);
-			else if (perfection == null)
+			else if (perfection === null)
 				return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
 			return max * perfection * (blueprint.statMult.lvlRequire || 1);
 		}

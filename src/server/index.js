@@ -51,11 +51,11 @@ let startup = {
 	},
 
 	onError: function (e) {
-		console.log(e);
 		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 			return;
 
 		console.log('Error Logged: ' + e.toString());
+		console.log(e.stack);
 
 		io.set({
 			ent: new Date(),

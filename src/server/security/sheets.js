@@ -64,9 +64,7 @@ module.exports = {
 				});
 
 				this.records = records;
-			} catch (e) {
-				console.log('Sheets in error state');
-			}
+			} catch (e) {}
 		}
 
 		setTimeout(this.update.bind(this), 300000);

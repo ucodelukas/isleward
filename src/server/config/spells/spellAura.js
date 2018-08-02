@@ -78,10 +78,8 @@ module.exports = {
 			if (effect)
 				return;
 
-			if (!obj.effects) {
-				console.log('No Effects ', obj.name);
+			if (!obj.effects)
 				return;
-			}
 
 			effects[obj.serverId] = obj.effects.addEffect({
 				type: this.effect,

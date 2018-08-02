@@ -16,7 +16,7 @@ module.exports = {
 	},
 
 	gather: function () {
-		if (this.gathering != null)
+		if (this.gathering)
 			return;
 
 		let nodes = this.nodes;
@@ -223,8 +223,7 @@ module.exports = {
 		}[nodeType]);
 
 		if (nodeType === 'fish') {
-			let rod = this.obj.equipment.eq.tool;
-			if (rod == null)
+			if (!this.obj.equipment.eq.has('tool'))
 				msg = 'You need a fishing rod to fish';
 		}
 
@@ -280,8 +279,7 @@ module.exports = {
 					continue;
 
 				if (node.resourceNode.nodeType === 'fish') {
-					let rod = this.obj.equipment.eq.tool;
-					if (rod == null) {
+					if (!this.obj.equipment.eq.has('tool')) {
 						process.send({
 							method: 'events',
 							data: {

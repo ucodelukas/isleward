@@ -13,10 +13,8 @@ module.exports = {
 
 	shouldRun: function (c) {
 		let cron = c.cron.split(' ');
-		if (cron.length !== 5) {
-			console.log('Invalid Cron Format: ' + cron.join(' '));
+		if (cron.length !== 5)
 			return false;
-		}
 
 		let lastTime = this.lastTime;
 		let time = this.getTime();

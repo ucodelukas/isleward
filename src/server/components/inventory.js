@@ -23,8 +23,8 @@ module.exports = {
 
 		//Spells should be sorted so they're EQ'd in the right order
 		items.sort(function (a, b) {
-			let aId = (a.spellId != null) ? ~~a.spellId : 9999;
-			let bId = (b.spellId != null) ? ~~b.spellId : 9999;
+			let aId = a.has('spellId') ? ~~a.spellId : 9999;
+			let bId = b.has('spellId') ? ~~b.spellId : 9999;
 			return (aId - bId);
 		});
 
@@ -98,9 +98,6 @@ module.exports = {
 							if (factionTier < f.tier)
 								noEquip = true;
 
-							if (!faction)
-								console.log(f);
-
 							return {
 								id: f.id,
 								name: faction.name,
@@ -152,7 +149,7 @@ module.exports = {
 	},
 
 	learnAbility: function (itemId, runeSlot) {
-		if (itemId.itemId != null) {
+		if (itemId.has('itemId')) {
 			let msg = itemId;
 			itemId = msg.itemId;
 			runeSlot = msg.slot;
@@ -192,7 +189,7 @@ module.exports = {
 
 		if ((item.slot === 'twoHanded') || (item.slot === 'oneHanded'))
 			runeSlot = 0;
-		else if (runeSlot == null) {
+		else if (!runeSlot) {
 			runeSlot = 4;
 			for (let i = 1; i <= 4; i++) {
 				if (!this.items.some(j => (j.runeSlot === i))) {
@@ -308,7 +305,7 @@ module.exports = {
 	},
 
 	unlearnAbility: function (itemId) {
-		if (itemId.itemId != null)
+		if (itemId.has('itemId'))
 			itemId = itemId.itemId;
 
 		let item = this.findItem(itemId);
@@ -494,7 +491,7 @@ module.exports = {
 				});
 			}
 
-			if ((item.pos == null) && (!item.eq)) {
+			if (!item.has('pos') && !item.eq) {
 				let pos = i;
 				for (let j = 0; j < iLen; j++) {
 					if (!items.some(fj => (fj.pos === j))) {
@@ -531,10 +528,10 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
+		let callbackId = msg.has('callbackId') ? msg.callbackId : msg;
 		result = result || [];
 
-		if (callbackId == null)
+		if (!callbackId)
 			return;
 
 		process.send({
@@ -548,7 +545,7 @@ module.exports = {
 	},
 
 	findItem: function (id) {
-		if (id == null)
+		if (id === null)
 			return null;
 
 		return this.items.find(i => i.id === id);
@@ -559,7 +556,7 @@ module.exports = {
 			return (
 				(i.spell) &&
 				(i.spell.rolls) &&
-				(i.spell.rolls.damage != null) &&
+				(i.spell.rolls.has('damage')) &&
 				((i.slot === 'twoHanded') || (i.slot === 'oneHanded'))
 			);
 		});
@@ -597,7 +594,7 @@ module.exports = {
 	},
 
 	createBag: function (x, y, items, ownerId) {
-		if (ownerId == null)
+		if (!ownerId)
 			ownerId = -1;
 
 		let bagCell = 50;
@@ -654,7 +651,7 @@ module.exports = {
 		//We need to know if a mob dropped it for quest purposes
 		let fromMob = item.fromMob;
 
-		if (item.quality == null)
+		if (!item.has('quality'))
 			item.quality = 0;
 
 		//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
@@ -711,7 +708,7 @@ module.exports = {
 			if (item.eq)
 				delete item.pos;
 
-			if ((item.pos == null) && (!item.eq)) {
+			if (!item.has('pos') && !item.eq) {
 				let pos = iLen;
 				for (let i = 0; i < iLen; i++) {
 					if (!items.some(fi => (fi.pos === i))) {

@@ -6,7 +6,7 @@ let serverConfig = require('../config/serverConfig');
 
 module.exports = {
 	nextId: 0,
-	nextCallbackId: 0,
+	lastCallbackId: 0,
 	threads: [],
 	callbacks: [],
 
@@ -87,11 +87,11 @@ module.exports = {
 
 	registerCallback: function (callback) {
 		this.callbacks.push({
-			id: this.nextCallbackId++,
+			id: ++this.nextCallbackId,
 			callback: callback
 		});
 
-		return this.nextCallbackId - 1;
+		return this.nextCallbackId;
 	},
 	resolveCallback: function (msg) {
 		let callback = this.callbacks.spliceFirstWhere(c => c.id === msg.msg.id);

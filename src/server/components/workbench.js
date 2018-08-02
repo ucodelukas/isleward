@@ -72,7 +72,7 @@ module.exports = {
 	},
 
 	open: function (msg) {
-		if (msg.sourceId == null)
+		if (!msg.has('sourceId'))
 			return;
 
 		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
@@ -157,10 +157,10 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = (msg.callbackId != null) ? msg.callbackId : msg;
+		let callbackId = (msg.has('callbackId')) ? msg.callbackId : msg;
 		result = result || [];
 
-		if (callbackId == null)
+		if (!callbackId)
 			return;
 
 		process.send({

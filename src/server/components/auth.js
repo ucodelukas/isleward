@@ -21,7 +21,7 @@ module.exports = {
 	customChannels: [],
 
 	play: function (data) {
-		if (this.username == null)
+		if (!this.username)
 			return;
 
 		let character = this.characters[data.data.name];
@@ -167,7 +167,7 @@ module.exports = {
 	},
 
 	getCharacterList: function (data) {
-		if (this.username == null)
+		if (!this.username)
 			return;
 
 		io.get({
@@ -204,9 +204,6 @@ module.exports = {
 		if (result) {
 			result = result.split('`').join('\'');
 			result = result.replace(/''+/g, '\'');
-		} else {
-			console.log('char not found');
-			console.log(data);
 		}
 
 		let character = JSON.parse(result || '{}');
@@ -267,7 +264,7 @@ module.exports = {
 
 		fixes.fixStash(this.stash);
 
-		if (this.skins != null) {
+		if (this.skins) {
 			this.verifySkin(character);
 			data.callback(character);
 		} else {

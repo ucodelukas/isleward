@@ -476,9 +476,9 @@ module.exports = {
 
 		this.values.hp -= amount;
 		let recipients = [];
-		if (this.obj.serverId != null)
+		if (this.obj.serverId)
 			recipients.push(this.obj.serverId);
-		if (source.serverId != null)
+		if (source.serverId)
 			recipients.push(source.serverId);
 		if ((source.follower) && (source.follower.master.serverId))
 			recipients.push(source.follower.master.serverId);
@@ -566,7 +566,7 @@ module.exports = {
 						for (let i = 0; i < aLen; i++) {
 							let a = aggroList[i];
 
-							if ((!a.threat) || (a.obj.serverId == null))
+							if ((!a.threat) || (!a.obj.serverId))
 								continue;
 
 							this.obj.inventory.dropBag(a.obj.serverId, killSource);
@@ -606,9 +606,9 @@ module.exports = {
 			values.hp = hpMax;
 
 		let recipients = [];
-		if (this.obj.serverId != null)
+		if (this.obj.serverId)
 			recipients.push(this.obj.serverId);
-		if (source.serverId != null)
+		if (source.serverId)
 			recipients.push(source.serverId);
 		if (recipients.length > 0) {
 			this.syncer.queue('onGetDamage', {

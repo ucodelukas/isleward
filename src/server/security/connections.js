@@ -21,7 +21,7 @@ module.exports = {
 
 		let sessionDuration = 0;
 
-		if (player.id != null) {
+		if (player.has('id')) {
 			if (player.social)
 				player.social.dc();
 			sessionDuration = ~~(((+new Date()) - player.player.sessionStart) / 1000);

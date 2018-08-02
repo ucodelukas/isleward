@@ -27,7 +27,7 @@ module.exports = {
 						(m !== 'default') &&
 						(
 							(mobBlueprint.attackable) ||
-							(mobBlueprint.attackable == null)
+							(!mobBlueprint.has('attackable'))
 						) &&
 						(mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35)) &&
 						(mobCounts[m] > 1)

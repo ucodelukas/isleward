@@ -108,7 +108,7 @@ module.exports = {
 
 			let spawnPos = map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x == null)) {
+			if (!msg.keepPos || !obj.has('x')) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}
@@ -310,7 +310,7 @@ module.exports = {
 			if (exists)
 				spawnPos = exists.map.getSpawnPos(obj);
 
-			if ((!msg.keepPos) || (obj.x == null)) {
+			if (!msg.keepPos || !obj.has('x')) {
 				obj.x = spawnPos.x;
 				obj.y = spawnPos.y;
 			}

@@ -99,7 +99,7 @@ module.exports = {
 	},
 
 	unlock: function (msg) {
-		if (msg.sourceId == null)
+		if (!msg.sourceId)
 			return;
 
 		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);

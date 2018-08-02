@@ -37,8 +37,7 @@ module.exports = {
 			return;
 		}
 
-		let currentEqId = this.eq[item.slot];
-		if (currentEqId == null) {
+		if (!this.eq.has(item.slot)) {
 			this.equip(itemId);
 			return true;
 		}
@@ -62,17 +61,15 @@ module.exports = {
 		if (!slot)
 			slot = item.equipSlot || item.slot;
 		if (slot === 'twoHanded') {
-			let offHandEqId = this.eq.offHand;
-			if (offHandEqId != null)
-				this.unequip(offHandEqId);
+			if (this.eq.has('offHand'))
+				this.unequip(this.eq.offHand);
 
 			slot = 'oneHanded';
 		} else if (slot === 'offHand') {
-			let oneHandedEqId = this.eq.oneHanded;
-			if (oneHandedEqId != null) {
-				let oneHandedEq = this.obj.inventory.findItem(oneHandedEqId);
-				if (oneHandedEq && oneHandedEq.slot === 'twoHanded')
-					this.unequip(oneHandedEqId);
+			if (this.eq.has('oneHanded')) {
+				let oneHandedEq = this.obj.inventory.findItem(this.eq.oneHanded);
+				if (oneHandedEq.slot === 'twoHanded')
+					this.unequip(this.eq.oneHanded);
 			}
 		}
 
@@ -98,8 +95,8 @@ module.exports = {
 		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 
 		if (slot === 'finger') {
-			let f1 = (this.eq['finger-1'] != null);
-			let f2 = (this.eq['finger-2'] != null);
+			let f1 = (this.eq.has('finger-1'));
+			let f2 = (this.eq.has('finger-2'));
 
 			if ((f1) && (f2))
 				slot = 'finger-1';
@@ -109,12 +106,12 @@ module.exports = {
 				slot = 'finger-2';
 		}
 
-		let currentEqId = this.eq[slot];
-		let currentEq = this.obj.inventory.findItem(currentEqId);
-		if (currentEq === item)
-			return;
-		if (currentEqId != null)
-			this.unequip(currentEqId);
+		if (this.eq.has(slot)) {
+			if (this.eq[slot].id === item.id)
+				return;
+
+			this.unequip(this.eq[slot].id);
+		}
 
 		let stats = item.stats;
 		for (let s in stats) {
@@ -177,7 +174,7 @@ module.exports = {
 		if (typeof (itemId) === 'object')
 			itemId = itemId.itemId;
 
-		if (item.id == null)
+		if (!item.has('id'))
 			item = this.obj.inventory.findItem(itemId);
 
 		if (!item)
@@ -267,9 +264,6 @@ module.exports = {
 
 		item.quickSlot = msg.slot;
 		obj.syncer.setArray(true, 'inventory', 'getItems', item);
-
-		console.log(item);
-		console.log(this.quickSlots);
 	},
 
 	unequipAttrRqrGear: function () {

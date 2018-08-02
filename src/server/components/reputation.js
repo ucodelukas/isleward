@@ -36,10 +36,8 @@ module.exports = {
 			factionBlueprint = factions.getFaction(factionId);
 		} catch (e) {}
 
-		if (factionBlueprint == null) {
-			console.log('No faction blueprint found');
+		if (!factionBlueprint)
 			return;
-		}
 
 		factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
 
@@ -100,7 +98,7 @@ module.exports = {
 	},
 
 	getReputation: function (factionId, gain) {
-		let fullSync = (this.factions[factionId] == null);
+		let fullSync = (!this.factions[factionId]);
 		let blueprint = this.getBlueprint(factionId);
 
 		let faction = this.list.find(l => l.id === factionId);
@@ -154,7 +152,7 @@ module.exports = {
 		if (this.list.some(l => l.id === factionId))
 			return;
 
-		let fullSync = (this.factions[factionId] == null);
+		let fullSync = (!this.factions[factionId]);
 		let blueprint = this.getBlueprint(factionId);
 
 		if (!blueprint)

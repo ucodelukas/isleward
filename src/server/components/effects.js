@@ -39,7 +39,7 @@ module.exports = {
 			type: 'effects',
 			effects: this.effects
 				.map(f => f.save())
-				.filter(f => f != null)
+				.filter(f => !!f)
 		};
 
 		return e;
@@ -54,7 +54,7 @@ module.exports = {
 		if ((effects.length > 0) && (effects[0].obj)) {
 			effects = effects
 				.map(f => f.simplify())
-				.filter(f => f != null);
+				.filter(f => !!f);
 		}
 		e.effects = effects;
 
@@ -117,7 +117,7 @@ module.exports = {
 	},
 
 	canApplyEffect: function (type) {
-		if (this.ccResistances[type] == null)
+		if (!this.ccResistances[type])
 			return true;
 
 		let ccResistances = this.ccResistances;

@@ -30,7 +30,7 @@ module.exports = {
 
 			if (!target)
 				continue;
-			else if (source == null) {
+			else if (!source) {
 				delete dialogue[s];
 				continue;
 			}

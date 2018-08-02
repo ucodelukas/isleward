@@ -137,7 +137,7 @@ module.exports = {
 							target: target
 						});
 						//null means we don't have LoS
-						if (success != null)
+						if (success !== null)
 							return;
 						hasLos = false;
 					} else
@@ -156,17 +156,17 @@ module.exports = {
 		let newDistance = max(abs(targetPos.x - tx), abs(targetPos.y - ty));
 
 		if ((newDistance >= distance) && (newDistance > furthestRange)) {
-			if (hasLos == null)
+			if (hasLos === null)
 				hasLos = this.physics.hasLos(x, y, tx, ty);
 			if (hasLos) {
-				if (doesCollide == null)
+				if (doesCollide === null)
 					doesCollide = this.physics.mobsCollide(x, y, obj);
 				if (!doesCollide) {
 					obj.aggro.ignore(target);
 					return;
 				}
 			} else {
-				if (doesCollide == null)
+				if (doesCollide === null)
 					doesCollide = this.physics.mobsCollide(x, y, obj);
 				if (!doesCollide) {
 					obj.aggro.ignore(target);

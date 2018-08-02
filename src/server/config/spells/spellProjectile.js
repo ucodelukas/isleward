@@ -99,11 +99,9 @@ module.exports = {
 
 		let damage = this.getDamage(target);
 
-		if (!target.stats) {
-			console.log('has no stats???');
-			console.log(target);
+		if (!target.stats)
 			return;
-		}
+
 		target.stats.takeDamage(damage, this.threatMult, this.obj);
 	}
 };

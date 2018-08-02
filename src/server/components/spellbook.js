@@ -23,7 +23,7 @@ module.exports = {
 
 		this.dmgMult = blueprint.dmgMult;
 
-		(blueprint.spells || []).forEach(s => this.addSpell(s));
+		(blueprint.spells || []).forEach(s => this.addSpell(s, -1));
 
 		delete blueprint.spells;
 	},
@@ -33,7 +33,7 @@ module.exports = {
 		this.spells = [];
 
 		spells.forEach(function (s) {
-			this.addSpell(s);
+			this.addSpell(s, -1);
 		}, this);
 	},
 
@@ -119,7 +119,7 @@ module.exports = {
 		if ((this.furthestRange === -1) || (builtSpell.range > this.furthestRange))
 			this.furthestRange = builtSpell.range;
 
-		if ((options.id == null) && (spellId == null)) {
+		if ((!options.has('id')) && (spellId === -1)) {
 			spellId = 0;
 			this.spells.forEach(function (s) {
 				if (s.id >= spellId)
@@ -127,7 +127,7 @@ module.exports = {
 			});
 		}
 
-		builtSpell.id = (options.id == null) ? spellId : options.id;
+		builtSpell.id = !options.has('id') ? spellId : options.id;
 		this.spells.push(builtSpell);
 		this.spells.sort(function (a, b) {
 			return (a.id - b.id);
@@ -242,7 +242,7 @@ module.exports = {
 		return null;
 	},
 	cast: function (action, isAuto) {
-		if (action.spell == null) {
+		if (!action.has('spell')) {
 			this.auto = [];
 			return true;
 		}
@@ -265,7 +265,7 @@ module.exports = {
 
 		if ((!spell.aura) && (!spell.targetGround)) {
 			//Did we pass in the target id?
-			if ((action.target != null) && (action.target.id == null)) {
+			if (action.target && !action.target.id) {
 				action.target = this.objects.objects.find(o => o.id === action.target);
 				if (!action.target)
 					return false;
@@ -274,7 +274,7 @@ module.exports = {
 			if ((action.target === this.obj) && (spell.noTargetSelf))
 				action.target = null;
 
-			if ((action.target == null) || (!action.target.player)) {
+			if (!action.target || !action.target.player) {
 				if (spell.autoTargetFollower) {
 					action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
 					if (action.target)
@@ -323,7 +323,7 @@ module.exports = {
 				} else
 					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
 			}
-		} else if (spell.range != null) {
+		} else if (spell.has('range')) {
 			let distance = Math.max(Math.abs(action.target.x - this.obj.x), Math.abs(action.target.y - this.obj.y));
 			let range = spell.range;
 			if ((spell.useWeaponRange) && (this.obj.player)) {

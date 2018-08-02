@@ -21,14 +21,14 @@ module.exports = {
 
 		let target = msg.target;
 
-		if ((target == null) && (!msg.targetName))
+		if (!target && !msg.targetName)
 			return false;
 
-		if ((target != null) && (target.id == null)) {
+		if (target && !target.id) {
 			target = this.obj.instance.objects.objects.find(o => o.id === target);
 			if (!target)
 				return false;
-		} else if (msg.targetName != null) {
+		} else if (msg.targetName) {
 			target = this.obj.instance.objects.objects.find(o => ((o.name) && (o.name.toLowerCase() === msg.targetName.toLowerCase())));
 			if (!target)
 				return false;
@@ -81,10 +81,9 @@ module.exports = {
 
 		this.sourceStates[sourceObj.id] = state;
 
-		if (!this.states) {
-			console.log(sourceObj.name, this.obj.name, state);
+		if (!this.states)
 			return null;
-		}
+
 		let stateConfig = this.states[state];
 		if (!stateConfig)
 			return null;

@@ -10,7 +10,7 @@ module.exports = {
 	magicFindMult: 7,
 
 	generate: function (item, blueprint) {
-		if (blueprint.quality != null) {
+		if (blueprint.has('quality')) {
 			item.quality = ~~blueprint.quality;
 			return;
 		}
