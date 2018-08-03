@@ -294,6 +294,18 @@ module.exports = {
 		let result = {};
 		this.obj.instance.eventEmitter.emit('onBeforeUseItem', this.obj, item, result);
 
+		let effects = (item.effects || []);
+		let eLen = effects.length;
+		for (let j = 0; j < eLen; j++) {
+			let effect = effects[j];
+
+			let effectEvent = effect.events.onConsumeItem;
+			if (!effectEvent)
+				continue;
+
+			effectEvent.call(this.obj, item, effect);
+		}
+
 		if (item.type === 'consumable') {
 			if (item.uses) {
 				item.uses--;

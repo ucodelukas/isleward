@@ -7,7 +7,12 @@ module.exports = [{
 		worth: 0,
 		noSalvage: true,
 		noAugment: true,
-		uses: 1
+		uses: 1,
+		effects: [{
+			type: 'gainStat',
+			stat: 'hp',
+			amount: '100%'
+		}]
 	},
 	materials: [{
 		nameLike: 'Sun Carp',

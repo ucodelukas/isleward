@@ -589,7 +589,7 @@ module.exports = {
 			return;
 
 		let threatMult = heal.threatMult;
-		if (!heal.hasOwnProperty('threatMult'))
+		if (!heal.has('threatMult'))
 			threatMult = 1;
 
 		let values = this.values;
@@ -622,11 +622,13 @@ module.exports = {
 
 		//Add aggro to all our attackers
 		let threat = amount * 0.4 * threatMult;
-		let aggroList = this.obj.aggro.list;
-		let aLen = aggroList.length;
-		for (let i = 0; i < aLen; i++) {
-			let a = aggroList[i].obj;
-			a.aggro.tryEngage(source, threat);
+		if (threat != 0) {
+			let aggroList = this.obj.aggro.list;
+			let aLen = aggroList.length;
+			for (let i = 0; i < aLen; i++) {
+				let a = aggroList[i].obj;
+				a.aggro.tryEngage(source, threat);
+			}
 		}
 
 		this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
