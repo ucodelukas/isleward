@@ -80,12 +80,12 @@ define([
 					return (b.level - a.level);
 				})
 				.forEach(function (c, i) {
-					let name = c.name;
+					let charName = c.name;
 					if (c.level !== null)
-						name += '<font class="color-yellowB"> (' + c.level + ')</font>';
+						charName += '<font class="color-yellowB"> (' + c.level + ')</font>';
 
 					let html = templateListItem
-						.replace('$NAME$', name);
+						.replace('$NAME$', charName);
 
 					let li = $(html)
 						.appendTo(list);
@@ -96,16 +96,16 @@ define([
 						li.click();
 				}, this);
 		},
-		onCharacterClick: function (name, e) {
+		onCharacterClick: function (charName, e) {
 			this.el.addClass('disabled');
 
 			let el = $(e.target);
 			el.parent().find('.selected').removeClass('selected');
 			el.addClass('selected');
 
-			let charInfo = this.characterInfo[name];
+			let charInfo = this.characterInfo[charName];
 			if (charInfo) {
-				this.onGetCharacter(name, charInfo);
+				this.onGetCharacter(charName, charInfo);
 
 				return;
 			}
@@ -114,12 +114,12 @@ define([
 				cpn: 'auth',
 				method: 'getCharacter',
 				data: {
-					name: name
+					name: charName
 				},
-				callback: this.onGetCharacter.bind(this, name)
+				callback: this.onGetCharacter.bind(this, charName)
 			});
 		},
-		onGetCharacter: function (name, result) {
+		onGetCharacter: function (charName, result) {
 			this.find('.button').removeClass('disabled');
 
 			let spriteY = ~~(result.cell / 8);
@@ -136,7 +136,7 @@ define([
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px')
 				.show();
 
-			this.find('.name').html(name);
+			this.find('.name').html(charName);
 			let stats = result.components.find(function (c) {
 				return (c.type === 'stats');
 			});
@@ -151,20 +151,20 @@ define([
 
 			this.el.removeClass('disabled');
 
-			this.characterInfo[name] = result;
-			this.selected = name;
+			this.characterInfo[charName] = result;
+			this.selected = charName;
 
 			let prophecies = result.components.find(function (c) {
 				return (c.type === 'prophecies');
 			});
 
 			if ((prophecies) && (prophecies.list.indexOf('hardcore') > -1))
-				this.find('.name').html(name + ' (hc)');
+				this.find('.name').html(charName + ' (hc)');
 
 			this.find('.btnPlay').removeClass('disabled');
 
 			if (result.permadead) {
-				this.find('.name').html(name + ' (hc - rip)');
+				this.find('.name').html(charName + ' (hc - rip)');
 				this.find('.btnPlay').addClass('disabled');
 			}
 		},

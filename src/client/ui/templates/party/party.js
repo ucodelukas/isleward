@@ -117,17 +117,17 @@ define([
 				let player = globals.onlineList.find(function (o) {
 					return (o.id === p);
 				});
-				let name = player ? player.name : 'unknown';
+				let playerName = player ? player.name : 'unknown';
 				let level = 'level: ' + (player ? player.level : '?');
 
 				let html = templatePartyMember
-					.replace('$NAME$', name)
+					.replace('$NAME$', playerName)
 					.replace('$LEVEL$', level);
 
 				let el = $(html)
 					.appendTo(container)
 					.attr('memberId', p)
-					.on('contextmenu', this.showContext.bind(this, name, p));
+					.on('contextmenu', this.showContext.bind(this, playerName, p));
 
 				if (player.zone !== window.player.zone)
 					el.addClass('differentZone');
@@ -153,7 +153,7 @@ define([
 				callback: this.leaveParty.bind(this)
 			}], e);
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 

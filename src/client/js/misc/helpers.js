@@ -1,3 +1,6 @@
+/* global _ */
+
+//eslint-disable-next-line no-extend-native
 Array.prototype.firstIndex = function (callback, thisArg) {
 	let T = thisArg;
 	let O = Object(this);
@@ -20,6 +23,7 @@ Array.prototype.firstIndex = function (callback, thisArg) {
 	return -1;
 };
 
+//eslint-disable-next-line no-extend-native
 Array.prototype.spliceWhere = function (callback, thisArg) {
 	let T = thisArg;
 	let O = Object(this);
@@ -42,6 +46,7 @@ Array.prototype.spliceWhere = function (callback, thisArg) {
 	}
 };
 
+//eslint-disable-next-line no-extend-native
 Array.prototype.spliceFirstWhere = function (callback, thisArg) {
 	let T = thisArg;
 	let O = Object(this);
@@ -63,6 +68,15 @@ Array.prototype.spliceFirstWhere = function (callback, thisArg) {
 		k++;
 	}
 };
+
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Object.prototype, 'has', {
+	enumerable: false,
+	value: function (prop) {
+		//eslint-disable-next-line no-undefined
+		return (this.hasOwnProperty(prop) && this[prop] !== undefined && this[prop] !== null);
+	}
+});
 
 window._ = {
 	create: function () {

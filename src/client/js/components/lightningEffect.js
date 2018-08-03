@@ -43,8 +43,10 @@ define([
 		},
 
 		renderManual: function () {
+			let linePercentage = this.linePercentage;
+
 			let cdMax = this.cdMax;
-			if (((this.lineGrow) && (this.linePercentage < 1)) || ((this.shrinking) && (this.linePercentage > 0)))
+			if (((this.lineGrow) && (linePercentage < 1)) || ((this.shrinking) && (linePercentage > 0)))
 				cdMax = 1;
 
 			if (this.cd > 0) {
@@ -76,29 +78,27 @@ define([
 			let changeTo = (
 				(
 					(this.lineGrow) && 
-					(this.linePercentage < 1)
+					(linePercentage < 1)
 				) ||
 				(
 					(this.shrinking) &&
-					(this.linePercentage > 0)
+					(linePercentage > 0)
 				)
 			);
 
 			if (changeTo) {
-				let linePercentage = this.linePercentage;
 				if (this.shrinking) 
 					linePercentage /= 1.5;
-				 else {
+				else {
 					linePercentage *= 1.5;
 					if (linePercentage > 1)
 						linePercentage = 1;
 				}
-				this.linePercentage = linePercentage;
 
 				let angle = Math.atan2(toY - fromY, toX - fromX);
 				let distance = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
-				toX = fromX + (Math.cos(angle) * distance * this.linePercentage);
-				toY = fromY + (Math.sin(angle) * distance * this.linePercentage);
+				toX = fromX + (Math.cos(angle) * distance * linePercentage);
+				toY = fromY + (Math.sin(angle) * distance * linePercentage);
 			}
 
 			this.effect = lightningBuilder.build({
@@ -113,6 +113,8 @@ define([
 
 			if ((this.shrinking) && (linePercentage < 0.1))
 				this.destroyed = true;
+
+			this.linePercentage = linePercentage;
 		},
 
 		destroyManual: function () {

@@ -54,7 +54,6 @@ define([
 
 		getClosest: function (x, y, maxDistance, reverse, fromMob) {
 			let objects = this.objects;
-			let oLen = objects.length;
 
 			let list = objects.filter(function (o) {
 				if ((!o.stats) || (o.nonSelectable) || (o === window.player))
@@ -89,7 +88,7 @@ define([
 
 			if (reverse) 
 				fromIndex = (fromIndex === 0 ? list.length : fromIndex) - 1;
-			 else 
+			else 
 				fromIndex = (fromIndex + 1) % list.length;
 
 			return list[fromIndex];

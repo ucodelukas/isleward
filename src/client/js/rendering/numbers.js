@@ -24,8 +24,6 @@ define([
 			if (!target)
 				return;
 
-			let addY = msg.event ? scale : -(scale * 0.75);
-
 			let ttl = 35;
 
 			let numberObj = {
@@ -43,7 +41,7 @@ define([
 
 			if (numberObj.event) 
 				numberObj.y += (scale / 2);
-			 else if (numberObj.heal)
+			else if (numberObj.heal)
 				numberObj.x -= scale;
 			else
 				numberObj.x += scale;

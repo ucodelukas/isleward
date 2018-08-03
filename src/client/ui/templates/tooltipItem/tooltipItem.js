@@ -100,7 +100,7 @@ define([
 				});
 			}
 
-			stats = Object.keys(tempStats)
+			let stats = Object.keys(tempStats)
 				.map(function (s) {
 					let isEnchanted = (s[0] === '_');
 					let statName = s;
@@ -160,16 +160,16 @@ define([
 				return row;
 			}).join('');
 
-			let name = item.name;
+			let itemName = item.name;
 			if (item.quantity > 1)
-				name += ' x' + item.quantity;
+				itemName += ' x' + item.quantity;
 
 			let level = null;
 			if (item.level)
 				level = item.level.push ? item.level[0] + ' - ' + item.level[1] : item.level;
 
 			let html = tplTooltip
-				.replace('$NAME$', name)
+				.replace('$NAME$', itemName)
 				.replace('$QUALITY$', item.quality)
 				.replace('$TYPE$', item.type)
 				.replace('$SLOT$', item.slot)
@@ -195,7 +195,7 @@ define([
 						// have to move away from zero by EPSILON, not a simple add
 						if (delta >= 0) 
 							delta += Number.EPSILON;
-						 else 
+						else 
 							delta -= Number.EPSILON;
 						
 						delta = ~~((delta) * 100) / 100;
@@ -268,7 +268,7 @@ define([
 
 			if (!item.ability) 
 				this.tooltip.find('.damage').hide();
-			 else
+			else
 				this.tooltip.find('.info').hide();
 
 			if (item.spell) {

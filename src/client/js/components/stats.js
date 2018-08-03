@@ -25,10 +25,6 @@ define([
 
 			let obj = this.obj;
 
-			let yOffset = -12;
-			if (obj.isChampion)
-				yOffset = -18;
-
 			this.hpSprite = renderer.buildRectangle({
 				layerName: 'effects',
 				x: obj.x * scale,

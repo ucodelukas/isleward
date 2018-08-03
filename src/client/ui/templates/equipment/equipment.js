@@ -104,7 +104,6 @@ define([
 				el = $(el);
 				let slot = el.attr('slot');
 				let newItems = window.player.inventory.items.some(function (i) {
-					let checkSlot = slot;
 					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
 					else if (slot === 'oneHanded')
@@ -209,20 +208,20 @@ define([
 					let imgX = -sprite[0] * 64;
 					let imgY = -sprite[1] * 64;
 
-					let el = $('<div class="slot"><div class="icon"></div></div>')
+					let itemEl = $('<div class="slot"><div class="icon"></div></div>')
 						.appendTo(container);
 
-					el
+					itemEl
 						.find('.icon')
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
-						.on('mousemove', this.onHoverItem.bind(this, el, item, null))
+						.on('mousemove', this.onHoverItem.bind(this, itemEl, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
 						.on('click', this.equipItem.bind(this, item, slot));
 
 					if (item === this.hoverCompare)
-						el.find('.icon').addClass('eq');
-					else if (item.isNew)
-						el.find('.icon').addClass('new');
+						itemEl.find('.icon').addClass('eq');
+					else itemEl(item.isNew);
+					el.find('.icon').addClass('new');
 				}, this);
 
 			if (items.length === 0)

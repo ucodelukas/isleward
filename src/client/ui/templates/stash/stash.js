@@ -58,7 +58,7 @@ define([
 						spritesheet = '../../../images/materials.png';
 					else if (item.quest)
 						spritesheet = '../../../images/questItems.png';
-					 else if (item.type === 'consumable')
+					else if (item.type === 'consumable')
 						spritesheet = '../../../images/consumables.png';
 				}
 
@@ -93,7 +93,7 @@ define([
 				callback: this.withdraw.bind(this, item)
 			}], e);
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 

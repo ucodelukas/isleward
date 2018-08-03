@@ -51,7 +51,7 @@ define([
 			}, this);
 		},
 
-		onSelectRecipe: function (el, name) {
+		onSelectRecipe: function (el, recipeName) {
 			el.parent().find('.selected').removeClass('selected');
 			el.addClass('selected');
 
@@ -63,7 +63,7 @@ define([
 					cpn: 'workbench',
 					method: 'getRecipe',
 					data: {
-						name: name		
+						name: recipeName		
 					}
 				},
 				callback: this.onGetRecipe.bind(this)
@@ -132,11 +132,10 @@ define([
 			this.find('.title').html('');
 			this.find('.description').html('');
 			this.find('.materialList .material').remove();
-			let container = this.find('.materialList')
+			this.find('.materialList')
 				.css({
 					visibility: 'hidden'
 				});
-
 			this.find('.btnCraft').addClass('disabled');
 		}
 	};

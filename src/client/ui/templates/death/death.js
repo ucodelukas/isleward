@@ -46,24 +46,24 @@ define([
 			events.emit('onShowOverlay', this.el);
 		},
 
-		onDeath: function (event) {
-			if (!event.source) 
+		onDeath: function (eventObj) {
+			if (!eventObj.source) 
 				this.find('.msg').html('you are dead');
-			 else
-				this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
+			else
+				this.find('.msg').html('you were killed by [ <div class="inner">' + eventObj.source + '</div> ]');
 			this.find('.penalty')
-				.html('you lost ' + event.xpLoss + ' experience')
+				.html('you lost ' + eventObj.xpLoss + ' experience')
 				.show();
 
-			if (!event.xpLoss)
+			if (!eventObj.xpLoss)
 				this.find('.penalty').hide();
 
 			this.el.removeClass('permadeath');
 			this.doShow();
 		},
 
-		onPermadeath: function (event) {
-			this.find('.msg').html('you were killed by [ <div class="inner">' + event.source + '</div> ]');
+		onPermadeath: function (eventObj) {
+			this.find('.msg').html('you were killed by [ <div class="inner">' + eventObj.source + '</div> ]');
 			this.el.addClass('permadeath');
 			this.doShow();
 		}

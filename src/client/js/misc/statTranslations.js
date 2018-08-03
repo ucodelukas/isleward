@@ -48,7 +48,6 @@ define([
 		elementFireResist: 'fire resistance',
 		elementHolyResist: 'holy resistance',
 		elementPoisonResist: 'poison resistance',
-		elementAllResist: 'all resistance',
 
 		attackSpeed: 'attack speed',
 		castSpeed: 'cast speed',

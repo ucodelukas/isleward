@@ -15,28 +15,6 @@ define([
 	tplTooltip,
 	input
 ) {
-	let qualityColors = [{
-		r: 252,
-		g: 252,
-		b: 252
-	}, {
-		r: 7,
-		g: 170,
-		b: 214
-	}, {
-		r: 255,
-		g: 255,
-		b: 0
-	}, {
-		r: 192,
-		g: 0,
-		b: 207
-	}, {
-		r: 255,
-		g: 108,
-		b: 4
-	}];
-
 	return {
 		tpl: template,
 
@@ -90,12 +68,12 @@ define([
 			let rendered = [];
 
 			for (let i = 0; i < iLen; i++) {
-				let item = items.find(function (item) {
-					return ((item.pos !== null) && (item.pos === i));
-				});
+				let itemEl = null;
+
+				let item = items.find(f => (f.pos !== null && f.pos === i));
 
 				if (!item) {
-					let itemEl = $(tplItem)
+					itemEl = $(tplItem)
 						.appendTo(container);
 
 					itemEl
@@ -112,7 +90,7 @@ define([
 				let imgX = -item.sprite[0] * 64;
 				let imgY = -item.sprite[1] * 64;
 
-				let itemEl = $(tplItem)
+				itemEl = $(tplItem)
 					.appendTo(container);
 
 				let spritesheet = item.spritesheet || '../../../images/items.png';
@@ -121,7 +99,7 @@ define([
 						spritesheet = '../../../images/materials.png';
 					else if (item.quest)
 						spritesheet = '../../../images/questItems.png';
-					 else if (item.type === 'consumable')
+					else if (item.type === 'consumable')
 						spritesheet = '../../../images/consumables.png';
 				}
 
@@ -365,7 +343,7 @@ define([
 			if (config.length > 0)
 				events.emit('onContextMenu', config, e);
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 
@@ -406,12 +384,14 @@ define([
 
 		onChangeStackAmount: function (e, amount) {
 			let item = this.find('.split-box').data('item');
-			let delta = e ? ((e.originalEvent.deltaY > 0) ? -1 : 1) : amount;
+			let delta = amount;
+			if (e)
+				delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
 			if (this.shiftDown)
 				delta *= 10;
-			let amount = this.find('.split-box .amount');
+			let elAmount = this.find('.split-box .amount');
 
-			amount.val(Math.max(1, Math.min(item.quantity - 1, ~~amount.val() + delta)));
+			elAmount.val(Math.max(1, Math.min(item.quantity - 1, ~~elAmount.val() + delta)));
 		},
 
 		onEnterStackAmount: function (e) {
@@ -464,7 +444,6 @@ define([
 					delete item.isNew;
 				}
 
-				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(e.clientX + 32),
 					y: ~~(e.clientY)
@@ -494,9 +473,9 @@ define([
 					if (item.slot === 'twoHanded') {
 						if (!equippedOneHanded) 
 							compare = equippedOffhand;
-						 else if (!equippedOffhand) 
+						else if (!equippedOffhand) 
 							compare = equippedOneHanded;
-						 else {
+						else {
 							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
 							compare = $.extend(true, {}, equippedOneHanded);
 							compare.refItem = equippedOneHanded;

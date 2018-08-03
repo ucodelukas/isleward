@@ -93,12 +93,12 @@ define([
 			let ticksLeft = ~~((this.endTime - (+new Date())) / 16);
 
 			if (ticksLeft <= 0) {
-				this.obj.x = target.x;
-				this.obj.y = target.y;
+				source.x = target.x;
+				source.y = target.y;
 				this.particles.emitter.emit = false;
 				if (!this.noExplosion)
-					this.obj.explosion.explode();
-				this.obj.destroyed = true;
+					source.explosion.explode();
+				source.destroyed = true;
 			} else {
 				dx /= ticksLeft;
 				dy /= ticksLeft;
@@ -106,8 +106,8 @@ define([
 				this.x += dx;
 				this.y += dy;
 
-				this.obj.x = (~~((this.x * scale) / 4) * 4) / scale;
-				this.obj.y = (~~((this.y * scale) / 4) * 4) / scale;
+				source.x = (~~((this.x * scale) / 4) * 4) / scale;
+				source.y = (~~((this.y * scale) / 4) * 4) / scale;
 			}
 		},
 

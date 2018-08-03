@@ -14,7 +14,7 @@ define([
 			frag.replace(/%THICKNESS%/gi, (1.0 / thickness).toFixed(7))
 		);
 
-		this.uniforms.pixelWidth = 0.002;//1.0 / (viewWidth || 1);
+		this.uniforms.pixelWidth = 0.002;
 		this.uniforms.pixelHeight = 1.0 / (viewHeight || 1);
 		this.uniforms.thickness = thickness;
 		this.uniforms.outlineColor = new Float32Array([0, 0, 0, 1]);

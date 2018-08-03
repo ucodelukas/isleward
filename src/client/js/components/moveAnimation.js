@@ -83,10 +83,10 @@ define([
 			let ticksLeft = ~~((this.endTime - (+new Date())) / 16);
 
 			if (ticksLeft <= 0) {
-				this.obj.x = this.targetX;
-				this.obj.y = this.targetY;
+				source.x = this.targetX;
+				source.y = this.targetY;
 
-				this.obj.setSpritePosition();
+				source.setSpritePosition();
 
 				this.destroyed = true;
 				this.particles.destroyed = true;
@@ -109,10 +109,10 @@ define([
 				this.x += dx;
 				this.y += dy;
 
-				this.obj.x = (~~((this.x * 32) / 8) * 8) / 32;
-				this.obj.y = (~~((this.y * 32) / 8) * 8) / 32;
+				source.x = (~~((this.x * 32) / 8) * 8) / 32;
+				source.y = (~~((this.y * 32) / 8) * 8) / 32;
 
-				this.obj.setSpritePosition();
+				source.setSpritePosition();
 			}
 
 			renderer.updateSprites();

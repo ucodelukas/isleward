@@ -150,8 +150,6 @@ define([
 
 		renderers: {
 			clear: function () {
-				let pos = this.oldPos || this.pos;
-
 				this.ctx.clearRect(0, 0, this.size.w, this.size.h);
 
 				delete this.oldPos;
@@ -317,12 +315,12 @@ define([
 					else if (node.spiritStart)
 						text = 'Starting node for ' + node.spiritStart + ' spirits';
 
-					let pos = {
+					let tooltipPos = {
 						x: input.mouse.raw.clientX + 15,
 						y: input.mouse.raw.clientY
 					};
 
-					events.emit('onShowTooltip', text, this.el[0], pos);
+					events.emit('onShowTooltip', text, this.el[0], tooltipPos);
 				} else
 					events.emit('onHideTooltip', this.el[0]);
 			},
@@ -398,7 +396,7 @@ define([
 			},
 
 			onGetPassivePoints: function (points) {
-				let el = this.find('.points')
+				this.find('.points')
 					.html('Points Available: ' + points);
 			},
 
@@ -409,9 +407,7 @@ define([
 					data: {
 						cpn: 'passives',
 						method: 'untickNode',
-						data: {
-							nodeId: node.id
-						}
+						data: {}
 					}
 				});
 			}

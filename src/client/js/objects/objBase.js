@@ -58,10 +58,10 @@ define([
 		},
 
 		update: function () {
-			let components = this.components;
-			let len = components.length;
+			let oComponents = this.components;
+			let len = oComponents.length;
 			for (let i = 0; i < len; i++) {
-				let c = components[i];
+				let c = oComponents[i];
 				if (c.update)
 					c.update();
 
@@ -69,7 +69,7 @@ define([
 					if (c.destroy)
 						c.destroy();
 
-					components.splice(i, 1);
+					oComponents.splice(i, 1);
 					i--;
 					len--;
 					delete this[c.type];
@@ -77,9 +77,9 @@ define([
 			}
 		},
 
-		on: function (event, callback) {
-			let list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
-			list.push(events.on(event, callback));
+		on: function (eventName, callback) {
+			let list = this.eventCallbacks[eventName] || (this.eventCallbacks[eventName] = []);
+			list.push(events.on(eventName, callback));
 		},
 
 		setSpritePosition: function () {
@@ -133,10 +133,10 @@ define([
 				});
 			}
 
-			let components = this.components;
-			let cLen = components.length;
+			let oComponents = this.components;
+			let cLen = oComponents.length;
 			for (let i = 0; i < cLen; i++) {
-				let c = components[i];
+				let c = oComponents[i];
 				if (c.destroy)
 					c.destroy();
 			}

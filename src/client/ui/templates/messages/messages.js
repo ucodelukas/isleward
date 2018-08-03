@@ -70,7 +70,7 @@ define([
 			this.find('[filter="' + channel.trim() + '"]').remove();
 
 			let container = this.find('.filters');
-			let newFilter = $(tplTab)
+			$(tplTab)
 				.appendTo(container)
 				.addClass('channel')
 				.attr('filter', channel.trim())

@@ -6,19 +6,19 @@ define([
 	let events = {
 		events: {},
 		queue: [],
-		on: function (event, callback) {
-			let list = this.events[event] || (this.events[event] = []);
+		on: function (eventName, callback) {
+			let list = this.events[eventName] || (this.events[eventName] = []);
 			list.push(callback);
 
 			for (let i = 0; i < this.queue.length; i++) {
 				let q = this.queue[i];
-				if (q.event !== event)
+				if (q.event !== eventName)
 					continue;
 
 				this.queue.splice(i, 1);
 				i--;
 
-				q.args.splice(0, 0, event);
+				q.args.splice(0, 0, eventName);
 
 				this.emit.apply(this, q.args);
 			}
@@ -31,7 +31,7 @@ define([
 				return ((q.event !== 'onGetConnectedPlayer') && (q.event !== 'onGetDisconnectedPlayer'));
 			});
 		},
-		off: function (event, callback) {
+		off: function (eventName, callback) {
 			let list = this.events[event] || [];
 			let lLen = list.length;
 			for (let i = 0; i < lLen; i++) {
@@ -43,15 +43,15 @@ define([
 			}
 
 			if (lLen === 0)
-				delete this.events[event];
+				delete this.events[eventName];
 		},
-		emit: function (event) {
+		emit: function (eventName) {
 			let args = [].slice.call(arguments, 1);
 
-			let list = this.events[event];
+			let list = this.events[eventName];
 			if (!list) {
 				this.queue.push({
-					event: event,
+					event: eventName,
 					args: args
 				});
 

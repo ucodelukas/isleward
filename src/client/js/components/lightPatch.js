@@ -69,7 +69,7 @@ define([
 					});
 					ray.x = ~~((nx * scale) - (scaleMult * j));
 					ray.y = (ny * scale) + (scaleMult * j * hm);
-					ray.alpha = ((1.0 - (j / h)) * 0.4);// * (0.5 + (Math.random() * 0.5));
+					ray.alpha = ((1.0 - (j / h)) * 0.4);
 					ray.width = w * scaleMult;
 					ray.height = scaleMult * hm;
 					ray.tint = 0xffeb38;

@@ -49,15 +49,15 @@ define([
 		setOptions: function (options) {
 			this.options = options;
 		},
-		on: function (el, event, callback) {
+		on: function (el, eventName, callback) {
 			if (typeof (el) === 'string')
 				el = this.find(el);
 			else
 				el = $(el);
 
-			el.on(event, function () {
+			el.on(eventName, function () {
 				let args = [].slice.call(arguments, 1);
-				args.splice(0, 0, event);
+				args.splice(0, 0, eventName);
 
 				callback.apply(null, args);
 			});
@@ -122,9 +122,9 @@ define([
 				this.el.addClass('disabled');
 		},
 
-		onEvent: function (event, callback) {
-			let list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
-			let eventCallback = events.on(event, callback);
+		onEvent: function (eventName, callback) {
+			let list = this.eventCallbacks[eventName] || (this.eventCallbacks[eventName] = []);
+			let eventCallback = events.on(eventName, callback);
 			list.push(eventCallback);
 
 			return eventCallback;

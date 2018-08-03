@@ -130,23 +130,23 @@ define([
 				this.offEvent(this.eventClickInv);
 				return;
 			} else if ((!msg.item.slot) || (msg.item.noAugment)) {
-				let msg = {
+				let resultMsg = {
 					msg: 'Incorrect Item Type',
 					type: 'failure',
 					zIndex: 9999999,
 					top: 180
 				};
-				events.emit('onGetAnnouncement', msg);
+				events.emit('onGetAnnouncement', resultMsg);
 
 				return;
 			} else if (msg.item.eq) {
-				let msg = {
+				let resultMsg = {
 					msg: 'Cannot augment equipped items',
 					type: 'failure',
 					zIndex: 9999999,
 					top: 180
 				};
-				events.emit('onGetAnnouncement', msg);
+				events.emit('onGetAnnouncement', resultMsg);
 
 				return;
 			}
@@ -247,7 +247,7 @@ define([
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
-			 else if (item.type === 'consumable')
+			else if (item.type === 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
 			let el = $(templateItem)
@@ -277,7 +277,6 @@ define([
 			let ttPos = null;
 
 			if (el) {
-				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(e.clientX + 32),
 					y: ~~(e.clientY)

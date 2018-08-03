@@ -24,7 +24,7 @@ define([
 
 			if (this.cd > 0) 
 				this.cd--;
-			 else if (this.cd === 0) {
+			else if (this.cd === 0) {
 				renderer.destroyObject({
 					sprite: chatSprite
 				});

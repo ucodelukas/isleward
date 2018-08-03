@@ -128,8 +128,6 @@ define([
 
 			let container = this.find('.list').empty();
 
-			let low = this.offset * this.pageSize;
-			let high = Math.min(result.length, low + this.pageSize);
 			this.maxOffset = Math.ceil(result.length / this.pageSize) - 1;
 
 			for (let i = 0; i < this.records.list.length; i++) {

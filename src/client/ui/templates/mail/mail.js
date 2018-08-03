@@ -73,7 +73,7 @@ define([
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
-			 else if (item.type === 'consumable')
+			else if (item.type === 'consumable')
 				spritesheet = '../../../images/consumables.png';
 
 			let el = this.find('.item');
@@ -83,10 +83,9 @@ define([
 				.find('.icon')
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
-			if (item.quantity) {
-				let quantityText = item.quantity;
+			if (item.quantity)
 				el.find('.quantity').html(item.quantity);
-			} else
+			else
 				el.find('.quantity').html('');
 
 			this.find('.txtRecipient').val('');

@@ -76,7 +76,7 @@ define([
 					spritesheet = '../../../images/materials.png';
 				else if (item.quest)
 					spritesheet = '../../../images/questItems.png';
-				 else if (item.type === 'consumable')
+				else if (item.type === 'consumable')
 					spritesheet = '../../../images/consumables.png';
 				else if (item.type === 'skin') {
 					offset = 4;
@@ -105,9 +105,7 @@ define([
 				if (action === 'buy') {
 					let noAfford = false;
 					if (item.worth.currency) {
-						let currencyItems = window.player.inventory.items.find(function (i) {
-							return (i.name === item.worth.currency);
-						});
+						let currencyItems = window.player.inventory.items.find(f => f.name === item.worth.currency);
 						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
 					} else
 						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);

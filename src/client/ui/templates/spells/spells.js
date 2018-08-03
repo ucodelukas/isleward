@@ -52,9 +52,10 @@ define([
 					})
 					.next().html(hotkey);
 
+				//HACK - we don't actually know how long a tick is
 				this.onGetSpellCooldowns({
 					spell: spells[i].id,
-					cd: spells[i].cd * 350 //HACK - we don't actually know how long a tick is
+					cd: spells[i].cd * 350
 				});
 			}
 		},

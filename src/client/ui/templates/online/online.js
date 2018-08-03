@@ -75,11 +75,11 @@ define([
 				this.build();
 		},
 
-		onGetDisconnectedPlayer: function (name) {
+		onGetDisconnectedPlayer: function (playerName) {
 			let onlineList = this.onlineList;
 
 			onlineList.spliceWhere(function (o) {
-				return (o.name === name);
+				return (o.name === playerName);
 			});
 
 			if (this.shown)
@@ -115,7 +115,7 @@ define([
 				}], e);
 			}
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 

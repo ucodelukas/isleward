@@ -23,12 +23,10 @@ define([
 
 				let x = 0;
 				let y = 0;
-				while (true) {
+				do {
 					x = msg.x + ~~(Math.random() * msg.width);
 					y = msg.y + ~~(Math.random() * msg.height);
-					if ((physics.isTileBlocking(x, y)) && (Math.max(Math.abs(x - this.obj.x), Math.abs(y - this.obj.y)) > 2))
-						break;
-				}
+				} while (!physics.isTileBlocking(x, y) || Math.max(Math.abs(x - this.obj.x), Math.abs(y - this.obj.y)) <= 2);
 
 				this.obj.flipX = (x < this.obj.x);
 				this.obj.setSpritePosition();

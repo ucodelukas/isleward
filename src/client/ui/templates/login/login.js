@@ -38,8 +38,8 @@ define([
 		},
 
 		redirect: function (e) {
-			let location = $(e.target).attr('location');
-			window.open(location, '_blank');
+			let currentLocation = $(e.target).attr('location');
+			window.open(currentLocation, '_blank');
 		},
 
 		onKeyDown: function (e) {

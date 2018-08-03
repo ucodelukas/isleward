@@ -31,7 +31,6 @@ define([
 			46: 'del',
 
 			//hacks for mac cmd key
-			17: 'ctrl',
 			224: 'ctrl',
 			91: 'ctrl',
 			93: 'ctrl'
@@ -86,8 +85,8 @@ define([
 				return (down === 1);
 			} return false;
 		},
-		getAxis: function (name) {
-			let axis = this.axes[name];
+		getAxis: function (axisName) {
+			let axis = this.axes[axisName];
 			if (!axis)
 				return 0;
 
@@ -167,7 +166,6 @@ define([
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
 
-					let button = e.button;
 					this.mouse.button = null;
 					this.mouse.down = false;
 

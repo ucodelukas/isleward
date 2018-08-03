@@ -46,6 +46,7 @@ define([
 				let volume = 0.3 * dist;
 
 				if (!s.sound) {
+					//eslint-disable-next-line no-undef
 					s.sound = new Howl({
 						src: ['audio/' + s.file],
 						autoplay: true,

@@ -37,7 +37,7 @@ define([
 
 			events.emit('onContextMenu', context, e.event);
 
-			e.event.preventDefault;
+			e.event.preventDefault();
 			return false;
 		},
 

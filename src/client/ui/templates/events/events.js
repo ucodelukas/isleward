@@ -33,44 +33,41 @@ define([
 		},
 
 		onRemoveEvent: function (id) {
-			let l = this.list.spliceFirstWhere(function (l) {
-				return (l.id === id);
-			});
-
+			let l = this.list.spliceFirstWhere(f => f.id === id);
 			if (l)
 				l.el.remove();
 		},
 
-		onObtainEvent: function (event) {
+		onObtainEvent: function (eventObj) {
 			let exists = this.list.find(function (l) {
-				return (l.id === event.id);
+				return (l.id === eventObj.id);
 			});
 			if (exists) {
-				exists.el.find('.name').html(event.name);
-				exists.el.find('.description').html(event.description);
+				exists.el.find('.name').html(eventObj.name);
+				exists.el.find('.description').html(eventObj.description);
 				return;
 			}
 
 			let container = this.el.find('.list');
 
 			let html = templateEvent
-				.replace('$NAME$', event.name)
-				.replace('$DESCRIPTION$', event.description);
+				.replace('$NAME$', eventObj.name)
+				.replace('$DESCRIPTION$', eventObj.description);
 
 			let el = $(html).appendTo(container);
 
-			if (event.isReady)
+			if (eventObj.isReady)
 				el.addClass('ready');
 
 			this.list.push({
-				id: event.id,
+				id: eventObj.id,
 				el: el,
-				event: event
+				event: eventObj
 			});
 
-			let event = container.find('.event');
+			let eventEl = container.find('.event');
 
-			event
+			eventEl
 				.sort(function (a, b) {
 					a = $(a).hasClass('active') ? 1 : 0;
 					b = $(b).hasClass('active') ? 1 : 0;
@@ -79,17 +76,17 @@ define([
 				.appendTo(container);
 		},
 
-		onUpdateEvent: function (event) {
+		onUpdateEvent: function (eventObj) {
 			let e = this.list.find(function (l) {
-				return (l.id === event.id);
+				return (l.id === eventObj.id);
 			});
 
-			e.event.isReady = event.isReady;
+			e.event.isReady = eventObj.isReady;
 
-			e.el.find('.description').html(event.description);
+			e.el.find('.description').html(eventObj.description);
 
 			e.el.removeClass('ready');
-			if (event.isReady) {
+			if (eventObj.isReady) {
 				e.el.removeClass('disabled');
 				e.el.addClass('ready');
 			}

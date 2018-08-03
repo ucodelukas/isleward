@@ -29,8 +29,6 @@ define([
 		effects: [],
 
 		init: function (blueprint) {
-			let sprite = this.obj.sprite;
-
 			this.effects = this.effects
 				.filter(function (e) {
 					return (auras[e] !== null);

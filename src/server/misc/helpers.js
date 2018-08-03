@@ -1,7 +1,5 @@
-//Hack to bypass eslint
-let Obj = Object;
-
-Obj.defineProperty(Array.prototype, 'firstIndex', {
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'firstIndex', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -26,7 +24,8 @@ Obj.defineProperty(Array.prototype, 'firstIndex', {
 	} 
 });
 
-Obj.defineProperty(Array.prototype, 'spliceWhere', {
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'spliceWhere', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -51,7 +50,8 @@ Obj.defineProperty(Array.prototype, 'spliceWhere', {
 	} 
 });
 
-Obj.defineProperty(Array.prototype, 'spliceFirstWhere', {
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'spliceFirstWhere', {
 	enumerable: false,
 	value: function (callback, thisArg) {
 		let T = thisArg;
@@ -76,9 +76,11 @@ Obj.defineProperty(Array.prototype, 'spliceFirstWhere', {
 	} 
 });
 
-Obj.defineProperty(Object.prototype, 'has', {
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Object.prototype, 'has', {
 	enumerable: false,
 	value: function (prop) {
+		//eslint-disable-next-line no-undefined
 		return (this.hasOwnProperty(prop) && this[prop] !== undefined && this[prop] !== null);
 	}
 });

@@ -266,17 +266,17 @@ define([
 
 		getTexture: function (baseTex, cell, size) {
 			size = size || 8;
-			let name = baseTex + '_' + cell;
+			let textureName = baseTex + '_' + cell;
 
 			let textureCache = this.textureCache;
 
-			let cached = textureCache[name];
+			let cached = textureCache[textureName];
 
 			if (!cached) {
 				let y = ~~(cell / 8);
 				let x = cell - (y * 8);
 				cached = new pixi.Texture(this.textures[baseTex], new pixi.Rectangle(x * size, y * size, size, size));
-				textureCache[name] = cached;
+				textureCache[textureName] = cached;
 			}
 
 			return cached;
@@ -755,8 +755,8 @@ define([
 			textSprite.x = obj.x - (textSprite.width / 2);
 			textSprite.y = obj.y;
 
-			let parent = obj.parent || this.layers[obj.layerName];
-			parent.addChild(textSprite);
+			let parentSprite = obj.parent || this.layers[obj.layerName];
+			parentSprite.addChild(textSprite);
 
 			return textSprite;
 		},

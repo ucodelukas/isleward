@@ -77,20 +77,30 @@ define([
 		},
 
 		tilesNoFlip: [
-			171, 179 //Stairs
+			//Stairs
+			171, 179
 		],
 		wallsNoFlip: [
-			156, 158, 162, 163, 167, 168, //Ledges
-			189, //Wall Sign
-			195, 196, 197, 198, 199, 200, 201, 202, 203, //Stone Ledges
-			204, 205, 206, 207, 214, 215, 220, 221, 222, 223 //Ship Edges
+			//Ledges
+			156, 158, 162, 163, 167, 168,
+			//Wall Sign
+			189, 
+			//Stone Ledges
+			195, 196, 197, 198, 199, 200, 201, 202, 203, 
+			//Ship Edges
+			204, 205, 206, 207, 214, 215, 220, 221, 222, 223 
 		],
 		objectsNoFlip: [
-			96, 101, //Clotheslines
-			103, 110, 118, 126, //Table Sides
-			120, 122, 140, //Wall-mounted plants
-			140, 143, //Ship oars
-			141, 142 //Ship Cannons
+			//Clotheslines
+			96, 101, 
+			//Table Sides
+			103, 110, 118, 126,
+			//Wall-mounted plants
+			120, 122, 140, 
+			//Ship oars
+			140, 143, 
+			//Ship Cannons
+			141, 142 
 		],
 
 		getSheetNum: function (tile) {

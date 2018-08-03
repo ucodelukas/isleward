@@ -47,8 +47,6 @@ define([
 
 			let index = indices[this.obj.cell];
 
-			let color = colors[index];
-
 			this.obj.addComponent('particles', {
 				chance: chances[index],
 				blueprint: {

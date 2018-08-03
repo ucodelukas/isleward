@@ -85,10 +85,7 @@ define([
 		},
 
 		onUpdateQuest: function (quest) {
-			let q = this.quests.find(function (q) {
-				return (q.id === quest.id);
-			});
-
+			let q = this.quests.find(f => f.id === quest.id);
 			q.quest.isReady = quest.isReady;
 
 			q.el.find('.description').html(quest.description);
@@ -101,17 +98,13 @@ define([
 		},
 
 		onCompleteQuest: function (id) {
-			let q = this.quests.find(function (q) {
-				return (q.id === id);
-			});
+			let q = this.quests.find(f => f.id === id);
 
 			if (!q)
 				return;
 
 			q.el.remove();
-			this.quests.spliceWhere(function (q) {
-				return (q.id === id);
-			});
+			this.quests.spliceWhere(f => f.id === id);
 		}
 	};
 });
