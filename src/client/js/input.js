@@ -76,10 +76,11 @@ define([
 		},
 
 		isKeyDown: function (key, noConsume) {
-			let down = this.keys[key];
-			if (down !== null) {
+			if (this.keys.has(key)) {
 				if (noConsume)
 					return true;
+
+				let down = this.keys[key];
 				
 				this.keys[key] = 2;
 				return (down === 1);
@@ -122,7 +123,7 @@ define([
 
 					let key = this.getMapping(e.which);
 
-					if (this.keys[key] !== null)
+					if (this.keys.has(key))
 						this.keys[key] = 2;
 					else {
 						this.keys[key] = 1;

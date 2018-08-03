@@ -220,8 +220,8 @@ define([
 
 					if (item === this.hoverCompare)
 						itemEl.find('.icon').addClass('eq');
-					else itemEl(item.isNew);
-					el.find('.icon').addClass('new');
+					else if (item.isNew)
+						el.find('.icon').addClass('new');
 				}, this);
 
 			if (items.length === 0)

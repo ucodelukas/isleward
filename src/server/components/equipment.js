@@ -266,6 +266,13 @@ module.exports = {
 		obj.syncer.setArray(true, 'inventory', 'getItems', item);
 	},
 
+	useQuickSlot: function (msg) {
+		if (!this.quickSlots.has(msg.slot))
+			return;
+
+		this.obj.inventory.useItem(this.quickSlots[0]);
+	},
+
 	unequipAttrRqrGear: function () {
 		let inventory = this.obj.inventory;
 

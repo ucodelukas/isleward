@@ -309,9 +309,13 @@ module.exports = {
 		if (item.type === 'consumable') {
 			if (item.uses) {
 				item.uses--;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-				return;
+
+				if (item.uses) {
+					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					return;
+				}
 			}
+
 			this.destroyItem(itemId, 1);
 		}
 	},
@@ -787,7 +791,7 @@ module.exports = {
 					let effectUrl = itemEffects.get(e.type);
 					let effectModule = require('../' + effectUrl);
 
-					e.text = effectModule.events.onGetText(item);
+					e.text = effectModule.events.onGetText(item, e);
 
 					e.events = effectModule.events;
 				}
@@ -802,6 +806,11 @@ module.exports = {
 				this.learnAbility(item.id, item.runeSlot);
 			else
 				this.obj.equipment.equip(item.id);
+		} else if (item.has('quickSlot')) {
+			this.obj.equipment.setQuickSlot({
+				itemId: item.id,
+				slot: item.quickSlot
+			});
 		} else if (!item.effects)
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
 		else {

@@ -3,8 +3,8 @@ module.exports = {
 		onConsumeItem (item, effect) {
 			const cpnStats = this.stats;
 
-			const stat = effect.stat;
-			let amount = effect.amount;
+			const stat = effect.rolls.stat;
+			let amount = effect.rolls.amount;
 
 			if (stat == 'hp') {
 				if (typeof(amount) === 'string' && amount.indexOf('%') > -1)
@@ -16,6 +16,10 @@ module.exports = {
 				}, item);
 			} else
 				cpnStats.addStat(stat, amount);
+		},
+
+		onGetText (item, effect) {
+			return `Restores ${effect.rolls.amount} ${effect.rolls.stat}`;
 		}
 	}
 };

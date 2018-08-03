@@ -10,15 +10,17 @@ module.exports = [{
 		uses: 1,
 		effects: [{
 			type: 'gainStat',
-			stat: 'hp',
-			amount: 50
+			rolls: {
+				stat: 'hp',
+				amount: 50
+			}
 		}]
 	},
-	materials: [{
+	materials: [/*{
 		name: 'Skyblossom',
 		quantity: 3
 	}, {
 		name: 'Empty Vial',
 		quantity: 1
-	}]
+	}*/]
 }];

@@ -13,11 +13,13 @@ define([
 		tpl: template,
 
 		stats: null,
+		items: null,
 
 		postRender: function () {
 			this.onEvent('onGetStats', this.events.onGetStats.bind(this));
 			this.onEvent('onGetPortrait', this.events.onGetPortrait.bind(this));
 			this.onEvent('onGetItems', this.events.onGetItems.bind(this));
+			this.onEvent('onDestroyItems', this.events.onGetItems.bind(this));
 			this.onEvent('onKeyDown', this.events.onKeyDown.bind(this));
 		},
 
@@ -40,17 +42,15 @@ define([
 		},
 
 		useQuickItem: function () {
-			const quickItem = items.find(f => !f.has('quickSlot'));
-			if (!quickItem)
-				return;
-
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
 				data: {
-					cpn: cpn,
-					method: method,
-					data: data
+					cpn: 'equipment',
+					method: 'useQuickSlot',
+					data: {
+						slot: 0
+					}
 				}
 			});
 		},
@@ -75,7 +75,9 @@ define([
 			},
 
 			onGetItems: function (items) {
-				const quickItem = items.find(f => !f.has('quickSlot'));
+				this.items = items;
+
+				const quickItem = items.find(f => f.has('quickSlot'));
 				if (!quickItem) {
 					this.find('.quickItem .icon').css('background', '');
 					return;

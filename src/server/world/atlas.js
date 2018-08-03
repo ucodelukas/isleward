@@ -87,11 +87,11 @@ module.exports = {
 
 	registerCallback: function (callback) {
 		this.callbacks.push({
-			id: ++this.nextCallbackId,
+			id: ++this.lastCallbackId,
 			callback: callback
 		});
 
-		return this.nextCallbackId;
+		return this.lastCallbackId;
 	},
 	resolveCallback: function (msg) {
 		let callback = this.callbacks.spliceFirstWhere(c => c.id === msg.msg.id);
