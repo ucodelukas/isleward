@@ -79,7 +79,10 @@ define([
 
 				const quickItem = items.find(f => f.has('quickSlot'));
 				if (!quickItem) {
-					this.find('.quickItem .icon').css('background', '');
+					this.find('.quickItem')
+						.hide()
+						.find('.icon')
+						.css('background', '');
 					return;
 				}
 
@@ -90,7 +93,7 @@ define([
 				let imgX = -quickItem.sprite[0] * 64;
 				let imgY = -quickItem.sprite[1] * 64;
 
-				let el = this.find('.quickItem');
+				let el = this.find('.quickItem').show();
 				el
 					.find('.icon')
 					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px');
