@@ -5,10 +5,6 @@ module.exports = {
 		Skyblossom: {
 			type: 'herb',
 			max: 7
-		},
-		Emberleaf: {
-			type: 'herb',
-			max: 0
 		}
 	},
 	objects: {
