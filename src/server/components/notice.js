@@ -1,107 +1,105 @@
-define([
+module.exports = {
+	type: 'notice',
 
-], function(
+	msg: null,
+	actions: null,
 
-) {
-	return {
-		type: 'notice',
+	syncer: null,
 
-		msg: null,
-		actions: null,
+	maxLevel: 0,
 
-		syncer: null,
+	contents: [],
 
-		maxLevel: 0,
+	init: function (blueprint) {
+		this.msg = blueprint.msg;
+		this.actions = blueprint.actions || {};
+		this.announce = blueprint.announce;
+		this.maxLevel = blueprint.maxLevel || 0;
 
-		contents: [],
+		this.syncer = this.obj.instance.syncer;
+	},
 
-		init: function(blueprint) {
-			this.msg = blueprint.msg;
-			this.actions = blueprint.actions || {};
-			this.announce = blueprint.announce;
-			this.maxLevel = blueprint.maxLevel || 0;
+	destroy: function () {
+		this.contents.forEach(c => this.collisionExit(c));
+	},
 
-			this.syncer = this.obj.instance.syncer;
-		},
+	callAction: function (obj, actionName) {
+		let action = this.actions[actionName];
+		if (!action)
+			return;
 
-		destroy: function() {
-			this.contents.forEach(c => this.collisionExit(c));
-		},
+		let args = action.args || [];
 
-		callAction: function(obj, actionName) {
-			var action = this.actions[actionName];
-			if (!action)
-				return;
+		let cpn = null;
 
-			if (action.targetId) {
-				var target = this.obj.instance.objects.find(o => o.id == action.targetId);
-				if (target) {
-					var cpn = target[action.cpn];
-					if ((cpn) && (cpn[action.method]))
-						cpn[action.method].call(cpn, obj, action.args);
-				}
-
-				return;
+		if (action.targetId) {
+			let target = this.obj.instance.objects.find(o => o.id === action.targetId);
+			if (target) {
+				cpn = target[action.cpn];
+				if ((cpn) && (cpn[action.method]))
+					cpn[action.method](obj, ...args);
 			}
 
-			var cpn = obj[action.cpn];
-			if ((cpn) && (cpn[action.method]))
-				cpn[action.method].apply(cpn, action.args);
-		},
+			return;
+		}
 
-		collisionEnter: function(obj) {
+		cpn = obj[action.cpn];
+		if ((cpn) && (cpn[action.method]))
+			cpn[action.method](...args);
+	},
+
+	collisionEnter: function (obj) {
+		if (!obj.player)
+			return;
+		else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+			return;
+
+		this.contents.push(obj);
+
+		this.callAction(obj, 'enter');
+
+		if (!this.msg)
+			return;
+
+		if (this.announce) {
+			this.syncer.queue('onGetAnnouncement', {
+				src: this.obj.id,
+				msg: this.msg
+			}, [obj.serverId]);
+
+			return;
+		}
+
+		this.syncer.queue('onGetDialogue', {
+			src: this.obj.id,
+			msg: this.msg
+		}, [obj.serverId]);
+	},
+
+	collisionExit: function (obj, force) {
+		if (!force) {
 			if (!obj.player)
 				return;
 			else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
 				return;
-
-			this.contents.push(obj);
-
-			this.callAction(obj, 'enter');
-
-			if (!this.msg)
-				return;
-
-			if (this.announce) {
-				this.syncer.queue('onGetAnnouncement', {
-					src: this.obj.id,
-					msg: this.msg
-				}, [obj.serverId]);
-
-				return;
-			}
-
-			this.syncer.queue('onGetDialogue', {
-				src: this.obj.id,
-				msg: this.msg
-			}, [obj.serverId]);
-		},
-
-		collisionExit: function(obj, force) {
-			if (!force) {
-				if (!obj.player)
-					return;
-				else if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
-					return;
-			}
-
-			this.contents.spliceWhere(c => (c == obj));
-
-			this.callAction(obj, 'exit');
-
-			if (!this.msg)
-				return;
-
-			this.syncer.queue('onRemoveDialogue', {
-				src: this.obj.id
-			}, [obj.serverId]);
-		},
-
-		events: {
-			onCellPlayerLevelUp: function(obj) {
-				if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
-					this.collisionExit(obj, true);
-			}
 		}
-	};
-});
+
+		this.contents.spliceWhere(c => (c === obj));
+
+		this.callAction(obj, 'exit');
+
+		if (!this.msg)
+			return;
+
+		this.syncer.queue('onRemoveDialogue', {
+			src: this.obj.id
+		}, [obj.serverId]);
+	},
+
+	events: {
+		onCellPlayerLevelUp: function (obj) {
+			if ((this.maxLevel) && (obj.stats.values.level > this.maxLevel))
+				this.collisionExit(obj, true);
+		}
+	}
+};

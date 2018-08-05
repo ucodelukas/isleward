@@ -1,19 +1,13 @@
- define([
- 	'misc/events'
- ], function (
- 	events
- ) {
- 	var list = {
+let events = require('../misc/events');
 
- 	};
+let list = {};
 
- 	return {
- 		init: function () {
- 			events.emit('onBeforeGetMtxList', list);
- 		},
+module.exports = {
+	init: function () {
+		events.emit('onBeforeGetMtxList', list);
+	},
 
- 		get: function (name) {
- 			return list[name];
- 		}
- 	};
- });
+	get: function (name) {
+		return list[name];
+	}
+};

@@ -1,9 +1,9 @@
 define([
 
-], function(
+], function (
 
 ) {
-    return `
+	return `
         varying vec2 vTextureCoord;
         uniform sampler2D uSampler;
 

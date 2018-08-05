@@ -1,14 +1,14 @@
 define([
 	'js/rendering/renderer',
 	'js/system/events'
-], function(
+], function (
 	renderer,
 	events
 ) {
-	var scale = 40;
-	var scaleMult = 5;
-	var round = Math.round.bind(Math);
-	var maxPathLength = 50;
+	let scale = 40;
+	let scaleMult = 5;
+	let round = Math.round.bind(Math);
+	let maxPathLength = 50;
 
 	return {
 		type: 'pather',
@@ -26,7 +26,7 @@ define([
 		lastX: 0,
 		lastY: 0,
 
-		init: function() {
+		init: function () {
 			events.on('onDeath', this.onDeath.bind(this));
 			events.on('onClearQueue', this.onDeath.bind(this));
 
@@ -34,8 +34,8 @@ define([
 			this.pathPos.y = round(this.obj.y);
 		},
 
-		clearPath: function() {
-			this.path.forEach(function(p) {
+		clearPath: function () {
+			this.path.forEach(function (p) {
 				renderer.destroyObject({
 					layerName: 'effects',
 					sprite: p.sprite
@@ -45,14 +45,14 @@ define([
 			this.path = [];
 		},
 
-		onDeath: function() {
+		onDeath: function () {
 			this.clearPath();
 			
 			this.pathPos.x = round(this.obj.x);
 			this.pathPos.y = round(this.obj.y);
 		},
 
-		add: function(x, y) {
+		add: function (x, y) {
 			if (this.path.length >= maxPathLength)
 				return;
 
@@ -73,26 +73,26 @@ define([
 			return true;
 		},
 
-		update: function() {
-			var x = this.obj.x;
-			var y = this.obj.y;
+		update: function () {
+			let x = this.obj.x;
+			let y = this.obj.y;
 
-			if (this.path.length == 0) {
+			if (this.path.length === 0) {
 				this.pathPos.x = round(x);
 				this.pathPos.y = round(y);
 			}
 
-			if ((x == this.lastX) && (y == this.lastY))
+			if ((x === this.lastX) && (y === this.lastY))
 				return;
 
 			this.lastX = x;
 			this.lastY = y;
 
-			for (var i = 0; i < this.path.length; i++) {
-				var p = this.path[i];
+			for (let i = 0; i < this.path.length; i++) {
+				let p = this.path[i];
 
-				if ((p.x == x) && (p.y == y)) {
-					for (var j = 0; j <= i; j++) {
+				if ((p.x === x) && (p.y === y)) {
+					for (let j = 0; j <= i; j++) {
 						renderer.destroyObject({
 							layerName: 'effects',
 							sprite: this.path[j].sprite
@@ -104,7 +104,7 @@ define([
 			}
 		},
 
-		setPath: function(path) {
+		setPath: function (path) {
 			this.path = this.path.concat(path);
 
 			this.pathPos.x = round(path[path.length - 1].x);

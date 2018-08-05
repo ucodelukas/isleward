@@ -1,6 +1,6 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
 	return {
@@ -23,7 +23,7 @@ define([
 
 		oldTexture: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if (!this.obj.sprite)
 				return true;
 			
@@ -32,16 +32,15 @@ define([
 			this.frame = 0;
 			this.frameDelayCd = 0;
 
-			for (var p in this.template) {
+			for (let p in this.template) 
 				this[p] = this.template[p];
-			}
 
 			this.frameDelayCd = this.frameDelay;
 
 			this.setSprite();		
 		},
 
-		setSprite: function() {
+		setSprite: function () {
 			renderer.setSprite({
 				sprite: this.obj.sprite,
 				cell: (this.row * 8) + this.col + this.frame,
@@ -49,27 +48,26 @@ define([
 			});
 		},
 
-		update: function() {
+		update: function () {
 			if (this.frameDelayCd > 0)
 				this.frameDelayCd--;
 			else {
 				this.frameDelayCd = this.frameDelay;
 				this.frame++;
-				if (this.frame == this.frames) {
+				if (this.frame === this.frames) {
 					this.loopCounter++;
-					if (this.loopCounter == this.loop) {
+					if (this.loopCounter === this.loop) {
 						this.destroyed = true;
 						return;
 					}
-					else
-						this.frame = 0;
+					this.frame = 0;
 				}
 			}
 
 			this.setSprite();
 		},
 
-		destroy: function() {
+		destroy: function () {
 			this.obj.sprite.texture = this.oldTexture;
 		}
 	};

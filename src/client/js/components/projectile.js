@@ -1,9 +1,9 @@
 define([
 	'js/rendering/effects'
-], function(
+], function (
 	effects
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'projectile',
@@ -22,15 +22,15 @@ define([
 
 		particles: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			if ((!this.source) || (!this.target)) {
 				this.obj.destroyed = true;
 				return;
 			}
 
-			this.endTime = +new Date + this.ttl;
+			this.endTime = +new Date() + this.ttl;
 
-			var source = this.source;
+			let source = this.source;
 			this.x = source.x;
 			this.y = source.y;
 
@@ -45,7 +45,7 @@ define([
 			this.obj.x = this.x;
 			this.obj.y = this.y;
 
-			var particlesBlueprint = this.particles ? {
+			let particlesBlueprint = this.particles ? {
 				blueprint: this.particles
 			} : {
 				blueprint: {
@@ -83,36 +83,35 @@ define([
 			effects.register(this);
 		},
 
-		renderManual: function() {
-			var source = this.obj;
-			var target = this.target;
+		renderManual: function () {
+			let source = this.obj;
+			let target = this.target;
 
-			var dx = target.x - this.x;
-			var dy = target.y - this.y;
+			let dx = target.x - this.x;
+			let dy = target.y - this.y;
 
-			var ticksLeft = ~~((this.endTime - (+new Date)) / 16);
+			let ticksLeft = ~~((this.endTime - (+new Date())) / 16);
 
 			if (ticksLeft <= 0) {
-				this.obj.x = target.x;
-				this.obj.y = target.y;
+				source.x = target.x;
+				source.y = target.y;
 				this.particles.emitter.emit = false;
 				if (!this.noExplosion)
-					this.obj.explosion.explode();
-				this.obj.destroyed = true;
-			}
-			else {
+					source.explosion.explode();
+				source.destroyed = true;
+			} else {
 				dx /= ticksLeft;
 				dy /= ticksLeft;
 
 				this.x += dx;
 				this.y += dy;
 
-				this.obj.x = (~~((this.x * scale) / 4) * 4) / scale;
-				this.obj.y = (~~((this.y * scale) / 4) * 4) / scale;
+				source.x = (~~((this.x * scale) / 4) * 4) / scale;
+				source.y = (~~((this.y * scale) / 4) * 4) / scale;
 			}
 		},
 
-		destroy: function() {
+		destroy: function () {
 			effects.unregister(this);
 		}
 	};

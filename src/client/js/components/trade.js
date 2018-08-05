@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -9,12 +9,12 @@ define([
 		itemList: null,
 		action: 'buy',
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			
 		},
 
-		extend: function(blueprint) {
-			var redraw = false;
+		extend: function (blueprint) {
+			let redraw = false;
 
 			if (blueprint.buyList) {
 				this.itemList = blueprint.buyList;
@@ -24,8 +24,7 @@ define([
 					this.action = 'buyback';
 				
 				delete blueprint.buyList;
-			}
-			else if (blueprint.sellList) {
+			} else if (blueprint.sellList) {
 				this.itemList = blueprint.sellList;
 				redraw = true;
 				this.action = 'sell';
@@ -33,7 +32,7 @@ define([
 			}
 
 			if (blueprint.removeItems) {
-				this.itemList.items.spliceWhere(function(b) {
+				this.itemList.items.spliceWhere(function (b) {
 					return (blueprint.removeItems.indexOf(b.id) > -1);
 				});
 				redraw = true;
@@ -43,9 +42,8 @@ define([
 			if (blueprint.redraw)
 				redraw = true;
 
-			for (var p in blueprint) {
+			for (let p in blueprint) 
 				this[p] = blueprint[p];
-			}
 
 			if (redraw)
 				events.emit('onGetTradeList', this.itemList, this.action);

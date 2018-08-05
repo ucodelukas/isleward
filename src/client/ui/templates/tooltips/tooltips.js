@@ -26,7 +26,7 @@ define([
 		},
 
 		onHideTooltip: function (el) {
-			if (this.hoverEl != el)
+			if (this.hoverEl !== el)
 				return;
 
 			this.hoverEl = null;
@@ -58,7 +58,7 @@ define([
 				});
 			}
 
-			if ((zIndex) && (zIndex != 'auto'))
+			if ((zIndex) && (zIndex !== 'auto'))
 				this.tooltip.css('zIndex', zIndex);
 			else
 				this.tooltip.css('zIndex', '');

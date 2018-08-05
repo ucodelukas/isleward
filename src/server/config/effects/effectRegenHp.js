@@ -1,27 +1,21 @@
-define([
+module.exports = {
+	type: 'regenHp',
 
-], function (
+	amount: 1,
 
-) {
-	return {
-		type: 'regenHp',
+	init: function () {
+		this.obj.stats.addStat('regenHp', this.amount);
+	},
 
-		amount: 1,
+	destroy: function () {
+		this.obj.stats.addStat('regenHp', -this.amount);
+	},
 
-		init: function () {
-			this.obj.stats.addStat('regenHp', this.amount);
-		},
+	update: function () {
 
-		destroy: function () {
-			this.obj.stats.addStat('regenHp', -this.amount);
-		},
+	},
 
-		update: function () {
+	events: {
 
-		},
-
-		events: {
-
-		}
-	};
-});
+	}
+};

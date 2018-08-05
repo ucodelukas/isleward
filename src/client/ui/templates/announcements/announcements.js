@@ -3,7 +3,7 @@ define([
 	'html!ui/templates/announcements/template',
 	'css!ui/templates/announcements/styles',
 	'html!ui/templates/announcements/templateLine'
-], function(
+], function (
 	events,
 	template,
 	styles,
@@ -15,19 +15,19 @@ define([
 		message: null,
 		maxTtl: 160,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetAnnouncement', this.onGetAnnouncement.bind(this));
 		},
 
-		onGetAnnouncement: function(e) {
+		onGetAnnouncement: function (e) {
 			this.clearMessage();
 
-			var container = this.find('.list');
+			let container = this.find('.list');
 
-			var html = templateLine
+			let html = templateLine
 				.replace('$MSG$', e.msg);
 
-			var el = $(html)
+			let el = $(html)
 				.appendTo(container);
 
 			if (e.type)
@@ -43,8 +43,8 @@ define([
 			};
 		},
 
-		update: function() {
-			var message = this.message;
+		update: function () {
+			let message = this.message;
 			if (!message)
 				return;
 
@@ -54,13 +54,13 @@ define([
 				this.clearMessage();
 		},
 
-		clearMessage: function() {
-			var message = this.message;
+		clearMessage: function () {
+			let message = this.message;
 			if (!message)
 				return;
 
 			this.message = null;
 			message.el.remove();
 		}
-	}
+	};
 });

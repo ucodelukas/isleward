@@ -1,46 +1,42 @@
-define([
-	'config/roles'
-], function(
-	roles
-) {
-	return {
-		type: 'portal',
+let roles = require('../config/roles');
 
-		toZone: null,
-		toPos: null,
+module.exports = {
+	type: 'portal',
 
-		patronLevel: 0,
+	toZone: null,
+	toPos: null,
 
-		init: function(blueprint) {
-			this.toPos = blueprint.pos;
-			this.toZone = blueprint.zone;
-			this.patronLevel = ~~blueprint.patron;
-		},
+	patronLevel: 0,
 
-		collisionEnter: function(obj) {
-			if (!obj.player)
+	init: function (blueprint) {
+		this.toPos = blueprint.pos;
+		this.toZone = blueprint.zone;
+		this.patronLevel = ~~blueprint.patron;
+	},
+
+	collisionEnter: function (obj) {
+		if (!obj.player)
+			return;
+		else if (this.patronLevel) {
+			if (!roles.isRoleLevel(obj, this.patronLevel, 'enter this area'))
 				return;
-			else if (this.patronLevel) {
-				if (!roles.isRoleLevel(obj, this.patronLevel, 'enter this area'))
-					return;
-			}
-
-			obj.fireEvent('beforeRezone');
-
-			obj.destroyed = true;
-
-			var simpleObj = obj.getSimple(true, true);
-			simpleObj.x = this.toPos.x;
-			simpleObj.y = this.toPos.y;
-
-			process.send({
-				method: 'rezone',
-				id: obj.serverId,
-				args: {
-					obj: simpleObj,
-					newZone: this.toZone
-				}
-			});
 		}
-	};
-});
+
+		obj.fireEvent('beforeRezone');
+
+		obj.destroyed = true;
+
+		let simpleObj = obj.getSimple(true, true);
+		simpleObj.x = this.toPos.x;
+		simpleObj.y = this.toPos.y;
+
+		process.send({
+			method: 'rezone',
+			id: obj.serverId,
+			args: {
+				obj: simpleObj,
+				newZone: this.toZone
+			}
+		});
+	}
+};

@@ -1,15 +1,15 @@
 define([
 	'js/rendering/renderer'
-], function(
+], function (
 	renderer
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'particles',
 		emitter: null,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = this.blueprint || {};
 			this.blueprint.pos = {
 				x: (this.obj.x * scale) + (scale / 2),
@@ -20,8 +20,8 @@ define([
 			this.emitter = renderer.buildEmitter(this.blueprint);
 		},
 
-		update: function() {
-			if (this.ttl != null) {
+		update: function () {
+			if (this.ttl !== null) {
 				this.ttl--;
 				if (this.ttl <= 0) {
 					if (this.destroyObject)
@@ -39,7 +39,7 @@ define([
 			this.emitter.spawnPos.y = (this.obj.y * scale) + (scale / 2);
 		},
 
-		destroy: function() {
+		destroy: function () {
 			renderer.destroyEmitter(this.emitter);
 		}
 	};

@@ -1,6 +1,6 @@
 define([
 	'js/system/events'
-], function(
+], function (
 	events
 ) {
 	return {
@@ -8,7 +8,7 @@ define([
 
 		customChannels: null,
 
-		init: function() {
+		init: function () {
 			if (this.customChannels)
 				events.emit('onGetCustomChatChannels', this.customChannels);
 		}

@@ -53,16 +53,16 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'j')
+			if (key === 'j')
 				this.toggle();
-			else if (key == 'shift') {
+			else if (key === 'shift') {
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 			}
 		},
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHoverItem(this.hoverEl, this.hoverItem, null);
@@ -104,13 +104,12 @@ define([
 				el = $(el);
 				let slot = el.attr('slot');
 				let newItems = window.player.inventory.items.some(function (i) {
-					let checkSlot = slot;
-					if (slot.indexOf('finger') == 0)
+					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
-					else if (slot == 'oneHanded')
+					else if (slot === 'oneHanded')
 						return ((['oneHanded', 'twoHanded'].indexOf(slot) > -1) && (i.isNew));
 
-					return ((i.slot == slot) && (i.isNew));
+					return ((i.slot === slot) && (i.isNew));
 				});
 
 				if (newItems)
@@ -120,24 +119,27 @@ define([
 			items
 				.filter(function (item) {
 					let runeSlot = item.runeSlot;
-					if ((runeSlot != null) && (item.slot))
+					if ((runeSlot !== null) && (item.slot))
 						skipSpellId = runeSlot;
 
-					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
+					return (item.quickSlot !== null || (item.eq && (item.slot || item.runeSlot !== null)));
 				}, this)
 				.forEach(function (item) {
 					let imgX = -item.sprite[0] * 64;
 					let imgY = -item.sprite[1] * 64;
 
 					let slot = item.slot;
-					if (!slot) {
+					if (item.runeSlot !== null) {
 						let runeSlot = item.runeSlot;
 						if (runeSlot > skipSpellId)
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
-					}
+					} else if (item.quickSlot !== null)
+						slot = 'quick-' + item.quickSlot;
 
 					let spritesheet = item.spritesheet || '../../../images/items.png';
+					if (item.type === 'consumable')
+						spritesheet = '../../../images/consumables.png';
 
 					slot = item.equipSlot || slot;
 
@@ -159,7 +161,8 @@ define([
 				el = $(el.currentTarget).parent();
 
 			let slot = el.attr('slot');
-			let isRune = (slot.indexOf('rune') == 0);
+			let isRune = (slot.indexOf('rune') === 0);
+			const isConsumable = (slot.indexOf('quick') === 0);
 
 			let container = this.find('.itemList')
 				.empty()
@@ -171,13 +174,21 @@ define([
 				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
+					else if (isConsumable)
+						return (item.type === 'consumable');
 					
-					let checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
-					if (slot == 'oneHanded')
-						return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
+					let checkSlot = (slot.indexOf('finger') === 0) ? 'finger' : slot;
+					if (slot === 'oneHanded')
+						return ((!item.eq) && ((item.slot === 'oneHanded') || (item.slot === 'twoHanded')));
 
-					return ((item.slot == checkSlot) && (!item.eq));
+					return ((item.slot === checkSlot) && (!item.eq));
 				}, this);
+
+			items = items
+				.filter(function (item, i) {
+					return (items.firstIndex(f => f.name === item.name) === i);
+				});
+
 			items.splice(0, 0, {
 				name: 'None',
 				slot: this.hoverCompare ? this.hoverCompare.slot : null,
@@ -192,37 +203,39 @@ define([
 					let sprite = item.sprite || [7, 0];
 
 					let spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
+					if (item.type === 'consumable')
+						spriteSheet = '../../../images/consumables.png';
 					let imgX = -sprite[0] * 64;
 					let imgY = -sprite[1] * 64;
 
-					let el = $('<div class="slot"><div class="icon"></div></div>')
+					let itemEl = $('<div class="slot"><div class="icon"></div></div>')
 						.appendTo(container);
 
-					el
+					itemEl
 						.find('.icon')
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
-						.on('mousemove', this.onHoverItem.bind(this, el, item, null))
+						.on('mousemove', this.onHoverItem.bind(this, itemEl, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
 						.on('click', this.equipItem.bind(this, item, slot));
 
-					if (item == this.hoverCompare)
-						el.find('.icon').addClass('eq');
+					if (item === this.hoverCompare)
+						itemEl.find('.icon').addClass('eq');
 					else if (item.isNew)
 						el.find('.icon').addClass('new');
 				}, this);
 
-			if (items.length == 0)
+			if (items.length === 0)
 				container.hide();
 		},
 
 		equipItem: function (item, slot) {
 			let isNew = window.player.inventory.items.some(function (i) {
-				return ((i.equipSlot == slot) && (i.isNew));
+				return ((i.equipSlot === slot) && (i.isNew));
 			});
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
 
-			if (item == this.hoverCompare) {
+			if (item === this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
 			}
@@ -234,7 +247,14 @@ define([
 			if (item.empty)
 				method = 'unequip';
 
-			if (!item.slot) {
+			if (item.type === 'consumable') {
+				cpn = 'equipment';
+				method = 'setQuickSlot';
+				data = {
+					itemId: item.id,
+					slot: ~~slot.replace('quick-', '')
+				};
+			} else if (!item.slot) {
 				cpn = 'inventory';
 				method = 'learnAbility';
 				data = {
@@ -250,7 +270,7 @@ define([
 					method = 'unlearnAbility';
 					data.itemId = this.hoverCompare.id;
 				}
-			} else if (item.slot == 'finger') {
+			} else if (item.slot === 'finger') {
 				data = {
 					itemId: item.id,
 					slot: slot
@@ -380,7 +400,7 @@ define([
 				let value = newStats[s];
 
 				let isGap = false;
-				if (label.indexOf('gap') == 0) {
+				if (label.indexOf('gap') === 0) {
 					isGap = true;
 					label = '';
 					value = '';
@@ -389,9 +409,9 @@ define([
 				let row = $('<div class="stat"><font class="q0">' + label + '</font><font color="#999">' + value + '</font></div>')
 					.appendTo(container);
 
-				if (s == 'gold')
+				if (s === 'gold')
 					row.addClass('gold');
-				else if ((s == 'level') || (s == 'next level'))
+				else if ((s === 'level') || (s === 'next level'))
 					row.addClass('blueText');
 
 				if (isGap)

@@ -1,4 +1,4 @@
-var components = [
+let components = [
 	'keyboardMover',
 	'mouseMover',
 	'player',
@@ -38,7 +38,7 @@ var components = [
 });
 
 define(components, function () {
-	var templates = {};
+	let templates = {};
 
 	[].forEach.call(arguments, function (t) {
 		templates[t.type] = t;
@@ -46,7 +46,7 @@ define(components, function () {
 
 	return {
 		getTemplate: function (type) {
-			if (type == 'lightpatch')
+			if (type === 'lightpatch')
 				type = 'lightPatch';
 
 			return templates[type];

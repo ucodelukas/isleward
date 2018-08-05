@@ -24,7 +24,7 @@ define([
 		},
 
 		onGetPassivePoints: function (points) {
-			var el = this.find('.btnPassives .points');
+			let el = this.find('.btnPassives .points');
 			el
 				.html('')
 				.hide();
@@ -35,5 +35,5 @@ define([
 					.show();
 			}
 		}
-	}
+	};
 });

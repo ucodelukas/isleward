@@ -5,11 +5,11 @@ define([
 	io,
 	events
 ) {
-	var client = {
+	let client = {
 		doneConnect: false,
 
 		init: function (onReady) {
-			var tType = 'websocket';
+			let tType = 'websocket';
 			if (window.location.href.indexOf('polling') > -1)
 				tType = 'polling';
 
@@ -49,21 +49,21 @@ define([
 			//If we get objects, self needs to be first
 			// otherwise we might create the object (setting his position or attack animation)
 			// before instantiating it
-			var oList = response.onGetObject;
+			let oList = response.onGetObject;
 			if (oList) {
-				var prepend = oList.filter(function (o) {
+				let prepend = oList.filter(function (o) {
 					return o.self;
 				});
 				oList.spliceWhere(function (o) {
 					return prepend.some(function (p) {
-						return p == o;
+						return p === o;
 					});
 				});
 				oList.unshift.apply(oList, prepend);
 			}
 
-			for (var e in response) {
-				var r = response[e];
+			for (let e in response) {
+				let r = response[e];
 
 				//Certain messages expect to be performed last (because the object they act on hasn't been greated when they get queued)
 				r.sort(function (a, b) {
@@ -71,8 +71,7 @@ define([
 						return 1;
 					else if (b.performLast)
 						return -1;
-					else
-						return 0;
+					return 0;
 				});
 
 				r.forEach(function (o) {

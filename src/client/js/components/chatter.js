@@ -3,7 +3,7 @@ define([
 ], function (
 	renderer
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'chatter',
@@ -18,13 +18,13 @@ define([
 		},
 
 		update: function () {
-			var chatSprite = this.obj.chatSprite;
+			let chatSprite = this.obj.chatSprite;
 			if (!chatSprite)
 				return;
 
-			if (this.cd > 0) {
+			if (this.cd > 0) 
 				this.cd--;
-			} else if (this.cd == 0) {
+			else if (this.cd === 0) {
 				renderer.destroyObject({
 					sprite: chatSprite
 				});
@@ -33,10 +33,10 @@ define([
 		},
 
 		extend: function (serverMsg) {
-			var msg = serverMsg.msg + '\n\'';
+			let msg = serverMsg.msg + '\n\'';
 			this.msg = msg;
 
-			var obj = this.obj;
+			let obj = this.obj;
 
 			if (obj.chatSprite) {
 				renderer.destroyObject({
@@ -44,11 +44,11 @@ define([
 				});
 			}
 
-			var color = this.color;
-			if (msg[0] == '*')
+			let color = this.color;
+			if (msg[0] === '*')
 				color = 0xffeb38;
 
-			var yOffset = (msg.split('\r\n').length - 1);
+			let yOffset = (msg.split('\r\n').length - 1);
 
 			obj.chatSprite = renderer.buildText({
 				layerName: 'effects',
@@ -63,7 +63,7 @@ define([
 		},
 
 		destroy: function () {
-			var chatSprite = this.obj.chatSprite;
+			let chatSprite = this.obj.chatSprite;
 			if (!chatSprite)
 				return;
 

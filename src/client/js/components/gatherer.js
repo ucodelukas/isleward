@@ -17,18 +17,16 @@ define([
 		},
 
 		extend: function (msg) {
-			if ((msg.width) && (msg.progress != 100)) {
+			if ((msg.width) && (msg.progress !== 100)) {
 				if (this.effect)
 					this.effect.destroyed = true;
 
-				var x = 0;
-				var y = 0;
-				while (true) {
+				let x = 0;
+				let y = 0;
+				do {
 					x = msg.x + ~~(Math.random() * msg.width);
 					y = msg.y + ~~(Math.random() * msg.height);
-					if ((physics.isTileBlocking(x, y)) && (Math.max(Math.abs(x - this.obj.x), Math.abs(y - this.obj.y)) > 2))
-						break;
-				}
+				} while (!physics.isTileBlocking(x, y) || Math.max(Math.abs(x - this.obj.x), Math.abs(y - this.obj.y)) <= 2);
 
 				this.obj.flipX = (x < this.obj.x);
 				this.obj.setSpritePosition();
@@ -46,7 +44,7 @@ define([
 					lineShrink: true
 				});
 			} else {
-				if ((msg.progress == 100) && (this.effect)) {
+				if ((msg.progress === 100) && (this.effect)) {
 					this.effect.destroyed = true;
 					this.effect = null;
 				}
@@ -63,7 +61,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key != 'g')
+			if (key !== 'g')
 				return;
 
 			client.request({

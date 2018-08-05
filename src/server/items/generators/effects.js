@@ -1,34 +1,28 @@
-define([
+module.exports = {
+	generate: function (item, blueprint) {
+		if (!blueprint.effects)
+			return;
 
-], function (
+		item.effects = blueprint.effects.map(function (e) {
+			let rolls = e.rolls;
+			let newRolls = {};
+			for (let p in rolls) {
+				let isInt = (p.indexOf('i_') === 0);
+				let fieldName = p.replace('i_', '');
 
-) {
-	return {
-		generate: function (item, blueprint) {
-			if (!blueprint.effects)
-				return;
+				let range = rolls[p];
+				let value = range[0] + (Math.random() * (range[1] - range[0]));
+				if (isInt)
+					value = ~~value;
 
-			item.effects = blueprint.effects.map(function (e) {
-				var rolls = e.rolls;
-				var newRolls = {};
-				for (var p in rolls) {
-					var isInt = (p.indexOf('i_') == 0);
-					var fieldName = p.replace('i_', '');
+				newRolls[fieldName] = value;
+			}
 
-					var range = rolls[p];
-					var value = range[0] + (Math.random() * (range[1] - range[0]));
-					if (isInt)
-						value = ~~value;
-
-					newRolls[fieldName] = value;
-				}
-
-				return {
-					type: e.type,
-					properties: e.properties,
-					rolls: newRolls
-				};
-			});
-		}
-	};
-});
+			return {
+				type: e.type,
+				properties: e.properties,
+				rolls: newRolls
+			};
+		});
+	}
+};

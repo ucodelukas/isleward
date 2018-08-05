@@ -7,9 +7,9 @@ define([
 	renderer,
 	events
 ) {
-	var scale = 40;
+	let scale = 40;
 
-	var objects = null;
+	let objects = null;
 	require(['js/objects/objects'], function (o) {
 		objects = o;
 	});
@@ -36,14 +36,14 @@ define([
 			this.targetSprite = renderer.buildObject({
 				sheetName: 'ui',
 				layerName: 'effects',
-				cell: this.reticleState,
+				cell: this.reticleState
 			});
 			this.targetSprite.visible = false;
 
 			this.reticleSprite = renderer.buildObject({
 				sheetName: 'ui',
 				layerName: 'effects',
-				cell: 8 + this.reticleState,
+				cell: 8 + this.reticleState
 			});
 			this.reticleSprite.visible = false;
 
@@ -63,7 +63,7 @@ define([
 			if (blueprint.removeSpells) {
 				blueprint.removeSpells.forEach(function (spellId) {
 					this.spells.spliceWhere(function (s) {
-						return (s.id == spellId);
+						return (s.id === spellId);
 					});
 				}, this);
 
@@ -72,8 +72,8 @@ define([
 
 			if (blueprint.getSpells) {
 				blueprint.getSpells.forEach(function (s) {
-					var existIndex = this.spells.firstIndex(function (spell) {
-						return (spell.id == s.id);
+					let existIndex = this.spells.firstIndex(function (spell) {
+						return (spell.id === s.id);
 					});
 
 					if (existIndex > -1) {
@@ -93,10 +93,10 @@ define([
 		},
 
 		getSpell: function (number) {
-			var spellNumber = (number == ' ') ? 0 : number;
+			let spellNumber = (number === ' ') ? 0 : number;
 
-			var spell = this.spells.find(function (s) {
-				return (s.id == spellNumber);
+			let spell = this.spells.find(function (s) {
+				return (s.id === spellNumber);
 			});
 			if (!spell)
 				return null;
@@ -134,7 +134,7 @@ define([
 		},
 
 		tabTarget: function () {
-			var closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
+			let closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
 
 			this.target = closest;
 			this.targetSprite.visible = !!this.target;
@@ -160,27 +160,27 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'b') {
+			if (key === 'b') {
 				this.build();
 				return;
-			} else if (key == 'n') {
+			} else if (key === 'n') {
 				this.build(true);
 				return;
 			}
 
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = true;
 				return;
-			} else if (key == 'tab') {
+			} else if (key === 'tab') {
 				this.tabTarget();
 				return;
 			}
 
-			var spell = this.getSpell(key);
+			let spell = this.getSpell(key);
 			if (!spell)
 				return;
 
-			var oldTarget = null;
+			let oldTarget = null;
 			if (this.shiftDown) {
 				oldTarget = this.target;
 				this.target = this.obj;
@@ -189,8 +189,8 @@ define([
 			if ((!spell.aura) && (!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
 				return;
 
-			var hoverTile = this.obj.mouseMover.hoverTile;
-			var target = hoverTile;
+			let hoverTile = this.obj.mouseMover.hoverTile;
+			let target = hoverTile;
 			if ((spell.autoTargetFollower) && (!this.target))
 				target = null;
 			else if ((!spell.targetGround) && (this.target))
@@ -199,7 +199,7 @@ define([
 			if (this.shiftDown)
 				this.target = oldTarget;
 
-			if ((target == this.obj) && (spell.noTargetSelf))
+			if ((target === this.obj) && (spell.noTargetSelf))
 				return;
 
 			client.request({
@@ -217,7 +217,7 @@ define([
 		},
 
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				return;
 			}
@@ -243,7 +243,7 @@ define([
 			else {
 				this.reticleCd = this.reticleCdMax;
 				this.reticleState++;
-				if (this.reticleState == 4)
+				if (this.reticleState === 4)
 					this.reticleState = 0;
 			}
 
@@ -275,7 +275,7 @@ define([
 			else {
 				this.reticleCd = this.reticleCdMax;
 				this.reticleState++;
-				if (this.reticleState == 4)
+				if (this.reticleState === 4)
 					this.reticleState = 0;
 			}
 

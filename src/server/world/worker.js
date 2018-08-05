@@ -1,117 +1,87 @@
-var requirejs = require('requirejs');
+global.extend = require('extend');
+global.io = require('../security/io');
+global._ = require('../misc/helpers');
+global.instancer = require('./instancer');
 
-requirejs.config({
-	baseUrl: '',
-	nodeRequire: require
-});
+let components = require('../components/components');
+let mods = require('../misc/mods');
+let mtx = require('../mtx/mtx');
+let animations = require('../config/animations');
+let skins = require('../config/skins');
+let factions = require('../config/factions');
+let classes = require('../config/spirits');
+let spellsConfig = require('../config/spellsConfig');
+let spells = require('../config/spells');
+let recipes = require('../config/recipes/recipes');
+let itemTypes = require('../items/config/types');
+let sheets = require('../security/sheets');
 
-global.io = true;
-var instancer = null;
+let onCpnsReady = function () {
+	factions.init();
+	skins.init();
+	mtx.init();
+	animations.init();
+	classes.init();
+	spellsConfig.init();
+	spells.init();
+	itemTypes.init();
+	recipes.init();
+	sheets.init();
 
-requirejs([
-	'extend',
-	'misc/helpers',
-	'components/components',
-	'world/instancer',
-	'security/io',
-	'misc/mods',
-	'mtx/mtx',
-	'config/animations',
-	'config/skins',
-	'config/factions',
-	'config/spirits',
-	'config/spellsConfig',
-	'config/spells',
-	'items/config/types',
-	'security/sheets'
-], function (
-	extend,
-	helpers,
-	components,
-	_instancer,
-	io,
-	mods,
-	mtx,
-	animations,
-	skins,
-	factions,
-	classes,
-	spellsConfig,
-	spells,
-	itemTypes,
-	sheets
-) {
-	var onDbReady = function () {
-		global.extend = extend;
-		global._ = helpers;
-		global.instancer = _instancer;
-		require('../misc/random');
+	process.send({
+		method: 'onReady'
+	});
+};
 
-		instancer = _instancer;
+let onModsReady = function () {
+	components.init(onCpnsReady);
+};
 
-		mods.init(onModsReady);
+let onDbReady = function () {
+	require('../misc/random');
 
-		setInterval(function () {
-			global.gc();
-		}, 60000);
+	mods.init(onModsReady);
 
-		process.on('uncaughtException', function (e) {
-			if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
-				return;
+	setInterval(function () {
+		global.gc();
+	}, 60000);
 
-			console.log('Error Logged: ' + e.toString());
-			console.log(e.stack);
+	process.on('uncaughtException', function (e) {
+		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+			return;
 
-			io.set({
-				ent: new Date(),
-				field: 'error',
-				value: e.toString() + ' | ' + e.stack.toString(),
-				callback: function () {
-					process.send({
-						event: 'onCrashed'
-					});
-				}
-			});
+		_.log('Error Logged: ' + e.toString());
+		_.log(e.stack);
+
+		io.set({
+			ent: new Date(),
+			field: 'error',
+			value: e.toString() + ' | ' + e.stack.toString(),
+			callback: function () {
+				process.send({
+					event: 'onCrashed'
+				});
+			}
 		});
-	};
+	});
+};
 
-	var onModsReady = function () {
-		components.init(onCpnsReady);
-	};
+io.init(onDbReady);
 
-	var onCpnsReady = function () {
-		factions.init();
-		skins.init();
-		mtx.init();
-		animations.init();
-		classes.init();
-		spellsConfig.init();
-		spells.init();
-		itemTypes.init();
-		sheets.init();
-
-		process.send({
-			method: 'onReady'
-		});
-	};
-
-	io.init(onDbReady);
-});
-
-process.on('message', (m) => {
+process.on('message', m => {
 	if (m.module) {
-		var instances = instancer.instances;
-		var iLen = instances.length;
-		for (var i = 0; i < iLen; i++) {
-			var objects = instances[i].objects.objects;
-			var oLen = objects.length;
-			var found = false;
-			for (var j = 0; j < oLen; j++) {
-				var object = objects[j];
+		let instances = instancer.instances;
+		let iLen = instances.length;
+		for (let i = 0; i < iLen; i++) {
+			let objects = instances[i].objects.objects;
+			let oLen = objects.length;
+			let found = false;
+			for (let j = 0; j < oLen; j++) {
+				let object = objects[j];
 
-				if (object.name == m.args[0]) {
-					var module = object.instance[m.module];
-					module[m.method].apply(module, m.args);
+				if (object.name === m.args[0]) {
+					let mod = object.instance[m.module];
+					mod[m.method].apply(mod, m.args);
 
 					found = true;
 					break;

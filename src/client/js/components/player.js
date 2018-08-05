@@ -9,7 +9,7 @@ define([
 	physics,
 	sound
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'player',
@@ -30,22 +30,22 @@ define([
 		},
 
 		update: function () {
-			var obj = this.obj;
-			var oldPos = this.oldPos;
+			let obj = this.obj;
+			let oldPos = this.oldPos;
 
-			if ((oldPos.x == obj.x) && (oldPos.y == obj.y))
+			if ((oldPos.x === obj.x) && (oldPos.y === obj.y))
 				return;
 
-			var dx = obj.x - oldPos.x;
-			var dy = obj.y - oldPos.y;
+			let dx = obj.x - oldPos.x;
+			let dy = obj.y - oldPos.y;
 
-			var instant = false;
+			let instant = false;
 			if ((dx > 5) || (dy > 5))
 				instant = true;
 
-			if (dx != 0)
+			if (dx !== 0)
 				dx = dx / Math.abs(dx);
-			if (dy != 0)
+			if (dy !== 0)
 				dy = dy / Math.abs(dy);
 
 			this.oldPos.x = this.obj.x;
@@ -70,7 +70,7 @@ define([
 		},
 
 		canvasFollow: function (delta, instant) {
-			var obj = this.obj;
+			let obj = this.obj;
 			delta = delta || {
 				x: 0,
 				y: 0
@@ -80,6 +80,6 @@ define([
 				x: (obj.x - (renderer.width / (scale * 2))) * scale,
 				y: (obj.y - (renderer.height / (scale * 2))) * scale
 			}, instant);
-		},
+		}
 	};
 });

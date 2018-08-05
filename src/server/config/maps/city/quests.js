@@ -1,9 +1,3 @@
-define([
-
-], function(
-
-) {
-	return {
-		infini: []
-	};
-});
+module.exports = {
+	infini: []
+};

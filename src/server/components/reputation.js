@@ -1,250 +1,242 @@
-define([
-	'config/factionBase',
-	'config/factions'
-], function (
-	factionBase,
-	factions
-) {
-	return {
-		type: 'reputation',
+let factionBase = require('../config/factionBase');
+let factions = require('../config/factions');
 
-		list: [],
+module.exports = {
+	type: 'reputation',
 
-		factions: {},
+	list: [],
 
-		init: function (blueprint) {
-			var list = ((blueprint || {}).list || []);
-			delete blueprint.list;
+	factions: {},
 
-			list.forEach(function (l) {
-				var bpt = this.getBlueprint(l.id);
-				if (!bpt)
-					return;
+	init: function (blueprint) {
+		let list = ((blueprint || {}).list || []);
+		delete blueprint.list;
 
-				this.list.push({
-					id: l.id,
-					rep: l.rep,
-					tier: null
-				});
-
-				this.calculateTier(l.id);
-			}, this);
-		},
-
-		getBlueprint: function (factionId) {
-			if (this.factions[factionId])
-				return this.factions[factionId];
-
-			var factionBlueprint = null;
-			try {
-				factionBlueprint = factions.getFaction(factionId);
-			} catch (e) {}
-
-			if (factionBlueprint == null) {
-				console.log('No faction blueprint found');
-				return;
-			}
-
-			factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
-
-			this.factions[factionBlueprint.id] = factionBlueprint;
-
-			return factionBlueprint;
-		},
-
-		getTier: function (factionId) {
-			var faction = this.list.find(l => l.id == factionId);
-			if (!faction) {
-				this.discoverFaction(factionId);
-				faction = this.list.find(l => l.id == factionId);
-			}
-
-			return (faction || {
-				tier: 3
-			}).tier;
-		},
-
-		canEquipItem: function (item) {
-			var factions = item.factions;
-			var fLen = factions.length;
-			for (var i = 0; i < fLen; i++) {
-				var f = factions[i];
-				if (this.getTier(f.id) < f.tier)
-					return false;
-			}
-
-			return true;
-		},
-
-		calculateTier: function (factionId) {
-			var blueprint = this.getBlueprint(factionId);
-
-			var faction = this.list.find(l => l.id == factionId);
-			var rep = faction.rep;
-
-			var tier = 0;
-			var tiers = blueprint.tiers;
-			var tLen = tiers.length;
-			for (var i = 0; i < tLen; i++) {
-				var t = tiers[i];
-				tier = i - 1;
-
-				if (t.rep > rep)
-					break;
-				else if (i == tLen - 1)
-					tier = i;
-			}
-
-			if (tier < 0)
-				tier = 0;
-
-			faction.tier = tier;
-
-			return tier;
-		},
-
-		getReputation: function (factionId, gain) {
-			var fullSync = (this.factions[factionId] == null);
-			var blueprint = this.getBlueprint(factionId);
-
-			var faction = this.list.find(l => l.id == factionId);
-			if (!faction) {
-				this.list.push({
-					id: factionId,
-					rep: blueprint.initialRep,
-					tier: null
-				});
-
-				faction = this.list[this.list.length - 1];
-			}
-
-			faction.rep += gain;
-			var oldTier = faction.tier;
-			this.calculateTier(factionId);
-
-			var action = 'gained';
-			if (gain < 0)
-				action = 'lost';
-
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: (action == 'gained') ? 'color-greenB' : 'color-redA',
-					message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
-					type: 'rep'
-				}]
-			}, [this.obj.serverId]);
-
-			if (faction.tier != oldTier) {
-				this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name, (faction.tier > oldTier));
-				this.obj.equipment.unequipFactionGear(faction.id, faction.tier);
-			}
-
-			this.syncFaction(factionId, fullSync);
-		},
-
-		sendMessage: function (tierName, factionName, didIncrease) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: didIncrease ? 'color-greenB' : 'color-redA',
-					message: 'you are now ' + tierName + ' with ' + factionName,
-					type: 'rep'
-				}]
-			}, [this.obj.serverId]);
-		},
-
-		discoverFaction(factionId) {
-			if (this.list.some(l => l.id == factionId))
+		list.forEach(function (l) {
+			let bpt = this.getBlueprint(l.id);
+			if (!bpt)
 				return;
 
-			var fullSync = (this.factions[factionId] == null);
-			var blueprint = this.getBlueprint(factionId);
+			this.list.push({
+				id: l.id,
+				rep: l.rep,
+				tier: null
+			});
 
-			if (!blueprint)
-				return;
+			this.calculateTier(l.id);
+		}, this);
+	},
 
+	getBlueprint: function (factionId) {
+		if (this.factions[factionId])
+			return this.factions[factionId];
+
+		let factionBlueprint = null;
+		try {
+			factionBlueprint = factions.getFaction(factionId);
+		} catch (e) {}
+
+		if (!factionBlueprint)
+			return;
+
+		factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
+
+		this.factions[factionBlueprint.id] = factionBlueprint;
+
+		return factionBlueprint;
+	},
+
+	getTier: function (factionId) {
+		let faction = this.list.find(l => l.id === factionId);
+		if (!faction) {
+			this.discoverFaction(factionId);
+			faction = this.list.find(l => l.id === factionId);
+		}
+
+		return (faction || {
+			tier: 3
+		}).tier;
+	},
+
+	canEquipItem: function (item) {
+		let itemFactions = item.factions;
+		let fLen = itemFactions.length;
+		for (let i = 0; i < fLen; i++) {
+			let f = itemFactions[i];
+			if (this.getTier(f.id) < f.tier)
+				return false;
+		}
+
+		return true;
+	},
+
+	calculateTier: function (factionId) {
+		let blueprint = this.getBlueprint(factionId);
+
+		let faction = this.list.find(l => l.id === factionId);
+		let rep = faction.rep;
+
+		let tier = 0;
+		let tiers = blueprint.tiers;
+		let tLen = tiers.length;
+		for (let i = 0; i < tLen; i++) {
+			let t = tiers[i];
+			tier = i - 1;
+
+			if (t.rep > rep)
+				break;
+			else if (i === tLen - 1)
+				tier = i;
+		}
+
+		if (tier < 0)
+			tier = 0;
+
+		faction.tier = tier;
+
+		return tier;
+	},
+
+	getReputation: function (factionId, gain) {
+		let fullSync = (!this.factions[factionId]);
+		let blueprint = this.getBlueprint(factionId);
+
+		let faction = this.list.find(l => l.id === factionId);
+		if (!faction) {
 			this.list.push({
 				id: factionId,
 				rep: blueprint.initialRep,
 				tier: null
 			});
 
-			var tier = blueprint.tiers[this.calculateTier(factionId)].name.toLowerCase();
-
-			if (!blueprint.noGainRep) {
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: [{
-						class: 'q4',
-						message: 'you are now ' + tier + ' with ' + blueprint.name,
-						type: 'rep'
-					}]
-				}, [this.obj.serverId]);
-			}
-
-			this.syncFaction(factionId, fullSync);
-		},
-
-		save: function () {
-			return {
-				type: 'reputation',
-				list: this.list
-			};
-		},
-
-		simplify: function (self) {
-			if (!self)
-				return null;
-
-			var sendList = this.list
-				.map(function (l) {
-					var result = {};
-					var blueprint = this.getBlueprint(l.id);
-					extend(true, result, l, blueprint);
-
-					return result;
-				}, this);
-
-			return {
-				type: 'reputation',
-				list: sendList
-			};
-		},
-
-		syncFaction: function (factionId, full) {
-			var l = this.list.find(l => (l.id == factionId));
-			var faction = {
-				id: factionId,
-				rep: l.rep,
-				tier: l.tier
-			};
-
-			if (full) {
-				var blueprint = this.getBlueprint(factionId);
-				extend(true, faction, l, blueprint);
-			}
-
-			this.obj.syncer.setArray(true, 'reputation', 'modifyRep', faction);
-		},
-
-		events: {
-			afterKillMob: function (mob) {
-				if (!mob.mob)
-					return;
-
-				var grantRep = mob.mob.grantRep;
-				if (!grantRep) {
-					var deathRep = mob.mob.deathRep;
-					if (deathRep)
-						this.getReputation(mob.aggro.faction, deathRep);
-					return;
-				}
-
-				for (var r in grantRep) {
-					this.getReputation(r, grantRep[r]);
-				}
-			}
+			faction = this.list[this.list.length - 1];
 		}
-	};
-});
+
+		faction.rep += gain;
+		let oldTier = faction.tier;
+		this.calculateTier(factionId);
+
+		let action = 'gained';
+		if (gain < 0)
+			action = 'lost';
+
+		this.obj.instance.syncer.queue('onGetMessages', {
+			id: this.obj.id,
+			messages: [{
+				class: (action === 'gained') ? 'color-greenB' : 'color-redA',
+				message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
+				type: 'rep'
+			}]
+		}, [this.obj.serverId]);
+
+		if (faction.tier !== oldTier) {
+			this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name, (faction.tier > oldTier));
+			this.obj.equipment.unequipFactionGear(faction.id, faction.tier);
+		}
+
+		this.syncFaction(factionId, fullSync);
+	},
+
+	sendMessage: function (tierName, factionName, didIncrease) {
+		this.obj.instance.syncer.queue('onGetMessages', {
+			id: this.obj.id,
+			messages: [{
+				class: didIncrease ? 'color-greenB' : 'color-redA',
+				message: 'you are now ' + tierName + ' with ' + factionName,
+				type: 'rep'
+			}]
+		}, [this.obj.serverId]);
+	},
+
+	discoverFaction (factionId) {
+		if (this.list.some(l => l.id === factionId))
+			return;
+
+		let fullSync = (!this.factions[factionId]);
+		let blueprint = this.getBlueprint(factionId);
+
+		if (!blueprint)
+			return;
+
+		this.list.push({
+			id: factionId,
+			rep: blueprint.initialRep,
+			tier: null
+		});
+
+		let tier = blueprint.tiers[this.calculateTier(factionId)].name.toLowerCase();
+
+		if (!blueprint.noGainRep) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'q4',
+					message: 'you are now ' + tier + ' with ' + blueprint.name,
+					type: 'rep'
+				}]
+			}, [this.obj.serverId]);
+		}
+
+		this.syncFaction(factionId, fullSync);
+	},
+
+	save: function () {
+		return {
+			type: 'reputation',
+			list: this.list
+		};
+	},
+
+	simplify: function (self) {
+		if (!self)
+			return null;
+
+		let sendList = this.list
+			.map(function (l) {
+				let result = {};
+				let blueprint = this.getBlueprint(l.id);
+				extend(true, result, l, blueprint);
+
+				return result;
+			}, this);
+
+		return {
+			type: 'reputation',
+			list: sendList
+		};
+	},
+
+	syncFaction: function (factionId, full) {
+		let l = this.list.find(f => (f.id === factionId));
+		let faction = {
+			id: factionId,
+			rep: l.rep,
+			tier: l.tier
+		};
+
+		if (full) {
+			let blueprint = this.getBlueprint(factionId);
+			extend(true, faction, l, blueprint);
+		}
+
+		this.obj.syncer.setArray(true, 'reputation', 'modifyRep', faction);
+	},
+
+	events: {
+		afterKillMob: function (mob) {
+			if (!mob.mob)
+				return;
+
+			let grantRep = mob.mob.grantRep;
+			if (!grantRep) {
+				let deathRep = mob.mob.deathRep;
+				if (deathRep)
+					this.getReputation(mob.aggro.faction, deathRep);
+				return;
+			}
+
+			for (let r in grantRep) 
+				this.getReputation(r, grantRep[r]);
+		}
+	}
+};

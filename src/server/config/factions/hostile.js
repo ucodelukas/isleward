@@ -1,13 +1,7 @@
-define([
+module.exports = {
+	id: 'hostile',
 
-], function (
+	initialRep: -10000,
 
-) {
-	return {
-		id: 'hostile',
-
-		initialRep: -10000,
-
-		noGainRep: true
-	};
-});
+	noGainRep: true
+};

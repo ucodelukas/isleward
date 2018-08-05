@@ -3,9 +3,9 @@ define([
 ], function (
 	pathfinder
 ) {
-	var sqrt = Math.sqrt.bind(Math);
-	var ceil = Math.ceil.bind(Math);
-	var random = Math.random.bind(Math);
+	let sqrt = Math.sqrt.bind(Math);
+	let ceil = Math.ceil.bind(Math);
+	let random = Math.random.bind(Math);
 
 	return {
 		graph: null,
@@ -29,34 +29,33 @@ define([
 		},
 
 		addRegion: function (obj) {
-			var lowX = obj.x;
-			var lowY = obj.y;
-			var highX = lowX + obj.width;
-			var highY = lowY + obj.height;
-			var cells = this.cells;
+			let lowX = obj.x;
+			let lowY = obj.y;
+			let highX = lowX + obj.width;
+			let highY = lowY + obj.height;
+			let cells = this.cells;
 
-			for (var i = lowX; i <= highX; i++) {
-				var row = cells[i];
-				for (var j = lowY; j <= highY; j++) {
+			for (let i = lowX; i <= highX; i++) {
+				let row = cells[i];
+				for (let j = lowY; j <= highY; j++) 
 					row[j].push(obj);
-				}
 			}
 		},
 
 		addObject: function (obj, x, y, fromX, fromY) {
-			var row = this.cells[x];
+			let row = this.cells[x];
 
 			if (!row)
 				return;
 
-			var cell = row[y];
+			let cell = row[y];
 
 			if (!cell)
 				return;
 
-			var cLen = cell.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = cell[i];
+			let cLen = cell.length;
+			for (let i = 0; i < cLen; i++) {
+				let c = cell[i];
 
 				//If we have fromX and fromY, check if the target cell doesn't contain the same obj (like a notice area)
 				if ((c.width) && (fromX)) {
@@ -74,22 +73,22 @@ define([
 			return true;
 		},
 		removeObject: function (obj, x, y, toX, toY) {
-			var row = this.cells[x];
+			let row = this.cells[x];
 
 			if (!row)
 				return;
 
-			var cell = row[y];
+			let cell = row[y];
 
 			if (!cell)
 				return;
 
-			var oId = obj.id;
-			var cLen = cell.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = cell[i];
+			let oId = obj.id;
+			let cLen = cell.length;
+			for (let i = 0; i < cLen; i++) {
+				let c = cell[i];
 
-				if (c.id != oId) {
+				if (c.id !== oId) {
 					//If we have toX and toY, check if the target cell doesn't contain the same obj (like a notice area)
 					if ((c.width) && (toX)) {
 						if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
@@ -109,21 +108,20 @@ define([
 		},
 
 		isValid: function (x, y) {
-			var row = this.cells[x];
+			let row = this.cells[x];
 
 			if ((!row) || (row.length <= y) || (!this.graph.grid[x][y]))
 				return false;
-			else
-				return true;
+			return true;
 		},
 
 		getCell: function (x, y) {
-			var row = this.cells[x];
+			let row = this.cells[x];
 
 			if (!row)
 				return [];
 
-			var cell = row[y];
+			let cell = row[y];
 
 			if (!cell)
 				return [];
@@ -131,8 +129,8 @@ define([
 			return cell;
 		},
 		getArea: function (x1, y1, x2, y2, filter) {
-			var width = this.width;
-			var height = this.height;
+			let width = this.width;
+			let height = this.height;
 
 			x1 = ~~x1;
 			y1 = ~~y1;
@@ -149,21 +147,21 @@ define([
 			else if (y2 >= height)
 				y2 = height - 1;
 
-			var cells = this.cells;
-			var grid = this.graph.grid;
+			let cells = this.cells;
+			let grid = this.graph.grid;
 
-			var result = [];
-			for (var i = x1; i <= x2; i++) {
-				var row = cells[i];
-				var gridRow = grid[i];
-				for (var j = y1; j <= y2; j++) {
+			let result = [];
+			for (let i = x1; i <= x2; i++) {
+				let row = cells[i];
+				let gridRow = grid[i];
+				for (let j = y1; j <= y2; j++) {
 					if (!gridRow[j])
 						continue;
 
-					var cell = row[j];
-					var cLen = cell.length;
-					for (var k = 0; k < cLen; k++) {
-						var c = cell[k];
+					let cell = row[j];
+					let cLen = cell.length;
+					for (let k = 0; k < cLen; k++) {
+						let c = cell[k];
 
 						if (filter) {
 							if (filter(c))
@@ -178,8 +176,8 @@ define([
 		},
 
 		getOpenCellInArea: function (x1, y1, x2, y2) {
-			var width = this.width;
-			var height = this.height;
+			let width = this.width;
+			let height = this.height;
 
 			x1 = ~~x1;
 			y1 = ~~y1;
@@ -196,19 +194,19 @@ define([
 			else if (y2 >= height)
 				y2 = height - 1;
 
-			var cells = this.cells;
-			var grid = this.graph.grid;
+			let cells = this.cells;
+			let grid = this.graph.grid;
 
-			var result = [];
-			for (var i = x1; i <= x2; i++) {
-				var row = cells[i];
-				var gridRow = grid[i];
-				for (var j = y1; j <= y2; j++) {
+			let result = [];
+			for (let i = x1; i <= x2; i++) {
+				let row = cells[i];
+				let gridRow = grid[i];
+				for (let j = y1; j <= y2; j++) {
 					if (!gridRow[j])
 						continue;
 
-					var cell = row[j];
-					if (cell.length == 0) {
+					let cell = row[j];
+					if (cell.length === 0) {
 						return {
 							x: i,
 							y: j
@@ -221,8 +219,8 @@ define([
 		},
 
 		getPath: function (from, to) {
-			var graph = this.graph;
-			var grid = graph.grid;
+			let graph = this.graph;
+			let grid = graph.grid;
 
 			if (!to) {
 				to = {
@@ -231,19 +229,19 @@ define([
 				};
 			}
 
-			var fromX = ~~from.x;
-			var fromY = ~~from.y;
+			let fromX = ~~from.x;
+			let fromY = ~~from.y;
 
 			if ((!grid[fromX]) || (grid[fromX].length <= fromY) || (fromX < 0) || (fromY < 0))
 				return [];
 
-			var toX = ~~to.x;
-			var toY = ~~to.y;
+			let toX = ~~to.x;
+			let toY = ~~to.y;
 
 			if ((!grid[toX]) || (grid[toX].length <= toY) || (toX < 0) || (toY < 0))
 				return [];
 
-			var path = pathfinder.astar.search(graph, {
+			let path = pathfinder.astar.search(graph, {
 				x: fromX,
 				y: fromY
 			}, {
@@ -262,29 +260,29 @@ define([
 			x = ~~x;
 			y = ~~y;
 
-			var node = this.graph.grid[x][y];
+			let node = this.graph.grid[x][y];
 
-			return ((!node) || (node.weight == 0));
+			return ((!node) || (node.weight === 0));
 		},
 		isCellOpen: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
-			return (this.cells[x][y].length == 0);
+			return (this.cells[x][y].length === 0);
 		},
 		hasLos: function (fromX, fromY, toX, toY) {
 			if ((fromX < 0) || (fromY < 0) || (fromX >= this.width) | (fromY >= this.height) || (toX < 0) || (toY < 0) || (toX >= this.width) | (toY >= this.height))
 				return false;
 
-			var graphGrid = this.graph.grid;
+			let graphGrid = this.graph.grid;
 
 			if ((!graphGrid[fromX][fromY]) || (!graphGrid[toX][toY]))
 				return false;
 
-			var dx = toX - fromX;
-			var dy = toY - fromY;
+			let dx = toX - fromX;
+			let dy = toY - fromY;
 
-			var distance = sqrt((dx * dx) + (dy * dy));
+			let distance = sqrt((dx * dx) + (dy * dy));
 
 			dx /= distance;
 			dy /= distance;
@@ -294,10 +292,10 @@ define([
 
 			distance = ceil(distance);
 
-			var x = 0;
-			var y = 0;
+			let x = 0;
+			let y = 0;
 
-			for (var i = 0; i < distance; i++) {
+			for (let i = 0; i < distance; i++) {
 				fromX += dx;
 				fromY += dy;
 
@@ -306,7 +304,7 @@ define([
 
 				if (!graphGrid[x][y])
 					return false;
-				else if ((x == toX) && (y == toY))
+				else if ((x === toX) && (y === toY))
 					return true;
 			}
 
@@ -314,26 +312,26 @@ define([
 		},
 
 		getClosestPos: function (fromX, fromY, toX, toY, target) {
-			var tried = {};
+			let tried = {};
 
-			var hasLos = this.hasLos.bind(this, toX, toY);
+			let hasLos = this.hasLos.bind(this, toX, toY);
 
-			var width = this.width;
-			var height = this.height;
+			let width = this.width;
+			let height = this.height;
 
-			var collisionMap = this.collisionMap;
-			var cells = this.cells;
+			let collisionMap = this.collisionMap;
+			let cells = this.cells;
 
-			var reverseX = (fromX > toX);
-			var reverseY = (fromY > toY);
+			let reverseX = (fromX > toX);
+			let reverseY = (fromY > toY);
 
-			for (var c = 1; c <= 10; c++) {
-				var x1 = toX - c;
-				var y1 = toY - c;
-				var x2 = toX + c;
-				var y2 = toY + c;
+			for (let c = 1; c <= 10; c++) {
+				let x1 = toX - c;
+				let y1 = toY - c;
+				let x2 = toX + c;
+				let y2 = toY + c;
 
-				var lowX, lowY, highX, highY, incX, incY;
+				let lowX, lowY, highX, highY, incX, incY;
 
 				if (reverseX) {
 					incX = -1;
@@ -355,38 +353,37 @@ define([
 					highY = y2 + 1;
 				}
 
-				for (var i = lowX; i != highX; i += incX) {
+				for (let i = lowX; i !== highX; i += incX) {
 					if ((i < 0) || (i >= width))
 						continue;
 
-					var row = collisionMap[i];
-					var cellRow = cells[i];
+					let row = collisionMap[i];
+					let cellRow = cells[i];
 
-					var t = tried[i];
-					if (!t) {
+					let t = tried[i];
+					if (!t) 
 						t = tried[i] = {};
-					}
 
-					for (var j = lowY; j != highY; j += incY) {
+					for (let j = lowY; j !== highY; j += incY) {
 						if (t[j])
 							continue;
 
 						t[j] = 1;
 
 						if (
-							((i == toX) && (j == toY)) ||
+							((i === toX) && (j === toY)) ||
 							((j < 0) || (j >= height)) ||
 							(row[j])
 						)
 							continue;
 
-						var cell = cellRow[j];
-						var cLen = cell.length;
-						var blocking = false;
-						for (var k = 0; k < cLen; k++) {
-							var aggro = cell[k].aggro;
+						let cell = cellRow[j];
+						let cLen = cell.length;
+						let blocking = false;
+						for (let k = 0; k < cLen; k++) {
+							let aggro = cell[k].aggro;
 							if (aggro) {
-								blocking = aggro.list.some(a => a.obj == target);
+								blocking = aggro.list.some(a => a.obj === target);
 								if (blocking)
 									break;
 							}
@@ -409,17 +406,17 @@ define([
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
 
-			var cell = this.cells[x][y];
-			var cLen = cell.length;
+			let cell = this.cells[x][y];
+			let cLen = cell.length;
 
-			if (cLen == 1)
+			if (cLen === 1)
 				return false;
 
-			var found = false;
-			for (var i = 0; i < cLen; i++) {
-				var c = cell[i];
+			let found = false;
+			for (let i = 0; i < cLen; i++) {
+				let c = cell[i];
 				if (c.aggro) {
-					if ((!found) && (c == obj))
+					if ((!found) && (c === obj))
 						found = true;
 					else
 						return true;
@@ -430,9 +427,9 @@ define([
 		},
 
 		setCollision: function (x, y, collides) {
-			var node = this.graph.grid[x][y];
+			let node = this.graph.grid[x][y];
 			if (!node) {
-				var grid = this.graph.grid;
+				let grid = this.graph.grid;
 				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
 			}
 

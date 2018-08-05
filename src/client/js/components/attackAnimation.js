@@ -5,7 +5,7 @@ define([
 	effects,
 	renderer
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'attackAnimation',
@@ -39,7 +39,7 @@ define([
 
 			this.frameDelayCd = this.frameDelay;
 
-			var cell = (this.row * 8) + this.col + this.frame;
+			let cell = (this.row * 8) + this.col + this.frame;
 
 			this.sprite = renderer.buildObject({
 				sheetName: this.spritesheet || this.spriteSheet,
@@ -59,9 +59,9 @@ define([
 			else {
 				this.frameDelayCd = this.frameDelay;
 				this.frame++;
-				if (this.frame == this.frames) {
+				if (this.frame === this.frames) {
 					this.loopCounter++;
-					if (this.loopCounter == this.loop) {
+					if (this.loopCounter === this.loop) {
 						if (this.destroyObject)
 							this.obj.destroyed = true;
 						else {
@@ -71,8 +71,7 @@ define([
 							this.destroyed = true;
 						}
 						return;
-					} else
-						this.frame = 0;
+					} this.frame = 0;
 				}
 			}
 
@@ -81,7 +80,7 @@ define([
 				this.sprite.y = this.obj.y * scale;
 			}
 
-			var cell = (this.row * 8) + this.col + this.frame;
+			let cell = (this.row * 8) + this.col + this.frame;
 
 			renderer.setSprite({
 				sheetName: this.spritesheet || this.spriteSheet,

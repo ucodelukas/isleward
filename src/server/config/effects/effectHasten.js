@@ -1,19 +1,13 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'hasten',
+module.exports = {
+	type: 'hasten',
 
-		events: {
-			init: function() {
+	events: {
+		init: function () {
 
-			},
+		},
 
-			destroy: function() {
-				
-			}
+		destroy: function () {
+			
 		}
-	};
-});
+	}
+};

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // javascript-astar 0.4.1
 // http://github.com/bgrins/javascript-astar
 // Freely distributable under the MIT License.
@@ -404,13 +406,13 @@
 				if (child2N < length) {
 					var child2 = this.content[child2N];
 					var child2Score = this.scoreFunction(child2);
-					if (child2Score < (swap === null ? elemScore : child1Score)) {
+					if (child2Score < (swap == null ? elemScore : child1Score)) {
 						swap = child2N;
 					}
 				}
 
 				// If the element needs to be moved, swap it, and continue.
-				if (swap !== null) {
+				if (swap != null) {
 					this.content[n] = this.content[swap];
 					this.content[swap] = element;
 					n = swap;

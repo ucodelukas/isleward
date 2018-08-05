@@ -1312,7 +1312,7 @@
                  "visible":true,
                  "width":8,
                  "x":792,
-                 "y":336
+                 "y":312
                 }, 
                 {
                  "gid":673,
@@ -1330,7 +1330,15 @@
                  "gid":693,
                  "height":8,
                  "id":743,
-                 "name":"Door|EstridDoor",
+                 "name":"Door",
+                 "properties":
+                    {
+                     "cpnDoor":""
+                    },
+                 "propertytypes":
+                    {
+                     "cpnDoor":"string"
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1516,6 +1524,18 @@
                  "width":24,
                  "x":1592,
                  "y":976
+                }, 
+                {
+                 "gid":570,
+                 "height":8,
+                 "id":862,
+                 "name":"Fireplace",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":984,
+                 "y":992
                 }],
          "opacity":1,
          "properties":
@@ -1541,7 +1561,7 @@
                  "gid":570,
                  "height":8,
                  "id":488,
-                 "name":"",
+                 "name":"Fireplace",
                  "properties":
                     {
                      "cpnLight":"{}"
@@ -2153,6 +2173,18 @@
                  "width":32,
                  "x":1552,
                  "y":912
+                }, 
+                {
+                 "gid":572,
+                 "height":8,
+                 "id":860,
+                 "name":"alchemy workbench",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":792,
+                 "y":336
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3519,7 +3551,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":860,
+ "nextobjectid":863,
  "orientation":"orthogonal",
  "properties":
     {

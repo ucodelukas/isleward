@@ -11,7 +11,7 @@ define([
 	input,
 	objects
 ) {
-	var scale = 40;
+	let scale = 40;
 
 	return {
 		type: 'mouseMover',
@@ -49,7 +49,7 @@ define([
 					renderer.destroyObject({
 						sprite: p.sprite,
 						layerName: 'effects'
-					})
+					});
 				}
 			});
 
@@ -64,13 +64,13 @@ define([
 		},
 
 		showPath: function (e) {
-			if ((e.button != null) && (e.button != 0))
+			if ((e.button !== null) && (e.button !== 0))
 				return;
 
-			var tileX = ~~(e.x / scale);
-			var tileY = ~~(e.y / scale);
+			let tileX = ~~(e.x / scale);
+			let tileY = ~~(e.y / scale);
 
-			if ((tileX == this.hoverTile.x) && (tileY == this.hoverTile.y))
+			if ((tileX === this.hoverTile.x) && (tileY === this.hoverTile.y))
 				return;
 
 			events.emit('onChangeHoverTile', tileX, tileY);
@@ -84,7 +84,7 @@ define([
 		queuePath: function (e) {
 			this.mouseDown = false;
 
-			if ((this.path.length == 0) || (e.down))
+			if ((this.path.length === 0) || (e.down))
 				return;
 
 			client.request({
@@ -94,7 +94,7 @@ define([
 					return {
 						x: p.x,
 						y: p.y
-					}
+					};
 				})
 			});
 

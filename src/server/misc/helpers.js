@@ -1,17 +1,15 @@
-define([
-	
-], function(
-	
-) {
-	Array.prototype.firstIndex = function(callback, thisArg) {
-		var T = thisArg;
-		var O = Object(this);
-		var len = O.length >>> 0;
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'firstIndex', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
 
-		var k = 0;
+		let k = 0;
 
 		while (k < len) {
-			var kValue;
+			let kValue;
 
 			if (k in O) {
 				kValue = O[k];
@@ -23,17 +21,21 @@ define([
 		}
 
 		return -1;
-	};
+	} 
+});
 
-	Array.prototype.spliceWhere = function(callback, thisArg) {
-		var T = thisArg;
-		var O = Object(this);
-		var len = O.length >>> 0;
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'spliceWhere', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
 
-		var k = 0;
+		let k = 0;
 
 		while (k < len) {
-			var kValue;
+			let kValue;
 
 			if (k in O) {
 				kValue = O[k];
@@ -45,17 +47,21 @@ define([
 			}
 			k++;
 		}
-	};
+	} 
+});
 
-	Array.prototype.spliceFirstWhere = function(callback, thisArg) {
-		var T = thisArg;
-		var O = Object(this);
-		var len = O.length >>> 0;
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Array.prototype, 'spliceFirstWhere', {
+	enumerable: false,
+	value: function (callback, thisArg) {
+		let T = thisArg;
+		let O = Object(this);
+		let len = O.length >>> 0;
 
-		var k = 0;
+		let k = 0;
 
 		while (k < len) {
-			var kValue;
+			let kValue;
 
 			if (k in O) {
 				kValue = O[k];
@@ -67,46 +73,62 @@ define([
 			}
 			k++;
 		}
-	};
-	
-	return {
-		get2dArray: function(w, h, def) {
-			def = def || 0;
-
-			var result = [];
-			for (var i = 0; i < w; i++) {
-				var inner = [];
-				for (var j = 0; j < h; j++) {
-					if (def == 'array')
-						inner.push([]);
-					else
-						inner.push(def);
-				}
-
-				result.push(inner);
-			}
-
-			return result;
-		},
-		randomKey: function(o) {
-			var keys = Object.keys(o);
-
-			var keyIndex = ~~(Math.random() * keys.length)
-			var key = keys[keyIndex];
-
-			return key;
-		},
-		getDeepProperty: function(obj, path) {
-			var o = obj;
-			var pLen = path.length;
-
-			for (var i = 0; i < pLen; i++) {
-				o = o[path[i]];
-				if (!o)
-					return null;
-			}
-
-			return o;
-		}
-	};
+	} 
 });
+
+//eslint-disable-next-line no-extend-native
+Object.defineProperty(Object.prototype, 'has', {
+	enumerable: false,
+	value: function (prop) {
+		//eslint-disable-next-line no-undefined
+		return (this.hasOwnProperty(prop) && this[prop] !== undefined && this[prop] !== null);
+	}
+});
+	
+module.exports = {
+	get2dArray: function (w, h, def) {
+		def = def || 0;
+
+		let result = [];
+		for (let i = 0; i < w; i++) {
+			let inner = [];
+			for (let j = 0; j < h; j++) {
+				if (def === 'array')
+					inner.push([]);
+				else
+					inner.push(def);
+			}
+
+			result.push(inner);
+		}
+
+		return result;
+	},
+	randomKey: function (o) {
+		let keys = Object.keys(o);
+
+		let keyIndex = ~~(Math.random() * keys.length);
+		let key = keys[keyIndex];
+
+		return key;
+	},
+	getDeepProperty: function (obj, path) {
+		let o = obj;
+		let pLen = path.length;
+
+		for (let i = 0; i < pLen; i++) {
+			o = o[path[i]];
+			if (!o)
+				return null;
+		}
+
+		return o;
+	},
+
+	//Only use this method for official logging. Temporary logs should use console.log
+	// so those instances can be reported by eslint
+	log: function (msg) {
+		//eslint-disable-next-line no-console
+		console.log(msg);
+	}
+};

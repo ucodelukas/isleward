@@ -1,59 +1,59 @@
 define([
 	'js/rendering/renderer',
 	'picture'
-], function(
+], function (
 	renderer,
 	picture
 ) {
-	var scale = 40;
-	var scaleMult = 5;
+	let scale = 40;
+	let scaleMult = 5;
 
 	return {
-		build: function(config) {
-			var obj = {
+		build: function (config) {
+			let obj = {
 				lines: []
 			};
 
-			var maxDeviate = config.maxDeviate || (scale * 0.3);
+			let maxDeviate = config.maxDeviate || (scale * 0.3);
 
-			var fx = config.fromX * scale;
-			var fy = config.fromY * scale;
+			let fx = config.fromX * scale;
+			let fy = config.fromY * scale;
 
-			var tx = config.toX * scale;
-			var ty = config.toY * scale;
+			let tx = config.toX * scale;
+			let ty = config.toY * scale;
 
-			var angle = Math.atan2(ty - fy, tx - fx);
-			var distance = Math.sqrt(Math.pow(tx - fx, 2) + Math.pow(ty - fy, 2));
-			var divDistance = Math.min(20, distance);
-			var divisions = config.divisions || Math.max(1, distance / divDistance);
+			let angle = Math.atan2(ty - fy, tx - fx);
+			let distance = Math.sqrt(Math.pow(tx - fx, 2) + Math.pow(ty - fy, 2));
+			let divDistance = Math.min(20, distance);
+			let divisions = config.divisions || Math.max(1, distance / divDistance);
 
-			var x = fx;
-			var y = fy;
+			let x = fx;
+			let y = fy;
 
-			for (var i = 0; i < divisions; i++) {
-				var line = {
+			for (let i = 0; i < divisions; i++) {
+				let line = {
 					sprites: []
 				};
 
-				var ntx = fx + (Math.cos(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
-				var nty = fy + (Math.sin(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
+				let ntx = fx + (Math.cos(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
+				let nty = fy + (Math.sin(angle) * (divDistance * i)) + ~~(Math.random() * (maxDeviate * 2)) - maxDeviate;
 
-				if (i == divisions - 1) {
+				if (i === divisions - 1) {
 					ntx = tx;
 					nty = ty;
 				}
 
-				var nAngle = Math.atan2(nty - y, ntx - x);
-				var steps = ~~(Math.sqrt(Math.pow(ntx - x, 2) + Math.pow(nty - y, 2)) / scaleMult);
+				let nAngle = Math.atan2(nty - y, ntx - x);
+				let steps = ~~(Math.sqrt(Math.pow(ntx - x, 2) + Math.pow(nty - y, 2)) / scaleMult);
 
-				var patches = {};
+				let patches = {};
 
-				for (var j = 0; j < steps; j++) {
-					var alpha = 1;
-					if ((config.colors) && (i == divisions - 1) && (j > (steps * 0.75)))
+				for (let j = 0; j < steps; j++) {
+					let alpha = 1;
+					if ((config.colors) && (i === divisions - 1) && (j > (steps * 0.75)))
 						alpha = 1 - (j / steps);
 
-					var c = (config.colors || [0xffeb38, 0xfaac45, 0xfafcfc])[~~(Math.random() * (config.colors ? config.colors.length : 3))];
+					let c = (config.colors || [0xffeb38, 0xfaac45, 0xfafcfc])[~~(Math.random() * (config.colors ? config.colors.length : 3))];
 					line.sprites.push(renderer.buildRectangle({
 						x: ~~(x / scaleMult) * scaleMult,
 						y: ~~(y / scaleMult) * scaleMult,
@@ -64,12 +64,12 @@ define([
 						layerName: 'effects'
 					}));
 
-					var xx = x;
-					var yy = y;
+					let xx = x;
+					let yy = y;
 					if ((!patches[xx + '-' + yy]) && (!config.colors)) {
 						patches[xx + '-' + yy] = 1;
 
-						var lightPatch = renderer.buildObject({
+						let lightPatch = renderer.buildObject({
 							sheetName: 'white',
 							x: 0,
 							y: 0,
@@ -99,22 +99,22 @@ define([
 			return obj;
 		},
 
-		toHex: function rgbToHex(r, g, b) {
-			var componentToHex = function(c) {
-				var hex = c.toString(16);
-				return hex.length == 1 ? '0' + hex : hex;
+		toHex: function rgbToHex (r, g, b) {
+			let componentToHex = function (c) {
+				let hex = c.toString(16);
+				return hex.length === 1 ? '0' + hex : hex;
 			};
 
 			return '0x' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 		},
 
-		update: function(obj) {
+		update: function (obj) {
 
 		},
 
-		destroy: function(obj) {
-			obj.lines.forEach(function(l) {
-				l.sprites.forEach(function(s) {
+		destroy: function (obj) {
+			obj.lines.forEach(function (l) {
+				l.sprites.forEach(function (s) {
 					s.parent.removeChild(s);
 				});
 			});

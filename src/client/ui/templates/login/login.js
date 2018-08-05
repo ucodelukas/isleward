@@ -38,12 +38,12 @@ define([
 		},
 
 		redirect: function (e) {
-			var location = $(e.target).attr('location');
-			window.open(location, '_blank');
+			let currentLocation = $(e.target).attr('location');
+			window.open(currentLocation, '_blank');
 		},
 
 		onKeyDown: function (e) {
-			if (e.keyCode == 13)
+			if (e.keyCode === 13)
 				this.onLoginClick();
 		},
 		onHandshake: function () {

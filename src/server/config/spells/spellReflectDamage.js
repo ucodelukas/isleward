@@ -1,47 +1,41 @@
-define([
+module.exports = {
+	type: 'reflectDamage',
 
-], function(
+	cdMax: 0,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'reflectDamage',
+	duration: 10,
 
-		cdMax: 0,
-		manaCost: 0,
+	targetGround: true,
 
-		duration: 10,
+	cast: function (action) {
+		let selfEffect = this.obj.effects.addEffect({
+			type: 'reflectDamage',
+			threatMult: this.threatMult
+		});
 
-		targetGround: true,
+		let ttl = this.duration * 350;
 
-		cast: function(action) {
-			var selfEffect = this.obj.effects.addEffect({
-				type: 'reflectDamage',
-				threatMult: this.threatMult
-			});
-
-			var ttl = this.duration * 350;
-
-			if (this.animation) {
-				this.obj.instance.syncer.queue('onGetObject', {
-					id: this.obj.id,
-					components: [{
-						type: 'animation',
-						template: this.animation
-					}]
-				});
-			}
-
-			this.queueCallback(this.endEffect.bind(this, selfEffect), ttl - 50);
-
-			return true;
-		},
-		endEffect: function(selfEffect) {
-			if (this.obj.destroyed)
-				return;
-
-			var obj = this.obj;
-
-			obj.effects.removeEffect(selfEffect);
+		if (this.animation) {
+			this.obj.instance.syncer.queue('onGetObject', {
+				id: this.obj.id,
+				components: [{
+					type: 'animation',
+					template: this.animation
+				}]
+			}, -1);
 		}
-	};
-});
+
+		this.queueCallback(this.endEffect.bind(this, selfEffect), ttl - 50);
+
+		return true;
+	},
+	endEffect: function (selfEffect) {
+		if (this.obj.destroyed)
+			return;
+
+		let obj = this.obj;
+
+		obj.effects.removeEffect(selfEffect);
+	}
+};
