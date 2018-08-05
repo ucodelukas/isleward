@@ -622,7 +622,7 @@ module.exports = {
 
 		//Add aggro to all our attackers
 		let threat = amount * 0.4 * threatMult;
-		if (threat != 0) {
+		if (threat !== 0) {
 			let aggroList = this.obj.aggro.list;
 			let aLen = aggroList.length;
 			for (let i = 0; i < aLen; i++) {

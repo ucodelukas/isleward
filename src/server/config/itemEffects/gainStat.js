@@ -6,7 +6,7 @@ module.exports = {
 			const stat = effect.rolls.stat;
 			let amount = effect.rolls.amount;
 
-			if (stat == 'hp') {
+			if (stat === 'hp') {
 				if (typeof(amount) === 'string' && amount.indexOf('%') > -1)
 					amount = (cpnStats.values.hpMax / 100) * ~~amount.replace('%', '');
 
