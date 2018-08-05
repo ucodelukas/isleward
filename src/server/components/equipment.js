@@ -246,14 +246,27 @@ module.exports = {
 
 	setQuickSlot: function (msg) {
 		let obj = this.obj;
+		const inventory = obj.inventory;
 
-		let item = obj.inventory.findItem(msg.itemId);
+		if (!msg.has('itemId') && this.quickSlots.has(msg.slot)) { 
+			let currentQuickItem = inventory.findItem(this.quickSlots[msg.slot]);
+			if (!currentQuickItem)
+				return;
+
+			delete this.quickSlots[msg.slot];
+			delete currentQuickItem.quickSlot;
+			obj.syncer.setArray(true, 'inventory', 'getItems', currentQuickItem);
+
+			return;
+		}
+
+		let item = inventory.findItem(msg.itemId);
 		if (!item)
 			return;
 
 		let currentQuickId = this.quickSlots[msg.slot];
 		if (currentQuickId) {
-			let currentQuickItem = obj.inventory.findItem(currentQuickId);
+			let currentQuickItem = inventory.findItem(currentQuickId);
 			if (currentQuickItem) {
 				delete currentQuickItem.quickSlot;
 				obj.syncer.setArray(true, 'inventory', 'getItems', currentQuickItem);

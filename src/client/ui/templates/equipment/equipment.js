@@ -122,19 +122,19 @@ define([
 					if ((runeSlot !== null) && (item.slot))
 						skipSpellId = runeSlot;
 
-					return (item.quickSlot !== null || (item.eq && (item.slot || item.runeSlot !== null)));
+					return (item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))));
 				}, this)
 				.forEach(function (item) {
 					let imgX = -item.sprite[0] * 64;
 					let imgY = -item.sprite[1] * 64;
 
 					let slot = item.slot;
-					if (item.runeSlot !== null) {
+					if (item.has('runeSlot')) {
 						let runeSlot = item.runeSlot;
 						if (runeSlot > skipSpellId)
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
-					} else if (item.quickSlot !== null)
+					} else if (item.has('quickSlot'))
 						slot = 'quick-' + item.quickSlot;
 
 					let spritesheet = item.spritesheet || '../../../images/items.png';
@@ -175,7 +175,7 @@ define([
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
 					else if (isConsumable)
-						return (item.type === 'consumable');
+						return (item.type === 'consumable' && !item.has('quickSlot'));
 					
 					let checkSlot = (slot.indexOf('finger') === 0) ? 'finger' : slot;
 					if (slot === 'oneHanded')
@@ -184,26 +184,29 @@ define([
 					return ((item.slot === checkSlot) && (!item.eq));
 				}, this);
 
-			items = items
-				.filter(function (item, i) {
-					return (items.firstIndex(f => f.name === item.name) === i);
-				});
+			if (!isConsumable) {
+				items = items
+					.filter(function (item, i) {
+						return (items.firstIndex(f => f.name === item.name) === i);
+					});
+			}
 
 			items.splice(0, 0, {
 				name: 'None',
 				slot: this.hoverCompare ? this.hoverCompare.slot : null,
-				id: this.hoverCompare ? this.hoverCompare.id : null,
+				id: (this.hoverCompare && !isConsumable) ? this.hoverCompare.id : null,
+				type: isConsumable ? 'consumable' : null,
 				empty: true
 			});
 			if (this.hoverCompare)
 				items.splice(1, 0, this.hoverCompare);
 
 			items
-				.forEach(function (item) {
+				.forEach(function (item, i) {
 					let sprite = item.sprite || [7, 0];
 
 					let spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
-					if (item.type === 'consumable')
+					if (i > 0 && item.type === 'consumable')
 						spriteSheet = '../../../images/consumables.png';
 					let imgX = -sprite[0] * 64;
 					let imgY = -sprite[1] * 64;
