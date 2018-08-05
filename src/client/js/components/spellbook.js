@@ -176,7 +176,7 @@ define([
 				return;
 			}
 
-			let spell = this.getSpell(key);
+			let spell = this.getSpell(~~key);
 			if (!spell)
 				return;
 
