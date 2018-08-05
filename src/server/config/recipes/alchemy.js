@@ -16,11 +16,11 @@ module.exports = [{
 			}
 		}]
 	},
-	materials: [/*{
+	materials: [{
 		name: 'Skyblossom',
 		quantity: 3
 	}, {
 		name: 'Empty Vial',
 		quantity: 1
-	}*/]
+	}]
 }];

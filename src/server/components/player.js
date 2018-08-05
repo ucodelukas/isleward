@@ -137,7 +137,7 @@ module.exports = {
 			class: obj.class
 		};
 
-		io.sockets.emit('events', {
+		cons.emit('events', {
 			onGetConnectedPlayer: [self]
 		});
 	},
