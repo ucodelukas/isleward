@@ -12,7 +12,7 @@ module.exports = [{
 			type: 'gainStat',
 			rolls: {
 				stat: 'hp',
-				amount: 50
+				amount: '50%'
 			}
 		}]
 	},

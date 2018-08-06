@@ -90,16 +90,12 @@ module.exports = {
 		}, [obj.serverId]);
 	},
 
-	getRecipe: function (msg) {
-		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
-		if ((!obj) || (!obj.player))
-			return;
-
-		let recipe = recipes.getRecipe(this.craftType, msg.name);
+	buildRecipe: function (crafter, recipeName) {
+		let recipe = recipes.getRecipe(this.craftType, recipeName);
 		if (!recipe)
 			return;
 
-		const items = obj.inventory.items;
+		const items = crafter.inventory.items;
 
 		let sendRecipe = extend(true, {}, recipe);
 		(sendRecipe.materials || []).forEach(function (m) {
@@ -114,6 +110,16 @@ module.exports = {
 				)
 			));
 		});
+
+		return sendRecipe;
+	},
+
+	getRecipe: function (msg) {
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
+		if ((!obj) || (!obj.player))
+			return;
+
+		const sendRecipe = this.buildRecipe(obj, msg.name);
 
 		this.resolveCallback(msg, sendRecipe);
 	},
@@ -154,6 +160,8 @@ module.exports = {
 		item.description += `<br /><br />(Crafted by ${obj.name})`;
 
 		obj.inventory.getItem(item);
+
+		this.resolveCallback(msg, this.buildRecipe(obj, msg.name));
 	},
 
 	resolveCallback: function (msg, result) {

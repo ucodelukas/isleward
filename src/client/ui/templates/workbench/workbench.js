@@ -107,8 +107,6 @@ define([
 		craft: function () {
 			let selectedRecipe = this.find('.list .item.selected').html();
 
-			this.clear();
-
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -119,8 +117,13 @@ define([
 					data: {
 						name: selectedRecipe
 					}
-				}
+				},
+				callback: this.onCraft.bind(this)
 			});
+		},
+
+		onCraft: function (recipe) {
+			this.onGetRecipe(recipe);
 		},
 
 		onAfterShow: function () {
