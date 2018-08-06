@@ -32,7 +32,7 @@ module.exports = {
 
 		//Have we reached home?
 		if (this.goHome) {
-			let distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
+			let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
 			if (distanceFromHome < this.walkDistance)
 				this.goHome = false;
 		}
@@ -78,28 +78,38 @@ module.exports = {
 		if (!this.physics.isCellOpen(toX, toY))
 			return;
 
-		let path = this.physics.getPath({
-			x: obj.x,
-			y: obj.y
-		}, {
-			x: toX,
-			y: toY
-		}, false);
-
-		let pLen = path.length;
-		for (let i = 0; i < pLen; i++) {
-			let p = path[i];
-
+		if (abs(obj.x - toX) <= 1 && abs(obj.y - toY) <= 1) {
 			obj.queue({
 				action: 'move',
 				data: {
-					x: p.x,
-					y: p.y
+					x: toX,
+					y: toY
 				}
 			});
+		} else {
+			let path = this.physics.getPath({
+				x: obj.x,
+				y: obj.y
+			}, {
+				x: toX,
+				y: toY
+			}, false);
+
+			let pLen = path.length;
+			for (let i = 0; i < pLen; i++) {
+				let p = path[i];
+
+				obj.queue({
+					action: 'move',
+					data: {
+						x: p.x,
+						y: p.y
+					}
+				});
+			}
 		}
 
-		//We use goHometo force followers to follow us around but they should never stay in that state
+		//We use goHome to force followers to follow us around but they should never stay in that state
 		// since it messes with combat
 		if (obj.follower)
 			this.goHome = false;
@@ -175,31 +185,41 @@ module.exports = {
 			}
 		}
 
-		let path = this.physics.getPath({
-			x: x,
-			y: y
-		}, {
-			x: targetPos.x,
-			y: targetPos.y
-		});
-		if (path.length === 0) {
-			obj.aggro.ignore(target);
-			//TODO: Don't skip a turn
-			return;
-		}
-
-		let p = path[0];
-		obj.queue({
-			action: 'move',
-			data: {
-				x: p.x,
-				y: p.y
+		if (abs(x - targetPos.x) <= 1 && abs(y - targetPos.y) <= 1) {
+			obj.queue({
+				action: 'move',
+				data: {
+					x: targetPos.x,
+					y: targetPos.y
+				}
+			});
+		} else {
+			let path = this.physics.getPath({
+				x: x,
+				y: y
+			}, {
+				x: targetPos.x,
+				y: targetPos.y
+			});
+			if (path.length === 0) {
+				obj.aggro.ignore(target);
+				//TODO: Don't skip a turn
+				return;
 			}
-		});
+
+			let p = path[0];
+			obj.queue({
+				action: 'move',
+				data: {
+					x: p.x,
+					y: p.y
+				}
+			});
+		}
 	},
 
 	canChase: function (obj) {
-		let distanceFromHome = Math.max(Math.abs(this.originX - obj.x), Math.abs(this.originY - obj.y));
+		let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
 		return ((!this.goHome) && (distanceFromHome <= this.maxChaseDistance));
 	}
 };
