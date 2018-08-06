@@ -13,6 +13,14 @@ module.exports = {
 			type: 'fish',
 			quantity: [6, 12]
 		},
+		vikardoor: {
+			properties: {
+				cpnDoor: {
+					locked: true,
+					key: 'vikar'
+				}
+			}
+		},
 		shopestrid: {
 			properties: {
 				cpnNotice: {
