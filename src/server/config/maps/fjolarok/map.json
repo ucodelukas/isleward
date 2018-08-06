@@ -1246,7 +1246,7 @@
                  "gid":698,
                  "height":8,
                  "id":709,
-                 "name":"wardrobe",
+                 "name":"Wardrobe",
                  "properties":
                     {
                      "cpnWardrobe":"{}"
@@ -2178,7 +2178,7 @@
                  "gid":572,
                  "height":8,
                  "id":860,
-                 "name":"alchemy workbench",
+                 "name":"Alchemy Workbench",
                  "rotation":0,
                  "type":"",
                  "visible":true,
