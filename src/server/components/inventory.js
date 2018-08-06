@@ -421,6 +421,15 @@ module.exports = {
 		if ((!item) || (item.noDrop) || (item.quest))
 			return;
 
+		if (item.has('quickSlot')) {
+			this.obj.equipment.setQuickSlot({
+				itemId: null,
+				slot: item.quickSlot
+			});
+
+			delete item.quickSlot;
+		}
+
 		delete item.pos;
 
 		//Find close open position
