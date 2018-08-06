@@ -12,8 +12,7 @@ const baseRecipes = {
 			effects: [{
 				type: 'gainStat',
 				rolls: {
-					stat: 'hp',
-					amount: 50
+					stat: 'hp'
 				}
 			}]
 		},
@@ -26,45 +25,26 @@ const baseRecipes = {
 	}
 };
 
+const buildRecipe = function (recipeName, itemName, effectAmount, materialName) {
+	return extend(true, {}, baseRecipes[recipeName], {
+		item: {
+			name: itemName,
+			effects: [{
+				rolls: {
+					amount: effectAmount
+				}
+			}]
+		},
+		materials: [{
+			name: materialName
+		}]
+	});
+};
+
 module.exports = [
-	extend(true, {}, baseRecipes.carp, {
-		item: {
-			name: 'Carp on a Stick'
-		},
-		materials: [{
-			name: 'Sun Carp'
-		}]
-	}),
-	extend(true, {}, baseRecipes.carp, {
-		item: {
-			name: 'Big Carp on a Stick'
-		},
-		materials: [{
-			name: 'Big Sun Carp'
-		}]
-	}),
-	extend(true, {}, baseRecipes.carp, {
-		item: {
-			name: 'Gaint Carp on a Stick'
-		},
-		materials: [{
-			name: 'Gaint Sun Carp'
-		}]
-	}),
-	extend(true, {}, baseRecipes.carp, {
-		item: {
-			name: 'Trophy Carp on a Stick'
-		},
-		materials: [{
-			name: 'Trophy Sun Carp'
-		}]
-	}),
-	extend(true, {}, baseRecipes.carp, {
-		item: {
-			name: 'Fabled Carp on a Stick'
-		},
-		materials: [{
-			name: 'Fabled Sun Carp'
-		}]
-	})
+	buildRecipe('carp', 'Carp on a Stick', 10, 'Sun Carp'),
+	buildRecipe('carp', 'Big Carp on a Stick', 25, 'Big Sun Carp'),
+	buildRecipe('carp', 'Giant Carp on a Stick', 50, 'Giant Sun Carp'),
+	buildRecipe('carp', 'Trophy Carp on a Stick', 100, 'Trophy Sun Carp'),
+	buildRecipe('carp', 'Fabled Carp on a Stick', 200, 'Fabled Sun Carp')
 ];
