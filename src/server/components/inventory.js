@@ -265,6 +265,8 @@ module.exports = {
 		if (!item)
 			return;
 
+		let obj = this.obj;
+
 		if (item.cdMax) {
 			if (item.cd) {
 				process.send({
@@ -274,7 +276,7 @@ module.exports = {
 							obj: {
 								msg: 'That item is on cooldown'
 							},
-							to: [this.obj.serverId]
+							to: [obj.serverId]
 						}]
 					}
 				});
@@ -292,7 +294,7 @@ module.exports = {
 		}
 
 		let result = {};
-		this.obj.instance.eventEmitter.emit('onBeforeUseItem', this.obj, item, result);
+		obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
 
 		let effects = (item.effects || []);
 		let eLen = effects.length;
@@ -303,7 +305,25 @@ module.exports = {
 			if (!effectEvent)
 				continue;
 
-			effectEvent.call(this.obj, item, effect);
+			let effectResult = {
+				success: true,
+				errorMessage: null
+			};
+
+			effectEvent.call(obj, effectResult, item, effect);
+
+			if (!effectResult.success) {
+				obj.instance.syncer.queue('onGetMessages', {
+					id: obj.id,
+					messages: [{
+						class: 'color-redA',
+						message: effectResult.errorMessage,
+						type: 'info'
+					}]
+				}, [obj.serverId]);
+
+				return;
+			}
 		}
 
 		if (item.type === 'consumable') {
@@ -311,7 +331,7 @@ module.exports = {
 				item.uses--;
 
 				if (item.uses) {
-					this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+					obj.syncer.setArray(true, 'inventory', 'getItems', item);
 					return;
 				}
 			}

@@ -1,12 +1,19 @@
 module.exports = {
 	events: {
-		onConsumeItem (item, effect) {
+		onConsumeItem (effectResult, item, effect) {
 			const cpnStats = this.stats;
 
 			const stat = effect.rolls.stat;
 			let amount = effect.rolls.amount;
 
 			if (stat === 'hp') {
+				if (cpnStats.values.hp >= cpnStats.values.hpMax) {
+					effectResult.success = false;
+					effectResult.errorMessage = 'You are already at full health.';
+
+					return;
+				}
+
 				if (typeof(amount) === 'string' && amount.indexOf('%') > -1)
 					amount = (cpnStats.values.hpMax / 100) * ~~amount.replace('%', '');
 
