@@ -33,6 +33,8 @@ module.exports = {
 					stats.addStat(p, node.stats[p]);
 			}
 		});
+
+		this.obj.spellbook.calcDps();
 	},
 
 	calcPoints: function () {
