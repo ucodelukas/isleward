@@ -5,6 +5,7 @@ let generatorSpells = require('./generators/spellbook');
 let salvager = require('./salvager');
 let configCurrencies = require('./config/currencies');
 let configSlots = require('./config/slots');
+let configTypes = require('./config/types');
 let generator = require('./generator');
 
 module.exports = {
@@ -98,12 +99,14 @@ module.exports = {
 				slot: configSlots.getRandomSlot(item.slot),
 				level: item.level,
 				quality: item.quality,
-				stats: Object.keys(item.stats || {})
+				stats: Object.keys(item.stats || {}),
+				implicitStat: (configTypes.types[item.slot][item.type] | {}).implicitStat
 			});
 
 			delete item.spritesheet;
 			delete item.stats;
 			delete item.spell;
+			delete item.implicitStats;
 
 			for (let p in enchantedStats) {
 				if (!newItem.stats[p])
