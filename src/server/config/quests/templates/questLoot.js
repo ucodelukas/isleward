@@ -11,7 +11,10 @@ module.exports = {
 			.filter(s => (s !== 'tool'));
 
 		if (this.slot) {
-			if (!slotNames.some(s => (s === this.slot)))
+			if (this.slot instanceof Array) {
+				if (this.slot.some(s => (slotNames.indexOf(s) == -1)))
+					this.slot = null;
+			} else if (!slotNames.some(s => (s === this.slot)))
 				this.slot = null;
 		}
 
@@ -84,11 +87,11 @@ module.exports = {
 					(item.quality < this.quality)
 				) ||
 				(
-					(this.slot.indexOf) &&
+					(this.slot instanceof Array) &&
 					(this.slot.indexOf(item.slot) === -1)
 				) ||
 				(
-					(!this.slot.indexOf) &&
+					(typeof(this.slot) === 'string') &&
 					(this.slot !== item.slot)
 				)
 			)
