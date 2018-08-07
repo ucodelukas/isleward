@@ -90,8 +90,11 @@ module.exports = {
 		if (typeof (value) !== 'string')
 			return;
 
-		value = value.split(' ').join('');
-		if (value.lengh === 0)
+		value = value
+			.trim()
+			.split(' ').join('');
+
+		if (value.length === 0)
 			return;
 
 		let obj = this.obj;
