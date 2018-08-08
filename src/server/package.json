@@ -5,6 +5,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "express": "^4.13.1",
+    "fast-copy": "^1.2.2",
     "google-spreadsheet": "^2.0.4",
     "less-middleware": "^2.0.1",
     "mysql": "^2.13.0",
