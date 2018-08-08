@@ -108,7 +108,7 @@ module.exports = {
 				queue = this.queue[playerName] = [];
 			
 			items.forEach(function (i) {
-				queue.push(extend(true, {}, i));
+				queue.push(extend({}, i));
 			});
 
 			return;

@@ -42,7 +42,7 @@ module.exports = {
 			return;
 		}
 
-		blueprint = extend(true, {}, blueprint, herbs[name], {
+		blueprint = extend({}, blueprint, herbs[name], {
 			name: name
 		});
 
@@ -109,13 +109,13 @@ module.exports = {
 		if (blueprint.quantity)
 			quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
 
-		let objBlueprint = extend(true, {}, blueprint, position);
+		let objBlueprint = extend({}, blueprint, position);
 		objBlueprint.properties = {
 			cpnResourceNode: {
 				nodeType: blueprint.type,
 				ttl: blueprint.ttl,
 				xp: this.zone.level * this.zone.level,
-				blueprint: extend(true, {}, blueprint),
+				blueprint: extend({}, blueprint),
 				quantity: quantity
 			}
 		};

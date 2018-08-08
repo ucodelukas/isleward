@@ -640,7 +640,7 @@ module.exports = {
 			delete this.sessionDuration;
 		}
 
-		let values = extend(true, {}, this.values);
+		let values = extend({}, this.values);
 		values.hp = this.values.hp;
 		values.mana = this.values.mana;
 

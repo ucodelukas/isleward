@@ -159,7 +159,7 @@ module.exports = {
 			typeTemplate = require('../' + result.url);
 		}
 
-		let builtEffect = extend(true, {}, effectTemplate, typeTemplate);
+		let builtEffect = extend({}, effectTemplate, typeTemplate);
 		for (let p in options) 
 			builtEffect[p] = options[p];
 		

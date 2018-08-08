@@ -39,7 +39,7 @@ module.exports = {
 
 		let result = list.items
 			.map(function (i) {
-				let item = extend(true, {}, i);
+				let item = extend({}, i);
 
 				if (item.effects) {
 					item.stats = {
@@ -146,7 +146,7 @@ module.exports = {
 		for (let i = 0; i < eLen; i++) {
 			let e = extra[i];
 
-			let item = extend(true, {}, e);
+			let item = extend({}, e);
 
 			if (item.type === 'skin') {
 				let skinBlueprint = skins.getBlueprint(item.id);

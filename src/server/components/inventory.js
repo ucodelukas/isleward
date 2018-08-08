@@ -76,7 +76,7 @@ module.exports = {
 			type: 'inventory',
 			items: this.items
 				.map(function (i) {
-					let item = extend(true, {}, i);
+					let item = extend({}, i);
 
 					if (item.effects) {
 						item.effects = item.effects.map(e => ({
@@ -237,7 +237,7 @@ module.exports = {
 		else if ((!item.quantity) || (item.quantity <= msg.stackSize) || (msg.stackSize < 1))
 			return;
 
-		let newItem = extend(true, {}, item);
+		let newItem = extend({}, item);
 		item.quantity -= msg.stackSize;
 		newItem.quantity = msg.stackSize;
 
@@ -372,7 +372,7 @@ module.exports = {
 		if (!stash.active)
 			return;
 
-		let clonedItem = extend(true, {}, item);
+		let clonedItem = extend({}, item);
 		this.destroyItem(id, null, true);
 		stash.deposit(clonedItem);
 	},
@@ -501,7 +501,7 @@ module.exports = {
 			return;
 		}
 
-		this.obj.instance.mail.sendMail(msg.recipient, [extend(true, {}, item)]);
+		this.obj.instance.mail.sendMail(msg.recipient, [extend({}, item)]);
 
 		this.destroyItem(item.id);
 
@@ -675,7 +675,7 @@ module.exports = {
 					ttl: this.obj.instance.instanced ? -1 : 1710
 				},
 				cpnInventory: {
-					items: extend(true, [], items)
+					items: extend([], items)
 				}
 			}
 		}]);
@@ -843,7 +843,7 @@ module.exports = {
 		} else if (!item.effects)
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
 		else {
-			let result = extend(true, {}, item);
+			let result = extend({}, item);
 			result.effects = result.effects.map(e => ({
 				factionId: e.factionId,
 				text: e.text,
@@ -913,7 +913,7 @@ module.exports = {
 		let blueprint = this.blueprint;
 		let magicFind = (blueprint.magicFind || 0);
 
-		let savedItems = extend(true, [], this.items);
+		let savedItems = extend([], this.items);
 		this.items = [];
 
 		let dropEvent = {

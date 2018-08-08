@@ -101,7 +101,7 @@ module.exports = {
 		simple.components.spliceWhere(c => c.type === 'stash');
 
 		let stats = simple.components.find(c => c.type === 'stats');
-		stats.values = extend(true, {}, stats.values);
+		stats.values = extend({}, stats.values);
 
 		let social = simple.components.find(c => c.type === 'social');
 		delete social.party;
@@ -140,7 +140,7 @@ module.exports = {
 			delete extensionObj.callback;
 		}
 
-		extend(true, simple, extensionObj);
+		extend(simple, extensionObj);
 
 		io.set({
 			ent: this.charname,

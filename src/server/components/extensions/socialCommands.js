@@ -304,7 +304,7 @@ module.exports = {
 				if (s === 'tool')
 					return;
 
-				let newConfig = extend(true, {}, config, {
+				let newConfig = extend({}, config, {
 					slot: s
 				});
 

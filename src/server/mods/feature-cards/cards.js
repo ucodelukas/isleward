@@ -56,7 +56,7 @@ module.exports = {
 
 		let mobLevel = mob.stats.values.level;
 
-		let configs = extend(true, {}, config);
+		let configs = extend({}, config);
 		looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 		Object.keys(configs).forEach(function (c) {
@@ -110,7 +110,7 @@ module.exports = {
 	},
 
 	getReward: function (looter, set) {
-		let configs = extend(true, {}, config);
+		let configs = extend({}, config);
 		looter.instance.eventEmitter.emit('onBeforeGetCardsConfig', configs);
 
 		let reward = configs[set].reward;

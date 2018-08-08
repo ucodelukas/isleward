@@ -49,7 +49,7 @@ module.exports = {
 					return;
 
 				let pick = gatherResult.items[~~(Math.random() * gatherResult.items.length)];
-				gatherResult.items.push(extend(true, {}, pick));
+				gatherResult.items.push(extend({}, pick));
 			}
 		}
 	},

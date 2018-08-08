@@ -58,7 +58,7 @@ module.exports = {
 			item.noDestroy = blueprint.noDestroy;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
 		} else if (blueprint.type === 'mtx') {
-			item = extend(true, {}, blueprint);
+			item = extend({}, blueprint);
 			delete item.chance;
 		} else {
 			generators.forEach(g => g.generate(item, blueprint));

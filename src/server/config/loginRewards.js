@@ -56,7 +56,7 @@ module.exports = {
 
 				let item = items.find(f => (f.name === pick.name));
 				if (!item) {
-					item = extend(true, {
+					item = extend({
 						material: true,
 						quality: p
 					}, pick);

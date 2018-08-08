@@ -10,7 +10,7 @@ module.exports = {
 			return;
 
 		item.type = type;
-		item.sprite = extend(true, [], blueprint.sprite || typeBlueprint.sprite);
+		item.sprite = extend([], blueprint.sprite || typeBlueprint.sprite);
 		if (typeBlueprint.spritesheet)
 			item.spritesheet = typeBlueprint.spritesheet;
 

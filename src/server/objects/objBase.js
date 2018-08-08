@@ -10,12 +10,12 @@ module.exports = {
 		if (!cpn) {
 			let template = components.components[type];
 			if (!template) {
-				template = extend(true, {
+				template = extend({
 					type: type
 				}, blueprint || {});
 			}
 
-			cpn = extend(true, {}, template);
+			cpn = extend({}, template);
 			cpn.obj = this;
 
 			this.components.push(cpn);
@@ -44,7 +44,7 @@ module.exports = {
 		let template = require('../components/extensions/' + type);
 		let cpn = this[ext];
 
-		extend(true, cpn, template);
+		extend(cpn, template);
 
 		if (template.init)
 			cpn.init(blueprint);

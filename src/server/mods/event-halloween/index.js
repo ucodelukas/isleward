@@ -92,7 +92,7 @@ module.exports = {
 	},
 
 	onBeforeGetFactions: function (mappings) {
-		extend(true, mappings, {
+		extend(mappings, {
 			pumpkinSailor: './factions/pumpkinSailor'
 		});
 	},
@@ -106,7 +106,7 @@ module.exports = {
 	},
 
 	onBeforeGetHerbConfig: function (herbs) {
-		extend(true, herbs, {
+		extend(herbs, {
 			'Tiny Pumpkin': {
 				sheetName: 'objects',
 				cell: 167,
@@ -189,7 +189,7 @@ module.exports = {
 			let mapScale = this.mapFile.tilesets[0].tileheight;
 
 			layer.objects.forEach(function (l) {
-				let newO = extend(true, {}, l);
+				let newO = extend({}, l);
 				newO.x += (offset.x * mapScale);
 				newO.y += (offset.y * mapScale);
 
@@ -227,7 +227,7 @@ module.exports = {
 	onAfterGetZone: function (zone, config) {
 		try {
 			let modZone = require('./maps/' + zone + '/zone.js');
-			extend(true, config, modZone);
+			extend(config, modZone);
 		} catch (e) {
 
 		}
@@ -236,7 +236,7 @@ module.exports = {
 	onBeforeGetDialogue: function (zone, config) {
 		try {
 			let modDialogue = require('./maps/' + zone + '/dialogues.js');
-			extend(true, config, modDialogue);
+			extend(config, modDialogue);
 		} catch (e) {
 
 		}

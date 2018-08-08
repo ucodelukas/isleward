@@ -122,7 +122,7 @@ module.exports = {
 			}
 			newItem.enchantedStats = enchantedStats;
 
-			extend(true, item, newItem);
+			extend(item, newItem);
 		} else if (msg.action === 'reforge') {
 			if (!item.spell)
 				return;
@@ -134,7 +134,7 @@ module.exports = {
 			generatorSpells.generate(item, {
 				spellName: spellName
 			});
-			item.spell = extend(true, oldSpell, item.spell);
+			item.spell = extend(oldSpell, item.spell);
 		} else if (msg.action === 'scour') {
 			if (!item.power)
 				return;

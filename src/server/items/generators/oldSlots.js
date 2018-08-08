@@ -44,7 +44,7 @@ module.exports = {
 
 		let extraStats = this.slots[item.slot].extraStats;
 		if (extraStats) {
-			extraStats = extend(true, {}, extraStats);
+			extraStats = extend({}, extraStats);
 			if (!(extraStats instanceof Array))
 				extraStats = [extraStats];
 

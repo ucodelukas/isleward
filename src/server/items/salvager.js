@@ -119,7 +119,7 @@ module.exports = {
 					exists.quantity = Math.max(exists.quantity, m.quantity);
 					exists.qualityMult = Math.max(exists.qualityMult, m.qualityMult);
 				} else
-					materials.push(extend(true, {}, m));
+					materials.push(extend({}, m));
 			});
 		});
 

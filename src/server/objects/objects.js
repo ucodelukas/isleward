@@ -15,7 +15,7 @@ module.exports = {
 	},
 
 	build: function (skipPush, clientObj) {
-		let o = extend(true, {}, objBase);
+		let o = extend({}, objBase);
 
 		if (clientObj)
 			o.update = null;
@@ -81,7 +81,7 @@ module.exports = {
 
 			//Add components (certain ones need to happen first)
 			//TODO: Clean this part up
-			let properties = extend(true, {}, l.properties);
+			let properties = extend({}, l.properties);
 			['cpnMob'].forEach(function (c) {
 				let blueprint = properties[c] || null;
 				if ((blueprint) && (typeof (blueprint) === 'string'))

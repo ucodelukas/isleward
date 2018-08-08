@@ -120,7 +120,7 @@ module.exports = {
 				return ((config[s].default) || (skins.some(f => ((f === s) || (f === '*')))));
 			})
 			.map(function (s) {
-				let res = extend(true, {}, config[s]);
+				let res = extend({}, config[s]);
 				res.id = s;
 				return res;
 			});

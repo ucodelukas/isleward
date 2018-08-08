@@ -86,7 +86,7 @@ module.exports = {
 		if (!typeTemplate.template)
 			typeTemplate.template = require('../config/spells/spell' + type);
 
-		let builtSpell = extend(true, {}, spellTemplate, typeTemplate.template, options);
+		let builtSpell = extend({}, spellTemplate, typeTemplate.template, options);
 		builtSpell.obj = this.obj;
 		builtSpell.baseDamage = builtSpell.damage;
 		builtSpell.damage += (options.damageAdd || 0);
@@ -108,7 +108,7 @@ module.exports = {
 				animation = animations.classes;
 
 			if ((animation) && (animation[this.obj.cell]) && (animation[this.obj.cell][animationName])) {
-				builtSpell.animation = extend(true, {}, animation[this.obj.cell][animationName]);
+				builtSpell.animation = extend({}, animation[this.obj.cell][animationName]);
 				builtSpell.animation.name = animationName;
 			} else
 				builtSpell.animation = null;
@@ -155,7 +155,7 @@ module.exports = {
 
 		runeSpell.values = {};
 
-		let builtSpell = extend(true, {
+		let builtSpell = extend({
 			type: runeSpell.type,
 			values: {}
 		}, playerSpell, playerSpellConfig, runeSpell);

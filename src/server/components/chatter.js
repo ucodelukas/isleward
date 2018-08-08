@@ -9,7 +9,7 @@ module.exports = {
 	global: false,
 
 	init: function (blueprint) {
-		this.chats = extend(true, [], blueprint.chats);
+		this.chats = extend([], blueprint.chats);
 		this.cd = ~~(Math.random() * this.cdMax);
 
 		for (let p in blueprint) {

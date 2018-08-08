@@ -10,7 +10,7 @@ module.exports = {
 		this.objects = msg.objects;
 		this.syncer = msg.syncer;
 		this.zone = msg.zone;
-		this.mobBuilder = extend(true, {
+		this.mobBuilder = extend({
 			zone: this.zone
 		}, mobBuilder);
 	},
@@ -21,7 +21,7 @@ module.exports = {
 	},
 
 	register: function (blueprint, cdMax) {
-		let spawner = extend(true, {
+		let spawner = extend({
 			cdMax: cdMax || 171,
 			cron: blueprint.cron,
 			lifetime: blueprint.lifetime,
@@ -40,7 +40,7 @@ module.exports = {
 		else
 			this.mobTypes[name]++;
 
-		spawner.zonePrint = extend(true, {}, this.zone.mobs.default, this.zone.mobs[name] || {});
+		spawner.zonePrint = extend({}, this.zone.mobs.default, this.zone.mobs[name] || {});
 	},
 
 	spawn: function (spawner) {
@@ -152,7 +152,7 @@ module.exports = {
 				if ((l.blueprint.sheetName === 'mobs') || (l.blueprint.sheetName === 'bosses'))
 					this.setupMob(mob, l.zonePrint, l.blueprint.scaleDrops);
 				else {
-					let blueprint = extend(true, {}, this.zone.objects.default, this.zone.objects[name] || {});
+					let blueprint = extend({}, this.zone.objects.default, this.zone.objects[name] || {});
 					this.setupObj(mob, blueprint);
 				}
 

@@ -10,6 +10,8 @@ let mapFile = null;
 let mapScale = null;
 let padding = null;
 
+let ex = require('extend');
+
 module.exports = {
 	name: null,
 	layers: [],
@@ -73,7 +75,7 @@ module.exports = {
 		if (dialogues)
 			this.zone.dialogues = dialogues;
 
-		this.zone = extend(true, {}, globalZone, this.zone);
+		this.zone = extend({}, globalZone, this.zone);	
 
 		let resources = this.zone.resources || {};
 		for (let r in resources) 
@@ -112,9 +114,9 @@ module.exports = {
 	getMapFile: function () {
 		this.build();
 
-		randomMap = extend(true, {}, randomMap);
+		randomMap = extend({}, randomMap);
 		this.oldMap = this.layers;
-		randomMap.templates = extend(true, [], this.rooms);
+		randomMap.templates = extend([], this.rooms);
 		randomMap.generateMappings(this);
 
 		for (let i = 0; i < this.size.w; i++) {
@@ -333,9 +335,9 @@ module.exports = {
 
 			if (this.zone) {
 				if ((this.zone.objects) && (this.zone.objects[objZoneName.toLowerCase()]))
-					extend(true, blueprint, this.zone.objects[objZoneName.toLowerCase()]);
+					extend(blueprint, this.zone.objects[objZoneName.toLowerCase()]);
 				else if ((this.zone.objects) && (this.zone.mobs[objZoneName.toLowerCase()]))
-					extend(true, blueprint, this.zone.mobs[objZoneName.toLowerCase()]);
+					extend(blueprint, this.zone.mobs[objZoneName.toLowerCase()]);
 			}
 
 			if (blueprint.blocking)

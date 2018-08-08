@@ -20,7 +20,7 @@ module.exports = {
 		files.forEach(function (f) {
 			let e = require(f);
 			if (!e.disabled)
-				this.configs.push(extend(true, {}, e));
+				this.configs.push(extend({}, e));
 		}, this);
 	},
 
@@ -95,7 +95,7 @@ module.exports = {
 
 		let event = {
 			id: this.nextId++,
-			config: extend(true, {}, config),
+			config: extend({}, config),
 			phases: [],
 			participators: [],
 			objects: [],
@@ -237,7 +237,7 @@ module.exports = {
 
 			let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
 			let typeTemplate = require('../config/eventPhases/' + phaseFile);
-			let phase = extend(true, {
+			let phase = extend({
 				instance: this.instance,
 				event: event
 			}, phaseTemplate, typeTemplate, p);

@@ -499,7 +499,7 @@ module.exports = {
 		}
 
 		if (blueprint.stats) {
-			let useStats = extend(true, [], blueprint.stats);
+			let useStats = extend([], blueprint.stats);
 			let addStats = Math.min(statCount, blueprint.stats.length);
 			for (let i = 0; i < addStats; i++) {
 				let choice = useStats[~~(Math.random() * useStats.length)];
@@ -521,7 +521,7 @@ module.exports = {
 
 	buildStat: function (item, blueprint, stat, result, isImplicit) {
 		let slotStats = this.slots[item.slot] || {};
-		let statOptions = extend(true, {}, this.stats, slotStats || {});
+		let statOptions = extend({}, this.stats, slotStats || {});
 
 		for (let p in statOptions) {
 			if ((!slotStats[p]) || (slotStats[p].ignore))
@@ -595,7 +595,7 @@ module.exports = {
 
 	rescale: function (item, level) {
 		let stats = item.stats;
-		let nStats = extend(true, {}, stats);
+		let nStats = extend({}, stats);
 		let bpt = {
 			statMult: {}
 		};

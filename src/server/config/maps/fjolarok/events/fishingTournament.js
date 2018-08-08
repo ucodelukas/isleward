@@ -104,7 +104,7 @@ module.exports = {
 
 				let rewardQty = rewardCounts[rank] || consolationQty;
 
-				event.rewards[f.owner] = [extend(true, {
+				event.rewards[f.owner] = [extend({
 					quantity: rewardQty
 				}, tpl)];
 			}
@@ -149,7 +149,7 @@ module.exports = {
 				.forEach(function (f, i) {
 					if (i === 0) {
 						f.owner = source.name;
-						tgtInventory.getItem(extend(true, {}, f));
+						tgtInventory.getItem(extend({}, f));
 					}
 
 					srcInventory.destroyItem(f.id);
@@ -348,7 +348,7 @@ module.exports = {
 					return;
 
 				gatherResult.items.forEach(function (g) {
-					extend(true, g, {
+					extend(g, {
 						name: 'Ancient Carp',
 						sprite: [11, 4],
 						noDrop: true

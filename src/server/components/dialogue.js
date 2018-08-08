@@ -92,7 +92,7 @@ module.exports = {
 
 		if (stateConfig.cpn) {
 			let cpn = sourceObj[stateConfig.cpn];
-			let newArgs = extend(true, [], stateConfig.args);
+			let newArgs = extend([], stateConfig.args);
 			newArgs.push(this.obj);
 			result = cpn[stateConfig.method].apply(cpn, newArgs);
 
@@ -102,14 +102,14 @@ module.exports = {
 				return this.getState(sourceObj, stateConfig.goto.failure);
 			} 
 			if (result) {
-				useMsg = extend(true, [], useMsg);
+				useMsg = extend([], useMsg);
 				useMsg[0].msg = result;
 			} else
 				return null;
 		} else if (stateConfig.method) {
 			let methodResult = stateConfig.method.call(this.obj, sourceObj);
 			if (methodResult) {
-				useMsg = extend(true, [], useMsg);
+				useMsg = extend([], useMsg);
 				useMsg[0].msg = methodResult;
 			}
 
@@ -191,7 +191,7 @@ module.exports = {
 	teleport: function (msg) {
 		this.obj.syncer.set(true, 'dialogue', 'state', null);
 
-		let portal = extend(true, {}, require('./portal'), msg);
+		let portal = extend({}, require('./portal'), msg);
 		portal.collisionEnter(this.obj);
 	},
 

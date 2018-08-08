@@ -97,7 +97,7 @@ module.exports = {
 
 		const items = crafter.inventory.items;
 
-		let sendRecipe = extend(true, {}, recipe);
+		let sendRecipe = extend({}, recipe);
 		(sendRecipe.materials || []).forEach(function (m) {
 			m.need = !items.some(i => (
 				(
@@ -156,7 +156,7 @@ module.exports = {
 			obj.inventory.destroyItem(findItem.id, m.quantity);
 		});
 
-		let item = extend(true, {}, recipe.item);
+		let item = extend({}, recipe.item);
 		item.description += `<br /><br />(Crafted by ${obj.name})`;
 
 		obj.inventory.getItem(item);

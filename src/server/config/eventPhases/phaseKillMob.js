@@ -34,7 +34,7 @@ module.exports = {
 				continue;
 
 			if (percentage) {
-				let cpn = extend(true, cpnDeathStopper, {
+				let cpn = extend(cpnDeathStopper, {
 					percentage: percentage
 				});
 				o.components.push(cpn);

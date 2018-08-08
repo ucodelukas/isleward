@@ -24,7 +24,7 @@ module.exports = {
 		if (character.dead)
 			obj.dead = true;
 
-		extend(true, obj, {
+		extend(obj, {
 			layerName: 'mobs',
 			cell: character.cell,
 			sheetName: character.sheetName,
@@ -44,7 +44,7 @@ module.exports = {
 		roles.onBeforePlayerEnterGame(obj, character);
 
 		let blueprintStats = character.components.find(c => c.type === 'stats') || {};
-		extend(true, blueprintStats, classes.stats[obj.class]);
+		extend(blueprintStats, classes.stats[obj.class]);
 		blueprintStats.values.hpMax = (blueprintStats.values.level || 1) * 32.7;
 		if (!blueprintStats.values.hp)
 			blueprintStats.values.hp = blueprintStats.values.hpMax;

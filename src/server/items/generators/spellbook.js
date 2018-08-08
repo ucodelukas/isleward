@@ -37,7 +37,7 @@ module.exports = {
 			item.stats = {};
 
 		if (blueprint.spellConfig)
-			spellAesthetic = extend(true, {}, spellAesthetic, blueprint.spellConfig);
+			spellAesthetic = extend({}, spellAesthetic, blueprint.spellConfig);
 
 		item.spell = {
 			name: spellAesthetic.name || 'Weapon Damage',
@@ -47,12 +47,12 @@ module.exports = {
 		};
 
 		if (blueprint.spellConfig) 
-			extend(true, item.spell, blueprint.spellConfig);
+			extend(item.spell, blueprint.spellConfig);
 
 		if (item.type) {
 			let typeConfig = configTypes.types[item.slot][item.type];
 			if (typeConfig)
-				spell = extend(true, {}, spell, typeConfig.spellConfig);
+				spell = extend({}, spell, typeConfig.spellConfig);
 		}
 
 		let propertyPerfection = [];

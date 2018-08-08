@@ -39,7 +39,7 @@ module.exports = {
 		if (!factionBlueprint)
 			return;
 
-		factionBlueprint = extend(true, {}, factionBase, factionBlueprint);
+		factionBlueprint = extend({}, factionBase, factionBlueprint);
 
 		this.factions[factionBlueprint.id] = factionBlueprint;
 
@@ -195,7 +195,7 @@ module.exports = {
 			.map(function (l) {
 				let result = {};
 				let blueprint = this.getBlueprint(l.id);
-				extend(true, result, l, blueprint);
+				extend(result, l, blueprint);
 
 				return result;
 			}, this);
@@ -216,7 +216,7 @@ module.exports = {
 
 		if (full) {
 			let blueprint = this.getBlueprint(factionId);
-			extend(true, faction, l, blueprint);
+			extend(faction, l, blueprint);
 		}
 
 		this.obj.syncer.setArray(true, 'reputation', 'modifyRep', faction);

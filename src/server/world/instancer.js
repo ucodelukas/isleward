@@ -451,33 +451,33 @@ module.exports = {
 		createInstance: function (objToAdd, transfer) {
 			let newMap = {
 				name: map.name,
-				spawn: extend(true, [], map.spawn),
-				clientMap: extend(true, {}, map.clientMap)
+				spawn: extend([], map.spawn),
+				clientMap: extend({}, map.clientMap)
 			};
 			newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
 
 			//Hack: We need to actually just always use the instanced eventEmitter
 			let eventQueue = eventEmitter.queue;
 			delete eventEmitter.queue;
-			let newEventEmitter = extend(true, {
+			let newEventEmitter = extend({
 				queue: []
 			}, eventEmitter);
 			eventEmitter.queue = eventQueue;
 
 			let instance = {
 				id: objToAdd.name + '_' + (+new Date()),
-				objects: extend(true, {}, objects),
-				spawners: extend(true, {}, spawners),
-				syncer: extend(true, {}, syncer),
-				physics: extend(true, {}, physics),
-				resourceSpawner: extend(true, {}, resourceSpawner),
+				objects: extend({}, objects),
+				spawners: extend({}, spawners),
+				syncer: extend({}, syncer),
+				physics: extend({}, physics),
+				resourceSpawner: extend({}, resourceSpawner),
 				zoneId: this.zoneId,
 				zone: map.zone,
 				closeTtl: null,
-				questBuilder: extend(true, {}, questBuilder),
-				events: extend(true, {}, events),
-				scheduler: extend(true, {}, scheduler),
-				mail: extend(true, {}, mail),
+				questBuilder: extend({}, questBuilder),
+				events: extend({}, events),
+				scheduler: extend({}, scheduler),
+				mail: extend({}, mail),
 				map: newMap,
 				eventEmitter: newEventEmitter,
 				instanced: true
@@ -490,7 +490,7 @@ module.exports = {
 			let onDone = this.instanced.onCreateInstance.bind(this, instance, objToAdd, transfer);
 
 			if (map.custom) {
-				instance.customMap = extend(true, {}, customMap);
+				instance.customMap = extend({}, customMap);
 				instance.customMap.load(instance, objToAdd, onDone);
 			} else
 				onDone();

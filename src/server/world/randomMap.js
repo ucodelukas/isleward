@@ -15,7 +15,7 @@ module.exports = {
 		this.exitAreas = [];
 		this.tileMappings = {};
 		this.bounds = [0, 0, 0, 0];
-		this.templates = extend(true, [], instance.map.rooms);
+		this.templates = extend([], instance.map.rooms);
 
 		this.setupTemplates(instance.map);
 		this.generateMappings(instance.map);
@@ -66,7 +66,7 @@ module.exports = {
 						if (i + j + k === 0)
 							continue;
 
-						let flipped = extend(true, {
+						let flipped = extend({
 							flipX: !!i,
 							flipY: !!j,
 							rotate: !!k
@@ -128,7 +128,7 @@ module.exports = {
 			r.map = _.get2dArray(r.width, r.height);
 			r.tiles = _.get2dArray(r.width, r.height);
 			r.collisionMap = _.get2dArray(r.width, r.height);
-			r.oldExits = extend(true, [], r.exits);
+			r.oldExits = extend([], r.exits);
 
 			for (let i = 0; i < w; i++) {
 				for (let j = 0; j < h; j++) {
@@ -352,7 +352,7 @@ module.exports = {
 			y: 0,
 			distance: 0,
 			isHallway: isHallway,
-			template: extend(true, {}, template),
+			template: extend({}, template),
 			connections: []
 		};
 
@@ -442,7 +442,7 @@ module.exports = {
 			return false;
 		}
 
-		let template = extend(true, {}, templates[this.randInt(0, templates.length)]);
+		let template = extend({}, templates[this.randInt(0, templates.length)]);
 
 		let templateExit = template.exits.filter(function (e) {
 			let direction = JSON.parse(e.properties.exit);

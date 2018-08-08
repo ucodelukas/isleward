@@ -152,7 +152,7 @@ module.exports = {
 								let pick = pool[~~(Math.random() * pool.length)];
 								let blueprint = rewards.find(r => (r.name === pick));
 
-								inventory.getItem(extend(true, {}, blueprint));
+								inventory.getItem(extend({}, blueprint));
 
 								inventory.destroyItem(snowflakes.id, 15);
 							}
@@ -242,7 +242,7 @@ module.exports = {
 					let zoneFile = require('../../' + zone + '/zone.js');
 					let override = _.getDeepProperty(zoneFile, ['mobs', mobName]);
 					if (override)
-						extend(true, blueprint, override);
+						extend(blueprint, override);
 				} catch (e) {}
 			},
 

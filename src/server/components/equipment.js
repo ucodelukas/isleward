@@ -136,7 +136,7 @@ module.exports = {
 			else {
 				let result = item;
 				if (item.effects) {
-					result = extend(true, {}, item);
+					result = extend({}, item);
 					result.effects = result.effects.map(e => ({
 						factionId: e.factionId,
 						text: e.text,
@@ -204,7 +204,7 @@ module.exports = {
 		} else if (!item.effects)
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		else {
-			let result = extend(true, {}, item);
+			let result = extend({}, item);
 			result.effects = result.effects.map(e => ({
 				factionId: e.factionId,
 				text: e.text,

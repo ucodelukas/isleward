@@ -23,7 +23,7 @@ module.exports = {
 		this.gold = blueprint.gold;
 
 		(blueprint.forceItems || []).forEach(function (f, i) {
-			let item = extend(true, {}, f);
+			let item = extend({}, f);
 
 			let id = 0;
 			this.items.forEach(function (checkItem) {
@@ -201,7 +201,7 @@ module.exports = {
 			if (!item.infinite)
 				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 
-			let clonedItem = extend(true, {}, item);
+			let clonedItem = extend({}, item);
 			if (item.worth.currency)
 				clonedItem.worth = 0;
 			if ((item.stats) && (item.stats.stats)) {
@@ -295,7 +295,7 @@ module.exports = {
 
 		let itemList = this.obj.inventory.items
 			.filter(i => ((i.worth > 0) && (!i.eq)));
-		itemList = extend(true, [], itemList);
+		itemList = extend([], itemList);
 
 		this.obj.syncer.set(true, 'trade', 'sellList', {
 			markup: target.trade.markup.buy,
@@ -341,7 +341,7 @@ module.exports = {
 		let reputation = requestedBy.reputation;
 
 		let items = this.items.map(function (i) {
-			let item = extend(true, {}, i);
+			let item = extend({}, i);
 
 			if (item.factions) {
 				item.factions = item.factions.map(function (f) {

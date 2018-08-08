@@ -42,7 +42,7 @@ module.exports = {
 		});
 
 		let cpnMob = mob.addComponent('mob');
-		extend(true, cpnMob, {
+		extend(cpnMob, {
 			walkDistance: blueprint.walkDistance,
 			hpMult: blueprint.hpMult || typeDefinition.hpMult,
 			dmgMult: blueprint.dmgMult || typeDefinition.dmgMult,
@@ -50,7 +50,7 @@ module.exports = {
 			deathRep: blueprint.deathRep
 		});
 
-		let spells = extend(true, [], blueprint.spells);
+		let spells = extend([], blueprint.spells);
 		spells.forEach(function (s) {
 			if (!s.animation) {
 				if ((mob.sheetName === 'mobs') && (animations.mobs[mob.cell])) 
@@ -143,7 +143,7 @@ module.exports = {
 		} else {
 			//TODO: Don't give the mob these items: he'll drop them anyway
 			drops.blueprints.forEach(function (d) {
-				let drop = extend(true, {}, d);
+				let drop = extend({}, d);
 				d.level = level;
 				if (drop.type === 'key')
 					return;

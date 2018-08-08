@@ -33,7 +33,7 @@ module.exports = {
 	},
 
 	onGetComponent: function (template) {
-		template = extend(true, {}, componentBase, template);
+		template = extend({}, componentBase, template);
 		this.components[template.type] = template;
 	}
 };

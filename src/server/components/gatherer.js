@@ -93,7 +93,7 @@ module.exports = {
 		}
 
 		let resourceNode = gathering.resourceNode;
-		let gatherResult = extend(true, {
+		let gatherResult = extend({
 			obj: gathering
 		}, {
 			nodeType: resourceNode.nodeType,
@@ -210,7 +210,7 @@ module.exports = {
 	},
 
 	enter: function (node) {
-		let gatherResult = extend(true, {
+		let gatherResult = extend({
 			nodeName: node.name
 		});
 		this.obj.instance.eventEmitter.emitNoSticky('beforeEnterPool', gatherResult, this.obj);

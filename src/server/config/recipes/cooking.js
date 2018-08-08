@@ -26,7 +26,7 @@ const baseRecipes = {
 };
 
 const buildRecipe = function (recipeName, itemName, effectAmount, materialName) {
-	return extend(true, {}, baseRecipes[recipeName], {
+	return extend({}, baseRecipes[recipeName], {
 		item: {
 			name: itemName,
 			effects: [{

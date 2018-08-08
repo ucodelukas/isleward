@@ -15,7 +15,7 @@ module.exports = {
 			else if (this.list.some(l => (l.type === p)))
 				return;
 
-			let prophecy = extend(true, {}, template);
+			let prophecy = extend({}, template);
 			prophecy.obj = this.obj;
 			prophecy.init();
 
