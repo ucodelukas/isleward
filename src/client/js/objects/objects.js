@@ -102,7 +102,7 @@ define([
 
 				if (oldZone === null)
 					o.destroy();
-				else if ((o.zoneId === oldZone) && (o.player === null))
+				else if ((o.zoneId === oldZone) && (!o.has('player')))
 					o.destroy();
 			}
 
