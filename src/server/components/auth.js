@@ -105,6 +105,9 @@ module.exports = {
 			value: JSON.stringify(simple).split('\'').join('`')
 		});
 
+		if (!this.obj.stash)
+			console.log(Object.keys(this.obj));
+
 		await io.setAsync({
 			key: this.username,
 			table: 'stash',

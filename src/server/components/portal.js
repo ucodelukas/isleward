@@ -26,7 +26,7 @@ module.exports = {
 
 		obj.destroyed = true;
 
-		let simpleObj = obj.getSimple(true, true);
+		let simpleObj = obj.getSimple(true, false, true);
 		simpleObj.x = this.toPos.x;
 		simpleObj.y = this.toPos.y;
 

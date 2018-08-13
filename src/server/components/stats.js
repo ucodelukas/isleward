@@ -681,6 +681,14 @@ module.exports = {
 		};
 	},
 
+	simplifyTransfer: function () {
+		return {
+			type: 'stats',
+			values: this.values,
+			stats: this.stats
+		};
+	},
+
 	onLogin: function () {
 		let stats = this.stats;
 		let time = scheduler.getTime();

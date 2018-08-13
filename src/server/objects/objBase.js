@@ -76,8 +76,8 @@ module.exports = {
 			this.performQueue();
 	},
 
-	getSimple: function (self, isSave) {
-		let s = this.simplify(null, self, isSave);
+	getSimple: function (self, isSave, isTransfer) {
+		let s = this.simplify(null, self, isSave, isTransfer);
 		if (this.instance)
 			s.zoneId = this.instance.zoneId;
 
@@ -92,7 +92,7 @@ module.exports = {
 		return s;
 	},
 
-	simplify: function (o, self, isSave) {
+	simplify: function (o, self, isSave, isTransfer) {
 		let result = {};
 		if (!o) {
 			result.components = [];
@@ -120,7 +120,13 @@ module.exports = {
 							});
 						}
 					} else {
-						let component = (isSave && value.save) ? value.save() : value.simplify(self);
+						let component = null;
+						if (isSave && value.save)
+							component = value.save();
+						else if (isTransfer && value.simplifyTransfer)
+							component = value.simplifyTransfer();
+						else
+							component = value.simplify(self);
 
 						if (value.destroyed) {
 							if (!component) {
