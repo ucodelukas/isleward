@@ -232,9 +232,7 @@ define([
 		},
 
 		equipItem: function (item, slot) {
-			let isNew = window.player.inventory.items.some(function (i) {
-				return ((i.equipSlot === slot) && (i.isNew));
-			});
+			let isNew = window.player.inventory.items.some(f => (f.equipSlot === slot && f.isNew));
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
 
@@ -262,7 +260,7 @@ define([
 				method = 'learnAbility';
 				data = {
 					itemId: item.id,
-					slot: ~~slot.replace('rune-', '') + 1
+					slot: ~~slot.replace('rune-', '')
 				};
 
 				if (item.empty) {
