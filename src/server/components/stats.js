@@ -102,7 +102,7 @@ module.exports = {
 
 	dead: false,
 
-	init: function (blueprint, isTransfer) {
+	init: function (blueprint) {
 		this.syncer = this.obj.instance.syncer;
 
 		let values = (blueprint || {}).values || {};

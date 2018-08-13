@@ -31,7 +31,7 @@ module.exports = {
 			method: 'addObject',
 			args: {
 				keepPos: keepPos,
-				obj: obj.getSimple ? obj.getSimple(true) : obj,
+				obj: obj.getSimple ? obj.getSimple(true, true) : obj,
 				instanceId: instanceId,
 				transfer: transfer
 			}

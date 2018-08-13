@@ -19,9 +19,8 @@ define([
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			let serverId = this.obj.serverId;
-			if (serverId !== null)
-				events.emit('onGetPartyStats', serverId, this.values);
+			if (this.obj.has('serverId'))
+				events.emit('onGetPartyStats', this.obj.serverId, this.values);
 
 			let obj = this.obj;
 
@@ -79,7 +78,7 @@ define([
 			this.hpSpriteInner.visible = this.hpSprite.visible;
 		},
 
-		extend: function (blueprint) {
+		extend: function (blueprint) {	
 			let bValues = blueprint.values || {};
 
 			let values = this.values;
@@ -90,9 +89,8 @@ define([
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			let serverId = this.obj.serverId;
-			if (serverId !== null)
-				events.emit('onGetPartyStats', serverId, this.values);
+			if (this.obj.has('serverId'))
+				events.emit('onGetPartyStats', this.obj.serverId, this.values);
 
 			this.updateHpSprite();
 		},

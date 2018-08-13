@@ -175,11 +175,8 @@ module.exports = {
 		for (let i = 0; i < len; i++) {
 			let c = components[i];
 
-			newO.addComponent(c.type, c);
-
-			let newC = newO[c.type];
-			for (let p in c) 
-				newC[p] = c[p];
+			let newC = newO.addComponent(c.type, c);
+			extend(newC, c);
 		}
 
 		this.objects.push(newO);
