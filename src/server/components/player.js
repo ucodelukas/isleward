@@ -206,13 +206,20 @@ module.exports = {
 	},
 
 	respawn: function () {
-		let syncer = this.obj.syncer;
-		syncer.o.x = this.obj.x;
-		syncer.o.y = this.obj.y;
+		const obj = this.obj;
 
-		this.obj.aggro.move();
+		let syncer = obj.syncer;
+		syncer.o.x = obj.x;
+		syncer.o.y = obj.y;
 
-		this.obj.instance.physics.addObject(this.obj, this.obj.x, this.obj.y);
+		obj.aggro.move();
+
+		obj.instance.physics.addObject(obj, obj.x, obj.y);
+
+		obj.instance.syncer.queue('onRespawn', {
+			x: obj.x,
+			y: obj.y
+		}, [obj.serverId]);
 	},
 
 	move: function (msg) {

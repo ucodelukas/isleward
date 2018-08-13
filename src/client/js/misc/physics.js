@@ -426,12 +426,16 @@ define([
 			return false;
 		},
 
-		setCollision: function (x, y, collides) {
-			let node = this.graph.grid[x][y];
-			if (!node) {
-				let grid = this.graph.grid;
+		setCollision: function (config) {
+			const x = config.x;
+			const y = config.y;
+			const collides = config.collides;
+
+			const grid = this.graph.grid;
+
+			let node = grid[x][y];
+			if (!node) 
 				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
-			}
 
 			node.weight = collides ? 0 : 1;
 		}
