@@ -52,7 +52,16 @@ define([
 			input.init(this.el);
 
 			this.data.nodes = temp.nodes;
-			this.data.links = temp.links;
+			this.data.links = temp.links.map(function (l) {
+				return {
+					from: {
+						id: l.from
+					},
+					to: {
+						id: l.to
+					}
+				};
+			});
 
 			//We need to be able to determine the size of elements
 			this.el.css({

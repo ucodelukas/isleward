@@ -71,12 +71,12 @@ module.exports = {
 			return;
 
 		let linked = passiveTree.links.some(function (l) {
-			if ((l.from.id !== node.id) && (l.to.id !== node.id))
+			if ((l.from !== node.id) && (l.to !== node.id))
 				return false;
 
 			return (
-				(this.selected.indexOf(l.from.id) > -1) ||
-				(this.selected.indexOf(l.to.id) > -1)
+				(this.selected.indexOf(l.from) > -1) ||
+				(this.selected.indexOf(l.to) > -1)
 			);
 		}, this);
 		if (!linked)

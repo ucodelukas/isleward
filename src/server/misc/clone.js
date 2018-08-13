@@ -15,7 +15,7 @@ let cloneRecursive = function (o, newO) {
 		return newO;
 	}
 
- 	if (!newO)
+	if (!newO)
 		newO = {};
 	for (let i in o) {
 		if (o.hasOwnProperty(i)) 
