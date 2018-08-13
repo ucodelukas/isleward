@@ -105,5 +105,13 @@ module.exports = {
 			active: this.active,
 			items: this.items
 		};
+	},
+
+	save: function () {
+		return null;
+	},
+
+	serialize: function () {
+		return JSON.stringify(this.items).split('\'').join('`');
 	}
 };

@@ -96,51 +96,8 @@ module.exports = {
 		leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
-	doSave: function (extensionObj) {
-		let simple = this.obj.getSimple(true, true);
-		simple.components.spliceWhere(c => c.type === 'stash');
-
-		let stats = simple.components.find(c => c.type === 'stats');
-		stats.values = extend({}, stats.values);
-
-		let social = simple.components.find(c => c.type === 'social');
-		delete social.party;
-		delete social.customChannels;
-
-		let statKeys = Object.keys(stats.values);
-		let sLen = statKeys.length;
-		for (let i = 0; i < sLen; i++) {
-			let s = statKeys[i];
-			if (
-				(
-					(s.indexOf('xp') > -1) &&
-					(s !== 'xpIncrease')
-				) ||
-				(s === 'level') ||
-				(s === 'hp') ||
-				(s === 'mana')
-			)
-				continue;
-
-			delete stats.values[s];
-		}
-
-		//Calculate and store the ttl for effects
-		let time = +new Date();
-		simple.components.find(e => e.type === 'effects').effects.forEach(function (e) {
-			if (e.expire)
-				return;
-
-			e.expire = time + (e.ttl * 350);
-		});
-
-		let callback = null;
-		if (extensionObj) {
-			callback = extensionObj.callback;
-			delete extensionObj.callback;
-		}
-
-		extend(simple, extensionObj);
+	doSave: function (callback) {
+		const simple = this.obj.getSimple(true, true);
 
 		io.set({
 			ent: this.charname,
@@ -149,11 +106,10 @@ module.exports = {
 			callback: callback
 		});
 
-		//Save stash
 		io.set({
 			ent: this.username,
 			field: 'stash',
-			value: JSON.stringify(this.obj.stash.items).split('\'').join('`')
+			value: this.obj.stash.serialize()
 		});
 	},
 
@@ -610,10 +566,7 @@ module.exports = {
 	permadie: function () {
 		this.obj.permadead = true;
 
-		this.doSave({
-			permadead: true,
-			callback: this.onPermadie.bind(this)
-		});
+		this.doSave(this.onPermadie.bind(this));
 	},
 
 	onPermadie: function () {

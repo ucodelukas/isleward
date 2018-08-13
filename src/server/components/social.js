@@ -27,6 +27,13 @@ module.exports = {
 		};
 	},
 
+	save: function () {
+		return {
+			type: 'social',
+			muted: this.muted
+		};
+	},
+
 	sendMessage: function (msg, color, target) {
 		(target || this.obj).socket.emit('event', {
 			event: 'onGetMessages',

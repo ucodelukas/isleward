@@ -640,13 +640,17 @@ module.exports = {
 			delete this.sessionDuration;
 		}
 
-		let values = extend({}, this.values);
-		values.hp = this.values.hp;
-		values.mana = this.values.mana;
+		const values = this.values;
 
 		return {
 			type: 'stats',
-			values: values,
+			values: {
+				level: values.level,
+				xp: values.xp,
+				xpTotal: values.xpTotal,
+				hp: values.hp,
+				mana: values.mana
+			},
 			stats: this.stats
 		};
 	},

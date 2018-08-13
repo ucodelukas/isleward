@@ -75,23 +75,23 @@ module.exports = {
 		if (!usedTurn) 
 			this.performQueue();
 	},
+
 	getSimple: function (self, isSave) {
 		let s = this.simplify(null, self, isSave);
 		if (this.instance)
 			s.zoneId = this.instance.zoneId;
 
-		if ((self) && (!isSave)) {
-			let syncer = this.syncer;
-			if (syncer) {
-				//Add things that have been queued by the syncer (that aren't tied to server-side components)
-				syncer.oSelf.components
-					.filter((c => !this[c.type]), this)
-					.forEach(c => s.components.push(c));
-			}
+		if (self && !isSave && this.syncer) {
+			this.syncer.oSelf.components
+				.forEach(c => {
+					if (!this[c.type])
+						s.components.push(c);
+				});
 		}
 
 		return s;
 	},
+
 	simplify: function (o, self, isSave) {
 		let result = {};
 		if (!o) {
@@ -107,9 +107,11 @@ module.exports = {
 				continue;
 
 			let type = typeof (value);
-
-			//build component
-			if (type === 'object') {
+			if (type === 'function')
+				continue;
+			else if (type !== 'object')
+				result[p] = value;
+			else {
 				if (value.type) {
 					if (!value.simplify) {
 						if (self) {
@@ -118,12 +120,7 @@ module.exports = {
 							});
 						}
 					} else {
-						let component = null;
-
-						if (isSave)
-							component = value.save ? value.save() : value.simplify(self);
-						else
-							component = value.simplify(self);
+						let component = (isSave && value.save) ? value.save() : value.simplify(self);
 
 						if (value.destroyed) {
 							if (!component) {
@@ -138,14 +135,16 @@ module.exports = {
 						if (component)
 							result.components.push(component);
 					}
-				} else if (syncTypes.indexOf(p) > -1) 
+				} else if (syncTypes.includes(p))
 					result[p] = value;
-			} else if (type !== 'function')
-				result[p] = value;
+
+				continue;
+			}
 		}
 
 		return result;
 	},
+
 	sendEvent: function (event, data) {
 		process.send({
 			method: 'event',
@@ -179,12 +178,14 @@ module.exports = {
 		else
 			this.actionQueue.push(action);
 	},
+
 	dequeue: function () {
 		if (this.actionQueue.length === 0)
 			return null;
 
 		return this.actionQueue.splice(0, 1)[0];
 	},
+
 	clearQueue: function () {
 		if (this.has('serverId')) {
 			this.instance.syncer.queue('onClearQueue', {
@@ -231,6 +232,7 @@ module.exports = {
 				this.performQueue();
 		}
 	},
+
 	performMove: function (action) {
 		let data = action.data;
 		let physics = this.instance.physics;
@@ -303,6 +305,7 @@ module.exports = {
 			}
 		}
 	},
+
 	collisionExit: function (obj) {
 		let cpns = this.components;
 		let cLen = cpns.length;
@@ -359,7 +362,7 @@ module.exports = {
 		let res = {};
 
 		for (let p in this) {
-			if (['components', 'syncer'].indexOf(p) > -1)
+			if (['components', 'syncer'].includes(p))
 				continue;
 
 			let val = this[p];
