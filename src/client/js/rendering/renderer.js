@@ -648,11 +648,11 @@ define([
 			let graphics = new pixi.Graphics();
 
 			let alpha = obj.alpha;
-			if (alpha !== null)
+			if (obj.has('alpha'))
 				graphics.alpha = alpha;
 
 			let fillAlpha = obj.fillAlpha;
-			if (fillAlpha === null)
+			if (obj.has('fillAlpha'))
 				fillAlpha = 1;
 
 			graphics.beginFill(obj.color || '0x48edff', fillAlpha);

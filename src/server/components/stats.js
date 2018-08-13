@@ -161,7 +161,7 @@ module.exports = {
 
 		if (values.hp < values.hpMax) {
 			values.hp += regenHp;
-			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
+			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', values.hp);
 		}
 
 		if (values.hp > values.hpMax) {
