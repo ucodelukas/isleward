@@ -107,10 +107,6 @@ module.exports = {
 		};
 	},
 
-	save: function () {
-		return null;
-	},
-
 	serialize: function () {
 		return JSON.stringify(this.items).split('\'').join('`');
 	}

@@ -98,15 +98,13 @@ module.exports = {
 
 	doSave: async function (callback) {
 		const simple = this.obj.getSimple(true, true);
+		simple.components.spliceWhere(f => (f.type === 'stash'));
 
 		await io.setAsync({
 			key: this.charname,
 			table: 'character',
 			value: JSON.stringify(simple).split('\'').join('`')
 		});
-
-		if (!this.obj.stash)
-			console.log(Object.keys(this.obj));
 
 		await io.setAsync({
 			key: this.username,
