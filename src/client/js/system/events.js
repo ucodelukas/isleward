@@ -32,7 +32,7 @@ define([
 			});
 		},
 		off: function (eventName, callback) {
-			let list = this.events[event] || [];
+			let list = this.events[eventName] || [];
 			let lLen = list.length;
 			for (let i = 0; i < lLen; i++) {
 				if (list[i] === callback) {

@@ -7,6 +7,7 @@ let profanities = require('../misc/profanities');
 let fixes = require('../fixes/fixes');
 let loginRewards = require('../config/loginRewards');
 let mail = require('../misc/mail');
+let scheduler = require('../misc/scheduler');
 
 module.exports = {
 	type: 'auth',
@@ -42,7 +43,6 @@ module.exports = {
 	checkLoginReward: function (data, character) {
 		let accountInfo = this.accountInfo;
 
-		let scheduler = require('../misc/scheduler');
 		let time = scheduler.getTime();
 		let lastLogin = accountInfo.lastLogin;
 		if ((!lastLogin) || (lastLogin.day !== time.day)) {
@@ -96,21 +96,23 @@ module.exports = {
 		leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
-	doSave: function (callback) {
+	doSave: async function (callback) {
 		const simple = this.obj.getSimple(true, true);
 
-		io.set({
-			ent: this.charname,
-			field: 'character',
-			value: JSON.stringify(simple).split('\'').join('`'),
-			callback: callback
+		await io.setAsync({
+			key: this.charname,
+			table: 'character',
+			value: JSON.stringify(simple).split('\'').join('`')
 		});
 
-		io.set({
-			ent: this.username,
-			field: 'stash',
+		await io.setAsync({
+			key: this.username,
+			table: 'stash',
 			value: this.obj.stash.serialize()
 		});
+
+		if (callback)
+			callback();
 	},
 
 	simplify: function () {
@@ -206,7 +208,7 @@ module.exports = {
 		msg.callback(skinList);
 	},
 
-	saveSkin: function (skinId) {
+	saveSkin: async function (skinId) {
 		if (!this.skins) {
 			this.getSkins({
 				callback: this.saveSkin.bind(this, skinId)
@@ -217,11 +219,10 @@ module.exports = {
 
 		this.skins.push(skinId);
 
-		io.set({
+		await io.setAsync({
 			ent: this.username,
 			field: 'skins',
-			value: JSON.stringify(this.skins),
-			callback: this.onSaveSkin.bind(this)
+			value: JSON.stringify(this.skins)
 		});
 	},
 
@@ -315,31 +316,26 @@ module.exports = {
 		bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 	},
 
-	onHashGenerated: function (msg, err, hashedPassword) {
-		io.set({
-			ent: msg.data.username,
-			field: 'login',
-			value: hashedPassword,
-			callback: this.onRegister.bind(this, msg)
+	onHashGenerated: async function (msg, err, hashedPassword) {
+		await io.setAsync({
+			key: msg.data.username,
+			table: 'login',
+			value: hashedPassword
 		});
-	},
 
-	onRegister: function (msg, result) {
 		this.accountInfo = {
 			loginStreak: 0
 		};
 
-		io.set({
-			ent: msg.data.username,
-			field: 'characterList',
-			value: '[]',
-			callback: this.onCreateCharacterList.bind(this, msg)
+		await io.setAsync({
+			key: msg.data.username,
+			table: 'characterList',
+			value: '[]'
 		});
-	},
 
-	onCreateCharacterList: function (msg, result) {
 		this.username = msg.data.username;
 		connections.logOut(this.obj);
+
 		msg.callback();
 	},
 
@@ -404,34 +400,31 @@ module.exports = {
 			list: data.prophecies || []
 		});
 
-		io.set({
-			ent: name,
-			field: 'character',
-			value: JSON.stringify(simple),
-			callback: this.onCreateCharacter.bind(this, msg)
-		});
-	},
-
-	onCreateCharacter: function (msg, result) {
-		let name = msg.data.name;
-
-		let simple = this.obj.getSimple(true);
-		simple.components.push({
-			type: 'prophecies',
-			list: msg.data.prophecies || []
-		});
 		simple.components.push({
 			type: 'social',
 			customChannels: this.customChannels
 		});
 
+		await io.setAsync({
+			key: name,
+			table: 'character',
+			value: JSON.stringify(simple)
+		});
+
 		this.characters[name] = simple;
 		this.characterList.push(name);
-		io.set({
-			ent: this.username,
-			field: 'characterList',
-			value: JSON.stringify(this.characterList),
-			callback: this.onAppendList.bind(this, msg)
+		
+		await io.setAsync({
+			key: this.username,
+			table: 'characterList',
+			value: JSON.stringify(this.characterList)
+		});
+
+		this.play({
+			data: {
+				name: name
+			},
+			callback: msg.callback
 		});
 	},
 
@@ -453,26 +446,25 @@ module.exports = {
 		});
 	},
 
-	onDeleteCharacter: function (msg, result) {
-		this.characterList.spliceWhere(c => ((c.name === msg.data.name) || (c === msg.data.name)));
+	onDeleteCharacter: async function (msg) {
+		let name = msg.data.name;
+
+		this.characterList.spliceWhere(c => (c.name === name || c === name));
 		let characterList = this.characterList
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)
 			}));
 
-		io.set({
-			ent: this.username,
-			field: 'characterList',
-			value: JSON.stringify(characterList),
-			callback: this.onRemoveFromList.bind(this, msg)
+		await io.setAsync({
+			key: this.username,
+			table: 'characterList',
+			value: JSON.stringify(characterList)
 		});
 
-		leaderboard.deleteCharacter(msg.data.name);
-	},
+		leaderboard.deleteCharacter(name);
 
-	onRemoveFromList: function (msg, result) {
-		result = this.characterList
+		let result = this.characterList
 			.map(c => ({
 				name: c.name ? c.name : c,
 				level: leaderboard.getLevel(c.name ? c.name : c)
@@ -481,18 +473,8 @@ module.exports = {
 		msg.callback(result);
 	},
 
-	onAppendList: function (msg, result) {
-		this.play({
-			data: {
-				name: msg.data.name
-			},
-			callback: msg.callback
-		});
-	},
-
 	permadie: function () {
 		this.obj.permadead = true;
-
 		this.doSave(this.onPermadie.bind(this));
 	},
 

@@ -104,6 +104,20 @@ module.exports = {
 		this.db.run(query, this.done.bind(this, options));
 	},
 
+	setAsync: async function (options) {
+		let table = options.table;
+		let key = options.key;
+		let value = options.value;
+
+		let exists = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`);
+
+		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${value}')`;
+		if (exists)
+			query = `UPDATE ${table} SET value = '${value}' WHERE key = '${key}'`;
+
+		await util.promisify(this.db.run.bind(this.db))(query);
+	},
+
 	done: function (options, err, result) {
 		result = result || {
 			value: null
