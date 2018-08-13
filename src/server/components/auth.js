@@ -235,7 +235,7 @@ module.exports = {
 
 	verifySkin: function (character) {
 		let list = [...this.skins, ...roles.getSkins(this.username)];
-		let skinList = skins.getSkinList(this.skins);
+		let skinList = skins.getSkinList(list);
 
 		if (!skinList.some(s => (s.id === character.skinId))) {
 			character.skinId = '1.0';
@@ -390,14 +390,14 @@ module.exports = {
 			name: name,
 			skinId: data.skinId,
 			class: data.class,
-			cell: skins.getCell(this.obj.skinId),
-			sheetName: skins.getSpritesheet(this.obj.skinId)
+			cell: skins.getCell(data.skinId),
+			sheetName: skins.getSpritesheet(data.skinId)
 		});
-
-		this.verifySkin(this.obj);
 
 		let simple = this.obj.getSimple(true);
 
+		this.verifySkin(simple);
+		
 		simple.components.push({
 			type: 'prophecies',
 			list: data.prophecies || []
