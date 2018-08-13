@@ -45,7 +45,6 @@ module.exports = {
 
 		let blueprintStats = character.components.find(c => c.type === 'stats') || {};
 		extend(blueprintStats, classes.stats[obj.class]);
-		blueprintStats.values.hpMax = (blueprintStats.values.level || 1) * 32.7;
 		if (!blueprintStats.values.hp)
 			blueprintStats.values.hp = blueprintStats.values.hpMax;
 		let stats = obj.addComponent('stats');

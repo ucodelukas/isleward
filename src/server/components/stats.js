@@ -114,6 +114,7 @@ module.exports = {
 			this.stats[v] = stats[v];
 
 		this.calcXpMax();
+		this.values.hpMax = (this.values.level || 1) * 32.7;
 
 		if (blueprint)
 			delete blueprint.stats;
