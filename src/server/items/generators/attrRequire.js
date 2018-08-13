@@ -2,9 +2,9 @@ let generatorStats = require('./stats');
 
 module.exports = {
 	minSlotPerfection: 0.1,
-	maxSlotPerfection: 1,
+	maxSlotPerfection: 0.75,
 	minLevelMult: 0.3,
-	maxLevelMult: 1,
+	maxLevelMult: 0.7,
 
 	generate: function (item, blueprint) {
 		if (!blueprint.attrRequire)
