@@ -1,4 +1,5 @@
 let fs = require('fs');
+let util = require('util');
 
 module.exports = {
 	db: null,
@@ -53,6 +54,26 @@ module.exports = {
 		options.query = `SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`;
 
 		this.db.get(options.query, this.done.bind(this, options));
+	},
+
+	getAsync: async function (options) {
+		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
+		if (res) {
+			res = res.value;
+
+			if (options.clean) {
+				res = res
+					.split('`')
+					.join('\'')
+					.replace(/''+/g, '\'');
+			}
+			
+			if (!options.noParse)
+				res = JSON.parse(res);
+		} else if (!options.noParse && !options.noDefault)
+			res = options.isArray ? [] : {};
+
+		return res;
 	},
 
 	delete: function (options) {

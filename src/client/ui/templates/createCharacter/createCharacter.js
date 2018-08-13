@@ -48,7 +48,7 @@ define([
 
 			client.request({
 				cpn: 'auth',
-				method: 'getSkins',
+				method: 'getSkinList',
 				data: {
 
 				},

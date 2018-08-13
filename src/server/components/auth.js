@@ -122,129 +122,86 @@ module.exports = {
 		};
 	},
 
-	getCharacterList: function (data) {
+	getCharacterList: async function (data) {
 		if (!this.username)
 			return;
 
-		io.get({
-			ent: this.username,
-			field: 'characterList',
-			callback: this.onGetCharacterList.bind(this, data)
+		this.characterList = await io.getAsync({
+			key: this.username,
+			table: 'characterList',
+			isArray: true
 		});
-	},
-	onGetCharacterList: function (data, result) {
-		let characters = JSON.parse(result || '[]');
-		this.characterList = characters;
 
-		result = characters
-			.map(c => ({
-				name: c.name ? c.name : c,
-				level: leaderboard.getLevel(c.name ? c.name : c)
-			}));
+		let res = this.characterList.map(c => ({
+			name: c.name ? c.name : c,
+			level: leaderboard.getLevel(c.name ? c.name : c)
+		}));
 
-		data.callback(result);
+		data.callback(res);
 	},
 
-	getCharacter: function (data) {
-		let name = data.data.name;
-		if (!this.characterList.some(c => ((c.name === name) || (c === name))))
+	getCharacter: async function (data) {
+		let charName = data.data.name;
+		if (!this.characterList.some(c => (c.name === charName || c === charName)))
 			return;
 
-		io.get({
-			ent: name,
-			field: 'character',
-			callback: this.onGetCharacter.bind(this, data)
+		let character = await io.getAsync({
+			key: charName,
+			table: 'character',
+			clean: true
 		});
-	},
-	onGetCharacter: function (data, result) {
-		if (result) {
-			result = result.split('`').join('\'');
-			result = result.replace(/''+/g, '\'');
-		}
 
-		let character = JSON.parse(result || '{}');
 		fixes.fixCharacter(character);
-
-		//Hack for old characters
-		if (!character.skinId)
-			character.skinId = character.class + ' 1';
 
 		character.cell = skins.getCell(character.skinId);
 		character.sheetName = skins.getSpritesheet(character.skinId);
 
-		this.characters[data.data.name] = character;
+		this.characters[charName] = character;
 
-		this.getCustomChannels(data, character);
+		await this.getCustomChannels(character);
+		await this.getStash();
+
+		this.verifySkin(character);
+
+		data.callback(character);
 	},
 
-	getCustomChannels: function (data, character) {
-		io.get({
-			ent: character.name,
-			field: 'customChannels',
-			callback: this.onGetCustomChannels.bind(this, data, character)
+	getCustomChannels: async function (character) {
+		this.customChannels = await io.getAsync({
+			key: character.name,
+			table: 'customChannels',
+			isArray: true
 		});
-	},
-
-	onGetCustomChannels: function (data, character, result) {
-		this.customChannels = JSON
-			.parse(result || '[]')
-			.filter(c => (typeof (c) === 'string'))
-			.map(c => c.split(' ').join(''))
-			.filter(c => (c.length > 0));
-
-		this.customChannels = this.customChannels
-			.filter((c, i) => (this.customChannels.indexOf(c) === i));
 
 		let social = character.components.find(c => (c.type === 'social'));
 		if (social)
 			social.customChannels = this.customChannels;
-
-		this.getStash(data, character);
 	},
 
-	getStash: function (data, character) {
-		io.get({
-			ent: this.username,
-			field: 'stash',
-			callback: this.onGetStash.bind(this, data, character)
+	getStash: async function (data, character) {
+		this.stash = await io.getAsync({
+			key: this.username,
+			table: 'stash',
+			isArray: true,
+			clean: true
 		});
-	},
-
-	onGetStash: function (data, character, result) {
-		if (result) {
-			result = result.split('`').join('\'');
-			result = result.replace(/''+/g, '\'');
-		}
-
-		this.stash = JSON.parse(result || '[]');
 
 		fixes.fixStash(this.stash);
-
-		if (this.skins) {
-			this.verifySkin(character);
-			data.callback(character);
-		} else {
-			data.callback = data.callback.bind(null, character);
-			this.getSkins(data, character);
-		}
 	},
 
-	getSkins: function (msg, character) {
-		io.get({
-			ent: this.username,
-			field: 'skins',
-			callback: this.onGetSkins.bind(this, msg, character)
+	getSkins: async function (character) {
+		this.skins = await io.getAsync({
+			key: this.username,
+			table: 'skins',
+			isArray: true
 		});
+
+		fixes.fixSkins(this.username, this.skins);
 	},
 
-	onGetSkins: function (msg, character, result) {
-		this.skins = JSON.parse(result || '[]');
-		fixes.fixSkins(this.username, this.skins);
-
+	getSkinList: function (msg) {
 		let list = [...this.skins, ...roles.getSkins(this.username)];
 		let skinList = skins.getSkinList(list);
-
-		this.verifySkin(character);
 
 		msg.callback(skinList);
 	},
@@ -273,15 +230,11 @@ module.exports = {
 	},
 
 	verifySkin: function (character) {
-		if (!character)
-			return;
-
 		let list = [...this.skins, ...roles.getSkins(this.username)];
-		let skinList = skins.getSkinList(list);
+		let skinList = skins.getSkinList(this.skins);
 
 		if (!skinList.some(s => (s.id === character.skinId))) {
 			character.skinId = '1.0';
-
 			character.cell = skins.getCell(character.skinId);
 			character.sheetName = skins.getSpritesheet(character.skinId);
 		}
@@ -291,75 +244,48 @@ module.exports = {
 		return this.skins.some(s => s === skinId);
 	},
 
-	login: function (msg) {
+	login: async function (msg) {
 		let credentials = msg.data;
 
-		if ((credentials.username === '') | (credentials.password === '')) {
+		if (credentials.username === '' || credentials.password === '') {
 			msg.callback(messages.login.allFields);
 			return;
 		}
 
 		this.username = credentials.username;
 
-		io.get({
-			ent: credentials.username,
-			field: 'login',
-			callback: this.onHashCompare.bind(this, msg)
+		let storedPassword = await io.getAsync({
+			key: credentials.username,
+			table: 'login',
+			noParse: true
 		});
-	},
-	onHashCompare: function (msg, storedPassword) {
-		let credentials = msg.data;
 
 		bcrypt.compare(credentials.password, storedPassword, this.onLogin.bind(this, msg, storedPassword));
 	},
-	onLogin: function (msg, storedPassword, err, compareResult) {
-		if (!storedPassword)
+
+	onLogin: async function (msg, storedPassword, err, compareResult) {
+		if (!compareResult) {
 			msg.callback(messages.login.incorrect);
-		else if (compareResult) {
-			//If stored password matches the hashed password entered by the user, log them in directly
-			this.onLoginVerified(msg);
-		} else if (msg.data.password === storedPassword) {
-			//If the stored password matches a plaintext password entered by the user; In that case the password gets hashed for the future
-			this.onUnhashedLogin(msg);
-		} else
-			msg.callback(messages.login.incorrect);
-	},
-	onUnhashedLogin: function (msg) {
-		bcrypt.hash(msg.data.password, null, null, this.onPasswordHashed.bind(this, msg));
-	},
-	onPasswordHashed: function (msg, err, hashedPassword) {
-		io.set({
-			ent: msg.data.username,
-			field: 'login',
-			value: hashedPassword,
-			callback: this.onLoginVerified.bind(this, msg)
-		});
-	},
-	onLoginVerified: function (msg) {
+			return;
+		}
+		
 		this.username = msg.data.username;
 		connections.logOut(this.obj);
 
-		io.get({
-			ent: msg.data.username,
-			field: 'accountInfo',
-			callback: this.onGetAccountInfo.bind(this, msg)
-		});
-	},
+		await this.getSkins();
 
-	onGetAccountInfo: function (msg, info) {
-		if (!info) {
-			info = {
-				loginStreak: 0
-			};
-		} else
-			info = JSON.parse(info);
-
-		this.accountInfo = info;
+		this.accountInfo = await io.getAsync({
+			key: msg.data.username,
+			table: 'accountInfo',
+			noDefault: true
+		}) || {
+			loginStreak: 0
+		};
 
 		msg.callback();
 	},
 
-	register: function (msg) {
+	register: async function (msg) {
 		let credentials = msg.data;
 
 		if ((credentials.username === '') || (credentials.password === '')) {
@@ -375,22 +301,20 @@ module.exports = {
 			}
 		}
 
-		io.get({
-			ent: credentials.username,
-			field: 'login',
-			callback: this.onCheckExists.bind(this, msg)
+		let exists = await io.getAsync({
+			key: credentials.username,
+			table: 'login',
+			noDefault: true
 		});
-	},
-	onCheckExists: function (msg, result) {
-		if (result) {
+
+		if (exists) {
 			msg.callback(messages.login.exists);
 			return;
 		}
 
-		let credentials = msg.data;
-
 		bcrypt.hash(credentials.password, null, null, this.onHashGenerated.bind(this, msg));
 	},
+
 	onHashGenerated: function (msg, err, hashedPassword) {
 		io.set({
 			ent: msg.data.username,
@@ -399,6 +323,7 @@ module.exports = {
 			callback: this.onRegister.bind(this, msg)
 		});
 	},
+
 	onRegister: function (msg, result) {
 		this.accountInfo = {
 			loginStreak: 0
@@ -411,30 +336,25 @@ module.exports = {
 			callback: this.onCreateCharacterList.bind(this, msg)
 		});
 	},
+
 	onCreateCharacterList: function (msg, result) {
 		this.username = msg.data.username;
 		connections.logOut(this.obj);
 		msg.callback();
 	},
 
-	createCharacter: function (msg) {
+	createCharacter: async function (msg) {
 		let data = msg.data;
-
-		if ((data.name.length < 3) || (data.name.length > 12)) {
-			msg.callback(messages.createCharacter.nameLength);
-			return;
-		}
-
-		if (!profanities.isClean(data.name)) {
-			msg.callback(messages.login.invalid);
-			return;
-		} 
 		let name = data.name;
 
-		if (name.indexOf('  ') > -1) {
+		let error = null;
+
+		if (name.length < 3 || name.length > 12)
+			error = messages.createCharacter.nameLength;
+		else if (!profanities.isClean(name))
+			error = messages.login.invalid;
+		else if (name.indexOf('  ') > -1)
 			msg.callback(messages.login.invalid);
-			return;
-		}
 
 		let nLen = name.length;
 		for (let i = 0; i < nLen; i++) {
@@ -443,50 +363,55 @@ module.exports = {
 				'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 			];
 
-			if (valid.indexOf(char) === -1) {
-				msg.callback(messages.login.invalid);
-				return;
+			if (!valid.includes(char)) {
+				error = messages.login.invalid;
+				break;
 			}
 		}
 
-		io.get({
-			ent: data.name,
-			field: 'character',
-			callback: this.onCheckCharacterExists.bind(this, msg)
+		if (error) {
+			msg.callback(error);
+			return;
+		}
+
+		let exists = await io.getAsync({
+			key: name,
+			table: 'character',
+			noDefault: true
 		});
-	},
-	onCheckCharacterExists: function (msg, result) {
-		if (result) {
+
+		if (exists) {
 			msg.callback(messages.login.charExists);
 			return;
 		}
 
-		let data = msg.data;
+		let obj = this.obj;
 
-		this.obj.name = data.name;
-		this.obj.skinId = data.skinId;
-		this.obj.class = data.class;
-
-		this.obj.cell = skins.getCell(this.obj.skinId);
-		this.obj.sheetName = skins.getSpritesheet(this.obj.skinId);
+		extend(obj, {
+			name: name,
+			skinId: data.skinId,
+			class: data.class,
+			cell: skins.getCell(this.obj.skinId),
+			sheetName: skins.getSpritesheet(this.obj.skinId)
+		});
 
 		this.verifySkin(this.obj);
 
 		let simple = this.obj.getSimple(true);
-		let prophecies = data.prophecies || [];
-		prophecies = prophecies.filter((p, i) => (prophecies.indexOf(p) === i));
+
 		simple.components.push({
 			type: 'prophecies',
-			list: prophecies
+			list: data.prophecies || []
 		});
 
 		io.set({
-			ent: data.name,
+			ent: name,
 			field: 'character',
 			value: JSON.stringify(simple),
 			callback: this.onCreateCharacter.bind(this, msg)
 		});
 	},
+
 	onCreateCharacter: function (msg, result) {
 		let name = msg.data.name;
 
@@ -527,6 +452,7 @@ module.exports = {
 			callback: this.onDeleteCharacter.bind(this, msg)
 		});
 	},
+
 	onDeleteCharacter: function (msg, result) {
 		this.characterList.spliceWhere(c => ((c.name === msg.data.name) || (c === msg.data.name)));
 		let characterList = this.characterList
@@ -544,6 +470,7 @@ module.exports = {
 
 		leaderboard.deleteCharacter(msg.data.name);
 	},
+
 	onRemoveFromList: function (msg, result) {
 		result = this.characterList
 			.map(c => ({

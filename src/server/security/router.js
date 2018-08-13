@@ -2,7 +2,7 @@ module.exports = {
 	allowedCpn: function (msg) {
 		let allowed = {
 			player: ['performAction', 'queueAction', 'move'],
-			auth: ['login', 'register', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkins', 'createCharacter', 'getCustomChannels'],
+			auth: ['login', 'register', 'play', 'getCharacterList', 'getCharacter', 'deleteCharacter', 'getSkinList', 'createCharacter', 'getCustomChannels'],
 			social: ['chat', 'getInvite', 'acceptInvite', 'declineInvite', 'removeFromParty', 'leaveParty']
 		};
 
