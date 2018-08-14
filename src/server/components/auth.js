@@ -337,6 +337,8 @@ module.exports = {
 		this.username = msg.data.username;
 		connections.logOut(this.obj);
 
+		await this.getSkins();
+
 		msg.callback();
 	},
 
