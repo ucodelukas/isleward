@@ -5,6 +5,11 @@ module.exports = {
 		Skyblossom: {
 			type: 'herb',
 			max: 7
+		},
+		Fireleaf: {
+			type: 'herb',
+			max: 1,
+			cdMax: 1710
 		}
 	},
 	objects: {

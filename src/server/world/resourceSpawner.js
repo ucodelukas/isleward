@@ -12,12 +12,13 @@ module.exports = {
 	cdMax: 171,
 
 	init: function (instance) {
-		this.objects = instance.objects;
-		this.syncer = instance.syncer;
-		this.zone = instance.zone;
-		this.physics = instance.physics;
-		this.map = instance.map;
-		this.zone = instance.zone;
+		Object.assign(this, {
+			objects: instance.objects,
+			syncer: instance.syncer,
+			physics: instance.physics,
+			map: instance.map,
+			zone: instance.zone
+		});
 	},
 
 	register: function (name, blueprint) {
@@ -49,9 +50,17 @@ module.exports = {
 		let max = blueprint.max;
 		delete blueprint.max;
 
+		let chance = blueprint.chance;
+		delete blueprint.chance;
+
+		let cdMax = blueprint.cdMax;
+		delete blueprint.cdMax;
+
 		this.nodes.push({
 			cd: 0,
 			max: max,
+			chance: chance,
+			cdMax: cdMax,
 			blueprint: blueprint,
 			spawns: []
 		});
@@ -89,7 +98,7 @@ module.exports = {
 			else if ((endTile.x !== x) || (endTile.y !== y))
 				return false;
 			
-				//Don't spawn in rooms or on objects/other resources
+			//Don't spawn in rooms or on objects/other resources
 			let cell = this.physics.getCell(x, y);
 			if (cell.length > 0)
 				return false;
@@ -164,30 +173,19 @@ module.exports = {
 		let nodes = this.nodes;
 		let nLen = nodes.length;
 
+		let ready = [];
+
 		for (let i = 0; i < nLen; i++) {
 			let node = nodes[i];
 
 			let spawns = node.spawns;
-			let sLen = spawns.length;
+			spawns.spliceWhere(f => f.destroyed);
 
-			if ((node.cd > 0) && (sLen < node.max))
-				node.cd--;
-
-			for (let j = 0; j < sLen; j++) {
-				let o = spawns[j];
-				if (o.destroyed) {
-					spawns.splice(j, 1);
-					j--;
-					sLen--;
-					continue;
-				}
-			}
-
-			if ((sLen < node.max) && (node.cd === 0)) {
-				if (this.spawn(node)) {
-					node.cd = this.cdMax;
-					break;
-				}
+			if (spawns.length < node.max) {
+				if (node.cd > 0)
+					node.cd--;
+				else if ((!node.chance || Math.random() < node.chance) && this.spawn(node))
+					node.cd = node.cdMax || this.cdMax;
 			}
 		}
 	}
