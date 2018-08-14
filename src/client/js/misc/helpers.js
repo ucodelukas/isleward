@@ -1,4 +1,7 @@
-/* global _ */
+/* global _, scale, scaleMult */
+
+window.scale = 40;
+window.scaleMult = 5;
 
 //eslint-disable-next-line no-extend-native
 Array.prototype.firstIndex = function (callback, thisArg) {

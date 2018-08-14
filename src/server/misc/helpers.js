@@ -125,6 +125,13 @@ module.exports = {
 		return o;
 	},
 
+	getGuid: function () {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	},
+
 	//Only use this method for official logging. Temporary logs should use console.log
 	// so those instances can be reported by eslint
 	log: function (msg) {

@@ -5,7 +5,7 @@ module.exports = {
 	rooms: [],
 	exitAreas: [],
 
-	maxDistance: 12,
+	maxDistance: 14,
 	minDistance: 0,
 
 	bounds: [0, 0, 0, 0],
@@ -374,7 +374,8 @@ module.exports = {
 		this.updateBounds(room);
 
 		if (room.distance < this.maxDistance) {
-			let count = this.randInt(1, room.template.exits.length);
+			const maxExits = room.template.exits.length;
+			let count = this.randInt(Math.min(maxExits, 2), maxExits);
 			for (let i = 0; i < count; i++) 
 				this.setupConnection(room, !isHallway);
 		}

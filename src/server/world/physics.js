@@ -315,7 +315,7 @@ module.exports = {
 
 		let node = this.graph.grid[x][y];
 		if (node)
-			return node.isWall();
+			return (node.weight === 0);
 		return true;
 	},
 	isCellOpen: function (x, y) {

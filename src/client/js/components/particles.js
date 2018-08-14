@@ -3,8 +3,6 @@ define([
 ], function (
 	renderer
 ) {
-	let scale = 40;
-
 	return {
 		type: 'particles',
 		emitter: null,

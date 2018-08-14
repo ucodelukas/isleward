@@ -86,10 +86,7 @@ module.exports = {
 		this.mapFile.properties = this.mapFile.properties || {};
 		mapScale = mapFile.tilesets[0].tileheight;
 
-		this.instanced = mapFile.properties.instanced;
 		this.custom = mapFile.properties.custom;
-		if (this.instanced)
-			this.instanced = (this.instanced === '1');
 
 		if (mapFile.properties.spawn) {
 			this.spawn = JSON.parse(mapFile.properties.spawn);

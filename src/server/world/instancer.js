@@ -28,514 +28,172 @@ module.exports = {
 		herbs.init();
 		map.init(args);
 
-		if (!map.instanced) {
-			let fakeInstance = {
-				objects: objects,
-				syncer: syncer,
-				physics: physics,
-				zoneId: this.zoneId,
-				spawners: spawners,
-				questBuilder: questBuilder,
-				events: events,
-				zone: map.zone,
-				mail: mail,
+		let fakeInstance = {
+			objects: objects,
+			syncer: syncer,
+			physics: physics,
+			zoneId: this.zoneId,
+			spawners: spawners,
+			questBuilder: questBuilder,
+			events: events,
+			zone: map.zone,
+			mail: mail,
+			map: map,
+			scheduler: scheduler,
+			eventEmitter: eventEmitter
+		};
+
+		this.instances.push(fakeInstance);
+
+		spawners.init(fakeInstance);
+		scheduler.init();
+
+		map.create();
+		if (map.mapFile.properties.isRandom) {
+			if (!map.oldCollisionMap)
+				map.oldCollisionMap = map.collisionMap;
+
+			randomMap.generate({
 				map: map,
-				scheduler: scheduler,
-				eventEmitter: eventEmitter
-			};
-
-			this.instances.push(fakeInstance);
-
-			spawners.init(fakeInstance);
-			scheduler.init();
-
-			map.create();
-			map.clientMap.zoneId = this.zoneId;
-
-			[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
-
-			this.addObject = this.nonInstanced.addObject.bind(this);
-			this.onAddObject = this.nonInstanced.onAddObject.bind(this);
-			this.updateObject = this.nonInstanced.updateObject.bind(this);
-			this.queueAction = this.nonInstanced.queueAction.bind(this);
-			this.performAction = this.nonInstanced.performAction.bind(this);
-			this.removeObject = this.nonInstanced.removeObject.bind(this);
-
-			this.tick = this.nonInstanced.tick.bind(this);
-			this.tick();
-		} else {
-			spawners.init({
-				zone: map.zone
+				physics: physics,
+				spawners: spawners
 			});
 
-			map.create();
-			map.clientMap.zoneId = this.zoneId;
+			map.seed = _.getGuid();
+		}
 
-			this.addObject = this.instanced.addObject.bind(this);
-			this.onAddObject = this.instanced.onAddObject.bind(this);
-			this.updateObject = this.instanced.updateObject.bind(this);
-			this.queueAction = this.instanced.queueAction.bind(this);
-			this.performAction = this.instanced.performAction.bind(this);
-			this.removeObject = this.instanced.removeObject.bind(this);
+		map.clientMap.zoneId = this.zoneId;
 
-			if (map.mapFile.properties.isRandom)
-				this.ttlGen = 0;
+		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
-			this.tick = this.instanced.tick.bind(this);
-			this.tick();
+		this.tick();
+	},
+
+	tick: function () {
+		events.update();
+		objects.update();
+		resourceSpawner.update();
+		spawners.update();
+		syncer.update();
+		scheduler.update();
+
+		setTimeout(this.tick.bind(this), this.speed);
+	},
+
+	addObject: function (msg) {
+		let obj = msg.obj;
+		obj.serverId = obj.id;
+		delete obj.id;
+
+		if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
+			msg.keepPos = false;
+
+		let spawnPos = map.getSpawnPos(obj);
+
+		if (!msg.keepPos || !obj.has('x') || (map.mapFile.properties.isRandom && obj.instanceId !== map.seed)) {
+			obj.x = spawnPos.x;
+			obj.y = spawnPos.y;
+		}
+
+		obj.instanceId = map.seed;
+
+		obj.spawn = map.spawn;
+
+		syncer.queue('onGetMap', map.clientMap, [obj.serverId]);
+
+		if (!msg.transfer)
+			objects.addObject(obj, this.onAddObject.bind(this));
+		else {
+			let o = objects.transferObject(obj);
+			questBuilder.obtain(o);
 		}
 	},
 
-	nonInstanced: {
-		tick: function () {
-			events.update();
-			objects.update();
-			resourceSpawner.update();
-			spawners.update();
-			syncer.update();
-			scheduler.update();
+	onAddObject: function (obj) {
+		if (obj.player)
+			obj.stats.onLogin();
 
-			setTimeout(this.tick.bind(this), this.speed);
-		},
+		questBuilder.obtain(obj);
+		obj.fireEvent('afterMove');
 
-		addObject: function (msg) {
-			let obj = msg.obj;
-			obj.serverId = obj.id;
-			delete obj.id;
-
-			if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
-				msg.keepPos = false;
-
-			let spawnPos = map.getSpawnPos(obj);
-
-			if (!msg.keepPos || !obj.has('x')) {
-				obj.x = spawnPos.x;
-				obj.y = spawnPos.y;
-			}
-
-			obj.spawn = map.spawn;
-
-			syncer.queue('onGetMap', map.clientMap, [obj.serverId]);
-
-			if (!msg.transfer)
-				objects.addObject(obj, this.onAddObject.bind(this));
-			else {
-				let o = objects.transferObject(obj);
-				questBuilder.obtain(o);
-			}
-		},
-		onAddObject: function (obj) {
-			if (obj.player)
-				obj.stats.onLogin();
-
-			questBuilder.obtain(obj);
-			obj.fireEvent('afterMove');
-
-			if (obj.dead) {
-				obj.instance.syncer.queue('onDeath', {
-					x: obj.x,
-					y: obj.y
-				}, [obj.serverId]);
-			}
-		},
-		updateObject: function (msg) {
-			let obj = objects.find(o => o.serverId === msg.id);
-			if (!obj)
-				return;
-
-			let msgObj = msg.obj;
-
-			let components = msgObj.components || [];
-			delete msgObj.components;
-
-			for (let p in msgObj) 
-				obj[p] = msgObj[p];
-
-			let cLen = components.length;
-			for (let i = 0; i < cLen; i++) {
-				let c = components[i];
-				let component = obj[c.type];
-				for (let p in c) 
-					component[p] = c[p];
-			}
-		},
-
-		queueAction: function (msg) {
-			let obj = objects.find(o => o.serverId === msg.id);
-			if (!obj)
-				return;
-			else if (msg.action.action === 'move') {
-				let moveEntries = obj.actionQueue.filter(q => (q.action === 'move')).length;
-				if (moveEntries >= 50)
-					return;
-			}
-
-			obj.queue(msg.action);
-		},
-
-		performAction: function (msg) {
-			let obj = null;
-			let targetId = msg.action.targetId;
-			if (!targetId)
-				obj = objects.find(o => o.serverId === msg.id);
-			else {
-				obj = objects.find(o => o.id === targetId);
-				if (obj) {
-					let action = msg.action;
-					if (!action.data)
-						action.data = {};
-					action.data.sourceId = msg.id;
-				}
-			}
-
-			if (!obj)
-				return;
-
-			obj.performAction(msg.action);
-		},
-
-		removeObject: function (msg) {
-			let obj = msg.obj;
-			obj = objects.find(o => o.serverId === obj.id);
-			if (!obj) {
-				//We should probably never reach this
-				return;
-			}
-
-			if (obj.auth)
-				obj.auth.doSave();
-
-			if (obj.player)
-				obj.fireEvent('beforeRezone');
-
-			obj.destroyed = true;
+		if (obj.dead) {
+			obj.instance.syncer.queue('onDeath', {
+				x: obj.x,
+				y: obj.y
+			}, [obj.serverId]);
 		}
 	},
-	instanced: {
-		tick: function () {
-			if (map.mapFile.properties.isRandom) {
-				if (this.ttlGen <= 0) {
-					if (!map.oldMap)
-						map.oldMap = map.clientMap.map;
-					if (!map.oldCollisionMap)
-						map.oldCollisionMap = map.collisionMap;
 
-					spawners.reset();
+	updateObject: function (msg) {
+		let obj = objects.find(o => o.serverId === msg.id);
+		if (!obj)
+			return;
 
-					randomMap.generate({
-						map: map,
-						physics: physics,
-						spawners: spawners
-					});
+		let msgObj = msg.obj;
 
-					this.ttlGen = 2000;
-				} else
-					this.ttlGen--;
-			}
+		let components = msgObj.components || [];
+		delete msgObj.components;
 
-			let instances = this.instances;
-			let iLen = instances.length;
-			for (let i = 0; i < iLen; i++) {
-				let instance = instances[i];
+		for (let p in msgObj) 
+			obj[p] = msgObj[p];
 
-				instance.objects.update();
-				instance.spawners.update();
-				instance.resourceSpawner.update();
-				instance.scheduler.update();
+		let cLen = components.length;
+		for (let i = 0; i < cLen; i++) {
+			let c = components[i];
+			let component = obj[c.type];
+			for (let p in c) 
+				component[p] = c[p];
+		}
+	},
 
-				instance.syncer.update();
-
-				if (instance.closeTtl) {
-					let hasPlayers = instance.objects.objects.some(o => o.player);
-					if (hasPlayers) {
-						delete instance.closeTtl;
-						continue;
-					}
-
-					instance.closeTtl--;
-					if (instance.closeTtl <= 0) {
-						instances.splice(i, 1);
-						i--;
-						iLen--;
-					}
-				} else {
-					let isEmpty = !instance.objects.objects.some(o => o.player);
-					if (isEmpty) {
-						//Zones reset after being empty for 2 minutes (about 342 ticks)
-						instance.closeTtl = 342;
-					}
-				}
-			}
-
-			setTimeout(this.tick.bind(this), this.speed);
-		},
-
-		addObject: function (msg) {
-			let obj = msg.obj;
-			let instanceId = msg.instanceId;
-
-			//Maybe a party member is in here already?
-			let social = obj.components.find(c => c.type === 'social');
-			if ((social) && (social.party)) {
-				let party = social.party;
-				let instances = this.instances;
-				let iLen = instances.length;
-				for (let i = 0; i < iLen; i++) {
-					let instance = instances[i];
-
-					let partyInside = instance.objects.objects.some(o => party.indexOf(o.serverId) > -1);
-					if (partyInside) {
-						if (instance.id !== obj.instanceId)
-							msg.keepPos = false;
-						obj.instanceId = instance.id;
-						obj.instance = instance;
-						instanceId = instance.id;
-						break;
-					}
-				}
-			}
-
-			if (msg.transfer)
-				msg.keepPos = false;
-
-			let exists = this.instances.find(i => i.id === instanceId);
-
-			if (exists) {
-				if ((msg.keepPos) && (!exists.physics.isValid(obj.x, obj.y)))
-					msg.keepPos = false;
-			}
-
-			let spawnPos = map.getSpawnPos(obj);
-
-			if (exists)
-				spawnPos = exists.map.getSpawnPos(obj);
-
-			if (!msg.keepPos || !obj.has('x')) {
-				obj.x = spawnPos.x;
-				obj.y = spawnPos.y;
-			}
-
-			obj.spawn = map.spawn;
-
-			if (exists) {
-				//Keep track of what the connection id is (sent from the server)
-				obj.serverId = obj.id;
-				delete obj.id;
-
-				obj.spawn = exists.map.spawn;
-
-				exists.syncer.queue('onGetMap', exists.map.clientMap, [obj.serverId]);
-
-				if (!msg.transfer)
-					exists.objects.addObject(obj, this.onAddObject.bind(this, msg.keepPos));
-				else {
-					let newObj = exists.objects.transferObject(obj);
-					this.onAddObject(false, newObj);
-				}
-
-				process.send({
-					method: 'object',
-					serverId: obj.serverId,
-					obj: {
-						instanceId: exists.id
-					}
-				});
-			} else
-				obj = this.instanced.createInstance.call(this, obj, msg.transfer);
-		},
-		onAddObject: function (keepPos, obj) {
-			if (!keepPos) {
-				let spawnPos = obj.instance.map.getSpawnPos(obj);
-
-				obj.x = spawnPos.x;
-				obj.y = spawnPos.y;
-			}
-
-			obj.instance.questBuilder.obtain(obj);
-
-			if (obj.player)
-				obj.stats.onLogin();
-
-			obj.fireEvent('afterMove');
-
-			if (obj.dead) {
-				obj.instance.syncer.queue('onDeath', {
-					x: obj.x,
-					y: obj.y
-				}, [obj.serverId]);
-			}
-		},
-		updateObject: function (msg) {
-			let id = msg.id;
-			let instanceId = msg.instanceId;
-
-			let exists = this.instances.find(i => i.id === instanceId);
-			if (!exists)
+	queueAction: function (msg) {
+		let obj = objects.find(o => o.serverId === msg.id);
+		if (!obj)
+			return;
+		else if (msg.action.action === 'move') {
+			let moveEntries = obj.actionQueue.filter(q => (q.action === 'move')).length;
+			if (moveEntries >= 50)
 				return;
+		}
 
-			let obj = exists.objects.find(o => o.serverId === id);
-			if (!obj)
-				return;
+		obj.queue(msg.action);
+	},
 
-			let msgObj = msg.obj;
-
-			let components = msgObj.components || [];
-			delete msgObj.components;
-
-			for (let p in msgObj) 
-				obj[p] = msgObj[p];
-
-			let cLen = components.length;
-			for (let i = 0; i < cLen; i++) {
-				let c = components[i];
-				let component = obj[c.type];
-				for (let p in c) 
-					component[p] = c[p];
-			}
-		},
-
-		performAction: function (msg) {
-			let id = msg.id;
-			let instanceId = msg.instanceId;
-
-			let exists = this.instances.find(i => i.id === instanceId);
-			if (!exists)
-				return;
-
-			let obj = exists.objects.find(o => o.serverId === id);
-			if (!obj)
-				return;
-
-			obj.performAction(msg.action);
-		},
-
-		queueAction: function (msg) {
-			let id = msg.id;
-			let instanceId = msg.instanceId;
-
-			let exists = this.instances.find(i => i.id === instanceId);
-			if (!exists)
-				return;
-
-			let obj = exists.objects.find(o => o.serverId === id);
+	performAction: function (msg) {
+		let obj = null;
+		let targetId = msg.action.targetId;
+		if (!targetId)
+			obj = objects.find(o => o.serverId === msg.id);
+		else {
+			obj = objects.find(o => o.id === targetId);
 			if (obj) {
-				if (msg.action.action === 'move') {
-					let moveEntries = obj.actionQueue.filter(q => (q.action === 'move')).length;
-					if (moveEntries >= 50)
-						return;
-				}
-
-				obj.queue(msg.action);
+				let action = msg.action;
+				if (!action.data)
+					action.data = {};
+				action.data.sourceId = msg.id;
 			}
-		},
-
-		removeObject: function (msg) {
-			let obj = msg.obj;
-			let instanceId = msg.instanceId;
-
-			let exists = this.instances.find(i => i.id === instanceId);
-			if (!exists)
-				return;
-
-			obj = exists.objects.find(o => o.serverId === obj.id);
-
-			if (!obj)
-				return;
-
-			if (obj.auth)
-				obj.auth.doSave();
-
-			obj.destroyed = true;
-		},
-
-		createInstance: function (objToAdd, transfer) {
-			let newMap = {
-				name: map.name,
-				spawn: extend([], map.spawn),
-				clientMap: extend({}, map.clientMap)
-			};
-			newMap.getSpawnPos = map.getSpawnPos.bind(newMap);
-
-			//Hack: We need to actually just always use the instanced eventEmitter
-			let eventQueue = eventEmitter.queue;
-			delete eventEmitter.queue;
-			let newEventEmitter = extend({
-				queue: []
-			}, eventEmitter);
-			eventEmitter.queue = eventQueue;
-
-			let instance = {
-				id: objToAdd.name + '_' + (+new Date()),
-				objects: extend({}, objects),
-				spawners: extend({}, spawners),
-				syncer: extend({}, syncer),
-				physics: extend({}, physics),
-				resourceSpawner: extend({}, resourceSpawner),
-				zoneId: this.zoneId,
-				zone: map.zone,
-				closeTtl: null,
-				questBuilder: extend({}, questBuilder),
-				events: extend({}, events),
-				scheduler: extend({}, scheduler),
-				mail: extend({}, mail),
-				map: newMap,
-				eventEmitter: newEventEmitter,
-				instanced: true
-			};
-
-			['objects', 'spawners', 'syncer', 'resourceSpawner', 'questBuilder', 'events', 'scheduler', 'mail'].forEach(i => instance[i].init(instance));
-
-			this.instances.push(instance);
-
-			let onDone = this.instanced.onCreateInstance.bind(this, instance, objToAdd, transfer);
-
-			if (map.custom) {
-				instance.customMap = extend({}, customMap);
-				instance.customMap.load(instance, objToAdd, onDone);
-			} else
-				onDone();
-		},
-		onCreateInstance: function (instance, objToAdd, transfer) {
-			objToAdd.instance = instance;
-			objToAdd.instanceId = instance.id;
-
-			//Keep track of what the connection id is (sent from the server)
-			objToAdd.serverId = objToAdd.id;
-			delete objToAdd.id;
-
-			let obj = null;
-
-			instance.syncer.queue('onGetMap', instance.map.clientMap, [objToAdd.serverId]);
-
-			if (!transfer)
-				obj = instance.objects.addObject(objToAdd, this.onAddObject.bind(this, false));
-			else {
-				obj = instance.objects.transferObject(objToAdd);
-
-				let spawnPos = instance.map.getSpawnPos(obj);
-
-				obj.x = spawnPos.x;
-				obj.y = spawnPos.y;
-
-				instance.questBuilder.obtain(obj);
-			}
-
-			process.send({
-				method: 'object',
-				serverId: obj.serverId,
-				obj: {
-					instanceId: instance.id
-				}
-			});
-
-			if (obj.dead) {
-				obj.instance.syncer.queue('onDeath', {
-					x: obj.x,
-					y: obj.y
-				}, [obj.serverId]);
-			}
-
-			return obj;
 		}
+
+		if (!obj)
+			return;
+
+		obj.performAction(msg.action);
+	},
+
+	removeObject: function (msg) {
+		let obj = msg.obj;
+		obj = objects.find(o => o.serverId === obj.id);
+		if (!obj) {
+			//We should probably never reach this
+			return;
+		}
+
+		if (obj.auth)
+			obj.auth.doSave();
+
+		if (obj.player)
+			obj.fireEvent('beforeRezone');
+
+		obj.destroyed = true;
 	}
 };

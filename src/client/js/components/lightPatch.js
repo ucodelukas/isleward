@@ -5,9 +5,6 @@ define([
 	renderer,
 	picture
 ) {
-	let scale = 40;
-	let scaleMult = 5;
-
 	return {
 		type: 'lightPatch',
 

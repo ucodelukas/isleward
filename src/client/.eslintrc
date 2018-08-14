@@ -53,7 +53,9 @@
     "$": false,
     "define": false,
     "_": false,
-    "PIXI": false
+    "PIXI": false,
+    "scale": false,
+    "scaleMult": false
   },
 
   "rules": {

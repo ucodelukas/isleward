@@ -3,8 +3,6 @@ define([
 ], function (
 	renderer
 ) {
-	let scale = 40;
-
 	let auras = {
 		reflectDamage: 0,
 		stealth: 1,

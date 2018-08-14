@@ -19,8 +19,6 @@ define([
 	spritePool,
 	picture
 ) {
-	let scale = 40;
-	let scaleMult = 5;
 	let pixi = PIXI;
 
 	return {

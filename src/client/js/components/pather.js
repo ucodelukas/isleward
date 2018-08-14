@@ -5,8 +5,6 @@ define([
 	renderer,
 	events
 ) {
-	let scale = 40;
-	let scaleMult = 5;
 	let round = Math.round.bind(Math);
 	let maxPathLength = 50;
 

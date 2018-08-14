@@ -7,9 +7,6 @@ define([
 	renderer,
 	events
 ) {
-	let scale = 40;
-	let scaleMult = 5;
-
 	return {
 		components: [],
 		offsetX: 0,

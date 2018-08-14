@@ -3,8 +3,6 @@ define([
 ], function (
 	effects
 ) {
-	let scale = 40;
-
 	return {
 		type: 'projectile',
 

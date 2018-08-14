@@ -5,8 +5,6 @@ define([
 	effects,
 	renderer
 ) {
-	let scale = 40;
-
 	return {
 		type: 'attackAnimation',
 

@@ -9,8 +9,6 @@ define([
 	renderer,
 	sound
 ) {
-	let scale = 40;
-
 	return {
 		showNames: false,
 

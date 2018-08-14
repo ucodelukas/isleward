@@ -9,8 +9,6 @@ define([
 	physics,
 	sound
 ) {
-	let scale = 40;
-
 	return {
 		type: 'player',
 
