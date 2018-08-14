@@ -6,6 +6,8 @@ module.exports = {
 	file: '../../data/storage.db',
 	exists: false,
 
+	buffer: [],
+
 	tables: {
 		character: null,
 		characterList: null,
@@ -34,7 +36,7 @@ module.exports = {
 			for (let t in tables) {
 				db.run(`
 					CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
-				`, scope.onTableCreated.bind(scope));
+				`, scope.onTableCreated.bind(scope, t));
 			}
 
 			cbReady();
@@ -42,7 +44,7 @@ module.exports = {
 
 		this.exists = true;
 	},
-	onTableCreated: function () {
+	onTableCreated: async function (table) {
 
 	},
 
@@ -57,23 +59,10 @@ module.exports = {
 	},
 
 	getAsync: async function (options) {
-		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
-		if (res) {
-			res = res.value;
-
-			if (options.clean) {
-				res = res
-					.split('`')
-					.join('\'')
-					.replace(/''+/g, '\'');
-			}
-			
-			if (!options.noParse)
-				res = JSON.parse(res);
-		} else if (!options.noParse && !options.noDefault)
-			res = options.isArray ? [] : {};
-
-		return res;
+		return await this.queue({
+			type: 'get',
+			options: options
+		});
 	},
 
 	delete: function (options) {
@@ -105,6 +94,74 @@ module.exports = {
 	},
 
 	setAsync: async function (options) {
+		await this.queue({
+			type: 'set',
+			options: options
+		});
+	},
+
+	queue: async function (config) {
+		let resolve = null;
+		let promise = new Promise(function (res) {
+			resolve = res;
+		});
+
+		this.buffer.push({
+			resolve: resolve,
+			config: config
+		});
+
+		this.process();
+
+		return promise;
+	},
+
+	process: async function () {
+		let next = this.buffer[0];
+		if (!next)
+			return;
+
+		let config = next.config;
+		let options = config.options;
+
+		let res = null;
+
+		try {
+			if (config.type === 'get')
+				res = await this.processGet(options);
+			else if (config.type === 'set')
+				await this.processSet(options);
+		} catch (e) {
+			return;
+		}
+
+		this.buffer.splice(0, 1);
+		next.resolve(res);
+
+		setTimeout(this.process.bind(this), 10);
+	},
+
+	processGet: async function (options) {
+		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
+		if (res) {
+			res = res.value;
+
+			if (options.clean) {
+				res = res
+					.split('`')
+					.join('\'')
+					.replace(/''+/g, '\'');
+			}
+			
+			if (!options.noParse)
+				res = JSON.parse(res);
+		} else if (!options.noParse && !options.noDefault)
+			res = options.isArray ? [] : {};
+
+		return res;
+	},
+
+	processSet: async function (options) {
 		let table = options.table;
 		let key = options.key;
 		let value = options.value;
