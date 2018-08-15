@@ -113,8 +113,11 @@ module.exports = {
 		for (let v in stats) 
 			this.stats[v] = stats[v];
 
-		this.calcXpMax();
-		this.values.hpMax = (this.values.level || 1) * 32.7;
+		if (this.obj.player) {
+			this.calcXpMax();
+			this.addLevelAttributes();
+			this.values.hpMax = (this.values.level || 1) * 32.7;
+		}
 
 		if (blueprint)
 			delete blueprint.stats;
@@ -181,7 +184,7 @@ module.exports = {
 		}
 	},
 
-	addStat: function (stat, value) {
+	addStat: function (stat, value, skipUnEq) {
 		let values = this.values;
 
 		if (['lvlRequire', 'allAttributes'].indexOf(stat) === -1)
@@ -196,35 +199,36 @@ module.exports = {
 		if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
 			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
-			this.addStat(morphStat, (0.05 * value));
+			this.addStat(morphStat, (0.05 * value), skipUnEq);
 		} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
 			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
-			this.addStat(morphStat, value);
+			this.addStat(morphStat, value, skipUnEq);
 		} else if (stat === 'vit') 
-			this.addStat('hpMax', (value * this.statScales.vitToHp));
+			this.addStat('hpMax', (value * this.statScales.vitToHp), skipUnEq);
 		else if (stat === 'allAttributes') {
 			['int', 'str', 'dex'].forEach(function (s) {
-				this.addStat(s, value);
+				this.addStat(s, value, skipUnEq);
 			}, this);
 		} else if (stat === 'elementAllResist') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
-				this.addStat(element, value);
+				this.addStat(element, value, skipUnEq);
 			}, this);
 		} else if (stat === 'elementPercent') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
-				this.addStat(element, value);
+				this.addStat(element, value, skipUnEq);
 			}, this);
 		} else if (stat === 'str')
-			this.addStat('armor', (value * this.statScales.strToArmor));
+			this.addStat('armor', (value * this.statScales.strToArmor), skipUnEq);
 		else if (stat === 'int')
-			this.addStat('manaMax', (value * this.statScales.intToMana));
+			this.addStat('manaMax', (value * this.statScales.intToMana), skipUnEq);
 		else if (stat === 'dex')
-			this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
+			this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge), skipUnEq);
 
-		this.obj.equipment.unequipAttrRqrGear();
+		if (!skipUnEq)
+			this.obj.equipment.unequipAttrRqrGear();
 	},
 
 	calcXpMax: function () {
@@ -283,9 +287,7 @@ module.exports = {
 
 			values.hpMax = values.level * 32.7;
 
-			let gainStats = classes.stats[this.obj.class].gainStats;
-			for (let s in gainStats) 
-				this.addStat(s, gainStats[s]);
+			this.addLevelAttributes(true);
 
 			this.obj.spellbook.calcDps();
 
@@ -454,6 +456,14 @@ module.exports = {
 		}, -1);
 
 		this.obj.player.respawn();
+	},
+
+	addLevelAttributes: function (singleLevel) {
+		const gainStats = classes.stats[this.obj.class].gainStats;
+		const count = singleLevel ? 1 : this.values.level;
+
+		for (let s in gainStats) 
+			this.addStat(s, gainStats[s] * count, true);
 	},
 
 	takeDamage: function (damage, threatMult, source) {
