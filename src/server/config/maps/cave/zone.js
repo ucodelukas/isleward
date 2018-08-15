@@ -483,7 +483,7 @@ module.exports = {
 						activated.push(order);
 						let valid = true;
 						for (let i = 0; i < activated.length; i++) {
-							if (activated[i] !== i) {
+							if (~~activated[i] !== i) {
 								valid = false;
 								break;
 							}
