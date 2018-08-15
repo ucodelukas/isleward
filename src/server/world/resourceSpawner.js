@@ -118,12 +118,15 @@ module.exports = {
 		if (blueprint.quantity)
 			quantity = blueprint.quantity[0] + ~~(Math.random() * (blueprint.quantity[1] - blueprint.quantity[0]));
 
+		let zoneLevel = this.zone.level;
+		zoneLevel = ~~(zoneLevel[0] + ((zoneLevel[1] - zoneLevel[0]) / 2));
+
 		let objBlueprint = extend({}, blueprint, position);
 		objBlueprint.properties = {
 			cpnResourceNode: {
 				nodeType: blueprint.type,
 				ttl: blueprint.ttl,
-				xp: this.zone.level * this.zone.level,
+				xp: zoneLevel * zoneLevel,
 				blueprint: extend({}, blueprint),
 				quantity: quantity
 			}

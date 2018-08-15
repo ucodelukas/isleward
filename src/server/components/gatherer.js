@@ -177,7 +177,7 @@ module.exports = {
 					item.quantity = ~~(Math.random() * blueprint.itemAmount[1]) + blueprint.itemAmount[0];
 			}
 
-			this.obj.inventory.getItem(item);
+			this.obj.inventory.getItem(item, false, false, true);
 
 			if (item.material)
 				this.obj.fireEvent('afterGatherResource', gatherResult);

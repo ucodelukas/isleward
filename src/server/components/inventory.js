@@ -690,7 +690,7 @@ module.exports = {
 		} return true;
 	},
 
-	getItem: function (item, hideMessage, noStack) {
+	getItem: function (item, hideMessage, noStack, hideAlert) {
 		this.obj.instance.eventEmitter.emit('onBeforeGetItem', item, this.obj);
 
 		//We need to know if a mob dropped it for quest purposes
@@ -765,7 +765,7 @@ module.exports = {
 			}
 		}
 
-		if ((this.obj.player) && (!hideMessage)) {
+		if (this.obj.player) {
 			let messages = [];
 
 			let msg = item.name;
@@ -780,16 +780,20 @@ module.exports = {
 				type: 'loot'
 			});
 
-			this.obj.instance.syncer.queue('onGetDamage', {
-				id: this.obj.id,
-				event: true,
-				text: 'loot'
-			}, -1);
+			if (!hideAlert) {
+				this.obj.instance.syncer.queue('onGetDamage', {
+					id: this.obj.id,
+					event: true,
+					text: 'loot'
+				}, -1);
+			}
 
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: messages
-			}, [this.obj.serverId]);
+			if (!hideMessage) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: messages
+				}, [this.obj.serverId]);
+			}
 		}
 
 		//TODO: Remove later, just for test
