@@ -21,6 +21,7 @@ module.exports = {
 
 	init: function (blueprint) {
 		this.gold = blueprint.gold;
+		this.items = [];
 
 		(blueprint.forceItems || []).forEach(function (f, i) {
 			let item = extend({}, f);
