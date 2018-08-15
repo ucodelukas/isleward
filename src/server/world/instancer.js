@@ -7,7 +7,6 @@ let resourceSpawner = require('./resourceSpawner');
 let spellCallbacks = require('../config/spells/spellCallbacks');
 let questBuilder = require('../config/quests/questBuilder');
 let randomMap = require('./randomMap');
-let customMap = require('./customMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let mail = require('../misc/mail');

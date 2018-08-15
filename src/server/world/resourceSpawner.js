@@ -173,8 +173,6 @@ module.exports = {
 		let nodes = this.nodes;
 		let nLen = nodes.length;
 
-		let ready = [];
-
 		for (let i = 0; i < nLen; i++) {
 			let node = nodes[i];
 

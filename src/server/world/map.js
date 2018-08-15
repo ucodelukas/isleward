@@ -10,8 +10,6 @@ let mapFile = null;
 let mapScale = null;
 let padding = null;
 
-let ex = require('extend');
-
 module.exports = {
 	name: null,
 	layers: [],

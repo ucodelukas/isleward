@@ -12,7 +12,7 @@ module.exports = {
 
 		if (this.slot) {
 			if (this.slot instanceof Array) {
-				if (this.slot.some(s => (slotNames.indexOf(s) == -1)))
+				if (this.slot.some(s => !slotNames.includes(s)))
 					this.slot = null;
 			} else if (!slotNames.some(s => (s === this.slot)))
 				this.slot = null;
