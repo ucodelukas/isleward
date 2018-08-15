@@ -101,7 +101,7 @@ module.exports = {
 			if (!effect)
 				return;
 
-			let obj = objects.find(f => (f.serverId === m));
+			let obj = objects.find(f => (f.serverId === ~~m));
 			if (!obj) {
 				delete effects[m];
 				return;
