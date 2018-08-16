@@ -3,8 +3,8 @@ module.exports = {
 	waiting: [],
 	loaded: false,
 
-	init: function () {
-		this.getList();
+	init: async function () {
+		await this.getList();
 	},
 
 	requestList: function (msg) {
@@ -23,7 +23,7 @@ module.exports = {
 
 					let match = true;
 					for (let i = 0; i < pLen; i++) {
-						if (!rProphecies.some(rp => rp === prophecyFilter[i])) {
+						if (!rProphecies.includes(prophecyFilter[i])) {
 							match = false;
 							break;
 						}
@@ -49,27 +49,17 @@ module.exports = {
 		});
 	},
 
-	getList: function () {
-		io.get({
-			ent: 'list',
-			field: 'leaderboard',
-			callback: this.onGetList.bind(this)
+	getList: async function () {
+		let list = await io.getAllAsync({
+			table: 'leaderboard',
+			isArray: true
 		});
-	},
 
-	onGetList: function (result) {
-		if (!result) {
-			let list = {
-				list: []
-			};
-
-			io.set({
-				ent: 'list',
-				field: 'leaderboard',
-				value: JSON.stringify(list)
-			});
-		} else
-			this.parseList(result);
+		this.list = list.map(l => ({
+			name: l.key,
+			level: l.value.level,
+			prophecies: l.value.prophecies
+		}));
 
 		this.loaded = true;
 	},
@@ -111,46 +101,39 @@ module.exports = {
 	},
 
 	setLevel: function (name, level, prophecies) {
-		if (!this.list) {
-			this.waiting.push({
-				name: name,
-				level: level,
-				prophecies: prophecies
-			});
-
-			return;
-		}
-
 		let exists = this.list.find(l => l.name === name);
-		if (exists) {
-			if (exists.level !== level) {
-				exists.level = level;
-
-				this.save();
-			}
-		} else {
-			this.list.push({
+		if (exists)
+			exists.level = level;
+		else {
+			exists = {
 				name: name,
 				level: level,
 				prophecies: prophecies
-			});
+			};
 
-			this.save();
+			this.list.push(exists);
+			this.sort();
 		}
+
+		this.save(exists);
 	},
 
-	deleteCharacter: function (name) {
+	deleteCharacter: async function (name) {
 		this.list.spliceWhere(l => (l.name === name));
-		this.save();
+		
+		await db.deleteAsync({
+			key: name,
+			table: 'leaderboard'
+		});
 	},
 
-	killCharacter: function (name) {
+	killCharacter: async function (name) {
 		let character = this.list.find(l => (l.name === name));
 		if (!character)
 			return;
 
 		character.dead = true;
-		this.save();
+		this.save(character);
 	},
 
 	sort: function () {
@@ -159,20 +142,19 @@ module.exports = {
 		}, this);
 	},
 
-	save: function () {
-		this.sort();
+	save: async function (character) {
+		let value = {
+			level: character.level,
+			prophecies: character.prophecies
+		};
 
-		if (!this.loaded)
-			return;
-
-		let value = JSON.stringify({
-			list: this.list
-		});
+		if (character.dead)
+			value.dead = true;
 
 		io.set({
-			ent: 'list',
+			ent: character.name,
 			field: 'leaderboard',
-			value: value
+			value: JSON.stringify(character)
 		});
 	}
 };

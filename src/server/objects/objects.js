@@ -243,7 +243,7 @@ module.exports = {
 			player.socket.emit('events', player.events);
 		}
 	},
-	updateObject: function (msg) {
+	updateObject: async function (msg) {
 		let player = this.objects.find(p => p.id === msg.serverId);
 		if (!player)
 			return;
@@ -253,10 +253,10 @@ module.exports = {
 			player[p] = obj[p];
 
 		if (obj.dead)
-			leaderboard.killCharacter(player.name);
+			await leaderboard.killCharacter(player.name);
 
 		if (obj.level) {
-			leaderboard.setLevel(player.name, obj.level);
+			await leaderboard.setLevel(player.name, obj.level);
 
 			cons.emit('events', {
 				onGetMessages: [{

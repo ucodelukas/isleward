@@ -2,5 +2,5 @@ module.exports = [
 	'cave',
 	'estuary',
 	'sewer',
-	'fjolarok'
+	'fjolarok'	
 ];

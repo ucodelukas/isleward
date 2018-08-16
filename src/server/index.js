@@ -12,13 +12,16 @@ let spells = require('./config/spells');
 let itemTypes = require('./items/config/types');
 let recipes = require('./config/recipes/recipes');
 let sheets = require('./security/sheets');
+let fixes = require('./fixes/fixes');
 
 let startup = {
 	init: function () {
 		io.init(this.onDbReady.bind(this));
 	},
 
-	onDbReady: function () {
+	onDbReady: async function () {
+		await fixes.fixDb();
+		
 		setInterval(function () {
 			global.gc();
 		}, 60000);
@@ -44,9 +47,10 @@ let startup = {
 		server.init(this.onServerReady.bind(this));
 	},
 
-	onServerReady: function () {
+	onServerReady: async function () {
+		await leaderboard.init();
+
 		atlas.init();
-		leaderboard.init();
 		sheets.init();
 	},
 

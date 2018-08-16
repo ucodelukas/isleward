@@ -45,7 +45,7 @@ module.exports = {
 		this.exists = true;
 	},
 	onTableCreated: async function (table) {
-
+		
 	},
 
 	//ent, field
@@ -65,6 +65,13 @@ module.exports = {
 		});
 	},
 
+	getAllAsync: async function (options) {
+		return await this.queue({
+			type: 'getAll',
+			options: options
+		});
+	},
+
 	delete: function (options) {
 		let key = options.ent;
 		let table = options.field;
@@ -72,6 +79,13 @@ module.exports = {
 		options.query = `DELETE FROM ${table} WHERE key = '${key}'`;
 
 		this.db.run(options.query, this.done.bind(this, options));
+	},
+
+	deleteAsync: async function (options) {
+		await this.queue({
+			type: 'delete',
+			options: options
+		});
 	},
 
 	//ent, field, value
@@ -129,8 +143,12 @@ module.exports = {
 		try {
 			if (config.type === 'get')
 				res = await this.processGet(options);
+			else if (config.type === 'getAll')
+				res = await this.processGetAll(options);
 			else if (config.type === 'set')
 				await this.processSet(options);
+			else if (config.type === 'delete')
+				await this.processDelete(options);
 		} catch (e) {
 			return;
 		}
@@ -161,6 +179,33 @@ module.exports = {
 		return res;
 	},
 
+	processGetAll: async function (options) {
+		let res = await util.promisify(this.db.all.bind(this.db))(`SELECT * FROM ${options.table}`);
+		if (res) {
+			if (options.clean) {
+				res.forEach(r => {
+					r.value = r.value
+						.split('`')
+						.join('\'')
+						.replace(/''+/g, '\'');
+				});
+			}
+			
+			if (!options.noParse) {
+				if (!res)
+					res = options.isArray ? [] : {};
+				else {
+					res.forEach(r => {
+						r.value = JSON.parse(r.value);
+					});
+				}
+			}
+		} else if (!options.noParse && !options.noDefault)
+			res = options.isArray ? [] : {};
+
+		return res;
+	},
+
 	processSet: async function (options) {
 		let table = options.table;
 		let key = options.key;
@@ -171,6 +216,15 @@ module.exports = {
 		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${value}')`;
 		if (exists)
 			query = `UPDATE ${table} SET value = '${value}' WHERE key = '${key}'`;
+
+		await util.promisify(this.db.run.bind(this.db))(query);
+	},
+
+	processDelete: async function (options) {
+		let table = options.table;
+		let key = options.key;
+
+		let query = `DELETE FROM ${table} WHERE key = '${key}'`;
 
 		await util.promisify(this.db.run.bind(this.db))(query);
 	},

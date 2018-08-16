@@ -1,6 +1,13 @@
 let configSkins = require('../config/skins');
 
 module.exports = {
+	fixDb: async function () {
+		await io.deleteAsync({
+			key: 'list',
+			table: 'leaderboard'
+		});
+	},
+
 	fixCharacter: function (player) {
 		let inv = player.components.find(c => (c.type === 'inventory'));
 		if ((inv) && (inv.items))

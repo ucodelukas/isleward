@@ -88,12 +88,12 @@ module.exports = {
 		});
 	},
 
-	onUpdateAccountInfo: function (data, character) {
+	onUpdateAccountInfo: async function (data, character) {
 		this.obj.player.sessionStart = +new Date();
 		this.obj.player.spawn(character, data.callback);
 
 		let prophecies = this.obj.prophecies ? this.obj.prophecies.simplify().list : [];
-		leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
+		await leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
 	doSave: async function (callback) {
@@ -465,7 +465,7 @@ module.exports = {
 			value: JSON.stringify(characterList)
 		});
 
-		leaderboard.deleteCharacter(name);
+		await leaderboard.deleteCharacter(name);
 
 		let result = this.characterList
 			.map(c => ({
