@@ -19,7 +19,7 @@ module.exports = {
 	onGetMod: function (name, mod) {
 		mod.events = events;
 		mod.folderName = 'server/mods/' + name;
-		mod.relativeFolderName = 'mods/' + name;
+		mod.relativeFolderName = '../mods/' + name;
 
 		let list = (mod.extraScripts || []);
 		let lLen = list.length;
@@ -28,6 +28,8 @@ module.exports = {
 			let extra = require('../mods/' + name + '/' + list[i]);
 			this.onGetExtra(name, mod, extra);
 		}
+
+		mod.init();
 	},
 
 	onGetExtra: function (name, mod, extra) {

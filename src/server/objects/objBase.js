@@ -360,8 +360,6 @@ module.exports = {
 			if (c.destroy)
 				c.destroy();
 		}
-
-		this.components = null;
 	},
 
 	toString: function () {
