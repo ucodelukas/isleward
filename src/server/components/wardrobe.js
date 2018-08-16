@@ -79,7 +79,7 @@ module.exports = {
 		if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
 			return;
 
-		obj.auth.getSkins({
+		obj.auth.getSkinList({
 			callback: this.onGetSkins.bind(this, obj)
 		});
 	},
