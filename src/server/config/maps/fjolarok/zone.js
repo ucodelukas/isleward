@@ -6,7 +6,7 @@ module.exports = {
 			type: 'herb',
 			max: 7
 		},
-		Fireleaf: {
+		Emberleaf: {
 			type: 'herb',
 			max: 1,
 			cdMax: 1710

@@ -54,10 +54,6 @@ module.exports = {
 		for (let s in blueprintStats.stats) 
 			stats.stats[s] = blueprintStats.stats[s];
 
-		let gainStats = classes.stats[character.class].gainStats;
-		for (let s in gainStats) 
-			stats.values[s] += (gainStats[s] * stats.values.level);
-
 		obj.portrait = classes.portraits[character.class];
 
 		obj.addComponent('spellbook');
