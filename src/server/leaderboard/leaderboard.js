@@ -121,7 +121,7 @@ module.exports = {
 	deleteCharacter: async function (name) {
 		this.list.spliceWhere(l => (l.name === name));
 		
-		await db.deleteAsync({
+		await io.deleteAsync({
 			key: name,
 			table: 'leaderboard'
 		});

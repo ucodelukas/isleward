@@ -252,7 +252,7 @@ module.exports = {
 		for (let p in obj) 
 			player[p] = obj[p];
 
-		if (obj.dead)
+		if (obj.permadead)
 			await leaderboard.killCharacter(player.name);
 
 		if (obj.level) {
