@@ -233,7 +233,7 @@ module.exports = {
 
 	calcXpMax: function () {
 		let level = this.values.level;
-		this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2));
+		this.values.xpMax = (level * 5) + ~~(level * 10 * Math.pow(level, 2.2)) - 5;
 
 		this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 	},

@@ -135,7 +135,7 @@ define([
 				let el = $('<div class="list-message ' + m.class + '">' + message + '</div>')
 					.appendTo(container);
 
-				if (m.type !== null)
+				if (m.has('type'))
 					el.addClass(m.type);
 				else
 					el.addClass('info');
