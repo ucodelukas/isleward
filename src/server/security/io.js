@@ -211,6 +211,9 @@ module.exports = {
 		let key = options.key;
 		let value = options.value;
 
+		if (options.serialize)
+			value = JSON.stringify(value);
+
 		let exists = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`);
 
 		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${value}')`;

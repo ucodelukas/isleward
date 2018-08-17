@@ -77,18 +77,16 @@ module.exports = {
 		accountInfo.lastLogin = time;
 	},
 
-	onSendRewards: function (data, character) {
+	onSendRewards: async function (data, character) {
 		delete mail.busy[character.name];
 
-		io.set({
-			ent: this.username,
-			field: 'accountInfo',
-			value: JSON.stringify(this.accountInfo),
-			callback: this.onUpdateAccountInfo.bind(this, data, character)
+		await io.setAsync({
+			key: this.username,
+			table: 'accountInfo',
+			value: this.accountInfo,
+			serialize: true
 		});
-	},
 
-	onUpdateAccountInfo: async function (data, character) {
 		this.obj.player.sessionStart = +new Date();
 		this.obj.player.spawn(character, data.callback);
 
@@ -401,9 +399,7 @@ module.exports = {
 		simple.components.push({
 			type: 'prophecies',
 			list: data.prophecies || []
-		});
-
-		simple.components.push({
+		}, {
 			type: 'social',
 			customChannels: this.customChannels
 		});
@@ -431,7 +427,7 @@ module.exports = {
 		});
 	},
 
-	deleteCharacter: function (msg) {
+	deleteCharacter: async function (msg) {
 		let data = msg.data;
 
 		if ((!data.name) || (!this.username))
@@ -442,15 +438,12 @@ module.exports = {
 			return;
 		}
 
-		io.delete({
-			ent: data.name,
-			field: 'character',
-			callback: this.onDeleteCharacter.bind(this, msg)
+		await io.deleteAsync({
+			key: data.name,
+			table: 'character'
 		});
-	},
 
-	onDeleteCharacter: async function (msg) {
-		let name = msg.data.name;
+		let name = data.name;
 
 		this.characterList.spliceWhere(c => (c.name === name || c === name));
 		let characterList = this.characterList
