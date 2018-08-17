@@ -61,33 +61,9 @@ module.exports = {
 			prophecies: l.value.prophecies
 		}));
 
+		this.sort();
+
 		this.loaded = true;
-	},
-
-	parseList: function (result) {
-		this.list = JSON.parse(result).list;
-
-		if (!(this.list instanceof Array))
-			this.list = [];
-
-		this.list.forEach(function (l) {
-			if (l.name.indexOf('\'') > -1)
-				l.name = l.name.split('\'').join('');
-		});
-
-		let doSave = false;
-
-		this.waiting.forEach(function (w) {
-			if (!this.list.some(l => l.name === w.name)) {
-				this.list.push(w);
-				doSave = true;
-			}
-		}, this);
-
-		if (doSave)
-			this.save();
-
-		this.waiting = [];
 	},
 
 	getLevel: function (name) {
