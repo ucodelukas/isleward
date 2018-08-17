@@ -6,7 +6,7 @@ module.exports = {
 	}, {
 		msg: '*coughs*'
 	}, {
-		msg: 'I hope the shop is ready on time'
+		msg: 'Hm...'
 	}],
 	priest: [{
 		msg: 'peace be with you'
