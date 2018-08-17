@@ -337,6 +337,8 @@ module.exports = {
 			}
 
 			this.destroyItem(itemId, 1);
+			if (item.has('quickSlot'))
+				this.obj.equipment.replaceQuickSlot(item);
 		}
 	},
 

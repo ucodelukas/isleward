@@ -289,15 +289,18 @@ module.exports = {
 		const item = inventory.findItem(this.quickSlots[0]);
 		inventory.useItem(this.quickSlots[0]);
 
-		if (item.uses <= 0 && !item.quantity) {
-			const newItem = inventory.items.find(f => f.name === item.name);
-			if (newItem) {
-				newItem.quickSlot = 0;
-				this.quickSlots[0] = newItem.id;
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', newItem);
-			} else
-				delete this.quickSlots[0];
-		}
+		if (item.uses <= 0 && !item.quantity)
+			this.replaceQuickSlot(item);
+	},
+
+	replaceQuickSlot: function (item) {
+		const newItem = this.obj.inventory.items.find(f => f.name === item.name);
+		if (newItem) {
+			newItem.quickSlot = 0;
+			this.quickSlots[0] = newItem.id;
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', newItem);
+		} else
+			delete this.quickSlots[0];
 	},
 
 	unequipAttrRqrGear: function () {
