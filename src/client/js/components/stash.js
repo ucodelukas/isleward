@@ -15,7 +15,7 @@ define([
 		},
 
 		extend: function (blueprint) {
-			if (blueprint.active !== null)
+			if (blueprint.has('active'))
 				this.active = blueprint.active;
 
 			if (blueprint.getItems) {
