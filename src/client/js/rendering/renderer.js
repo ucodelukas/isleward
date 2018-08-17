@@ -699,6 +699,7 @@ define([
 			sprite.y = obj.y * scale;
 			sprite.width = obj.w || scale;
 			sprite.height = obj.h || scale;
+			sprite.visible = obj.has('visible') ? obj.visible : true;
 
 			if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
 				sprite.x -= scale;

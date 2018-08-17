@@ -1,11 +1,13 @@
 define([
 	'js/system/client',
 	'js/rendering/renderer',
-	'js/system/events'
+	'js/system/events',
+	'js/input'
 ], function (
 	client,
 	renderer,
-	events
+	events,
+	input
 ) {
 	let objects = null;
 	require(['js/objects/objects'], function (o) {
@@ -16,63 +18,48 @@ define([
 		type: 'spellbook',
 
 		hoverTarget: null,
-
 		target: null,
-		selected: null,
+		targetSprite: null,
+
 		reticleState: 0,
 		reticleCd: 0,
 		reticleCdMax: 10,
-
-		renderRange: null,
-
 		reticleSprite: null,
-		targetSprite: null,
-
-		shiftDown: false,
 
 		init: function (blueprint) {
 			this.targetSprite = renderer.buildObject({
 				sheetName: 'ui',
 				layerName: 'effects',
-				cell: this.reticleState
+				cell: 0,
+				visible: false
 			});
-			this.targetSprite.visible = false;
 
 			this.reticleSprite = renderer.buildObject({
 				sheetName: 'ui',
 				layerName: 'effects',
-				cell: 8 + this.reticleState
+				cell: 8,
+				visible: false
 			});
-			this.reticleSprite.visible = false;
 
 			events.emit('onGetSpells', this.spells);
 
 			this.reticleCd = this.reticleCdMax;
-			this.obj.on('onDeath', this.onDeath.bind(this));
 
+			this.obj.on('onDeath', this.onDeath.bind(this));
 			this.obj.on('onMobHover', this.onMobHover.bind(this));
 			this.obj.on('mouseDown', this.onMouseDown.bind(this));
-
 			this.obj.on('onKeyDown', this.onKeyDown.bind(this));
-			this.obj.on('onKeyUp', this.onKeyUp.bind(this));
 		},
 
 		extend: function (blueprint) {
 			if (blueprint.removeSpells) {
-				blueprint.removeSpells.forEach(function (spellId) {
-					this.spells.spliceWhere(function (s) {
-						return (s.id === spellId);
-					});
-				}, this);
-
+				blueprint.removeSpells.forEach(r => this.spells.spliceWhere(s => s.id === r));
 				events.emit('onGetSpells', this.spells);
 			}
 
 			if (blueprint.getSpells) {
 				blueprint.getSpells.forEach(function (s) {
-					let existIndex = this.spells.firstIndex(function (spell) {
-						return (spell.id === s.id);
-					});
+					let existIndex = this.spells.firstIndex(f => f.id === s.id);
 
 					if (existIndex > -1) {
 						this.spells.splice(existIndex, 1, s);
@@ -80,10 +67,7 @@ define([
 					}
 
 					this.spells.push(s);
-
-					this.spells = this.spells.sort(function (a, b) {
-						return (a.id - b.id);
-					});
+					this.spells.sort((a, b) => a.id - b.id);
 				}, this);
 
 				events.emit('onGetSpells', this.spells);
@@ -92,12 +76,7 @@ define([
 
 		getSpell: function (number) {
 			let spellNumber = (number === ' ') ? 0 : number;
-
-			let spell = this.spells.find(function (s) {
-				return (s.id === spellNumber);
-			});
-			if (!spell)
-				return null;
+			let spell = this.spells.find(s => s.id === spellNumber);
 
 			return spell;
 		},
@@ -132,7 +111,7 @@ define([
 		},
 
 		tabTarget: function () {
-			let closest = objects.getClosest(window.player.x, window.player.y, 10, this.shiftDown, this.target);
+			let closest = objects.getClosest(window.player.x, window.player.y, 10, input.isKeyDown('shift'), this.target);
 
 			this.target = closest;
 			this.targetSprite.visible = !!this.target;
@@ -158,46 +137,44 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'b') {
-				this.build();
-				return;
-			} else if (key === 'n') {
-				this.build(true);
-				return;
-			}
+			let handler = ({
+				b: this.build.bind(this),
+				n: this.build.bind(this, true),
+				tab: this.tabTarget.bind(this)
+			})[key];
 
-			if (key === 'shift') {
-				this.shiftDown = true;
+			if (handler) {
+				handler();
 				return;
-			} else if (key === 'tab') {
-				this.tabTarget();
+			} else if (isNaN(key))
 				return;
-			}
 
-			let spell = this.getSpell(~~key);
+			let spell = this.getSpell(key);
 			if (!spell)
 				return;
 
+			let isShiftDown = input.isKeyDown('shift');
+
 			let oldTarget = null;
-			if (this.shiftDown) {
+			if (isShiftDown) {
 				oldTarget = this.target;
 				this.target = this.obj;
 			}
 
-			if ((!spell.aura) && (!spell.targetGround) && (!spell.autoTargetFollower) && (!this.target))
+			if (!spell.aura && !spell.targetGround && !spell.autoTargetFollower && !this.target)
 				return;
 
 			let hoverTile = this.obj.mouseMover.hoverTile;
 			let target = hoverTile;
-			if ((spell.autoTargetFollower) && (!this.target))
+			if (spell.autoTargetFollower && !this.target)
 				target = null;
-			else if ((!spell.targetGround) && (this.target))
+			else if (!spell.targetGround && this.target)
 				target = this.target.id;
 
-			if (this.shiftDown)
+			if (isShiftDown)
 				this.target = oldTarget;
 
-			if ((target === this.obj) && (spell.noTargetSelf))
+			if (target === this.obj && spell.noTargetSelf)
 				return;
 
 			client.request({
@@ -209,16 +186,9 @@ define([
 					spell: spell.id,
 					auto: spell.auto,
 					target: target,
-					self: this.shiftDown
+					self: isShiftDown
 				}
 			});
-		},
-
-		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				return;
-			}
 		},
 
 		onDeath: function () {
@@ -227,15 +197,6 @@ define([
 		},
 
 		update: function () {
-			if ((this.target) && (this.target.destroyed)) {
-				this.target = null;
-				this.targetSprite.visible = false;
-			}
-			if ((this.target) && (this.target.nonSelectable)) {
-				this.target = null;
-				this.targetSprite.visible = false;
-			}
-
 			if (this.reticleCd > 0)
 				this.reticleCd--;
 			else {
@@ -245,17 +206,23 @@ define([
 					this.reticleState = 0;
 			}
 
-			if (!this.target)
+			let target = this.target;
+			if (!target)
 				return;
+
+			if (this.target.destroyed || this.target.nonSelectable) {
+				this.target = null;
+				this.targetSprite.visible = false;
+			}
+
+			this.targetSprite.x = target.x * scale;
+			this.targetSprite.y = target.y * scale;
 
 			renderer.setSprite({
 				sprite: this.targetSprite,
 				cell: this.reticleState,
 				sheetName: 'ui'
 			});
-
-			this.targetSprite.x = this.target.x * scale;
-			this.targetSprite.y = this.target.y * scale;
 		},
 
 		destroy: function () {
@@ -265,29 +232,6 @@ define([
 					sprite: this.targetSprite
 				});
 			}
-		},
-
-		render: function () {
-			if (this.reticleCd > 0)
-				this.reticleCd--;
-			else {
-				this.reticleCd = this.reticleCdMax;
-				this.reticleState++;
-				if (this.reticleState === 4)
-					this.reticleState = 0;
-			}
-
-			if (!this.target)
-				return;
-
-			renderer.setSprite({
-				sprite: this.targetSprite,
-				cell: this.reticleState,
-				sheetName: 'ui'
-			});
-
-			this.targetSprite.x = this.target.x * scale;
-			this.targetSprite.y = this.target.y * scale;
 		}
 	};
 });
