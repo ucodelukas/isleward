@@ -5,7 +5,7 @@ module.exports = {
 
 	castingEffect: null,
 
-	statType: 'agi',
+	statType: 'dex',
 	statMult: 1,
 	targetGround: true,
 

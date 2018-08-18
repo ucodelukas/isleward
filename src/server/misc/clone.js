@@ -6,7 +6,7 @@ let cloneRecursive = function (o, newO) {
 		return o;
  
 	if (o instanceof Array) {
-		if (!newO)
+		if (!newO || !newO.push)
 			newO = [];
 
 		for (let i = 0; i < o.length; i++) 
