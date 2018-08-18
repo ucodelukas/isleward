@@ -107,10 +107,10 @@ module.exports = {
 		}
 
 		if (this.eq.has(slot)) {
-			if (this.eq[slot].id === item.id)
+			if (this.eq[slot] === item.id)
 				return;
 
-			this.unequip(this.eq[slot].id);
+			this.unequip(this.eq[slot]);
 		}
 
 		let stats = item.stats;
