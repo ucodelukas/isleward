@@ -184,7 +184,7 @@ define([
 					return ((item.slot === checkSlot) && (!item.eq));
 				}, this);
 
-			if (!isConsumable) {
+			if (isConsumable) {
 				items = items
 					.filter(function (item, i) {
 						return (items.firstIndex(f => f.name === item.name) === i);
