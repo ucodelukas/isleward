@@ -336,8 +336,6 @@ module.exports = {
 			o.x = o.x - template.x + room.x;
 			o.y = o.y - template.y + room.y;
 
-			o.amount = 1;
-
 			o.scaleDrops = true;
 
 			spawners.register(o, spawnCd);

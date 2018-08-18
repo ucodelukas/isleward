@@ -21,7 +21,6 @@ module.exports = {
 		h: 0
 	},
 
-	instanced: false,
 	custom: null,
 
 	collisionMap: null,

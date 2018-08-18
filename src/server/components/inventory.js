@@ -674,7 +674,7 @@ module.exports = {
 			properties: {
 				cpnChest: {
 					ownerId: ownerId,
-					ttl: this.obj.instance.instanced ? -1 : 1710
+					ttl: 1710
 				},
 				cpnInventory: {
 					items: extend([], items)
