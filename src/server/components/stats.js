@@ -357,7 +357,7 @@ module.exports = {
 				mult = (1 + (partySize * 0.1));
 			}
 
-			if ((a.obj.stats) && (!a.obj.follower)) {
+			if (a.obj.player) {
 				//Scale xp by source level so you can't just farm low level mobs (or get boosted on high level mobs).
 				//Mobs that are farther then 10 levels from you, give no xp
 				//We don't currently do this for quests/herb gathering
