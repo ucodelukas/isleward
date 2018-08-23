@@ -43,7 +43,7 @@ module.exports = {
 		}
 	},
 
-	equip: function (itemId) {
+	equip: function (itemId, skipUnEq) {
 		let slot = null;
 		if (typeof (itemId) === 'object') {
 			slot = itemId.slot;
@@ -117,11 +117,11 @@ module.exports = {
 		for (let s in stats) {
 			let val = stats[s];
 
-			this.obj.stats.addStat(s, val);
+			this.obj.stats.addStat(s, val, skipUnEq);
 		}
 
 		(item.implicitStats || []).forEach(function (s) {
-			this.obj.stats.addStat(s.stat, s.value);
+			this.obj.stats.addStat(s.stat, s.value, skipUnEq);
 		}, this);
 
 		item.eq = true;

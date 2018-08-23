@@ -840,7 +840,7 @@ module.exports = {
 			if (item.ability)
 				this.learnAbility(item.id, item.runeSlot);
 			else
-				this.obj.equipment.equip(item.id);
+				this.obj.equipment.equip(item.id, true);
 		} else if (item.has('quickSlot')) {
 			this.obj.equipment.setQuickSlot({
 				itemId: item.id,
