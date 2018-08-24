@@ -16,7 +16,7 @@ define([
 
 			if (blueprint.destroyItems) {
 				rerender = true;
-				events.emit('onDestroyItems', blueprint.destroyItems);
+				events.emit('onDestroyItems', blueprint.destroyItems, this.items);
 			}
 
 			if (blueprint.getItems) {

@@ -19,7 +19,7 @@ define([
 			this.onEvent('onGetStats', this.events.onGetStats.bind(this));
 			this.onEvent('onGetPortrait', this.events.onGetPortrait.bind(this));
 			this.onEvent('onGetItems', this.events.onGetItems.bind(this));
-			this.onEvent('onDestroyItems', this.events.onGetItems.bind(this));
+			this.onEvent('onDestroyItems', this.events.onDestroyItems.bind(this));
 			this.onEvent('onKeyDown', this.events.onKeyDown.bind(this));
 		},
 
@@ -72,6 +72,16 @@ define([
 						background: 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px',
 						visibility: 'visible'
 					});
+			},
+
+			onDestroyItems: function (itemIds) {
+				const quickItem = this.items.find(f => f.has('quickSlot'));
+				if (!quickItem || itemIds.includes(quickItem.id)) {
+					this.find('.quickItem')
+						.hide()
+						.find('.icon')
+						.css('background', '');
+				}
 			},
 
 			onGetItems: function (items) {
