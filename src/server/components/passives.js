@@ -30,7 +30,7 @@ module.exports = {
 			let node = passiveTree.nodes.find(n => (n.id === id));
 			if (node) {
 				for (let p in node.stats) 
-					stats.addStat(p, node.stats[p]);
+					stats.addStat(p, node.stats[p], true);
 			}
 		});
 
@@ -45,17 +45,6 @@ module.exports = {
 			points--;
 
 		return points;
-	},
-
-	applyPassives: function () {
-		let stats = this.obj.stats;
-		this.selected.forEach(function (id) {
-			let node = passiveTree.nodes.find(n => (n.id === id));
-			if (node) {
-				for (let p in node.stats) 
-					stats.addStat(p, node.stats[p]);
-			}
-		});
 	},
 
 	tickNode: function (msg) {
