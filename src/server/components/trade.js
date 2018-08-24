@@ -263,7 +263,7 @@ module.exports = {
 		this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 		this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 
-		let buybackList = this.buybackList;
+		let buybackList = targetTrade.buybackList;
 		let name = this.obj.name;
 		if (!buybackList[name])
 			buybackList[name] = [];
