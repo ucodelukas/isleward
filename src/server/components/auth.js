@@ -304,7 +304,8 @@ module.exports = {
 		let exists = await io.getAsync({
 			key: credentials.username,
 			table: 'login',
-			noDefault: true
+			noDefault: true,
+			noParse: true
 		});
 
 		if (exists) {

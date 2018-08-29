@@ -10,9 +10,14 @@ module.exports = {
 
 	maxBuyback: 10,
 
+	blueprint: null,
 	gold: 0,
 
 	target: null,
+
+	regenCd: 0,
+	regenCdMax: 1710,
+	genLeft: 0,
 
 	markup: {
 		buy: 1,
@@ -20,8 +25,10 @@ module.exports = {
 	},
 
 	init: function (blueprint) {
+		this.blueprint = blueprint;
 		this.gold = blueprint.gold;
 		this.items = [];
+		this.regenCd = this.regenCdMax;
 
 		(blueprint.forceItems || []).forEach(function (f, i) {
 			let item = extend({}, f);
@@ -55,27 +62,41 @@ module.exports = {
 			return;
 		}
 
-		let itemCount = blueprint.items.min + ~~(Math.random() * (blueprint.items.max - blueprint.items.min));
-		for (let i = 0; i < itemCount; i++) {
-			let level = 1;
-			if (blueprint.level)
-				level = blueprint.level.min + ~~(Math.random() * (blueprint.level.max - blueprint.level.min));
+		this.genLeft = blueprint.items.max;
+	},
 
-			let item = generator.generate({
-				noSpell: true,
-				level: level
-			});
-
-			let id = 0;
-			this.items.forEach(function (checkItem) {
-				if (checkItem.id >= id)
-					id = checkItem.id + 1;
-			});
-
-			item.id = id;
-
-			this.items.push(item);
+	update: function () {
+		if (this.regenCd > 0) {
+			this.regenCd--;
+			return;
 		}
+
+		this.regenCd = this.regenCdMax;
+
+		if (!this.genLeft)
+			return;
+
+		this.genLeft--;
+
+		let blueprint = this.blueprint;
+		let level = 1;
+		if (blueprint.level)
+			level = blueprint.level.min + ~~(Math.random() * (blueprint.level.max - blueprint.level.min));
+
+		let item = generator.generate({
+			noSpell: true,
+			level: level
+		});
+
+		let id = 0;
+		this.items.forEach(function (checkItem) {
+			if (checkItem.id >= id)
+				id = checkItem.id + 1;
+		});
+
+		item.id = id;
+
+		this.items.push(item);
 	},
 
 	startBuy: function (msg) {
@@ -186,8 +207,10 @@ module.exports = {
 
 		if (msg.action === 'buyback')
 			targetTrade.removeBuyback(msg.itemId, this.obj.name);
-		else if ((item.type !== 'skin') && (!item.infinite))
+		else if ((item.type !== 'skin') && (!item.infinite)) {
 			targetTrade.removeItem(msg.itemId, this.obj.name);
+			targetTrade.genLeft++;
+		}
 
 		if (item.worth.currency) {
 			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));

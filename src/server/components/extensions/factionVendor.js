@@ -6,7 +6,7 @@ let itemEffects = require('../../items/itemEffects');
 module.exports = {
 	baseItems: [],
 
-	cdMax: 10,
+	cdMax: 5130,
 
 	blueprint: null,
 
@@ -16,6 +16,17 @@ module.exports = {
 
 		this.faction = blueprint.faction;
 		this.blueprint = blueprint;
+	},
+
+	update: function () {
+		for (let name in this.items) {
+			let list = this.items[name];
+			list.cd--;
+			if (!list.cd) {
+				list.cd = this.cdMax;
+				this.regenList(list);
+			}
+		}
 	},
 
 	getItems: function (requestedBy) {
