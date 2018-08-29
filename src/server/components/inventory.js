@@ -39,6 +39,12 @@ module.exports = {
 
 		this.hookItemEvents(items);
 
+		//Hack to skip attr checks on equip
+		let oldFn = this.canEquipItem;
+		this.canEquipItem = () => {
+			return true; 
+		};
+
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
 			let pos = item.pos;
@@ -47,6 +53,9 @@ module.exports = {
 			newItem.pos = pos;
 		}
 
+		//Hack to skip attr checks on equip
+		this.canEquipItem = oldFn.bind(this);
+
 		if ((this.obj.player) && (!isTransfer) && (this.obj.stats.values.level === 1))
 			this.getDefaultAbilities();
 
@@ -54,7 +63,8 @@ module.exports = {
 
 		this.blueprint = blueprint;
 
-		this.obj.equipment.unequipAttrRqrGear();
+		if (this.obj.equipment)
+			this.obj.equipment.unequipAttrRqrGear();
 	},
 
 	transfer: function () {
@@ -842,7 +852,7 @@ module.exports = {
 			if (item.ability)
 				this.learnAbility(item.id, item.runeSlot);
 			else
-				this.obj.equipment.equip(item.id, true);
+				this.obj.equipment.equip(item.id);
 		} else if (item.has('quickSlot')) {
 			this.obj.equipment.setQuickSlot({
 				itemId: item.id,
