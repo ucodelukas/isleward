@@ -43,7 +43,7 @@ module.exports = {
 		}
 	},
 
-	equip: function (itemId, skipUnEq) {
+	equip: function (itemId) {
 		let slot = null;
 		if (typeof (itemId) === 'object') {
 			slot = itemId.slot;
@@ -117,11 +117,11 @@ module.exports = {
 		for (let s in stats) {
 			let val = stats[s];
 
-			this.obj.stats.addStat(s, val, skipUnEq);
+			this.obj.stats.addStat(s, val);
 		}
 
 		(item.implicitStats || []).forEach(function (s) {
-			this.obj.stats.addStat(s.stat, s.value, skipUnEq);
+			this.obj.stats.addStat(s.stat, s.value);
 		}, this);
 
 		item.eq = true;
@@ -236,6 +236,8 @@ module.exports = {
 		this.obj.spellbook.calcDps();
 
 		this.obj.fireEvent('afterUnequipItem', item);
+
+		this.unequipAttrRqrGear();
 	},
 	unequipAll: function () {
 		let eq = this.eq;

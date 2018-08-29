@@ -30,7 +30,7 @@ module.exports = {
 			let node = passiveTree.nodes.find(n => (n.id === id));
 			if (node) {
 				for (let p in node.stats) 
-					stats.addStat(p, node.stats[p], true);
+					stats.addStat(p, node.stats[p]);
 			}
 		});
 

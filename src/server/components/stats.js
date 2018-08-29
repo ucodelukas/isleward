@@ -184,7 +184,7 @@ module.exports = {
 		}
 	},
 
-	addStat: function (stat, value, skipUnEq) {
+	addStat: function (stat, value) {
 		let values = this.values;
 
 		if (['lvlRequire', 'allAttributes'].indexOf(stat) === -1)
@@ -199,36 +199,33 @@ module.exports = {
 		if (['addCritChance', 'addAttackCritChance', 'addSpellCritChance'].indexOf(stat) > -1) {
 			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
-			this.addStat(morphStat, (0.05 * value), skipUnEq);
+			this.addStat(morphStat, (0.05 * value));
 		} else if (['addCritMultiplier', 'addAttackCritMultiplier', 'addSpellCritMultiplier'].indexOf(stat) > -1) {
 			let morphStat = stat.substr(3);
 			morphStat = morphStat[0].toLowerCase() + morphStat.substr(1);
-			this.addStat(morphStat, value, skipUnEq);
+			this.addStat(morphStat, value);
 		} else if (stat === 'vit') 
-			this.addStat('hpMax', (value * this.statScales.vitToHp), skipUnEq);
+			this.addStat('hpMax', (value * this.statScales.vitToHp));
 		else if (stat === 'allAttributes') {
 			['int', 'str', 'dex'].forEach(function (s) {
-				this.addStat(s, value, skipUnEq);
+				this.addStat(s, value);
 			}, this);
 		} else if (stat === 'elementAllResist') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Resist';
-				this.addStat(element, value, skipUnEq);
+				this.addStat(element, value);
 			}, this);
 		} else if (stat === 'elementPercent') {
 			['arcane', 'frost', 'fire', 'holy', 'poison'].forEach(function (s) {
 				let element = 'element' + (s[0].toUpperCase() + s.substr(1)) + 'Percent';
-				this.addStat(element, value, skipUnEq);
+				this.addStat(element, value);
 			}, this);
 		} else if (stat === 'str')
-			this.addStat('armor', (value * this.statScales.strToArmor), skipUnEq);
+			this.addStat('armor', (value * this.statScales.strToArmor));
 		else if (stat === 'int')
-			this.addStat('manaMax', (value * this.statScales.intToMana), skipUnEq);
+			this.addStat('manaMax', (value * this.statScales.intToMana));
 		else if (stat === 'dex')
-			this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge), skipUnEq);
-
-		if (!skipUnEq)
-			this.obj.equipment.unequipAttrRqrGear();
+			this.addStat('dodgeAttackChance', (value * this.statScales.dexToDodge));
 	},
 
 	calcXpMax: function () {
@@ -463,7 +460,7 @@ module.exports = {
 		const count = singleLevel ? 1 : this.values.level;
 
 		for (let s in gainStats) 
-			this.addStat(s, gainStats[s] * count, true);
+			this.addStat(s, gainStats[s] * count);
 	},
 
 	takeDamage: function (damage, threatMult, source) {

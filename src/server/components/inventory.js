@@ -53,6 +53,8 @@ module.exports = {
 		delete blueprint.items;
 
 		this.blueprint = blueprint;
+
+		this.obj.equipment.unequipAttrRqrGear();
 	},
 
 	transfer: function () {
