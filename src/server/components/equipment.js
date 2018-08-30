@@ -174,7 +174,7 @@ module.exports = {
 		if (typeof (itemId) === 'object')
 			itemId = itemId.itemId;
 
-		if (typeof(item) !== 'object')
+		if (typeof(item) !== 'object' || !item.has('id'))
 			item = this.obj.inventory.findItem(itemId);
 
 		if (!item)
