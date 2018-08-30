@@ -718,7 +718,7 @@ module.exports = {
 			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
-				existItem = (existItem.quantity || 1) + (item.quantity || 1);
+				existItem.quantity = (existItem.quantity || 1) + (item.quantity || 1);
 				item = existItem;
 			}
 		}
