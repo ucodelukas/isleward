@@ -7,15 +7,12 @@ let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
 
 module.exports = {
-	//Properties
 	type: 'inventory',
 
 	inventorySize: 50,
 	items: [],
 
 	blueprint: null,
-
-	//Base Methods
 
 	init: function (blueprint, isTransfer) {
 		let items = blueprint.items || [];
@@ -138,8 +135,6 @@ module.exports = {
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		}
 	},
-
-	//Client Actions
 
 	enchantItem: function (msg) {
 		let item = this.findItem(msg.itemId);
@@ -522,8 +517,6 @@ module.exports = {
 		this.resolveCallback(msg);
 	},
 
-	//Helpers
-
 	hookItemEvents: function (items) {
 		items = items || this.items;
 		let iLen = items.length;
@@ -721,14 +714,11 @@ module.exports = {
 		let quantity = item.quantity;
 
 		let exists = false;
-		if (((item.material) || (item.quest) || (item.quantity)) && (!item.noStack) && (!item.uses) && (!noStack)) {
-			let existItem = this.items.find(i => (i.name === item.name));
+		if ((item.material || item.quest || item.quantity) && !item.noStack && !item.uses && !noStack) {
+			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
-				if (!existItem.quantity)
-					existItem.quantity = 1;
-
-				existItem.quantity += (item.quantity || 1);
+				existItem = (existItem.quantity || 1) + (item.quantity || 1);
 				item = existItem;
 			}
 		}
@@ -807,23 +797,6 @@ module.exports = {
 					id: this.obj.id,
 					messages: messages
 				}, [this.obj.serverId]);
-			}
-		}
-
-		//TODO: Remove later, just for test
-		if (item.stats) {
-			let stats = Object.keys(item.stats);
-			let sLen = stats.length;
-			for (let i = 0; i < sLen; i++) {
-				let s = stats[i];
-				let val = item.stats[s];
-				if (s === 'maxHp') {
-					delete item.stats[s];
-					item.stats.hpMax = val;
-				} else if (s === 'maxMana') {
-					delete item.stats[s];
-					item.stats.manaMax = val;
-				}
 			}
 		}
 
