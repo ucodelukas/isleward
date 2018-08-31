@@ -1,6 +1,8 @@
 module.exports = {
 	type: 'projectile',
 
+	applyEffect: null,
+
 	cdMax: 7,
 	manaCost: 0,
 
@@ -119,6 +121,9 @@ module.exports = {
 
 		if (!target.stats)
 			return;
+
+		if (this.applyEffect)
+			target.effects.addEffect(this.applyEffect, this.obj);
 
 		target.stats.takeDamage(damage, this.threatMult, this.obj);
 	}

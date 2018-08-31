@@ -83,6 +83,7 @@ module.exports = {
 			}
 		}
 
+<<<<<<< HEAD
 		let x = obj.x;
 		let y = obj.y;
 
@@ -96,6 +97,58 @@ module.exports = {
 		let iLen = inRange.length;
 		for (let i = 0; i < iLen; i++) {
 			let enemy = inRange[i];
+=======
+		move: function (obj, x, y, range) {
+			obj = obj || this.obj;
+			var aggro = obj.aggro;
+
+			if (obj.dead)
+				return;
+
+			var result = {
+				success: true
+			};
+			obj.fireEvent('beforeAggro', result);
+			if (!result.success)
+				return;
+
+			//If we're attacking something, don't try and look for more trouble. SAVE THE CPU!
+			// this only counts for mobs, players can have multiple attackers
+			var list = aggro.list;
+			if (obj.isMob) {
+				var lLen = list.length;
+				for (var i = 0; i < lLen; i++) {
+					var l = list[i];
+
+					var lThreat = l.obj.aggro.getHighest();
+					if (lThreat) {
+						l.obj.aggro.list.forEach(function (a) {
+							a.obj.aggro.unIgnore(lThreat);
+						});
+					}
+
+					l.obj.aggro.unIgnore(obj);
+					if (l.threat > 0)
+						return;
+				}
+			} else {
+				var lLen = list.length;
+				for (var i = 0; i < lLen; i++) {
+					var targetAggro = list[i].obj.aggro;
+					//Maybe the aggro component has been removed?
+					if (targetAggro)
+						targetAggro.unIgnore(obj);
+				}
+			}
+
+			x = (x == null) ? obj.x : x;
+			y = (y == null) ? obj.y : y;
+
+			//find mobs in range
+			range = range || aggro.range;
+			var faction = aggro.faction;
+			var inRange = aggro.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
+>>>>>>> 555-new-dungeon
 
 			//The length could change
 			let lLen = list.length;
@@ -138,6 +191,7 @@ module.exports = {
 			return true;
 	},
 
+<<<<<<< HEAD
 	willAutoAttack: function (target) {
 		if (this.obj === target)
 			return false;
@@ -145,6 +199,16 @@ module.exports = {
 		let faction = target.aggro.faction;
 		if (!faction || !this.faction)
 			return false;
+=======
+				//Do we have LoS?
+				if (!aggro.physics.hasLos(x, y, enemy.x, enemy.y))
+					continue;
+
+				if (enemy.aggro.tryEngage(obj))
+					aggro.tryEngage(enemy, 0);
+			}
+		},
+>>>>>>> 555-new-dungeon
 
 		let rep = this.obj.reputation;
 		if (!rep) {
@@ -212,6 +276,7 @@ module.exports = {
 		return true;
 	},
 
+<<<<<<< HEAD
 	getFirstAttacker: function () {
 		let first = this.list.find(l => ((l.obj.player) && (l.damage > 0)));
 		if (first)
@@ -222,6 +287,13 @@ module.exports = {
 	die: function () {
 		let list = this.list;
 		let lLen = list.length;
+=======
+				list.push(l);
+
+				if (obj.player)
+					this.move(obj, this.obj.x, this.obj.y, ~~(this.range / 2));
+			}
+>>>>>>> 555-new-dungeon
 
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
@@ -313,6 +385,7 @@ module.exports = {
 			}
 		}
 
+<<<<<<< HEAD
 		if (highest)
 			return highest.obj;
 			
@@ -335,6 +408,60 @@ module.exports = {
 				l.threat -= this.threatDecay;
 				if (l.threat < 0)
 					l.threat = 0;
+=======
+			if (highest)
+				return highest.obj;
+			else {
+				//We have aggro but can't reach our target. Don't let the mob run away as if not in combat!
+				return true;
+			}
+		},
+
+		getFurthest: function () {
+			var furthest = null;
+			var distance = 0;
+
+			var list = this.list;
+			var lLen = list.length;
+
+			var thisObj = this.obj;
+			var x = thisObj.x;
+			var y = thisObj.y;
+
+			for (var i = 0; i < lLen; i++) {
+				var l = list[i];
+				var obj = l.obj;
+
+				if (this.ignoreList.some(o => o == obj))
+					continue;
+
+				var oDistance = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
+				if (oDistance > distance) {
+					furthest = l;
+					distance = oDistance;
+				}
+			}
+
+			return furthest.obj;
+		},
+
+		getRandom: function () {
+			var useList = this.list.filter(l => (!this.ignoreList.some(o => (o == l.obj))));
+			return useList[~~(Math.random() * useList.length)];
+		},
+
+		update: function () {
+			var list = this.list;
+			var lLen = list.length;
+
+			for (var i = 0; i < lLen; i++) {
+				var l = list[i];
+				if (l.obj.destroyed) {
+					this.unAggro(l.obj);
+					i--;
+					lLen--;
+				}
+>>>>>>> 555-new-dungeon
 			}
 		}
 	}

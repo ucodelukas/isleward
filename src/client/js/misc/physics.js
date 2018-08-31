@@ -1,12 +1,17 @@
 define([
-	'js/misc/pathfinder'
+	'js/misc/pathfinder',
+	'js/misc/distanceToPolygon'
 ], function (
-	pathfinder
+	pathfinder,
+	distanceToPolygon
 ) {
+<<<<<<< HEAD
 	let sqrt = Math.sqrt.bind(Math);
 	let ceil = Math.ceil.bind(Math);
 	let random = Math.random.bind(Math);
 
+=======
+>>>>>>> 555-new-dungeon
 	return {
 		graph: null,
 
@@ -28,6 +33,7 @@ define([
 			});
 		},
 
+<<<<<<< HEAD
 		addRegion: function (obj) {
 			let lowX = obj.x;
 			let lowY = obj.y;
@@ -253,6 +259,8 @@ define([
 
 			return path;
 		},
+=======
+>>>>>>> 555-new-dungeon
 		isTileBlocking: function (x, y, mob, obj) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
@@ -264,6 +272,7 @@ define([
 
 			return ((!node) || (node.weight === 0));
 		},
+<<<<<<< HEAD
 		isCellOpen: function (x, y) {
 			if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
 				return true;
@@ -289,28 +298,51 @@ define([
 
 			fromX += 0.5;
 			fromY += 0.5;
+=======
+>>>>>>> 555-new-dungeon
 
-			distance = ceil(distance);
+		isInPolygon: function (x, y, verts) {
+			var inside = false;
 
+<<<<<<< HEAD
 			let x = 0;
 			let y = 0;
 
 			for (let i = 0; i < distance; i++) {
 				fromX += dx;
 				fromY += dy;
+=======
+			var vLen = verts.length;
+			for (var i = 0, j = vLen - 1; i < vLen; j = i++) {
+				var vi = verts[i];
+				var vj = verts[j];
 
-				x = ~~fromX;
-				y = ~~fromY;
+				var xi = vi[0];
+				var yi = vi[1];
+				var xj = vj[0];
+				var yj = vj[1];
+>>>>>>> 555-new-dungeon
 
+				var doesIntersect = (
+					((yi > y) != (yj > y)) &&
+					(x < ((((xj - xi) * (y - yi)) / (yj - yi)) + xi))
+				);
+
+<<<<<<< HEAD
 				if (!graphGrid[x][y])
 					return false;
 				else if ((x === toX) && (y === toY))
 					return true;
+=======
+				if (doesIntersect)
+					inside = !inside
+>>>>>>> 555-new-dungeon
 			}
 
-			return true;
+			return inside;
 		},
 
+<<<<<<< HEAD
 		getClosestPos: function (fromX, fromY, toX, toY, target) {
 			let tried = {};
 
@@ -438,6 +470,10 @@ define([
 				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
 
 			node.weight = collides ? 0 : 1;
+=======
+		distanceToPolygon: function (p, verts) {
+			return distanceToPolygon.calculate(p, verts);
+>>>>>>> 555-new-dungeon
 		}
 	};
 });

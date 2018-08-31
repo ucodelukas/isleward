@@ -544,7 +544,7 @@ module.exports = {
 								class: 'color-redA',
 								message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
 							}
-						}, -1);
+						});
 
 						this.syncer.queue('onPermadeath', {
 							source: killSource.name
@@ -565,7 +565,7 @@ module.exports = {
 							x: this.obj.x,
 							y: this.obj.y,
 							components: [deathAnimation]
-						}, -1);
+						});
 					}
 
 					if (this.obj.inventory) {
@@ -574,10 +574,10 @@ module.exports = {
 						for (let i = 0; i < aLen; i++) {
 							let a = aggroList[i];
 
-							if ((!a.threat) || (!a.obj.serverId))
+							if ((!a.threat) || (a.obj.serverId == null))
 								continue;
 
-							this.obj.inventory.dropBag(a.obj.serverId, killSource);
+							this.obj.inventory.dropBag(a.obj.name, killSource);
 						}
 					}
 				}

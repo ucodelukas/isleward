@@ -337,21 +337,50 @@ module.exports = {
 			if (blueprint.blocking)
 				this.collisionMap[blueprint.x][blueprint.y] = 1;
 
-			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName === 'rooms') || (layerName === 'hiddenRooms')) {
+			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName === 'rooms') || (layerName == 'hiddenRooms')) {
 				blueprint.y++;
 				blueprint.width = cell.width / mapScale;
 				blueprint.height = cell.height / mapScale;
 			} else if (cell.width === 24)
 				blueprint.x++;
 
+			if (cell.polyline) {
+				let lowX = this.size.w;
+				let lowY = this.size.h;
+				let highX = 0;
+				let highY = 0;
+
+				blueprint.area = cell.polyline.map(function (v) {
+					let x = ~~((v.x + cell.x) / mapScale);
+					let y = ~~((v.y + cell.y) / mapScale);
+
+					if (x < lowX)
+						lowX = x;
+					if (x > highX)
+						highX = x;
+
+					if (y < lowY)
+						lowY = y;
+					if (y > highY)
+						highY = y;
+
+					return [x, y];
+				});
+
+				blueprint.x = lowX;
+				blueprint.y = lowY;
+				blueprint.width = (highX - lowX);
+				blueprint.height = (highY - lowY);
+			}
+
 			if (layerName === 'rooms') {
 				if (blueprint.properties.exit) {
 					let room = this.rooms.find(function (r) {
 						return (!(
 							(blueprint.x + blueprint.width < r.x) ||
-							(blueprint.y + blueprint.height < r.y) ||
-							(blueprint.x >= r.x + r.width) ||
-							(blueprint.y >= r.y + r.height)
+								(blueprint.y + blueprint.height < r.y) ||
+								(blueprint.x >= r.x + r.width) ||
+								(blueprint.y >= r.y + r.height)
 						));
 					});
 
@@ -363,23 +392,30 @@ module.exports = {
 					blueprint.objects = [];
 					this.rooms.push(blueprint);
 				}
-			} else if (layerName === 'hiddenRooms') 
+			} else if (layerName === 'hiddenRooms') {
+				blueprint.fog = (cell.properties || {}).fog;
+				blueprint.discoverable = (cell.properties || {}).discoverable;
 				this.hiddenRooms.push(blueprint);
-			else if (!clientObj) {
+			} else if (!clientObj) {
 				if (!mapFile.properties.isRandom)
 					spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 				else {
 					let room = this.rooms.find(function (r) {
 						return (!(
 							(blueprint.x < r.x) ||
-							(blueprint.y < r.y) ||
-							(blueprint.x >= r.x + r.width) ||
-							(blueprint.y >= r.y + r.height)
+								(blueprint.y < r.y) ||
+								(blueprint.x >= r.x + r.width) ||
+								(blueprint.y >= r.y + r.height)
 						));
 					});
 					room.objects.push(blueprint);
 				}
 			} else {
+				if ((cell.width) && (!cell.polyline)) {
+					blueprint.width = cell.width / mapScale;
+					blueprint.height = cell.height / mapScale;
+				}
+
 				let obj = objects.buildObjects([blueprint], true).getSimple(true);
 				this.objBlueprints.push(obj);
 			}

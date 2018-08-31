@@ -39,14 +39,14 @@ define([
 							max: 18
 						}
 					},
-					
+
 					particlesPerWave: 14,
-					particleSpacing: 0,	
+					particleSpacing: 0,
 					lifetime: {
 						min: 1,
 						max: 3
 					},
-					randomColor: true, 
+					randomColor: true,
 					randomScale: true,
 					randomSpeed: true,
 					frequency: 1
@@ -65,7 +65,7 @@ define([
 						}
 					}
 				})
-			};	
+			};
 		},
 
 		explode: function (blueprint) {

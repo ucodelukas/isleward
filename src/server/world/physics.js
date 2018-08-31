@@ -52,6 +52,7 @@ module.exports = {
 			}
 		}
 	},
+
 	removeRegion: function (obj) {
 		let oId = obj.id;
 
@@ -103,12 +104,17 @@ module.exports = {
 
 			//If we have fromX and fromY, check if the target cell doesn't contain the same obj (like a notice area)
 			if ((c.width) && (fromX)) {
-				if ((fromX < c.x) || (fromY < c.y) || (fromX >= c.x + c.width) || (fromY >= c.y + c.height)) {
+				if (c.area) {
+					if ((this.isInPolygon(x, y, c.area)) && (!this.isInPolygon(fromX, fromY, c.area))) {
+						c.collisionEnter(obj);
+						obj.collisionEnter(c);
+					}
+				} else if ((fromX < c.x) || (fromY < c.y) || (fromX >= c.x + c.width) || (fromY >= c.y + c.height)) {
 					c.collisionEnter(obj);
 					obj.collisionEnter(c);
 				}
 			} else {
-				//If a callback returns true, it means we collide
+			//If a callback returns true, it means we collide
 				if (c.collisionEnter(obj))
 					return;
 				obj.collisionEnter(c);
@@ -118,6 +124,7 @@ module.exports = {
 		cell.push(obj);
 		return true;
 	},
+
 	removeObject: function (obj, x, y, toX, toY) {
 		let row = this.cells[x];
 
@@ -137,7 +144,12 @@ module.exports = {
 			if (c.id !== oId) {
 				//If we have toX and toY, check if the target cell doesn't contain the same obj (like a notice area)
 				if ((c.width) && (toX)) {
-					if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
+					if (c.area) {
+						if ((this.isInPolygon(x, y, c.area)) && (!this.isInPolygon(toX, toY, c.area))) {
+							c.collisionExit(obj);
+							obj.collisionExit(c);
+						}
+					} else if ((toX < c.x) || (toY < c.y) || (toX >= c.x + c.width) || (toY >= c.y + c.height)) {
 						c.collisionExit(obj);
 						obj.collisionExit(c);
 					}
@@ -502,5 +514,30 @@ module.exports = {
 			grid[x][y].weight = collides ? 0 : 1;
 			pathfinder.astar.cleanNode(grid[x][y]);
 		}
+	},
+
+	isInPolygon: function (x, y, verts) {
+		let inside = false;
+
+		let vLen = verts.length;
+		for (let i = 0, j = vLen - 1; i < vLen; j = i++) {
+			let vi = verts[i];
+			let vj = verts[j];
+
+			let xi = vi[0];
+			let yi = vi[1];
+			let xj = vj[0];
+			let yj = vj[1];
+
+			let doesIntersect = (
+				((yi > y) != (yj > y)) &&
+					(x < ((((xj - xi) * (y - yi)) / (yj - yi)) + xi))
+			);
+
+			if (doesIntersect)
+				inside = !inside;
+		}
+
+		return inside;
 	}
 };

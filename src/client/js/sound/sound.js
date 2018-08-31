@@ -1,49 +1,63 @@
 define([
-	'howler'
+	'howler',
+	'js/misc/physics'
 ], function (
-	howler
+	howler,
+	physics
 ) {
 	return {
 		sounds: [],
 
 		init: function (zone) {
 			this.unload();
-
-			if (zone !== 'fjolarok')
-				return;
-
-			this.addSound('fire.ogg', 123, 123);
-			this.addSound('stream.ogg', 107, 69);
-			this.addSound('wind.ogg', 176, 104);
 		},
 
-		unload: function () {
+		unload: function (zoneId) {
 			this.sounds.forEach(function (s) {
-				if (s.sound)
+				if ((s.sound) && (s.zoneId != zoneId))
 					s.sound.unload();
 			});
 
-			this.sounds = [];
+			this.sounds.spliceWhere(function (s) {
+				return (s.zoneId !== zoneId);
+			});
 		},
 
 		update: function (x, y) {
 			this.sounds.forEach(function (s) {
-				let dx = Math.abs(s.x - x);
-				if (dx > 10) {
-					if (s.sound)
-						s.sound.volume(0);
-					return;
-				}
-				let dy = Math.abs(s.y - y);
-				if (dy > 10) {
-					if (s.sound)
-						s.sound.volume(0);
-					return;
-				}
+				let volume;
 
-				let dist = 10 - Math.max(dx, dy);
-				dist = (dist * dist) / 100;
-				let volume = 0.3 * dist;
+				if (!s.w) {
+					let dx = Math.abs(s.x - x);
+					if (dx > 10) {
+						if (s.sound)
+							s.sound.volume(0);
+						return;
+					}
+					let dy = Math.abs(s.y - y);
+					if (dy > 10) {
+						if (s.sound)
+							s.sound.volume(0);
+						return;
+					}
+
+					let dist = 10 - Math.max(dx, dy);
+					dist = (dist * dist) / 100;
+					volume = 0.3 * dist;
+				} else if (physics.isInPolygon(x, y, s.area)) 
+					volume = 0.3;
+				else {
+					let distance = physics.distanceToPolygon([x, y], s.area);
+					if (distance > 10) {
+						if (s.sound)
+							s.sound.volume(0);
+						return;
+					}
+
+					let dist = 10 - distance;
+					dist = (dist * dist) / 100;
+					volume = 0.3 * dist;
+				}
 
 				if (!s.sound) {
 					//eslint-disable-next-line no-undef
@@ -55,16 +69,30 @@ define([
 					});
 				}
 
-				s.sound.volume(volume);
+				s.sound.volume(volume * s.volume);
 			});
 		},
 
-		addSound: function (file, x, y) {
+		addSound: function (zoneId, file, volume, x, y, w, h, area) {
+			if ((!area) && (w)) {
+				area = [
+					[x, y],
+					[x + w, y],
+					[x + w, y + h],
+					[x, y + h]
+				];
+			}
+
 			let sound = {
 				file: file,
 				x: x,
 				y: y,
-				sound: null
+				w: w,
+				h: h,
+				volume: volume,
+				area: area,
+				sound: null,
+				zoneId: zoneId
 			};
 
 			this.sounds.push(sound);

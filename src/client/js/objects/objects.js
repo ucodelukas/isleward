@@ -2,12 +2,14 @@ define([
 	'js/objects/objBase',
 	'js/system/events',
 	'js/rendering/renderer',
-	'js/sound/sound'
+	'js/sound/sound',
+	'js/config'
 ], function (
 	objBase,
 	events,
 	renderer,
-	sound
+	sound,
+	config
 ) {
 	return {
 		showNames: false,
@@ -20,21 +22,36 @@ define([
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
+			events.on('onTilesVisible', this.onTilesVisible.bind(this));
 
 			//Get saved value for showNames, or use the value set above
+<<<<<<< HEAD
 			let showNames = window.localStorage.getItem('iwd_opt_shownames');
 			this.showNames = showNames ? (showNames === 'true') : this.showNames;
+=======
+			var showNames = window.localStorage.getItem('iwd_opt_shownames');
+			this.showNames = showNames ? (showNames == 'true') : this.showNames;
+			config.showNames = this.showNames;
+>>>>>>> 555-new-dungeon
 		},
 
 		getLocation: function (x, y) {
 			let objects = this.objects;
 			let oLen = objects.length;
 
+<<<<<<< HEAD
 			let closest = 999;
 			let mob = null;
 			for (let i = 0; i < oLen; i++) {
 				let o = objects[i];
 				if ((!o.stats) || (o.nonSelectable))
+=======
+			var closest = 999;
+			var mob = null;
+			for (var i = 0; i < oLen; i++) {
+				var o = objects[i];
+				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
+>>>>>>> 555-new-dungeon
 					continue;
 
 				let dx = Math.abs(o.x - x);
@@ -53,8 +70,13 @@ define([
 		getClosest: function (x, y, maxDistance, reverse, fromMob) {
 			let objects = this.objects;
 
+<<<<<<< HEAD
 			let list = objects.filter(function (o) {
 				if ((!o.stats) || (o.nonSelectable) || (o === window.player))
+=======
+			var list = objects.filter(function (o) {
+				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
+>>>>>>> 555-new-dungeon
 					return false;
 
 				let dx = Math.abs(o.x - x);
@@ -120,13 +142,18 @@ define([
 			else
 				this.updateObject(exists, obj);
 		},
+
 		buildObject: function (template) {
 			let obj = $.extend(true, {}, objBase);
 
 			let components = template.components || [];
 			delete template.components;
 
+<<<<<<< HEAD
 			let syncTypes = ['portrait'];
+=======
+			var syncTypes = ['portrait', 'area'];
+>>>>>>> 555-new-dungeon
 
 			for (let p in template) {
 				let value = template[p];
@@ -137,19 +164,6 @@ define([
 						obj[p] = value;
 				} else
 					obj[p] = value;
-			}
-
-			if (obj.sheetName) {
-				obj.sprite = renderer.buildObject(obj);
-				if (template.hidden) {
-					obj.sprite.visible = false;
-					if (obj.nameSprite)
-						obj.nameSprite.visible = false;
-					if ((obj.stats) && (obj.stats.hpSprite)) {
-						obj.stats.hpSprite.visible = false;
-						obj.stats.hpSpriteInner.visible = false;
-					}
-				}
 			}
 
 			components.forEach(function (c) {
@@ -170,13 +184,26 @@ define([
 				obj.addComponent(c.type, c);
 			}, this);
 
+			if (obj.sheetName) {
+				obj.sprite = renderer.buildObject(obj);
+				if (template.hidden) {
+					obj.sprite.visible = false;
+					if (obj.nameSprite)
+						obj.nameSprite.visible = false;
+					if ((obj.stats) && (obj.stats.hpSprite)) {
+						obj.stats.hpSprite.visible = false;
+						obj.stats.hpSpriteInner.visible = false;
+					}
+				}
+			}
+
 			this.objects.push(obj);
 
 			if (obj.self) {
 				events.emit('onGetPlayer', obj);
 				window.player = obj;
 
-				sound.init(obj.zoneName);
+				sound.init(obj.zoneId);
 
 				renderer.setPosition({
 					x: (obj.x - (renderer.width / (scale * 2))) * scale,
@@ -191,11 +218,16 @@ define([
 					x: (obj.x * scale) + (scale / 2),
 					y: (obj.y * scale) + scale
 				});
-				obj.nameSprite.visible = this.showNames;
+			}
+
+			if (renderer.sprites) {
+				var isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
+				obj.setVisible(isVisible);
 			}
 
 			return obj;
 		},
+
 		updateObject: function (obj, template) {
 			let components = template.components || [];
 
@@ -239,6 +271,13 @@ define([
 
 				if ((p === 'x') || (p === 'y'))
 					moved = true;
+
+				if (p == 'casting') {
+					if (obj == window.player)
+						events.emit('onGetSelfCasting', value);
+					else
+						events.emit('onGetTargetCasting', value);
+				}
 
 				if (sprite) {
 					if (p === 'x') {
@@ -285,8 +324,14 @@ define([
 				obj.nameSprite.visible = this.showNames;
 			}
 
+			if (obj.sprite) {
+				var isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
+				obj.setVisible(isVisible);
+			}
+
 			obj.setSpritePosition();
 		},
+
 		update: function () {
 			let objects = this.objects;
 			let len = objects.length;
@@ -314,19 +359,45 @@ define([
 
 				//Set new value in localStorage for showNames
 				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
+				config.showNames = this.showNames;
 
 				let showNames = this.showNames;
 
+<<<<<<< HEAD
 				let objects = this.objects;
 				let oLen = objects.length;
 				for (let i = 0; i < oLen; i++) {
 					let obj = objects[i];
 					let ns = obj.nameSprite;
 					if ((!ns) || (obj.dead))
+=======
+				var objects = this.objects;
+				var oLen = objects.length;
+				for (var i = 0; i < oLen; i++) {
+					var obj = objects[i];
+					var ns = obj.nameSprite;
+					if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
+>>>>>>> 555-new-dungeon
 						continue;
 
 					ns.visible = showNames;
 				}
+			}
+		},
+
+		onTilesVisible: function (tiles, visible) {
+			var objects = this.objects;
+			var oLen = objects.length;
+			for (var i = 0; i < oLen; i++) {
+				var o = objects[i];
+
+				var onPos = tiles.some(function (t) {
+					return ((t.x == o.x) && (t.y == o.y));
+				});
+				if (!onPos)
+					continue;
+
+				o.setVisible(visible);
 			}
 		}
 	};

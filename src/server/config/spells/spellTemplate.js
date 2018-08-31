@@ -6,17 +6,15 @@ module.exports = {
 	manaCost: 1,
 	threatMult: 1,
 
+	casting: false,
+	castTime: 0,
+	castTimeMax: 0,
+
 	needLos: false,
 
-	pendingAttacks: [],
+	currentAction: null,
 
-	castBase: function () {
-		if (this.cd > 0)
-			return false;
-		else if (this.manaCost > this.obj.stats.values.mana)
-			return false;
-		return true;
-	},
+	pendingAttacks: [],
 
 	canCast: function (target) {
 		if (this.cd > 0)
@@ -32,17 +30,76 @@ module.exports = {
 			let distance = Math.max(Math.abs(target.x - obj.x), Math.abs(target.y - obj.y));
 			inRange = (distance <= this.range);
 		}
-
 		return inRange;
 	},
 
+	castBase: function (action) {
+		if (this.castTimeMax > 0) {
+			if ((!this.currentAction) || (this.currentAction.target != action.target)) {
+				this.currentAction = action;
+				this.castTime = this.castTimeMax;
+				this.obj.syncer.set(false, null, 'casting', 0);
+			}
+
+			return false;
+		}
+
+		return this.cast(action);
+	},
+
 	updateBase: function () {
+		if (this.castTime > 0) {
+			this.castTime--;
+			this.obj.syncer.set(false, null, 'casting', (this.castTimeMax - this.castTime) / this.castTimeMax);
+
+			if (!this.castTime) {
+				if (this.cast(this.currentAction)) {
+					this.consumeMana();
+					this.setCd();
+					this.currentAction = null;
+				}
+			} else
+				this.sendBump(null, 0, -1);
+
+			return;
+		}
+
 		if (this.cd > 0)
 			this.cd--;
 	},
 
+	consumeMana: function () {
+		let stats = this.obj.stats.values;
+		stats.mana -= this.manaCost;
+
+		if (this.obj.player)
+			this.obj.syncer.setObject(true, 'stats', 'values', 'mana', stats.mana);
+	},
+
+	setCd: function () {
+		let cd = {
+			cd: this.cdMax
+		};
+
+		let isAttack = (this.type == 'melee');
+		if ((Math.random() * 100) < this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'])
+			cd.cd = 1;
+
+		this.obj.fireEvent('beforeSetSpellCooldown', cd);
+
+		this.cd = cd.cd;
+
+		if (this.obj.player) {
+			this.obj.instance.syncer.queue('onGetSpellCooldowns', {
+				id: this.obj.id,
+				spell: this.id,
+				cd: (this.cd * 350)
+			}, [this.obj.serverId]);
+		}
+	},
+
 	calcDps: function (target, noSync) {
-		if ((!this.values) || (this.spellType === 'buff'))
+		if ((!this.values) || (this.spellType == 'buff'))
 			return;
 
 		if ((!this.damage) && (!this.healing))
@@ -66,12 +123,12 @@ module.exports = {
 				noCrit: true
 			}).amount;
 
-			let isAttack = (this.type === 'melee');
+			let isAttack = (this.type == 'melee');
 
 			let statValues = this.obj.stats.values;
 
 			let critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
-			let critMultiplier = 100 + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
+			let critMultiplier = isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier;
 			let attackSpeed = (statValues.attackSpeed / 100);
 			attackSpeed += 1;
 
@@ -84,7 +141,7 @@ module.exports = {
 
 			if (this.damage) 
 				this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
-			else
+				 else
 				this.values.heal = ~~(dmg * 100) / 100 + '/tick';
 
 			if (!noSync)
@@ -93,28 +150,27 @@ module.exports = {
 	},
 
 	sendAnimation: function (blueprint) {
-		this.obj.instance.syncer.queue('onGetObject', blueprint, -1);
+		this.obj.instance.syncer.queue('onGetObject', blueprint);
 	},
 
-	sendBump: function (target) {
-		let x = this.obj.x;
-		let y = this.obj.y;
+	sendBump: function (target, deltaX, deltaY) {
+		if (target) {
+			let x = this.obj.x;
+			let y = this.obj.y;
 
-		let tx = target.x;
-		let ty = target.y;
+			let tx = target.x;
+			let ty = target.y;
 
-		let deltaX = 0;
-		let deltaY = 0;
+			if (tx < x)
+				deltaX = -1;
+			else if (tx > x)
+				deltaX = 1;
 
-		if (tx < x)
-			deltaX = -1;
-		else if (tx > x)
-			deltaX = 1;
-
-		if (ty < y)
-			deltaY = -1;
-		else if (ty > y)
-			deltaY = 1;
+			if (ty < y)
+				deltaY = -1;
+			else if (ty > y)
+				deltaY = 1;
+		}
 
 		let components = [{
 			type: 'bumpAnimation',
@@ -122,7 +178,8 @@ module.exports = {
 			deltaY: deltaY
 		}];
 
-		if (this.animation) {
+			//During casting we only bump
+		if ((target) && (this.animation)) {
 			components.push({
 				type: 'animation',
 				template: this.animation
@@ -132,7 +189,7 @@ module.exports = {
 		this.obj.instance.syncer.queue('onGetObject', {
 			id: this.obj.id,
 			components: components
-		}, -1);
+		});
 	},
 
 	simplify: function (self) {

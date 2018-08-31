@@ -99,7 +99,7 @@ module.exports = {
 			o = this;
 		}
 
-		let syncTypes = ['portrait'];
+		let syncTypes = ['portrait', 'area'];
 
 		for (let p in o) {
 			let value = o[p];

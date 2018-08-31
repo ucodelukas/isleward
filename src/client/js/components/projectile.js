@@ -82,8 +82,13 @@ define([
 		},
 
 		renderManual: function () {
+<<<<<<< HEAD
 			let source = this.obj;
 			let target = this.target;
+=======
+			var source = this.obj;
+			var target = this.target;
+>>>>>>> 555-new-dungeon
 
 			let dx = target.x - this.x;
 			let dy = target.y - this.y;
@@ -95,8 +100,13 @@ define([
 				source.y = target.y;
 				this.particles.emitter.emit = false;
 				if (!this.noExplosion)
+<<<<<<< HEAD
 					source.explosion.explode();
 				source.destroyed = true;
+=======
+					this.obj.explosion.explode();
+				this.obj.destroyed = true;
+>>>>>>> 555-new-dungeon
 			} else {
 				dx /= ticksLeft;
 				dy /= ticksLeft;

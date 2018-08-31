@@ -1,0 +1,32 @@
+@import "../../../css/ui.less";
+
+.middleHud {
+	position: absolute;
+	left: 50%;
+	top: calc(50% + 60px);
+	transform: translate(-50%, -50%);
+
+	.casting {
+		display: none;
+		width: 100px;
+		height: 20px;
+		position: relative;
+		background-color: @grayC;
+
+		.bar {
+			width: 0%;
+			height: 100%;
+			background-color: @white;
+		}
+
+		.text {
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			padding-top: 2px;
+			width: 100%;
+			text-align: center;
+			color: @black;
+		}
+	}
+}

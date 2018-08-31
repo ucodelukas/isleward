@@ -16,11 +16,17 @@ module.exports = {
 	maxChaseDistance: 25,
 	goHome: false,
 
+	patrol: null,
+	patrolTargetNode: 0,
+
 	init: function (blueprint) {
 		this.physics = this.obj.instance.physics;
 
 		this.originX = this.obj.x;
 		this.originY = this.obj.y;
+
+		if (blueprint.patrol)
+			this.patrol = blueprint.patrol;
 	},
 
 	update: function () {
@@ -63,17 +69,33 @@ module.exports = {
 		if (obj.actionQueue.length > 0)
 			return;
 
-		//Unless we're going home, don't always move
-		if ((!this.goHome) && (rnd() < 0.85))
+			//Unless we're going home, don't always move
+		if ((!this.goHome) && (rnd() < 0.85) && (!this.patrol))
 			return;
 
-		//don't move around if we're not allowed to, unless we're going home
+			//Don't move around if we're not allowed to, unless we're going home
 		let walkDistance = this.walkDistance;
 		if ((!this.goHome) && (walkDistance <= 0))
 			return;
 
-		let toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
-		let toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+		let toX, toY;
+
+		if (!this.patrol) {
+			toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+			toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
+		} else {
+			while (true) {
+				let toNode = this.patrol[this.patrolTargetNode];
+				toX = toNode[0];
+				toY = toNode[1];
+				if ((toX - obj.x == 0) && (toY - obj.y == 0)) {
+					this.patrolTargetNode++;
+					if (this.patrolTargetNode >= this.patrol.length)
+						this.patrolTargetNode = 0;
+				} else
+					break;
+			}
+		}
 
 		if (!this.physics.isCellOpen(toX, toY))
 			return;

@@ -18,6 +18,21 @@ define([
 		postRender: function () {
 			this.onEvent('onSetTarget', this.onSetTarget.bind(this));
 			this.onEvent('onDeath', this.onSetTarget.bind(this, null));
+			this.onEvent('onGetTargetCasting', this.onGetCasting.bind(this));
+		},
+
+		onGetCasting: function (casting) {
+			var box = this.el.find('.statBox')
+				.eq(2);
+
+			if ((casting == 0) || (casting == 1)) {
+				box.hide();
+				return;
+			} else
+				box.show();
+
+			var w = ~~(casting * 100);
+			box.find('[class^="stat"]').css('width', w + '%');
 		},
 
 		onContextMenu: function (e) {

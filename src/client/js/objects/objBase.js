@@ -1,11 +1,13 @@
 define([
 	'js/components/components',
 	'js/rendering/renderer',
-	'js/system/events'
+	'js/system/events',
+	'js/config'
 ], function (
 	components,
 	renderer,
-	events
+	events,
+	config
 ) {
 	return {
 		components: [],
@@ -118,6 +120,19 @@ define([
 
 			if (this.stats)
 				this.stats.updateHpSprite();
+		},
+
+		setVisible: function (visible) {
+			if (this.sprite)
+				this.sprite.visible = visible;
+
+			if (this.nameSprite)
+				this.nameSprite.visible = ((visible) && (config.showNames));
+
+			this.components.forEach(function (c) {
+				if (c.setVisible)
+					c.setVisible(visible);
+			});
 		},
 
 		destroy: function () {

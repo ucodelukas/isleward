@@ -3,7 +3,8 @@ let events = require('../misc/events');
 let spells = {
 	melee: {
 		auto: true,
-		cdMax: 5,
+		cdMax: 10,
+		castTimeMax: 0,
 		useWeaponRange: true,
 		random: {
 			damage: [3, 11.4]
@@ -11,7 +12,8 @@ let spells = {
 	},
 	projectile: {
 		auto: true,
-		cdMax: 7,
+		cdMax: 10,
+		castTimeMax: 0,
 		manaCost: 0,
 		range: 9,
 		random: {
@@ -23,7 +25,8 @@ let spells = {
 		statType: 'int',
 		statMult: 1,
 		element: 'arcane',
-		cdMax: 14,
+		cdMax: 8,
+		castTimeMax: 6,
 		manaCost: 4,
 		range: 9,
 		random: {
@@ -34,7 +37,8 @@ let spells = {
 		statType: 'int',
 		statMult: 0.49,
 		element: 'frost',
-		cdMax: 12,
+		cdMax: 9,
+		castTimeMax: 3,
 		manaCost: 4,
 		range: 9,
 		random: {
@@ -47,6 +51,7 @@ let spells = {
 		statMult: 0.22,
 		element: 'fire',
 		cdMax: 6,
+		castTimeMax: 0,
 		manaCost: 5,
 		random: {
 			damage: [6, 22.9],
@@ -57,8 +62,8 @@ let spells = {
 	smite: {
 		statType: 'int',
 		statMult: 1,
-		element: 'holy',
-		cdMax: 10,
+		cdMax: 4,
+		castTimeMax: 6,
 		range: 9,
 		manaCost: 4,
 		random: {
@@ -70,7 +75,8 @@ let spells = {
 		statType: 'int',
 		statMult: 0.07,
 		element: 'holy',
-		cdMax: 10,
+		cdMax: 8,
+		castTimeMax: 2,
 		manaCost: 8,
 		range: 9,
 		radius: 3,
@@ -79,21 +85,13 @@ let spells = {
 			i_duration: [7, 13]
 		}
 	},
-	/*'holy vengeance': {
-			statType: 'int',
-			statMult: 1,
-			cdMax: 30,
-			manaCost: 15,
-			range: 9,
-			random: {
-				i_duration: [30, 50]
-			}
-		},*/
+
 	slash: {
 		statType: 'str',
 		statMult: 1,
 		threatMult: 4,
-		cdMax: 10,
+		cdMax: 8,
+		castTimeMax: 2,
 		manaCost: 4,
 		useWeaponRange: true,
 		random: {
@@ -105,6 +103,7 @@ let spells = {
 		statMult: 0.59,
 		threatMult: 3,
 		cdMax: 15,
+		castTimeMax: 0,
 		range: 10,
 		manaCost: 3,
 		random: {
@@ -112,20 +111,11 @@ let spells = {
 			i_stunDuration: [6, 10]
 		}
 	},
-	/*'reflect damage': {
-			statType: 'str',
-			statMult: 1,
-			cdMax: 5,
-			threatMult: 2,
-			manaCost: 10,
-			random: {
-				i_duration: [4, 8]
-			}
-		},*/
 	flurry: {
 		statType: 'dex',
 		statMult: 0.88,
 		cdMax: 20,
+		castTimeMax: 0,
 		manaCost: 5,
 		random: {
 			i_duration: [4, 9]
@@ -136,6 +126,7 @@ let spells = {
 		statMult: 0.98,
 		element: 'poison',
 		cdMax: 5,
+		castTimeMax: 0,
 		manaCost: 6,
 		random: {
 			damage: [0.25, 0.73],
@@ -143,19 +134,13 @@ let spells = {
 			i_duration: [7, 13]
 		}
 	},
-	/*'stealth': {
-			statType: 'dex',
-			statMult: 1,
-			duration: 200,
-			cdMax: 15,
-			manaCost: 10
-		},*/
 	'crystal spikes': {
 		statType: ['dex', 'int'],
 		statMult: 1.82,
 		manaCost: 22,
 		needLos: true,
-		cdMax: 20,
+		cdMax: 16,
+		castTimeMax: 4,
 		range: 9,
 		random: {
 			damage: [7, 26.5],
@@ -172,6 +157,7 @@ let spells = {
 			percentage: 0.25
 		},
 		cdMax: 10,
+		castTimeMax: 0,
 		auraRange: 9,
 		effect: 'regenHp',
 		random: {
@@ -186,6 +172,7 @@ let spells = {
 			percentage: 0.25
 		},
 		cdMax: 10,
+		castTimeMax: 0,
 		auraRange: 9,
 		effect: 'regenMana',
 		random: {
@@ -200,24 +187,14 @@ let spells = {
 			percentage: 0.4
 		},
 		cdMax: 10,
+		castTimeMax: 0,
 		auraRange: 9,
 		effect: 'swiftness',
 		random: {
 			chance: [5, 10]
 		}
 	}
-	/*,
-				'chain lightning': {
-					statType: 'int',
-					statMult: 0.454,
-					element: 'holy',
-					cdMax: 5,
-					manaCost: 0,
-					range: 9,
-					random: {
-						damage: [9.3, 18.6]
-					}
-				}*/
+
 };
 
 module.exports = {

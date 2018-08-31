@@ -52,7 +52,8 @@ define([
 				'mail',
 				'wardrobe',
 				'passives',
-				'workbench'
+				'workbench',
+				'middleHud'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);

@@ -49,6 +49,11 @@ module.exports = {
 			grantRep: blueprint.grantRep,
 			deathRep: blueprint.deathRep
 		});
+		if (blueprint.patrol)
+			cpnMob.patrol = blueprint.patrol;
+
+		if (cpnMob.patrol)
+			cpnMob.walkDistance = 1;
 
 		let spells = extend([], blueprint.spells);
 		spells.forEach(function (s) {
@@ -64,7 +69,7 @@ module.exports = {
 		});
 
 		let attackable = blueprint.attackable;
-		if (attackable !== false) {
+		if (!blueprint.has('attackable') || attackable === true) {
 			mob.addComponent('aggro', {
 				faction: blueprint.faction
 			});
