@@ -1,137 +1,127 @@
-define([
+let cpnHealPatch = {
+	type: 'healPatch',
 
-], function(
+	contents: [],
 
-) {
-	var cpnHealPatch = {
-		type: 'healPatch',
+	init: function (blueprint) {
+		for (let p in blueprint) 
+			this[p] = blueprint[p];
+	},
 
-		contents: [],
+	applyHeal: function (o, amount) {
+		o.stats.getHp(amount, this.caster);
+	},
 
-		init: function(blueprint) {
-			for (var p in blueprint) {
-				this[p] = blueprint[p];
-			}
-		},
+	collisionEnter: function (o) {
+		if ((!o.aggro) || (!o.player))
+			return;
 
-		applyHeal: function(o, amount) {
-			o.stats.getHp(amount, this.caster);
-		},
+		let isPlayer = !!this.caster.player;
+		let isTargetPlayer = !!o.player;
 
-		collisionEnter: function(o) {
-			if ((!o.aggro) || (!o.player))
+		if ((this.caster.aggro.canAttack(o)) || (isPlayer !== isTargetPlayer))
+			return;
+
+		this.contents.push(o);
+	},
+
+	collisionExit: function (o) {
+		let contents = this.contents;
+		let cLen = contents.length;
+		for (let i = 0; i < cLen; i++) {
+			if (contents[i] === o) {
+				contents.splice(i, 1);
 				return;
-
-			var isPlayer = !!this.caster.player;
-			var isTargetPlayer = !!o.player;
-
-			if ((this.caster.aggro.canAttack(o)) || (isPlayer != isTargetPlayer))
-				return;
-
-			this.contents.push(o);
-		},
-
-		collisionExit: function(o) {
-			var contents = this.contents;
-			var cLen = contents.length;
-			for (var i = 0; i < cLen; i++) {
-				if (contents[i] == o) {
-					contents.splice(i, 1);
-					return;
-				}
-			}
-		},
-
-		update: function() {
-			var stats = this.caster.stats;
-
-			var contents = this.contents;
-			var cLen = contents.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = contents[i];
-
-				var amount = this.spell.getDamage(c, true);
-				this.applyHeal(c, amount);
 			}
 		}
-	};
+	},
 
-	return {
-		type: 'healingCircle',
+	update: function () {
+		let contents = this.contents;
+		let cLen = contents.length;
+		for (let i = 0; i < cLen; i++) {
+			let c = contents[i];
 
-		cdMax: 20,
-		manaCost: 0,
-		range: 9,
+			let amount = this.spell.getDamage(c, true);
+			this.applyHeal(c, amount);
+		}
+	}
+};
 
-		healing: 1,
-		duration: 70,
+module.exports = {
+	type: 'healingCircle',
 
-		targetGround: true,
-		needLos: true,
+	cdMax: 20,
+	manaCost: 0,
+	range: 9,
 
-		cast: function(action) {
-			var obj = this.obj;
-			var target = action.target;
+	healing: 1,
+	duration: 70,
 
-			var radius = this.radius;
+	targetGround: true,
+	needLos: true,
 
-			var x = target.x;
-			var y = target.y;
+	cast: function (action) {
+		let obj = this.obj;
+		let target = action.target;
 
-			var objects = this.obj.instance.objects;
-			var patches = [];
+		let radius = this.radius;
 
-			var physics = this.obj.instance.physics;
+		let x = target.x;
+		let y = target.y;
 
-			for (var i = x - radius; i <= x + radius; i++) {
-				var dx = Math.abs(x - i);
-				for (var j = y - radius; j <= y + radius; j++) {
-					var distance = dx + Math.abs(j - y);
+		let objects = obj.instance.objects;
+		let patches = [];
 
-					if (distance > radius + 1)
-						continue;
+		let physics = obj.instance.physics;
 
-					if (!physics.hasLos(x, y, i, j))
-						continue;
+		for (let i = x - radius; i <= x + radius; i++) {
+			let dx = Math.abs(x - i);
+			for (let j = y - radius; j <= y + radius; j++) {
+				let distance = dx + Math.abs(j - y);
 
-					var patch = objects.buildObjects([{
-						x: i,
-						y: j,
-						properties: {
-							cpnHealPatch: cpnHealPatch,
-							cpnParticles: {
-								simplify: function() {
-									return {
-										type: 'particles',
-										blueprint: this.blueprint
-									};
-								},
-								blueprint: this.particles
-							}
-						},
-						extraProperties: {
-							healPatch: {
-								caster: this.obj,
-								spell: this
-							}
+				if (distance > radius + 1)
+					continue;
+
+				if (!physics.hasLos(x, y, i, j))
+					continue;
+
+				let patch = objects.buildObjects([{
+					x: i,
+					y: j,
+					properties: {
+						cpnHealPatch: cpnHealPatch,
+						cpnParticles: {
+							simplify: function () {
+								return {
+									type: 'particles',
+									blueprint: this.blueprint
+								};
+							},
+							blueprint: this.particles
 						}
-					}]);
+					},
+					extraProperties: {
+						healPatch: {
+							caster: obj,
+							spell: this
+						}
+					}
+				}]);
 
-					patches.push(patch);
-				}
-			}
-
-			this.sendBump(target);
-
-			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
-
-			return true;
-		},
-		endEffect: function(patches) {
-			var pLen = patches.length;
-			for (var i = 0; i < pLen; i++) {
-				patches[i].destroyed = true;
+				patches.push(patch);
 			}
 		}
-	};
-});
+
+		this.sendBump(target);
+
+		this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
+
+		return true;
+	},
+	endEffect: function (patches) {
+		let pLen = patches.length;
+		for (let i = 0; i < pLen; i++) 
+			patches[i].destroyed = true;
+	}
+};

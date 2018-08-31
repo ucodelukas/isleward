@@ -9,7 +9,7 @@ define([
 	styles,
 	templateBuff
 ) {
-	var icons = {
+	let icons = {
 		stunned: [4, 0],
 		regenHp: [3, 1],
 		regenMana: [4, 1],
@@ -30,15 +30,15 @@ define([
 		},
 
 		onGetBuff: function (buff) {
-			var icon = icons[buff.type];
+			let icon = icons[buff.type];
 			if (!icon)
 				return;
 
-			var imgX = icon[0] * -32;
-			var imgY = icon[1] * -32;
+			let imgX = icon[0] * -32;
+			let imgY = icon[1] * -32;
 
-			var html = templateBuff;
-			var el = $(html).appendTo(this.el)
+			let html = templateBuff;
+			let el = $(html).appendTo(this.el)
 				.find('.inner')
 				.css({
 					background: 'url(../../../images/statusIcons.png) ' + imgX + 'px ' + imgY + 'px'
@@ -48,12 +48,12 @@ define([
 		},
 
 		onRemoveBuff: function (buff) {
-			var el = this.icons[buff.id];
+			let el = this.icons[buff.id];
 			if (!el)
 				return;
 
 			el.remove();
 			delete this.icons[buff.id];
 		}
-	}
+	};
 });

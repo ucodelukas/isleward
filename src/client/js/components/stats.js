@@ -5,8 +5,6 @@ define([
 	events,
 	renderer
 ) {
-	var scale = 40;
-
 	return {
 		type: 'stats',
 
@@ -19,15 +17,10 @@ define([
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			var serverId = this.obj.serverId;
-			if (serverId != null)
-				events.emit('onGetPartyStats', serverId, this.values);
+			if (this.obj.has('serverId'))
+				events.emit('onGetPartyStats', this.obj.serverId, this.values);
 
-			var obj = this.obj;
-
-			var yOffset = -12;
-			if (obj.isChampion)
-				yOffset = -18;
+			let obj = this.obj;
 
 			this.hpSprite = renderer.buildRectangle({
 				layerName: 'effects',
@@ -54,14 +47,14 @@ define([
 			if (this.obj.dead)
 				return;
 
-			var obj = this.obj;
+			let obj = this.obj;
 
-			var yOffset = -12;
+			let yOffset = -12;
 			if (obj.isChampion)
 				yOffset = -18;
 
-			var x = obj.x * scale;
-			var y = (obj.y * scale) + yOffset;
+			let x = obj.x * scale;
+			let y = (obj.y * scale) + yOffset;
 
 			renderer.moveRectangle({
 				sprite: this.hpSprite,
@@ -83,21 +76,19 @@ define([
 			this.hpSpriteInner.visible = this.hpSprite.visible;
 		},
 
-		extend: function (blueprint) {
-			var bValues = blueprint.values || {};
+		extend: function (blueprint) {	
+			let bValues = blueprint.values || {};
 
-			var values = this.values;
+			let values = this.values;
 
-			for (var b in bValues) {
+			for (let b in bValues) 
 				values[b] = bValues[b];
-			}
 
 			if (this.obj.self)
 				events.emit('onGetStats', this.values);
 
-			var serverId = this.obj.serverId;
-			if (serverId != null)
-				events.emit('onGetPartyStats', serverId, this.values);
+			if (this.obj.has('serverId'))
+				events.emit('onGetPartyStats', this.obj.serverId, this.values);
 
 			this.updateHpSprite();
 		},

@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/fame/template',
 	'css!ui/templates/fame/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -16,8 +16,8 @@ define([
 		centeredX: true,
 		modal: true,
 
-		postRender: function() {
+		postRender: function () {
 			
 		}
-	}
+	};
 });

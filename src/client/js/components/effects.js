@@ -3,9 +3,7 @@ define([
 ], function (
 	renderer
 ) {
-	var scale = 40;
-
-	var auras = {
+	let auras = {
 		reflectDamage: 0,
 		stealth: 1,
 		regenHp: 9,
@@ -29,11 +27,9 @@ define([
 		effects: [],
 
 		init: function (blueprint) {
-			var sprite = this.obj.sprite;
-
 			this.effects = this.effects
 				.filter(function (e) {
-					return (auras[e] != null);
+					return (auras[e] !== null);
 				}, this)
 				.map(function (e) {
 					return {
@@ -47,14 +43,14 @@ define([
 							h: scale * 2,
 							cell: auras[e]
 						})
-					}
+					};
 				}, this);
 		},
 		extend: function (blueprint) {
 			if (blueprint.addEffects) {
 				blueprint.addEffects = blueprint.addEffects
 					.filter(function (e) {
-						return (auras[e] != null);
+						return (auras[e] !== null);
 					})
 					.map(function (e) {
 						return {
@@ -68,15 +64,15 @@ define([
 								h: scale * 2,
 								cell: auras[e]
 							})
-						}
+						};
 					}, this);
 
 				this.effects.push.apply(this.effects, blueprint.addEffects || []);
 			}
 			if (blueprint.removeEffects) {
 				blueprint.removeEffects.forEach(function (r) {
-					var effect = this.effects.find(function (e) {
-						return (e.name == r);
+					let effect = this.effects.find(function (e) {
+						return (e.name === r);
 					});
 
 					if (!effect)
@@ -88,7 +84,7 @@ define([
 					});
 
 					this.effects.spliceFirstWhere(function (e) {
-						return (e.name == r);
+						return (e.name === r);
 					});
 				}, this);
 			}
@@ -104,10 +100,10 @@ define([
 				this.alphaDir *= -1;
 			}
 
-			var x = (this.obj.x - 0.5) * scale;
-			var y = (this.obj.y - 0.5) * scale;
+			let x = (this.obj.x - 0.5) * scale;
+			let y = (this.obj.y - 0.5) * scale;
 
-			var useAlpha = this.alpha;
+			let useAlpha = this.alpha;
 			if (useAlpha < this.alphaCutoff)
 				useAlpha = 0;
 			else {

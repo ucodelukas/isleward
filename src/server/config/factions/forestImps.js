@@ -1,15 +1,9 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		id: 'forestImps',
-		name: 'The Forest Imps',
-		description: `The imps of the Forest.`,
+module.exports = {
+	id: 'forestImps',
+	name: 'The Forest Imps',
+	description: 'The imps of the Forest.',
 
-		relations: {
+	relations: {
 
-		}
-	};
-});
+	}
+};

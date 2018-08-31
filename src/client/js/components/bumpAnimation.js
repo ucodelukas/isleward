@@ -22,32 +22,30 @@ define([
 
 		init: function (blueprint) {
 			//Only allow one bumper at a time
-			if (this.obj.components.filter(function (c) {
-					c.type == this.type
-				}) > 1)
+			if (this.obj.components.some(c => c.type === this.type))
 				return true;
 		},
 
 		update: function () {
-			var deltaX = this.deltaX;
+			let deltaX = this.deltaX;
 			if (deltaX < 0)
 				this.obj.flipX = true;
 			else if (deltaX > 0)
 				this.obj.flipX = false;
 
-			if (this.updateCd > 0) {
+			if (this.updateCd > 0) 
 				this.updateCd--;
-			} else {
+			else {
 				this.obj.offsetX += (this.deltaX * this.direction * this.speed);
 				this.obj.offsetY += (this.deltaY * this.direction * this.speed);
 
 				this.updateCd = this.updateCdMax;
 				this.durationCounter++;
 
-				if (this.durationCounter == this.duration) {
+				if (this.durationCounter === this.duration) {
 					this.durationCounter = 0;
 					this.direction *= -1;
-					if ((this.direction == 1) && (!this.infinite))
+					if ((this.direction === 1) && (!this.infinite))
 						this.destroyed = true;
 					else
 						this.obj.dirty = true;

@@ -4,7 +4,7 @@ define([
 	'html!ui/templates/events/template',
 	'html!ui/templates/events/templateEvent',
 	'css!ui/templates/events/styles'
-], function(
+], function (
 	client,
 	events,
 	tpl,
@@ -18,7 +18,7 @@ define([
 
 		container: '.right',
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainEvent', this.onObtainEvent.bind(this));
@@ -27,51 +27,48 @@ define([
 			this.onEvent('onCompleteEvent', this.onCompleteEvent.bind(this));
 		},
 
-		onRezone: function() {
+		onRezone: function () {
 			this.list = [];
 			this.el.find('.list').empty();
 		},
 
-		onRemoveEvent: function(id) {
-			var l = this.list.spliceFirstWhere(function(l) {
-				return (l.id == id);
-			});
-
+		onRemoveEvent: function (id) {
+			let l = this.list.spliceFirstWhere(f => f.id === id);
 			if (l)
 				l.el.remove();
 		},
 
-		onObtainEvent: function(event) {
-			var exists = this.list.find(function(l) {
-				return (l.id == event.id);
+		onObtainEvent: function (eventObj) {
+			let exists = this.list.find(function (l) {
+				return (l.id === eventObj.id);
 			});
 			if (exists) {
-				exists.el.find('.name').html(event.name);
-				exists.el.find('.description').html(event.description);
+				exists.el.find('.name').html(eventObj.name);
+				exists.el.find('.description').html(eventObj.description);
 				return;
 			}
 
-			var container = this.el.find('.list');
+			let container = this.el.find('.list');
 
-			var html = templateEvent
-				.replace('$NAME$', event.name)
-				.replace('$DESCRIPTION$', event.description);
+			let html = templateEvent
+				.replace('$NAME$', eventObj.name)
+				.replace('$DESCRIPTION$', eventObj.description);
 
-			var el = $(html).appendTo(container);
+			let el = $(html).appendTo(container);
 
-			if (event.isReady)
+			if (eventObj.isReady)
 				el.addClass('ready');
 
 			this.list.push({
-				id: event.id,
+				id: eventObj.id,
 				el: el,
-				event: event
+				event: eventObj
 			});
 
-			var event = container.find('.event');
+			let eventEl = container.find('.event');
 
-			event
-				.sort(function(a, b) {
+			eventEl
+				.sort(function (a, b) {
 					a = $(a).hasClass('active') ? 1 : 0;
 					b = $(b).hasClass('active') ? 1 : 0;
 					return b - a;
@@ -79,34 +76,34 @@ define([
 				.appendTo(container);
 		},
 
-		onUpdateEvent: function(event) {
-			var e = this.list.find(function(l) {
-				return (l.id == event.id);
+		onUpdateEvent: function (eventObj) {
+			let e = this.list.find(function (l) {
+				return (l.id === eventObj.id);
 			});
 
-			e.event.isReady = event.isReady;
+			e.event.isReady = eventObj.isReady;
 
-			e.el.find('.description').html(event.description);
+			e.el.find('.description').html(eventObj.description);
 
 			e.el.removeClass('ready');
-			if (event.isReady) {
+			if (eventObj.isReady) {
 				e.el.removeClass('disabled');
 				e.el.addClass('ready');
 			}
 		},
 
-		onCompleteEvent: function(id) {
-			var e = this.list.find(function(l) {
-				return (l.id == id);
+		onCompleteEvent: function (id) {
+			let e = this.list.find(function (l) {
+				return (l.id === id);
 			});
 
 			if (!e)
 				return;
 
 			e.el.remove();
-			this.list.spliceWhere(function(l) {
-				return (l.id == id);
+			this.list.spliceWhere(function (l) {
+				return (l.id === id);
 			});
 		}
-	}
+	};
 });

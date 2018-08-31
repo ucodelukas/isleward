@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'Fishing Tournament',
-	description: `Catch the heaviest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
+	description: 'Catch the heaviest Ancient Carp for a chance to win Angler\'s Marks. Speak with Angler Nayla for more info.',
 	distance: -1,
 	cron: '0 19 * * *',
 
@@ -36,13 +36,13 @@ module.exports = {
 	duration: 4285,
 	prizeTime: 3428,
 
-	descBase: `Catch the heaviest Ancient Carp for a chance to win Angler's Marks. Speak with Angler Nayla for more info.`,
+	descBase: 'Catch the heaviest Ancient Carp for a chance to win Angler\'s Marks. Speak with Angler Nayla for more info.',
 	descLeaderboard: null,
 	descTimer: null,
 
 	events: {
 		afterGiveRewards: function (events) {
-			var event = events.getEvent('Fishing Tournament');
+			let event = events.getEvent('Fishing Tournament');
 			event.descBase = 'The tournament has ended.';
 			event.descLeaderboard = null;
 			event.descTimer = null;
@@ -51,7 +51,7 @@ module.exports = {
 		},
 
 		beforeSetDescription: function (events) {
-			var event = events.getEvent('Fishing Tournament');
+			let event = events.getEvent('Fishing Tournament');
 
 			event.description = event.descBase;
 			if (event.descLeaderboard)
@@ -67,30 +67,30 @@ module.exports = {
 			event.rewards = {};
 			event.weights = {};
 
-			var tempFish = anglerNayla.inventory.items
+			let tempFish = anglerNayla.inventory.items
 				.filter(i => (i.name.indexOf('Ancient Carp') > -1))
 				.sort((a, b) => (b.stats.weight - a.stats.weight));
 
-			var fish = [];
+			let fish = [];
 			tempFish.forEach(function (t) {
-				if (!fish.some(f => (f.owner == t.owner)))
+				if (!fish.some(f => (f.owner === t.owner)))
 					fish.push(t);
 			});
 
-			var rewardCounts = [35, 20, 10];
-			var tpl = {
-				name: `Angler's Mark`,
+			let rewardCounts = [35, 20, 10];
+			let tpl = {
+				name: 'Angler\'s Mark',
 				sprite: [12, 9],
 				noDrop: true,
 				noDestroy: true,
 				noSalvage: true
 			};
-			var consolationQty = 2;
+			let consolationQty = 2;
 
-			var rank = 0;
-			var lastWeight = fish[0].stats.weight;
-			for (var i = 0; i < fish.length; i++) {
-				var f = fish[i];
+			let rank = 0;
+			let lastWeight = fish[0].stats.weight;
+			for (let i = 0; i < fish.length; i++) {
+				let f = fish[i];
 				if (event.rewards[f.owner])
 					continue;
 
@@ -102,22 +102,22 @@ module.exports = {
 				event.ranks[f.owner] = rank + 1;
 				event.weights[f.owner] = f.stats.weight;
 
-				var rewardQty = rewardCounts[rank] || consolationQty;
+				let rewardQty = rewardCounts[rank] || consolationQty;
 
-				event.rewards[f.owner] = [extend(true, {
+				event.rewards[f.owner] = [extend({
 					quantity: rewardQty
 				}, tpl)];
 			}
 		},
 
 		updateDescription: function (event, events) {
-			var ranks = event.ranks;
-			var weights = event.weights;
+			let ranks = event.ranks;
+			let weights = event.weights;
 
-			var desc = `Leaderboard:<br />`;
-			for (var playerName in ranks) {
+			let desc = 'Leaderboard:<br />';
+			for (let playerName in ranks) 
 				desc += `${ranks[playerName]}: ${playerName} (${weights[playerName]}) <br />`;
-			}
+			
 			desc = desc.substr(0, desc.length - 6);
 
 			event.config.descLeaderboard = desc;
@@ -125,13 +125,13 @@ module.exports = {
 		},
 
 		updateWinText: function (event, events) {
-			var ranks = event.ranks;
+			let ranks = event.ranks;
 
-			var winText = `Angler Nayla: `;
-			var winners = Object.keys(ranks).filter(r => (ranks[r] == 1));
-			var wLen = winners.length;
+			let winText = 'Angler Nayla: ';
+			let winners = Object.keys(ranks).filter(r => (ranks[r] === 1));
+			let wLen = winners.length;
 			winners.forEach(function (w, i) {
-				winText += ((wLen > 1) && (i == wLen - 1)) ? `and ${w} ` : `${w} `;
+				winText += ((wLen > 1) && (i === wLen - 1)) ? `and ${w} ` : `${w} `;
 			});
 
 			winText += 'won!';
@@ -140,16 +140,16 @@ module.exports = {
 		},
 
 		giveFish: function (source, target) {
-			var srcInventory = source.inventory;
-			var tgtInventory = target.inventory;
+			let srcInventory = source.inventory;
+			let tgtInventory = target.inventory;
 
 			srcInventory.items
 				.filter(i => (i.name.indexOf('Ancient Carp') > -1))
 				.sort((a, b) => (b.stats.weight - a.stats.weight))
 				.forEach(function (f, i) {
-					if (i == 0) {
+					if (i === 0) {
 						f.owner = source.name;
-						tgtInventory.getItem(extend(true, {}, f));
+						tgtInventory.getItem(extend({}, f));
 					}
 
 					srcInventory.destroyItem(f.id);
@@ -157,11 +157,11 @@ module.exports = {
 		},
 
 		getRank: function (event, playerName) {
-			var ranks = event.ranks;
-			if (!event.ranks)
+			let ranks = event.ranks;
+			if (!ranks)
 				return -1;
 
-			return (event.ranks[playerName] || -1);
+			return (ranks[playerName] || -1);
 		}
 	},
 
@@ -182,56 +182,56 @@ module.exports = {
 			dialogue: {
 				auto: true,
 				config: {
-					'1': {
+					1: {
 						msg: [{
-							msg: `Hi there, are you here to compete?`,
+							msg: 'Hi there, are you here to compete?',
 							options: [1.1, 1.2, 1.3]
 						}],
 						options: {
-							'1.1': {
-								msg: `What's happening here?`,
+							1.1: {
+								msg: 'What\'s happening here?',
 								goto: 2
 							},
-							'1.2': {
-								msg: `Could I please have a Competition Rod?`,
+							1.2: {
+								msg: 'Could I please have a Competition Rod?',
 								goto: 5
 							},
-							'1.3': {
-								msg: `I would like to trade some Angler's Marks.`,
+							1.3: {
+								msg: 'I would like to trade some Angler\'s Marks.',
 								goto: 'tradeBuy'
 							}
 						}
 					},
-					'2': {
-						msg: `Why, the Grand Fishing Tournament, of course! Anglers come from all over to compete in this esteemed event.`,
+					2: {
+						msg: 'Why, the Grand Fishing Tournament, of course! Anglers come from all over to compete in this esteemed event.',
 						options: {
-							'2.1': {
-								msg: `How does it work?`,
+							2.1: {
+								msg: 'How does it work?',
 								goto: 3
 							}
 						}
 					},
-					'3': {
-						msg: `Simply catch fish during the tournament. If you're lucky, you'll catch an Ancient Carp. Bring them to me and if you catch the heaviest one, you win!`,
+					3: {
+						msg: 'Simply catch fish during the tournament. If you\'re lucky, you\'ll catch an Ancient Carp. Bring them to me and if you catch the heaviest one, you win!',
 						options: {
-							'3.1': {
-								msg: `What are the prizes?`,
+							3.1: {
+								msg: 'What are the prizes?',
 								goto: 4
 							}
 						}
 					},
-					'4': {
-						msg: `The top three participants will win Angler's Marks that can be exchanged for Fishing Rods and Cerulean Pearls.`,
+					4: {
+						msg: 'The top three participants will win Angler\'s Marks that can be exchanged for Fishing Rods and Cerulean Pearls.',
 						options: {
-							'4.1': {
-								msg: `I would like to ask something else.`,
+							4.1: {
+								msg: 'I would like to ask something else.',
 								goto: 1
 							}
 						}
 					},
-					'5': {
+					5: {
 						msg: [{
-							msg: ``,
+							msg: '',
 							options: [1.1, 1.2, 1.3, 1.4]
 						}],
 						cpn: 'dialogue',
@@ -275,16 +275,16 @@ module.exports = {
 					infinite: true,
 					quality: 3,
 					worth: {
-						currency: `Angler's Mark`,
+						currency: 'Angler\'s Mark',
 						amount: 4
-					},
+					}
 				}, {
 					name: 'Common Fishing Rod',
 					type: 'Fishing Rod',
 					slot: 'tool',
 					quality: 0,
 					worth: {
-						currency: `Angler's Mark`,
+						currency: 'Angler\'s Mark',
 						amount: 5
 					},
 					sprite: [11, 0],
@@ -298,7 +298,7 @@ module.exports = {
 					slot: 'tool',
 					quality: 1,
 					worth: {
-						currency: `Angler's Mark`,
+						currency: 'Angler\'s Mark',
 						amount: 15
 					},
 					sprite: [11, 0],
@@ -312,7 +312,7 @@ module.exports = {
 					slot: 'tool',
 					quality: 2,
 					worth: {
-						currency: `Angler's Mark`,
+						currency: 'Angler\'s Mark',
 						amount: 45
 					},
 					sprite: [11, 0],
@@ -340,15 +340,15 @@ module.exports = {
 		auto: true,
 		events: {
 			beforeGatherResource: function (gatherResult, gatherer) {
-				if (gatherResult.nodeType != 'fish')
+				if (gatherResult.nodeType !== 'fish')
 					return;
 
-				var hasCompRod = gatherer.inventory.items.some(i => ((i.name == 'Competition Rod') && (i.eq)));
+				let hasCompRod = gatherer.inventory.items.some(i => ((i.name === 'Competition Rod') && (i.eq)));
 				if (!hasCompRod)
 					return;
 
 				gatherResult.items.forEach(function (g) {
-					extend(true, g, {
+					extend(g, {
 						name: 'Ancient Carp',
 						sprite: [11, 4],
 						noDrop: true
@@ -357,7 +357,7 @@ module.exports = {
 			},
 
 			beforeEnterPool: function (gatherResult, gatherer) {
-				if (gatherResult.nodeName == 'Sun Carp')
+				if (gatherResult.nodeName === 'Sun Carp')
 					gatherResult.nodeName = 'Ancient Carp';
 			}
 		}
@@ -367,49 +367,48 @@ module.exports = {
 		mobId: 'anglerNayla',
 		dialogue: {
 			add: {
-				'1': {
-					'1.4': {
-						msg: `I'd like to hand in some fish.`,
+				1: {
+					1.4: {
+						msg: 'I\'d like to hand in some fish.',
 						prereq: function (obj) {
-							var fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
+							let fishies = obj.inventory.items.find(i => (i.name.indexOf('Ancient Carp') > -1));
 							return !!fishies;
 						},
 						goto: 'giveFish'
 					}
 				},
-				'giveFish': {
+				giveFish: {
 					msg: [{
-						msg: ``,
+						msg: '',
 						options: [1.1, 1.2, 1.3, 1.4]
 					}],
 					method: function (obj) {
-						var eventConfig = this.instance.events.getEvent('Fishing Tournament');
+						let eventConfig = this.instance.events.getEvent('Fishing Tournament');
 						if (!eventConfig)
 							return;
 
-						var helpers = eventConfig.helpers;
-						var event = eventConfig.event;
+						let helpers = eventConfig.helpers;
+						let event = eventConfig.event;
 
-						var oldRank = helpers.getRank(event, obj.name);
+						let oldRank = helpers.getRank(event, obj.name);
 
 						helpers.giveFish(obj, this);
 						helpers.updateRewards(event, this);
 
-						var newRank = helpers.getRank(event, obj.name);
+						let newRank = helpers.getRank(event, obj.name);
 						helpers.updateDescription(event, this.instance.events);
 
-						if (oldRank != newRank) {
+						if (oldRank !== newRank) {
 							helpers.updateWinText(event, this.instance.events);
 
 							return {
-								'1': `Wow, that one's huge. You took first place!`,
-								'2': `Nice catch. You took second place!`,
-								'3': `Not bad at all. You took third place!`
+								1: 'Wow, that one\'s huge. You took first place!',
+								2: 'Nice catch. You took second place!',
+								3: 'Not bad at all. You took third place!'
 							}[newRank];
-						} else if (newRank == 1)
-							return `Great, you're still in first place!`;
-						else
-							return 'Not quite heavy enough, keep trying!';
+						} else if (newRank === 1)
+							return 'Great, you\'re still in first place!';
+						return 'Not quite heavy enough, keep trying!';
 					}
 				}
 			}
@@ -419,10 +418,10 @@ module.exports = {
 		mobId: 'anglerNayla',
 		dialogue: {
 			remove: {
-				'1': {
-					'1.4': null
+				1: {
+					1.4: null
 				},
-				'giveFish': null
+				giveFish: null
 			}
 		}
 	}]

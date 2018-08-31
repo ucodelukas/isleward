@@ -1,27 +1,24 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		save: function() {
-			if (!this.persist)
-				return null;
+module.exports = {
+	save: function () {
+		if (!this.persist)
+			return null;
 
-			var values = {};
-			for (var p in this) {
-				var value = this[p];
-				if ((typeof(value) == 'function') || (p == 'obj') || (p == 'events'))
-					continue;
+		let values = {};
+		for (let p in this) {
+			let value = this[p];
+			if ((typeof(value) === 'function') || (p === 'obj') || (p === 'events'))
+				continue;
 
-				values[p] = value;
-			}
+			values[p] = value;
+		}
 
-			return values;
-		},
+		if (!this.expire)
+			this.expire = (+new Date()) + (this.ttl * 350);
 
-		simplify: function() {
-			return this.type;
-		}	
-	};
-});
+		return values;
+	},
+
+	simplify: function () {
+		return this.type;
+	}	
+};

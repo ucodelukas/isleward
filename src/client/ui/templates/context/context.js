@@ -3,7 +3,7 @@ define([
 	'html!ui/templates/context/template',
 	'css!ui/templates/context/styles',
 	'html!ui/templates/context/templateItem'
-], function(
+], function (
 	events,
 	template,
 	styles,
@@ -13,7 +13,7 @@ define([
 		tpl: template,
 		modal: true,
 
-		postRender: function() {			
+		postRender: function () {			
 			this.onEvent('onContextMenu', this.onContextMenu.bind(this));
 			this.onEvent('onHideContextMenu', this.onMouseDown.bind(this));
 			this.onEvent('mouseDown', this.onMouseDown.bind(this));
@@ -21,17 +21,17 @@ define([
 			$('.ui-container').on('mouseup', this.onMouseDown.bind(this));
 		},
 
-		onContextMenu: function(config, e) {
-			var container = this.el.find('.list')
+		onContextMenu: function (config, e) {
+			let container = this.el.find('.list')
 				.empty();
 
-			config.forEach(function(c, i) {
-				var text = c.text ? c.text : c;
+			config.forEach(function (c, i) {
+				let text = c.text ? c.text : c;
 
-				var html = templateItem
+				let html = templateItem
 					.replace('$TEXT$', text);
 
-				var row = $(html)
+				let row = $(html)
 					.appendTo(container);
 
 				if (c.callback)
@@ -48,16 +48,16 @@ define([
 				.show();
 		},
 
-		onClick: function(index, callback) {
+		onClick: function (index, callback) {
 			this.el.hide();
 			callback();
 		},
 
-		onMouseDown: function(e) {
-			if ((!this.el.is(':visible')) || (e.cancel) || (e.button == 2))
+		onMouseDown: function (e) {
+			if ((!this.el.is(':visible')) || (e.cancel) || (e.button === 2))
 				return;
 
 			this.el.hide();
 		}
-	}
+	};
 });

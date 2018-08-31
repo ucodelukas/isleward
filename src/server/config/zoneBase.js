@@ -1,59 +1,53 @@
-define([
+module.exports = {
+	objects: {
+		default: {
 
-], function (
+		}
+	},
+	mobs: {
+		default: {
+			level: 1,
+			walkDistance: 1,
 
-) {
-	return {
-		objects: {
-			default: {
+			spells: [{
+				type: 'melee',
+				statMult: 0.1356
+			}],
 
-			}
-		},
-		mobs: {
-			default: {
-				level: 1,
-				walkDistance: 1,
+			regular: {
+				hpMult: 1,
+				dmgMult: 1,
 
-				spells: [{
-					type: 'melee',
-					statMult: 0.1356
-				}],
+				drops: {
+					chance: 40,
+					rolls: 1
+				}
+			},
 
-				regular: {
-					hpMult: 1,
-					dmgMult: 1,
+			rare: {
+				count: 1,
+				chance: 0.4,
 
-					drops: {
-						chance: 40,
-						rolls: 1
-					}
-				},
+				hpMult: 1.5,
+				dmgMult: 1.5,
 
-				rare: {
-					count: 1,
-					chance: 0.4,
+				drops: {
+					chance: 100,
+					rolls: 1,
+					magicFind: 2000
+				}
+			},
 
-					hpMult: 1.5,
-					dmgMult: 1.5,
+			champion: {
+				hpMult: 2,
+				dmgMult: 2,
 
-					drops: {
-						chance: 100,
-						rolls: 1,
-						magicFind: 2000
-					}
-				},
-
-				champion: {
-					hpMult: 2,
-					dmgMult: 2,
-
-					drops: {
-						chance: 100,
-						rolls: 2,
-						magicFind: [2000, 175]
-					}
+				drops: {
+					chance: 100,
+					rolls: 2,
+					magicFind: [2000, 175]
 				}
 			}
 		}
-	};
-});
+	}
+};

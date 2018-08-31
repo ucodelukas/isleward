@@ -21,10 +21,10 @@ define([
 		},
 
 		findNode: function (x, y) {
-			var res = this.nodes.find(n => ((n.pos.x == x) && (n.pos.y == y)));
+			let res = this.nodes.find(n => ((n.pos.x == x) && (n.pos.y == y)));
 			if (!res) {
 				res = this.nodes.find(function (n) {
-					return ((n.size > 0) && (Math.abs(n.pos.x - x) <= 1) && (Math.abs(n.pos.y - y) <= 1))
+					return ((n.size > 0) && (Math.abs(n.pos.x - x) <= 1) && (Math.abs(n.pos.y - y) <= 1));
 				});
 			}
 
@@ -32,21 +32,20 @@ define([
 		},
 
 		callAction: function (action, options = {}) {
-			var node = options.node || this.findNode(options.x, options.y);
+			let node = options.node || this.findNode(options.x, options.y);
 
 			options.node = node;
 			return !this.actions[action].call(this, options);
 		},
 
 		getSelected: function (single) {
-			var selected = this.nodes.filter(n => n.selected);
+			let selected = this.nodes.filter(n => n.selected);
 			if ((single) && (selected.length != 1))
 				return null;
 
 			if (single)
 				return selected[0];
-			else
-				return selected;
+			return selected;
 		},
 
 		serialize: function () {
@@ -63,6 +62,30 @@ define([
 					};
 				})
 			});
+		},
+
+		getData: function () {
+			return {
+				nodes: this.nodes.map(function (n) {
+					let res = {
+						id: n.id,
+						pos: n.pos
+					};
+
+					['size', 'color', 'stats', 'spiritStart'].forEach(function (s) {
+						if (n[s] !== undefined)
+							res[s] = n[s];
+					});
+
+					return res;
+				}),
+				links: this.links.map(function (l) {
+					return {
+						from: l.from.id,
+						to: l.to.id
+					};
+				})
+			};
 		},
 
 		getNextId: function () {
@@ -143,13 +166,13 @@ define([
 			},
 
 			connectNode: function (options) {
-				var node = options.node;
+				let node = options.node;
 				if (!node) {
 					this.callAction('selectNode');
 					return true;
 				}
 
-				var singleSelected = this.getSelected(true);
+				let singleSelected = this.getSelected(true);
 
 				if ((singleSelected) && (input.isKeyDown('ctrl'))) {
 					if (options.shiftDown) {
@@ -180,12 +203,12 @@ define([
 				} else {
 					return this.callAction('selectNode', {
 						node: node
-					})
+					});
 				}
 			},
 
 			moveNode: function (options) {
-				var selected = this.getSelected();
+				let selected = this.getSelected();
 				if (!selected.length)
 					return true;
 
@@ -193,14 +216,14 @@ define([
 					return;
 
 				selected.sort(function (a, b) {
-					var distanceA = Math.abs(a.pos.x - options.x) + Math.abs(a.pos.y - options.y);
-					var distanceB = Math.abs(b.pos.x - options.x) + Math.abs(b.pos.y - options.y);
+					let distanceA = Math.abs(a.pos.x - options.x) + Math.abs(a.pos.y - options.y);
+					let distanceB = Math.abs(b.pos.x - options.x) + Math.abs(b.pos.y - options.y);
 
 					return (distanceA > distanceB) ? 1 : -1;
 				});
 
-				var deltaX = selected[0].pos.x - options.x;
-				var deltaY = selected[0].pos.y - options.y;
+				let deltaX = selected[0].pos.x - options.x;
+				let deltaY = selected[0].pos.y - options.y;
 
 				selected.forEach(function (s) {
 					s.pos.x -= deltaX;
@@ -209,7 +232,7 @@ define([
 			},
 
 			deleteNode: function (options) {
-				var selected = this.getSelected();
+				let selected = this.getSelected();
 				selected.forEach(function (s) {
 					this.nodes.spliceWhere(n => (n == s));
 					this.links.spliceWhere(n => ((n.from == s) || (n.to == s)));
@@ -221,7 +244,7 @@ define([
 			},
 
 			recolorNode: function () {
-				var selected = this.getSelected(true);
+				let selected = this.getSelected(true);
 				if (!selected)
 					return true;
 
@@ -229,7 +252,7 @@ define([
 			},
 
 			resizeNode: function () {
-				var selected = this.getSelected(true);
+				let selected = this.getSelected(true);
 				if (!selected)
 					return true;
 
@@ -242,15 +265,15 @@ define([
 				if (!input.isKeyDown('ctrl'))
 					this.nodes.forEach(n => (n.selected = false));
 
-				var lowX = Math.min(from.x, to.x);
-				var lowY = Math.min(from.y, to.y);
+				let lowX = Math.min(from.x, to.x);
+				let lowY = Math.min(from.y, to.y);
 
-				var highX = Math.max(from.x, to.x);
-				var highY = Math.max(from.y, to.y);
+				let highX = Math.max(from.x, to.x);
+				let highY = Math.max(from.y, to.y);
 
-				for (var i = lowX; i <= highX; i++) {
-					for (var j = lowY; j <= highY; j++) {
-						var node = this.findNode(i, j);
+				for (let i = lowX; i <= highX; i++) {
+					for (let j = lowY; j <= highY; j++) {
+						let node = this.findNode(i, j);
 						if (!node)
 							continue;
 						node.selected = true;
@@ -261,13 +284,13 @@ define([
 			},
 
 			onMouseMove: function (e) {
-				var hoverNode = this.findNode(e.x, e.y);
+				let hoverNode = this.findNode(e.x, e.y);
 				if (hoverNode) {
-					var text = '';
-					var stats = hoverNode.stats || {};
-					for (var s in stats) {
+					let text = '';
+					let stats = hoverNode.stats || {};
+					for (let s in stats) 
 						text += s + ': ' + stats[s] + '<br />';
-					}
+					
 					text = text.substr(0, text.length - 6);
 
 					if (text.length > 0)

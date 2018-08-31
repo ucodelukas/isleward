@@ -23,26 +23,26 @@ define([
 		},
 
 		build: function () {
-			var list = this.list;
+			let list = this.list;
 
 			this.find('.info .heading-bottom').html('');
 			this.find('.info .description').html('');
 			this.find('.bar-outer').hide();
 
-			if (list.length == 0)
+			if (list.length === 0)
 				this.find('.heading-bottom').html("you haven't discovered any factions yet");
 			else
 				this.find('.heading-bottom').html('select a faction to see more info');
 
-			var elList = this.find('.list').empty();
+			let elList = this.find('.list').empty();
 
 			list.forEach(function (l) {
 				if (l.noGainRep)
 					return;
 
-				var html = '<div class="faction">' + l.name.toLowerCase() + '</div>';
+				let html = '<div class="faction">' + l.name.toLowerCase() + '</div>';
 
-				var el = $(html)
+				let el = $(html)
 					.appendTo(elList);
 
 				el
@@ -57,20 +57,20 @@ define([
 			this.find('.info .heading-bottom').html(faction.name.toLowerCase());
 			this.find('.info .description').html(faction.description.toLowerCase());
 
-			var rep = faction.rep;
-			var tier = faction.tier;
-			var tiers = faction.tiers;
-			var prevTier = tiers[tier];
-			var nextTier = (tier == tiers.length - 1) ? tiers[tiers.length - 1] : tiers[tier + 1];
+			let rep = faction.rep;
+			let tier = faction.tier;
+			let tiers = faction.tiers;
+			let prevTier = tiers[tier];
+			let nextTier = (tier === tiers.length - 1) ? tiers[tiers.length - 1] : tiers[tier + 1];
 
-			var percentage = (rep - prevTier.rep) / (nextTier.rep - prevTier.rep) * 100;
+			let percentage = (rep - prevTier.rep) / (nextTier.rep - prevTier.rep) * 100;
 			this.find('.bar-outer').show();
 
 			this.find('.front').css({
 				width: percentage + '%'
 			});
 
-			var w = ~~(this.find('.front').width() / 5) * 5;
+			let w = ~~(this.find('.front').width() / 5) * 5;
 			this.find('.front').css({
 				width: w + 'px'
 			});
@@ -85,8 +85,7 @@ define([
 			this.list.sort(function (a, b) {
 				if (a.name[0] < b.name[0])
 					return -1;
-				else
-					return 1;
+				return 1;
 			});
 
 			if (this.el.is(':visible'))
@@ -94,7 +93,7 @@ define([
 		},
 
 		toggle: function () {
-			var shown = !this.el.is(':visible');
+			let shown = !this.el.is(':visible');
 
 			if (shown) {
 				this.build();

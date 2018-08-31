@@ -9,8 +9,6 @@ define([
 	physics,
 	sound
 ) {
-	var scale = 40;
-
 	return {
 		type: 'player',
 
@@ -20,66 +18,53 @@ define([
 		},
 
 		init: function () {
-			this.obj.addComponent('keyboardMover');
-			this.obj.addComponent('mouseMover');
-			this.obj.addComponent('serverActions');
+			const obj = this.obj;
 
-			this.obj.addComponent('pather');
+			obj.addComponent('keyboardMover');
+			obj.addComponent('mouseMover');
+			obj.addComponent('serverActions');
+			obj.addComponent('pather');
 
-			events.emit('onGetPortrait', this.obj.portrait);
-		},
+			events.on('onRespawn', this.onRespawn.bind(this));
 
-		update: function () {
-			var obj = this.obj;
-			var oldPos = this.oldPos;
-
-			if ((oldPos.x == obj.x) && (oldPos.y == obj.y))
-				return;
-
-			var dx = obj.x - oldPos.x;
-			var dy = obj.y - oldPos.y;
-
-			var instant = false;
-			if ((dx > 5) || (dy > 5))
-				instant = true;
-
-			if (dx != 0)
-				dx = dx / Math.abs(dx);
-			if (dy != 0)
-				dy = dy / Math.abs(dy);
-
-			this.oldPos.x = this.obj.x;
-			this.oldPos.y = this.obj.y;
-
-			this.canvasFollow({
-				x: dx,
-				y: dy
-			}, instant);
-
-			sound.update(obj.x, obj.y);
+			events.emit('onGetPortrait', obj.portrait);
 		},
 
 		extend: function (blueprint) {
-			if (blueprint.collisionChanges) {
-				blueprint.collisionChanges.forEach(function (c) {
-					physics.setCollision(c.x, c.y, c.collides);
-				});
+			let collisionChanges = blueprint.collisionChanges;
+			delete blueprint.collisionChanges;
 
-				delete blueprint.collisionChanges;
-			}
+			if (collisionChanges) 
+				collisionChanges.forEach(c => physics.setCollision(c));
 		},
 
-		canvasFollow: function (delta, instant) {
-			var obj = this.obj;
-			delta = delta || {
-				x: 0,
-				y: 0
-			};
+		update: function () {
+			const obj = this.obj;
+			const x = obj.x;
+			const y = obj.y;
 
+			let oldPos = this.oldPos;
+
+			if ((oldPos.x === x) && (oldPos.y === y))
+				return;
+
+			oldPos.x = x;
+			oldPos.y = y;
+
+			sound.update(x, y);
+
+			this.positionCamera(x, y);
+		},
+
+		positionCamera: function (x, y, instant) {
 			renderer.setPosition({
-				x: (obj.x - (renderer.width / (scale * 2))) * scale,
-				y: (obj.y - (renderer.height / (scale * 2))) * scale
-			}, instant);
+				x: (x - (renderer.width / (scale * 2))) * scale,
+				y: (y - (renderer.height / (scale * 2))) * scale
+			}, instant);		
 		},
+
+		onRespawn: function (position) {
+			this.positionCamera(position.x, position.y, true);
+		}
 	};
 });

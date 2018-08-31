@@ -1,21 +1,11 @@
-define([
+module.exports = {
+	events: {
+		onGetText: function (item) {
+			return 'your hits always crit';
+		},
 
-], function (
-
-) {
-	return {
-		events: {
-			onGetText: function (item) {
-				var rolls = item.effects.find(e => (e.type == 'alwaysCrit')).rolls;
-
-				return `your hits always crit`;
-			},
-
-			onBeforeCalculateDamage: function (item, damage, target) {
-				var rolls = item.effects.find(e => (e.type == 'alwaysCrit')).rolls;
-
-				damage.crit = true;
-			}
+		onBeforeCalculateDamage: function (item, damage, target) {
+			damage.crit = true;
 		}
-	};
-});
+	}
+};

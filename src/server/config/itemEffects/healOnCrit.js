@@ -1,47 +1,41 @@
-define([
+module.exports = {
+	events: {
+		onGetText: function (item) {
+			let rolls = item.effects.find(e => (e.type === 'healOnCrit')).rolls;
+			let chance = rolls.chance || 100;
+			let amount = rolls.amount;
+			let percentage = rolls.percentage;
 
-], function (
+			let text = '';
 
-) {
-	return {
-		events: {
-			onGetText: function (item) {
-				var rolls = item.effects.find(e => (e.type == 'healOnCrit')).rolls;
-				var chance = rolls.chance || 100;
-				var amount = rolls.amount;
-				var percentage = rolls.percentage;
+			if (chance < 100)
+				text = `${chance}% chance to heal on crit for `;
+			else
+				text = 'critical hits heal you for ';
 
-				var text = '';
+			if (percentage)
+				text += `${percentage}% of damage dealt`;
+			else
+				text += `${amount || '?'} health`;
 
-				if (chance < 100)
-					text = `${chance}% chance to heal on crit for `;
-				else
-					text = `critical hits heal you for `;
+			return text;
+		},
 
-				if (percentage)
-					text += `${percentage}% of damage dealt`;
-				else
-					text += `${amount || '?'} health`;
+		afterDealDamage: function (item, damage, target) {
+			if (!damage.crit)
+				return;
 
-				return text;
-			},
+			let rolls = item.effects.find(e => (e.type === 'healOnCrit')).rolls;
 
-			afterDealDamage: function (item, damage, target) {
-				if (!damage.crit)
-					return;
+			let chanceRoll = Math.random() * 100;
+			if (chanceRoll >= (rolls.chance || 100))
+				return;
 
-				var rolls = item.effects.find(e => (e.type == 'healOnCrit')).rolls;
+			let amount = rolls.amount || ((damage.dealt / 100) * rolls.percentage);
 
-				var chanceRoll = Math.random() * 100;
-				if (chanceRoll >= (rolls.chance || 100))
-					return;
-
-				var amount = rolls.amount || ((damage.dealt / 100) * rolls.percentage);
-
-				this.stats.getHp({
-					amount: amount
-				}, this);
-			}
+			this.stats.getHp({
+				amount: amount
+			}, this);
 		}
-	};
-});
+	}
+};

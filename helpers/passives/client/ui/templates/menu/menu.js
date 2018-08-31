@@ -4,14 +4,16 @@ define([
 	'ui/factory',
 	'js/generator',
 	'js/renderer',
-	'js/constants'
+	'js/constants',
+	'js/client'
 ], function (
 	template,
 	styles,
 	uiFactory,
 	generator,
 	renderer,
-	constants
+	constants,
+	client
 ) {
 	return {
 		tpl: template,
@@ -27,6 +29,7 @@ define([
 			this.on('.btnSave', 'click', this.actions.onSave.bind(this));
 			this.on('.btnExport', 'click', this.actions.onExport.bind(this));
 			this.on('.btnImport', 'click', this.actions.onImport.bind(this));
+			this.on('.btnPersist', 'click', this.actions.onPersist.bind(this));
 		},
 
 		actions: {
@@ -50,7 +53,11 @@ define([
 
 			onImport: function () {
 				uiFactory.build('import');
+			},
+
+			onPersist: function () {
+				client.persist(generator.getData());
 			}
 		}
-	}
+	};
 });

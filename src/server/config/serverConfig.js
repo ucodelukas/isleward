@@ -1,11 +1,5 @@
-define([
-
-], function(
-
-) {
-    return {
-        port: 4000,
-        startupMessage: 'Server: ready',
-        defaultZone: 'fjolarok'
-    }
-});
+module.exports = {
+	port: 4000,
+	startupMessage: 'Server: ready',
+	defaultZone: 'fjolarok'
+};

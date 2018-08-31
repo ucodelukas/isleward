@@ -1,54 +1,55 @@
-require = requirejs;
+/* global require */
+window.require = requirejs;
 
 require.config({
 	baseUrl: '',
 	waitSeconds: 120,
 	paths: {
-		'socket': 'plugins/socket',
-		'jquery': 'plugins/jquery.min',
-		'json': 'plugins/json',
-		'text': 'plugins/text',
-		'html': 'plugins/html',
-		'css': 'plugins/css',
-		'bin': 'plugins/bin',
-		'audio': 'plugins/audio',
-		'worker': 'plugins/worker',
-		'main': 'js/main',
-		'helpers': 'js/misc/helpers',
-		'particles': 'plugins/pixi.particles',
-		'picture': 'plugins/pixi.picture',
-		'pixi': 'plugins/pixi.min',
-		'howler': 'plugins/howler.min'
+		socket: 'plugins/socket',
+		jquery: 'plugins/jquery.min',
+		json: 'plugins/json',
+		text: 'plugins/text',
+		html: 'plugins/html',
+		css: 'plugins/css',
+		bin: 'plugins/bin',
+		audio: 'plugins/audio',
+		worker: 'plugins/worker',
+		main: 'js/main',
+		helpers: 'js/misc/helpers',
+		particles: 'plugins/pixi.particles',
+		picture: 'plugins/pixi.picture',
+		pixi: 'plugins/pixi.min',
+		howler: 'plugins/howler.min'
 	},
 	shim: {
-		'howler': {
+		howler: {
 			exports: 'howl'
 		},
-		'socket': {
+		socket: {
 			exports: 'io'
 		},
-		'jquery': {
+		jquery: {
 			exports: '$'
 		},
-		'helpers': {
+		helpers: {
 			deps: [
 				'jquery'
 			]
 		},
-		'pixi': {
+		pixi: {
 			exports: 'PIXI'
 		},
-		'particles': {
+		particles: {
 			deps: [
 				'pixi'
 			]
 		},
-		'picture': {
+		picture: {
 			deps: [
 				'pixi'
 			]
 		},
-		'main': {
+		main: {
 			deps: [
 				'helpers',
 				'js/input'

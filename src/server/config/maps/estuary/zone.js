@@ -190,7 +190,7 @@ module.exports = {
 		}
 	},
 	objects: {
-		'exit': {
+		exit: {
 			components: {
 				cpnParticles: {
 					simplify: function () {
@@ -237,7 +237,7 @@ module.exports = {
 									h: 64
 								}
 							}
-						}
+						};
 					}
 				}
 			}

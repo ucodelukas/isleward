@@ -1,173 +1,131 @@
-define([
-	'config/passiveTree'
-], function (
-	passiveTree
-) {
-	return {
-		type: 'passives',
+let passiveTree = require('../config/passiveTree');
 
-		selected: [],
-		points: 0,
+module.exports = {
+	type: 'passives',
 
-		init: function (blueprint) {
-			this.selected = ((blueprint || {}).selected || []);
-			this.selected.spliceWhere(s => (passiveTree.nodes.some(n => ((n.id == s) && (n.spiritStart)))));
+	selected: [],
+	points: 0,
 
-			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
+	init: function (blueprint) {
+		this.selected = ((blueprint || {}).selected || []);
+		this.selected.spliceWhere(s => (passiveTree.nodes.some(n => ((n.id === s) && (n.spiritStart)))));
 
-			var points = this.calcPoints();
+		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 
-			if (points < this.selected.length) {
-				this.selected = [];
-				this.selected.push(passiveTree.nodes.find(n => (n.spiritStart == this.obj.class)).id);
-				blueprint.selected = this.selected;
-				points = this.calcPoints();
-			}
+		let points = this.calcPoints();
 
-			this.points = points;
-			blueprint.points = points;
+		if (points + this.selected.length < this.selected.length) {
+			this.selected = [];
+			this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
+			blueprint.selected = this.selected;
+			points = this.calcPoints();
+		}
 
-			var stats = this.obj.stats;
+		this.points = points;
+		blueprint.points = points;
 
-			this.selected.forEach(function (id) {
-				var node = passiveTree.nodes.find(n => (n.id == id));
-				if (node) {
-					for (var p in node.stats) {
-						stats.addStat(p, node.stats[p]);
-					}
-				}
-			});
-		},
+		let stats = this.obj.stats;
 
-		calcPoints: function () {
-			var level = this.obj.stats.values.level;
-			var points = level - this.selected.length + 1;
-
-			if (level < 20)
-				points--;
-
-			return points;
-		},
-
-		applyPassives: function () {
-			var stats = this.obj.stats;
-			this.selected.forEach(function (id) {
-				var node = passiveTree.nodes.find(n => (n.id == id));
-				if (node) {
-					for (var p in node.stats) {
-						stats.addStat(p, node.stats[p]);
-					}
-				}
-			});
-		},
-
-		tickNode: function (msg) {
-			if (this.points <= 0)
-				return;
-			else if (this.selected.some(s => (s == msg.nodeId)))
-				return;
-
-			var nodeId = msg.nodeId;
-			var node = passiveTree.nodes.find(n => (n.id == nodeId));
-
-			if (node.spiritStart)
-				return;
-
-			var linked = passiveTree.links.some(function (l) {
-				if ((l.from.id != node.id) && (l.to.id != node.id))
-					return false;
-
-				return (
-					(this.selected.indexOf(l.from.id) > -1) ||
-					(this.selected.indexOf(l.to.id) > -1)
-				);
-			}, this);
-			if (!linked)
-				return;
-
-			this.points--;
-			this.obj.syncer.set(true, 'passives', 'points', this.points);
-
-			this.selected.push(nodeId);
-			this.obj.syncer.setArray(true, 'passives', 'tickNodes', nodeId);
-
-			var stats = this.obj.stats;
+		this.selected.forEach(function (id) {
+			let node = passiveTree.nodes.find(n => (n.id === id));
 			if (node) {
-				for (var p in node.stats) {
+				for (let p in node.stats) 
 					stats.addStat(p, node.stats[p]);
-				}
 			}
+		});
 
-			this.obj.spellbook.calcDps();
-		},
+		this.obj.spellbook.calcDps();
+	},
 
-		untickNode: function (msg) {
-			var stats = this.obj.stats;
+	calcPoints: function () {
+		let level = this.obj.stats.values.level;
+		let points = level - this.selected.length + 1;
 
-			this.selected.forEach(function (s) {
-				var node = passiveTree.nodes.find(n => (n.id == s));
-				if (node.spiritStart)
-					return;
+		if (level < 20)
+			points--;
 
-				this.points++;
-				this.obj.syncer.set(true, 'passives', 'points', this.points);
+		return points;
+	},
 
-				this.obj.syncer.setArray(true, 'passives', 'untickNodes', node.id);
+	tickNode: function (msg) {
+		if (this.points <= 0)
+			return;
+		else if (this.selected.some(s => (s === msg.nodeId)))
+			return;
 
-				if (node) {
-					for (var p in node.stats) {
-						stats.addStat(p, -node.stats[p]);
-					}
-				}
-			}, this);
+		let nodeId = msg.nodeId;
+		let node = passiveTree.nodes.find(n => (n.id === nodeId));
 
-			this.selected.spliceWhere(s => (!s.spiritStart));
+		if (node.spiritStart)
+			return;
 
-			this.obj.spellbook.calcDps();
-		},
+		let linked = passiveTree.links.some(function (l) {
+			if ((l.from !== node.id) && (l.to !== node.id))
+				return false;
 
-		/*untickNode: function (msg) {
-			var nodeId = msg.nodeId;
+			return (
+				(this.selected.indexOf(l.from) > -1) ||
+				(this.selected.indexOf(l.to) > -1)
+			);
+		}, this);
+		if (!linked)
+			return;
 
-			if (!this.selected.some(s => (s == msg.nodeId)))
-				return;
+		this.points--;
+		this.obj.syncer.set(true, 'passives', 'points', this.points);
 
-			var node = passiveTree.nodes.find(n => (n.id == nodeId));
+		this.selected.push(nodeId);
+		this.obj.syncer.setArray(true, 'passives', 'tickNodes', nodeId);
 
+		let stats = this.obj.stats;
+		if (node) {
+			for (let p in node.stats) 
+				stats.addStat(p, node.stats[p]);
+		}
+
+		this.obj.spellbook.calcDps();
+	},
+
+	untickNode: function (msg) {
+		let stats = this.obj.stats;
+
+		this.selected.forEach(function (s) {
+			let node = passiveTree.nodes.find(n => (n.id === s));
 			if (node.spiritStart)
 				return;
 
 			this.points++;
 			this.obj.syncer.set(true, 'passives', 'points', this.points);
 
-			this.selected.spliceWhere(id => (id == nodeId));
-			this.obj.syncer.setArray(true, 'passives', 'untickNodes', nodeId);
+			this.obj.syncer.setArray(true, 'passives', 'untickNodes', node.id);
 
-			var node = passiveTree.nodes.find(n => (n.id == nodeId));
-			var stats = this.obj.stats;
 			if (node) {
-				for (var p in node.stats) {
+				for (let p in node.stats) 
 					stats.addStat(p, -node.stats[p]);
-				}
 			}
-		},*/
+		}, this);
 
-		simplify: function (self) {
-			if (!self)
-				return;
+		this.selected = [];
+		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 
-			return {
-				type: 'passives',
-				selected: this.selected,
-				points: this.points
-			};
-		},
+		this.obj.spellbook.calcDps();
+	},
 
-		events: {
-			onLevelUp: function (level) {
-				this.points = this.calcPoints();
-				this.obj.syncer.set(true, 'passives', 'points', this.points);
-			}
+	simplify: function (self) {
+		if (!self)
+			return;
+
+		return {
+			type: 'passives',
+			selected: this.selected,
+			points: this.points
+		};
+	},
+
+	events: {
+		onLevelUp: function (level) {
+			this.points = this.calcPoints();
+			this.obj.syncer.set(true, 'passives', 'points', this.points);
 		}
-	};
-});
+	}
+};

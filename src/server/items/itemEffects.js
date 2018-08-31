@@ -1,24 +1,20 @@
- define([
- 	'misc/events'
- ], function (
- 	events
- ) {
- 	var list = {
+let events = require('../misc/events');
 
- 	};
+let list = {
 
- 	return {
- 		init: function () {
- 			events.emit('onBeforeGetItemEffectList', list);
- 		},
+};
 
- 		get: function (name) {
- 			var res = list[name];
+module.exports = {
+	init: function () {
+		events.emit('onBeforeGetItemEffectList', list);
+	},
 
- 			if (!res)
- 				return 'config/itemEffects/' + name;
+	get: function (name) {
+		let res = list[name];
 
- 			return res;
- 		}
- 	};
- });
+		if (!res)
+			return 'config/itemEffects/' + name;
+
+		return res;
+	}
+};

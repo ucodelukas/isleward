@@ -1,301 +1,296 @@
-define([
-	'config/effects/effectTemplate'
-], function (
-	effectTemplate
-) {
-	return {
-		type: 'effects',
+const effectTemplate = require('../config/effects/effectTemplate');
 
-		effects: [],
-		nextId: 0,
+module.exports = {
+	type: 'effects',
 
-		ccResistances: {
-			stunned: 0,
-			slowed: 0
-		},
+	effects: [],
+	nextId: 0,
 
-		init: function (blueprint) {
-			var effects = blueprint.effects || [];
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var e = effects[i];
-				if (!e.type)
-					continue;
+	ccResistances: {
+		stunned: 0,
+		slowed: 0
+	},
 
-				this.addEffect(e);
-			}
+	init: function (blueprint) {
+		let effects = blueprint.effects || [];
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let e = effects[i];
+			if (!e.type)
+				continue;
 
-			delete blueprint.effects;
-		},
+			this.addEffect(e);
+		}
 
-		transfer: function () {
-			var transferEffects = this.effects;
-			this.effects = [];
+		delete blueprint.effects;
+	},
 
-			this.init({
-				effects: transferEffects
-			});
-		},
+	transfer: function () {
+		let transferEffects = this.effects;
+		this.effects = [];
 
-		save: function () {
-			var e = {
-				type: 'effects',
-				effects: this.effects
-					.map(e => e.save())
-					.filter(e => e != null)
-			};
+		this.init({
+			effects: transferEffects
+		});
+	},
 
-			return e;
-		},
+	save: function () {
+		let e = {
+			type: 'effects',
+			effects: this.effects
+				.map(f => f.save())
+				.filter(f => !!f)
+		};
 
-		simplify: function (self) {
-			var e = {
-				type: 'effects'
-			};
+		return e;
+	},
 
-			var effects = this.effects;
-			if ((effects.length > 0) && (effects[0].obj)) {
-				effects = effects
-					.map(e => e.simplify())
-					.filter(e => e != null);
-			}
-			e.effects = effects;
+	simplify: function (self) {
+		let e = {
+			type: 'effects'
+		};
 
-			return e;
-		},
+		let effects = this.effects;
+		if ((effects.length > 0) && (effects[0].obj)) {
+			effects = effects
+				.map(f => f.simplify())
+				.filter(f => !!f);
+		}
+		e.effects = effects;
 
-		destroy: function () {
-			if (this.obj.instance)
-				this.events.beforeRezone.call(this);
-		},
+		return e;
+	},
 
-		die: function () {
-			this.events.beforeRezone.call(this, true);
-		},
+	destroy: function () {
+		if (this.obj.instance)
+			this.events.beforeRezone.call(this);
+	},
 
-		reset: function () {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var effect = effects[i];
+	die: function () {
+		this.events.beforeRezone.call(this, true);
+	},
 
-				if (effect.reset)
-					effect.reset();
-			}
-		},
+	reset: function () {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let effect = effects[i];
 
-		reapply: function () {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var effect = effects[i];
+			if (effect.reset)
+				effect.reset();
+		}
+	},
 
-				if (effect.reapply)
-					effect.reapply();
-			}
-		},
+	reapply: function () {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let effect = effects[i];
 
-		events: {
-			beforeRezone: function (forceDestroy) {
-				var effects = this.effects;
-				var eLen = effects.length;
-				for (var i = 0; i < eLen; i++) {
-					var effect = effects[i];
-					if (!forceDestroy) {
-						if (effect.persist) {
-							this.syncRemove(effect.id, effect.type);
-							continue;
-						}
+			if (effect.reapply)
+				effect.reapply();
+		}
+	},
+
+	events: {
+		beforeRezone: function (forceDestroy) {
+			let effects = this.effects;
+			let eLen = effects.length;
+			for (let i = 0; i < eLen; i++) {
+				let effect = effects[i];
+				if (!forceDestroy) {
+					if (effect.persist) {
+						this.syncRemove(effect.id, effect.type);
+						continue;
 					}
-
-					if (effect.destroy)
-						effect.destroy();
-
-					this.syncRemove(effect.id, effect.type);
-					effects.splice(i, 1);
-					eLen--;
-					i--;
 				}
+
+				if (effect.destroy)
+					effect.destroy();
+
+				this.syncRemove(effect.id, effect.type);
+				effects.splice(i, 1);
+				eLen--;
+				i--;
 			}
-		},
+		}
+	},
 
-		canApplyEffect: function (type) {
-			if (this.ccResistances[type] == null)
-				return true;
+	canApplyEffect: function (type) {
+		if (!this.ccResistances[type])
+			return true;
 
-			var ccResistances = this.ccResistances;
-			if ((100 - ccResistances[type]) >= 50) {
-				ccResistances[type] += 50;
-				return true;
-			} else
-				return false;
-		},
+		let ccResistances = this.ccResistances;
+		if ((100 - ccResistances[type]) >= 50) {
+			ccResistances[type] += 50;
+			return true;
+		} return false;
+	},
 
-		addEffect: function (options) {
-			if (!this.canApplyEffect(options.type))
-				return;
+	addEffect: function (options) {
+		if (!this.canApplyEffect(options.type))
+			return;
 
-			if (!options.new) {
-				var exists = this.effects.find(e => e.type == options.type);
-				if (exists) {
-					exists.ttl += options.ttl;
+		if (!options.new) {
+			let exists = this.effects.find(e => e.type === options.type);
+			if (exists) {
+				exists.ttl += options.ttl;
 
-					for (var p in options) {
-						if (p == 'ttl')
-							continue;
+				for (let p in options) {
+					if (p === 'ttl')
+						continue;
 
-						exists[p] = options[p];
-					}
-
-					return exists;
+					exists[p] = options[p];
 				}
+
+				return exists;
 			}
+		}
 
-			var typeTemplate = null;
-			if (options.type) {
-				var type = options.type[0].toUpperCase() + options.type.substr(1);
-				var result = {
-					type: type,
-					url: 'config/effects/effect' + type + '.js'
-				};
-				this.obj.instance.eventEmitter.emit('onBeforeGetEffect', result);
+		let typeTemplate = null;
+		if (options.type) {
+			let type = options.type[0].toUpperCase() + options.type.substr(1);
+			let result = {
+				type: type,
+				url: 'config/effects/effect' + type + '.js'
+			};
+			this.obj.instance.eventEmitter.emit('onBeforeGetEffect', result);
 
-				typeTemplate = require(result.url);
-			}
+			typeTemplate = require('../' + result.url);
+		}
 
-			var builtEffect = extend(true, {}, effectTemplate, typeTemplate);
-			for (var p in options) {
-				builtEffect[p] = options[p];
-			}
-			builtEffect.obj = this.obj;
-			builtEffect.id = this.nextId++;
-			builtEffect.noMsg = options.noMsg;
+		let builtEffect = extend({}, effectTemplate, typeTemplate);
+		for (let p in options) 
+			builtEffect[p] = options[p];
+		
+		builtEffect.obj = this.obj;
+		builtEffect.id = this.nextId++;
+		builtEffect.noMsg = options.noMsg;
 
-			if (builtEffect.init)
-				builtEffect.init(options.source);
+		if (builtEffect.init)
+			builtEffect.init(options.source);
 
-			this.effects.push(builtEffect);
+		this.effects.push(builtEffect);
 
-			if (!options.noMsg) {
-				this.obj.instance.syncer.queue('onGetBuff', {
-					type: options.type,
-					id: builtEffect.id
-				}, [this.obj.serverId]);
-
-				this.obj.instance.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					event: true,
-					text: '+' + options.type
-				});
-
-				this.obj.syncer.setArray(false, 'effects', 'addEffects', options.type);
-			}
-
-			return builtEffect;
-		},
-
-		syncRemove: function (id, type, noMsg) {
-			if ((noMsg) || (!type))
-				return;
-
-			this.obj.instance.syncer.queue('onRemoveBuff', {
-				id: id
+		if (!options.noMsg) {
+			this.obj.instance.syncer.queue('onGetBuff', {
+				type: options.type,
+				id: builtEffect.id
 			}, [this.obj.serverId]);
 
 			this.obj.instance.syncer.queue('onGetDamage', {
 				id: this.obj.id,
 				event: true,
-				text: '-' + type
-			});
+				text: '+' + options.type
+			}, -1);
 
-			this.obj.syncer.setArray(false, 'effects', 'removeEffects', type);
-		},
+			this.obj.syncer.setArray(false, 'effects', 'addEffects', options.type);
+		}
 
-		removeEffect: function (checkEffect, noMsg) {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var effect = effects[i];
-				if (effect == checkEffect) {
-					if (effect.destroy)
-						effect.destroy();
-					this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
-					effects.splice(i, 1);
-					return;
-				}
-			}
-		},
-		removeEffectByName: function (effectName, noMsg) {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var effect = effects[i];
-				if (effect.type == effectName) {
-					this.syncRemove(effect.id, effect.type, noMsg || effects.noMsg);
-					effects.splice(i, 1);
-					return;
-				}
-			}
-		},
+		return builtEffect;
+	},
 
-		fireEvent: function (event, args) {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var e = effects[i];
+	syncRemove: function (id, type, noMsg) {
+		if ((noMsg) || (!type))
+			return;
 
-				//Maybe the effect killed us?
-				if (!e) {
-					i--;
-					eLen--;
-					continue;
-				}
+		this.obj.instance.syncer.queue('onRemoveBuff', {
+			id: id
+		}, [this.obj.serverId]);
 
-				if (e.ttl <= 0)
-					continue;
-				var events = e.events;
-				if (!events)
-					continue;
+		this.obj.instance.syncer.queue('onGetDamage', {
+			id: this.obj.id,
+			event: true,
+			text: '-' + type
+		}, -1);
 
-				var callback = events[event];
-				if (!callback)
-					continue;
+		this.obj.syncer.setArray(false, 'effects', 'removeEffects', type);
+	},
 
-				callback.apply(e, args);
-			}
-		},
-
-		update: function () {
-			var effects = this.effects;
-			var eLen = effects.length;
-			for (var i = 0; i < eLen; i++) {
-				var e = effects[i];
-
-				if (e.ttl > 0) {
-					e.ttl--;
-					if (e.ttl == 0)
-						e.destroyed = true;
-				}
-
-				if (e.update)
-					e.update();
-
-				if (e.destroyed) {
-					effects.splice(i, 1);
-					eLen--;
-					i--;
-
-					if (e.destroy)
-						e.destroy();
-
-					this.syncRemove(e.id, e.type, e.noMsg);
-				}
-			}
-
-			for (var p in this.ccResistances) {
-				if (this.ccResistances[p] > 0)
-					this.ccResistances[p]--;
+	removeEffect: function (checkEffect, noMsg) {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let effect = effects[i];
+			if (effect === checkEffect) {
+				if (effect.destroy)
+					effect.destroy();
+				this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
+				effects.splice(i, 1);
+				return;
 			}
 		}
-	};
-});
+	},
+	removeEffectByName: function (effectName, noMsg) {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let effect = effects[i];
+			if (effect.type === effectName) {
+				this.syncRemove(effect.id, effect.type, noMsg || effects.noMsg);
+				effects.splice(i, 1);
+				return;
+			}
+		}
+	},
+
+	fireEvent: function (event, args) {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let e = effects[i];
+
+			//Maybe the effect killed us?
+			if (!e) {
+				i--;
+				eLen--;
+				continue;
+			}
+
+			if (e.ttl <= 0)
+				continue;
+			let events = e.events;
+			if (!events)
+				continue;
+
+			let callback = events[event];
+			if (!callback)
+				continue;
+
+			callback.apply(e, args);
+		}
+	},
+
+	update: function () {
+		let effects = this.effects;
+		let eLen = effects.length;
+		for (let i = 0; i < eLen; i++) {
+			let e = effects[i];
+
+			if (e.ttl > 0) {
+				e.ttl--;
+				if (e.ttl === 0)
+					e.destroyed = true;
+			}
+
+			if (e.update)
+				e.update();
+
+			if (e.destroyed) {
+				effects.splice(i, 1);
+				eLen--;
+				i--;
+
+				if (e.destroy)
+					e.destroy();
+
+				this.syncRemove(e.id, e.type, e.noMsg);
+			}
+		}
+
+		for (let p in this.ccResistances) {
+			if (this.ccResistances[p] > 0)
+				this.ccResistances[p]--;
+		}
+	}
+};

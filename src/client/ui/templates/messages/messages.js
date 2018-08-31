@@ -21,6 +21,8 @@ define([
 		messages: [],
 		maxTtl: 500,
 
+		maxChatLength: 255,
+
 		shiftDown: false,
 		hoverItem: null,
 
@@ -35,6 +37,7 @@ define([
 
 			this.find('input')
 				.on('keydown', this.sendChat.bind(this))
+				.on('input', this.checkChatLength.bind(this))
 				.on('blur', this.toggle.bind(this, false, true));
 
 			this
@@ -46,6 +49,17 @@ define([
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 		},
 
+		checkChatLength: function () {
+			let textbox = this.find('input');
+			let val = textbox.val();
+
+			if (val.length <= this.maxChatLength)
+				return;
+
+			val = val.substr(0, this.maxChatLength);
+			textbox.val(val);
+		},
+
 		onGetCustomChatChannels: function (channels) {
 			channels.forEach(function (c) {
 				this.onJoinChannel(c);
@@ -55,8 +69,8 @@ define([
 		onJoinChannel: function (channel) {
 			this.find('[filter="' + channel.trim() + '"]').remove();
 
-			var container = this.find('.filters');
-			var newFilter = $(tplTab)
+			let container = this.find('.filters');
+			$(tplTab)
 				.appendTo(container)
 				.addClass('channel')
 				.attr('filter', channel.trim())
@@ -75,30 +89,29 @@ define([
 		},
 
 		onClickFilter: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 			el.toggleClass('active');
 
-			var filter = el.attr('filter');
-			var method = (el.hasClass('active') ? 'show' : 'hide');
+			let filter = el.attr('filter');
+			let method = (el.hasClass('active') ? 'show' : 'hide');
 
-			if (method == 'show')
+			if (method === 'show')
 				this.find('.list').addClass(filter);
 			else
 				this.find('.list').removeClass(filter);
 
-			if (el.hasClass('channel')) {
+			if (el.hasClass('channel')) 
 				this.find('.list .' + filter)[method]();
-			}
 		},
 
 		onKeyDown: function (key, state) {
-			if (key == 'enter')
+			if (key === 'enter')
 				this.toggle(true);
 		},
 
 		onDoWhisper: function (charName) {
 			this.toggle(true);
-			var toName = charName;
+			let toName = charName;
 			if (charName.indexOf(' ') > -1)
 				toName = "'" + toName + "'";
 
@@ -106,23 +119,23 @@ define([
 		},
 
 		onGetMessages: function (e) {
-			var messages = e.messages;
+			let messages = e.messages;
 			if (!messages.length)
 				messages = [messages];
 
-			var container = this.find('.list');
+			let container = this.find('.list');
 
 			messages.forEach(function (m) {
-				var message = m.message;
+				let message = m.message;
 				if (m.item) {
-					var source = message.split(':')[0] + ': ';
+					let source = message.split(':')[0] + ': ';
 					message = source + '<span class="q' + (m.item.quality || 0) + '">' + message.replace(source, '') + '</span>';
 				}
 
-				var el = $('<div class="list-message ' + m.class + '">' + message + '</div>')
+				let el = $('<div class="list-message ' + m.class + '">' + message + '</div>')
 					.appendTo(container);
 
-				if (m.type != null)
+				if (m.has('type'))
 					el.addClass(m.type);
 				else
 					el.addClass('info');
@@ -134,7 +147,7 @@ define([
 				}
 
 				if (m.type) {
-					var isChannel = (['info', 'chat', 'loot', 'rep'].indexOf(m.type) == -1);
+					let isChannel = (['info', 'chat', 'loot', 'rep'].indexOf(m.type) === -1);
 					if (isChannel) {
 						if (this.find('.filter[filter="' + m.type + '"]').hasClass('active'))
 							el.show();
@@ -168,7 +181,7 @@ define([
 			if (!item)
 				return;
 
-			var ttPos = null;
+			let ttPos = null;
 			if (el) {
 				ttPos = {
 					x: ~~(e.clientX + 32),
@@ -187,22 +200,21 @@ define([
 
 			this.el.removeClass('typing');
 
-			var textbox = this.find('input');
+			let textbox = this.find('input');
 
 			if (show) {
 				this.el.addClass('typing');
 				textbox.focus();
 				this.find('.list').scrollTop(9999999);
-			} else {
+			} else 
 				textbox.val('');
-			}
 		},
 
 		sendChat: function (e) {
-			if (e.which == 27)
+			if (e.which === 27)
 				this.toggle(false);
 
-			if (e.which != 13)
+			if (e.which !== 13)
 				return;
 
 			if (!this.el.hasClass('typing')) {
@@ -210,8 +222,8 @@ define([
 				return;
 			}
 
-			var textbox = this.find('input');
-			var val = textbox.val()
+			let textbox = this.find('input');
+			let val = textbox.val()
 				.split('<')
 				.join('&lt;')
 				.split('>')
@@ -219,7 +231,7 @@ define([
 
 			textbox.blur();
 
-			if (val.trim() == '')
+			if (val.trim() === '')
 				return;
 
 			client.request({
@@ -230,5 +242,5 @@ define([
 				}
 			});
 		}
-	}
+	};
 });

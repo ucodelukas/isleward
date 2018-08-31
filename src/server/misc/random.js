@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var Random =function(a){a=a===void 0?(new Date).getTime():a;this.N=624;this.M=397;this.MATRIX_A=2567483615;this.UPPER_MASK=2147483648;this.LOWER_MASK=2147483647;this.mt=Array(this.N);this.mti=this.N+1;this.init_by_array([a],1)};Random.prototype.init_genrand=function(a){this.mt[0]=a>>>0;for(this.mti=1;this.mti<this.N;this.mti++)a=this.mt[this.mti-1]^this.mt[this.mti-1]>>>30,this.mt[this.mti]=(((a&4294901760)>>>16)*1812433253<<16)+(a&65535)*1812433253+this.mti,this.mt[this.mti]>>>=0};
 Random.prototype.init_by_array=function(a,c){var b,f,e;this.init_genrand(19650218);b=1;f=0;for(e=this.N>c?this.N:c;e;e--){var d=this.mt[b-1]^this.mt[b-1]>>>30;this.mt[b]=(this.mt[b]^(((d&4294901760)>>>16)*1664525<<16)+(d&65535)*1664525)+a[f]+f;this.mt[b]>>>=0;b++;f++;b>=this.N&&(this.mt[0]=this.mt[this.N-1],b=1);f>=c&&(f=0)}for(e=this.N-1;e;e--)d=this.mt[b-1]^this.mt[b-1]>>>30,this.mt[b]=(this.mt[b]^(((d&4294901760)>>>16)*1566083941<<16)+(d&65535)*1566083941)-b,this.mt[b]>>>=0,b++,b>=this.N&&(this.mt[0]=
 this.mt[this.N-1],b=1);this.mt[0]=2147483648};
@@ -9,7 +11,7 @@ a-1))break}else if(d<=Math.exp(-h))break;return h*c}};Random.prototype.normal=fu
 Random.prototype.triangular=function(a,c,b){var f=(b-a)/(c-a),e=this.random();return e<=f?a+Math.sqrt(e*(c-a)*(b-a)):c-Math.sqrt((1-e)*(c-a)*(c-b))};Random.prototype.uniform=function(a,c){return a+this.random()*(c-a)};Random.prototype.weibull=function(a,c){var b=1-this.random();return a*Math.pow(-Math.log(b),1/c)};
 
 global.random = new Random();
-extend(true, random, {
+extend(random, {
 	norm: function(low, high) {
 		var mid = low + ((high - low) / 2);
 		var range = mid - low;

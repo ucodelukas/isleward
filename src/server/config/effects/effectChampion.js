@@ -1,9 +1,3 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'champion'	
-	};
-});
+module.exports = {
+	type: 'champion'	
+};

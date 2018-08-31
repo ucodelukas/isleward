@@ -3,7 +3,7 @@ define([
 ], function (
 	events
 ) {
-	var resources = {
+	let resources = {
 		spriteNames: [
 			'charas',
 			'tiles',
@@ -28,6 +28,7 @@ define([
 			'animBoss',
 			'white',
 			'ray',
+			'consumables',
 			'images/skins/0001.png',
 			'images/skins/0010.png'
 		],
@@ -39,7 +40,7 @@ define([
 			}, this);
 
 			this.spriteNames.forEach(function (s) {
-				var sprite = {
+				let sprite = {
 					image: (new Image()),
 					ready: false
 				};
@@ -52,13 +53,13 @@ define([
 		onSprite: function (sprite) {
 			sprite.ready = true;
 
-			var readyCount = 0;
-			for (var s in this.sprites) {
+			let readyCount = 0;
+			for (let s in this.sprites) {
 				if (this.sprites[s].ready)
 					readyCount++;
 			}
 
-			if (readyCount == this.spriteNames.length)
+			if (readyCount === this.spriteNames.length)
 				this.onReady();
 		},
 		onReady: function () {

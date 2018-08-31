@@ -1,36 +1,30 @@
-define([
+module.exports = {
+	type: 'slowed',
+	chance: 0.7,
 
-], function (
+	events: {
+		beforeMove: function (targetPos) {
+			if (Math.random() >= this.chance)
+				return;
 
-) {
-	return {
-		type: 'slowed',
-		chance: 0.7,
+			targetPos.success = false;
+		},
 
-		events: {
-			beforeMove: function (targetPos) {
-				if (Math.random() >= this.chance)
-					return;
+		beforeDealDamage: function (damage) {
+			if (!damage)
+				return;
 
-				targetPos.success = false;
-			},
+			if (Math.random() >= this.chance)
+				return;
 
-			beforeDealDamage: function (damage) {
-				if (!damage)
-					return;
+			damage.failed = true;
+		},
 
-				if (Math.random() >= this.chance)
-					return;
+		beforeCastSpell: function (successObj) {
+			if (Math.random() < this.chance)
+				return;
 
-				damage.failed = true;
-			},
-
-			beforeCastSpell: function (successObj) {
-				if (Math.random() < this.chance)
-					return;
-
-				successObj.success = false;
-			}
+			successObj.success = false;
 		}
-	};
-});
+	}
+};

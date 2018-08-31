@@ -1,19 +1,13 @@
-define([
+module.exports = {
+	type: 'frenzy',
+	newCd: 0,
 
-], function (
+	events: {
+		beforeSetSpellCooldown: function (msg, spell) {
+			if (!spell.auto)
+				return;
 
-) {
-	return {
-		type: 'frenzy',
-		newCd: 0,
-
-		events: {
-			beforeSetSpellCooldown: function (msg, spell) {
-				if (!spell.auto)
-					return;
-
-				msg.cd = this.newCd;
-			}
+			msg.cd = this.newCd;
 		}
-	};
-});
+	}
+};

@@ -1,19 +1,19 @@
 define([
 	'js/resources',
 	'js/rendering/tileOpacity'
-], function(
+], function (
 	resources,
 	tileOpacity
 ) {
-	var tileSize = 32;
-	var width = 0;
-	var height = 0;
+	let tileSize = 32;
+	let width = 0;
+	let height = 0;
 
-	var canvas = null;
-	var ctx = null;
+	let canvas = null;
+	let ctx = null;
 
 	return {
-		buildSprite: function(layers, maps, opacities) {
+		buildSprite: function (layers, maps, opacities) {
 			width = maps[0].length;
 			height = maps[0][0].length;
 
@@ -34,41 +34,40 @@ define([
 			return canvas[0];
 		},
 
-		build: function(layers, maps, opacities) {
-			var random = Math.random.bind(Math);
+		build: function (layers, maps, opacities) {
+			let random = Math.random.bind(Math);
 
-			for (var m = 0; m < maps.length; m++) {
-				var map = maps[m];
+			for (let m = 0; m < maps.length; m++) {
+				let map = maps[m];
 				if (!map)
 					continue;
 
-				var layer = layers[m];
-				var sprite = resources.sprites[layer].image;
+				let layer = layers[m];
+				let sprite = resources.sprites[layer].image;
 
-				var opacity = opacities[m];
+				let opacity = opacities[m];
 
-				for (var i = 0; i < width; i++) {
-					var x = i * tileSize;
-					for (var j = 0; j < height; j++) {
-						var y = j * tileSize;
+				for (let i = 0; i < width; i++) {
+					let x = i * tileSize;
+					for (let j = 0; j < height; j++) {
+						let y = j * tileSize;
 
-						var cell = map[i][j];
-						if (cell == 0)
+						let cell = map[i][j];
+						if (cell === 0)
 							continue;
 
 						cell--;
 
-						var tileY = ~~(cell / 8);
-						var tileX = cell - (tileY * 8);
+						let tileY = ~~(cell / 8);
+						let tileX = cell - (tileY * 8);
 
-						var tileO = tileOpacity[layer];
+						let tileO = tileOpacity[layer];
 						if (tileO) {
 							if (tileO[cell])
 								ctx.globalAlpha = tileO[cell];
 							else
 								ctx.globalAlpha = opacity;
-						}
-						else
+						} else
 							ctx.globalAlpha = opacity;
 
 						if (random() > 0.5) {
@@ -83,8 +82,7 @@ define([
 								tileSize, 
 								tileSize
 							);
-						}
-						else {
+						} else {
 							ctx.save();
 							ctx.scale(-1, 1);
 							ctx.drawImage(

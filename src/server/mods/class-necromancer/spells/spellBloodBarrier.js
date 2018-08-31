@@ -1,64 +1,58 @@
-define([
+module.exports = {
+	type: 'bloodBarrier',
 
-], function (
+	cdMax: 7,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'bloodBarrier',
+	range: 9,
 
-		cdMax: 7,
-		manaCost: 0,
+	speed: 150,
+	damage: 1,
 
-		range: 9,
+	row: 3,
+	col: 0,
 
-		speed: 150,
-		damage: 1,
+	needLos: true,
+	autoTargetFollower: true,
+	targetFriendly: true,
+	noTargetSelf: true,
 
-		row: 3,
-		col: 0,
+	cast: function (action) {
+		let obj = this.obj;
+		let target = action.target;
 
-		needLos: true,
-		autoTargetFollower: true,
-		targetFriendly: true,
-		noTargetSelf: true,
+		this.sendBump(target);
 
-		cast: function (action) {
-			var obj = this.obj;
-			var target = action.target;
+		this.queueCallback(this.explode.bind(this, target), 1, null, target);
 
-			this.sendBump(target);
+		this.sendBump({
+			x: obj.x,
+			y: obj.y - 1
+		});
 
-			this.queueCallback(this.explode.bind(this, target), 1, null, target);
+		return true;
+	},
+	explode: function (target) {
+		if ((this.obj.destroyed) || (target.destroyed))
+			return;
 
-			this.sendBump({
-				x: obj.x,
-				y: obj.y - 1
-			});
+		let amount = (this.obj.stats.values.hpMax / 100) * this.drainPercentage;
+		let damage = {
+			amount: amount
+		};
+		this.obj.stats.takeDamage(damage, 0, this.obj);
 
-			return true;
-		},
-		explode: function (target) {
-			if ((this.obj.destroyed) || (target.destroyed))
-				return;
+		amount = amount * this.shieldMultiplier;
+		let heal = {
+			amount: amount
+		};
+		target.stats.getHp(heal, this.obj);
 
-			var amount = (this.obj.stats.values.hpMax / 100) * this.drainPercentage;
-			var damage = {
-				amount: amount
-			};
-			this.obj.stats.takeDamage(damage, 0, this.obj);
-
-			amount = amount * this.shieldMultiplier;
-			var heal = {
-				amount: amount
-			};
-			target.stats.getHp(heal, this.obj);
-
-			target.spellbook.spells[0].cd = 0;
-			target.effects.addEffect({
-				type: 'frenzy',
-				ttl: this.frenzyDuration,
-				newCd: target.player ? 2 : 0
-			});
-		}
-	};
-});
+		target.spellbook.spells[0].cd = 0;
+		target.effects.addEffect({
+			type: 'frenzy',
+			ttl: this.frenzyDuration,
+			newCd: target.player ? 2 : 0
+		});
+	}
+};

@@ -61,7 +61,7 @@
 			height: 528px;
 		}
 
-		.left, .right, .itemList, .runes, .tools {
+		.left, .right, .itemList, .runes, .tools, .quick {
 			width: 96px;
 			padding: 8px;	
 
@@ -98,6 +98,7 @@
 					&[slot="offHand"] 	.icon { background-position: -192px -384px; }
 					&[slot="tool"] 		.icon { background-position: -256px -384px; }
 					&[slot^="rune"] 	.icon { background-position: -320px -384px; }
+					&[slot^="quick-0"] 	.icon { background-position: -128px -384px; }
 				}
 
 				.icon {
@@ -213,6 +214,11 @@
 					}
 				}
 			}
+		}
+
+		.quick .slot {
+			margin-top: -168px;
+			margin-left: 184px;
 		}
 
 		.itemList {

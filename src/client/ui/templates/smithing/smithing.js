@@ -43,11 +43,11 @@ define([
 		},
 
 		clickAction: function (e) {
-			var el = $(e.currentTarget);
+			let el = $(e.currentTarget);
 			this.find('.col-btn').removeClass('selected');
 
-			var action = el.attr('action');
-			var changed = (action != this.action);
+			let action = el.attr('action');
+			let changed = (action !== this.action);
 			this.action = action;
 
 			el.addClass('selected');
@@ -77,17 +77,17 @@ define([
 		onSmith: function (item, result) {
 			this.setDisabled(false);
 
-			var msg = {
+			let msg = {
 				msg: 'Item Enhancement Succeeded',
 				type: 'success',
 				zIndex: 9999999,
 				top: 100
 			};
-			if (this.action == 'reroll')
+			if (this.action === 'reroll')
 				msg.msg = 'Item Reroll Succeeded';
-			else if (this.action == 'relevel')
+			else if (this.action === 'relevel')
 				msg.msg = 'Item Relevel Succeeded';
-			else if (this.action == 'reslot')
+			else if (this.action === 'reslot')
 				msg.msg = 'Item Reslot Succeeded';
 
 			result.addStatMsgs.forEach(function (a) {
@@ -101,7 +101,7 @@ define([
 
 			this.getMaterials(this.item);
 
-			var augment = this.find('[action="augment"]').addClass('disabled');
+			let augment = this.find('[action="augment"]').addClass('disabled');
 			if ((result.item.power || 0) < 3)
 				augment.removeClass('disabled');
 			else
@@ -130,23 +130,23 @@ define([
 				this.offEvent(this.eventClickInv);
 				return;
 			} else if ((!msg.item.slot) || (msg.item.noAugment)) {
-				var msg = {
+				let resultMsg = {
 					msg: 'Incorrect Item Type',
 					type: 'failure',
 					zIndex: 9999999,
 					top: 180
 				};
-				events.emit('onGetAnnouncement', msg);
+				events.emit('onGetAnnouncement', resultMsg);
 
 				return;
 			} else if (msg.item.eq) {
-				var msg = {
+				let resultMsg = {
 					msg: 'Cannot augment equipped items',
 					type: 'failure',
 					zIndex: 9999999,
 					top: 180
 				};
-				events.emit('onGetAnnouncement', msg);
+				events.emit('onGetAnnouncement', resultMsg);
 
 				return;
 			}
@@ -155,17 +155,21 @@ define([
 			this.find('[action="augment"]').addClass('selected');
 			this.action = 'augment';
 
-			var augment = this.find('[action="augment"]').addClass('disabled');
+			let augment = this.find('[action="augment"]').addClass('disabled');
 			if ((msg.item.power || 0) < 3)
 				augment.removeClass('disabled');
 
-			var reforge = this.find('[action="reforge"]').addClass('disabled');
+			let reforge = this.find('[action="reforge"]').addClass('disabled');
 			if (msg.item.spell)
 				reforge.removeClass('disabled');
 
-			var reslot = this.find('[action="reslot"]').addClass('disabled');
+			let reslot = this.find('[action="reslot"]').addClass('disabled');
 			if (!msg.item.effects)
 				reslot.removeClass('disabled');
+
+			let relevel = this.find('[action="relevel"]').addClass('disabled');
+			if (msg.item.slot === 'tool')
+				relevel.removeClass('disabled');
 
 			this.offEvent(this.eventClickInv);
 
@@ -208,10 +212,10 @@ define([
 			this.find('.actionButton').removeClass('disabled').addClass('disabled');
 
 			if (result.materials) {
-				var material = result.materials[0];
+				let material = result.materials[0];
 				if (material) {
-					var hasMaterials = window.player.inventory.items.find(function (i) {
-						return (i.name == material.name);
+					let hasMaterials = window.player.inventory.items.find(function (i) {
+						return (i.name === material.name);
 					});
 					if (hasMaterials) {
 						material.quantityText = hasMaterials.quantity + '/' + material.quantity;
@@ -235,16 +239,18 @@ define([
 		drawItem: function (container, item, redQuantity) {
 			container.find('.icon').hide();
 
-			var imgX = -item.sprite[0] * 64;
-			var imgY = -item.sprite[1] * 64;
+			let imgX = -item.sprite[0] * 64;
+			let imgY = -item.sprite[1] * 64;
 
-			var spritesheet = item.spritesheet || '../../../images/items.png';
+			let spritesheet = item.spritesheet || '../../../images/items.png';
 			if (item.material)
 				spritesheet = '../../../images/materials.png';
 			else if (item.quest)
 				spritesheet = '../../../images/questItems.png';
+			else if (item.type === 'consumable')
+				spritesheet = '../../../images/consumables.png';
 
-			var el = $(templateItem)
+			let el = $(templateItem)
 				.appendTo(container);
 
 			el
@@ -255,7 +261,7 @@ define([
 				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
 
 			if (item.quantity) {
-				var quantityText = item.quantityText;
+				let quantityText = item.quantityText;
 				el.find('.quantity').html(quantityText);
 				if (redQuantity)
 					el.find('.quantity').addClass('red');
@@ -268,10 +274,9 @@ define([
 			else
 				item = this.hoverItem;
 
-			var ttPos = null;
+			let ttPos = null;
 
 			if (el) {
-				var elOffset = el.offset();
 				ttPos = {
 					x: ~~(e.clientX + 32),
 					y: ~~(e.clientY)
@@ -303,7 +308,7 @@ define([
 				this.hide();
 		},
 		onKeyDown: function (key) {
-			if (key == 'm')
+			if (key === 'm')
 				this.toggle();
 		}
 	};

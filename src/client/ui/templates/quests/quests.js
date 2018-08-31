@@ -31,15 +31,15 @@ define([
 		},
 
 		onObtainQuest: function (quest) {
-			var list = this.el.find('.list');
+			let list = this.el.find('.list');
 
-			var html = templateQuest
+			let html = templateQuest
 				.replace('$ZONE$', quest.zoneName)
 				.replace('$NAME$', quest.name)
 				.replace('$DESCRIPTION$', quest.description)
 				.replace('$REWARD$', quest.xp + ' xp');
 
-			var el = $(html)
+			let el = $(html)
 				.appendTo(list);
 
 			if (quest.isReady)
@@ -58,7 +58,7 @@ define([
 				quest: quest
 			});
 
-			var quests = list.find('.quest');
+			let quests = list.find('.quest');
 
 			quests
 				.sort(function (a, b) {
@@ -85,10 +85,7 @@ define([
 		},
 
 		onUpdateQuest: function (quest) {
-			var q = this.quests.find(function (q) {
-				return (q.id == quest.id);
-			});
-
+			let q = this.quests.find(f => f.id === quest.id);
 			q.quest.isReady = quest.isReady;
 
 			q.el.find('.description').html(quest.description);
@@ -101,17 +98,13 @@ define([
 		},
 
 		onCompleteQuest: function (id) {
-			var q = this.quests.find(function (q) {
-				return (q.id == id);
-			});
+			let q = this.quests.find(f => f.id === id);
 
 			if (!q)
 				return;
 
 			q.el.remove();
-			this.quests.spliceWhere(function (q) {
-				return (q.id == id);
-			});
+			this.quests.spliceWhere(f => f.id === id);
 		}
-	}
+	};
 });

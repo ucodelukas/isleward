@@ -1,10 +1,10 @@
-var fs = require('fs');
+let fs = require('fs');
 
-var mod = {
+let mod = {
 	init: function (callback) {
-		var app = require('express')();
-		var server = require('http').createServer(app);
-		var io = require('socket.io')(server);
+		let app = require('express')();
+		let server = require('http').createServer(app);
+		let io = require('socket.io')(server);
 
 		app.use(function (req, res, next) {
 			if (req.url.indexOf('/server') != 0)
@@ -13,7 +13,7 @@ var mod = {
 			next();
 		});
 
-		var lessMiddleware = require('less-middleware');
+		let lessMiddleware = require('less-middleware');
 		app.use(lessMiddleware('../', {
 			force: true,
 			render: {
@@ -26,9 +26,9 @@ var mod = {
 
 		io.on('connection', this.listeners.onConnection.bind(this));
 
-		var port = process.env.PORT || 5000;
+		let port = process.env.PORT || 5000;
 		server.listen(port, function () {
-			var message = 'Server: Ready';
+			let message = 'Server: Ready';
 			console.log(message);
 		});
 	},
@@ -40,14 +40,15 @@ var mod = {
 
 		onRequest: function (socket, msg, callback) {
 			if (msg.action == 'load') {
-				var res = JSON.parse(fs.readFileSync('saves/' + msg.fileName + '.json'));
+				let res = JSON.parse(fs.readFileSync('saves/' + msg.fileName + '.json'));
 				callback(res);
 			} else if (msg.action == 'save')
 				fs.writeFileSync('saves/' + msg.fileName + '.json', msg.data);
 			else if (msg.action == 'getFileList') {
 				callback(fs.readdirSync('saves/').map(l => (l.split('.')[0])));
 				return;
-			}
+			} else if (msg.action == 'persist')
+				require('./persist')(msg.data);
 
 			if (callback)
 				callback();
@@ -59,13 +60,13 @@ var mod = {
 		},
 
 		default: function (req, res, next) {
-			var root = req.url.split('/')[1];
-			var file = req.params[0];
+			let root = req.url.split('/')[1];
+			let file = req.params[0];
 
 			file = file.replace('/' + root + '/', '');
 
 			res.sendFile(file, {
-				'root': '../' + root
+				root: '../' + root
 			});
 		}
 	}

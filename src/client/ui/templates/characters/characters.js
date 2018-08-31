@@ -31,7 +31,7 @@ define([
 		},
 
 		onPlayClick: function () {
-			var char = this.selected;
+			let char = this.selected;
 			if (!char)
 				return;
 
@@ -72,7 +72,7 @@ define([
 
 			this.el.removeClass('disabled');
 
-			var list = this.find('.left')
+			let list = this.find('.left')
 				.empty();
 
 			characters
@@ -80,32 +80,32 @@ define([
 					return (b.level - a.level);
 				})
 				.forEach(function (c, i) {
-					var name = c.name;
-					if (c.level != null)
-						name += '<font class="color-yellowB"> (' + c.level + ')</font>'
+					let charName = c.name;
+					if (c.level !== null)
+						charName += '<font class="color-yellowB"> (' + c.level + ')</font>';
 
-					var html = templateListItem
-						.replace('$NAME$', name);
+					let html = templateListItem
+						.replace('$NAME$', charName);
 
-					var li = $(html)
+					let li = $(html)
 						.appendTo(list);
 
 					li.on('click', this.onCharacterClick.bind(this, c.name));
 
-					if (i == 0)
+					if (i === 0)
 						li.click();
 				}, this);
 		},
-		onCharacterClick: function (name, e) {
+		onCharacterClick: function (charName, e) {
 			this.el.addClass('disabled');
 
-			var el = $(e.target);
+			let el = $(e.target);
 			el.parent().find('.selected').removeClass('selected');
 			el.addClass('selected');
 
-			var charInfo = this.characterInfo[name];
+			let charInfo = this.characterInfo[charName];
 			if (charInfo) {
-				this.onGetCharacter(name, charInfo);
+				this.onGetCharacter(charName, charInfo);
 
 				return;
 			}
@@ -114,31 +114,31 @@ define([
 				cpn: 'auth',
 				method: 'getCharacter',
 				data: {
-					name: name
+					name: charName
 				},
-				callback: this.onGetCharacter.bind(this, name)
+				callback: this.onGetCharacter.bind(this, charName)
 			});
 		},
-		onGetCharacter: function (name, result) {
+		onGetCharacter: function (charName, result) {
 			this.find('.button').removeClass('disabled');
 
-			var spriteY = ~~(result.cell / 8);
-			var spirteX = result.cell - (spriteY * 8);
+			let spriteY = ~~(result.cell / 8);
+			let spirteX = result.cell - (spriteY * 8);
 
 			spirteX = -(spirteX * 8);
 			spriteY = -(spriteY * 8);
 
-			var spritesheet = result.sheetName;
-			if (spritesheet == 'characters')
+			let spritesheet = result.sheetName;
+			if (spritesheet === 'characters')
 				spritesheet = '../../../images/characters.png';
 
 			this.find('.sprite')
 				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px')
 				.show();
 
-			this.find('.name').html(name);
-			var stats = result.components.find(function (c) {
-				return (c.type == 'stats');
+			this.find('.name').html(charName);
+			let stats = result.components.find(function (c) {
+				return (c.type === 'stats');
 			});
 			if (stats) {
 				this.find('.class').html(
@@ -146,26 +146,25 @@ define([
 					' ' +
 					result.class[0].toUpperCase() + result.class.substr(1)
 				);
-			} else {
+			} else 
 				this.find('.class').html('');
-			}
 
 			this.el.removeClass('disabled');
 
-			this.characterInfo[name] = result;
-			this.selected = name;
+			this.characterInfo[charName] = result;
+			this.selected = charName;
 
-			var prophecies = result.components.find(function (c) {
-				return (c.type == 'prophecies');
+			let prophecies = result.components.find(function (c) {
+				return (c.type === 'prophecies');
 			});
 
 			if ((prophecies) && (prophecies.list.indexOf('hardcore') > -1))
-				this.find('.name').html(name + ' (hc)');
+				this.find('.name').html(charName + ' (hc)');
 
 			this.find('.btnPlay').removeClass('disabled');
 
 			if (result.permadead) {
-				this.find('.name').html(name + ' (hc - rip)');
+				this.find('.name').html(charName + ' (hc - rip)');
 				this.find('.btnPlay').addClass('disabled');
 			}
 		},
@@ -181,12 +180,12 @@ define([
 			if (this.deleteCount < 3) {
 				this.deleteCount++;
 
-				this.setMessage('click delete ' + (4 - this.deleteCount) + ' more time' + ((this.deleteCount == 3) ? '' : 's') + ' to confirm');
+				this.setMessage('click delete ' + (4 - this.deleteCount) + ' more time' + ((this.deleteCount === 3) ? '' : 's') + ' to confirm');
 
 				this.find('.btnDelete')
 					.removeClass('deleting')
 					.addClass('deleting')
-					.html('delete (' + (4 - this.deleteCount) + ')')
+					.html('delete (' + (4 - this.deleteCount) + ')');
 
 				return;
 			}

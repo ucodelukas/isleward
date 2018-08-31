@@ -1,127 +1,123 @@
-define([
-	'config/skins'
-], function (
-	skins
-) {
-	return {
-		type: 'wardrobe',
+let skins = require('../config/skins');
 
-		init: function (blueprint) {
-			var o = this.obj.instance.objects.buildObjects([{
-				properties: {
-					x: this.obj.x - 1,
-					y: this.obj.y - 1,
-					width: 3,
-					height: 3,
-					cpnNotice: {
-						actions: {
-							enter: {
-								cpn: 'wardrobe',
-								method: 'enterArea',
-								targetId: this.obj.id,
-								args: []
-							},
-							exit: {
-								cpn: 'wardrobe',
-								method: 'exitArea',
-								targetId: this.obj.id,
-								args: []
-							}
+module.exports = {
+	type: 'wardrobe',
+
+	init: function (blueprint) {
+		this.obj.instance.objects.buildObjects([{
+			properties: {
+				x: this.obj.x - 1,
+				y: this.obj.y - 1,
+				width: 3,
+				height: 3,
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'wardrobe',
+							method: 'enterArea',
+							targetId: this.obj.id,
+							args: []
+						},
+						exit: {
+							cpn: 'wardrobe',
+							method: 'exitArea',
+							targetId: this.obj.id,
+							args: []
 						}
 					}
 				}
-			}]);
-		},
+			}
+		}]);
+	},
 
-		exitArea: function (obj) {
-			if (!obj.player)
-				return;
+	exitArea: function (obj) {
+		if (!obj.player)
+			return;
 
-			obj.syncer.setArray(true, 'serverActions', 'removeActions', {
-				key: 'u',
-				action: {
-					targetId: this.obj.id,
-					cpn: 'wardrobe',
-					method: 'access'
-				}
-			});
+		obj.syncer.setArray(true, 'serverActions', 'removeActions', {
+			key: 'u',
+			action: {
+				targetId: this.obj.id,
+				cpn: 'wardrobe',
+				method: 'access'
+			}
+		});
 
-			this.obj.instance.syncer.queue('onCloseWardrobe', null, [obj.serverId]);
-		},
+		this.obj.instance.syncer.queue('onCloseWardrobe', null, [obj.serverId]);
+	},
 
-		enterArea: function (obj) {
-			if (!obj.player)
-				return;
+	enterArea: function (obj) {
+		if (!obj.player)
+			return;
 
-			var msg = `Press U to access the wardrobe`;
+		let msg = 'Press U to access the wardrobe';
 
-			obj.syncer.setArray(true, 'serverActions', 'addActions', {
-				key: 'u',
-				action: {
-					targetId: this.obj.id,
-					cpn: 'wardrobe',
-					method: 'open'
-				}
-			});
+		obj.syncer.setArray(true, 'serverActions', 'addActions', {
+			key: 'u',
+			action: {
+				targetId: this.obj.id,
+				cpn: 'wardrobe',
+				method: 'open'
+			}
+		});
 
-			this.obj.instance.syncer.queue('onGetAnnouncement', {
-				src: this.obj.id,
-				msg: msg
-			}, [obj.serverId]);
-		},
+		this.obj.instance.syncer.queue('onGetAnnouncement', {
+			src: this.obj.id,
+			msg: msg
+		}, [obj.serverId]);
+	},
 
-		open: function (msg) {
-			if (msg.sourceId == null)
-				return;
+	open: function (msg) {
+		if (!msg.has('sourceId'))
+			return;
 
-			var obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
-			if ((!obj) || (!obj.player))
-				return;
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
+		if ((!obj) || (!obj.player))
+			return;
 
-			var thisObj = this.obj;
-			if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
-				return;
+		let thisObj = this.obj;
+		if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
+			return;
 
-			obj.auth.getSkins({
-				callback: this.onGetSkins.bind(this, obj)
-			});
-		},
+		obj.auth.getSkinList({
+			callback: this.onGetSkins.bind(this, obj)
+		});
+	},
 
-		apply: function (msg) {
-			var obj = this.obj.instance.objects.objects.find(o => o.serverId == msg.sourceId);
-			if (!obj)
-				return;
+	apply: function (msg) {
+		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
+		if (!obj)
+			return;
 
-			obj.skinId = msg.skinId;
+		obj.skinId = msg.skinId;
 
-			obj.cell = skins.getCell(obj.skinId);
-			obj.sheetName = skins.getSpritesheet(obj.skinId);
+		obj.cell = skins.getCell(obj.skinId);
+		obj.sheetName = skins.getSpritesheet(obj.skinId);
 
-			var syncer = obj.syncer;
-			syncer.set(false, null, 'cell', obj.cell);
-			syncer.set(false, null, 'sheetName', obj.sheetName);
-			syncer.set(false, null, 'skinId', obj.skinId);
+		let syncer = obj.syncer;
+		syncer.set(false, null, 'cell', obj.cell);
+		syncer.set(false, null, 'sheetName', obj.sheetName);
+		syncer.set(false, null, 'skinId', obj.skinId);
 
-			var oSyncer = this.obj.instance.syncer;
+		let oSyncer = this.obj.instance.syncer;
 
-			oSyncer.queue('onCloseWardrobe', null, [obj.serverId]);
+		oSyncer.queue('onCloseWardrobe', null, [obj.serverId]);
 
-			oSyncer.queue('onGetObject', {
-				x: obj.x,
-				y: obj.y,
-				components: [{
-					type: 'attackAnimation',
-					row: 0,
-					col: 4
-				}]
-			});
-		},
+		oSyncer.queue('onGetObject', {
+			x: obj.x,
+			y: obj.y,
+			components: [{
+				type: 'attackAnimation',
+				row: 0,
+				col: 4
+			}]
+		}, -1);
+	},
 
-		onGetSkins: function (obj, skins) {
-			this.obj.instance.syncer.queue('onGetWardrobeSkins', {
-				id: this.obj.id,
-				skins: skins
-			}, [obj.serverId]);
-		}
-	};
-});
+	onGetSkins: function (obj, result) {
+		this.obj.instance.syncer.queue('onGetWardrobeSkins', {
+			id: this.obj.id,
+			skins: result
+		}, [obj.serverId]);
+	}
+};

@@ -1,99 +1,243 @@
-define([
-	'fs'
-], function (
-	fs
-) {
-	return {
-		db: null,
-		file: '../../data/storage.db',
-		exists: false,
+let fs = require('fs');
+let util = require('util');
 
-		tables: {
-			character: null,
-			characterList: null,
-			stash: null,
-			skins: null,
-			login: null,
-			leaderboard: null,
-			customMap: null,
-			mail: null,
-			customChannels: null,
-			error: null,
-			modLog: null,
-			accountInfo: null
-		},
+module.exports = {
+	db: null,
+	file: '../../data/storage.db',
+	exists: false,
 
-		init: function (cbReady) {
-			var sqlite = require('sqlite3').verbose();
-			this.exists = fs.existsSync(this.file);
-			this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
-		},
-		onDbCreated: function (cbReady) {
-			var db = this.db;
-			var tables = this.tables;
-			var scope = this;
-			db.serialize(function () {
-				for (var t in tables) {
+	buffer: [],
 
-					db.run(`
-						CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
-					`, scope.onTableCreated.bind(scope));
-				}
+	tables: {
+		character: null,
+		characterList: null,
+		stash: null,
+		skins: null,
+		login: null,
+		leaderboard: null,
+		customMap: null,
+		mail: null,
+		customChannels: null,
+		error: null,
+		modLog: null,
+		accountInfo: null
+	},
 
-				cbReady();
-			}, this);
+	init: function (cbReady) {
+		let sqlite = require('sqlite3').verbose();
+		this.exists = fs.existsSync(this.file);
+		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
+	},
+	onDbCreated: function (cbReady) {
+		let db = this.db;
+		let tables = this.tables;
+		let scope = this;
+		db.serialize(function () {
+			for (let t in tables) {
+				db.run(`
+					CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
+				`, scope.onTableCreated.bind(scope, t));
+			}
 
-			this.exists = true;
-		},
-		onTableCreated: function () {
+			cbReady();
+		}, this);
 
-		},
+		this.exists = true;
+	},
+	onTableCreated: async function (table) {
+		
+	},
 
-		//ent, field
-		get: function (options) {
-			var key = options.ent;
-			var table = options.field;
+	//ent, field
+	get: function (options) {
+		let key = options.ent;
+		let table = options.field;
 
-			options.query = `SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`;
+		options.query = `SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`;
 
-			this.db.get(options.query, this.done.bind(this, options));
-		},
+		this.db.get(options.query, this.done.bind(this, options));
+	},
 
-		delete: function (options) {
-			var key = options.ent;
-			var table = options.field;
+	getAsync: async function (options) {
+		return await this.queue({
+			type: 'get',
+			options: options
+		});
+	},
 
-			options.query = `DELETE FROM ${table} WHERE key = '${key}'`;
+	getAllAsync: async function (options) {
+		return await this.queue({
+			type: 'getAll',
+			options: options
+		});
+	},
 
-			this.db.run(options.query, this.done.bind(this, options));
-		},
+	delete: function (options) {
+		let key = options.ent;
+		let table = options.field;
 
-		//ent, field, value
-		set: function (options) {
-			var key = options.ent;
-			var table = options.field;
+		options.query = `DELETE FROM ${table} WHERE key = '${key}'`;
 
-			this.db.get(`SELECT 1 FROM ${table} where key = '${key}'`, this.doesExist.bind(this, options));
-		},
-		doesExist: function (options, err, result) {
-			var key = options.ent;
-			var table = options.field;
+		this.db.run(options.query, this.done.bind(this, options));
+	},
 
-			var query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${options.value}')`;
+	deleteAsync: async function (options) {
+		await this.queue({
+			type: 'delete',
+			options: options
+		});
+	},
 
-			if (result)
-				query = `UPDATE ${table} SET value = '${options.value}' WHERE key = '${key}'`;
+	//ent, field, value
+	set: function (options) {
+		let key = options.ent;
+		let table = options.field;
 
-			this.db.run(query, this.done.bind(this, options));
-		},
+		this.db.get(`SELECT 1 FROM ${table} where key = '${key}'`, this.doesExist.bind(this, options));
+	},
+	doesExist: function (options, err, result) {
+		let key = options.ent;
+		let table = options.field;
 
-		done: function (options, err, result) {
-			result = result || {
-				value: null
-			};
+		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${options.value}')`;
 
-			if (options.callback)
-				options.callback(result.value);
+		if (result)
+			query = `UPDATE ${table} SET value = '${options.value}' WHERE key = '${key}'`;
+
+		this.db.run(query, this.done.bind(this, options));
+	},
+
+	setAsync: async function (options) {
+		await this.queue({
+			type: 'set',
+			options: options
+		});
+	},
+
+	queue: async function (config) {
+		let resolve = null;
+		let promise = new Promise(function (res) {
+			resolve = res;
+		});
+
+		this.buffer.push({
+			resolve: resolve,
+			config: config
+		});
+
+		this.process();
+
+		return promise;
+	},
+
+	process: async function () {
+		let next = this.buffer[0];
+		if (!next)
+			return;
+
+		let config = next.config;
+		let options = config.options;
+
+		let res = null;
+
+		try {
+			if (config.type === 'get')
+				res = await this.processGet(options);
+			else if (config.type === 'getAll')
+				res = await this.processGetAll(options);
+			else if (config.type === 'set')
+				await this.processSet(options);
+			else if (config.type === 'delete')
+				await this.processDelete(options);
+		} catch (e) {
+			return;
 		}
-	};
-});
+
+		this.buffer.splice(0, 1);
+		next.resolve(res);
+
+		setTimeout(this.process.bind(this), 10);
+	},
+
+	processGet: async function (options) {
+		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
+		if (res) {
+			res = res.value;
+
+			if (options.clean) {
+				res = res
+					.split('`')
+					.join('\'')
+					.replace(/''+/g, '\'');
+			}
+			
+			if (!options.noParse)
+				res = JSON.parse(res);
+		} else if (!options.noParse && !options.noDefault)
+			res = options.isArray ? [] : {};
+
+		return res;
+	},
+
+	processGetAll: async function (options) {
+		let res = await util.promisify(this.db.all.bind(this.db))(`SELECT * FROM ${options.table}`);
+		if (res) {
+			if (options.clean) {
+				res.forEach(r => {
+					r.value = r.value
+						.split('`')
+						.join('\'')
+						.replace(/''+/g, '\'');
+				});
+			}
+			
+			if (!options.noParse) {
+				if (!res)
+					res = options.isArray ? [] : {};
+				else {
+					res.forEach(r => {
+						r.value = JSON.parse(r.value);
+					});
+				}
+			}
+		} else if (!options.noParse && !options.noDefault)
+			res = options.isArray ? [] : {};
+
+		return res;
+	},
+
+	processSet: async function (options) {
+		let table = options.table;
+		let key = options.key;
+		let value = options.value;
+
+		if (options.serialize)
+			value = JSON.stringify(value);
+
+		let exists = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`);
+
+		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${value}')`;
+		if (exists)
+			query = `UPDATE ${table} SET value = '${value}' WHERE key = '${key}'`;
+
+		await util.promisify(this.db.run.bind(this.db))(query);
+	},
+
+	processDelete: async function (options) {
+		let table = options.table;
+		let key = options.key;
+
+		let query = `DELETE FROM ${table} WHERE key = '${key}'`;
+
+		await util.promisify(this.db.run.bind(this.db))(query);
+	},
+
+	done: function (options, err, result) {
+		result = result || {
+			value: null
+		};
+
+		if (options.callback)
+			options.callback(result.value);
+	}
+};

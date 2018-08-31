@@ -1,46 +1,40 @@
-define([
+module.exports = {
+	type: 'flurry',
 
-], function (
+	cdMax: 7,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'flurry',
+	range: 9,
 
-		cdMax: 7,
-		manaCost: 0,
+	speed: 150,
 
-		range: 9,
+	row: 3,
+	col: 0,
+	aura: true,
 
-		speed: 150,
+	cast: function (action) {
+		let obj = this.obj;
 
-		row: 3,
-		col: 0,
-		aura: true,
+		this.sendBump(obj);
 
-		cast: function (action) {
-			var obj = this.obj;
+		this.queueCallback(this.explode.bind(this, obj), 1, null, obj);
 
-			this.sendBump(obj);
+		this.sendBump({
+			x: obj.x,
+			y: obj.y - 1
+		});
 
-			this.queueCallback(this.explode.bind(this, obj), 1, null, obj);
+		return true;
+	},
+	explode: function (obj) {
+		if (this.obj.destroyed)
+			return;
 
-			this.sendBump({
-				x: obj.x,
-				y: obj.y - 1
-			});
-
-			return true;
-		},
-		explode: function (obj) {
-			if (this.obj.destroyed)
-				return;
-
-			this.obj.spellbook.spells[0].cd = 0;
-			this.obj.effects.addEffect({
-				type: 'frenzy',
-				ttl: this.duration,
-				newCd: 1
-			});
-		}
-	};
-});
+		this.obj.spellbook.spells[0].cd = 0;
+		this.obj.effects.addEffect({
+			type: 'frenzy',
+			ttl: this.duration,
+			newCd: 1
+		});
+	}
+};

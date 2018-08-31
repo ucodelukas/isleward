@@ -1,55 +1,39 @@
-define([
-	'misc/fileLister',
-	'misc/events',
-	'path'
-], function(
-	fileLister,
-	events,
-	pathUtilities
-) {
-	var onReady = null;
+let fileLister = require('../misc/fileLister');
+let events = require('../misc/events');
+const componentBase = require('./componentBase');
 
-	var components = {
-		components: {},
-		waiting: [],
+let onReady = null;
 
-		init: function(callback) {
-			onReady = callback;
-			events.emit('onBeforeGetComponents', this.components);
-			this.getComponentFolder();
-		},
+module.exports = {
+	components: {},
 
-		getComponentFolder: function() {
-			var files = fileLister.getFolder('./components/');
-			files = files.filter(w => (
-				(w.indexOf('components') == -1) &&
-				(w.indexOf('cpnBase') == -1) &&
-				(w.indexOf('projectile') == -1)
-			));
-			var fLen = files.length;
-			for (var i = 0; i < fLen; i++) {
-				this.getComponentFile(`./components/${files[i]}`);
-			}
-		},
+	init: function (callback) {
+		onReady = callback;
+		events.emit('onBeforeGetComponents', this.components);
+		this.getComponentFolder();
+	},
 
-		getComponentFile: function(path) {
-			var fileName = pathUtilities.basename(path);
-			fileName = fileName.replace('.js', '');
-			this.waiting.push(fileName);
-			require([ path ], this.onGetComponent.bind(this));
-		},
+	getComponentFolder: function () {
+		let files = fileLister.getFolder('./components/');
+		files = files.filter(w => (
+			(w.indexOf('components') === -1) &&
+			(w.indexOf('cpnBase') === -1) &&
+			(w.indexOf('projectile') === -1)
+		));
+		let fLen = files.length;
+		for (let i = 0; i < fLen; i++) 
+			this.getComponentFile(`./${files[i]}`);
 
-		onGetComponent: function(template) {
-			this.waiting.spliceWhere(w => w == template.type);
+		onReady();
+	},
 
-			this.components[template.type] = template;
+	getComponentFile: function (path) {
+		let cpn = require(path);
+		this.onGetComponent(cpn);
+	},
 
-			if (this.waiting.length == 0) {
-				delete this.waiting;
-				onReady();
-			}
-		}
-	};
-
-	return components;
-});
+	onGetComponent: function (template) {
+		template = extend({}, componentBase, template);
+		this.components[template.type] = template;
+	}
+};

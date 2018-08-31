@@ -1,72 +1,66 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		callbacks: [],
+module.exports = {
+	callbacks: [],
 
-		speed: 100,
+	speed: 100,
 
-		init: function() {
-			setInterval(this.update.bind(this), this.speed);
-		},
+	init: function () {
+		setInterval(this.update.bind(this), this.speed);
+	},
 
-		register: function(sourceId, callback, time, destroyCallback) {
-			var obj = {
-				sourceId: sourceId,
-				callback: callback,
-				destroyCallback: destroyCallback,
-				time: time
-			};
+	register: function (sourceId, callback, time, destroyCallback) {
+		let obj = {
+			sourceId: sourceId,
+			callback: callback,
+			destroyCallback: destroyCallback,
+			time: time
+		};
 
-			this.callbacks.push(obj);
+		this.callbacks.push(obj);
 
-			return obj;
-		},
-		unregister: function(sourceId) {
-			var callbacks = this.callbacks;
-			var cLen = callbacks.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = callbacks[i];
+		return obj;
+	},
+	unregister: function (sourceId) {
+		let callbacks = this.callbacks;
+		let cLen = callbacks.length;
+		for (let i = 0; i < cLen; i++) {
+			let c = callbacks[i];
 
-				if (c.sourceId == sourceId) {
-					if (c.destroyCallback)
-						c.destroyCallback();
-					callbacks.splice(i, 1);
-					i--;
-					cLen--;
-				}
-			}
-		},
-
-		update: function() {
-			var speed = this.speed;
-
-			var callbacks = this.callbacks;
-			var cLen = callbacks.length;
-			for (var i = 0; i < cLen; i++) {
-				var c = callbacks[i];
-
-				//If a spellCallback kills a mob he'll unregister his callbacks
-				if (!c) {
-					i--;
-					cLen--;
-					continue;
-				}
-
-				c.time -= speed;
-
-				if (c.time <= 0) {
-					if (c.callback)
-						c.callback();
-					if (c.destroyCallback)
-						c.destroyCallback();
-					callbacks.splice(i, 1);
-					i--;
-					cLen--;
-				}
+			if (c.sourceId === sourceId) {
+				if (c.destroyCallback)
+					c.destroyCallback();
+				callbacks.splice(i, 1);
+				i--;
+				cLen--;
 			}
 		}
-	};
-});
+	},
+
+	update: function () {
+		let speed = this.speed;
+
+		let callbacks = this.callbacks;
+		let cLen = callbacks.length;
+		for (let i = 0; i < cLen; i++) {
+			let c = callbacks[i];
+
+			//If a spellCallback kills a mob he'll unregister his callbacks
+			if (!c) {
+				i--;
+				cLen--;
+				continue;
+			}
+
+			c.time -= speed;
+
+			if (c.time <= 0) {
+				if (c.callback)
+					c.callback();
+				if (c.destroyCallback)
+					c.destroyCallback();
+				callbacks.splice(i, 1);
+				i--;
+				cLen--;
+			}
+		}
+	}
+};

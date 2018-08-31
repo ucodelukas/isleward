@@ -58,9 +58,9 @@ define([
 			window.onfocus = this.onFocus.bind(this, true);
 			window.onblur = this.onFocus.bind(this, false);
 			$(window).on('contextmenu', function (e) {
-				var allowedList = ['txtUsername', 'txtPassword'];
+				let allowedList = ['txtUsername', 'txtPassword'];
 
-				var allowed = allowedList.some(function (item) {
+				let allowed = allowedList.some(function (item) {
 					return $(e.target).hasClass(item);
 				});
 

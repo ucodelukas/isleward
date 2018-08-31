@@ -16,13 +16,12 @@ define([
 		extend: function (blueprint) {
 			if (blueprint.modifyRep) {
 				blueprint.modifyRep.forEach(function (m) {
-					var exists = this.list.find(l => (l.id == m.id));
+					let exists = this.list.find(l => (l.id === m.id));
 					if (!exists)
 						this.list.push(m);
 					else {
-						for (var p in m) {
+						for (let p in m) 
 							exists[p] = m[p];
-						}
 					}
 				}, this);
 

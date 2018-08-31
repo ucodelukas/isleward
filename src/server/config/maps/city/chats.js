@@ -5,7 +5,7 @@ module.exports = {
 		msg: '*sighs*'
 	}],
 	peasant: [{
-		msg: `I'm so poor`
+		msg: 'I\'m so poor'
 	}, {
 		msg: '*twitches internally*'
 	}, {

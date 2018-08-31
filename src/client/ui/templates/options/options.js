@@ -5,7 +5,8 @@ define([
 	'js/rendering/renderer',
 	'ui/factory',
 	'js/objects/objects',
-	'js/system/client'
+	'js/system/client',
+	'js/sound/sound'
 ], function (
 	events,
 	template,
@@ -13,7 +14,8 @@ define([
 	renderer,
 	factory,
 	objects,
-	client
+	client,
+	sound
 ) {
 	return {
 		tpl: template,
@@ -22,7 +24,6 @@ define([
 		modal: true,
 
 		postRender: function () {
-			//this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
 			this.el.find('.btnScreen').on('click', this.toggleScreen.bind(this));
@@ -52,10 +53,11 @@ define([
 			renderer.clean();
 			objects.onRezone();
 			renderer.buildTitleScreen();
+			sound.unload();
 
 			events.emit('onShowCharacterSelect');
 			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
-				var ui = $(el).data('ui');
+				let ui = $(el).data('ui');
 				if ((ui) && (ui.destroy))
 					ui.destroy();
 			});
@@ -67,7 +69,7 @@ define([
 		},
 
 		onResize: function () {
-			var isFullscreen = (window.innerHeight == screen.height);
+			let isFullscreen = (window.innerHeight === screen.height);
 			if (isFullscreen)
 				this.el.find('.btnScreen').html('Windowed');
 			else
@@ -93,8 +95,8 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'esc')
+			if (key === 'esc')
 				this.toggle();
 		}
-	}
+	};
 });

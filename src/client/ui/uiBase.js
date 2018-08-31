@@ -14,7 +14,7 @@ define([
 		eventCallbacks: {},
 
 		render: function () {
-			var container = '.ui-container';
+			let container = '.ui-container';
 			if (this.container)
 				container += ' > ' + this.container;
 
@@ -28,7 +28,8 @@ define([
 			if (this.modal)
 				this.el.addClass('modal');
 
-			this.postRender && this.postRender();
+			if (this.postRender)
+				this.postRender();
 
 			if (this.centered) {
 				this.centeredX = true;
@@ -48,15 +49,15 @@ define([
 		setOptions: function (options) {
 			this.options = options;
 		},
-		on: function (el, event, callback) {
-			if (typeof (el) == 'string')
+		on: function (el, eventName, callback) {
+			if (typeof (el) === 'string')
 				el = this.find(el);
 			else
 				el = $(el);
 
-			el.on(event, function () {
-				var args = [].slice.call(arguments, 1);
-				args.splice(0, 0, event);
+			el.on(eventName, function () {
+				let args = [].slice.call(arguments, 1);
+				args.splice(0, 0, eventName);
 
 				callback.apply(null, args);
 			});
@@ -65,19 +66,19 @@ define([
 			return this.el.find(selector);
 		},
 		center: function (x, y) {
-			if (x == null)
+			if (x === null)
 				x = true;
-			if (y == null)
+			if (y === null)
 				y = true;
 
 			this.centeredX = x;
 			this.centeredY = y;
 
-			var el = this.el;
-			var pat = el.parent();
+			let el = this.el;
+			let pat = el.parent();
 
-			var posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
-			var posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
+			let posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
+			let posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
 
 			el.css('position', 'absolute');
 			if (x)
@@ -91,6 +92,9 @@ define([
 
 			this.shown = true;
 			this.el.show();
+
+			if (this.onAfterShow)
+				this.onAfterShow();
 		},
 		hide: function () {
 			if (this.beforeHide)
@@ -112,31 +116,31 @@ define([
 		},
 
 		setDisabled: function (isDisabled) {
-			this.el.removeClass('disabled')
+			this.el.removeClass('disabled');
 
 			if (isDisabled)
 				this.el.addClass('disabled');
 		},
 
-		onEvent: function (event, callback) {
-			var list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
-			var eventCallback = events.on(event, callback);
+		onEvent: function (eventName, callback) {
+			let list = this.eventCallbacks[eventName] || (this.eventCallbacks[eventName] = []);
+			let eventCallback = events.on(eventName, callback);
 			list.push(eventCallback);
 
 			return eventCallback;
 		},
 
 		offEvent: function (eventCallback) {
-			for (var e in this.eventCallbacks) {
+			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
-					if (c == eventCallback)
+					if (c === eventCallback)
 						events.off(e, c);
 				}, this);
 			}
 		},
 
 		offEvents: function () {
-			for (var e in this.eventCallbacks) {
+			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
 					events.off(e, c);
 				}, this);
