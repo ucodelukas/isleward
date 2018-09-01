@@ -113,33 +113,8 @@ module.exports = {
 				eLen--;
 				i--;
 			}
-<<<<<<< HEAD
 		}
 	},
-=======
-		},
-
-		canApplyEffect: function (type) {
-			if (this.ccResistances[type] == null)
-				return true;
-
-			var ccResistances = this.ccResistances;
-			if ((100 - ccResistances[type]) >= 50) {
-				ccResistances[type] += 50;
-				return true;
-			} else
-				return false;
-		},
-
-		addEffect: function (options, source) {
-			if ((options.ttl != null) && (options.ttl == 0))
-				return;
-
-			options.caster = options.caster || source;
-
-			if (!this.canApplyEffect(options.type))
-				return;
->>>>>>> 555-new-dungeon
 
 	canApplyEffect: function (type) {
 		if (!this.ccResistances[type])
@@ -153,6 +128,11 @@ module.exports = {
 	},
 
 	addEffect: function (options) {
+		if ((options.ttl != null) && (options.ttl == 0))
+			return;
+
+		options.caster = options.caster || source;
+
 		if (!this.canApplyEffect(options.type))
 			return;
 

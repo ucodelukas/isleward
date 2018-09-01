@@ -9,12 +9,12 @@ define([
 		},
 
 		distanceToLine: function (p, la, lb) {
-			var xD = lb[0] - la[0];
-			var yD = lb[1] - la[1];
+			let xD = lb[0] - la[0];
+			let yD = lb[1] - la[1];
 
-			var u = (((p[0] - la[0]) * xD) + ((p[1] - la[1]) * yD)) / ((xD * xD) + (yD * yD));
+			let u = (((p[0] - la[0]) * xD) + ((p[1] - la[1]) * yD)) / ((xD * xD) + (yD * yD));
 
-			var closestLine;
+			let closestLine;
 			if (u < 0)
 				closestLine = [la[0], la[1]];
 			else if (u > 1)
@@ -26,14 +26,14 @@ define([
 		},
 
 		calculate: function (p, verts) {
-			var minDistance = 9999;
+			let minDistance = 9999;
 
-			var vLen = verts.length;
-			for (var i = 0, j = vLen - 1; i < vLen; j = i++) {
-				var vi = verts[i];
-				var vj = verts[j];
+			let vLen = verts.length;
+			for (let i = 0, j = vLen - 1; i < vLen; j = i++) {
+				let vi = verts[i];
+				let vj = verts[j];
 
-				var distance = this.distanceToLine(p, vi, vj);
+				let distance = this.distanceToLine(p, vi, vj);
 				if (distance < minDistance)
 					minDistance = distance;
 			}

@@ -15,9 +15,9 @@ define([
 		},
 
 		onGetCasting: function (casting) {
-			var el = this.find('.casting');
+			let el = this.find('.casting');
 
-			if ((casting == 0) || (casting == 1))
+			if ((casting === 0) || (casting === 1))
 				el.hide();
 			else {
 				el

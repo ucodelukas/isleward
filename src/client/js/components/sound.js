@@ -10,7 +10,7 @@ define([
 		volume: 0,
 
 		init: function () {
-			var obj = this.obj;
+			let obj = this.obj;
 			sound.addSound(obj.zoneId, this.sound, this.volume, obj.x, obj.y, obj.width, obj.height, obj.area);
 		}
 	};

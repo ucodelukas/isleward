@@ -22,16 +22,15 @@ define([
 		},
 
 		onGetCasting: function (casting) {
-			var box = this.el.find('.statBox')
+			let box = this.el.find('.statBox')
 				.eq(2);
 
-			if ((casting == 0) || (casting == 1)) {
+			if ((casting === 0) || (casting === 1)) {
 				box.hide();
 				return;
-			} else
-				box.show();
+			} box.show();
 
-			var w = ~~(casting * 100);
+			let w = ~~(casting * 100);
 			box.find('[class^="stat"]').css('width', w + '%');
 		},
 

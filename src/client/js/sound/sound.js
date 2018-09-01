@@ -14,7 +14,7 @@ define([
 
 		unload: function (zoneId) {
 			this.sounds.forEach(function (s) {
-				if ((s.sound) && (s.zoneId != zoneId))
+				if ((s.sound) && (s.zoneId !== zoneId))
 					s.sound.unload();
 			});
 
