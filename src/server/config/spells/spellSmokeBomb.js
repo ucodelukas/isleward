@@ -112,7 +112,7 @@ module.exports = {
 						x: i,
 						y: j,
 						properties: {
-							cpnHealPatch: cpnSmokePatch,
+							cpnSmokePatch: cpnSmokePatch,
 							cpnParticles: {
 								simplify: function () {
 									return {
@@ -121,15 +121,15 @@ module.exports = {
 									};
 								},
 								blueprint: this.particles
-							},
-							extraProperties: {
-								smokePatch: {
-									caster: obj,
-									statType: this.statType,
-									getDamage: this.getDamage.bind(this),
-									ttl: this.duration
-								}
-							} 
+							}
+						},
+						extraProperties: {
+							smokePatch: {
+								caster: obj,
+								statType: this.statType,
+								getDamage: this.getDamage.bind(this),
+								ttl: this.duration
+							}
 						} 
 					}]);
 

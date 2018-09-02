@@ -150,7 +150,7 @@ module.exports = {
 	},
 
 	sendAnimation: function (blueprint) {
-		this.obj.instance.syncer.queue('onGetObject', blueprint);
+		this.obj.instance.syncer.queue('onGetObject', blueprint, -1);
 	},
 
 	sendBump: function (target, deltaX, deltaY) {
@@ -178,7 +178,7 @@ module.exports = {
 			deltaY: deltaY
 		}];
 
-			//During casting we only bump
+		//During casting we only bump
 		if ((target) && (this.animation)) {
 			components.push({
 				type: 'animation',
@@ -189,7 +189,7 @@ module.exports = {
 		this.obj.instance.syncer.queue('onGetObject', {
 			id: this.obj.id,
 			components: components
-		});
+		}, -1);
 	},
 
 	simplify: function (self) {

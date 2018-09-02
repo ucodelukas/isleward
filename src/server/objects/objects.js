@@ -84,7 +84,7 @@ module.exports = {
 
 			//Add components (certain ones need to happen first)
 			//TODO: Clean this part up
-			let properties = extend(true, {}, l.properties);
+			let properties = extend({}, l.properties);
 			['cpnMob'].forEach(function (c) {
 				let blueprint = properties[c] || null;
 				if ((blueprint) && (typeof (blueprint) === 'string'))

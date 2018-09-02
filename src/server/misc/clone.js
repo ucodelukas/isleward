@@ -18,16 +18,20 @@ let cloneRecursive = function (o, newO) {
 	if (!newO)
 		newO = {};
 	for (let i in o) {
-		if (o.hasOwnProperty(i)) 
+		if (o.hasOwnProperty(i))
 			newO[i] = cloneRecursive(o[i], newO[i]);
 	}
 	return newO;
 };
 
 let clone = function (o) {
-	let aLen = arguments.length;
-	for (let i = 1; i < aLen; i++) 
-		cloneRecursive(arguments[i], o);
+	try {
+		let aLen = arguments.length;
+		for (let i = 1; i < aLen; i++) 
+			cloneRecursive(arguments[i], o);
+	} catch (e) {
+		console.log(arguments[0]);
+	}
 
 	return o;
 };

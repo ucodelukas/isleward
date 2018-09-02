@@ -69,11 +69,11 @@ module.exports = {
 		if (obj.actionQueue.length > 0)
 			return;
 
-			//Unless we're going home, don't always move
+		//Unless we're going home, don't always move
 		if ((!this.goHome) && (rnd() < 0.85) && (!this.patrol))
 			return;
 
-			//Don't move around if we're not allowed to, unless we're going home
+		//Don't move around if we're not allowed to, unless we're going home
 		let walkDistance = this.walkDistance;
 		if ((!this.goHome) && (walkDistance <= 0))
 			return;
@@ -84,7 +84,7 @@ module.exports = {
 			toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 		} else {
-			while (true) {
+			do {
 				let toNode = this.patrol[this.patrolTargetNode];
 				toX = toNode[0];
 				toY = toNode[1];
@@ -94,7 +94,7 @@ module.exports = {
 						this.patrolTargetNode = 0;
 				} else
 					break;
-			}
+			} while (toX - obj.x !== 0 || toY - obj.y !== 0);
 		}
 
 		if (!this.physics.isCellOpen(toX, toY))

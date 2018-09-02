@@ -64,7 +64,7 @@ module.exports = {
 
 		targets.forEach(function (t) {
 			ttl = (Math.sqrt(Math.pow(t.x - obj.x, 2) + Math.pow(t.y - obj.y, 2)) * this.speed) - 50;
-			let config = extend(true, {}, projectileConfig);
+			let config = extend({}, projectileConfig);
 			config.components[0].ttl = ttl;
 			config.components[0].idTarget = t.id;
 

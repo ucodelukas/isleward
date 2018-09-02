@@ -39,6 +39,20 @@ define([
 			return ((!node) || (node.weight === 0));
 		},
 
+		setCollision: function (config) {
+			const x = config.x;
+			const y = config.y;
+			const collides = config.collides;
+
+			const grid = this.graph.grid;
+
+			let node = grid[x][y];
+			if (!node) 
+				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
+
+			node.weight = collides ? 0 : 1;
+		},
+
 		isInPolygon: function (x, y, verts) {
 			let inside = false;
 
