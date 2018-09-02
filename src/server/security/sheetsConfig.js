@@ -2,7 +2,7 @@ module.exports = {
 	sheetId: '',
 
 	roles: [{
-		username: 'admin',
+		username: 'waffle',
 		level: 10,
 		messagestyle: 'color-blueA',
 		messageprefix: '(dev) ',
