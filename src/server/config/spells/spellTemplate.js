@@ -35,7 +35,7 @@ module.exports = {
 
 	castBase: function (action) {
 		if (this.castTimeMax > 0) {
-			if ((!this.currentAction) || (this.currentAction.target != action.target)) {
+			if ((!this.currentAction) || (this.currentAction.target !== action.target)) {
 				this.currentAction = action;
 				this.castTime = this.castTimeMax;
 				this.obj.syncer.set(false, null, 'casting', 0);
@@ -81,7 +81,7 @@ module.exports = {
 			cd: this.cdMax
 		};
 
-		let isAttack = (this.type == 'melee');
+		let isAttack = (this.type === 'melee');
 		if ((Math.random() * 100) < this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'])
 			cd.cd = 1;
 
@@ -99,7 +99,7 @@ module.exports = {
 	},
 
 	calcDps: function (target, noSync) {
-		if ((!this.values) || (this.spellType == 'buff'))
+		if ((!this.values) || (this.spellType === 'buff'))
 			return;
 
 		if ((!this.damage) && (!this.healing))
@@ -123,7 +123,7 @@ module.exports = {
 				noCrit: true
 			}).amount;
 
-			let isAttack = (this.type == 'melee');
+			let isAttack = (this.type === 'melee');
 
 			let statValues = this.obj.stats.values;
 
@@ -141,7 +141,7 @@ module.exports = {
 
 			if (this.damage) 
 				this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
-				 else
+			else
 				this.values.heal = ~~(dmg * 100) / 100 + '/tick';
 
 			if (!noSync)

@@ -127,8 +127,8 @@ module.exports = {
 		} return false;
 	},
 
-	addEffect: function (options) {
-		if ((options.ttl != null) && (options.ttl == 0))
+	addEffect: function (options, source) {
+		if ((options.has('ttl')) && (options.ttl === 0))
 			return;
 
 		options.caster = options.caster || source;

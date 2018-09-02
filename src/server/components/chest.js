@@ -6,7 +6,7 @@ module.exports = {
 	ttl: -1,
 
 	init: function (blueprint) {
-		if (blueprint.ownerName != null)
+		if (blueprint.has('ownerName'))
 			this.ownerName = blueprint.ownerName;
 
 		if (blueprint.ttl)
@@ -24,7 +24,7 @@ module.exports = {
 		if (this.ttl > 0) {
 			this.ttl--;
 
-			if (this.ttl == 0)
+			if (!this.ttl)
 				this.obj.destroyed = true;
 		}
 	},

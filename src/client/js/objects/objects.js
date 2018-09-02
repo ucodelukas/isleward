@@ -25,33 +25,21 @@ define([
 			events.on('onTilesVisible', this.onTilesVisible.bind(this));
 
 			//Get saved value for showNames, or use the value set above
-<<<<<<< HEAD
 			let showNames = window.localStorage.getItem('iwd_opt_shownames');
 			this.showNames = showNames ? (showNames === 'true') : this.showNames;
-=======
-			var showNames = window.localStorage.getItem('iwd_opt_shownames');
-			this.showNames = showNames ? (showNames == 'true') : this.showNames;
 			config.showNames = this.showNames;
->>>>>>> 555-new-dungeon
 		},
 
 		getLocation: function (x, y) {
 			let objects = this.objects;
 			let oLen = objects.length;
 
-<<<<<<< HEAD
 			let closest = 999;
 			let mob = null;
 			for (let i = 0; i < oLen; i++) {
 				let o = objects[i];
-				if ((!o.stats) || (o.nonSelectable))
-=======
-			var closest = 999;
-			var mob = null;
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
-				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
->>>>>>> 555-new-dungeon
+				
+				if ((!o.stats) || (o.nonSelectable) || (o === window.player) || (!o.sprite.visible))
 					continue;
 
 				let dx = Math.abs(o.x - x);
@@ -70,13 +58,8 @@ define([
 		getClosest: function (x, y, maxDistance, reverse, fromMob) {
 			let objects = this.objects;
 
-<<<<<<< HEAD
 			let list = objects.filter(function (o) {
-				if ((!o.stats) || (o.nonSelectable) || (o === window.player))
-=======
-			var list = objects.filter(function (o) {
-				if ((!o.stats) || (o.nonSelectable) || (o == window.player) || (!o.sprite.visible))
->>>>>>> 555-new-dungeon
+				if ((!o.stats) || (o.nonSelectable) || (o === window.player) || (!o.sprite.visible))
 					return false;
 
 				let dx = Math.abs(o.x - x);
@@ -149,11 +132,7 @@ define([
 			let components = template.components || [];
 			delete template.components;
 
-<<<<<<< HEAD
-			let syncTypes = ['portrait'];
-=======
-			var syncTypes = ['portrait', 'area'];
->>>>>>> 555-new-dungeon
+			let syncTypes = ['portrait', 'area'];
 
 			for (let p in template) {
 				let value = template[p];
@@ -221,7 +200,7 @@ define([
 			}
 
 			if (renderer.sprites) {
-				var isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
+				let isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
 				obj.setVisible(isVisible);
 			}
 
@@ -272,8 +251,8 @@ define([
 				if ((p === 'x') || (p === 'y'))
 					moved = true;
 
-				if (p == 'casting') {
-					if (obj == window.player)
+				if (p === 'casting') {
+					if (obj === window.player)
 						events.emit('onGetSelfCasting', value);
 					else
 						events.emit('onGetTargetCasting', value);
@@ -325,7 +304,7 @@ define([
 			}
 
 			if (obj.sprite) {
-				var isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
+				let isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
 				obj.setVisible(isVisible);
 			}
 
@@ -363,21 +342,12 @@ define([
 
 				let showNames = this.showNames;
 
-<<<<<<< HEAD
 				let objects = this.objects;
 				let oLen = objects.length;
 				for (let i = 0; i < oLen; i++) {
 					let obj = objects[i];
 					let ns = obj.nameSprite;
-					if ((!ns) || (obj.dead))
-=======
-				var objects = this.objects;
-				var oLen = objects.length;
-				for (var i = 0; i < oLen; i++) {
-					var obj = objects[i];
-					var ns = obj.nameSprite;
 					if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
->>>>>>> 555-new-dungeon
 						continue;
 
 					ns.visible = showNames;
@@ -386,13 +356,13 @@ define([
 		},
 
 		onTilesVisible: function (tiles, visible) {
-			var objects = this.objects;
-			var oLen = objects.length;
-			for (var i = 0; i < oLen; i++) {
-				var o = objects[i];
+			let objects = this.objects;
+			let oLen = objects.length;
+			for (let i = 0; i < oLen; i++) {
+				let o = objects[i];
 
-				var onPos = tiles.some(function (t) {
-					return ((t.x == o.x) && (t.y == o.y));
+				let onPos = tiles.some(function (t) {
+					return ((t.x === o.x) && (t.y === o.y));
 				});
 				if (!onPos)
 					continue;

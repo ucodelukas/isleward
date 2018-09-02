@@ -1,20 +1,14 @@
-define([
+module.exports = {
+	type: 'sound',
 
-], function (
+	sound: null,
+	volume: 0,
 
-) {
-	return {
-		type: 'sound',
-
-		sound: null,
-		volume: 0,
-
-		simplify: function () {
-			return {
-				type: 'sound',
-				sound: this.sound,
-				volume: this.volume
-			};
-		}
-	};
-});
+	simplify: function () {
+		return {
+			type: 'sound',
+			sound: this.sound,
+			volume: this.volume
+		};
+	}
+};

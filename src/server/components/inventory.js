@@ -645,10 +645,7 @@ module.exports = {
 		}, this);
 	},
 
-	createBag: function (x, y, items, ownerId) {
-		if (!ownerId)
-			ownerId = -1;
-
+	createBag: function (x, y, items, ownerName) {
 		let bagCell = 50;
 
 		let topQuality = 0;
@@ -678,62 +675,17 @@ module.exports = {
 			y: y,
 			properties: {
 				cpnChest: {
-					ownerId: ownerId,
+					ownerName: ownerName,
 					ttl: 1710
 				},
 				cpnInventory: {
 					items: extend([], items)
 				}
-<<<<<<< HEAD
-=======
-			}, this);
-		},
-
-		createBag: function (x, y, items, ownerName) {
-			var bagCell = 50;
-
-			var topQuality = 0;
-			var iLen = items.length;
-			for (var i = 0; i < iLen; i++) {
-				var quality = items[i].quality;
-				items[i].fromMob = !!this.obj.mob;
-				if (quality > topQuality)
-					topQuality = quality;
->>>>>>> 555-new-dungeon
 			}
 		}]);
 
-<<<<<<< HEAD
 		return obj;
 	},
-=======
-			if (topQuality == 0)
-				bagCell = 50;
-			else if (topQuality == 1)
-				bagCell = 51;
-			else if (topQuality == 2)
-				bagCell = 128;
-			else if (topQuality == 3)
-				bagCell = 52;
-			else
-				bagCell = 53;
-
-			var obj = this.obj.instance.objects.buildObjects([{
-				sheetName: 'objects',
-				cell: bagCell,
-				x: x,
-				y: y,
-				properties: {
-					cpnChest: {
-						ownerName: ownerName,
-						ttl: this.obj.instance.instanced ? -1 : 1710
-					},
-					cpnInventory: {
-						items: extend(true, [], items)
-					}
-				}
-			}]);
->>>>>>> 555-new-dungeon
 
 	hasSpace: function () {
 		if (this.inventorySize !== -1) {
@@ -918,26 +870,14 @@ module.exports = {
 		return item;
 	},
 
-	dropBag: function (ownerId, killSource) {
+	dropBag: function (ownerName, killSource) {
 		if (!this.blueprint)
 			return;
 
 		//Only drop loot if this player is in the zone
-		let playerObject = this.obj.instance.objects.find(o => o.serverId === ownerId);
+		let playerObject = this.obj.instance.objects.find(o => o.name === ownerName);
 		if (!playerObject)
 			return;
-
-		//Get player's spells' statTypes
-		let stats = [];
-		playerObject.spellbook.spells.forEach(function (s) {
-			let spellStatType = s.statType;
-			if (!(spellStatType instanceof Array))
-				spellStatType = [spellStatType];
-			spellStatType.forEach(function (ss) {
-				if (stats.indexOf(ss) === -1)
-					stats.push(ss);
-			});
-		});
 
 		let items = this.items;
 		let iLen = items.length;
@@ -946,22 +886,11 @@ module.exports = {
 			delete items[i].pos;
 		}
 
-<<<<<<< HEAD
 		let blueprint = this.blueprint;
 		let magicFind = (blueprint.magicFind || 0);
 
 		let savedItems = extend([], this.items);
 		this.items = [];
-=======
-		dropBag: function (ownerName, killSource) {
-			if (!this.blueprint)
-				return;
-
-			//Only drop loot if this player is in the zone
-			var playerObject = this.obj.instance.objects.find(o => o.name == ownerName);
-			if (!playerObject)
-				return;
->>>>>>> 555-new-dungeon
 
 		let dropEvent = {
 			chanceMultiplier: 1,
@@ -1023,13 +952,8 @@ module.exports = {
 		playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
 		this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
-<<<<<<< HEAD
 		if (this.items.length > 0)
-			this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
-=======
-			if (this.items.length > 0)
-				this.createBag(this.obj.x, this.obj.y, this.items, ownerName);
->>>>>>> 555-new-dungeon
+			this.createBag(this.obj.x, this.obj.y, this.items, ownerName);
 
 		this.items = savedItems;
 	},

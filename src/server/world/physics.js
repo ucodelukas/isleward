@@ -530,7 +530,7 @@ module.exports = {
 			let yj = vj[1];
 
 			let doesIntersect = (
-				((yi > y) != (yj > y)) &&
+				((yi > y) !== (yj > y)) &&
 					(x < ((((xj - xi) * (y - yi)) / (yj - yi)) + xi))
 			);
 

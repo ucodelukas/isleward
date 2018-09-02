@@ -337,7 +337,7 @@ module.exports = {
 			if (blueprint.blocking)
 				this.collisionMap[blueprint.x][blueprint.y] = 1;
 
-			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName === 'rooms') || (layerName == 'hiddenRooms')) {
+			if ((blueprint.properties.cpnNotice) || (blueprint.properties.cpnLightPatch) || (layerName === 'rooms') || (layerName === 'hiddenRooms')) {
 				blueprint.y++;
 				blueprint.width = cell.width / mapScale;
 				blueprint.height = cell.height / mapScale;

@@ -88,7 +88,7 @@ module.exports = {
 				let toNode = this.patrol[this.patrolTargetNode];
 				toX = toNode[0];
 				toY = toNode[1];
-				if ((toX - obj.x == 0) && (toY - obj.y == 0)) {
+				if ((toX - obj.x === 0) && (toY - obj.y === 0)) {
 					this.patrolTargetNode++;
 					if (this.patrolTargetNode >= this.patrol.length)
 						this.patrolTargetNode = 0;

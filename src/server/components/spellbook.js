@@ -115,9 +115,9 @@ module.exports = {
 		}
 
 		if (!builtSpell.castOnDeath) {
-			if ((this.closestRange == -1) || (builtSpell.range < this.closestRange))
+			if ((this.closestRange === -1) || (builtSpell.range < this.closestRange))
 				this.closestRange = builtSpell.range;
-			if ((this.furthestRange == -1) || (builtSpell.range > this.furthestRange))
+			if ((this.furthestRange === -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
 		}
 
@@ -382,32 +382,6 @@ module.exports = {
 		}
 
 		return success;
-
-		let stats = this.obj.stats.values;
-		stats.mana -= spell.manaCost;
-		let cd = {
-			cd: spell.cdMax
-		};
-
-		let isAttack = (spell.type == 'melee');
-		if ((Math.random() * 100) < stats[isAttack ? 'attackSpeed' : 'castSpeed'])
-			cd.cd = 1;
-
-		this.obj.fireEvent('beforeSetSpellCooldown', cd);
-
-		spell.cd = cd.cd;
-
-		if (this.obj.player) {
-			let syncer = this.obj.syncer;
-			syncer.setObject(true, 'stats', 'values', 'mana', this.obj.stats.values.mana);
-			this.obj.instance.syncer.queue('onGetSpellCooldowns', {
-				id: this.obj.id,
-				spell: action.spell,
-				cd: (spell.cd * 350)
-			}, [this.obj.serverId]);
-		}
-
-		return true;
 	},
 
 	getClosestRange: function (spellNum) {
@@ -569,7 +543,7 @@ module.exports = {
 
 	stopCasting: function (ignore) {
 		this.spells.forEach(function (s) {
-			if ((!s.castTimeMax) || (!s.castTime) || (s == ignore))
+			if ((!s.castTimeMax) || (!s.castTime) || (s === ignore))
 				return;
 
 			s.castTime = 0;

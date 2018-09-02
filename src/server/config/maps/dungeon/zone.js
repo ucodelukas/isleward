@@ -1,4 +1,4 @@
-var balance = {
+let balance = {
 	mobs: {
 		violetSerpent: {
 			level: 5,
@@ -249,7 +249,7 @@ module.exports = {
 									max: 6
 								}
 							}
-						}
+						};
 					}
 				}
 			}
