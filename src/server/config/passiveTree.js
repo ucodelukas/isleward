@@ -1,2220 +1,1717 @@
-define([
-
-], function (
-
-) {
-	return {
-		"nodes": [{
-			"color": 3,
-			"size": 0,
+module.exports = {
+	"nodes": [
+		{
+			"id": 0,
 			"pos": {
 				"x": 53,
 				"y": 39
 			},
-			"id": 0,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"physicalPercent": 15
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 1,
 			"pos": {
 				"x": 50,
 				"y": 39
 			},
-			"id": 1,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"physicalPercent": 15
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 2,
 			"pos": {
 				"x": 47,
 				"y": 39
 			},
-			"id": 2,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"physicalPercent": 15
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 3,
 			"pos": {
 				"x": 47,
 				"y": 36
 			},
-			"id": 3,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"attackSpeed": 4
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 4,
 			"pos": {
 				"x": 41,
 				"y": 39
 			},
-			"id": 4,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"attackSpeed": 4
 			}
-		}, {
-			"color": 3,
-			"size": 1,
+		},
+		{
+			"id": 5,
 			"pos": {
 				"x": 44,
 				"y": 39
 			},
-			"id": 5,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 1,
+			"color": 3,
 			"stats": {
 				"addAttackCritMultiplier": 100
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 6,
 			"pos": {
 				"x": 41,
 				"y": 36
 			},
-			"id": 6,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"attackSpeed": 4
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 8,
 			"pos": {
 				"x": 44,
 				"y": 33
 			},
-			"id": 8,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"attackSpeed": 4
 			}
-		}, {
-			"color": 3,
-			"size": 1,
+		},
+		{
+			"id": 9,
 			"pos": {
 				"x": 44,
 				"y": 36
 			},
-			"id": 9,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 1,
+			"color": 3,
 			"stats": {
 				"addAttackCritChance": 70
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 10,
 			"pos": {
 				"x": 47,
 				"y": 42
 			},
-			"id": 10,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"str": 1
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 11,
 			"pos": {
 				"x": 47,
 				"y": 45
 			},
-			"id": 11,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"str": 1
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 14,
 			"pos": {
 				"x": 44,
 				"y": 51
 			},
-			"id": 14,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"armor": 50
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 17,
 			"pos": {
 				"x": 50,
 				"y": 51
 			},
-			"id": 17,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"armor": 50
 			}
-		}, {
-			"color": 3,
-			"size": 1,
+		},
+		{
+			"id": 18,
 			"pos": {
 				"x": 44,
 				"y": 54
 			},
-			"id": 18,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 1,
+			"color": 3,
 			"stats": {
 				"blockAttackChance": 10
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 20,
 			"pos": {
 				"x": 47,
 				"y": 48
 			},
-			"id": 20,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"armor": 50
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 21,
 			"pos": {
 				"x": 47,
 				"y": 54
 			},
-			"id": 21,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"str": 1
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 22,
 			"pos": {
 				"x": 47,
 				"y": 57
 			},
-			"id": 22,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"str": 1
 			}
-		}, {
-			"color": 3,
-			"size": 1,
+		},
+		{
+			"id": 23,
 			"pos": {
 				"x": 50,
 				"y": 54
 			},
-			"id": 23,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 1,
+			"color": 3,
 			"stats": {
 				"blockSpellChance": 10
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 7,
 			"pos": {
 				"x": 47,
 				"y": 51
 			},
-			"id": 7,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"str": 1
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 13,
 			"pos": {
 				"x": 50,
 				"y": 57
 			},
-			"id": 13,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"armor": 50
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 19,
 			"pos": {
 				"x": 44,
 				"y": 57
 			},
-			"id": 19,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"armor": 50
 			}
-		}, {
-			"color": 4,
-			"size": 0,
+		},
+		{
+			"id": 24,
 			"pos": {
 				"x": 47,
 				"y": 60
 			},
-			"id": 24,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 4,
 			"stats": {
 				"str": 1,
 				"int": 1
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 12,
 			"pos": {
 				"x": 53,
 				"y": 42
 			},
-			"id": 12,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"vit": 5
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 16,
 			"pos": {
 				"x": 53,
 				"y": 45
 			},
-			"id": 16,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"vit": 5
 			}
-		}, {
-			"color": 3,
-			"size": 0,
+		},
+		{
+			"id": 26,
 			"pos": {
 				"x": 50,
 				"y": 48
 			},
-			"id": 26,
-			"selected": false,
-			"group": ["Bear"],
+			"size": 0,
+			"color": 3,
 			"stats": {
 				"regenHp": 8
 			}
-		}, {
-			"color": 2,
-			"size": 0,
+		},
+		{
+			"id": 15,
 			"pos": {
 				"x": 74,
 				"y": 42
 			},
-			"id": 15,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"attackSpeed": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 25,
 			"pos": {
 				"x": 74,
 				"y": 39
 			},
-			"id": 25,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"attackSpeed": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 27,
 			"pos": {
 				"x": 77,
 				"y": 39
 			},
-			"id": 27,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"attackSpeed": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
-			"pos": {
-				"x": 80,
-				"y": 36
-			},
+			}
+		},
+		{
 			"id": 28,
-			"selected": false,
+			"pos": {
+				"x": 80,
+				"y": 36
+			},
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"addAttackCritChance": 25
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 29,
 			"pos": {
 				"x": 83,
 				"y": 36
 			},
-			"id": 29,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"addAttackCritChance": 25
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 31,
 			"pos": {
 				"x": 80,
 				"y": 42
 			},
-			"id": 31,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"addAttackCritMultiplier": 40
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 32,
 			"pos": {
 				"x": 83,
 				"y": 42
 			},
-			"id": 32,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"addAttackCritMultiplier": 40
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 33,
 			"pos": {
 				"x": 86,
 				"y": 42
 			},
-			"id": 33,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dex": 1
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 1,
+			}
+		},
+		{
+			"id": 34,
 			"pos": {
 				"x": 83,
 				"y": 39
 			},
-			"id": 34,
-			"selected": false,
+			"size": 1,
+			"color": 2,
 			"stats": {
 				"elementPoisonPercent": 20
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 35,
 			"pos": {
 				"x": 86,
 				"y": 39
 			},
-			"id": 35,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dex": 1
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 50,
 			"pos": {
 				"x": 62,
 				"y": 63
 			},
-			"id": 50,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"spellPercent": 10
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 51,
 			"pos": {
 				"x": 65,
 				"y": 63
 			},
-			"id": 51,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"castSpeed": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 52,
 			"pos": {
 				"x": 59,
 				"y": 66
 			},
-			"id": 52,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"addSpellCritChance": 50
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 53,
 			"pos": {
 				"x": 68,
 				"y": 66
 			},
-			"id": 53,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"castSpeed": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 56,
 			"pos": {
 				"x": 59,
 				"y": 72
 			},
-			"id": 56,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"spellPercent": 10
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 58,
 			"pos": {
 				"x": 68,
 				"y": 69
 			},
-			"id": 58,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"castSpeed": 2
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 59,
 			"pos": {
 				"x": 68,
 				"y": 72
 			},
-			"id": 59,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"int": 1
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 60,
 			"pos": {
 				"x": 74,
 				"y": 72
 			},
-			"id": 60,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"int": 1
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 61,
 			"pos": {
 				"x": 77,
 				"y": 72
 			},
-			"id": 61,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"int": 1
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 64,
 			"pos": {
 				"x": 62,
 				"y": 75
 			},
-			"id": 64,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"spellPercent": 10
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 65,
 			"pos": {
 				"x": 65,
 				"y": 75
 			},
-			"id": 65,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"castSpeed": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 66,
 			"pos": {
 				"x": 62,
 				"y": 78
 			},
-			"id": 66,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"spellPercent": 10
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 67,
 			"pos": {
 				"x": 59,
 				"y": 78
 			},
-			"id": 67,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"regenMana": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 1,
+			}
+		},
+		{
+			"id": 68,
 			"pos": {
 				"x": 56,
 				"y": 78
 			},
-			"id": 68,
-			"selected": false,
+			"size": 1,
+			"color": 1,
 			"stats": {
 				"addSpellCritMultiplier": 60
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 69,
 			"pos": {
 				"x": 65,
 				"y": 78
 			},
-			"id": 69,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"int": 1
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 70,
 			"pos": {
 				"x": 68,
 				"y": 78
 			},
-			"id": 70,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"regenMana": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 1,
+			}
+		},
+		{
+			"id": 71,
 			"pos": {
 				"x": 71,
 				"y": 75
 			},
-			"id": 71,
-			"selected": false,
+			"size": 1,
+			"color": 1,
 			"stats": {
 				"addSpellCritMultiplier": 60
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 1,
+			}
+		},
+		{
+			"id": 57,
 			"pos": {
 				"x": 77,
 				"y": 69
 			},
-			"id": 57,
-			"selected": false,
+			"size": 1,
+			"color": 1,
 			"stats": {
 				"addSpellCritMultiplier": 60
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 72,
 			"pos": {
 				"x": 56,
 				"y": 69
 			},
-			"id": 72,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"addSpellCritChance": 50
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 73,
 			"pos": {
 				"x": 53,
 				"y": 66
 			},
-			"id": 73,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"addSpellCritChance": 50
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 75,
 			"pos": {
 				"x": 74,
 				"y": 45
 			},
-			"id": 75,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"physicalPercent": 15
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 76,
 			"pos": {
 				"x": 77,
 				"y": 45
 			},
-			"id": 76,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"physicalPercent": 15
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 77,
 			"pos": {
 				"x": 80,
 				"y": 48
 			},
-			"id": 77,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dex": 1
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 78,
 			"pos": {
 				"x": 83,
 				"y": 48
 			},
-			"id": 78,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dex": 1
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 79,
 			"pos": {
 				"x": 83,
 				"y": 51
 			},
-			"id": 79,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dex": 1
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 81,
 			"pos": {
 				"x": 77,
 				"y": 51
 			},
-			"id": 81,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dodgeAttackChance": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 82,
 			"pos": {
 				"x": 74,
 				"y": 51
 			},
-			"id": 82,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dodgeAttackChance": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 1,
+			}
+		},
+		{
+			"id": 83,
 			"pos": {
 				"x": 74,
 				"y": 54
 			},
-			"id": 83,
-			"selected": false,
+			"size": 1,
+			"color": 2,
 			"stats": {
 				"sprintChance": 12
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 84,
 			"pos": {
 				"x": 77,
 				"y": 54
 			},
-			"id": 84,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"dodgeAttackChance": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 85,
 			"pos": {
 				"x": 83,
 				"y": 57
 			},
-			"id": 85,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"regenHp": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 86,
 			"pos": {
 				"x": 80,
 				"y": 57
 			},
-			"id": 86,
-			"selected": true,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"regenHp": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 1,
+			}
+		},
+		{
+			"id": 87,
 			"pos": {
 				"x": 80,
 				"y": 54
 			},
-			"id": 87,
-			"selected": false,
+			"size": 1,
+			"color": 2,
 			"stats": {
 				"vit": 10
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 2,
-			"size": 0,
+			}
+		},
+		{
+			"id": 88,
 			"pos": {
 				"x": 83,
 				"y": 54
 			},
-			"id": 88,
-			"selected": false,
+			"size": 0,
+			"color": 2,
 			"stats": {
 				"regenHp": 3
-			},
-			"group": ["Lynx"]
-		}, {
-			"color": 4,
-			"size": 0,
+			}
+		},
+		{
+			"id": 39,
 			"pos": {
 				"x": 47,
 				"y": 63
 			},
-			"id": 39,
-			"selected": false,
+			"size": 0,
+			"color": 4,
 			"stats": {
 				"str": 1,
 				"int": 1
 			}
-		}, {
-			"color": 4,
-			"size": 0,
+		},
+		{
+			"id": 41,
 			"pos": {
 				"x": 50,
 				"y": 63
 			},
-			"id": 41,
-			"selected": false,
+			"size": 0,
+			"color": 4,
 			"stats": {
 				"str": 1,
 				"int": 1
 			}
-		}, {
-			"color": 4,
-			"size": 0,
+		},
+		{
+			"id": 42,
 			"pos": {
 				"x": 50,
 				"y": 66
 			},
-			"id": 42,
-			"selected": false,
+			"size": 0,
+			"color": 4,
 			"stats": {
 				"str": 1,
 				"int": 1
 			}
-		}, {
-			"color": 1,
-			"size": 0,
+		},
+		{
+			"id": 44,
 			"pos": {
 				"x": 56,
 				"y": 63
 			},
-			"id": 44,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"addSpellCritChance": 50
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 74,
 			"pos": {
 				"x": 71,
 				"y": 78
 			},
-			"id": 74,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"regenMana": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 1,
+			}
+		},
+		{
+			"id": 45,
 			"pos": {
 				"x": 74,
 				"y": 78
 			},
-			"id": 45,
-			"selected": false,
+			"size": 1,
+			"color": 1,
 			"stats": {
 				"manaMax": 12
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 90,
 			"pos": {
 				"x": 74,
 				"y": 75
 			},
-			"id": 90,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"regenMana": 3
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 91,
 			"pos": {
 				"x": 62,
 				"y": 67
 			},
-			"id": 91,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"elementArcanePercent": 20
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 92,
 			"pos": {
 				"x": 62,
 				"y": 71
 			},
-			"id": 92,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"elementHolyPercent": 20
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 93,
 			"pos": {
 				"x": 65,
 				"y": 71
 			},
-			"id": 93,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"elementFirePercent": 20
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 1,
-			"size": 0,
+			}
+		},
+		{
+			"id": 94,
 			"pos": {
 				"x": 65,
 				"y": 67
 			},
-			"id": 94,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"elementFrostPercent": 20
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 5,
-			"size": 0,
+			}
+		},
+		{
+			"id": 62,
 			"pos": {
 				"x": 53,
 				"y": 36
 			},
-			"id": 62,
-			"selected": false,
+			"size": 0,
+			"color": 5,
 			"stats": {
 				"str": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 5,
-			"size": 0,
+		},
+		{
+			"id": 63,
 			"pos": {
 				"x": 71,
 				"y": 36
 			},
-			"id": 63,
-			"selected": false,
+			"size": 0,
+			"color": 5,
 			"stats": {
 				"str": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 5,
-			"size": 0,
+		},
+		{
+			"id": 95,
 			"pos": {
 				"x": 68,
 				"y": 36
 			},
-			"id": 95,
-			"selected": false,
+			"size": 0,
+			"color": 5,
 			"stats": {
 				"str": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 5,
-			"size": 0,
+		},
+		{
+			"id": 96,
 			"pos": {
 				"x": 65,
 				"y": 33
 			},
-			"id": 96,
-			"selected": false,
+			"size": 0,
+			"color": 5,
 			"stats": {
 				"str": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 5,
-			"size": 0,
+		},
+		{
+			"id": 97,
 			"pos": {
 				"x": 56,
 				"y": 33
 			},
-			"id": 97,
-			"selected": false,
+			"size": 0,
+			"color": 5,
 			"stats": {
 				"str": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 6,
-			"size": 0,
+		},
+		{
+			"id": 98,
 			"pos": {
 				"x": 71,
 				"y": 66
 			},
-			"id": 98,
-			"selected": false,
+			"size": 0,
+			"color": 6,
 			"stats": {
 				"int": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 6,
-			"size": 0,
+		},
+		{
+			"id": 99,
 			"pos": {
 				"x": 77,
 				"y": 66
 			},
-			"id": 99,
-			"selected": false,
+			"size": 0,
+			"color": 6,
 			"stats": {
 				"int": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 6,
-			"size": 0,
+		},
+		{
+			"id": 100,
 			"pos": {
 				"x": 80,
 				"y": 63
 			},
-			"id": 100,
-			"selected": false,
+			"size": 0,
+			"color": 6,
 			"stats": {
 				"int": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 6,
-			"size": 0,
+		},
+		{
+			"id": 101,
 			"pos": {
 				"x": 83,
 				"y": 60
 			},
-			"id": 101,
-			"selected": false,
+			"size": 0,
+			"color": 6,
 			"stats": {
 				"int": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 1,
-			"size": 0,
+		},
+		{
+			"id": 102,
 			"pos": {
 				"x": 71,
 				"y": 72
 			},
-			"id": 102,
-			"selected": false,
+			"size": 0,
+			"color": 1,
 			"stats": {
 				"int": 1
-			},
-			"group": ["Owl"]
-		}, {
-			"color": 6,
-			"size": 0,
+			}
+		},
+		{
+			"id": 103,
 			"pos": {
 				"x": 71,
 				"y": 69
 			},
-			"id": 103,
-			"selected": false,
+			"size": 0,
+			"color": 6,
 			"stats": {
 				"int": 1,
 				"dex": 1
 			}
-		}, {
-			"color": 1,
-			"size": 0,
+		},
+		{
+			"id": 80,
 			"pos": {
 				"x": 65,
 				"y": 60
 			},
-			"id": 80,
-			"spiritStart": "owl",
-			"selected": false,
-			"stats": {}
-		}, {
-			"color": 3,
 			"size": 0,
+			"color": 1,
+			"stats": {},
+			"spiritStart": "owl"
+		},
+		{
+			"id": 104,
 			"pos": {
 				"x": 56,
 				"y": 39
 			},
-			"id": 104,
-			"spiritStart": "bear",
-			"selected": false,
-			"stats": {}
-		}, {
-			"color": 2,
 			"size": 0,
+			"color": 3,
+			"stats": {},
+			"spiritStart": "bear"
+		},
+		{
+			"id": 105,
 			"pos": {
 				"x": 71,
 				"y": 42
 			},
-			"id": 105,
-			"spiritStart": "lynx",
-			"selected": false,
-			"stats": {}
-		}, {
-			"color": 3,
-			"size": 1,
+			"size": 0,
+			"color": 2,
+			"stats": {},
+			"spiritStart": "lynx"
+		},
+		{
+			"id": 106,
 			"pos": {
 				"x": 50,
 				"y": 45
 			},
-			"id": 106,
-			"selected": false,
+			"size": 1,
+			"color": 3,
 			"stats": {
 				"elementAllResist": 15
 			}
-		}],
-		"links": [{
-			"from": {
-				"id": 0
-			},
-			"to": {
-				"id": 1
-			}
-		}, {
-			"from": {
-				"id": 1
-			},
-			"to": {
-				"id": 2
-			}
-		}, {
-			"from": {
-				"id": 2
-			},
-			"to": {
-				"id": 3
-			}
-		}, {
-			"from": {
-				"id": 3
-			},
-			"to": {
-				"id": 8
-			}
-		}, {
-			"from": {
-				"id": 8
-			},
-			"to": {
-				"id": 6
-			}
-		}, {
-			"from": {
-				"id": 6
-			},
-			"to": {
-				"id": 4
-			}
-		}, {
-			"from": {
-				"id": 4
-			},
-			"to": {
-				"id": 5
-			}
-		}, {
-			"from": {
-				"id": 2
-			},
-			"to": {
-				"id": 10
-			}
-		}, {
-			"from": {
-				"id": 10
-			},
-			"to": {
-				"id": 11
-			}
-		}, {
-			"from": {
-				"id": 20
-			},
-			"to": {
-				"id": 17
-			}
-		}, {
-			"from": {
-				"id": 21
-			},
-			"to": {
-				"id": 22
-			}
-		}, {
-			"from": {
-				"id": 20
-			},
-			"to": {
-				"id": 14
-			}
-		}, {
-			"from": {
-				"id": 14
-			},
-			"to": {
-				"id": 18
-			}
-		}, {
-			"from": {
-				"id": 17
-			},
-			"to": {
-				"id": 23
-			}
-		}, {
-			"from": {
-				"id": 20
-			},
-			"to": {
-				"id": 7
-			}
-		}, {
-			"from": {
-				"id": 7
-			},
-			"to": {
-				"id": 21
-			}
-		}, {
-			"from": {
-				"id": 11
-			},
-			"to": {
-				"id": 20
-			}
-		}, {
-			"from": {
-				"id": 23
-			},
-			"to": {
-				"id": 23
-			}
-		}, {
-			"from": {
-				"id": 18
-			},
-			"to": {
-				"id": 19
-			}
-		}, {
-			"from": {
-				"id": 19
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 22
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 13
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 23
-			},
-			"to": {
-				"id": 13
-			}
-		}, {
-			"from": {
-				"id": 21
-			},
-			"to": {
-				"id": 21
-			}
-		}, {
-			"from": {
-				"id": 26
-			},
-			"to": {
-				"id": 20
-			}
-		}, {
-			"from": {
-				"id": 16
-			},
-			"to": {
-				"id": 12
-			}
-		}, {
-			"from": {
-				"id": 9
-			},
-			"to": {
-				"id": 9
-			}
-		}, {
-			"from": {
-				"id": 18
-			},
-			"to": {
-				"id": 18
-			}
-		}, {
-			"from": {
-				"id": 21
-			},
-			"to": {
-				"id": 21
-			}
-		}, {
-			"from": {
-				"id": 23
-			},
-			"to": {
-				"id": 23
-			}
-		}, {
-			"from": {
-				"id": 14
-			},
-			"to": {
-				"id": 14
-			}
-		}, {
-			"from": {
-				"id": 19
-			},
-			"to": {
-				"id": 19
-			}
-		}, {
-			"from": {
-				"id": 22
-			},
-			"to": {
-				"id": 22
-			}
-		}, {
-			"from": {
-				"id": 7
-			},
-			"to": {
-				"id": 7
-			}
-		}, {
-			"from": {
-				"id": 17
-			},
-			"to": {
-				"id": 17
-			}
-		}, {
-			"from": {
-				"id": 13
-			},
-			"to": {
-				"id": 13
-			}
-		}, {
-			"from": {
-				"id": 17
-			},
-			"to": {
-				"id": 17
-			}
-		}, {
-			"from": {
-				"id": 7
-			},
-			"to": {
-				"id": 7
-			}
-		}, {
-			"from": {
-				"id": 7
-			},
-			"to": {
-				"id": 7
-			}
-		}, {
-			"from": {
-				"id": 14
-			},
-			"to": {
-				"id": 14
-			}
-		}, {
-			"from": {
-				"id": 19
-			},
-			"to": {
-				"id": 19
-			}
-		}, {
-			"from": {
-				"id": 22
-			},
-			"to": {
-				"id": 22
-			}
-		}, {
-			"from": {
-				"id": 14
-			},
-			"to": {
-				"id": 14
-			}
-		}, {
-			"from": {
-				"id": 19
-			},
-			"to": {
-				"id": 19
-			}
-		}, {
-			"from": {
-				"id": 22
-			},
-			"to": {
-				"id": 22
-			}
-		}, {
-			"from": {
-				"id": 7
-			},
-			"to": {
-				"id": 7
-			}
-		}, {
-			"from": {
-				"id": 17
-			},
-			"to": {
-				"id": 17
-			}
-		}, {
-			"from": {
-				"id": 13
-			},
-			"to": {
-				"id": 13
-			}
-		}, {
-			"from": {
-				"id": 24
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 24
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 5
-			},
-			"to": {
-				"id": 5
-			}
-		}, {
-			"from": {
-				"id": 4
-			},
-			"to": {
-				"id": 4
-			}
-		}, {
-			"from": {
-				"id": 6
-			},
-			"to": {
-				"id": 6
-			}
-		}, {
-			"from": {
-				"id": 8
-			},
-			"to": {
-				"id": 8
-			}
-		}, {
-			"from": {
-				"id": 3
-			},
-			"to": {
-				"id": 3
-			}
-		}, {
-			"from": {
-				"id": 0
-			},
-			"to": {
-				"id": 0
-			}
-		}, {
-			"from": {
-				"id": 12
-			},
-			"to": {
-				"id": 12
-			}
-		}, {
-			"from": {
-				"id": 15
-			},
-			"to": {
-				"id": 25
-			}
-		}, {
-			"from": {
-				"id": 25
-			},
-			"to": {
-				"id": 27
-			}
-		}, {
-			"from": {
-				"id": 27
-			},
-			"to": {
-				"id": 28
-			}
-		}, {
-			"from": {
-				"id": 28
-			},
-			"to": {
-				"id": 29
-			}
-		}, {
-			"from": {
-				"id": 35
-			},
-			"to": {
-				"id": 33
-			}
-		}, {
-			"from": {
-				"id": 33
-			},
-			"to": {
-				"id": 32
-			}
-		}, {
-			"from": {
-				"id": 32
-			},
-			"to": {
-				"id": 31
-			}
-		}, {
-			"from": {
-				"id": 31
-			},
-			"to": {
-				"id": 27
-			}
-		}, {
-			"from": {
-				"id": 34
-			},
-			"to": {
-				"id": 29
-			}
-		}, {
-			"from": {
-				"id": 34
-			},
-			"to": {
-				"id": 32
-			}
-		}, {
-			"from": {
-				"id": 50
-			},
-			"to": {
-				"id": 52
-			}
-		}, {
-			"from": {
-				"id": 64
-			},
-			"to": {
-				"id": 66
-			}
-		}, {
-			"from": {
-				"id": 66
-			},
-			"to": {
-				"id": 67
-			}
-		}, {
-			"from": {
-				"id": 67
-			},
-			"to": {
-				"id": 68
-			}
-		}, {
-			"from": {
-				"id": 51
-			},
-			"to": {
-				"id": 53
-			}
-		}, {
-			"from": {
-				"id": 53
-			},
-			"to": {
-				"id": 58
-			}
-		}, {
-			"from": {
-				"id": 59
-			},
-			"to": {
-				"id": 58
-			}
-		}, {
-			"from": {
-				"id": 60
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 65
-			},
-			"to": {
-				"id": 69
-			}
-		}, {
-			"from": {
-				"id": 69
-			},
-			"to": {
-				"id": 70
-			}
-		}, {
-			"from": {
-				"id": 52
-			},
-			"to": {
-				"id": 56
-			}
-		}, {
-			"from": {
-				"id": 52
-			},
-			"to": {
-				"id": 72
-			}
-		}, {
-			"from": {
-				"id": 72
-			},
-			"to": {
-				"id": 73
-			}
-		}, {
-			"from": {
-				"id": 75
-			},
-			"to": {
-				"id": 76
-			}
-		}, {
-			"from": {
-				"id": 76
-			},
-			"to": {
-				"id": 77
-			}
-		}, {
-			"from": {
-				"id": 77
-			},
-			"to": {
-				"id": 78
-			}
-		}, {
-			"from": {
-				"id": 78
-			},
-			"to": {
-				"id": 79
-			}
-		}, {
-			"from": {
-				"id": 81
-			},
-			"to": {
-				"id": 82
-			}
-		}, {
-			"from": {
-				"id": 82
-			},
-			"to": {
-				"id": 83
-			}
-		}, {
-			"from": {
-				"id": 83
-			},
-			"to": {
-				"id": 84
-			}
-		}, {
-			"from": {
-				"id": 84
-			},
-			"to": {
-				"id": 81
-			}
-		}, {
-			"from": {
-				"id": 85
-			},
-			"to": {
-				"id": 86
-			}
-		}, {
-			"from": {
-				"id": 86
-			},
-			"to": {
-				"id": 87
-			}
-		}, {
-			"from": {
-				"id": 87
-			},
-			"to": {
-				"id": 88
-			}
-		}, {
-			"from": {
-				"id": 88
-			},
-			"to": {
-				"id": 85
-			}
-		}, {
-			"from": {
-				"id": 39
-			},
-			"to": {
-				"id": 41
-			}
-		}, {
-			"from": {
-				"id": 41
-			},
-			"to": {
-				"id": 42
-			}
-		}, {
-			"from": {
-				"id": 39
-			},
-			"to": {
-				"id": 24
-			}
-		}, {
-			"from": {
-				"id": 73
-			},
-			"to": {
-				"id": 44
-			}
-		}, {
-			"from": {
-				"id": 44
-			},
-			"to": {
-				"id": 52
-			}
-		}, {
-			"from": {
-				"id": 73
-			},
-			"to": {
-				"id": 42
-			}
-		}, {
-			"from": {
-				"id": 70
-			},
-			"to": {
-				"id": 74
-			}
-		}, {
-			"from": {
-				"id": 74
-			},
-			"to": {
-				"id": 45
-			}
-		}, {
-			"from": {
-				"id": 90
-			},
-			"to": {
-				"id": 71
-			}
-		}, {
-			"from": {
-				"id": 56
-			},
-			"to": {
-				"id": 64
-			}
-		}, {
-			"from": {
-				"id": 59
-			},
-			"to": {
-				"id": 65
-			}
-		}, {
-			"from": {
-				"id": 56
-			},
-			"to": {
-				"id": 92
-			}
-		}, {
-			"from": {
-				"id": 91
-			},
-			"to": {
-				"id": 52
-			}
-		}, {
-			"from": {
-				"id": 94
-			},
-			"to": {
-				"id": 53
-			}
-		}, {
-			"from": {
-				"id": 93
-			},
-			"to": {
-				"id": 59
-			}
-		}, {
-			"from": {
-				"id": 66
-			},
-			"to": {
-				"id": 69
-			}
-		}, {
-			"from": {
-				"id": 62
-			},
-			"to": {
-				"id": 97
-			}
-		}, {
-			"from": {
-				"id": 97
-			},
-			"to": {
-				"id": 96
-			}
-		}, {
-			"from": {
-				"id": 96
-			},
-			"to": {
-				"id": 95
-			}
-		}, {
-			"from": {
-				"id": 95
-			},
-			"to": {
-				"id": 63
-			}
-		}, {
-			"from": {
-				"id": 98
-			},
-			"to": {
-				"id": 99
-			}
-		}, {
-			"from": {
-				"id": 99
-			},
-			"to": {
-				"id": 100
-			}
-		}, {
-			"from": {
-				"id": 100
-			},
-			"to": {
-				"id": 101
-			}
-		}, {
-			"from": {
-				"id": 59
-			},
-			"to": {
-				"id": 102
-			}
-		}, {
-			"from": {
-				"id": 102
-			},
-			"to": {
-				"id": 60
-			}
-		}, {
-			"from": {
-				"id": 85
-			},
-			"to": {
-				"id": 101
-			}
-		}, {
-			"from": {
-				"id": 88
-			},
-			"to": {
-				"id": 79
-			}
-		}, {
-			"from": {
-				"id": 79
-			},
-			"to": {
-				"id": 81
-			}
-		}, {
-			"from": {
-				"id": 102
-			},
-			"to": {
-				"id": 103
-			}
-		}, {
-			"from": {
-				"id": 103
-			},
-			"to": {
-				"id": 98
-			}
-		}, {
-			"from": {
-				"id": 35
-			},
-			"to": {
-				"id": 29
-			}
-		}, {
-			"from": {
-				"id": 50
-			},
-			"to": {
-				"id": 80
-			}
-		}, {
-			"from": {
-				"id": 80
-			},
-			"to": {
-				"id": 51
-			}
-		}, {
-			"from": {
-				"id": 104
-			},
-			"to": {
-				"id": 0
-			}
-		}, {
-			"from": {
-				"id": 104
-			},
-			"to": {
-				"id": 12
-			}
-		}, {
-			"from": {
-				"id": 105
-			},
-			"to": {
-				"id": 15
-			}
-		}, {
-			"from": {
-				"id": 105
-			},
-			"to": {
-				"id": 75
-			}
-		}, {
-			"from": {
-				"id": 16
-			},
-			"to": {
-				"id": 106
-			}
-		}, {
-			"from": {
-				"id": 106
-			},
-			"to": {
-				"id": 26
-			}
-		}, {
-			"from": {
-				"id": 9
-			},
-			"to": {
-				"id": 8
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 61
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 57
-			},
-			"to": {
-				"id": 61
-			}
-		}, {
-			"from": {
-				"id": 90
-			},
-			"to": {
-				"id": 45
-			}
-		}, {
-			"from": {
-				"id": 62
-			},
-			"to": {
-				"id": 0
-			}
-		}, {
-			"from": {
-				"id": 63
-			},
-			"to": {
-				"id": 25
-			}
-		}]
-	};
-});
+		}
+	],
+	"links": [
+		{
+			"from": 0,
+			"to": 1
+		},
+		{
+			"from": 1,
+			"to": 2
+		},
+		{
+			"from": 2,
+			"to": 3
+		},
+		{
+			"from": 3,
+			"to": 8
+		},
+		{
+			"from": 8,
+			"to": 6
+		},
+		{
+			"from": 6,
+			"to": 4
+		},
+		{
+			"from": 4,
+			"to": 5
+		},
+		{
+			"from": 2,
+			"to": 10
+		},
+		{
+			"from": 10,
+			"to": 11
+		},
+		{
+			"from": 20,
+			"to": 17
+		},
+		{
+			"from": 21,
+			"to": 22
+		},
+		{
+			"from": 20,
+			"to": 14
+		},
+		{
+			"from": 14,
+			"to": 18
+		},
+		{
+			"from": 17,
+			"to": 23
+		},
+		{
+			"from": 20,
+			"to": 7
+		},
+		{
+			"from": 7,
+			"to": 21
+		},
+		{
+			"from": 11,
+			"to": 20
+		},
+		{
+			"from": 23,
+			"to": 23
+		},
+		{
+			"from": 18,
+			"to": 19
+		},
+		{
+			"from": 19,
+			"to": 24
+		},
+		{
+			"from": 22,
+			"to": 24
+		},
+		{
+			"from": 13,
+			"to": 24
+		},
+		{
+			"from": 23,
+			"to": 13
+		},
+		{
+			"from": 21,
+			"to": 21
+		},
+		{
+			"from": 26,
+			"to": 20
+		},
+		{
+			"from": 16,
+			"to": 12
+		},
+		{
+			"from": 9,
+			"to": 9
+		},
+		{
+			"from": 18,
+			"to": 18
+		},
+		{
+			"from": 21,
+			"to": 21
+		},
+		{
+			"from": 23,
+			"to": 23
+		},
+		{
+			"from": 14,
+			"to": 14
+		},
+		{
+			"from": 19,
+			"to": 19
+		},
+		{
+			"from": 22,
+			"to": 22
+		},
+		{
+			"from": 7,
+			"to": 7
+		},
+		{
+			"from": 17,
+			"to": 17
+		},
+		{
+			"from": 13,
+			"to": 13
+		},
+		{
+			"from": 17,
+			"to": 17
+		},
+		{
+			"from": 7,
+			"to": 7
+		},
+		{
+			"from": 7,
+			"to": 7
+		},
+		{
+			"from": 14,
+			"to": 14
+		},
+		{
+			"from": 19,
+			"to": 19
+		},
+		{
+			"from": 22,
+			"to": 22
+		},
+		{
+			"from": 14,
+			"to": 14
+		},
+		{
+			"from": 19,
+			"to": 19
+		},
+		{
+			"from": 22,
+			"to": 22
+		},
+		{
+			"from": 7,
+			"to": 7
+		},
+		{
+			"from": 17,
+			"to": 17
+		},
+		{
+			"from": 13,
+			"to": 13
+		},
+		{
+			"from": 24,
+			"to": 24
+		},
+		{
+			"from": 24,
+			"to": 24
+		},
+		{
+			"from": 5,
+			"to": 5
+		},
+		{
+			"from": 4,
+			"to": 4
+		},
+		{
+			"from": 6,
+			"to": 6
+		},
+		{
+			"from": 8,
+			"to": 8
+		},
+		{
+			"from": 3,
+			"to": 3
+		},
+		{
+			"from": 0,
+			"to": 0
+		},
+		{
+			"from": 12,
+			"to": 12
+		},
+		{
+			"from": 15,
+			"to": 25
+		},
+		{
+			"from": 25,
+			"to": 27
+		},
+		{
+			"from": 27,
+			"to": 28
+		},
+		{
+			"from": 28,
+			"to": 29
+		},
+		{
+			"from": 35,
+			"to": 33
+		},
+		{
+			"from": 33,
+			"to": 32
+		},
+		{
+			"from": 32,
+			"to": 31
+		},
+		{
+			"from": 31,
+			"to": 27
+		},
+		{
+			"from": 34,
+			"to": 29
+		},
+		{
+			"from": 34,
+			"to": 32
+		},
+		{
+			"from": 50,
+			"to": 52
+		},
+		{
+			"from": 64,
+			"to": 66
+		},
+		{
+			"from": 66,
+			"to": 67
+		},
+		{
+			"from": 67,
+			"to": 68
+		},
+		{
+			"from": 51,
+			"to": 53
+		},
+		{
+			"from": 53,
+			"to": 58
+		},
+		{
+			"from": 59,
+			"to": 58
+		},
+		{
+			"from": 60,
+			"to": 61
+		},
+		{
+			"from": 65,
+			"to": 69
+		},
+		{
+			"from": 69,
+			"to": 70
+		},
+		{
+			"from": 52,
+			"to": 56
+		},
+		{
+			"from": 52,
+			"to": 72
+		},
+		{
+			"from": 72,
+			"to": 73
+		},
+		{
+			"from": 75,
+			"to": 76
+		},
+		{
+			"from": 76,
+			"to": 77
+		},
+		{
+			"from": 77,
+			"to": 78
+		},
+		{
+			"from": 78,
+			"to": 79
+		},
+		{
+			"from": 81,
+			"to": 82
+		},
+		{
+			"from": 82,
+			"to": 83
+		},
+		{
+			"from": 83,
+			"to": 84
+		},
+		{
+			"from": 84,
+			"to": 81
+		},
+		{
+			"from": 85,
+			"to": 86
+		},
+		{
+			"from": 86,
+			"to": 87
+		},
+		{
+			"from": 87,
+			"to": 88
+		},
+		{
+			"from": 88,
+			"to": 85
+		},
+		{
+			"from": 39,
+			"to": 41
+		},
+		{
+			"from": 41,
+			"to": 42
+		},
+		{
+			"from": 39,
+			"to": 24
+		},
+		{
+			"from": 73,
+			"to": 44
+		},
+		{
+			"from": 44,
+			"to": 52
+		},
+		{
+			"from": 73,
+			"to": 42
+		},
+		{
+			"from": 70,
+			"to": 74
+		},
+		{
+			"from": 74,
+			"to": 45
+		},
+		{
+			"from": 90,
+			"to": 71
+		},
+		{
+			"from": 56,
+			"to": 64
+		},
+		{
+			"from": 59,
+			"to": 65
+		},
+		{
+			"from": 56,
+			"to": 92
+		},
+		{
+			"from": 91,
+			"to": 52
+		},
+		{
+			"from": 94,
+			"to": 53
+		},
+		{
+			"from": 93,
+			"to": 59
+		},
+		{
+			"from": 66,
+			"to": 69
+		},
+		{
+			"from": 62,
+			"to": 97
+		},
+		{
+			"from": 97,
+			"to": 96
+		},
+		{
+			"from": 96,
+			"to": 95
+		},
+		{
+			"from": 95,
+			"to": 63
+		},
+		{
+			"from": 98,
+			"to": 99
+		},
+		{
+			"from": 99,
+			"to": 100
+		},
+		{
+			"from": 100,
+			"to": 101
+		},
+		{
+			"from": 59,
+			"to": 102
+		},
+		{
+			"from": 102,
+			"to": 60
+		},
+		{
+			"from": 85,
+			"to": 101
+		},
+		{
+			"from": 88,
+			"to": 79
+		},
+		{
+			"from": 79,
+			"to": 81
+		},
+		{
+			"from": 102,
+			"to": 103
+		},
+		{
+			"from": 103,
+			"to": 98
+		},
+		{
+			"from": 35,
+			"to": 29
+		},
+		{
+			"from": 50,
+			"to": 80
+		},
+		{
+			"from": 80,
+			"to": 51
+		},
+		{
+			"from": 104,
+			"to": 0
+		},
+		{
+			"from": 104,
+			"to": 12
+		},
+		{
+			"from": 105,
+			"to": 15
+		},
+		{
+			"from": 105,
+			"to": 75
+		},
+		{
+			"from": 16,
+			"to": 106
+		},
+		{
+			"from": 106,
+			"to": 26
+		},
+		{
+			"from": 9,
+			"to": 8
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 61,
+			"to": 61
+		},
+		{
+			"from": 57,
+			"to": 61
+		},
+		{
+			"from": 90,
+			"to": 45
+		},
+		{
+			"from": 62,
+			"to": 0
+		},
+		{
+			"from": 63,
+			"to": 25
+		},
+		{
+			"from": 15,
+			"to": 75
+		}
+	]
+};

@@ -122,7 +122,7 @@ module.exports = {
 			rare: {
 				count: 0
 			}
-		},
+		}
 	},
 	objects: {
 		sewerdoor: {

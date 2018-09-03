@@ -1,29 +1,23 @@
-define([
+module.exports = {
+	events: {
+		onGetText: function (item) {
+			let rolls = item.effects.find(e => (e.type === 'freezeOnHit')).rolls;
 
-], function (
+			return `${rolls.chance}% chance on hit to freeze target for ${rolls.duration} ticks`;
+		},
 
-) {
-	return {
-		events: {
-			onGetText: function (item) {
-				var rolls = item.effects.find(e => (e.type == 'freezeOnHit')).rolls;
+		afterDealDamage: function (item, damage, target) {
+			let rolls = item.effects.find(e => (e.type === 'freezeOnHit')).rolls;
 
-				return `${rolls.chance}% chance on hit to freeze target for ${rolls.duration} ticks`;
-			},
+			let chanceRoll = Math.random() * 100;
+			if (chanceRoll >= rolls.chance)
+				return;
 
-			afterDealDamage: function (item, damage, target) {
-				var rolls = item.effects.find(e => (e.type == 'freezeOnHit')).rolls;
-
-				var chanceRoll = Math.random() * 100;
-				if (chanceRoll >= rolls.chance)
-					return;
-
-				target.effects.addEffect({
-					type: 'slowed',
-					chance: 1,
-					ttl: rolls.duration
-				});
-			}
+			target.effects.addEffect({
+				type: 'slowed',
+				chance: 1,
+				ttl: rolls.duration
+			});
 		}
-	};
-});
+	}
+};

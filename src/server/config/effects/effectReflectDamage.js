@@ -1,24 +1,18 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'reflectDamage',
+module.exports = {
+	type: 'reflectDamage',
 
-		events: {
-			beforeTakeDamage: function(damage, source) {
-				damage.amount *= 0.5;
-				source.stats.takeDamage(damage, this.threatMult, this.obj);
+	events: {
+		beforeTakeDamage: function (damage, source) {
+			damage.amount *= 0.5;
+			source.stats.takeDamage(damage, this.threatMult, this.obj);
 
-				damage.failed = true;
+			damage.failed = true;
 
-				this.obj.instance.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					event: true,
-					text: 'reflect'
-				});
-			}
+			this.obj.instance.syncer.queue('onGetDamage', {
+				id: this.obj.id,
+				event: true,
+				text: 'reflect'
+			}, -1);
 		}
-	};
-});
+	}
+};

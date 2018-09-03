@@ -1,96 +1,89 @@
-define([
-	'config/serverConfig',
-	'security/router'
-], function (
-	config,
-	router
-) {
-	return {
-		init: function (callback) {
-			var app = require('express')();
-			var server = require('http').createServer(app);
-			global.io = require('socket.io')(server);
+let config = require('./config/serverConfig');
+let router = require('./security/router');
 
-			app.use(function (req, res, next) {
-				if ((req.url.indexOf('/server') != 0) && (req.url.indexOf('/mods') != 0))
-					req.url = '/client/' + req.url;
+module.exports = {
+	init: function (callback) {
+		let app = require('express')();
+		let server = require('http').createServer(app);
+		let socketServer = require('socket.io')(server);
 
-				next();
-			});
+		global.cons.sockets = socketServer.sockets;
 
-			var lessMiddleware = require('less-middleware');
-			app.use(lessMiddleware('../', {
-				force: true,
-				render: {
-					strictMath: true
-				}
-			}));
+		app.use(function (req, res, next) {
+			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
+				req.url = '/client/' + req.url;
 
-			app.get('/', this.requests.root.bind(this));
-			app.get(/^(.*)$/, this.requests.default.bind(this));
+			next();
+		});
 
-			io.on('connection', this.listeners.onConnection.bind(this));
-
-			var port = process.env.PORT || config.port || 4000;
-			server.listen(port, function () {
-				var message = config.startupMessage || 'Server: Ready';
-				console.log(message);
-
-				callback();
-			});
-		},
-		listeners: {
-			onConnection: function (socket) {
-				socket.on('handshake', this.listeners.onHandshake.bind(this, socket));
-				socket.on('disconnect', this.listeners.onDisconnect.bind(this, socket));
-				socket.on('request', this.listeners.onRequest.bind(this, socket));
-
-				socket.emit('handshake');
-			},
-			onHandshake: function (socket) {
-				cons.onHandshake(socket);
-			},
-			onDisconnect: function (socket) {
-				cons.onDisconnect(socket);
-			},
-			onRequest: function (socket, msg, callback) {
-				msg.callback = callback;
-
-				if (!msg.data)
-					msg.data = {};
-
-				if (msg.cpn) {
-					if (!router.allowedCpn(msg))
-						return;
-
-					cons.route(socket, msg);
-				} else {
-					if (!router.allowedGlobal(msg))
-						return;
-
-					msg.socket = socket;
-					global[msg.module][msg.method](msg);
-				}
+		let lessMiddleware = require('less-middleware');
+		app.use(lessMiddleware('../', {
+			force: true,
+			render: {
+				strictMath: true
 			}
+		}));
+
+		app.get('/', this.requests.root.bind(this));
+		app.get(/^(.*)$/, this.requests.default.bind(this));
+
+		socketServer.on('connection', this.listeners.onConnection.bind(this));
+
+		let port = config.port || 4000;
+		server.listen(port, function () {
+			let message = config.startupMessage || 'Server: Ready';
+			_.log(message);
+
+			callback();
+		});
+	},
+	listeners: {
+		onConnection: function (socket) {
+			socket.on('handshake', this.listeners.onHandshake.bind(this, socket));
+			socket.on('disconnect', this.listeners.onDisconnect.bind(this, socket));
+			socket.on('request', this.listeners.onRequest.bind(this, socket));
+
+			socket.emit('handshake');
 		},
-		requests: {
-			root: function (req, res) {
-				//var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-				//if (ip != '::1')
-				//	return;
+		onHandshake: function (socket) {
+			cons.onHandshake(socket);
+		},
+		onDisconnect: function (socket) {
+			cons.onDisconnect(socket);
+		},
+		onRequest: function (socket, msg, callback) {
+			msg.callback = callback;
 
-				res.sendFile('index.html');
-			},
-			default: function (req, res, next) {
-				var root = req.url.split('/')[1];
-				var file = req.params[0];
+			if (!msg.data)
+				msg.data = {};
 
-				file = file.replace('/' + root + '/', '');
+			if (msg.cpn) {
+				if (!router.allowedCpn(msg))
+					return;
 
-				res.sendFile(file, {
-					'root': '../' + root
-				});
+				cons.route(socket, msg);
+			} else {
+				if (!router.allowedGlobal(msg))
+					return;
+
+				msg.socket = socket;
+				global[msg.module][msg.method](msg);
 			}
 		}
-	};
-});
+	},
+	requests: {
+		root: function (req, res) {
+			res.sendFile('index.html');
+		},
+		default: function (req, res) {
+			let root = req.url.split('/')[1];
+			let file = req.params[0];
+
+			file = file.replace('/' + root + '/', '');
+
+			res.sendFile(file, {
+				root: '../' + root
+			});
+		}
+	}
+};

@@ -1,46 +1,42 @@
-define([
-	'./stats'
-], function (
-	generatorStats
-) {
-	return {
-		minSlotPerfection: 0.1,
-		maxSlotPerfection: 1,
-		minLevelMult: 0.3,
-		maxLevelMult: 1,
+let generatorStats = require('./stats');
 
-		generate: function (item, blueprint) {
-			if (!blueprint.attrRequire)
-				return;
+module.exports = {
+	minSlotPerfection: 0.1,
+	maxSlotPerfection: 0.75,
+	minLevelMult: 0.3,
+	maxLevelMult: 0.7,
 
-			if (!item.requires)
-				item.requires = [];
+	generate: function (item, blueprint) {
+		if (!blueprint.attrRequire)
+			return;
 
-			var tempItem = {
-				quality: 0,
-				level: item.level,
-				stats: {}
-			};
+		if (!item.requires)
+			item.requires = [];
 
-			var perfection = ~~(11 * (this.minSlotPerfection + (Math.random() * (this.maxSlotPerfection - this.minSlotPerfection))));
+		let tempItem = {
+			quality: 0,
+			level: item.level,
+			stats: {}
+		};
 
-			generatorStats.generate(tempItem, {
-				forceStats: [blueprint.attrRequire],
-				perfection: perfection
-			});
+		let perfection = ~~(11 * (this.minSlotPerfection + (Math.random() * (this.maxSlotPerfection - this.minSlotPerfection))));
 
-			var statValue = tempItem.stats[Object.keys(tempItem.stats)[0]];
-			statValue += ~~(item.level * (this.minLevelMult + ~~(Math.random() * (this.maxLevelMult - this.minLevelMult))));
-			statValue = Math.ceil(((item.level - 1) / 20) * statValue);
-			if (statValue <= 0) {
-				item.requires = null;
-				return;
-			}
+		generatorStats.generate(tempItem, {
+			forceStats: [blueprint.attrRequire],
+			perfection: perfection
+		});
 
-			item.requires.push({
-				stat: blueprint.attrRequire,
-				value: statValue
-			});
+		let statValue = tempItem.stats[Object.keys(tempItem.stats)[0]];
+		statValue += ~~(item.level * (this.minLevelMult + ~~(Math.random() * (this.maxLevelMult - this.minLevelMult))));
+		statValue = Math.ceil(((item.level - 1) / 20) * statValue);
+		if (statValue <= 0) {
+			item.requires = null;
+			return;
 		}
-	};
-});
+
+		item.requires.push({
+			stat: blueprint.attrRequire,
+			value: statValue
+		});
+	}
+};

@@ -1,21 +1,15 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'butcher',
+module.exports = {
+	type: 'butcher',
 
-		init: function() {
-			
-		},
+	init: function () {
+		
+	},
 
-		simplify: function() {
-			return this.type;
-		},
+	simplify: function () {
+		return this.type;
+	},
 
-		events: {
-			
-		}
-	};
-});
+	events: {
+		
+	}
+};

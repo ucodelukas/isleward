@@ -1,23 +1,17 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		type: 'hardcore',
+module.exports = {
+	type: 'hardcore',
 
-		init: function() {
-			
-		},
+	init: function () {
+		
+	},
 
-		simplify: function() {
-			return this.type;
-		},
+	simplify: function () {
+		return this.type;
+	},
 
-		events: {
-			afterDeath: function(event) {
-				event.permadeath = true;
-			}
+	events: {
+		afterDeath: function (event) {
+			event.permadeath = true;
 		}
-	};
-});
+	}
+};

@@ -32,7 +32,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'o')
+			if (key === 'o')
 				this.toggle();
 		},
 
@@ -50,11 +50,11 @@ define([
 			if (!list.length)
 				list = [list];
 
-			var onlineList = this.onlineList;
+			let onlineList = this.onlineList;
 
 			list.forEach(function (l) {
-				var exists = onlineList.find(function (o) {
-					return (o.name == l.name);
+				let exists = onlineList.find(function (o) {
+					return (o.name === l.name);
 				});
 				if (exists)
 					$.extend(true, exists, l);
@@ -64,24 +64,22 @@ define([
 
 			onlineList
 				.sort(function (a, b) {
-					if (a.level == b.level) {
+					if (a.level === b.level) {
 						if (a.name > b.name)
 							return 1;
-						else
-							return -1;
-					} else
-						return b.level - a.level;
+						return -1;
+					} return b.level - a.level;
 				});
 
 			if (this.shown)
 				this.build();
 		},
 
-		onGetDisconnectedPlayer: function (name) {
-			var onlineList = this.onlineList;
+		onGetDisconnectedPlayer: function (playerName) {
+			let onlineList = this.onlineList;
 
 			onlineList.spliceWhere(function (o) {
-				return (o.name == name);
+				return (o.name === playerName);
 			});
 
 			if (this.shown)
@@ -89,13 +87,13 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.list');
+			let container = this.el.find('.list');
 			container
 				.children(':not(.heading)')
 				.remove();
 
 			this.onlineList.forEach(function (l) {
-				var html = templateListItem
+				let html = templateListItem
 					.replace('$NAME$', l.name)
 					.replace('$LEVEL$', l.level)
 					.replace('$CLASS$', l.class);
@@ -107,7 +105,7 @@ define([
 		},
 
 		showContext: function (char, e) {
-			if (char.name != window.player.name) {
+			if (char.name !== window.player.name) {
 				events.emit('onContextMenu', [{
 					text: 'invite to party',
 					callback: this.invite.bind(this, char.id)
@@ -117,7 +115,7 @@ define([
 				}], e);
 			}
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 

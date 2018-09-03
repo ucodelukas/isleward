@@ -7,7 +7,7 @@ define([
 		socket: null,
 
 		init: function (onReady) {
-			var tType = 'websocket';
+			let tType = 'websocket';
 			this.socket = io({
 				transports: [tType]
 			});
@@ -28,6 +28,13 @@ define([
 				action: 'save',
 				data: data
 			}, callback);
+		},
+
+		persist: function (data) {
+			this.socket.emit('request', {
+				action: 'persist',
+				data: data
+			});
 		},
 
 		getFileList: function (callback) {

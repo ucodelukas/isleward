@@ -1,122 +1,114 @@
-define([
+module.exports = {
+	type: 'aura',
 
-], function (
+	cdMax: 0,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'aura',
+	duration: 10,
 
-		cdMax: 0,
-		manaCost: 0,
+	aura: true,
+	active: false,
 
-		duration: 10,
+	effects: {},
 
-		aura: true,
-		active: false,
+	cast: function (action) {
+		this.active = !this.active;
 
-		effects: {},
+		return true;
+	},
 
-		cast: function (action) {
-			this.active = !this.active;
+	update: function () {
+		let active = this.active;
 
-			return true;
-		},
-
-		update: function () {
-			var active = this.active;
-
-			if (active)
-				this.updateActive();
-			else
-				this.updateInactive();
-		},
-
-		unlearn: function () {
+		if (active)
+			this.updateActive();
+		else
 			this.updateInactive();
-		},
+	},
 
-		onAfterSimplify: function (values) {
-			delete values.effects;
-		},
+	unlearn: function () {
+		this.updateInactive();
+	},
 
-		die: function () {
-			if (this.active)
-				this.cast();
-		},
+	onAfterSimplify: function (values) {
+		delete values.effects;
+	},
 
-		updateActive: function () {
-			var o = this.obj;
-			var amount = 0;
-			if (this.name == 'Innervation')
-				amount = ~~((o.stats.values.hpMax / 100) * this.values.regenPercentage);
-			else
-				amount = this.values.regenPercentage || this.values.chance;
+	die: function () {
+		if (this.active)
+			this.cast();
+	},
 
-			var party = (o.social || {}).party || [];
-			var members = [o.serverId, ...party];
-			var effects = this.effects;
-			var objects = o.instance.objects.objects;
+	updateActive: function () {
+		let o = this.obj;
+		let amount = 0;
+		if (this.name === 'Innervation')
+			amount = ~~((o.stats.values.hpMax / 100) * this.values.regenPercentage);
+		else
+			amount = this.values.regenPercentage || this.values.chance;
 
-			var range = this.auraRange;
+		let party = (o.social || {}).party || [];
+		let members = [o.serverId, ...party];
+		let effects = this.effects;
+		let objects = o.instance.objects.objects;
 
-			members.forEach(function (m) {
-				var effect = effects[m];
+		let range = this.auraRange;
 
-				var obj = objects.find(o => (o.serverId === m));
-				if (!obj) {
-					if (effect)
-						delete effects[m];
+		members.forEach(function (m) {
+			let effect = effects[m];
 
-					return;
-				}
-
-				var distance = Math.max(Math.abs(o.x - obj.x), Math.abs(o.y - obj.y));
-				if (distance > range) {
-					if (effect) {
-						delete effects[m];
-						obj.effects.removeEffect(effect);
-					}
-
-					return;
-				}
-
+			let obj = objects.find(f => (f.serverId === m));
+			if (!obj) {
 				if (effect)
-					return;
-
-				if (!obj.effects) {
-					console.log('No Effects ', obj.name);
-					return;
-				}
-
-				effects[obj.serverId] = obj.effects.addEffect({
-					type: this.effect,
-					amount: amount,
-					caster: this.obj,
-					ttl: -1,
-					new: true
-				});
-			}, this);
-		},
-
-		updateInactive: function () {
-			var o = this.obj;
-			var effects = this.effects;
-			var objects = o.instance.objects.objects;
-
-			Object.keys(effects).forEach(function (m) {
-				var effect = effects[m];
-				if (!effect)
-					return;
-
-				var obj = objects.find(o => (o.serverId == m));
-				if (!obj) {
 					delete effects[m];
-					return;
+
+				return;
+			}
+
+			let distance = Math.max(Math.abs(o.x - obj.x), Math.abs(o.y - obj.y));
+			if (distance > range) {
+				if (effect) {
+					delete effects[m];
+					obj.effects.removeEffect(effect);
 				}
 
-				obj.effects.removeEffect(effect);
+				return;
+			}
+
+			if (effect)
+				return;
+
+			if (!obj.effects)
+				return;
+
+			effects[obj.serverId] = obj.effects.addEffect({
+				type: this.effect,
+				amount: amount,
+				caster: this.obj,
+				ttl: -1,
+				new: true
+			});
+		}, this);
+	},
+
+	updateInactive: function () {
+		let o = this.obj;
+		let effects = this.effects;
+		let objects = o.instance.objects.objects;
+
+		Object.keys(effects).forEach(function (m) {
+			let effect = effects[m];
+			if (!effect)
+				return;
+
+			let obj = objects.find(f => (f.serverId === ~~m));
+			if (!obj) {
 				delete effects[m];
-			}, this);
-		}
-	};
-});
+				return;
+			}
+
+			obj.effects.removeEffect(effect);
+			delete effects[m];
+		}, this);
+	}
+};

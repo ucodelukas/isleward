@@ -53,16 +53,16 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'j')
+			if (key === 'j')
 				this.toggle();
-			else if (key == 'shift') {
+			else if (key === 'shift') {
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 			}
 		},
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHoverItem(this.hoverEl, this.hoverItem, null);
@@ -86,7 +86,7 @@ define([
 
 			this.find('.slot').addClass('empty');
 
-			var skipSpellId = 0;
+			let skipSpellId = 0;
 
 			this.find('[slot]')
 				.removeData('item')
@@ -102,15 +102,14 @@ define([
 
 			this.find('[slot]').toArray().forEach(function (el) {
 				el = $(el);
-				var slot = el.attr('slot');
-				var newItems = window.player.inventory.items.some(function (i) {
-					var checkSlot = slot;
-					if (slot.indexOf('finger') == 0)
+				let slot = el.attr('slot');
+				let newItems = window.player.inventory.items.some(function (i) {
+					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
-					else if (slot == 'oneHanded')
+					else if (slot === 'oneHanded')
 						return ((['oneHanded', 'twoHanded'].indexOf(slot) > -1) && (i.isNew));
 
-					return ((i.slot == slot) && (i.isNew));
+					return ((i.slot === slot) && (i.isNew));
 				});
 
 				if (newItems)
@@ -119,29 +118,32 @@ define([
 
 			items
 				.filter(function (item) {
-					var runeSlot = item.runeSlot;
-					if ((runeSlot != null) && (item.slot))
+					let runeSlot = item.runeSlot;
+					if ((runeSlot !== null) && (item.slot))
 						skipSpellId = runeSlot;
 
-					return ((item.eq) && ((item.slot) || (item.runeSlot != null)));
+					return (item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))));
 				}, this)
 				.forEach(function (item) {
-					var imgX = -item.sprite[0] * 64;
-					var imgY = -item.sprite[1] * 64;
+					let imgX = -item.sprite[0] * 64;
+					let imgY = -item.sprite[1] * 64;
 
-					var slot = item.slot;
-					if (!slot) {
-						var runeSlot = item.runeSlot;
+					let slot = item.slot;
+					if (item.has('runeSlot')) {
+						let runeSlot = item.runeSlot;
 						if (runeSlot > skipSpellId)
 							runeSlot--;
 						slot = 'rune-' + runeSlot;
-					}
+					} else if (item.has('quickSlot'))
+						slot = 'quick-' + item.quickSlot;
 
-					var spritesheet = item.spritesheet || '../../../images/items.png';
+					let spritesheet = item.spritesheet || '../../../images/items.png';
+					if (item.type === 'consumable')
+						spritesheet = '../../../images/consumables.png';
 
 					slot = item.equipSlot || slot;
 
-					var elSlot = this.find('[slot="' + slot + '"]');
+					let elSlot = this.find('[slot="' + slot + '"]');
 					elSlot
 						.data('item', item)
 						.removeClass('empty show-default-icon')
@@ -158,101 +160,118 @@ define([
 			if (el.currentTarget)
 				el = $(el.currentTarget).parent();
 
-			var slot = el.attr('slot');
-			var isRune = (slot.indexOf('rune') == 0);
+			let slot = el.attr('slot');
+			let isRune = (slot.indexOf('rune') === 0);
+			const isConsumable = (slot.indexOf('quick') === 0);
 
-			var container = this.find('.itemList')
+			let container = this.find('.itemList')
 				.empty()
 				.show();
 
 			this.hoverCompare = el.data('item');
 
-			var items = this.items
+			let items = this.items
 				.filter(function (item) {
 					if (isRune)
 						return ((!item.slot) && (item.spell) && (!item.eq));
-					else {
-						var checkSlot = (slot.indexOf('finger') == 0) ? 'finger' : slot;
-						if (slot == 'oneHanded')
-							return ((!item.eq) && ((item.slot == 'oneHanded') || (item.slot == 'twoHanded')));
+					else if (isConsumable)
+						return (item.type === 'consumable' && !item.has('quickSlot'));
+					
+					let checkSlot = (slot.indexOf('finger') === 0) ? 'finger' : slot;
+					if (slot === 'oneHanded')
+						return ((!item.eq) && ((item.slot === 'oneHanded') || (item.slot === 'twoHanded')));
 
-						return ((item.slot == checkSlot) && (!item.eq));
-					}
+					return ((item.slot === checkSlot) && (!item.eq));
 				}, this);
+
+			if (isConsumable) {
+				items = items
+					.filter(function (item, i) {
+						return (items.firstIndex(f => f.name === item.name) === i);
+					});
+			}
+
 			items.splice(0, 0, {
 				name: 'None',
 				slot: this.hoverCompare ? this.hoverCompare.slot : null,
-				id: this.hoverCompare ? this.hoverCompare.id : null,
+				id: (this.hoverCompare && !isConsumable) ? this.hoverCompare.id : null,
+				type: isConsumable ? 'consumable' : null,
 				empty: true
 			});
 			if (this.hoverCompare)
 				items.splice(1, 0, this.hoverCompare);
 
 			items
-				.forEach(function (item) {
-					var sprite = item.sprite || [7, 0];
+				.forEach(function (item, i) {
+					let sprite = item.sprite || [7, 0];
 
-					var spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
-					var imgX = -sprite[0] * 64;
-					var imgY = -sprite[1] * 64;
+					let spriteSheet = item.empty ? '../../../images/uiIcons.png' : item.spritesheet || '../../../images/items.png';
+					if (i > 0 && item.type === 'consumable')
+						spriteSheet = '../../../images/consumables.png';
+					let imgX = -sprite[0] * 64;
+					let imgY = -sprite[1] * 64;
 
-					var el = $('<div class="slot"><div class="icon"></div></div>')
+					let itemEl = $('<div class="slot"><div class="icon"></div></div>')
 						.appendTo(container);
 
-					el
+					itemEl
 						.find('.icon')
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
-						.on('mousemove', this.onHoverItem.bind(this, el, item, null))
+						.on('mousemove', this.onHoverItem.bind(this, itemEl, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
 						.on('click', this.equipItem.bind(this, item, slot));
 
-					if (item == this.hoverCompare)
-						el.find('.icon').addClass('eq');
+					if (item === this.hoverCompare)
+						itemEl.find('.icon').addClass('eq');
 					else if (item.isNew)
 						el.find('.icon').addClass('new');
 				}, this);
 
-			if (items.length == 0)
+			if (items.length === 0)
 				container.hide();
 		},
 
 		equipItem: function (item, slot) {
-			var isNew = window.player.inventory.items.some(function (i) {
-				return ((i.equipSlot == slot) && (i.isNew));
-			});
+			let isNew = window.player.inventory.items.some(f => (f.equipSlot === slot && f.isNew));
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
 
-			if (item == this.hoverCompare) {
+			if (item === this.hoverCompare) {
 				this.find('.itemList').hide();
 				return;
 			}
 
-			var cpn = 'equipment';
-			var method = 'equip';
-			var data = item.id;
+			let cpn = 'equipment';
+			let method = 'equip';
+			let data = item.id;
 
 			if (item.empty)
 				method = 'unequip';
 
-			if (!item.slot) {
+			if (item.type === 'consumable') {
+				cpn = 'equipment';
+				method = 'setQuickSlot';
+				data = {
+					itemId: item.id,
+					slot: ~~slot.replace('quick-', '')
+				};
+			} else if (!item.slot) {
 				cpn = 'inventory';
 				method = 'learnAbility';
 				data = {
 					itemId: item.id,
-					slot: ~~slot.replace('rune-', '') + 1
+					slot: ~~slot.replace('rune-', '')
 				};
 
 				if (item.empty) {
 					if (!this.hoverCompare) {
 						this.find('.itemList').hide();
 						return;
-					} else {
-						method = 'unlearnAbility';
-						data.itemId = this.hoverCompare.id;
-					}
+					} 
+					method = 'unlearnAbility';
+					data.itemId = this.hoverCompare.id;
 				}
-			} else if (item.slot == 'finger') {
+			} else if (item.slot === 'finger') {
 				data = {
 					itemId: item.id,
 					slot: slot
@@ -282,7 +301,7 @@ define([
 					el.find('.icon').removeClass('new');
 				}
 
-				var ttPos = null;
+				let ttPos = null;
 				if (e) {
 					ttPos = {
 						x: ~~(e.clientX + 32),
@@ -306,21 +325,17 @@ define([
 			if (!this.shown)
 				return;
 
-			var container = this.el.find('.stats');
+			let container = this.el.find('.stats');
 
 			container
 				.children('*:not(.tabs)')
 				.remove();
 
-			var xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			let xpRemaining = (stats.xpMax - stats.xp).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-			var level = stats.level;
-			if (stats.originalLevel)
-				level = stats.originalLevel + ' (' + stats.level + ')';
-
-			var newStats = {
+			let newStats = {
 				basic: {
-					level: level,
+					level: stats.level,
 					'next level': xpRemaining + 'xp',
 					gap1: '',
 					gold: window.player.trade.gold,
@@ -353,7 +368,7 @@ define([
 					'spell increase': stats.spellPercent + '%',
 					gap3: '',
 					'attack speed': (100 + stats.attackSpeed) + '%',
-					'cast speed': (100 + stats.castSpeed) + '%',
+					'cast speed': (100 + stats.castSpeed) + '%'
 				},
 				defense: {
 					armor: stats.armor,
@@ -381,23 +396,23 @@ define([
 				}
 			}[this.find('.tab.selected').html()];
 
-			for (var s in newStats) {
-				var label = s + ': ';
-				var value = newStats[s];
+			for (let s in newStats) {
+				let label = s + ': ';
+				let value = newStats[s];
 
-				var isGap = false;
-				if (label.indexOf('gap') == 0) {
+				let isGap = false;
+				if (label.indexOf('gap') === 0) {
 					isGap = true;
 					label = '';
 					value = '';
 				}
 
-				var row = $('<div class="stat"><font class="q0">' + label + '</font><font color="#999">' + value + '</font></div>')
+				let row = $('<div class="stat"><font class="q0">' + label + '</font><font color="#999">' + value + '</font></div>')
 					.appendTo(container);
 
-				if (s == 'gold')
+				if (s === 'gold')
 					row.addClass('gold');
-				else if ((s == 'level') || (s == 'next level'))
+				else if ((s === 'level') || (s === 'next level'))
 					row.addClass('blueText');
 
 				if (isGap)

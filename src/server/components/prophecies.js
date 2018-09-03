@@ -1,78 +1,70 @@
-define([
+module.exports = {
+	type: 'prophecies',
 
-], function (
+	list: [],
 
-) {
-	return {
-		type: 'prophecies',
+	init: function (blueprint) {
+		(blueprint.list || []).forEach(function (p) {
+			let template = null;
+			try {
+				template = require('../config/prophecies/' + p);
+			} catch (e) {}
 
-		list: [],
+			if (!template)
+				return;
+			else if (this.list.some(l => (l.type === p)))
+				return;
 
-		init: function (blueprint) {
-			(blueprint.list || []).forEach(function (p) {
-				var template = null;
-				try {
-					var template = require('config/prophecies/' + p);
-				} catch (e) {
-					console.log(e);
-				}
+			let prophecy = extend({}, template);
+			prophecy.obj = this.obj;
+			prophecy.init();
 
-				if (template == null)
-					return;
-				else if (this.list.some(l => (l.type == p)))
-					return;
+			this.list.push(prophecy);
+		}, this);
 
-				var p = extend(true, {}, template);
-				p.obj = this.obj;
-				p.init();
+		delete blueprint.list;
+	},
 
-				this.list.push(p);
-			}, this);
+	hasProphecy: function (type) {
+		return this.list.some(l => (l.type === type));
+	},
 
-			delete blueprint.list;
-		},
+	transfer: function () {
+		let transferList = this.list;
+		this.list = [];
 
-		hasProphecy: function (type) {
-			return this.list.some(l => (l.type == type));
-		},
+		this.init({
+			list: transferList
+		});
+	},
 
-		transfer: function () {
-			var transferList = this.list;
-			this.list = [];
+	fireEvent: function (event, args) {
+		let list = this.list;
+		let lLen = list.length;
+		for (let i = 0; i < lLen; i++) {
+			let l = list[i];
+			let events = l.events;
+			if (!events)
+				continue;
 
-			this.init({
-				list: transferList
-			});
-		},
+			let callback = events[event];
+			if (!callback)
+				continue;
 
-		fireEvent: function (event, args) {
-			var list = this.list;
-			var lLen = list.length;
-			for (var i = 0; i < lLen; i++) {
-				var l = list[i];
-				var events = l.events;
-				if (!events)
-					continue;
+			callback.apply(l, args);
+		}
+	},
 
-				var callback = events[event];
-				if (!callback)
-					continue;
+	simplify: function (self) {
+		let e = {
+			type: 'prophecies'
+		};
 
-				callback.apply(l, args);
-			}
-		},
+		if ((this.list.length > 0) && (this.list[0].simplify))
+			e.list = this.list.map(p => p.simplify());
+		else
+			e.list = this.list;
 
-		simplify: function (self) {
-			var e = {
-				type: 'prophecies',
-			};
-
-			if ((this.list.length > 0) && (this.list[0].simplify))
-				e.list = this.list.map(p => p.simplify());
-			else
-				e.list = this.list;
-
-			return e;
-		},
-	};
-});
+		return e;
+	}
+};

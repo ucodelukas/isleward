@@ -31,33 +31,35 @@ define([
 		},
 
 		build: function () {
-			var container = this.el.find('.grid')
+			let container = this.el.find('.grid')
 				.empty();
 
-			var items = this.items;
-			var iLen = items.length;
+			let items = this.items;
+			let iLen = items.length;
 
-			var remainder = iLen % 8;
-			var startNoPad = ~~(iLen / 8);
-			if (remainder == 0)
+			let remainder = iLen % 8;
+			let startNoPad = ~~(iLen / 8);
+			if (remainder === 0)
 				startNoPad--;
 			startNoPad *= 8;
 
-			for (var i = 0; i < iLen; i++) {
-				var item = items[i];
+			for (let i = 0; i < iLen; i++) {
+				let item = items[i];
 
-				var imgX = -item.sprite[0] * 64;
-				var imgY = -item.sprite[1] * 64;
+				let imgX = -item.sprite[0] * 64;
+				let imgY = -item.sprite[1] * 64;
 
-				var itemEl = $(tplItem)
+				let itemEl = $(tplItem)
 					.appendTo(container);
 
-				var spritesheet = item.spritesheet || '../../../images/items.png';
+				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (!item.spritesheet) {
 					if (item.material)
 						spritesheet = '../../../images/materials.png';
 					else if (item.quest)
 						spritesheet = '../../../images/questItems.png';
+					else if (item.type === 'consumable')
+						spritesheet = '../../../images/consumables.png';
 				}
 
 				itemEl
@@ -77,7 +79,7 @@ define([
 					itemEl.addClass('new');
 
 				if (i >= startNoPad) {
-					if (i == iLen - 1)
+					if (i === iLen - 1)
 						itemEl.css('margin', '0px 0px 0px 0px');
 					else
 						itemEl.css('margin', '0px 8px 0px 0px');
@@ -91,7 +93,7 @@ define([
 				callback: this.withdraw.bind(this, item)
 			}], e);
 
-			e.preventDefault;
+			e.preventDefault();
 			return false;
 		},
 
@@ -105,23 +107,23 @@ define([
 			else
 				item = this.hoverItem;
 
-			var ttPos = null;
+			let ttPos = null;
 
 			if (el) {
 				el.removeClass('new');
 				delete item.isNew;
 
-				var elOffset = el.offset();
+				let elOffset = el.offset();
 				ttPos = {
 					x: ~~(elOffset.left + 74),
 					y: ~~(elOffset.top + 4)
 				};
 			}
 
-			var compare = null;
+			let compare = null;
 			if (this.shiftDown) {
 				compare = window.player.inventory.items.find(function (i) {
-					return ((i.eq) && (i.slot == item.slot));
+					return ((i.eq) && (i.slot === item.slot));
 				});
 			}
 
@@ -144,22 +146,20 @@ define([
 
 			//Sort by slot
 			this.items.sort(function (a, b) {
-				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot != null) && (a.slot == b.slot))) {
-					if (a.type == b.type) {
+				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot !== null) && (a.slot === b.slot))) {
+					if (a.type === b.type) {
 						if (a.name < b.name)
 							return -1;
-						else if (a.name == b.name)
+						else if (a.name === b.name)
 							return 0;
 						else if (a.name > b.name)
 							return 1;
-					} else {
-						if ((a.type || '') < (b.type || ''))
-							return -1;
-						else if ((a.type || '') == (b.type || ''))
-							return 0;
-						else if ((a.type || '') > (b.type || ''))
-							return 1;
-					}
+					} else if ((a.type || '') < (b.type || ''))
+						return -1;
+					else if ((a.type || '') === (b.type || ''))
+						return 0;
+					else if ((a.type || '') > (b.type || ''))
+						return 1;
 				} else if ((a.quest) && (!b.quest))
 					return -1;
 				else if ((b.quest) && (!a.quest))
@@ -172,9 +172,8 @@ define([
 					return -1;
 				else if (a.slot < b.slot)
 					return 1;
-				else {
+				else 
 					return b.id - a.id;
-				}
 			});
 
 			if (this.shown)
@@ -182,12 +181,11 @@ define([
 		},
 		onDestroyStashItems: function (itemIds) {
 			itemIds.forEach(function (id) {
-				var item = this.items.find(i => i.id == id);
-				if (item == this.hoverItem) {
+				let item = this.items.find(i => i.id === id);
+				if (item === this.hoverItem) 
 					this.hideTooltip();
-				}
 
-				this.items.spliceWhere(i => i.id == id);
+				this.items.spliceWhere(i => i.id === id);
 			}, this);
 
 			if (this.shown)
@@ -235,17 +233,17 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key == 'u')
+			if (key === 'u')
 				this.toggle();
-			else if (key == 'shift') {
+			else if (key === 'shift') {
 				this.shiftDown = true;
 				if (this.hoverItem)
 					this.onHover();
-			} else if ((key == 'esc') && (this.shown))
+			} else if ((key === 'esc') && (this.shown))
 				this.toggle();
 		},
 		onKeyUp: function (key) {
-			if (key == 'shift') {
+			if (key === 'shift') {
 				this.shiftDown = false;
 				if (this.hoverItem)
 					this.onHover();

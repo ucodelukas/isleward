@@ -1,17 +1,11 @@
-define([
-	
-], function(
-	
-) {
-	return {
-		end: false,
+module.exports = {
+	end: false,
 
-		init: function() {
+	init: function () {
 
-		},
+	},
+	
+	update: function () {
 		
-		update: function() {
-			
-		}
-	};
-});
+	}
+};

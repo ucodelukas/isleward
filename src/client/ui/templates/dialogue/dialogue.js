@@ -3,7 +3,7 @@ define([
 	'js/system/client',
 	'html!ui/templates/dialogue/template',
 	'css!ui/templates/dialogue/styles'
-], function(
+], function (
 	events,
 	client,
 	template,
@@ -15,32 +15,32 @@ define([
 
 		centeredX: true,
 
-		postRender: function() {
+		postRender: function () {
 			this.onEvent('onGetDialogue', this.onGetDialogue.bind(this));
 			this.onEvent('onRemoveDialogue', this.onRemoveDialogue.bind(this));
 		},
 
-		onGetDialogue: function(msg) {
-			this.text.spliceWhere(function(t) {
-				return (t.src == msg.src);
+		onGetDialogue: function (msg) {
+			this.text.spliceWhere(function (t) {
+				return (t.src === msg.src);
 			});
 
 			this.text.push(msg);
 			this.setText();
 		},
 
-		onRemoveDialogue: function(msg) {
-			this.text.spliceWhere(function(t) {
-				return (t.src == msg.src);
+		onRemoveDialogue: function (msg) {
+			this.text.spliceWhere(function (t) {
+				return (t.src === msg.src);
 			});
 
 			this.setText();
 		},
 
-		setText: function() {
-			var text = '';
-			for (var i = 0; i < this.text.length; i++) {
-				var t = this.text[i];
+		setText: function () {
+			let text = '';
+			for (let i = 0; i < this.text.length; i++) {
+				let t = this.text[i];
 
 				text += t.msg;
 				if (i < this.text.length - 1)
@@ -49,11 +49,11 @@ define([
 			
 			this.find('.textBox').html(text);
 
-			if (text != '') {
+			if (text !== '') 
 				this.show();
-			}
+			
 			else
 				this.hide();
 		}
-	}
+	};
 });

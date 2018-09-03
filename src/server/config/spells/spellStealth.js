@@ -1,40 +1,34 @@
-define([
+module.exports = {
+	type: 'stealth',
 
-], function(
+	cdMax: 0,
+	manaCost: 0,
 
-) {
-	return {
-		type: 'stealth',
+	duration: 10,
 
-		cdMax: 0,
-		manaCost: 0,
+	targetGround: true,
 
-		duration: 10,
+	cast: function (action) {
+		//Clear Aggro
+		this.obj.aggro.die();
 
-		targetGround: true,
+		let ttl = this.duration * 350;
+		let endCallback = this.queueCallback(this.endEffect.bind(this), ttl - 50);
 
-		cast: function(action) {
-			//Clear Aggro
-			this.obj.aggro.die();
+		this.obj.effects.addEffect({
+			type: 'stealth',
+			endCallback: endCallback
+		});		
 
-			var ttl = this.duration * 350;
-			var endCallback = this.queueCallback(this.endEffect.bind(this), ttl - 50);
+		return true;
+	},
+	endEffect: function () {
+		if (this.obj.destroyed)
+			return;
 
-			this.obj.effects.addEffect({
-				type: 'stealth',
-				endCallback: endCallback
-			});		
+		let obj = this.obj;
 
-			return true;
-		},
-		endEffect: function() {
-			if (this.obj.destroyed)
-				return;
-
-			var obj = this.obj;
-
-			obj.effects.removeEffectByName('stealth');
-			this.obj.aggro.move();
-		}
-	};
-});
+		obj.effects.removeEffectByName('stealth');
+		this.obj.aggro.move();
+	}
+};

@@ -54,7 +54,7 @@ define([
 		},
 
 		keyMove: function () {
-			var delta = {
+			let delta = {
 				x: input.getAxis('horizontal'),
 				y: input.getAxis('vertical')
 			};
@@ -65,11 +65,11 @@ define([
 			this.direction.x = delta.x;
 			this.direction.y = delta.y;
 
-			var newX = this.obj.pather.pathPos.x + delta.x;
-			var newY = this.obj.pather.pathPos.y + delta.y;
+			let newX = this.obj.pather.pathPos.x + delta.x;
+			let newY = this.obj.pather.pathPos.y + delta.y;
 
 			if (physics.isTileBlocking(~~newX, ~~newY)) {
-				this.bump(delta.x, delta.y)
+				this.bump(delta.x, delta.y);
 				return;
 			}
 
@@ -80,10 +80,10 @@ define([
 		addQueue: function (x, y) {
 			if (this.obj.moveAnimation)
 				return;
+			else if (!this.obj.pather.add(x, y))
+				return;
 
-			this.obj.dirty = true;
-
-			this.obj.pather.add(x, y);
+			this.obj.dirty = true;			
 
 			this.obj.pather.pathPos.x = x;
 			this.obj.pather.pathPos.y = y;

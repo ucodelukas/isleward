@@ -1,12 +1,10 @@
 define([
 	'js/rendering/effects',
 	'js/rendering/renderer'
-], function(
+], function (
 	effects,
 	renderer
 ) {
-	var scale = 40;
-
 	return {
 		type: 'light',
 
@@ -17,20 +15,20 @@ define([
 
 		range: 3,
 
-		init: function(blueprint) {
+		init: function (blueprint) {
 			this.blueprint = this.blueprint || {};
 
-			var x = this.obj.x;
-			var y = this.obj.y;
+			let x = this.obj.x;
+			let y = this.obj.y;
 
-			var range = this.range;
-			var halfRange = (range - 1) / 2;
+			let range = this.range;
+			let halfRange = (range - 1) / 2;
 
-			for (var i = 0; i < range; i++) {
-				for (var j = 0; j < range; j++) {
-					var n = i + '|' + j;
+			for (let i = 0; i < range; i++) {
+				for (let j = 0; j < range; j++) {
+					let n = i + '|' + j;
 
-					var maxAlpha = (1 + ((halfRange * 2) - (Math.abs(halfRange - i) + Math.abs(halfRange - j)))) * 0.1;
+					let maxAlpha = (1 + ((halfRange * 2) - (Math.abs(halfRange - i) + Math.abs(halfRange - j)))) * 0.1;
 
 					this.emitters[n] = renderer.buildEmitter({
 						pos: {
@@ -79,14 +77,14 @@ define([
 			}
 		},
 
-		update: function() {
+		update: function () {
 
 		},
 
-		destroy: function() {
-			var keys = Object.keys(this.emitters);
-			for (var i = 0; i < keys.length; i++) {
-				var emitter = this.emitters[keys[i]];
+		destroy: function () {
+			let keys = Object.keys(this.emitters);
+			for (let i = 0; i < keys.length; i++) {
+				let emitter = this.emitters[keys[i]];
 				delete this.emitters[keys[i]];
 
 				renderer.destroyEmitter(emitter);

@@ -1,27 +1,21 @@
-define([
+module.exports = {
+	type: 'swiftness',
 
-], function (
+	amount: 1,
 
-) {
-	return {
-		type: 'swiftness',
+	init: function () {
+		this.obj.stats.addStat('sprintChance', this.amount);
+	},
 
-		amount: 1,
+	destroy: function () {
+		this.obj.stats.addStat('sprintChance', -this.amount);
+	},
 
-		init: function () {
-			this.obj.stats.addStat('sprintChance', this.amount);
-		},
+	update: function () {
 
-		destroy: function () {
-			this.obj.stats.addStat('sprintChance', -this.amount);
-		},
+	},
 
-		update: function () {
+	events: {
 
-		},
-
-		events: {
-
-		}
-	};
-});
+	}
+};

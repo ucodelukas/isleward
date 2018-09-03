@@ -1,17 +1,13 @@
-define([
-	'misc/events'
-], function(
-	events
-) {
-	return {
-		resourceList: [],
+let events = require('../misc/events');
 
-		init: function() {
-			events.emit('onBeforeGetResourceList', this.resourceList);
-		},
+module.exports = {
+	resourceList: [],
 
-		getResourcesList: function(msg) {
-			msg.callback(this.resourceList);
-		}
-	};
-});
+	init: function () {
+		events.emit('onBeforeGetResourceList', this.resourceList);
+	},
+
+	getResourcesList: function (msg) {
+		msg.callback(this.resourceList);
+	}
+};
