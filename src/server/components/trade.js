@@ -212,19 +212,7 @@ module.exports = {
 			targetTrade.genLeft++;
 		}
 
-		if (item.worth.currency) {
-			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
-			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
-		} else {
-			targetTrade.gold += ~~(item.worth * markup);
-			this.gold -= ~~(item.worth * markup);
-			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
-		}
-
 		if (item.type !== 'skin') {
-			if (!item.infinite)
-				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
-
 			let clonedItem = extend({}, item);
 			if (item.worth.currency)
 				clonedItem.worth = 0;
@@ -243,7 +231,13 @@ module.exports = {
 					clonedItem.factions = item.factions;
 			}
 
-			this.obj.inventory.getItem(clonedItem);
+			if (!this.obj.inventory.getItem(clonedItem)) {
+				this.resolveCallback(msg);
+				return;
+			}
+
+			if (!item.infinite)
+				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 		} else {
 			this.obj.auth.saveSkin(item.skinId);
 
@@ -255,6 +249,15 @@ module.exports = {
 					type: 'info'
 				}]
 			}, [this.obj.serverId]);
+		}
+
+		if (item.worth.currency) {
+			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
+			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
+		} else {
+			targetTrade.gold += ~~(item.worth * markup);
+			this.gold -= ~~(item.worth * markup);
+			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 		}
 
 		//Hack to always redraw the UI (to give items the red overlay if they can't be afforded)
@@ -404,7 +407,7 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = msg.has('callbackId ') ? msg.callbackId : msg;
+		let callbackId = msg.has('callbackId') ? msg.callbackId : msg;
 		result = result || [];
 
 		if (!callbackId)
