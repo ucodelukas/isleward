@@ -292,6 +292,7 @@ define([
 		},
 
 		beforeHide: function () {
+			this.item = null;
 			this.offEvent(this.eventCloseInv);
 			this.offEvent(this.eventClickInv);
 		},
@@ -304,7 +305,7 @@ define([
 				this.find('.icon').show();
 				this.find('.actionButton').removeClass('disabled').addClass('disabled');
 				this.show();
-			} else
+			} else 
 				this.hide();
 		},
 		onKeyDown: function (key) {
