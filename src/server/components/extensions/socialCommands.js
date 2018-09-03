@@ -33,7 +33,8 @@ let localCommands = [
 	'join',
 	'leave',
 	'mute',
-	'unmute'
+	'unmute',
+	'setPassword'
 ];
 
 module.exports = {
