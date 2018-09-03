@@ -25,14 +25,16 @@ let commandRoles = {
 	loseReputation: 10,
 	setStat: 10,
 	die: 10,
-	getXp: 10
+	getXp: 10,
+	setPassword: 10
 };
 
 let localCommands = [
 	'join',
 	'leave',
 	'mute',
-	'unmute'
+	'unmute',
+	'setPassword'
 ];
 
 module.exports = {
@@ -491,5 +493,17 @@ module.exports = {
 		this.obj.stats.takeDamage({
 			amount: 99999
 		}, 1, this.obj);
+	},
+
+	setPassword: function (config) {
+		let keys = Object.keys(config);
+		let username = keys[0];
+		let hashedPassword = keys[1];
+
+		io.set({
+			ent: username,
+			field: 'login',
+			value: hashedPassword
+		});
 	}
 };
