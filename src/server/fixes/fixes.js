@@ -14,6 +14,10 @@ module.exports = {
 			this.fixItems(inv.items);
 	},
 
+	fixCustomChannels: function (customChannels) {
+		customChannels = customChannels.filter(c => c.length <= 15);
+	},
+
 	fixStash: function (stash) {
 		this.fixItems(stash);
 	},

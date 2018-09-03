@@ -96,10 +96,22 @@ module.exports = {
 			.trim()
 			.split(' ').join('');
 
+		let obj = this.obj;
+
 		if (value.length === 0)
 			return;
-
-		let obj = this.obj;
+		else if (value.length > 15) {
+			obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'Channel names can not be longer than 15 characters.',
+						type: 'info'
+					}]
+				}]
+			});
+			return;
+		}
 
 		let channels = obj.auth.customChannels;
 		if (!channels.some(c => (c === value)))
