@@ -34,10 +34,8 @@ define([
 			let collisionChanges = blueprint.collisionChanges;
 			delete blueprint.collisionChanges;
 
-			if (collisionChanges) {
-				console.log(collisionChanges);
+			if (collisionChanges)
 				collisionChanges.forEach(c => physics.setCollision(c));
-			}
 		},
 
 		update: function () {
