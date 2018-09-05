@@ -2,4 +2,4 @@
 * Scarlet snake takes long to charge (have to be very close), maybe he didnd't aggro? Should cascade though
 * No poison cloud on death for viridian snakes
 * Client side debuff icons aren't being removed
-* Sending messages in custom channels doesn't work
+* AFter relog you don't receive a list of custom channels
