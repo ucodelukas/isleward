@@ -267,6 +267,10 @@ define([
 					text: 'learn',
 					callback: this.performItemAction.bind(this, item, 'learnAbility')
 				},
+				quickSlot: {
+					text: 'quickslot',
+					callback: this.performItemAction(this, item, 'setQuickSlot')
+				},
 				activate: {
 					text: 'activate',
 					callback: this.performItemAction.bind(this, item, 'activateMtx')
@@ -308,9 +312,10 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type === 'mtx')
 				config.push(menuItems.activate);
-			else if ((item.type === 'toy') || (item.type === 'consumable'))
+			else if ((item.type === 'toy') || (item.type === 'consumable')) {
 				config.push(menuItems.use);
-			else if (item.slot) {
+				config.push(menuItems.quickSlot);
+			} else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
 					config.push(menuItems.divider);
@@ -575,9 +580,19 @@ define([
 			else if ((action === 'activateMtx') && (item.type !== 'mtx'))
 				return;
 
+			let data = item.id;
+
 			let cpn = 'inventory';
-			if (action === 'equip')
+			if (['equip', 'setQuickSlot'].includes(action)) {
 				cpn = 'equipment';
+
+				if (action === 'quickSlot') {
+					data = {
+						itemId: item.id,
+						slot: 0
+					};
+				}
+			}
 
 			if (action === 'useItem')
 				this.hide();
@@ -588,7 +603,7 @@ define([
 				data: {
 					cpn: cpn,
 					method: action,
-					data: item.id
+					data: data
 				}
 			});
 		},
