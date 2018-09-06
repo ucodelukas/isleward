@@ -44,6 +44,7 @@ let startup = {
 	onComponentsReady: function () {
 		skins.init();
 		factions.init();
+		clientConfig.init();
 		server.init(this.onServerReady.bind(this));
 	},
 
