@@ -29,8 +29,8 @@ module.exports = {
 		}
 
 		if ((!blocked) && (!dodged)) {
-			let statValue = 0;
 			if (config.statType) {
+				let statValue = 0;
 				let statType = config.statType;
 				if (!(statType instanceof Array))
 					statType = [statType];
@@ -38,21 +38,22 @@ module.exports = {
 				statType.forEach(function (s) {
 					statValue += srcValues[s];
 				});
+
+				statValue = max(1, statValue);
+				let statMult = config.statMult || 1;
+
+				amount *= statValue * statMult;
 			}
 
-			statValue = max(1, statValue);
-			let statMult = config.statMult || 1;
-			let dmgPercent = 100 + (srcValues.dmgPercent || 0);
-
-			amount *= statValue * statMult;
+			let dmgPercent = 100 + (srcValues.dmgPercent || 0);	
 
 			if (config.element) {
 				let elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 				dmgPercent += (srcValues[elementName + 'Percent'] || 0);
-				dmgPercent += srcValues.elementPercent;
+				dmgPercent += srcValues.elementPercent || 0;
 
 				if (!config.isAttack)
-					dmgPercent += srcValues.spellPercent;
+					dmgPercent += srcValues.spellPercent || 0;
 
 				//Don't mitigate heals
 				if (!config.noMitigate) {
@@ -60,7 +61,7 @@ module.exports = {
 					amount *= max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5);
 				}
 			} else if (!config.noMitigate) {
-				dmgPercent += srcValues.physicalPercent;
+				dmgPercent += srcValues.physicalPercent || 0;
 				amount *= max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5);
 			}
 
