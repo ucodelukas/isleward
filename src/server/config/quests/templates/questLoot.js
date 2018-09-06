@@ -55,6 +55,7 @@ module.exports = {
 				this.description = 'Loot 1x ' + this.slotName;
 			} else {
 				this.name = 'Purveyor of Artefacts';
+				this.quality = 0;
 				this.slot = slotNames[~~(Math.random() * slotNames.length)];
 				this.slotName = this.slot[0].toUpperCase() + this.slot.substr(1);
 				this.description = 'Loot 1x ' + this.slotName + ' slot item';
