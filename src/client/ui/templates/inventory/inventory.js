@@ -269,7 +269,7 @@ define([
 				},
 				quickSlot: {
 					text: 'quickslot',
-					callback: this.performItemAction(this, item, 'setQuickSlot')
+					callback: this.performItemAction.bind(this, item, 'setQuickSlot')
 				},
 				activate: {
 					text: 'activate',
@@ -312,9 +312,10 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type === 'mtx')
 				config.push(menuItems.activate);
-			else if ((item.type === 'toy') || (item.type === 'consumable')) {
+			else if (item.type === 'toy' || item.type === 'consumable') {
 				config.push(menuItems.use);
-				config.push(menuItems.quickSlot);
+				if (!item.has('quickSlot'))
+					config.push(menuItems.quickSlot);
 			} else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
@@ -586,7 +587,7 @@ define([
 			if (['equip', 'setQuickSlot'].includes(action)) {
 				cpn = 'equipment';
 
-				if (action === 'quickSlot') {
+				if (action === 'setQuickSlot') {
 					data = {
 						itemId: item.id,
 						slot: 0

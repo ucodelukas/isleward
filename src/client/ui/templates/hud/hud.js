@@ -42,7 +42,7 @@ define([
 		},
 
 		useQuickItem: function () {
-			const quickItem = items.find(f => f.has('quickSlot'));
+			const quickItem = this.items.find(f => f.has('quickSlot'));
 			if (!quickItem)
 				return;
 
@@ -61,7 +61,7 @@ define([
 			});
 		},
 
-		howQuickItemTooltip: function(show, item, e) {
+		showQuickItemTooltip: function (show, item, e) {
 			if (show) {
 				let ttPos = null;
 				if (e) {
@@ -105,7 +105,6 @@ define([
 
 					if (quickItem)
 						events.emit('onHideItemTooltip', quickItem);
-
 				}
 			},
 
