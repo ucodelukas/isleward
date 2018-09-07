@@ -10,16 +10,6 @@ module.exports = {
 			targetPos.success = false;
 		},
 
-		beforeDealDamage: function (damage) {
-			if (!damage)
-				return;
-
-			if (Math.random() >= this.chance)
-				return;
-
-			damage.failed = true;
-		},
-
 		beforeCastSpell: function (successObj) {
 			if (Math.random() < this.chance)
 				return;
