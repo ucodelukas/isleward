@@ -1584,11 +1584,13 @@
                  "name":"Fireplace",
                  "properties":
                     {
-                     "cpnLight":"{}"
+                     "cpnLight":"{}",
+                     "cpnSound":"{\"sound\":\"fire.ogg\",\"volume\":0.5}"
                     },
                  "propertytypes":
                     {
-                     "cpnLight":"string"
+                     "cpnLight":"string",
+                     "cpnSound":"string"
                     },
                  "rotation":0,
                  "type":"",
@@ -1788,6 +1790,126 @@
                  "width":8,
                  "x":576,
                  "y":416
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":868,
+                 "name":"|soundStream",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"stream.ogg\",\"volume\":1}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":856,
+                 "y":560
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":869,
+                 "name":"|soundWind",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"wind.ogg\",\"volume\":1.5}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":1176,
+                 "y":880
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":870,
+                 "name":"|soundWind",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"wind.ogg\",\"volume\":1.5}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":1224,
+                 "y":800
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":871,
+                 "name":"|soundWind",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"wind.ogg\",\"volume\":1.5}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":1304,
+                 "y":872
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":872,
+                 "name":"|soundWind",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"wind.ogg\",\"volume\":1.5}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":1360,
+                 "y":856
+                }, 
+                {
+                 "gid":523,
+                 "height":8,
+                 "id":873,
+                 "name":"|soundWind",
+                 "properties":
+                    {
+                     "cpnSound":"{\"sound\":\"wind.ogg\",\"volume\":1.5}"
+                    },
+                 "propertytypes":
+                    {
+                     "cpnSound":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":1408,
+                 "y":840
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3740,7 +3862,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":868,
+ "nextobjectid":874,
  "orientation":"orthogonal",
  "properties":
     {

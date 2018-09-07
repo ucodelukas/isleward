@@ -9,7 +9,7 @@ define([
 		sounds: [],
 
 		init: function (zone) {
-			this.unload();
+			
 		},
 
 		unload: function (zoneId) {
