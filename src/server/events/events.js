@@ -81,8 +81,12 @@ module.exports = {
 			} else if ((c.ttl) && (c.ttl > 0)) {
 				c.ttl--;
 				continue;
-			} else if ((c.cron) && (!scheduler.shouldRun(c)))
-				continue;
+			} else if (c.cron) {
+				if (c.durationEvent && !scheduler.isActive(c))
+					continue;
+				else if (!c.durationEvent && !scheduler.shouldRun(c))
+					continue;
+			}
 
 			c.event = this.startEvent(c);
 			this.updateEvent(c.event);
