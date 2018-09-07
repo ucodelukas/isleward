@@ -82,6 +82,18 @@ module.exports = {
 		let item = this.items.find(i => i.id === id);
 		if (!item)
 			return;
+		else if (!this.obj.inventory.hasSpace(item)) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You do not have room in your inventory to withdraw that item',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+			
+			return;
+		}
 
 		this.obj.inventory.getItem(item);
 		this.items.spliceWhere(i => i === item);

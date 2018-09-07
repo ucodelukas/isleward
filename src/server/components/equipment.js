@@ -62,14 +62,14 @@ module.exports = {
 			slot = item.equipSlot || item.slot;
 		if (slot === 'twoHanded') {
 			if (this.eq.has('offHand'))
-				this.unequip(this.eq.offHand);
+				this.unequip(this.eq.offHand, true);
 
 			slot = 'oneHanded';
 		} else if (slot === 'offHand') {
 			if (this.eq.has('oneHanded')) {
 				let oneHandedEq = this.obj.inventory.findItem(this.eq.oneHanded);
 				if (oneHandedEq.slot === 'twoHanded')
-					this.unequip(this.eq.oneHanded);
+					this.unequip(this.eq.oneHanded, true);
 			}
 		}
 
@@ -110,7 +110,7 @@ module.exports = {
 			if (this.eq[slot] === item.id)
 				return;
 
-			this.unequip(this.eq[slot]);
+			this.unequip(this.eq[slot], true);
 		}
 
 		let stats = item.stats;
@@ -169,7 +169,7 @@ module.exports = {
 
 		this.obj.fireEvent('afterEquipItem', item);
 	},
-	unequip: function (itemId) {
+	unequip: function (itemId, ignoreSpaceCheck) {
 		let item = itemId;
 		if (typeof (itemId) === 'object')
 			itemId = itemId.itemId;
@@ -179,6 +179,18 @@ module.exports = {
 
 		if (!item)
 			return;
+		else if (!ignoreSpaceCheck && !this.obj.inventory.hasSpace()) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You do not have room in your inventory to unequip that item',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+
+			return;
+		}
 
 		let stats = item.stats;
 

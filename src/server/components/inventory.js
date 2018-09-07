@@ -687,8 +687,14 @@ module.exports = {
 		return obj;
 	},
 
-	hasSpace: function () {
+	hasSpace: function (item) {
 		if (this.inventorySize !== -1) {
+			if (item) {
+				let exists = this.items.find(i => (i.name === item.name));
+				if (exists && (exists.quantity || item.quantity))
+					return true;
+			}
+
 			let nonEqItems = this.items.filter(f => !f.eq).length;
 			return (nonEqItems < this.inventorySize);
 		} return true;
