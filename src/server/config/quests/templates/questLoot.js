@@ -14,8 +14,13 @@ module.exports = {
 			if (this.slot instanceof Array) {
 				if (this.slot.some(s => !slotNames.includes(s)))
 					this.slot = null;
-			} else if (!slotNames.some(s => (s === this.slot)))
-				this.slot = null;
+			} else {
+				//Single slot quests are always regular quality
+				this.quality = 0;
+				
+				if (!slotNames.some(s => (s === this.slot)))
+					this.slot = null;
+			}
 		}
 
 		if (!this.slot) {
