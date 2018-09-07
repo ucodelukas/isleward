@@ -362,7 +362,7 @@ define([
 				let o = objects[i];
 
 				let onPos = tiles.some(function (t) {
-					return ((t.x === o.x) && (t.y === o.y));
+					return (!(t.x !== o.x || t.y !== o.y));
 				});
 				if (!onPos)
 					continue;

@@ -42,6 +42,9 @@ define([
 				});
 			}
 
+			if (obj.sprite && !obj.sprite.visible)
+				return;
+
 			let color = this.color;
 			if (msg[0] === '*')
 				color = 0xffeb38;
