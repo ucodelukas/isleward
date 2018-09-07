@@ -577,6 +577,9 @@ module.exports = {
 
 					if ((reserve) && (reserve.percentage))
 						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+
+					//Make sure to remove the buff from party members
+					s.updateInactive();
 				}
 			}, this);
 
