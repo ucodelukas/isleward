@@ -220,8 +220,8 @@ module.exports = {
 		if (zone !== 'fjolarok')
 			return;
 
-		list.push(this.relativeFolderName + '/maps/fjolarok/events/halloween.js');
-		list.push(this.relativeFolderName + '/maps/fjolarok/events/halloweenBoss.js');
+		list.push('../' + this.relativeFolderName + '/maps/fjolarok/events/halloween.js');
+		list.push('../' + this.relativeFolderName + '/maps/fjolarok/events/halloweenBoss.js');
 	},
 
 	onAfterGetZone: function (zone, config) {

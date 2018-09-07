@@ -2,8 +2,9 @@ module.exports = {
 	name: 'Beware Lord Squash',
 	description: 'Lord Squash haunts the island. Stop him in the name of the Pumpkin Sailor.',
 	distance: -1,
-	cron: '0 */2 1-31 10 *',
-	disabled: true,
+	durationEvent: true,
+	cron: '* * 1-31 9 *',
+	disabled: false,
 
 	events: {
 
