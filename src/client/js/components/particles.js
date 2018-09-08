@@ -19,6 +19,10 @@ define([
 			this.emitter = renderer.buildEmitter(this.blueprint);
 		},
 
+		setVisible: function (visible) {
+			this.emitter.emit = visible;
+		},
+
 		update: function () {
 			if (this.ttl !== null) {
 				this.ttl--;
