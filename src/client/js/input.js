@@ -127,6 +127,13 @@ define([
 						this.keys[key] = 2;
 					else {
 						this.keys[key] = 1;
+						let keyEvent = {
+							key: key,
+							consumed: false
+						};
+						events.emit('onUiKeyDown', keyEvent);
+						if (!keyEvent.consumed)
+							events.emit('onCanvasKeyDown', keyEvent);
 						events.emit('onKeyDown', key);
 					}
 

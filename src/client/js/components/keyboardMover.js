@@ -1,11 +1,13 @@
 define([
 	'js/input',
 	'js/system/client',
-	'js/misc/physics'
+	'js/misc/physics',
+	'js/system/events'
 ], function (
 	input,
 	client,
-	physics
+	physics,
+	events
 ) {
 	return {
 		type: 'keyboardMover',
@@ -17,6 +19,10 @@ define([
 			y: 0
 		},
 
+		init: function () {
+			events.on('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
+		},
+
 		update: function () {
 			if (this.obj.dead)
 				return;
@@ -24,7 +30,16 @@ define([
 			if (this.obj.moveAnimation)
 				this.obj.pather.clearPath();
 
-			if (input.isKeyDown('esc')) {
+			if (this.moveCd > 0) {
+				this.moveCd--;
+				return;
+			}
+
+			this.keyMove();
+		},
+
+		onCanvasKeyDown: function (keyEvent) {
+			if (keyEvent.key === 'esc') {
 				client.request({
 					cpn: 'player',
 					method: 'queueAction',
@@ -34,13 +49,6 @@ define([
 					}
 				});
 			}
-
-			if (this.moveCd > 0) {
-				this.moveCd--;
-				return;
-			}
-
-			this.keyMove();
 		},
 
 		bump: function (dx, dy) {

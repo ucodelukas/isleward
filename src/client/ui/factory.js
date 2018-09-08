@@ -13,7 +13,7 @@ define([
 				this.root = root + '/';
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
-			events.on('onKeyDown', this.onKeyDown.bind(this));
+			events.on('onUiKeyDown', this.onUiKeyDown.bind(this));
 			events.on('onResize', this.onResize.bind(this));
 		},
 		onEnterGame: function () {
@@ -88,8 +88,10 @@ define([
 			}, this);
 		},
 
-		onKeyDown: function (key) {
-			if (key === 'esc') {
+		onUiKeyDown: function (keyEvent) {
+			if (keyEvent.key === 'esc') {
+				keyEvent.consumed = true;
+
 				this.uis.forEach(function (u) {
 					if (!u.modal)
 						return;
@@ -98,7 +100,7 @@ define([
 				});
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
-			} else if (['o', 'j', 'h', 'i'].indexOf(key) > -1)
+			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
 				$('.uiOverlay').hide();
 		},
 
