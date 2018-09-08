@@ -90,12 +90,11 @@ define([
 
 		onUiKeyDown: function (keyEvent) {
 			if (keyEvent.key === 'esc') {
-				keyEvent.consumed = true;
-
 				this.uis.forEach(function (u) {
-					if (!u.modal)
+					if (!u.modal || !u.shown)
 						return;
 
+					keyEvent.consumed = true;
 					u.hide();
 				});
 				$('.uiOverlay').hide();
