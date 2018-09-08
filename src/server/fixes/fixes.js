@@ -15,7 +15,8 @@ module.exports = {
 	},
 
 	fixCustomChannels: function (customChannels) {
-		customChannels = customChannels.filter(c => c.length <= 15);
+		customChannels = customChannels
+			.filter(c => c.length <= 15);
 	},
 
 	fixStash: function (stash) {

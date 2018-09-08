@@ -30,6 +30,7 @@ module.exports = {
 	save: function () {
 		return {
 			type: 'social',
+			customChannels: this.customChannels,
 			muted: this.muted
 		};
 	},
