@@ -307,6 +307,8 @@ module.exports = {
 		let eLen = effects.length;
 		for (let j = 0; j < eLen; j++) {
 			let effect = effects[j];
+			if (!effect.events)
+				continue;
 
 			let effectEvent = effect.events.onConsumeItem;
 			if (!effectEvent)
@@ -536,9 +538,10 @@ module.exports = {
 						statGenerator.generate(item);
 					} else {
 						let effectUrl = itemEffects.get(e.type);
-						let effectModule = require('../' + effectUrl);
-
-						e.events = effectModule.events;
+						try {
+							let effectModule = require('../' + effectUrl);
+							e.events = effectModule.events;
+						} catch (error) {}
 					}
 				});
 			}
@@ -812,11 +815,11 @@ module.exports = {
 					e.events = mtxModule.events;
 				} else if (e.type) {
 					let effectUrl = itemEffects.get(e.type);
-					let effectModule = require('../' + effectUrl);
-
-					e.text = effectModule.events.onGetText(item, e);
-
-					e.events = effectModule.events;
+					try {
+						let effectModule = require('../' + effectUrl);
+						e.text = effectModule.events.onGetText(item, e);
+						e.events = effectModule.events;
+					} catch (error) {}
 				}
 			});
 		}

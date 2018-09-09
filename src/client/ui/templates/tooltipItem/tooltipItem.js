@@ -285,7 +285,7 @@ define([
 
 			this.tooltip.find('.worth').html(item.worthText ? ('<br />value: ' + item.worthText) : '');
 
-			if ((item.effects) && (item.type !== 'mtx')) {
+			if (item.effects && item.effects[0].text && item.type !== 'mtx') {
 				let htmlEffects = '';
 
 				item.effects.forEach(function (e, i) {

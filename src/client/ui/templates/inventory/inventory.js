@@ -312,7 +312,9 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type === 'mtx')
 				config.push(menuItems.activate);
-			else if (item.type === 'toy' || item.type === 'consumable') {
+			else if (item.type === 'toy' || item.type === 'consumable' || item.useText) {
+				if (item.useText)
+					menuItems.use.text = item.useText;
 				config.push(menuItems.use);
 				if (!item.has('quickSlot'))
 					config.push(menuItems.quickSlot);

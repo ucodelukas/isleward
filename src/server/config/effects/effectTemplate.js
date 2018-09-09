@@ -12,8 +12,8 @@ module.exports = {
 			values[p] = value;
 		}
 
-		if (!this.expire)
-			this.expire = (+new Date()) + (this.ttl * 350);
+		if (!values.expire)
+			values.expire = (+new Date()) + (this.ttl * 350);
 
 		return values;
 	},

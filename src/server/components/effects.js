@@ -38,7 +38,7 @@ module.exports = {
 		let e = {
 			type: 'effects',
 			effects: this.effects
-				.map(f => f.save())
+				.map(f => f.save ? f.save() : f)
 				.filter(f => !!f)
 		};
 
@@ -222,6 +222,10 @@ module.exports = {
 					effect.destroy();
 				this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
 				effects.splice(i, 1);
+
+				if (effect.destroy)
+					effect.destroy();
+
 				return;
 			}
 		}
@@ -234,7 +238,11 @@ module.exports = {
 			if (effect.type === effectName) {
 				this.syncRemove(effect.id, effect.type, noMsg || effects.noMsg);
 				effects.splice(i, 1);
-				return;
+
+				if (effect.destroy)
+					effect.destroy();
+				
+				return effect;
 			}
 		}
 	},
@@ -252,7 +260,7 @@ module.exports = {
 				continue;
 			}
 
-			if (e.ttl <= 0)
+			if (e.ttl === 0)
 				continue;
 			let events = e.events;
 			if (!events)

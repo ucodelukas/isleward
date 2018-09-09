@@ -219,14 +219,24 @@ module.exports = {
 			return;
 
 		if (q.action === 'move') {
+			let maxDistance = 1;
 			if ((this.actionQueue[0]) && (this.actionQueue[0].action === 'move')) {
-				let sprintChance = this.stats.values.sprintChance || 0;
+				let moveEvent = {
+					sprintChance: this.stats.values.sprintChance || 0
+				};
+				this.fireEvent('onBeforeTryMove', moveEvent);
+
 				let physics = this.instance.physics;
-				if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
-					q = this.dequeue();
-					q.isDouble = true;
-				}
+				let sprintChance = moveEvent.sprintChance;				
+				do {
+					if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
+						q = this.dequeue();
+						maxDistance++;
+					}
+					sprintChance -= 100;
+				} while (sprintChance > 0 && this.actionQueue.length > 0);
 			}
+			q.maxDistance = maxDistance;
 			let success = this.performMove(q);
 			if (!success) 
 				this.clearQueue();
@@ -255,7 +265,7 @@ module.exports = {
 				return true;
 			}
 
-			let maxDistance = action.isDouble ? 2 : 1;
+			let maxDistance = action.maxDistance || 1;
 
 			let deltaX = Math.abs(this.x - data.x);
 			let deltaY = Math.abs(this.y - data.y);
