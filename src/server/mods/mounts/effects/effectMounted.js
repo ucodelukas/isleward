@@ -10,8 +10,8 @@ module.exports = {
 		this.oldCell = obj.cell;
 		this.oldSheetName = obj.sheetName;
 
-		obj.cell = 35;
-		obj.sheetName = 'mobs';
+		obj.cell = this.cell;
+		obj.sheetName = this.sheetName;
 
 		let syncer = obj.syncer;
 		syncer.set(false, null, 'cell', obj.cell);

@@ -5,7 +5,6 @@ Example of a mount:
 	type: 'mount',
 	quality: 2,
 	noDrop: true,
-	noDestroy: true,
 	noSalvage: true,
 	cdMax: 10,
 	sprite: [0, 9],
@@ -13,10 +12,10 @@ Example of a mount:
 	useText: 'mount',
 	description: 'Stout, dependable and at least faster than you',
 	effects: [{
-		type: 'mount',
+		type: 'mounted',
 		rolls: {
 			speed: 150,
-			cell: 5,
+			cell: 0,
 			sheetName: 'mobs'
 		}
 	}]
@@ -49,10 +48,11 @@ module.exports = {
 				return;
 		}
 
-		let builtEffect = obj.effects.addEffect({
-			type: 'mounted',
+		let effectOptions = extend({ type: 'mounted',
 			ttl: -1
-		});
+		}, item.effects[0].rolls);
+
+		let builtEffect = obj.effects.addEffect(effectOptions);
 		builtEffect.source = item;
 
 		item.useText = 'unmount';
@@ -60,7 +60,7 @@ module.exports = {
 	},
 
 	onBeforeGetEffect: function (result) {
-		if (result.type.toLowerCase() === 'mounted')
+		if (result.type.toLowerCase() === 'mounted') 
 			result.url = `${this.relativeFolderName}/effects/effectMounted.js`;
 	}
 };
