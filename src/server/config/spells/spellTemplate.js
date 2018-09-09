@@ -85,7 +85,7 @@ module.exports = {
 		if ((Math.random() * 100) < this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'])
 			cd.cd = 1;
 
-		this.obj.fireEvent('beforeSetSpellCooldown', cd);
+		this.obj.fireEvent('beforeSetSpellCooldown', cd, this);
 
 		this.cd = cd.cd;
 
