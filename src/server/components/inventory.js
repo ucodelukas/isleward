@@ -738,7 +738,7 @@ module.exports = {
 			let items = this.items;
 			let iLen = items.length;
 
-			if (!this.hasSpace()) {
+			if (!this.hasSpace(item)) {
 				if (!hideMessage) {
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
@@ -979,11 +979,10 @@ module.exports = {
 				items.splice(i, 1);
 				i--;
 				iLen--;
-			} else
-				return false;
+			}
 		}
 
-		return true;
+		return !iLen;
 	},
 
 	fireEvent: function (event, args) {

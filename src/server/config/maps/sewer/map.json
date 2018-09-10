@@ -657,13 +657,42 @@
          "name":"hiddenRooms",
          "objects":[
                 {
-                 "height":136,
-                 "id":867,
+                 "height":0,
+                 "id":890,
                  "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":136,
+                         "y":0
+                        }, 
+                        {
+                         "x":136,
+                         "y":136
+                        }, 
+                        {
+                         "x":0,
+                         "y":136
+                        }, 
+                        {
+                         "x":0,
+                         "y":0
+                        }],
+                 "properties":
+                    {
+                     "fog":"1"
+                    },
+                 "propertytypes":
+                    {
+                     "fog":"string"
+                    },
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":136,
+                 "width":0,
                  "x":136,
                  "y":80
                 }],
@@ -1076,7 +1105,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":889,
+ "nextobjectid":891,
  "orientation":"orthogonal",
  "properties":
     {
