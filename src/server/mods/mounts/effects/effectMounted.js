@@ -39,6 +39,14 @@ module.exports = {
 	events: {
 		onBeforeTryMove: function (moveEvent) {
 			moveEvent.sprintChance = 200;
+		},
+
+		beforeCastSpell: function (castEvent) {
+			this.destroyed = true;
+		},
+
+		beforeTakeDamage: function (dmgEvent) {
+			this.destroyed = true;
 		}
 	}
 };
