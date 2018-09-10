@@ -154,7 +154,7 @@ module.exports = {
 
 		if (isFish) {
 			let itemChance = 1 + this.obj.stats.values.fishItems;
-			if (~~(Math.random() * 100) < itemChance) {
+			if (~~(Math.random() * 500) < itemChance) {
 				gatherResult.items = [{
 					name: 'Cerulean Pearl',
 					material: true,
