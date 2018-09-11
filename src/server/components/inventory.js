@@ -79,47 +79,48 @@ module.exports = {
 		if (!self)
 			return null;
 
-		let reputation = this.obj.reputation;
-
 		return {
 			type: 'inventory',
-			items: this.items
-				.map(function (i) {
-					let item = extend({}, i);
-
-					if (item.effects) {
-						item.effects = item.effects.map(e => ({
-							factionId: e.factionId,
-							text: e.text,
-							properties: e.properties,
-							mtx: e.mtx,
-							type: e.type,
-							rolls: e.rolls
-						}));
-					}
-
-					if (item.factions) {
-						item.factions = item.factions.map(function (f) {
-							let faction = reputation.getBlueprint(f.id);
-							let factionTier = reputation.getTier(f.id);
-
-							let noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
-
-							return {
-								id: f.id,
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-
-					return item;
-				})
+			items: this.items.map(this.simplifyItem)
 		};
+	},
+
+	simplifyItem: function (item) {
+		let result = extend({}, item);
+
+		if (result.effects) {
+			result.effects = result.effects.map(e => ({
+				factionId: e.factionId,
+				text: e.text,
+				properties: e.properties,
+				mtx: e.mtx,
+				type: e.type,
+				rolls: e.rolls
+			}));
+		}
+
+		if (result.factions) {
+			let reputation = this.obj.reputation;
+
+			result.factions = result.factions.map(function (f) {
+				let faction = reputation.getBlueprint(f.id);
+				let factionTier = reputation.getTier(f.id);
+
+				let noEquip = null;
+				if (factionTier < f.tier)
+					noEquip = true;
+
+				return {
+					id: f.id,
+					name: faction.name,
+					tier: f.tier,
+					tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+					noEquip: noEquip
+				};
+			}, this);
+		}
+
+		return result;
 	},
 
 	update: function () {
@@ -837,39 +838,8 @@ module.exports = {
 				itemId: item.id,
 				slot: item.quickSlot
 			});
-		} else if (!item.effects)
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
-		else {
-			let result = extend({}, item);
-			result.effects = result.effects.map(e => ({
-				factionId: e.factionId,
-				text: e.text,
-				properties: e.properties
-			}));
-
-			let reputation = this.obj.reputation;
-
-			//Don't do this check if we don't have a reputation cpn. That means this is most likely a bag
-			if ((reputation) && (result.factions)) {
-				result.factions = result.factions.map(function (f) {
-					let faction = reputation.getBlueprint(f.id);
-					let factionTier = reputation.getTier(f.id);
-
-					let noEquip = null;
-					if (factionTier < f.tier)
-						noEquip = true;
-
-					return {
-						name: faction.name,
-						tier: f.tier,
-						tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-						noEquip: noEquip
-					};
-				}, this);
-			}
-
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', result, true);
-		}
+		} else 
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
 
 		if (!hideMessage) {
 			if (fromMob)

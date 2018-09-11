@@ -50,10 +50,13 @@ module.exports = {
 			itemId = itemId.itemId;
 		}
 
-		let item = this.obj.inventory.findItem(itemId);
+		let obj = this.obj;
+		let inventory = obj.inventory;
+
+		let item = inventory.findItem(itemId);
 		if (!item)
 			return;
-		else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!this.obj.inventory.canEquipItem(item))) {
+		else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!inventory.canEquipItem(item))) {
 			item.eq = false;
 			return;
 		}
@@ -67,7 +70,7 @@ module.exports = {
 			slot = 'oneHanded';
 		} else if (slot === 'offHand') {
 			if (this.eq.has('oneHanded')) {
-				let oneHandedEq = this.obj.inventory.findItem(this.eq.oneHanded);
+				let oneHandedEq = inventory.findItem(this.eq.oneHanded);
 				if (oneHandedEq.slot === 'twoHanded')
 					this.unequip(this.eq.oneHanded, true);
 			}
@@ -77,22 +80,22 @@ module.exports = {
 			success: true,
 			item: item
 		};
-		this.obj.fireEvent('beforeEquipItem', equipMsg);
+		obj.fireEvent('beforeEquipItem', equipMsg);
 		if (!equipMsg.success) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
+			obj.instance.syncer.queue('onGetMessages', {
+				id: obj.id,
 				messages: [{
 					class: 'color-redA',
 					message: equipMsg.msg || 'you cannot equip that item',
 					type: 'info'
 				}]
-			}, [this.obj.serverId]);
+			}, [obj.serverId]);
 
 			return;
 		}
 
 		delete item.pos;
-		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 
 		if (slot === 'finger') {
 			let f1 = (this.eq.has('finger-1'));
@@ -117,77 +120,50 @@ module.exports = {
 		for (let s in stats) {
 			let val = stats[s];
 
-			this.obj.stats.addStat(s, val);
+			obj.stats.addStat(s, val);
 		}
 
 		(item.implicitStats || []).forEach(function (s) {
-			this.obj.stats.addStat(s.stat, s.value);
+			obj.stats.addStat(s.stat, s.value);
 		}, this);
 
 		item.eq = true;
 		this.eq[slot] = itemId;
 		item.equipSlot = slot;
 
-		this.obj.spellbook.calcDps();
+		obj.spellbook.calcDps();
 
-		if ((!this.obj.mob) || (item.ability)) {
+		if ((!obj.mob) || (item.ability)) {
 			if (item.spell)
-				this.obj.inventory.learnAbility(itemId, item.runeSlot);
-			else {
-				let result = item;
-				if (item.effects) {
-					result = extend({}, item);
-					result.effects = result.effects.map(e => ({
-						factionId: e.factionId,
-						text: e.text,
-						properties: e.properties
-					}));
-					let reputation = this.obj.reputation;
-
-					if (result.factions) {
-						result.factions = result.factions.map(function (f) {
-							let faction = reputation.getBlueprint(f.id);
-							let factionTier = reputation.getTier(f.id);
-
-							let noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
-
-							return {
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-				}
-
-				this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
-			}
+				inventory.learnAbility(itemId, item.runeSlot);
+			else
+				obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		}
 
-		this.obj.fireEvent('afterEquipItem', item);
+		obj.fireEvent('afterEquipItem', item);
 	},
 	unequip: function (itemId, ignoreSpaceCheck) {
 		let item = itemId;
 		if (typeof (itemId) === 'object')
 			itemId = itemId.itemId;
 
+		let obj = this.obj;
+		let inventory = obj.inventory;
+
 		if (typeof(item) !== 'object' || !item.has('id'))
-			item = this.obj.inventory.findItem(itemId);
+			item = inventory.findItem(itemId);
 
 		if (!item)
 			return;
-		else if (!ignoreSpaceCheck && !this.obj.inventory.hasSpace()) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
+		else if (!ignoreSpaceCheck && !inventory.hasSpace()) {
+			obj.instance.syncer.queue('onGetMessages', {
+				id: obj.id,
 				messages: [{
 					class: 'color-redA',
 					message: 'You do not have room in your inventory to unequip that item',
 					type: 'info'
 				}]
-			}, [this.obj.serverId]);
+			}, [obj.serverId]);
 
 			return;
 		}
@@ -201,53 +177,24 @@ module.exports = {
 		for (let s in stats) {
 			let val = stats[s];
 
-			this.obj.stats.addStat(s, -val);
+			obj.stats.addStat(s, -val);
 		}
 
 		(item.implicitStats || []).forEach(function (s) {
-			this.obj.stats.addStat(s.stat, -s.value);
+			obj.stats.addStat(s.stat, -s.value);
 		}, this);
 
-		this.obj.inventory.setItemPosition(itemId);
+		inventory.setItemPosition(itemId);
 
 		if (item.spell) {
 			item.eq = true;
-			this.obj.inventory.unlearnAbility(itemId, item.runeSlot);
-		} else if (!item.effects)
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-		else {
-			let result = extend({}, item);
-			result.effects = result.effects.map(e => ({
-				factionId: e.factionId,
-				text: e.text,
-				properties: e.properties
-			}));
-			let reputation = this.obj.reputation;
+			inventory.unlearnAbility(itemId, item.runeSlot);
+		} else
+			obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 
-			if (result.factions) {
-				result.factions = result.factions.map(function (f) {
-					let faction = reputation.getBlueprint(f.id);
-					let factionTier = reputation.getTier(f.id);
+		obj.spellbook.calcDps();
 
-					let noEquip = null;
-					if (factionTier < f.tier)
-						noEquip = true;
-
-					return {
-						name: faction.name,
-						tier: f.tier,
-						tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-						noEquip: noEquip
-					};
-				}, this);
-			}
-
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', result);
-		}
-
-		this.obj.spellbook.calcDps();
-
-		this.obj.fireEvent('afterUnequipItem', item);
+		obj.fireEvent('afterUnequipItem', item);
 
 		this.unequipAttrRqrGear();
 	},
@@ -378,5 +325,25 @@ module.exports = {
 				}, [this.obj.serverId]);
 			}
 		}, this);
+	},
+
+	inspect: function (msg) {
+		const targetPlayer = this.obj.instance.objects.find(o => o.id === msg.playerId);
+		if (!targetPlayer || !targetPlayer.player)
+			return;
+
+		const targetInv = targetPlayer.inventory;
+		const targetEq = targetPlayer.equipment.eq;
+		const targetStats = targetPlayer.stats.values;
+
+		const mappedEq = Object.keys(targetEq).map(m => targetInv.simplifyItem(targetInv.findItem(targetEq[m])));
+		const mappedStats = extend({}, targetStats);
+
+		let result = {
+			equipment: mappedEq,
+			stats: mappedStats
+		};
+
+		this.obj.instance.syncer.queue('onInspectTarget', result, [this.obj.serverId]);
 	}
 };
