@@ -48,55 +48,7 @@ module.exports = {
 
 		let reputation = requestedBy.reputation;
 
-		let result = list.items
-			.map(function (i) {
-				let item = extend({}, i);
-
-				if (item.effects) {
-					item.stats = {
-						stats: '???'
-					};
-					item.quality = 0;
-					item.name = item.type;
-
-					item.effects = item.effects
-						.map(function (e) {
-							if (e.factionId) {
-								return {
-									factionId: e.factionId,
-									text: e.text,
-									properties: e.properties
-								};
-							} 
-							let effectUrl = itemEffects.get(e.type);
-							let effectModule = require('../../' + effectUrl);
-
-							return {
-								text: effectModule.events.onGetText(item)
-							};
-						});
-				}
-
-				if (item.factions) {
-					item.factions = item.factions.map(function (f) {
-						let faction = reputation.getBlueprint(f.id);
-						let factionTier = reputation.getTier(f.id);
-
-						let noEquip = null;
-						if (factionTier < f.tier)
-							noEquip = true;
-
-						return {
-							name: faction.name,
-							tier: f.tier,
-							tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-							noEquip: noEquip
-						};
-					}, this);
-				}
-
-				return item;
-			});
+		let result = list.items.map(m => requestedBy.inventory.simplifyItem(m));
 
 		return result;
 	},

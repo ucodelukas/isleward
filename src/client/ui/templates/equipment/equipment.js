@@ -24,9 +24,13 @@ define([
 		hoverCompare: null,
 		shiftDown: false,
 
+		isInspecting: false,
+
 		postRender: function () {
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
+
+			this.onEvent('onInspectTarget', this.onInspectTarget.bind(this));
 
 			this.onEvent('onShowEquipment', this.toggle.bind(this));
 
@@ -36,8 +40,13 @@ define([
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
+		beforeHide: function () {
+			this.isInspecting = false;
+		},
+
 		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
+			this.isInspecting = false;
 
 			if (this.shown) {
 				this.find('.itemList').hide();
@@ -79,7 +88,9 @@ define([
 
 		onGetItems: function (items) {
 			items = items || this.items;
-			this.items = items;
+
+			if (!this.isInspecting)
+				this.items = items;
 
 			if (!this.shown)
 				return;
@@ -154,6 +165,15 @@ define([
 						.on('mouseleave', this.onHoverItem.bind(this, null, null))
 						.on('click', this.buildSlot.bind(this, elSlot));
 				}, this);
+		},
+
+		onInspectTarget: function (result) {
+			this.isInspecting = true;
+
+			this.show();
+
+			this.onGetStats(result.stats);
+			this.onGetItems(result.items);
 		},
 
 		buildSlot: function (el) {
@@ -317,10 +337,10 @@ define([
 		},
 
 		onGetStats: function (stats) {
-			if (stats)
+			if (stats && !this.isInspecting)
 				this.stats = stats;
 
-			stats = this.stats;
+			stats = stats || this.stats;
 
 			if (!this.shown)
 				return;

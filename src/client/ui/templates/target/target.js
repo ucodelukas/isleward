@@ -38,8 +38,21 @@ define([
 			let target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
-			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies))
+			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies)) {
+				if (target.prophecies) {
+					let context = [
+						target.name,
+						'----------', {
+							text: 'inspect',
+							callback: this.onInspect.bind(this)
+						}
+					];
+
+					events.emit('onContextMenu', context, e.event);
+				}
+
 				return;
+			}
 
 			let context = [
 				target.name,
@@ -57,6 +70,16 @@ define([
 
 		onTalk: function () {
 			window.player.dialogue.talk(this.target);
+		},
+
+		onInspect: function () {
+			client.request({
+				cpn: 'equipment',
+				method: 'inspect',
+				data: {
+					playerId: this.target.id
+				}
+			});
 		},
 
 		onSetTarget: function (target, e) {

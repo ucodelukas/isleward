@@ -326,28 +326,7 @@ module.exports = {
 
 		this.obj.syncer.set(true, 'trade', 'sellList', {
 			markup: target.trade.markup.buy,
-			items: itemList
-				.map(function (i) {
-					if (i.factions) {
-						i.factions = i.factions.map(function (f) {
-							let faction = reputation.getBlueprint(f.id);
-							let factionTier = reputation.getTier(f.id);
-
-							let noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
-
-							return {
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-
-					return i;
-				})
+			items: itemList.map(i => this.obj.inventory.simplifyItem(i))
 		});
 	},
 
@@ -367,29 +346,7 @@ module.exports = {
 	getItems: function (requestedBy) {
 		let reputation = requestedBy.reputation;
 
-		let items = this.items.map(function (i) {
-			let item = extend({}, i);
-
-			if (item.factions) {
-				item.factions = item.factions.map(function (f) {
-					let faction = reputation.getBlueprint(f.id);
-					let factionTier = reputation.getTier(f.id);
-
-					let noEquip = null;
-					if (factionTier < f.tier)
-						noEquip = true;
-
-					return {
-						name: faction.name,
-						tier: f.tier,
-						tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-						noEquip: noEquip
-					};
-				}, this);
-			}
-
-			return item;
-		});
+		let items = this.items.map(i => requestedBy.inventory.simplifyItem(i));
 
 		return items;
 	},
