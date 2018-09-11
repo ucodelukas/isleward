@@ -79,8 +79,6 @@ module.exports = {
 		if (!self)
 			return null;
 
-		let reputation = this.obj.reputation;
-
 		return {
 			type: 'inventory',
 			items: this.items.map(this.simplifyItem)
@@ -102,6 +100,8 @@ module.exports = {
 		}
 
 		if (result.factions) {
+			let reputation = this.obj.reputation;
+
 			result.factions = result.factions.map(function (f) {
 				let faction = reputation.getBlueprint(f.id);
 				let factionTier = reputation.getTier(f.id);

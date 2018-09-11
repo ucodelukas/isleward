@@ -1,8 +1,10 @@
 define([
+	'js/system/client',
 	'js/system/events',
 	'html!ui/templates/target/template',
 	'css!ui/templates/target/styles'
 ], function (
+	client,
 	events,
 	template,
 	styles
@@ -40,7 +42,7 @@ define([
 			// target.player (only the logged-in player has a player component)
 			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies)) {
 				if (target.prophecies) {
-					let context = [
+					let inspectContext = [
 						target.name,
 						'----------', {
 							text: 'inspect',
@@ -48,13 +50,13 @@ define([
 						}
 					];
 
-					events.emit('onContextMenu', context, e.event);
+					events.emit('onContextMenu', inspectContext, e.event);
 				}
 
 				return;
 			}
 
-			let context = [
+			let talkContext = [
 				target.name,
 				'----------', {
 					text: 'talk',
@@ -62,7 +64,7 @@ define([
 				}
 			];
 
-			events.emit('onContextMenu', context, e.event);
+			events.emit('onContextMenu', talkContext, e.event);
 
 			e.event.preventDefault();
 			return false;
@@ -74,10 +76,14 @@ define([
 
 		onInspect: function () {
 			client.request({
-				cpn: 'equipment',
-				method: 'inspect',
+				cpn: 'player',
+				method: 'performAction',
 				data: {
-					playerId: this.target.id
+					cpn: 'equipment',
+					method: 'inspect',
+					data: {
+						playerId: this.target.id
+					}
 				}
 			});
 		},

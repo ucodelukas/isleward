@@ -173,7 +173,7 @@ define([
 			this.show();
 
 			this.onGetStats(result.stats);
-			this.onGetItems(result.items);
+			this.onGetItems(result.equipment);
 		},
 
 		buildSlot: function (el) {

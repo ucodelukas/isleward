@@ -1,7 +1,6 @@
 let generator = require('../../items/generator');
 let skins = require('../../config/skins');
 let factions = require('../../config/factions');
-let itemEffects = require('../../items/itemEffects');
 
 module.exports = {
 	baseItems: [],
@@ -45,8 +44,6 @@ module.exports = {
 			this.regenList(list);
 		} else if (list.level !== requestLevel)
 			this.regenList(list);
-
-		let reputation = requestedBy.reputation;
 
 		let result = list.items.map(m => requestedBy.inventory.simplifyItem(m));
 

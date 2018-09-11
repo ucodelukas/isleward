@@ -30,7 +30,7 @@ let clone = function (o) {
 		for (let i = 1; i < aLen; i++) 
 			cloneRecursive(arguments[i], o);
 	} catch (e) {
-		console.log(arguments[0]);
+		throw e;
 	}
 
 	return o;

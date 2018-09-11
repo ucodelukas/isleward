@@ -11,7 +11,7 @@ module.exports = {
 		this.lastTime = this.getTime();
 	},
 
-	isActive: function(c) {
+	isActive: function (c) {
 		let cron = c.cron.split(' ');
 		if (cron.length !== 5)
 			return false;

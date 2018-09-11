@@ -318,8 +318,6 @@ module.exports = {
 
 		this.target = target;
 
-		let reputation = this.obj.reputation;
-
 		let itemList = this.obj.inventory.items
 			.filter(i => ((i.worth > 0) && (!i.eq)));
 		itemList = extend([], itemList);
@@ -344,8 +342,6 @@ module.exports = {
 	},
 
 	getItems: function (requestedBy) {
-		let reputation = requestedBy.reputation;
-
 		let items = this.items.map(i => requestedBy.inventory.simplifyItem(i));
 
 		return items;

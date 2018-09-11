@@ -137,7 +137,7 @@ module.exports = {
 			if (item.spell)
 				inventory.learnAbility(itemId, item.runeSlot);
 			else
-				obj.syncer.setArray(true, 'inventory', 'getItems', result);
+				obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		}
 
 		obj.fireEvent('afterEquipItem', item);
@@ -328,26 +328,22 @@ module.exports = {
 	},
 
 	inspect: function (msg) {
-		const targetPlayer = this.obj.instance.objects.find(o => o.id === msg.id);
-		if (!targetPlayer)
+		const targetPlayer = this.obj.instance.objects.find(o => o.id === msg.playerId);
+		if (!targetPlayer || !targetPlayer.player)
 			return;
 
 		const targetInv = targetPlayer.inventory;
 		const targetEq = targetPlayer.equipment.eq;
 		const targetStats = targetPlayer.stats.values;
 
-		const mappedEq = Object.keys(targetEq).map(m => targetInv.simplifyItem(targetInv.find(m)));
+		const mappedEq = Object.keys(targetEq).map(m => targetInv.simplifyItem(targetInv.findItem(targetEq[m])));
 		const mappedStats = extend({}, targetStats);
-		Object.keys(mappedStats).forEach(m => {
-			if (m.indexOf('xp') > -1)
-				delete mappedStats[m];
-		});
 
 		let result = {
 			equipment: mappedEq,
 			stats: mappedStats
 		};
 
-		this.obj.syncer.queue('onInspectTarget', result, [this.obj.serverId]);
+		this.obj.instance.syncer.queue('onInspectTarget', result, [this.obj.serverId]);
 	}
 };
