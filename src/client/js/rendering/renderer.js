@@ -96,13 +96,8 @@ define([
 
 			let layers = this.layers;
 			Object.keys(layers).forEach(function (l) {
-				if (l === 'tileSprites') {
-					layers[l] = new pixi.Container();
-					layers[l].layer = 'tiles';
-				} else {
-					layers[l] = new pixi.Container();
-					layers[l].layer = l;
-				}
+				layers[l] = new pixi.Container();
+				layers[l].layer = (l === 'tileSprites') ? 'tiles' : l;
 
 				this.stage.addChild(layers[l]);
 			}, this);
@@ -152,22 +147,17 @@ define([
 		},
 
 		toggleScreen: function () {
-			let screenMode = 0;
-
 			let isFullscreen = (window.innerHeight === screen.height);
-			if (isFullscreen)
-				screenMode = 0;
-			else
-				screenMode = 1;
 
-			if (screenMode === 0) {
-				(document.cancelFullscreen || document.msCancelFullscreen || document.mozCancelFullscreen || document.webkitCancelFullScreen).call(document);
+			if (isFullscreen) {
+				let doc = document;
+				(doc.cancelFullscreen || doc.msCancelFullscreen || doc.mozCancelFullscreen || doc.webkitCancelFullScreen).call(doc);
 				return 'Windowed';
-			} else if (screenMode === 1) {
-				let el = $('body')[0];
-				(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
-				return 'Fullscreen';
-			}
+			} 
+
+			let el = $('body')[0];
+			(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
+			return 'Fullscreen';
 		},
 
 		buildTitleScreen: function () {
@@ -184,33 +174,26 @@ define([
 			let container = this.layers.tileSprites;
 
 			for (let i = 0; i < w; i++) {
+				let ii = i / 10;
 				for (let j = 0; j < h; j++) {
-					let ii = i / 10;
-					let alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
+					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
+
 					let tile = 5;
-					if (j < 7)
-						tile = 5;
-					else if (alpha < -0.2)
+					if (roll < -0.2)
 						tile = 3;
-					else if (alpha < 0.2)
+					else if (roll < 0.2)
 						tile = 4;
-					else if ((alpha < 0.5) && (j > 7))
+					else if (roll < 0.5 && j > 7)
 						tile = 53;
 
-					alpha = Math.random();
+					let alpha = mRandom();
 
-					if (tile === 5)
-						alpha *= 2;
-					else if (tile === 3)
-						alpha *= 1;
-					else if (tile === 4)
-						alpha *= 1;
-					else if (tile === 53)
+					if ([5, 53].indexOf(tile) > -1)
 						alpha *= 2;
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
-					if (Math.random() < 0.35) {
+					if (mRandom() < 0.35) {
 						tile = {
 							2: 7,
 							5: 6,
@@ -228,7 +211,7 @@ define([
 					sprite.width = scale;
 					sprite.height = scale;
 
-					if (Math.random() < 0.5) {
+					if (mRandom() < 0.5) {
 						sprite.position.x += scale;
 						sprite.scale.x = -scaleMult;
 					}
@@ -333,7 +316,7 @@ define([
 			tile.width = scale;
 			tile.height = scale;
 
-			if (Math.random() < 0.5) {
+			if (mRandom() < 0.5) {
 				tile.position.x += scale;
 				tile.scale.x = -scaleMult;
 			}
@@ -357,7 +340,7 @@ define([
 			tile.height = scale;
 
 			if (canFlip) {
-				if (Math.random() < 0.5) {
+				if (mRandom() < 0.5) {
 					tile.position.x += scale;
 					tile.scale.x = -scaleMult;
 				}
@@ -656,11 +639,8 @@ define([
 			events.emit('onTilesVisible', newVisible, true);
 			events.emit('onTilesVisible', newHidden, false);
 
-			if (addedSprite) {
-				container.children.sort(function (a, b) {
-					return (a.z - b.z);
-				});
-			}
+			if (addedSprite)
+				container.children.sort((a, b) => a.z - b.z);
 		},
 
 		update: function () {
@@ -851,9 +831,7 @@ define([
 		reorder: function (sprite) {
 			let mobLayer = this.layers.mobs;
 			let mobs = mobLayer.children;
-			mobs.sort(function (a, b) {
-				return (b.y - a.y);
-			});
+			mobs.sort((a, b) => b.y - a.y);
 		},
 
 		destroyObject: function (obj) {

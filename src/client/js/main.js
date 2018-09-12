@@ -45,18 +45,8 @@ define([
 		start: function () {
 			window.onfocus = this.onFocus.bind(this, true);
 			window.onblur = this.onFocus.bind(this, false);
-			$(window).on('contextmenu', function (e) {
-				let allowedList = ['txtUsername', 'txtPassword'];
 
-				let allowed = allowedList.some(function (item) {
-					return $(e.target).hasClass(item);
-				});
-
-				if (!allowed) {
-					e.preventDefault();
-					return false;
-				}
-			});
+			$(window).on('contextmenu', this.onContextMenu.bind(this));
 
 			objects.init();
 			renderer.init();
@@ -79,13 +69,21 @@ define([
 				input.resetKeys();
 		},
 
+		onContextMenu: function (e) {
+			const allowed = ['txtUsername', 'txtPassword'].some(s => $(e.target).hasClass(s));
+			if (!allowed) {
+				e.preventDefault();
+				return false;
+			}
+		},
+
 		render: function () {
 			numbers.render();
-
 			renderer.render();
 
 			requestAnimationFrame(this.render.bind(this));
 		},
+		
 		update: function () {
 			objects.update();
 			renderer.update();
