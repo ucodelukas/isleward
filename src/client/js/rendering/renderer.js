@@ -287,44 +287,7 @@ define([
 				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
-			}, this);
-		},
-
-		onGetMapCustomization: function (msg) {
-			if (!msg.collide) {
-				let children = this.layers.tiles.children;
-				let cLen = children.length;
-				let x = msg.x * scale;
-				let y = msg.y * scale;
-				for (let i = cLen - 1; i >= 0; i--) {
-					let c = children[i];
-					let cx = c.x;
-					if (c.scale.x < 0)
-						cx -= scale;
-					if ((cx === x) && (c.y === y)) {
-						c.parent.removeChild(c);
-						break;
-					}
-				}
-			}
-
-			let tile = new pixi.Sprite(this.getTexture('sprites', msg.tile));
-
-			tile.alpha = tileOpacity.map(msg.tile);
-			tile.position.x = msg.x * scale;
-			tile.position.y = msg.y * scale;
-			tile.width = scale;
-			tile.height = scale;
-
-			if (mRandom() < 0.5) {
-				tile.position.x += scale;
-				tile.scale.x = -scaleMult;
-			}
-
-			this.layers.tiles.addChild(tile);
-
-			physics.collisionMap[msg.x][msg.y] = msg.collide;
-			physics.graph.grid[msg.x][msg.y] = !msg.collide;
+			});
 		},
 
 		buildTile: function (c, i, j) {
@@ -339,11 +302,9 @@ define([
 			tile.width = scale;
 			tile.height = scale;
 
-			if (canFlip) {
-				if (mRandom() < 0.5) {
-					tile.position.x += scale;
-					tile.scale.x = -scaleMult;
-				}
+			if (canFlip && mRandom() < 0.5) {
+				tile.position.x += scale;
+				tile.scale.x = -scaleMult;
 			}
 
 			return tile;
@@ -358,11 +319,12 @@ define([
 			let h = this.h = map[0].length;
 
 			for (let i = 0; i < w; i++) {
+				let row = map[i];
 				for (let j = 0; j < h; j++) {
-					if (!map[i][j].split)
-						map[i][j] += '';
+					if (!row[j].split)
+						row[j] += '';
 
-					map[i][j] = map[i][j].split(',');
+					row[j] = row[j].split(',');
 				}
 			}
 
@@ -399,7 +361,6 @@ define([
 			pos.y += 16;
 
 			let player = window.player;
-			
 			if (player) {
 				let px = player.x;
 				let py = player.y;
@@ -411,15 +372,14 @@ define([
 					if (!h.discoverable)
 						continue;
 					if (
-						(
-							(px < h.x) ||
-							(px >= h.x + h.width) ||
-							(py < h.y) ||
-							(py >= h.y + h.height)
-						) ||
-						(!physics.isInPolygon(px, py, h.area))
+						px < h.x ||
+						px >= h.x + h.width ||
+						py < h.y ||
+						py >= h.y + h.height ||
+						!physics.isInPolygon(px, py, h.area)
 					)
 						continue;
+
 					h.discovered = true;
 				}
 			}
@@ -443,7 +403,7 @@ define([
 			let sw = this.width;
 			let sh = this.height;
 
-			return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
+			return (!(x < sx || y < sy || x >= sx + sw || y >= sy + sh));
 		},
 
 		isHidden: function (x, y) {
@@ -461,10 +421,10 @@ define([
 				let h = hiddenRooms[i];
 
 				let outsideHider = (
-					(x < h.x) ||
-					(x >= h.x + h.width) ||
-					(y < h.y) ||
-					(y >= h.y + h.height)
+					x < h.x ||
+					x >= h.x + h.width ||
+					y < h.y ||
+					y >= h.y + h.height
 				);
 
 				if (outsideHider)
@@ -479,10 +439,10 @@ define([
 					return false;
 
 				outsideHider = (
-					(px < h.x) ||
-					(px >= h.x + h.width) ||
-					(py < h.y) ||
-					(py >= h.y + h.height)
+					px < h.x ||
+					px >= h.x + h.width ||
+					py < h.y ||
+					py >= h.y + h.height
 				);
 
 				if (outsideHider) {
@@ -650,7 +610,7 @@ define([
 				let deltaX = this.moveTo.x - this.pos.x;
 				let deltaY = this.moveTo.y - this.pos.y;
 
-				if ((deltaX !== 0) || (deltaY !== 0)) {
+				if (deltaX !== 0 || deltaY !== 0) {
 					let moveSpeed = this.moveSpeed;
 					let distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
@@ -669,8 +629,8 @@ define([
 					deltaX = (deltaX / distance) * moveSpeed;
 					deltaY = (deltaY / distance) * moveSpeed;
 
-					this.pos.x = this.pos.x + (deltaX);
-					this.pos.y = this.pos.y + (deltaY);
+					this.pos.x = this.pos.x + deltaX;
+					this.pos.y = this.pos.y + deltaY;
 				} else {
 					this.moveSpeed = 0;
 					this.moveTo = null;
@@ -681,7 +641,7 @@ define([
 				stage.y = -~~this.pos.y;
 
 				let halfScale = scale / 2;
-				if ((Math.abs(stage.x - this.lastUpdatePos.x) > halfScale) || (Math.abs(stage.y - this.lastUpdatePos.y) > halfScale))
+				if (Math.abs(stage.x - this.lastUpdatePos.x) > halfScale || Math.abs(stage.y - this.lastUpdatePos.y) > halfScale)
 					this.updateSprites();
 
 				events.emit('onSceneMove');
