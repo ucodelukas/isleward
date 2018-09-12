@@ -72,7 +72,7 @@ define([
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
 		onGetTemplate: function (options, template) {
-			let ui = _.create(uiBase, template);
+			let ui = $.extend(true, {}, uiBase, template);
 			ui.setOptions(options);
 			ui.render();
 			ui.el.data('ui', ui);
