@@ -14,10 +14,6 @@ define([
 
 		moveCd: 0,
 		moveCdMax: 8,
-		direction: {
-			x: 0,
-			y: 0
-		},
 
 		init: function () {
 			events.on('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
@@ -70,9 +66,6 @@ define([
 			if ((!delta.x) && (!delta.y))
 				return;
 
-			this.direction.x = delta.x;
-			this.direction.y = delta.y;
-
 			let newX = this.obj.pather.pathPos.x + delta.x;
 			let newY = this.obj.pather.pathPos.y + delta.y;
 
@@ -85,6 +78,7 @@ define([
 
 			this.addQueue(newX, newY);
 		},
+
 		addQueue: function (x, y) {
 			if (this.obj.moveAnimation)
 				return;

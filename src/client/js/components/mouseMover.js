@@ -41,24 +41,9 @@ define([
 			});
 		},
 
-		clearPath: function () {
-			this.path.forEach(function (p) {
-				if (p.sprite) {
-					renderer.destroyObject({
-						sprite: p.sprite,
-						layerName: 'effects'
-					});
-				}
-			});
-
-			this.path = [];
-		},
-
 		onUiHover: function (dunno, onUiHover) {
-			if (!this.sprite)
-				return;
-
-			this.sprite.visible = !onUiHover;
+			if (this.sprite)
+				this.sprite.visible = !onUiHover;
 		},
 
 		showPath: function (e) {
@@ -79,26 +64,6 @@ define([
 			this.sprite.x = (this.hoverTile.x * scale);
 			this.sprite.y = (this.hoverTile.y * scale);
 		},
-		queuePath: function (e) {
-			this.mouseDown = false;
-
-			if ((this.path.length === 0) || (e.down))
-				return;
-
-			client.request({
-				cpn: 'player',
-				method: 'moveList',
-				data: this.path.map(function (p) {
-					return {
-						x: p.x,
-						y: p.y
-					};
-				})
-			});
-
-			this.obj.pather.setPath(this.path);
-			this.path = [];
-		},
 
 		update: function () {
 			this.opacityCounter++;
@@ -109,8 +74,7 @@ define([
 
 		destroy: function () {
 			renderer.destroyObject({
-				sprite: this.sprite,
-				layerName: 'effects'
+				sprite: this.sprite
 			});
 		}
 	};

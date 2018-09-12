@@ -23,7 +23,6 @@ define([
 
 		maxChatLength: 255,
 
-		shiftDown: false,
 		hoverItem: null,
 
 		hoverFilter: false,

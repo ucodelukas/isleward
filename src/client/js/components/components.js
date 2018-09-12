@@ -18,7 +18,6 @@ let components = [
 	'stats',
 	'chest',
 	'effects',
-	'aggro',
 	'quests',
 	'events',
 	'resourceNode',
@@ -28,7 +27,6 @@ let components = [
 	'chatter',
 	'dialogue',
 	'trade',
-	'prophecies',
 	'reputation',
 	'serverActions',
 	'social',
@@ -50,7 +48,11 @@ define(components, function () {
 			if (type === 'lightpatch')
 				type = 'lightPatch';
 
-			return templates[type];
+			let template = templates[type] || {
+				type: type
+			};
+
+			return template;
 		}
 	};
 });

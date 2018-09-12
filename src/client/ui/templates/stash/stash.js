@@ -3,21 +3,21 @@ define([
 	'js/system/client',
 	'html!ui/templates/stash/template',
 	'css!ui/templates/stash/styles',
-	'html!ui/templates/inventory/templateItem'
+	'html!ui/templates/inventory/templateItem',
+	'js/input'
 ], function (
 	events,
 	client,
 	template,
 	styles,
-	tplItem
+	tplItem,
+	input
 ) {
 	return {
 		tpl: template,
 
 		centered: true,
 		hoverItem: null,
-
-		shiftDown: false,
 
 		items: [],
 
@@ -121,11 +121,8 @@ define([
 			}
 
 			let compare = null;
-			if (this.shiftDown) {
-				compare = window.player.inventory.items.find(function (i) {
-					return ((i.eq) && (i.slot === item.slot));
-				});
-			}
+			if (input.isKeyDown('shift', true))
+				compare = window.player.inventory.items.find(i => (i.eq && i.slot === item.slot));
 
 			events.emit('onShowItemTooltip', item, ttPos, compare);
 		},
@@ -235,19 +232,15 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'u')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHover();
-			} else if ((key === 'esc') && (this.shown))
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
+			else if (key === 'esc' && this.shown)
 				this.toggle();
 		},
+
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHover();
-			}
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
 	};
 });

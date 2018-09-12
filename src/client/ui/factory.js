@@ -72,7 +72,7 @@ define([
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
 		onGetTemplate: function (options, template) {
-			let ui = _.create(uiBase, template);
+			let ui = $.extend(true, {}, uiBase, template);
 			ui.setOptions(options);
 			ui.render();
 			ui.el.data('ui', ui);
@@ -101,6 +101,27 @@ define([
 				events.emit('onHideContextMenu');
 			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
 				$('.uiOverlay').hide();
+		},
+
+		preload: function () {
+			require([
+				'death',
+				'dialogue',
+				'equipment',
+				'events',
+				'hud',
+				'inventory',
+				'overlay',
+				'passives',
+				'quests',
+				'reputation',
+				'smithing',
+				'stash'
+			].map(m => 'ui/templates/' + m + '/' + m), this.afterPreload.bind(this));
+		},
+
+		afterPreload: function () {
+			this.build('characters', {});
 		},
 
 		update: function () {

@@ -8,20 +8,8 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
-	'ui/templates/inventory/inventory',
-	'ui/templates/equipment/equipment',
-	'ui/templates/stash/stash',
-	'ui/templates/hud/hud',
 	'ui/templates/online/online',
-	'ui/templates/quests/quests',
-	'ui/templates/events/events',
-	'ui/templates/dialogue/dialogue',
-	'ui/templates/smithing/smithing',
-	'ui/templates/overlay/overlay',
-	'ui/templates/tooltips/tooltips',
-	'ui/templates/reputation/reputation',
-	'ui/templates/death/death',
-	'ui/templates/passives/passives'
+	'ui/templates/tooltips/tooltips'
 ], function (
 	client,
 	uiFactory,
@@ -57,18 +45,8 @@ define([
 		start: function () {
 			window.onfocus = this.onFocus.bind(this, true);
 			window.onblur = this.onFocus.bind(this, false);
-			$(window).on('contextmenu', function (e) {
-				let allowedList = ['txtUsername', 'txtPassword'];
 
-				let allowed = allowedList.some(function (item) {
-					return $(e.target).hasClass(item);
-				});
-
-				if (!allowed) {
-					e.preventDefault();
-					return false;
-				}
-			});
+			$(window).on('contextmenu', this.onContextMenu.bind(this));
 
 			objects.init();
 			renderer.init();
@@ -81,6 +59,8 @@ define([
 
 			this.update();
 			this.render();
+
+			$('.loader-container').remove();
 		},
 
 		onFocus: function (hasFocus) {
@@ -91,13 +71,21 @@ define([
 				input.resetKeys();
 		},
 
+		onContextMenu: function (e) {
+			const allowed = ['txtUsername', 'txtPassword'].some(s => $(e.target).hasClass(s));
+			if (!allowed) {
+				e.preventDefault();
+				return false;
+			}
+		},
+
 		render: function () {
 			numbers.render();
-
 			renderer.render();
 
 			requestAnimationFrame(this.render.bind(this));
 		},
+		
 		update: function () {
 			objects.update();
 			renderer.update();

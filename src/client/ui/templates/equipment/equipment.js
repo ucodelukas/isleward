@@ -2,12 +2,14 @@ define([
 	'js/system/events',
 	'js/system/client',
 	'html!ui/templates/equipment/template',
-	'css!ui/templates/equipment/styles'
+	'css!ui/templates/equipment/styles',
+	'js/input'
 ], function (
 	events,
 	client,
 	template,
-	styles
+	styles,
+	input
 ) {
 	return {
 		tpl: template,
@@ -22,7 +24,6 @@ define([
 		hoverItem: null,
 		hoverEl: null,
 		hoverCompare: null,
-		shiftDown: false,
 
 		isInspecting: false,
 
@@ -64,18 +65,12 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'j')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
-			}
+			else if (key === 'shift' && this.hoverItem)
+				this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 		},
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHoverItem(this.hoverEl, this.hoverItem, null);
-			}
+			if (key === 'shift' && this.hoverItem)
+				this.onHoverItem(this.hoverEl, this.hoverItem, null);
 		},
 
 		onTabClick: function (e) {
@@ -329,7 +324,7 @@ define([
 					};
 				}
 
-				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare, false, this.shiftDown);
+				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare, false, input.isKeyDown('shift', true));
 			} else {
 				events.emit('onHideItemTooltip', this.hoverItem);
 				this.hoverItem = null;

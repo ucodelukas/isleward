@@ -96,13 +96,8 @@ define([
 
 			let layers = this.layers;
 			Object.keys(layers).forEach(function (l) {
-				if (l === 'tileSprites') {
-					layers[l] = new pixi.Container();
-					layers[l].layer = 'tiles';
-				} else {
-					layers[l] = new pixi.Container();
-					layers[l].layer = l;
-				}
+				layers[l] = new pixi.Container();
+				layers[l].layer = (l === 'tileSprites') ? 'tiles' : l;
 
 				this.stage.addChild(layers[l]);
 			}, this);
@@ -152,22 +147,17 @@ define([
 		},
 
 		toggleScreen: function () {
-			let screenMode = 0;
-
 			let isFullscreen = (window.innerHeight === screen.height);
-			if (isFullscreen)
-				screenMode = 0;
-			else
-				screenMode = 1;
 
-			if (screenMode === 0) {
-				(document.cancelFullscreen || document.msCancelFullscreen || document.mozCancelFullscreen || document.webkitCancelFullScreen).call(document);
+			if (isFullscreen) {
+				let doc = document;
+				(doc.cancelFullscreen || doc.msCancelFullscreen || doc.mozCancelFullscreen || doc.webkitCancelFullScreen).call(doc);
 				return 'Windowed';
-			} else if (screenMode === 1) {
-				let el = $('body')[0];
-				(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
-				return 'Fullscreen';
-			}
+			} 
+
+			let el = $('body')[0];
+			(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
+			return 'Fullscreen';
 		},
 
 		buildTitleScreen: function () {
@@ -184,33 +174,26 @@ define([
 			let container = this.layers.tileSprites;
 
 			for (let i = 0; i < w; i++) {
+				let ii = i / 10;
 				for (let j = 0; j < h; j++) {
-					let ii = i / 10;
-					let alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
+					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
+
 					let tile = 5;
-					if (j < 7)
-						tile = 5;
-					else if (alpha < -0.2)
+					if (roll < -0.2)
 						tile = 3;
-					else if (alpha < 0.2)
+					else if (roll < 0.2)
 						tile = 4;
-					else if ((alpha < 0.5) && (j > 7))
+					else if (roll < 0.5 && j > 7)
 						tile = 53;
 
-					alpha = Math.random();
+					let alpha = mRandom();
 
-					if (tile === 5)
-						alpha *= 2;
-					else if (tile === 3)
-						alpha *= 1;
-					else if (tile === 4)
-						alpha *= 1;
-					else if (tile === 53)
+					if ([5, 53].indexOf(tile) > -1)
 						alpha *= 2;
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
-					if (Math.random() < 0.35) {
+					if (mRandom() < 0.35) {
 						tile = {
 							2: 7,
 							5: 6,
@@ -228,7 +211,7 @@ define([
 					sprite.width = scale;
 					sprite.height = scale;
 
-					if (Math.random() < 0.5) {
+					if (mRandom() < 0.5) {
 						sprite.position.x += scale;
 						sprite.scale.x = -scaleMult;
 					}
@@ -304,44 +287,7 @@ define([
 				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
-			}, this);
-		},
-
-		onGetMapCustomization: function (msg) {
-			if (!msg.collide) {
-				let children = this.layers.tiles.children;
-				let cLen = children.length;
-				let x = msg.x * scale;
-				let y = msg.y * scale;
-				for (let i = cLen - 1; i >= 0; i--) {
-					let c = children[i];
-					let cx = c.x;
-					if (c.scale.x < 0)
-						cx -= scale;
-					if ((cx === x) && (c.y === y)) {
-						c.parent.removeChild(c);
-						break;
-					}
-				}
-			}
-
-			let tile = new pixi.Sprite(this.getTexture('sprites', msg.tile));
-
-			tile.alpha = tileOpacity.map(msg.tile);
-			tile.position.x = msg.x * scale;
-			tile.position.y = msg.y * scale;
-			tile.width = scale;
-			tile.height = scale;
-
-			if (Math.random() < 0.5) {
-				tile.position.x += scale;
-				tile.scale.x = -scaleMult;
-			}
-
-			this.layers.tiles.addChild(tile);
-
-			physics.collisionMap[msg.x][msg.y] = msg.collide;
-			physics.graph.grid[msg.x][msg.y] = !msg.collide;
+			});
 		},
 
 		buildTile: function (c, i, j) {
@@ -356,11 +302,9 @@ define([
 			tile.width = scale;
 			tile.height = scale;
 
-			if (canFlip) {
-				if (Math.random() < 0.5) {
-					tile.position.x += scale;
-					tile.scale.x = -scaleMult;
-				}
+			if (canFlip && mRandom() < 0.5) {
+				tile.position.x += scale;
+				tile.scale.x = -scaleMult;
 			}
 
 			return tile;
@@ -375,11 +319,12 @@ define([
 			let h = this.h = map[0].length;
 
 			for (let i = 0; i < w; i++) {
+				let row = map[i];
 				for (let j = 0; j < h; j++) {
-					if (!map[i][j].split)
-						map[i][j] += '';
+					if (!row[j].split)
+						row[j] += '';
 
-					map[i][j] = map[i][j].split(',');
+					row[j] = row[j].split(',');
 				}
 			}
 
@@ -416,7 +361,6 @@ define([
 			pos.y += 16;
 
 			let player = window.player;
-			
 			if (player) {
 				let px = player.x;
 				let py = player.y;
@@ -428,15 +372,14 @@ define([
 					if (!h.discoverable)
 						continue;
 					if (
-						(
-							(px < h.x) ||
-							(px >= h.x + h.width) ||
-							(py < h.y) ||
-							(py >= h.y + h.height)
-						) ||
-						(!physics.isInPolygon(px, py, h.area))
+						px < h.x ||
+						px >= h.x + h.width ||
+						py < h.y ||
+						py >= h.y + h.height ||
+						!physics.isInPolygon(px, py, h.area)
 					)
 						continue;
+
 					h.discovered = true;
 				}
 			}
@@ -460,7 +403,7 @@ define([
 			let sw = this.width;
 			let sh = this.height;
 
-			return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
+			return (!(x < sx || y < sy || x >= sx + sw || y >= sy + sh));
 		},
 
 		isHidden: function (x, y) {
@@ -478,10 +421,10 @@ define([
 				let h = hiddenRooms[i];
 
 				let outsideHider = (
-					(x < h.x) ||
-					(x >= h.x + h.width) ||
-					(y < h.y) ||
-					(y >= h.y + h.height)
+					x < h.x ||
+					x >= h.x + h.width ||
+					y < h.y ||
+					y >= h.y + h.height
 				);
 
 				if (outsideHider)
@@ -496,10 +439,10 @@ define([
 					return false;
 
 				outsideHider = (
-					(px < h.x) ||
-					(px >= h.x + h.width) ||
-					(py < h.y) ||
-					(py >= h.y + h.height)
+					px < h.x ||
+					px >= h.x + h.width ||
+					py < h.y ||
+					py >= h.y + h.height
 				);
 
 				if (outsideHider) {
@@ -656,11 +599,8 @@ define([
 			events.emit('onTilesVisible', newVisible, true);
 			events.emit('onTilesVisible', newHidden, false);
 
-			if (addedSprite) {
-				container.children.sort(function (a, b) {
-					return (a.z - b.z);
-				});
-			}
+			if (addedSprite)
+				container.children.sort((a, b) => a.z - b.z);
 		},
 
 		update: function () {
@@ -670,7 +610,7 @@ define([
 				let deltaX = this.moveTo.x - this.pos.x;
 				let deltaY = this.moveTo.y - this.pos.y;
 
-				if ((deltaX !== 0) || (deltaY !== 0)) {
+				if (deltaX !== 0 || deltaY !== 0) {
 					let moveSpeed = this.moveSpeed;
 					let distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
@@ -689,8 +629,8 @@ define([
 					deltaX = (deltaX / distance) * moveSpeed;
 					deltaY = (deltaY / distance) * moveSpeed;
 
-					this.pos.x = this.pos.x + (deltaX);
-					this.pos.y = this.pos.y + (deltaY);
+					this.pos.x = this.pos.x + deltaX;
+					this.pos.y = this.pos.y + deltaY;
 				} else {
 					this.moveSpeed = 0;
 					this.moveTo = null;
@@ -701,7 +641,7 @@ define([
 				stage.y = -~~this.pos.y;
 
 				let halfScale = scale / 2;
-				if ((Math.abs(stage.x - this.lastUpdatePos.x) > halfScale) || (Math.abs(stage.y - this.lastUpdatePos.y) > halfScale))
+				if (Math.abs(stage.x - this.lastUpdatePos.x) > halfScale || Math.abs(stage.y - this.lastUpdatePos.y) > halfScale)
 					this.updateSprites();
 
 				events.emit('onSceneMove');
@@ -795,12 +735,9 @@ define([
 		},
 
 		addFilter: function (sprite) {
-			let thickness = 16;
-			if (sprite.width > scale)
-				thickness = 8;
+			let thickness = (sprite.width > scale) ? 8 : 16;
 
 			let filter = new shaderOutline(this.renderer.width, this.renderer.height, thickness, '0xffffff');
-
 			if (!sprite.filters)
 				sprite.filters = [filter];
 			else
@@ -810,10 +747,8 @@ define([
 		},
 
 		removeFilter: function (sprite, filter) {
-			if (!sprite.filters)
-				return;
-
-			sprite.filters = null;
+			if (sprite.filters)
+				sprite.filters = null;
 		},
 
 		buildText: function (obj) {
@@ -836,8 +771,7 @@ define([
 		},
 
 		buildEmitter: function (config) {
-			let emitter = particles.buildEmitter(config);
-			return emitter;
+			return particles.buildEmitter(config);
 		},
 
 		destroyEmitter: function (emitter) {
@@ -849,17 +783,12 @@ define([
 		},
 
 		reorder: function (sprite) {
-			let mobLayer = this.layers.mobs;
-			let mobs = mobLayer.children;
-			mobs.sort(function (a, b) {
-				return (b.y - a.y);
-			});
+			this.layers.mobs.children.sort((a, b) => b.y - a.y);
 		},
 
 		destroyObject: function (obj) {
-			if (!obj.sprite.parent)
-				return;
-			obj.sprite.parent.removeChild(obj.sprite);
+			if (obj.sprite.parent)
+				obj.sprite.parent.removeChild(obj.sprite);
 		},
 
 		render: function () {

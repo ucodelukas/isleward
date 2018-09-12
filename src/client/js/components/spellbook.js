@@ -119,32 +119,9 @@ define([
 			events.emit('onSetTarget', this.target, null);
 		},
 
-		build: function (destroy) {
-			client.request({
-				cpn: 'player',
-				method: 'performAction',
-				data: {
-					instanceModule: 'customMap',
-					method: 'customize',
-					data: {
-						tile: 189,
-						direction: this.obj.keyboardMover.direction,
-						destroy: destroy
-					}
-				},
-				callback: renderer.onGetMapCustomization.bind(renderer)
-			});
-		},
-
 		onKeyDown: function (key) {
-			let handler = ({
-				b: this.build.bind(this),
-				n: this.build.bind(this, true),
-				tab: this.tabTarget.bind(this)
-			})[key];
-
-			if (handler) {
-				handler();
+			if (key === 'tab') {
+				this.tabTarget();
 				return;
 			} else if (isNaN(key))
 				return;
