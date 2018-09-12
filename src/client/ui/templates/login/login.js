@@ -70,7 +70,7 @@ define([
 			this.el.removeClass('disabled');
 
 			if (!res) {
-				uiFactory.build('characters', {});
+				uiFactory.preload();
 
 				$('.uiLoginExtra').remove();
 				this.el.remove();

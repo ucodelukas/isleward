@@ -103,6 +103,27 @@ define([
 				$('.uiOverlay').hide();
 		},
 
+		preload: function () {
+			require([
+				'death',
+				'dialogue',
+				'equipment',
+				'events',
+				'hud',
+				'inventory',
+				'overlay',
+				'passives',
+				'quests',
+				'reputation',
+				'smithing',
+				'stash'
+			].map(m => 'ui/templates/' + m + '/' + m), this.afterPreload.bind(this));
+		},
+
+		afterPreload: function () {
+			this.build('characters', {});
+		},
+
 		update: function () {
 			let uis = this.uis;
 			let uLen = uis.length;

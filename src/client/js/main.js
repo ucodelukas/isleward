@@ -8,20 +8,8 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
-	'ui/templates/inventory/inventory',
-	'ui/templates/equipment/equipment',
-	'ui/templates/stash/stash',
-	'ui/templates/hud/hud',
 	'ui/templates/online/online',
-	'ui/templates/quests/quests',
-	'ui/templates/events/events',
-	'ui/templates/dialogue/dialogue',
-	'ui/templates/smithing/smithing',
-	'ui/templates/overlay/overlay',
-	'ui/templates/tooltips/tooltips',
-	'ui/templates/reputation/reputation',
-	'ui/templates/death/death',
-	'ui/templates/passives/passives'
+	'ui/templates/tooltips/tooltips'
 ], function (
 	client,
 	uiFactory,

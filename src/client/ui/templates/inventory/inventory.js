@@ -4,7 +4,6 @@ define([
 	'html!ui/templates/inventory/template',
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
-	'html!ui/templates/inventory/templateTooltip',
 	'js/input'
 ], function (
 	events,
@@ -12,7 +11,6 @@ define([
 	template,
 	styles,
 	tplItem,
-	tplTooltip,
 	input
 ) {
 	return {
@@ -21,9 +19,6 @@ define([
 		centered: true,
 
 		items: [],
-
-		shiftDown: false,
-		ctrlDown: false,
 
 		dragItem: null,
 		dragEl: null,
@@ -143,7 +138,7 @@ define([
 			if (!msg.success)
 				return;
 
-			if (!this.ctrlDown)
+			if (!input.isKeyDown('ctrl', true))
 				return;
 
 			client.request({
@@ -398,7 +393,7 @@ define([
 			let delta = amount;
 			if (e)
 				delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
-			if (this.shiftDown)
+			if (input.isKeyDown('shift', true))
 				delta *= 10;
 			let elAmount = this.find('.split-box .amount');
 
@@ -468,7 +463,7 @@ define([
 				});
 
 				// check special cases for mismatched weapon/offhand scenarios (only valid when comparing)
-				if ((!compare) && (this.shiftDown)) {
+				if (!compare && input.isKeyDown('shift', true)) {
 					let equippedTwoHanded = this.items.find(function (i) {
 						return ((i.eq) && (i.slot === 'twoHanded'));
 					});
@@ -523,7 +518,7 @@ define([
 				}
 			}
 
-			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
+			events.emit('onShowItemTooltip', item, ttPos, compare, false, input.isKeyDown('shift', true));
 		},
 
 		onGetItems: function (items, rerender) {
@@ -626,20 +621,12 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'i')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHover();
-			} else if (key === 'ctrl')
-				this.ctrlDown = true;
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		},
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHover();
-			} else if (key === 'ctrl')
-				this.ctrlDown = false;
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
 	};
 });
