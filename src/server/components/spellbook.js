@@ -2,6 +2,7 @@ let spellTemplate = require('../config/spells/spellTemplate');
 let animations = require('../config/animations');
 let playerSpells = require('../config/spells');
 let playerSpellsConfig = require('../config/spellsConfig');
+let events = require('../misc/events');
 
 module.exports = {
 	type: 'spellbook',
@@ -43,8 +44,14 @@ module.exports = {
 		this.spells.forEach(function (s) {
 			let reserve = s.manaReserve;
 
-			if ((reserve) && (reserve.percentage) && (s.active))
-				this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+			if (reserve && reserve.percentage && s.active) {
+				let reserveEvent = {
+					spell: s.name,
+					reservePercent: reserve.percentage
+				};
+				this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
+				this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
+			}
 
 			s.die();
 		}, this);
@@ -203,11 +210,17 @@ module.exports = {
 		let exists = this.spells.spliceFirstWhere(s => (s.id === id));
 
 		if (exists) {
-			if ((exists.manaReserve) && (exists.active)) {
+			if (exists.manaReserve && exists.active) {
 				let reserve = exists.manaReserve;
 
-				if (reserve.percentage)
-					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+				if (reserve.percentage) {
+					let reserveEvent = {
+						spell: exists.name,
+						reservePercent: reserve.percentage
+					};
+					this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
+					this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
+				}
 			}
 
 			if (exists.unlearn)
@@ -319,14 +332,20 @@ module.exports = {
 			let reserve = spell.manaReserve;
 
 			if (reserve.percentage) {
+				let reserveEvent = {
+					spell: spell.name,
+					reservePercent: reserve.percentage
+				};
+				this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
+
 				if (!spell.active) {
 					if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
 						this.sendAnnouncement('Insufficient mana to cast spell');
 						success = false;
 					} else
-						this.obj.stats.addStat('manaReservePercent', reserve.percentage);
+						this.obj.stats.addStat('manaReservePercent', reserveEvent.reservePercent);
 				} else
-					this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+					this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
 			}
 		} else if (spell.has('range')) {
 			let distance = Math.max(Math.abs(action.target.x - this.obj.x), Math.abs(action.target.y - this.obj.y));
@@ -575,8 +594,14 @@ module.exports = {
 
 					let reserve = s.manaReserve;
 
-					if ((reserve) && (reserve.percentage))
-						this.obj.stats.addStat('manaReservePercent', -reserve.percentage);
+					if (reserve && reserve.percentage) {
+						let reserveEvent = {
+							spell: s.name,
+							reservePercent: reserve.percentage
+						};
+						this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
+						this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
+					}
 
 					//Make sure to remove the buff from party members
 					s.updateInactive();

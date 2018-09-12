@@ -961,8 +961,10 @@ module.exports = {
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
 
-			if ((!item.eq) && (!item.active))
-				continue;
+			if (!item.eq && !item.active) {
+				if (event !== 'afterUnequipItem' || item !== args[0])
+					continue;
+			}
 
 			let effects = item.effects;
 			if (!effects)
