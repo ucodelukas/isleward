@@ -59,6 +59,8 @@ define([
 
 			this.update();
 			this.render();
+
+			$('.loader-container').remove();
 		},
 
 		onFocus: function (hasFocus) {
