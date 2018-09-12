@@ -735,12 +735,9 @@ define([
 		},
 
 		addFilter: function (sprite) {
-			let thickness = 16;
-			if (sprite.width > scale)
-				thickness = 8;
+			let thickness = (sprite.width > scale) ? 8 : 16;
 
 			let filter = new shaderOutline(this.renderer.width, this.renderer.height, thickness, '0xffffff');
-
 			if (!sprite.filters)
 				sprite.filters = [filter];
 			else
@@ -750,10 +747,8 @@ define([
 		},
 
 		removeFilter: function (sprite, filter) {
-			if (!sprite.filters)
-				return;
-
-			sprite.filters = null;
+			if (sprite.filters)
+				sprite.filters = null;
 		},
 
 		buildText: function (obj) {
@@ -776,8 +771,7 @@ define([
 		},
 
 		buildEmitter: function (config) {
-			let emitter = particles.buildEmitter(config);
-			return emitter;
+			return particles.buildEmitter(config);
 		},
 
 		destroyEmitter: function (emitter) {
@@ -789,15 +783,12 @@ define([
 		},
 
 		reorder: function (sprite) {
-			let mobLayer = this.layers.mobs;
-			let mobs = mobLayer.children;
-			mobs.sort((a, b) => b.y - a.y);
+			this.layers.mobs.children.sort((a, b) => b.y - a.y);
 		},
 
 		destroyObject: function (obj) {
-			if (!obj.sprite.parent)
-				return;
-			obj.sprite.parent.removeChild(obj.sprite);
+			if (obj.sprite.parent)
+				obj.sprite.parent.removeChild(obj.sprite);
 		},
 
 		render: function () {
