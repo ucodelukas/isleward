@@ -54,7 +54,13 @@ define([
 
 			const time = new Date();
 			let elTime = this.find('.time');
-			const timeString = '[ ' + time.getUTCHours() + ':' + time.getUTCMinutes() + ' ]';
+			const timeString = (
+				'[ ' + 
+				time.getUTCHours().toString().padStart(2, 0) + 
+				':' + 
+				time.getUTCMinutes().toString().padStart(2, 0) + 
+				' ]'
+			);
 			if (elTime.html() !== timeString)
 				elTime.html(timeString);
 		},
