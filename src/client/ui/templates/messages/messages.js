@@ -48,6 +48,17 @@ define([
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 		},
 
+		update: function () {
+			if (this.el.hasClass('typing'))
+				return;
+
+			const time = new Date();
+			let elTime = this.find('.time');
+			const timeString = time.getUTCHours() + ':' + time.getUTCMinutes();
+			if (elTime.html() != timeString)
+				elTime.html(timeString);
+		},
+
 		checkChatLength: function () {
 			let textbox = this.find('input');
 			let val = textbox.val();

@@ -16,8 +16,14 @@
 	&.typing {
 		pointer-events: all;
 
-		.el.message {
-			display: block;
+		.el.textbox {
+			&.message {
+				display: block;
+			}
+
+			&.time {
+				display: none;
+			}
 		}
 
 		.filters {
@@ -141,12 +147,34 @@
 		&.loot .loot { display: block; }
 	}
 
-	.el.message {
-		display: none;
-		text-align: left;
-		background-color: @gray;
+	.el {
+		&.textbox.message {
+			display: none;
+			background-color: @gray;
+			text-align: left;
+			padding: 5px 10px;
+		}
+
+		&.time {
+			display: block;
+			background-color: transparent;
+			text-align: left;
+			padding: 5px 10px;
+
+			filter:
+				drop-shadow(0px -2px 0px @blackD)
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD)
+				drop-shadow(-2px 0px 0px @blackD);
+
+			-moz-filter:
+				drop-shadow(0px -2px 0px @blackD)
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD)
+				drop-shadow(-2px 0px 0px @blackD);
+		}
+
 		width: 100%;
 		color: @white;
-		padding: 5px 10px;
 	}
 }
