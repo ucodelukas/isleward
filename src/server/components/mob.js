@@ -70,7 +70,7 @@ module.exports = {
 			return;
 
 		//Unless we're going home, don't always move
-		if ((!this.goHome) && (rnd() < 0.85) && (!this.patrol))
+		if (!this.goHome && rnd() < 0.85 && !this.patrol)
 			return;
 
 		//Don't move around if we're not allowed to, unless we're going home

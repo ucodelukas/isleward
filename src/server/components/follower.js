@@ -24,7 +24,6 @@ module.exports = {
 		this.lastMasterPos.y = master.y;
 
 		this.obj.aggro.faction = master.aggro.faction;
-
 		this.fGetHighest.inCombat = master.aggro.getHighest.bind(master.aggro);
 		this.fGetHighest.outOfCombat = this.returnNoAggro.bind(this);
 	},
@@ -89,7 +88,7 @@ module.exports = {
 	update: function () {
 		if (this.lifetime > 0) {
 			this.lifetime--;
-			if (this.lifetime <= 0) {
+			if (this.lifetime === 0) {
 				this.despawn();
 				return;
 			}
@@ -98,17 +97,20 @@ module.exports = {
 		let obj = this.obj;
 		let master = this.master;
 
-		if ((master.destroyed) && (!this.noNeedMaster)) {
+		if (master.destroyed && !this.noNeedMaster) {
 			this.despawn();
 			return;
 		}
 
-		let attacker = this.fGetHighest.inCombat();
+		let attacker = null;
 		let maxDistance = this.maxDistance;
 		let distance = Math.max(Math.abs(obj.x - master.x), Math.abs(obj.y - master.y));
 
+		if (obj.aggro)
+			attacker = this.fGetHighest.inCombat();
+
 		//When we're too far, just teleport
-		if ((!attacker) && (distance >= maxDistance * 2)) {
+		if (!attacker && distance >= maxDistance * 2) {
 			this.teleport();
 			return;
 		}
@@ -126,11 +128,14 @@ module.exports = {
 		}
 
 		if (doMove) {
-			this.obj.clearQueue();
+			obj.clearQueue();
 			obj.mob.target = obj;
 		}
 
-		obj.aggro.getHighest = doMove ? this.fGetHighest.outOfCombat : this.fGetHighest.inCombat;
+		if (obj.aggro)
+			obj.aggro.getHighest = doMove ? this.fGetHighest.outOfCombat : this.fGetHighest.inCombat;
+		else
+			this.returnNoAggro();
 	},
 
 	simplify: function () {

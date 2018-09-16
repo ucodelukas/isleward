@@ -131,7 +131,7 @@ module.exports = {
 	},
 
 	update: function () {
-		if (((this.obj.mob) && (!this.obj.follower)) || (this.obj.dead))
+		if ((this.obj.mob && !this.obj.follower) || this.obj.dead)
 			return;
 
 		let values = this.values;
@@ -146,7 +146,7 @@ module.exports = {
 		if (!regen.success)
 			return;
 
-		let isInCombat = (this.obj.aggro.list.length > 0);
+		let isInCombat = this.obj.aggro && this.obj.aggro.list.length > 0;
 		if (this.obj.follower) {
 			isInCombat = (this.obj.follower.master.aggro.list.length > 0);
 			if (isInCombat)
