@@ -24,6 +24,22 @@ module.exports = {
 	},
 
 	fixItems: function (items) {
+		items.push({
+			name: 'Red Macaw\'s Cage',
+			type: 'pet',
+			quality: 2,
+			noDrop: true,
+			noSalvage: true,
+			cdMax: 10,
+			sprite: [11, 9],
+			spritesheet: 'images/questItems.png',
+			petCell: 42,
+			petSheet: 'mobs',
+			petName: 'Red Macaw',
+			useText: 'summon',
+			description: 'Vibrant, majestic and bitey.'
+		});
+
 		items
 			.filter(i => ((i.name === 'Cowl of Obscurity') && (!i.factions)))
 			.forEach(function (i) {
