@@ -7,10 +7,10 @@ Example of a pet:
 	noDrop: true,
 	noSalvage: true,
 	cdMax: 10,
-	sprite: [0, 9],
+	sprite: [11, 9],
 	spritesheet: 'images/questItems.png',
-	petCell: 10,
-	petSheet: 'images/mobs.png',
+	petCell: 42,
+	petSheet: 'mobs',
 	petName: 'Red Macaw',
 	useText: 'summon',
 	description: 'Vibrant, majestic and bitey.'
