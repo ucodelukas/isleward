@@ -54,7 +54,7 @@ define([
 		},
 
 		onMouseDown: function (e) {
-			if ((!this.el.is(':visible')) || (e.cancel) || (e.button === 2))
+			if (!this.el.is(':visible') || (e && (e.cancel || e.button === 2)))
 				return;
 
 			this.el.hide();

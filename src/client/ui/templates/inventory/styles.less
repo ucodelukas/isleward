@@ -1,6 +1,6 @@
 @import "../../../css/ui.less";
 
-.uiInventory {
+.uiInventory, .uiStash {
 	display: none;
 	z-index: 2;
 	width: 818px;
@@ -196,54 +196,5 @@
 				}
 			}
 		}		
-	}
-
-	.tooltip {
-		display: none;
-		position: absolute;
-		border: 4px solid lighten(@blackA, 20%);
-		margin-left: -4px;
-		margin-top: -4px;
-		background-color: fade(@blackD, 95%);
-		pointer-events: none;
-		padding: 6px;
-		color: white;
-		text-align: center;
-		width: 212px;
-		line-height: 18px;
-
-		.name {
-			margin-bottom: 8px;
-		}
-
-		.stats {
-			color: darken(@white, 20%);
-			margin-bottom: 8px;
-
-			.gainStat {
-				color: @green;
-			}
-
-			.loseStat {
-				color: @red;
-			}
-		}
-
-		.level {
-			color: darken(@white, 40%);
-		}
-
-		.material {
-			color: darken(@white, 40%);
-			display: none;
-		}
-
-		.info {
-			color: darken(@white, 60%);
-		}
-
-		&.no-compare .info {
-			display: none;
-		}
 	}
 }

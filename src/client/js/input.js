@@ -17,6 +17,11 @@ define([
 			}
 		},
 
+		//Certain keys should always register even if they don't get emitted
+		modifiers: [
+			'shift', 'ctrl'
+		],
+
 		mappings: {
 			8: 'backspace',
 			9: 'tab',
@@ -116,25 +121,30 @@ define([
 					if (!this.enabled)
 						return;
 
-					if (e.target !== document.body)
+					let key = this.getMapping(e.which);
+					let isModifier = this.modifiers.indexOf(key) > -1;
+					let isBody = e.target === document.body;
+
+					if (!isModifier && !isBody)
 						return true;
 					if ((e.keyCode === 9) || (e.keyCode === 8) || (e.keyCode === 122))
 						e.preventDefault();
-
-					let key = this.getMapping(e.which);
 
 					if (this.keys.has(key))
 						this.keys[key] = 2;
 					else {
 						this.keys[key] = 1;
-						let keyEvent = {
-							key: key,
-							consumed: false
-						};
-						events.emit('onUiKeyDown', keyEvent);
-						if (!keyEvent.consumed)
-							events.emit('onCanvasKeyDown', keyEvent);
-						events.emit('onKeyDown', key);
+
+						if (isBody || isModifier) {
+							let keyEvent = {
+								key: key,
+								consumed: false
+							};
+							events.emit('onUiKeyDown', keyEvent);
+							if (!keyEvent.consumed)
+								events.emit('onCanvasKeyDown', keyEvent);
+							events.emit('onKeyDown', key);
+						}
 					}
 
 					if (key === 'backspace')
@@ -146,10 +156,12 @@ define([
 					if (!this.enabled)
 						return;
 
-					if (e.target !== document.body)
-						return;
-
 					let key = this.getMapping(e.which);
+					let isModifier = this.modifiers.indexOf(key) > -1;
+					let isBody = e.target === document.body;
+					
+					if (!isModifier && !isBody)
+						return;
 
 					delete this.keys[key];
 

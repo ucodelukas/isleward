@@ -46,6 +46,7 @@ define([
 				.on('click', this.onClickFilter.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
+			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
 		update: function () {
@@ -120,9 +121,16 @@ define([
 				this.find('.list .' + filter)[method]();
 		},
 
-		onKeyDown: function (key, state) {
+		onKeyDown: function (key) {
 			if (key === 'enter')
 				this.toggle(true);
+			else if (key === 'shift')
+				this.showItemTooltip();
+		},
+
+		onKeyUp: function (key) {
+			if (key === 'shift')
+				this.showItemTooltip();
 		},
 
 		onDoWhisper: function (charName) {
@@ -188,6 +196,7 @@ define([
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
+
 		showItemTooltip: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
@@ -205,7 +214,7 @@ define([
 				};
 			}
 
-			events.emit('onShowItemTooltip', item, ttPos, null, true);
+			events.emit('onShowItemTooltip', item, ttPos, true, true);
 		},
 
 		toggle: function (show, isFake) {
@@ -227,11 +236,11 @@ define([
 		},
 
 		sendChat: function (e) {
-			if (e.which === 27)
+			if (e.which === 27) {
 				this.toggle(false);
-
-			if (e.which !== 13)
 				return;
+			} else if (e.which !== 13)
+				return; 
 
 			if (!this.el.hasClass('typing')) {
 				this.toggle(true);

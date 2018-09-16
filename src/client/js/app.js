@@ -7,13 +7,9 @@ require.config({
 	paths: {
 		socket: 'plugins/socket',
 		jquery: 'plugins/jquery.min',
-		json: 'plugins/json',
 		text: 'plugins/text',
 		html: 'plugins/html',
 		css: 'plugins/css',
-		bin: 'plugins/bin',
-		audio: 'plugins/audio',
-		worker: 'plugins/worker',
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
 		particles: 'plugins/pixi.particles',

@@ -324,7 +324,7 @@ define([
 					};
 				}
 
-				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare, false, input.isKeyDown('shift', true));
+				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare);
 			} else {
 				events.emit('onHideItemTooltip', this.hoverItem);
 				this.hoverItem = null;

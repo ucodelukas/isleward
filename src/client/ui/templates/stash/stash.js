@@ -43,14 +43,17 @@ define([
 				startNoPad--;
 			startNoPad *= 8;
 
-			for (let i = 0; i < iLen; i++) {
+			for (let i = 0; i < 50; i++) {
 				let item = items[i];
-
-				let imgX = -item.sprite[0] * 64;
-				let imgY = -item.sprite[1] * 64;
 
 				let itemEl = $(tplItem)
 					.appendTo(container);
+
+				if (!item)
+					continue;
+
+				let imgX = -item.sprite[0] * 64;
+				let imgY = -item.sprite[1] * 64;
 
 				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (!item.spritesheet) {
@@ -77,13 +80,6 @@ define([
 					itemEl.addClass('eq');
 				if (item.isNew)
 					itemEl.addClass('new');
-
-				if (i >= startNoPad) {
-					if (i === iLen - 1)
-						itemEl.css('margin', '0px 0px 0px 0px');
-					else
-						itemEl.css('margin', '0px 8px 0px 0px');
-				}
 			}
 		},
 
@@ -101,6 +97,7 @@ define([
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
+		
 		onHover: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
@@ -119,13 +116,10 @@ define([
 					y: ~~(elOffset.top + 4)
 				};
 			}
-
-			let compare = null;
-			if (input.isKeyDown('shift', true))
-				compare = window.player.inventory.items.find(i => (i.eq && i.slot === item.slot));
-
-			events.emit('onShowItemTooltip', item, ttPos, compare);
+		
+			events.emit('onShowItemTooltip', item, ttPos, true);
 		},
+
 		onClick: function (el, item) {
 			client.request({
 				cpn: 'player',
@@ -141,41 +135,10 @@ define([
 		onGetStashItems: function (items) {
 			this.items = items;
 
-			//Sort by slot
-			this.items.sort(function (a, b) {
-				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot !== null) && (a.slot === b.slot))) {
-					if (a.type === b.type) {
-						if (a.name < b.name)
-							return -1;
-						else if (a.name === b.name)
-							return 0;
-						else if (a.name > b.name)
-							return 1;
-					} else if ((a.type || '') < (b.type || ''))
-						return -1;
-					else if ((a.type || '') === (b.type || ''))
-						return 0;
-					else if ((a.type || '') > (b.type || ''))
-						return 1;
-				} else if ((a.quest) && (!b.quest))
-					return -1;
-				else if ((b.quest) && (!a.quest))
-					return 1;
-				else if ((a.material) && (!b.material))
-					return -1;
-				else if (b.material && (!a.material))
-					return 1;
-				else if (a.slot > b.slot)
-					return -1;
-				else if (a.slot < b.slot)
-					return 1;
-				else 
-					return b.id - a.id;
-			});
-
 			if (this.shown)
 				this.build();
 		},
+
 		onDestroyStashItems: function (itemIds) {
 			itemIds.forEach(function (id) {
 				let item = this.items.find(i => i.id === id);

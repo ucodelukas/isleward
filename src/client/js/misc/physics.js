@@ -1,30 +1,25 @@
 define([
-	'js/misc/pathfinder',
 	'js/misc/distanceToPolygon'
-
 ], function (
-	pathfinder,
 	distanceToPolygon
 ) {
 	return {
-		graph: null,
+		grid: null,
 
-		collisionMap: null,
-		cells: [],
 		width: 0,
 		height: 0,
 
 		init: function (collisionMap) {
-			this.collisionMap = collisionMap;
-
 			this.width = collisionMap.length;
 			this.height = collisionMap[0].length;
 
-			this.cells = _.get2dArray(this.width, this.height, 'array');
-
-			this.graph = new pathfinder.Graph(collisionMap, {
-				diagonal: true
-			});
+			let grid = this.grid = _.get2dArray(this.width, this.height, false);
+			for (let i = 0; i < this.width; i++) {
+				let row = grid[i];
+				let collisionRow = collisionMap[i];
+				for (let j = 0; j < this.height; j++)
+					row[j] = collisionRow[j];
+			}
 		},
 
 		isTileBlocking: function (x, y, mob, obj) {
@@ -34,9 +29,7 @@ define([
 			x = ~~x;
 			y = ~~y;
 
-			let node = this.graph.grid[x][y];
-
-			return ((!node) || (node.weight === 0));
+			return this.grid[x][y];
 		},
 
 		setCollision: function (config) {
@@ -44,13 +37,7 @@ define([
 			const y = config.y;
 			const collides = config.collides;
 
-			const grid = this.graph.grid;
-
-			let node = grid[x][y];
-			if (!node) 
-				node = grid[x][y] = new pathfinder.gridNode(x, y, collides ? 0 : 1);
-
-			node.weight = collides ? 0 : 1;
+			this.grid[x][y] = collides;
 		},
 
 		isInPolygon: function (x, y, verts) {

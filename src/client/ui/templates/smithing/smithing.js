@@ -283,7 +283,7 @@ define([
 				};
 			}
 
-			events.emit('onShowItemTooltip', item, ttPos);
+			events.emit('onShowItemTooltip', item, ttPos, true);
 		},
 
 		hideTooltip: function (el, item, e) {
@@ -308,9 +308,17 @@ define([
 			} else 
 				this.hide();
 		},
+
 		onKeyDown: function (key) {
 			if (key === 'm')
 				this.toggle();
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
+		},
+
+		onKeyUp: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();	
 		}
 	};
 });
