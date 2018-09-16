@@ -24,6 +24,7 @@ module.exports = {
 
 	init: function () {
 		this.events.on('onBeforeUseItem', this.onBeforeUseItem.bind(this));
+		this.events.on('onBeforeGetEffect', this.onBeforeGetEffect.bind(this));
 	},
 
 	onBeforeUseItem: function (obj, item, result) {
@@ -61,7 +62,19 @@ module.exports = {
 			blueprint: blueprint
 		});
 
+		let builtEffect = obj.effects.addEffect({
+			type: 'pet',
+			new: true
+		});
+		builtEffect.source = item;
+		builtEffect.pet = pet;
+
 		item.useText = 'dismiss';
 		syncer.setArray(true, 'inventory', 'getItems', item);
+	},
+
+	onBeforeGetEffect: function (result) {
+		if (result.type.toLowerCase() === 'pet') 
+			result.url = `${this.relativeFolderName}/effects/effectPet.js`;
 	}
 };
