@@ -168,7 +168,7 @@ define([
 				reslot.removeClass('disabled');
 
 			let relevel = this.find('[action="relevel"]').addClass('disabled');
-			if (msg.item.slot === 'tool')
+			if (msg.item.slot !== 'tool')
 				relevel.removeClass('disabled');
 
 			this.offEvent(this.eventClickInv);
