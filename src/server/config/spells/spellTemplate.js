@@ -57,7 +57,7 @@ module.exports = {
 	updateBase: function () {
 		if (this.castTime > 0) {
 			let action = this.currentAction;
-			if (_.getDeepProperty(action, 'target.destroyed')) {
+			if (_.getDeepProperty(action, 'target.destroyed') || !this.canCast(action.target)) {
 				this.currentAction = null;
 				this.castTime = 0;
 				this.obj.syncer.set(false, null, 'casting', 0);
