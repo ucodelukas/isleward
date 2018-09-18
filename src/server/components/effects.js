@@ -117,7 +117,7 @@ module.exports = {
 	},
 
 	canApplyEffect: function (type) {
-		if (!this.ccResistances[type])
+		if (!this.ccResistances.has(type))
 			return true;
 
 		let ccResistances = this.ccResistances;
