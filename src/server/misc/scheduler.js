@@ -78,7 +78,7 @@ module.exports = {
 						if (f.length === 1) {
 							f = f[0].split('/');
 							if (f.length === 1)
-								return (useTime === f[0]);
+								return (useTime === ~~f[0]);
 							return ((useTime % f[1]) === 0);
 						}
 						return ((useTime >= f[0]) && (useTime <= f[1]));
