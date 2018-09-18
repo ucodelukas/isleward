@@ -11,6 +11,30 @@ module.exports = {
 		this.lastTime = this.getTime();
 	},
 
+	isActive: function (c) {
+		let cron = c.cron.split(' ');
+		if (cron.length !== 5)
+			return false;
+
+		let time = this.getTime();
+
+		return Object.keys(time).every((t, i) => {
+			let f = cron[i].split('-');
+			if (f[0] === '*')
+				return true;
+
+			let useTime = time[t];
+
+			if (f.length === 1) {
+				f = f[0].split('/');
+				if (f.length === 1)
+					return (useTime === ~~f[0]);
+				return ((useTime % f[1]) === 0);
+			}
+			return ((useTime >= f[0]) && (useTime <= f[1]));
+		});
+	},
+
 	shouldRun: function (c) {
 		let cron = c.cron.split(' ');
 		if (cron.length !== 5)
@@ -54,7 +78,7 @@ module.exports = {
 						if (f.length === 1) {
 							f = f[0].split('/');
 							if (f.length === 1)
-								return (useTime === f[0]);
+								return (useTime === ~~f[0]);
 							return ((useTime % f[1]) === 0);
 						}
 						return ((useTime >= f[0]) && (useTime <= f[1]));
@@ -75,7 +99,7 @@ module.exports = {
 			minute: time.getMinutes(),
 			hour: time.getHours(),
 			day: time.getDate(),
-			month: time.getMonth(),
+			month: time.getMonth() + 1,
 			weekday: time.getDay()
 		};
 	},
