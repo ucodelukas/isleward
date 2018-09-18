@@ -10,11 +10,8 @@ module.exports = {
 			targetPos.success = false;
 		},
 
-		beforeCastSpell: function (successObj) {
-			if (Math.random() < this.chance)
-				return;
-
-			successObj.success = false;
+		beforeGetSpellCastTime: function (castEvent) {
+			castEvent.castTimeMax *= 3;
 		}
 	}
 };

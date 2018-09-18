@@ -37,7 +37,14 @@ module.exports = {
 		if (this.castTimeMax > 0) {
 			if ((!this.currentAction) || (this.currentAction.target !== action.target)) {
 				this.currentAction = action;
-				this.castTime = this.castTimeMax;
+
+				let castEvent = {
+					castTimeMax: this.castTimeMax
+				};
+				this.obj.fireEvent('beforeGetSpellCastTime', castEvent);
+
+				this.currentAction.castTimeMax = castEvent.castTimeMax;
+				this.castTime = castEvent.castTimeMax;
 				this.obj.syncer.set(false, null, 'casting', 0);
 			}
 
@@ -49,11 +56,19 @@ module.exports = {
 
 	updateBase: function () {
 		if (this.castTime > 0) {
+			let action = this.currentAction;
+			if (_.getDeepProperty(action, 'target.destroyed')) {
+				this.currentAction = null;
+				this.castTime = 0;
+				this.obj.syncer.set(false, null, 'casting', 0);
+				return;
+			}
+
 			this.castTime--;
-			this.obj.syncer.set(false, null, 'casting', (this.castTimeMax - this.castTime) / this.castTimeMax);
+			this.obj.syncer.set(false, null, 'casting', (action.castTimeMax - this.castTime) / action.castTimeMax);
 
 			if (!this.castTime) {
-				if (this.cast(this.currentAction)) {
+				if (this.cast(action)) {
 					this.consumeMana();
 					this.setCd();
 					this.currentAction = null;
@@ -196,7 +211,7 @@ module.exports = {
 		let values = {};
 		for (let p in this) {
 			let value = this[p];
-			if ((typeof (value) === 'function') || (p === 'obj'))
+			if ((typeof (value) === 'function') || (p === 'obj') || (p === 'currentAction'))
 				continue;
 
 			values[p] = value;

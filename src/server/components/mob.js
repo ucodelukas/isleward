@@ -137,15 +137,18 @@ module.exports = {
 			this.goHome = false;
 	},
 	fight: function (target) {
+		let obj = this.obj;
+
 		if (this.target !== target) {
-			this.obj.clearQueue();
+			obj.clearQueue();
 			this.target = target;
 		}
 		//If the target is true, it means we can't reach the target and should wait for a new one
 		if (this.target === true)
 			return;
+		else if (obj.spellbook.isCasting())
+			return;
 
-		let obj = this.obj;
 		let x = obj.x;
 		let y = obj.y;
 

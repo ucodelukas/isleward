@@ -447,6 +447,8 @@ module.exports = {
 				s.update();
 		});
 
+		const isCasting = this.isCasting();
+
 		let auto = this.auto;
 		let aLen = auto.length;
 		for (let i = 0; i < aLen; i++) {
@@ -458,7 +460,7 @@ module.exports = {
 				continue;
 			}
 
-			if (this.cast(a, true))
+			if (!isCasting && this.cast(a, true))
 				didCast = true;
 		}
 
@@ -560,6 +562,10 @@ module.exports = {
 		}
 	},
 
+	isCasting: function () {
+		return this.spells.some(s => s.castTime);
+	},
+
 	stopCasting: function (ignore) {
 		this.spells.forEach(function (s) {
 			if ((!s.castTimeMax) || (!s.castTime) || (s === ignore))
@@ -568,13 +574,17 @@ module.exports = {
 			s.castTime = 0;
 			s.currentAction = null;
 
-			if (!ignore)
+			if (!ignore || !ignore.castTimeMax)
 				this.obj.syncer.set(false, null, 'casting', 0);
 		}, this);
 	},
 
 	events: {
 		beforeMove: function () {
+			this.stopCasting();
+		},
+
+		clearQueue: function () {
 			this.stopCasting();
 		},
 

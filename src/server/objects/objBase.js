@@ -200,6 +200,8 @@ module.exports = {
 		}
 
 		this.actionQueue = [];
+
+		this.fireEvent('clearQueue');
 	},
 
 	performAction: function (action) {

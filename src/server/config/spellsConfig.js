@@ -25,7 +25,7 @@ let spells = {
 		statType: 'int',
 		statMult: 1,
 		element: 'arcane',
-		cdMax: 8,
+		cdMax: 0,
 		castTimeMax: 6,
 		manaCost: 4,
 		range: 9,
