@@ -37,7 +37,7 @@ let spells = {
 		statType: 'int',
 		statMult: 0.49,
 		element: 'frost',
-		cdMax: 9,
+		cdMax: 0,
 		castTimeMax: 3,
 		manaCost: 4,
 		range: 9,
@@ -50,8 +50,8 @@ let spells = {
 		statType: 'int',
 		statMult: 0.22,
 		element: 'fire',
-		cdMax: 6,
-		castTimeMax: 0,
+		cdMax: 0,
+		castTimeMax: 6,
 		manaCost: 5,
 		random: {
 			damage: [6, 22.9],
@@ -62,8 +62,8 @@ let spells = {
 	smite: {
 		statType: 'int',
 		statMult: 1,
-		cdMax: 4,
-		castTimeMax: 6,
+		cdMax: 0,
+		castTimeMax: 4,
 		range: 9,
 		manaCost: 4,
 		random: {
@@ -75,8 +75,8 @@ let spells = {
 		statType: 'int',
 		statMult: 0.07,
 		element: 'holy',
-		cdMax: 8,
-		castTimeMax: 2,
+		cdMax: 0,
+		castTimeMax: 8,
 		manaCost: 8,
 		range: 9,
 		radius: 3,
@@ -90,8 +90,8 @@ let spells = {
 		statType: 'str',
 		statMult: 1,
 		threatMult: 4,
-		cdMax: 8,
-		castTimeMax: 2,
+		cdMax: 0,
+		castTimeMax: 8,
 		manaCost: 4,
 		useWeaponRange: true,
 		random: {
@@ -102,8 +102,8 @@ let spells = {
 		statType: 'str',
 		statMult: 0.59,
 		threatMult: 3,
-		cdMax: 15,
-		castTimeMax: 0,
+		cdMax: 0,
+		castTimeMax: 4,
 		range: 10,
 		manaCost: 3,
 		random: {
@@ -116,7 +116,7 @@ let spells = {
 		statMult: 0.88,
 		cdMax: 20,
 		castTimeMax: 0,
-		manaCost: 5,
+		manaCost: 8,
 		random: {
 			i_duration: [4, 9]
 		}
@@ -126,7 +126,7 @@ let spells = {
 		statMult: 0.98,
 		element: 'poison',
 		cdMax: 5,
-		castTimeMax: 0,
+		castTimeMax: 2,
 		manaCost: 6,
 		random: {
 			damage: [0.25, 0.73],
