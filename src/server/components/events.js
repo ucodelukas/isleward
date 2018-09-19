@@ -28,6 +28,10 @@ module.exports = {
 		};
 	},
 
+	simplifyTransfer: function () {
+		return this.save();
+	},
+
 	unregisterEvent: function (event) {
 		this.list.spliceWhere(l => (l === event));
 
