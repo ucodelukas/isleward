@@ -1,3 +1,4 @@
+let compression = require('compression');
 let config = require('./config/serverConfig');
 let router = require('./security/router');
 
@@ -8,6 +9,8 @@ module.exports = {
 		let socketServer = require('socket.io')(server);
 
 		global.cons.sockets = socketServer.sockets;
+
+		app.use(compression());
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))

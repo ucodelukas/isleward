@@ -200,6 +200,8 @@ const sq = {
 	removeData: function (property) {
 		if (this.dataSet)
 			delete this.dataSet[property];
+
+		return this;
 	},
 
 	wrap: function (els) {
