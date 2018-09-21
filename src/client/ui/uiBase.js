@@ -66,9 +66,9 @@ define([
 			return this.el.find(selector);
 		},
 		center: function (x, y) {
-			if (x === null)
+			if (x !== false)
 				x = true;
-			if (y === null)
+			if (y !== false)
 				y = true;
 
 			this.centeredX = x;
@@ -76,6 +76,8 @@ define([
 
 			let el = this.el;
 			let pat = el.parent();
+			if (!pat[0])
+				return;
 
 			let posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
 			let posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
@@ -95,6 +97,9 @@ define([
 
 			if (this.onAfterShow)
 				this.onAfterShow();
+
+			if ((this.centeredX) || (this.centeredY))
+				this.center(this.centeredX, this.centeredY);
 		},
 		hide: function () {
 			if (this.beforeHide)

@@ -6,7 +6,7 @@ require.config({
 	waitSeconds: 120,
 	paths: {
 		socket: 'plugins/socket',
-		jquery: 'plugins/jquery.min',
+		wquery: 'plugins/wquery.min',
 		text: 'plugins/text',
 		html: 'plugins/html',
 		css: 'plugins/css',
@@ -24,12 +24,12 @@ require.config({
 		socket: {
 			exports: 'io'
 		},
-		jquery: {
+		wquery: {
 			exports: '$'
 		},
 		helpers: {
 			deps: [
-				'jquery'
+				'wquery'
 			]
 		},
 		pixi: {

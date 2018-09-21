@@ -59,14 +59,11 @@ define([
 			});
 
 			let quests = list.find('.quest');
-
-			quests
-				.sort(function (a, b) {
-					a = $(a).hasClass('active') ? 1 : 0;
-					b = $(b).hasClass('active') ? 1 : 0;
-					return b - a;
-				})
-				.appendTo(list);
+			quests.each(c => {
+				let childEl = $(c);
+				if (childEl.hasClass('active'))
+					childEl.prependTo(list);
+			});
 		},
 
 		onClick: function (el, quest) {
