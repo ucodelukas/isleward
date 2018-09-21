@@ -1,4 +1,5 @@
 let compression = require('compression');
+let minify = require('express-minify');
 let config = require('./config/serverConfig');
 let router = require('./security/router');
 
@@ -11,6 +12,7 @@ module.exports = {
 		global.cons.sockets = socketServer.sockets;
 
 		app.use(compression());
+		//app.use(minify());
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
