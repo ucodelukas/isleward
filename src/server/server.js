@@ -12,7 +12,7 @@ module.exports = {
 		global.cons.sockets = socketServer.sockets;
 
 		app.use(compression());
-		//app.use(minify());
+		app.use(minify());
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
