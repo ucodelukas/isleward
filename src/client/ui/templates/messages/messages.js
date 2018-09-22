@@ -106,7 +106,7 @@ define([
 		},
 
 		onClickFilter: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			el.toggleClass('active');
 
 			let filter = el.attr('filter');

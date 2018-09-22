@@ -107,7 +107,7 @@ define([
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
-					.on('contextmenu', this.showContext.bind(this, item));
+					.on('contextmenu', this.showContext.bind(this, item), true);
 
 				if (item.quantity > 1 || item.eq || item.active || item.has('quickSlot')) {
 					let elQuantity = itemEl.find('.quantity');

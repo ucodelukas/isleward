@@ -18,8 +18,12 @@ const sq = {
 	},
 
 	find: function (queryString) {
-		const el = (this[0] || document).querySelectorAll(queryString);
-		return sq.wrap(el);
+		if (!this[0])
+			return sq.wrap(document.querySelectorAll(queryString));
+
+		let els = [];
+		this.each(el => els.push(...el.querySelectorAll(queryString)));
+		return sq.wrap(els);
 	},
 
 	children: function () {
@@ -27,16 +31,43 @@ const sq = {
 	},
 
 	parent: function () {
-		return sq.wrap([this[0].parentElement]);
+		let parents = [];
+		this.each(el => parents.push(el.parentElement));
+
+		return sq.wrap(parents);
 	},
 
-	on: function (event, fn) {
-		this.each(el => el.addEventListener(event, e => {
+	on: function (event, fn, preventDefault) {
+		let fnHandler = function (fn, el, noDefault, e) {
 			e.target = el;
-			fn(e);
-		}));
+			requestAnimationFrame(fn.bind(null, e));
+
+			if (noDefault) {
+				e.preventDefault();
+				return false;
+			}
+		};
+
+		this.each(el => el.addEventListener(event, fnHandler.bind(null, fn, el, preventDefault)));
 
 		return this;
+	},
+
+	off: function () {
+		let newNodes = [];
+
+		this.each(el => {
+			let newNode = el.cloneNode(true);
+			el.parentNode.replaceChild(newNode, el);
+			newNodes.push(newNode);
+		});
+
+		return this.wrap(newNodes);
+	},
+
+	clone: function () {
+		let newNode = this[0].cloneNode(true);
+		return this.wrap([newNode]);
 	},
 
 	each: function (fn) {
@@ -83,12 +114,25 @@ const sq = {
 	},
 
 	show: function () {
-		this.each(el => el.attributeStyleMap.set('display', 'block'));
+		this.each(el => {
+			if ($(el).css('display') !== 'none')
+				return;
+
+			let newDisplay = el.oldDisplay || 'block';
+			delete el.oldDisplay;
+			el.attributeStyleMap.set('display', newDisplay);
+		});
+
 		return this;
 	},
 
 	hide: function () {
-		this.each(el => el.attributeStyleMap.set('display', 'none'));
+		this.each(el => {
+			let oldDisplay = $(el).css('display');
+			if (oldDisplay !== 'none')
+				el.oldDisplay = oldDisplay;
+			el.attributeStyleMap.set('display', 'none');
+		});
 		return this;	
 	},
 
@@ -96,9 +140,14 @@ const sq = {
 		let config = property;
 		let aLen = arguments.length;
 
-		if (aLen === 1 && typeof(property) === 'string')
-			return (this[0].attributeStyleMap.get(property) || {}).value;
-		else if (aLen === 2) {
+		if (aLen === 1 && typeof(property) === 'string') {
+			let value = this[0].attributeStyleMap.get(property);
+			if (!value) {
+				let styles = this[0].computedStyleMap();
+				value = (styles.get(property) || {});
+			}
+			return value.value;
+		} else if (aLen === 2) {
 			config = {
 				[property]: value
 			};
@@ -218,11 +267,21 @@ const sq = {
 		return res;
 	},
 
-	width: function () {
+	width: function (val) {
+		if (val) {
+			this.css('width', val);
+			return this;
+		}
+
 		return this[0].offsetWidth;
 	},
 
-	height: function () {
+	height: function (val) {
+		if (val) {
+			this.css('height', val);
+			return this;
+		}
+
 		return this[0].offsetHeight;
 	},
 
@@ -232,6 +291,11 @@ const sq = {
 
 	focus: function () {
 		this[0].focus();
+		return this;
+	},
+
+	blur: function () {
+		this[0].blur();
 		return this;
 	},
 

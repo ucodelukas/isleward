@@ -76,7 +76,7 @@ define([
 		onTabClick: function (e) {
 			this.find('.tab.selected').removeClass('selected');
 
-			$(e.currentTarget).addClass('selected');
+			$(e.target).addClass('selected');
 
 			this.onGetStats(this.stats);
 		},
@@ -106,7 +106,7 @@ define([
 				.css('background-position', '')
 				.on('click', this.buildSlot.bind(this));
 
-			this.find('[slot]').toArray().forEach(function (el) {
+			this.find('[slot]').each(function (el) {
 				el = $(el);
 				let slot = el.attr('slot');
 				let newItems = window.player.inventory.items.some(function (i) {
@@ -172,8 +172,8 @@ define([
 		},
 
 		buildSlot: function (el) {
-			if (el.currentTarget)
-				el = $(el.currentTarget).parent();
+			if (el.target)
+				el = $(el.target).parent();
 
 			let slot = el.attr('slot');
 			let isRune = (slot.indexOf('rune') === 0);

@@ -67,13 +67,11 @@ define([
 
 			let eventEl = container.find('.event');
 
-			eventEl
-				.sort(function (a, b) {
-					a = $(a).hasClass('active') ? 1 : 0;
-					b = $(b).hasClass('active') ? 1 : 0;
-					return b - a;
-				})
-				.appendTo(container);
+			eventEl.each(c => {
+				let childEl = $(c);
+				if (childEl.hasClass('active'))
+					childEl.prependTo(container);
+			});
 		},
 
 		onUpdateEvent: function (eventObj) {

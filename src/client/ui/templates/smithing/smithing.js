@@ -43,7 +43,7 @@ define([
 		},
 
 		clickAction: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			this.find('.col-btn').removeClass('selected');
 
 			let action = el.attr('action');

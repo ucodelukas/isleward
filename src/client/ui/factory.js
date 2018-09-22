@@ -8,6 +8,7 @@ define([
 	return {
 		uis: [],
 		root: '',
+
 		init: function (root) {
 			if (root)
 				this.root = root + '/';
@@ -16,6 +17,7 @@ define([
 			events.on('onUiKeyDown', this.onUiKeyDown.bind(this));
 			events.on('onResize', this.onResize.bind(this));
 		},
+
 		onEnterGame: function () {
 			events.clearQueue();
 
@@ -68,17 +70,25 @@ define([
 
 			this.getTemplate(type, options);
 		},
+
 		getTemplate: function (type, options) {
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
+
 		onGetTemplate: function (options, template) {
 			let ui = $.extend(true, {}, uiBase, template);
 			ui.setOptions(options);
+
+			requestAnimationFrame(this.renderUi.bind(this, ui));
+		},
+
+		renderUi: function (ui) {
 			ui.render();
 			ui.el.data('ui', ui);
 
 			this.uis.push(ui);
 		},
+
 		onResize: function () {
 			this.uis.forEach(function (ui) {
 				if (ui.centered)

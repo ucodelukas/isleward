@@ -72,7 +72,7 @@ define([
 		},
 
 		onProphecyHover: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 
 			let pos = {
 				x: e.clientX + 25,
@@ -85,11 +85,11 @@ define([
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
 		onProphecyUnhover: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			events.emit('onHideTooltip', el[0]);
 		},
 		onProphecyClick: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			let pName = el.attr('prophecy');
 
 			if (el.hasClass('active')) {
@@ -143,7 +143,7 @@ define([
 		},
 
 		onClassHover: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 
 			let pos = {
 				x: e.clientX + 25,
@@ -160,7 +160,7 @@ define([
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
 		onClassUnhover: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			events.emit('onHideTooltip', el[0]);
 		},
 		changeClass: function (e) {

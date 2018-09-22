@@ -10,7 +10,7 @@ module.exports = {
 
 		modList.forEach(function (m) {
 			let mod = require('../mods/' + m + '/index');
-			this.onGetMod(m, mod);
+			//this.onGetMod(m, mod);
 		}, this);
 
 		cbDone();

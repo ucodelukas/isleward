@@ -58,7 +58,6 @@ define([
 			uiFactory.build('login', 'body');
 
 			this.update();
-			this.render();
 
 			$('.loader-container').remove();
 		},
@@ -79,19 +78,15 @@ define([
 			}
 		},
 
-		render: function () {
-			numbers.render();
-			renderer.render();
-
-			requestAnimationFrame(this.render.bind(this));
-		},
-		
 		update: function () {
 			objects.update();
 			renderer.update();
 			uiFactory.update();
 
-			setTimeout(this.update.bind(this), 16);
+			numbers.render();
+			renderer.render();
+
+			requestAnimationFrame(this.update.bind(this));
 		}
 	};
 });
