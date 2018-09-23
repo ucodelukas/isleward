@@ -150,6 +150,7 @@ module.exports = {
 			else if (config.type === 'delete')
 				await this.processDelete(options);
 		} catch (e) {
+			console.log(e);
 			return;
 		}
 
