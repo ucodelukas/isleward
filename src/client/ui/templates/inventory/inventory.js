@@ -392,7 +392,7 @@ define([
 			let item = this.find('.split-box').data('item');
 			let delta = amount;
 			if (e)
-				delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
+				delta = (e.deltaY > 0) ? -1 : 1;
 			if (input.isKeyDown('shift', true))
 				delta *= 10;
 			let elAmount = this.find('.split-box .amount');

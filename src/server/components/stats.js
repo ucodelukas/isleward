@@ -565,7 +565,7 @@ module.exports = {
 							x: this.obj.x,
 							y: this.obj.y,
 							components: [deathAnimation]
-						});
+						}, -1);
 					}
 
 					if (this.obj.inventory) {

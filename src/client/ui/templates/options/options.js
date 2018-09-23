@@ -57,9 +57,9 @@ define([
 			sound.unload();
 
 			events.emit('onShowCharacterSelect');
-			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
+			$('[class^="ui"]:not(.ui-container)').each(el => {
 				let ui = $(el).data('ui');
-				if ((ui) && (ui.destroy))
+				if (ui && ui.destroy)
 					ui.destroy();
 			});
 			factory.build('characters', {});
