@@ -1,3 +1,5 @@
+const sqData = new Map();
+
 const sq = {
 	default: function (q) {
 		const type = typeof(q);
@@ -26,8 +28,11 @@ const sq = {
 		return sq.wrap(els);
 	},
 
-	children: function () {
-		return sq.wrap(this[0].children);
+	children: function (filter) {
+		if (!filter)
+			return sq.wrap(this[0].children);
+
+		return this.find(filter);
 	},
 
 	parent: function () {
@@ -96,7 +101,8 @@ const sq = {
 	},
 
 	addClass: function (classNames) {
-		classNames.split(' ').forEach(c => this.each(el => el.classList.add(c)));
+		if (classNames)
+			classNames.split(' ').forEach(c => this.each(el => el.classList.add(c)));
 		return this;
 	},
 
@@ -158,7 +164,13 @@ const sq = {
 			if (['left', 'top', 'width', 'height'].includes(c) && (!val.indexOf || val.indexOf('%') === -1))
 				val += 'px';
 
-			this.each(el => val ? el.attributeStyleMap.set(c, val) : el.attributeStyleMap.delete(c));
+			this.each(el => {
+				if (val) 
+					el.style[c] = val;
+
+				else
+					el.attributeStyleMap.delete(c);
+			});
 		});
 		return this;
 	},
@@ -235,13 +247,16 @@ const sq = {
 	},
 
 	data: function (property, value) {
-		if (!this.dataSet)
-			this.dataSet = {};
+		let dataSet = sqData.get(this[0]);
+		if (!dataSet) {
+			dataSet = {};
+			sqData.set(this[0], dataSet);
+		}		
 
 		if (arguments.length === 1)
-			return this.dataSet[property];
+			return dataSet[property];
 
-		this.dataSet[property] = value;
+		dataSet[property] = value;
 
 		return this;
 	},
@@ -316,7 +331,7 @@ const sq = {
 			return newO;
 		}
 
-		if (!newO)
+		if (!newO || typeof(newO) !== 'object')
 			newO = {};
 		for (let i in o) {
 			if (o.hasOwnProperty(i)) 

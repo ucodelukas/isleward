@@ -69,13 +69,11 @@ define([
 			if (item.level > stats.level)
 				errors.push('level');
 
-			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
+			if (item.requires && item.requires[0] && stats[item.requires[0].stat] < item.requires[0].value)
 				errors.push('stats');
 
 			if (item.factions) {
-				if (item.factions.some(function (f) {
-					return f.noEquip;
-				}))
+				if (item.factions.some(f => f.noEquip))
 					errors.push('faction');
 			}
 

@@ -247,7 +247,7 @@ define([
 				.replace('$STATS$', stats)
 				.replace('$LEVEL$', level);
 
-			if (item.requires) {
+			if (item.requires && item.requires[0]) {
 				html = html
 					.replace('$ATTRIBUTE$', item.requires[0].stat)
 					.replace('$ATTRIBUTEVALUE$', item.requires[0].value);
@@ -305,7 +305,7 @@ define([
 			} else
 				this.tooltip.find('.requires .stats').show();
 
-			if ((!item.stats) || (!Object.keys(item.stats).length))
+			if (!stats.length)
 				this.tooltip.children('.stats').hide();
 
 			if ((!item.type) || (item.type === item.name))
@@ -399,7 +399,7 @@ define([
 			} else
 				this.find('.faction').hide();
 
-			if ((shiftDown) || (!compare))
+			if (shiftDown || !compare)
 				this.tooltip.find('.info').hide();
 
 			if (item.cd) {

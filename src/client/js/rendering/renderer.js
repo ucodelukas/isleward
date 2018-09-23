@@ -90,7 +90,7 @@ define([
 			window.onresize = this.onResize.bind(this);
 
 			$(this.renderer.view)
-				.appendTo('.canvasContainer');
+				.appendTo('.canvas-container');
 
 			this.stage = new pixi.Container();
 

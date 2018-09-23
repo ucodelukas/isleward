@@ -9,6 +9,7 @@ let commandRoles = {
 	join: 0,
 	leave: 0,
 	unEq: 0,
+	roll: 0,
 
 	//Mods
 	mute: 5,
@@ -34,7 +35,8 @@ let localCommands = [
 	'leave',
 	'mute',
 	'unmute',
-	'setPassword'
+	'setPassword',
+	'roll'
 ];
 
 module.exports = {
@@ -196,7 +198,7 @@ module.exports = {
 
 	roll: function () {
 		let roll = 1 + ~~(Math.random() * 100);
-		global.io.sockets.emit('event', {
+		cons.emit('event', {
 			event: 'onGetMessages',
 			data: {
 				messages: [{

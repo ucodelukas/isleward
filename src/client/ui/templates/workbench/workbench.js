@@ -31,7 +31,7 @@ define([
 
 		onOpenWorkbench: function (msg) {
 			this.workbenchId = msg.workbenchId;
-			this.find('.heading-title').html(msg.name);
+			this.find('.heading-text').html(msg.name);
 
 			this.renderRecipes(msg.recipes);
 
