@@ -91,7 +91,8 @@ module.exports = {
 
 		if (player.social)
 			player.social.dc();
-		atlas.removeObject(player, true);
+
+		atlas.removeObject(player, true, this.onUnzone.bind(this, msg));
 
 		let keys = Object.keys(player);
 		keys.forEach(function (k) {
@@ -119,6 +120,11 @@ module.exports = {
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
 	},
+
+	onUnzone: function (msg) {
+		msg.callback();
+	},
+
 	logOut: function (exclude) {
 		let players = this.players;
 		let pLen = players.length;

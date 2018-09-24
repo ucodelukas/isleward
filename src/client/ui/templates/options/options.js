@@ -45,11 +45,16 @@ define([
 		},
 
 		charSelect: function () {
+			this.el.addClass('disabled');
+
 			client.request({
 				module: 'cons',
-				method: 'unzone'
+				method: 'unzone',
+				callback: this.onCharSelect.bind(this)
 			});
+		},
 
+		onCharSelect: function () {
 			renderer.clean();
 			objects.onRezone();
 			renderer.buildTitleScreen();

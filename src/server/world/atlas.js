@@ -37,7 +37,7 @@ module.exports = {
 			}
 		});
 	},
-	removeObject: function (obj, skipLocal) {
+	removeObject: function (obj, skipLocal, callback) {
 		if (!skipLocal)
 			objects.removeObject(obj);
 
@@ -45,12 +45,17 @@ module.exports = {
 		if (!thread)
 			return;
 
+		let callbackId = null;
+		if (callback)
+			callbackId = this.registerCallback(callback);
+
 		obj.zone = thread.id;
 		this.send(obj.zone, {
 			method: 'removeObject',
 			args: {
 				obj: obj.getSimple(true),
-				instanceId: obj.instanceId
+				instanceId: obj.instanceId,
+				callbackId: callbackId
 			}
 		});
 	},

@@ -151,6 +151,7 @@ module.exports = {
 				await this.processDelete(options);
 		} catch (e) {
 			console.log(e);
+			setTimeout(this.process.bind(this), 10);
 			return;
 		}
 
