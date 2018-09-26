@@ -152,7 +152,7 @@ module.exports = {
 						delete item.stats[p];
 
 					if (p === 'lvlRequire') {
-						item.level += value;
+						item.level = Math.min(20, item.level + value);
 						delete item.originalLevel;
 					}
 				}
