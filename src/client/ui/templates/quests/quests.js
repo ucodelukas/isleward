@@ -59,7 +59,7 @@ define([
 			});
 
 			let quests = list.find('.quest');
-			quests.each(c => {
+			quests.toArray().forEach(c => {
 				let childEl = $(c);
 				if (childEl.hasClass('active'))
 					childEl.prependTo(list);

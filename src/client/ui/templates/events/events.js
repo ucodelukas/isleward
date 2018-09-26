@@ -67,7 +67,7 @@ define([
 
 			let eventEl = container.find('.event');
 
-			eventEl.each(c => {
+			eventEl.toArray().forEach(c => {
 				let childEl = $(c);
 				if (childEl.hasClass('active'))
 					childEl.prependTo(container);

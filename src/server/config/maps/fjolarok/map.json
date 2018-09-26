@@ -1536,26 +1536,6 @@
                  "width":8,
                  "x":984,
                  "y":992
-                }, 
-                {
-                 "gid":715,
-                 "height":24,
-                 "id":865,
-                 "name":"estuary entrance",
-                 "properties":
-                    {
-                     "cpnPortal":"{\"zone\":\"dungeon\",\"pos\":{\"x\":6,\"y\":104}}"
-                    },
-                 "propertytypes":
-                    {
-                     "cpnPortal":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":920,
-                 "y":848
                 }],
          "opacity":1,
          "properties":

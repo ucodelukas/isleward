@@ -6,7 +6,7 @@ require.config({
 	waitSeconds: 120,
 	paths: {
 		socket: 'plugins/socket',
-		wquery: 'plugins/wquery',
+		wquery: 'plugins/jquery.min',
 		text: 'plugins/text',
 		html: 'plugins/html',
 		css: 'plugins/css',

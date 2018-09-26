@@ -106,7 +106,7 @@ define([
 				.css('background-position', '')
 				.on('click', this.buildSlot.bind(this));
 
-			this.find('[slot]').each(function (el) {
+			this.find('[slot]').toArray().forEach(function (el) {
 				el = $(el);
 				let slot = el.attr('slot');
 				let newItems = window.player.inventory.items.some(function (i) {
