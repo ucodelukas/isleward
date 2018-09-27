@@ -544,7 +544,7 @@ module.exports = {
 								class: 'color-redA',
 								message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
 							}
-						});
+						}, -1);
 
 						this.syncer.queue('onPermadeath', {
 							source: killSource.name
