@@ -179,7 +179,7 @@ module.exports = {
 		obj.performAction(msg.action);
 	},
 
-	removeObject: function (msg) {
+	removeObject: async function (msg) {
 		let obj = msg.obj;
 		obj = objects.find(o => o.serverId === obj.id);
 		if (!obj) {
@@ -188,11 +188,21 @@ module.exports = {
 		}
 
 		if (obj.auth)
-			obj.auth.doSave();
+			await obj.auth.doSave();
 
 		if (obj.player)
 			obj.fireEvent('beforeRezone');
 
 		obj.destroyed = true;
+
+		if (msg.callbackId) {
+			process.send({
+				module: 'atlas',
+				method: 'resolveCallback',
+				msg: {
+					id: msg.callbackId
+				}
+			});
+		}
 	}
 };
