@@ -50,14 +50,13 @@ define([
 
 			client.request({
 				module: 'cons',
-				method: 'unzone'
 				method: 'unzone',
 				callback: this.onCharSelect.bind(this)
 			});
 		},
 
 		onCharSelect: function () {
-				renderer.clean();
+			renderer.clean();
 			objects.onRezone();
 			renderer.buildTitleScreen();
 			sound.unload();
