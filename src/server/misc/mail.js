@@ -6,7 +6,9 @@ module.exports = {
 		this.instance = instance;
 	},
 
-	getMail: function (playerName) {
+	getMail: async function (playerName, block) {
+		this.busy[playerName] = (this.busy[playerName] || 0) + 1;
+
 		let player = this.instance.objects.objects.find(o => (o.name === playerName));
 		if (!player) {
 			process.send({
@@ -23,13 +25,18 @@ module.exports = {
 			return;
 		}
 
-		io.get({
-			ent: playerName,
-			field: 'mail',
-			callback: this.onGetMail.bind(this, player)
+		let result = await io.getAsync({
+			key: playerName,
+			table: 'mail',
+			noParse: true
 		});
+
+		this.busy[playerName]--;
+
+		await this.onGetMail(player, result);
 	},
-	onGetMail: function (player, result) {
+
+	onGetMail: async function (player, result) {
 		if (result === 'null')
 			result = null;
 		else if (result) {
@@ -83,16 +90,20 @@ module.exports = {
 			}
 		});
 
-		io.set({
-			ent: player.name,
-			field: 'mail',
-			value: null,
-			callback: this.processQueue.bind(this, player.name)
+		await io.setAsync({
+			key: player.name,
+			table: 'mail',
+			value: ''
 		});
+
+		this.processQueue(player.name);
 	},
 
 	processQueue: function (playerName) {
-		delete this.busy[playerName];
+		this.busy[playerName]--;
+		if (this.busy[playerName])
+			return;
+
 		let queue = this.queue[playerName];
 		if (!queue)
 			return;
@@ -101,31 +112,34 @@ module.exports = {
 		this.sendMail(playerName, queue);
 	},
 
-	sendMail: function (playerName, items, callback) {
+	sendMail: async function (playerName, items, callback) {
 		if (this.busy[playerName]) {
 			let queue = this.queue[playerName];
 			if (!queue) 
 				queue = this.queue[playerName] = [];
-			
-			items.forEach(function (i) {
-				queue.push(extend({}, i));
-			});
 
+			queue.push(...extend([], items));
 			return;
 		}
 
-		this.busy[playerName] = true;
+		//Only maintain the busy queue on child threads
+		//since the parent thread never actually distributes items
+		if (process.send)
+			this.busy[playerName] = (this.busy[playerName] || 0) + 1;
 
 		if (!items.push)
 			items = [items];
 
-		io.get({
-			ent: playerName,
-			field: 'mail',
-			callback: this.doSendMail.bind(this, playerName, items, callback)
+		let result = await io.getAsync({
+			key: playerName,
+			table: 'mail',
+			noParse: true
 		});
+
+		this.doSendMail(playerName, items, callback, result);
 	},
-	doSendMail: function (playerName, items, callback, result) {
+
+	doSendMail: async function (playerName, items, callback, result) {
 		if (result === 'null')
 			result = null;
 
@@ -137,11 +151,12 @@ module.exports = {
 
 		let itemString = JSON.stringify(result).split('\'').join('`');
 
-		io.set({
-			ent: playerName,
-			field: 'mail',
-			value: itemString,
-			callback: callback || this.getMail.bind(this, playerName)
+		await io.setAsync({
+			key: playerName,
+			table: 'mail',
+			value: itemString
 		});
+
+		(callback || this.getMail.bind(this, playerName))();
 	}
 };
