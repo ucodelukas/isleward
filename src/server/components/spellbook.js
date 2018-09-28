@@ -2,7 +2,6 @@ let spellTemplate = require('../config/spells/spellTemplate');
 let animations = require('../config/animations');
 let playerSpells = require('../config/spells');
 let playerSpellsConfig = require('../config/spellsConfig');
-let events = require('../misc/events');
 
 module.exports = {
 	type: 'spellbook',
@@ -548,9 +547,9 @@ module.exports = {
 		for (let i = 0; i < sLen; i++) {
 			let s = spells[i];
 
-			let events = s.events;
-			if (events) {
-				let callback = events[event];
+			let spellEvents = s.events;
+			if (spellEvents) {
+				let callback = spellEvents[event];
 				if (!callback)
 					continue;
 

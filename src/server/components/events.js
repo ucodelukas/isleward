@@ -22,10 +22,6 @@ module.exports = {
 		return result;
 	},
 
-	simplifyTransfer: function () {
-		return this.save();
-	},
-
 	save: function () {
 		return {
 			type: 'events'

@@ -17,8 +17,6 @@ Example of a pet:
 }
 */
 
-let mobBuilder = require('../../world/mobBuilder');
-
 module.exports = {
 	name: 'Feature: Pets',
 

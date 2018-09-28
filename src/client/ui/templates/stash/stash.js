@@ -37,12 +37,6 @@ define([
 			let items = this.items;
 			let iLen = items.length;
 
-			let remainder = iLen % 8;
-			let startNoPad = ~~(iLen / 8);
-			if (remainder === 0)
-				startNoPad--;
-			startNoPad *= 8;
-
 			for (let i = 0; i < 50; i++) {
 				let item = items[i];
 

@@ -81,7 +81,7 @@ module.exports = {
 
 		return {
 			type: 'inventory',
-			items: this.items.map(this.simplifyItem)
+			items: this.items.map(this.simplifyItem.bind(this))
 		};
 	},
 
