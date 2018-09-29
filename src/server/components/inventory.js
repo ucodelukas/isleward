@@ -375,7 +375,7 @@ module.exports = {
 
 	stashItem: function (id) {
 		let item = this.findItem(id);
-		if ((!item) || (item.quest) || (item.noStash))
+		if (!item || item.quest || item.noStash)
 			return;
 
 		delete item.pos;
@@ -385,8 +385,11 @@ module.exports = {
 			return;
 
 		let clonedItem = extend({}, item);
+		const success = stash.deposit(clonedItem);
+		if (!success)
+			return;
+
 		this.destroyItem(id, null, true);
-		stash.deposit(clonedItem);
 	},
 
 	salvageItem: function (id) {

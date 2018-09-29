@@ -55,12 +55,26 @@ module.exports = {
 	deposit: function (item) {
 		if (!this.active)
 			return;
+		else if (this.items.length >= 50) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You do not have room in your stash to deposit that item',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+
+			return;
+		}
 
 		this.getItem(item);
 
 		this.obj.syncer.setArray(true, 'stash', 'getItems', item);
 
 		this.changed = true;
+
+		return true;
 	},
 
 	destroyItem: function (id) {
