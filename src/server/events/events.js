@@ -158,7 +158,7 @@ module.exports = {
 		if (event.winText) {
 			this.instance.syncer.queue('onGetMessages', {
 				messages: {
-					class: 'color-pinkB',
+					class: 'color-pinkA',
 					message: event.winText
 				}
 			}, -1);
@@ -210,7 +210,7 @@ module.exports = {
 			if (n) {
 				this.instance.syncer.queue('onGetMessages', {
 					messages: {
-						class: 'color-pinkB',
+						class: 'color-pinkA',
 						message: n.msg
 					}
 				}, -1);
