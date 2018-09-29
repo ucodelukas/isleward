@@ -540,7 +540,7 @@ define([
 
 					for (let k = 0; k < cLen; k++) {
 						let c = cell[k];
-						if (c === '0')
+						if (c === '0' || c === '')
 							continue;
 
 						c--;
