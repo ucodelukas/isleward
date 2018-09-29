@@ -152,7 +152,8 @@ module.exports = {
 			if (duration) 
 				dmg *= duration;
 
-			dmg /= this.cdMax;
+			const div = (this.cdMax + this.castTimeMax) || 1;
+			dmg /= div;
 
 			if (this.damage) 
 				this.values.dmg = ~~(dmg * 100) / 100 + '/tick';
