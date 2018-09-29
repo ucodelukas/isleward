@@ -149,12 +149,12 @@ module.exports = {
 		spells['harvest life'] = {
 			statType: ['str', 'int'],
 			statMult: 1,
-			cdMax: 8,
-			castTimeMax: 4,
+			cdMax: 10,
+			castTimeMax: 3,
 			manaCost: 5,
 			range: 1,
 			random: {
-				damage: [3, 11],
+				damage: [4, 14],
 				healPercent: [10, 30]
 			}
 		};
@@ -162,8 +162,8 @@ module.exports = {
 		spells['summon skeleton'] = {
 			statType: ['str', 'int'],
 			statMult: 0.27,
-			cdMax: 5,
-			castTimeMax: 2,
+			cdMax: 6,
+			castTimeMax: 6,
 			manaCost: 5,
 			range: 9,
 			random: {
@@ -175,8 +175,8 @@ module.exports = {
 		spells['blood barrier'] = {
 			statType: ['str', 'int'],
 			statMult: 0.1,
-			cdMax: 15,
-			castTimeMax: 5,
+			cdMax: 13,
+			castTimeMax: 3,
 			manaCost: 5,
 			range: 9,
 			random: {

@@ -25,8 +25,8 @@ let spells = {
 		statType: 'int',
 		statMult: 1,
 		element: 'arcane',
-		cdMax: 0,
-		castTimeMax: 6,
+		cdMax: 6,
+		castTimeMax: 8,
 		manaCost: 4,
 		range: 9,
 		random: {
@@ -35,37 +35,37 @@ let spells = {
 	},
 	'ice spear': {
 		statType: 'int',
-		statMult: 0.49,
+		statMult: 1,
 		element: 'frost',
-		cdMax: 0,
-		castTimeMax: 3,
+		cdMax: 10,
+		castTimeMax: 2,
 		manaCost: 4,
 		range: 9,
 		random: {
-			damage: [4, 15.2],
+			damage: [2, 8],
 			i_freezeDuration: [6, 10]
 		}
 	},
 	fireblast: {
 		statType: 'int',
-		statMult: 0.22,
+		statMult: 1,
 		element: 'fire',
-		cdMax: 0,
-		castTimeMax: 6,
+		cdMax: 4,
+		castTimeMax: 2,
 		manaCost: 5,
 		random: {
-			damage: [6, 22.9],
+			damage: [2, 5],
 			i_radius: [1, 2.2],
-			i_pushback: [1, 4]
+			i_pushback: [2, 5]
 		}
 	},
 	smite: {
 		statType: 'int',
 		statMult: 1,
-		cdMax: 0,
-		castTimeMax: 4,
+		cdMax: 4,
+		castTimeMax: 6,
 		range: 9,
-		manaCost: 4,
+		manaCost: 7,
 		random: {
 			damage: [4, 14],
 			i_stunDuration: [6, 10]
@@ -73,15 +73,15 @@ let spells = {
 	},
 	consecrate: {
 		statType: 'int',
-		statMult: 0.07,
+		statMult: 1,
 		element: 'holy',
-		cdMax: 0,
-		castTimeMax: 8,
+		cdMax: 5,
+		castTimeMax: 5,
 		manaCost: 8,
 		range: 9,
 		radius: 3,
 		random: {
-			healing: [3.5, 4],
+			healing: [0.3, 0.5],
 			i_duration: [7, 13]
 		}
 	},
@@ -90,8 +90,8 @@ let spells = {
 		statType: 'str',
 		statMult: 1,
 		threatMult: 4,
-		cdMax: 0,
-		castTimeMax: 8,
+		cdMax: 9,
+		castTimeMax: 1,
 		manaCost: 4,
 		useWeaponRange: true,
 		random: {
@@ -100,50 +100,50 @@ let spells = {
 	},
 	charge: {
 		statType: 'str',
-		statMult: 0.59,
+		statMult: 1,
 		threatMult: 3,
-		cdMax: 0,
-		castTimeMax: 4,
+		cdMax: 14,
+		castTimeMax: 1,
 		range: 10,
 		manaCost: 3,
 		random: {
-			damage: [3.5, 13.3],
+			damage: [2, 8],
 			i_stunDuration: [6, 10]
 		}
 	},
 	flurry: {
 		statType: 'dex',
-		statMult: 0.88,
+		statMult: 1,
 		cdMax: 20,
 		castTimeMax: 0,
-		manaCost: 8,
+		manaCost: 12,
 		random: {
 			i_duration: [4, 9]
 		}
 	},
 	smokebomb: {
 		statType: 'dex',
-		statMult: 0.98,
+		statMult: 1,
 		element: 'poison',
 		cdMax: 5,
-		castTimeMax: 2,
+		castTimeMax: 0,
 		manaCost: 6,
 		random: {
-			damage: [0.25, 0.73],
+			damage: [0.25, 1.45],
 			i_radius: [1, 3],
 			i_duration: [7, 13]
 		}
 	},
 	'crystal spikes': {
 		statType: ['dex', 'int'],
-		statMult: 1.82,
+		statMult: 1,
 		manaCost: 22,
 		needLos: true,
-		cdMax: 16,
-		castTimeMax: 4,
+		cdMax: 20,
+		castTimeMax: 0,
 		range: 9,
 		random: {
-			damage: [7, 26.5],
+			damage: [3, 14],
 			i_delay: [1, 4]
 		},
 		negativeStats: [
@@ -152,7 +152,7 @@ let spells = {
 	},
 	innervation: {
 		statType: ['str'],
-		statMult: 0.0205,
+		statMult: 1,
 		manaReserve: {
 			percentage: 0.25
 		},
@@ -166,7 +166,7 @@ let spells = {
 	},
 	tranquility: {
 		statType: ['int'],
-		statMult: 0.0205,
+		statMult: 1,
 		element: 'holy',
 		manaReserve: {
 			percentage: 0.25
@@ -181,7 +181,7 @@ let spells = {
 	},
 	swiftness: {
 		statType: ['dex'],
-		statMult: 0.0205,
+		statMult: 1,
 		element: 'fire',
 		manaReserve: {
 			percentage: 0.4
