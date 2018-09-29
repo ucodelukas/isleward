@@ -1902,25 +1902,6 @@
          "name":"notices",
          "objects":[
                 {
-                 "height":40,
-                 "id":578,
-                 "name":"",
-                 "properties":
-                    {
-                     "cpnNotice":"{\"msg\":\"Hermit's Shack\"}"
-                    },
-                 "propertytypes":
-                    {
-                     "cpnNotice":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":1016,
-                 "y":896
-                }, 
-                {
                  "height":16,
                  "id":595,
                  "name":"",
