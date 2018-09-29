@@ -39,7 +39,7 @@ module.exports = {
 		//Have we reached home?
 		if (this.goHome) {
 			let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
-			if (distanceFromHome < this.walkDistance)
+			if (!distanceFromHome)
 				this.goHome = false;
 		}
 
