@@ -35,7 +35,6 @@ define([
 				.empty();
 
 			let items = this.items;
-			let iLen = items.length;
 
 			for (let i = 0; i < 50; i++) {
 				let item = items[i];

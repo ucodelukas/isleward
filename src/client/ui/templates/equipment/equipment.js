@@ -92,8 +92,6 @@ define([
 
 			this.find('.slot').addClass('empty');
 
-			let skipSpellId = 0;
-
 			this.find('[slot]')
 				.removeData('item')
 				.addClass('empty show-default-icon')
@@ -124,10 +122,6 @@ define([
 
 			items
 				.filter(function (item) {
-					let runeSlot = item.runeSlot;
-					if ((runeSlot !== null) && (item.slot))
-						skipSpellId = runeSlot;
-
 					return (item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))));
 				}, this)
 				.forEach(function (item) {
@@ -137,8 +131,6 @@ define([
 					let slot = item.slot;
 					if (item.has('runeSlot')) {
 						let runeSlot = item.runeSlot;
-						if (runeSlot > skipSpellId)
-							runeSlot--;
 						slot = 'rune-' + runeSlot;
 					} else if (item.has('quickSlot'))
 						slot = 'quick-' + item.quickSlot;
