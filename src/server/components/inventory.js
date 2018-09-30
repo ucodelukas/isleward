@@ -240,10 +240,22 @@ module.exports = {
 
 	splitStack: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if (!item)
+		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1)
 			return;
-		else if ((!item.quantity) || (item.quantity <= msg.stackSize) || (msg.stackSize < 1))
-			return;
+
+		const hasSpace = this.hasSpace(item, true);
+		if (!hasSpace) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'your bags are too full to split that stack',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+		}
+
+		return;
 
 		let newItem = extend({}, item);
 		item.quantity -= msg.stackSize;
@@ -694,11 +706,11 @@ module.exports = {
 		return obj;
 	},
 
-	hasSpace: function (item) {
+	hasSpace: function (item, noStack) {
 		if (this.inventorySize !== -1) {
 			if (item) {
 				let exists = this.items.find(i => (i.name === item.name));
-				if (exists && (exists.quantity || item.quantity))
+				if (exists && !noStack && (exists.quantity || item.quantity))
 					return true;
 			}
 
