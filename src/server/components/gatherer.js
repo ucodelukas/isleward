@@ -127,6 +127,9 @@ module.exports = {
 			}
 
 			gatherResult.items.forEach(function (g) {
+				if (g.slot)
+					return;
+				
 				delete g.quantity;
 
 				qualityGenerator.generate(g, {
