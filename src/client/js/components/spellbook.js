@@ -86,14 +86,7 @@ define([
 		},
 
 		onMouseDown: function (e, target) {
-			this.target = target || this.hoverTarget;
-
-			if (this.target) {
-				this.targetSprite.x = this.target.x * scale;
-				this.targetSprite.y = this.target.y * scale;
-
-				this.targetSprite.visible = true;
-			} else {
+			if (!target && this.target && (!this.hoverTarget || this.hoverTarget.id != this.target.id)) {
 				client.request({
 					cpn: 'player',
 					method: 'queueAction',
@@ -103,9 +96,17 @@ define([
 						target: null
 					}
 				});
-
-				this.targetSprite.visible = false;
 			}
+
+			this.target = target || this.hoverTarget;
+
+			if (this.target) {
+				this.targetSprite.x = this.target.x * scale;
+				this.targetSprite.y = this.target.y * scale;
+
+				this.targetSprite.visible = true;
+			} else
+				this.targetSprite.visible = false;
 
 			events.emit('onSetTarget', this.target, e);
 		},

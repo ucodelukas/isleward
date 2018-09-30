@@ -258,7 +258,7 @@ module.exports = {
 			return valid[~~(Math.random() * valid.length)];
 		return null;
 	},
-	cast: function (action, isAuto) {
+	cast: function (action, isAuto) {	
 		if (!action.has('spell')) {
 			this.auto = [];
 			return true;
