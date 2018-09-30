@@ -7,7 +7,7 @@ module.exports = {
 	maxLevelMult: 0.7,
 
 	generate: function (item, blueprint) {
-		if (!blueprint.attrRequire)
+		if (!blueprint.attrRequire || item.level <= 5)
 			return;
 
 		if (!item.requires)
