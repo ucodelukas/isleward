@@ -71,9 +71,7 @@ define([
 			}
 			if (blueprint.removeEffects) {
 				blueprint.removeEffects.forEach(function (r) {
-					let effect = this.effects.find(function (e) {
-						return (e.name === r);
-					});
+					let effect = this.effects.find(e => e.name === r);
 
 					if (!effect)
 						return;
@@ -83,9 +81,7 @@ define([
 						sprite: effect.sprite
 					});
 
-					this.effects.spliceFirstWhere(function (e) {
-						return (e.name === r);
-					});
+					this.effects.spliceFirstWhere(e => e.name === r);
 				}, this);
 			}
 		},

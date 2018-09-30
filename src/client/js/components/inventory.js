@@ -29,9 +29,7 @@ define([
 					let nItem = newItems[i];
 					let nId = nItem.id;
 
-					let findItem = items.find(function (item) {
-						return (item.id === nId);
-					});
+					let findItem = items.find(f => i.id === nId);
 					if (findItem) {
 						if (!rerender) {
 							rerender = (

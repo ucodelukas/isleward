@@ -36,6 +36,7 @@ define([
 
 			this.onEvent('onHideInventory', this.hackMethod.bind(this));
 			this.onEvent('beforeInventoryClickItem', this.hackMethod.bind(this));
+			this.onEvent('onGetItems', this.onGetItems.bind(this));
 
 			this.onEvent('onSetSmithItem', this.onHideInventory.bind(this));
 
@@ -179,7 +180,7 @@ define([
 
 			msg.success = false;
 
-			if ((!msg) || (!msg.item) || (!msg.item.slot) || (msg.item.eq))
+			if (!msg || !msg.item || !msg.item.slot || msg.item.eq)
 				return;
 
 			this.item = msg.item;
@@ -214,9 +215,7 @@ define([
 			if (result.materials) {
 				let material = result.materials[0];
 				if (material) {
-					let hasMaterials = window.player.inventory.items.find(function (i) {
-						return (i.name === material.name);
-					});
+					let hasMaterials = window.player.inventory.items.find(i => i.name === material.name);
 					if (hasMaterials) {
 						material.quantityText = hasMaterials.quantity + '/' + material.quantity;
 						hasMaterials = hasMaterials.quantity >= material.quantity;
@@ -234,6 +233,20 @@ define([
 			}
 
 			this.setDisabled(false);
+		},
+
+		onGetItems: function (items) {
+			let elMaterial = this.find('.material .item');
+			if (!elMaterial.length)
+				return;
+
+			let itemMaterial = elMaterial.data('item');
+			let elQuantity = elMaterial.find('.quantity');
+			let invMaterial = items.find(i => i.name === itemMaterial.name);
+			
+			let newText = elQuantity.html().split('/');
+			newText = invMaterial.quantity + '/' + newText[1];
+			elQuantity.html(newText);			
 		},
 
 		drawItem: function (container, item, redQuantity) {
