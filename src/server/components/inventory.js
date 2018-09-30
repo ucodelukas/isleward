@@ -249,13 +249,13 @@ module.exports = {
 				id: this.obj.id,
 				messages: [{
 					class: 'color-redA',
-					message: 'your bags are too full to split that stack',
+					message: 'Your bags are too full to split that stack',
 					type: 'info'
 				}]
 			}, [this.obj.serverId]);
-		}
 
-		return;
+			return;
+		}
 
 		let newItem = extend({}, item);
 		item.quantity -= msg.stackSize;
@@ -760,7 +760,7 @@ module.exports = {
 						id: this.obj.id,
 						messages: [{
 							class: 'color-redA',
-							message: 'your bags are too full to loot any more items',
+							message: 'Your bags are too full to loot any more items',
 							type: 'info'
 						}]
 					}, [this.obj.serverId]);
