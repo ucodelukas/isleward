@@ -38,8 +38,14 @@ module.exports = {
 			if ((!this.currentAction) || (this.currentAction.target !== action.target)) {
 				this.currentAction = action;
 
+				let castTimeMax = this.castTimeMax;
+
+				let isAttack = (this.type === 'melee');
+				let speedModifier = this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'];
+				castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
+
 				let castEvent = {
-					castTimeMax: this.castTimeMax
+					castTimeMax: castTimeMax
 				};
 				this.obj.fireEvent('beforeGetSpellCastTime', castEvent);
 
@@ -95,10 +101,6 @@ module.exports = {
 		let cd = {
 			cd: this.cdMax
 		};
-
-		let isAttack = (this.type === 'melee');
-		if ((Math.random() * 100) < this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'])
-			cd.cd = 1;
 
 		this.obj.fireEvent('beforeSetSpellCooldown', cd, this);
 
