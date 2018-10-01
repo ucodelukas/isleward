@@ -255,7 +255,75 @@ module.exports = {
 			return valid[~~(Math.random() * valid.length)];
 		return null;
 	},
-	cast: function (action, isAuto) {	
+
+	getTarget: function (spell, action) {
+		let target = action.target;
+
+		//Cast on self?
+		if (action.self) {
+			if (spell.targetGround) {
+				target = {
+					x: this.obj.x,
+					y: this.obj.y
+				};
+			} else if (spell.spellType === 'buff') 
+				target = this.obj;
+		}
+
+		if (!spell.aura && !spell.targetGround) {
+			//Did we pass in the target id?
+			if (target && !target.id) {
+				target = this.objects.objects.find(o => o.id === target);
+				if (!target)
+					return null;
+			}
+
+			if (target === this.obj && spell.noTargetSelf)
+				target = null;
+
+			if (!target || !target.player) {
+				if (spell.autoTargetFollower) {
+					target = this.spells.find(s => s.minions && s.minions.length > 0);
+					if (target)
+						target = target.minions[0];
+					else
+						return null;
+				}
+			}
+
+			if (spell.spellType === 'buff') {
+				if (this.obj.aggro.faction !== target.aggro.faction)
+					return;
+			} else if (target.aggro && !this.obj.aggro.canAttack(target)) {
+				if (this.obj.player)
+					this.sendAnnouncement("You don't feel like attacking that target");
+				return;
+			}
+		}
+
+		if (!spell.targetGround && target && !target.aggro && !spell.aura) {
+			this.sendAnnouncement("You don't feel like attacking that target");
+			return;
+		}
+
+		return target;
+	},
+
+	canCast: function (action) {
+		if (!action.has('spell'))
+			return false;
+
+		let spell = this.spells.find(s => (s.id === action.spell));
+
+		if (!spell)
+			return false;
+
+		let target = this.getTarget(spell, action);
+
+		return spell.canCast(target);
+	},
+
+	cast: function (action, isAuto) {
 		if (!action.has('spell')) {
 			this.auto = [];
 			return true;
@@ -266,52 +334,9 @@ module.exports = {
 		if (!spell)
 			return false;
 
-		//Cast on self?
-		if (action.self) {
-			if (spell.targetGround) {
-				action.target = {
-					x: this.obj.x,
-					y: this.obj.y
-				};
-			} else if (spell.spellType === 'buff') 
-				action.target = this.obj;
-		}
-
-		if ((!spell.aura) && (!spell.targetGround)) {
-			//Did we pass in the target id?
-			if (action.target && !action.target.id) {
-				action.target = this.objects.objects.find(o => o.id === action.target);
-				if (!action.target)
-					return false;
-			}
-
-			if ((action.target === this.obj) && (spell.noTargetSelf))
-				action.target = null;
-
-			if (!action.target || !action.target.player) {
-				if (spell.autoTargetFollower) {
-					action.target = this.spells.find(s => (s.minions) && (s.minions.length > 0));
-					if (action.target)
-						action.target = action.target.minions[0];
-					else
-						return false;
-				}
-			}
-
-			if (spell.spellType === 'buff') {
-				if (this.obj.aggro.faction !== action.target.aggro.faction)
-					return;
-			} else if ((action.target.aggro) && (!this.obj.aggro.canAttack(action.target))) {
-				if (this.obj.player)
-					this.sendAnnouncement("You don't feel like attacking that target");
-				return;
-			}
-		}
-
-		if ((!spell.targetGround) && (action.target) && (!action.target.aggro) && (!spell.aura)) {
-			this.sendAnnouncement("You don't feel like attacking that target");
-			return;
-		}
+		action.target = this.getTarget(spell, action);
+		if (!action.target)
+			return false;
 
 		let success = true;
 		if (spell.cd > 0) {
@@ -396,7 +421,8 @@ module.exports = {
 			spell.setCd();
 		}
 
-		return success;
+		//Null means we didn't fail but are initiating casting
+		return (success === null || success === true);
 	},
 
 	getClosestRange: function (spellNum) {
@@ -485,7 +511,7 @@ module.exports = {
 			}
 		}
 
-		return didCast;
+		return didCast || isCasting;
 	},
 
 	registerCallback: function (sourceId, callback, time, destroyCallback, targetId, destroyOnRezone) {
@@ -559,12 +585,12 @@ module.exports = {
 	},
 
 	isCasting: function () {
-		return this.spells.some(s => s.castTime);
+		return this.spells.some(s => s.currentAction);
 	},
 
 	stopCasting: function (ignore) {
 		this.spells.forEach(function (s) {
-			if ((!s.castTimeMax) || (!s.castTime) || (s === ignore))
+			if (!s.currentAction || s === ignore)
 				return;
 
 			s.castTime = 0;
@@ -581,6 +607,7 @@ module.exports = {
 		},
 
 		clearQueue: function () {
+			this.auto = [];
 			this.stopCasting();
 		},
 

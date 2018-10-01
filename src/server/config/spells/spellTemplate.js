@@ -54,7 +54,7 @@ module.exports = {
 				this.obj.syncer.set(false, null, 'casting', 0);
 			}
 
-			return false;
+			return null;
 		}
 
 		return this.cast(action);

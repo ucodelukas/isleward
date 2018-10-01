@@ -164,7 +164,7 @@ module.exports = {
 
 	queue: function (action) {
 		if (action.list) {
-			let type = action.action;
+			const type = action.type;
 			let data = action.data;
 			let dLen = data.length;
 			for (let i = 0; i < dLen; i++) {
@@ -177,11 +177,24 @@ module.exports = {
 			}
 
 			return;
+		} else if (action.action === 'clearQueue' && action.priority) {
+			this.clearQueue();
+			return;
 		}
 
-		if (action.priority)
-			this.actionQueue.splice(this.actionQueue.firstIndex(a => !a.priority), 0, action);
-		else
+		if (action.priority) {
+			if (action.action === 'spell') {
+				const canCast = this.spellbook.canCast(action);
+
+				if (canCast) {
+					this.spellbook.stopCasting();
+					this.actionQueue.spliceWhere(a => a.priority);
+				} else
+					return;
+			}
+			
+			this.actionQueue.splice(0, 0, action);
+		} else
 			this.actionQueue.push(action);
 	},
 
