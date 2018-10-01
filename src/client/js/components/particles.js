@@ -20,7 +20,10 @@ define([
 		},
 
 		setVisible: function (visible) {
-			this.emitter.emit = visible;
+			//Sometimes, we make emitters stop emitting for a reason
+			// for example, when an explosion stops
+			if (!this.emitter.disabled)
+				this.emitter.emit = visible;
 		},
 
 		update: function () {

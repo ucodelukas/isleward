@@ -6,10 +6,7 @@ define([
 	return {
 		type: 'explosion',
 
-		count: 10,
-
 		blueprint: null,
-		particles: null,
 
 		init: function (blueprint) {
 			this.blueprint = {
@@ -69,10 +66,11 @@ define([
 		},
 
 		explode: function (blueprint) {
-			this.particles = this.obj.addComponent('particles', this.blueprint);
+			let particles = this.obj.addComponent('particles', this.blueprint);
 
-			this.particles.emitter.update(0.2);
-			this.particles.emitter.emit = false;
+			particles.emitter.update(0.2);
+			particles.emitter.emit = false;
+			particles.emitter.disabled = true;
 		}
 	};
 });
