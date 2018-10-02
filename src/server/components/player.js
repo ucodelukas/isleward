@@ -220,13 +220,7 @@ module.exports = {
 	move: function (msg) {
 		atlas.queueAction(this.obj, {
 			action: 'move',
-			data: msg.data
-		});
-	},
-	moveList: function (msg) {
-		atlas.queueAction(this.obj, {
-			action: 'move',
-			list: true,
+			priority: msg.priority,
 			data: msg.data
 		});
 	},

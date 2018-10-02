@@ -96,10 +96,10 @@ define([
 			client.request({
 				cpn: 'player',
 				method: 'move',
+				priority: isPriority ? true : null,
 				data: {
 					x: x,
-					y: y,
-					priority: isPriority
+					y: y
 				}
 			});
 		}

@@ -202,8 +202,11 @@ module.exports = {
 
 			this.actionQueue.spliceWhere(a => a.priority);
 			this.actionQueue.splice(0, 0, action);
-		} else
+		} else {
+			if (action.priority)
+				this.spellbook.stopCasting();
 			this.actionQueue.push(action);
+		}
 	},
 
 	dequeue: function () {
