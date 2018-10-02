@@ -306,6 +306,9 @@ module.exports = {
 			return;
 		}
 
+		if (spell.aura)
+			target = this.obj;
+
 		return target;
 	},
 
