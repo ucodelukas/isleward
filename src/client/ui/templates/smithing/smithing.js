@@ -242,11 +242,17 @@ define([
 
 			let itemMaterial = elMaterial.data('item');
 			let elQuantity = elMaterial.find('.quantity');
-			let invMaterial = items.find(i => i.name === itemMaterial.name);
+			let invMaterial = items.find(i => i.name === itemMaterial.name) || { quantity: 0 };
 			
 			let newText = elQuantity.html().split('/');
 			newText = invMaterial.quantity + '/' + newText[1];
-			elQuantity.html(newText);			
+			elQuantity.html(newText);
+
+			let elButton = this.find('.actionButton').removeClass('disabled');
+			if (invMaterial.quantity < newText[1]) {
+				elButton.addClass('disabled');
+				elQuantity.addClass('red');
+			}
 		},
 
 		drawItem: function (container, item, redQuantity) {
