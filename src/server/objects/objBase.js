@@ -178,21 +178,29 @@ module.exports = {
 
 			return;
 		} else if (action.action === 'clearQueue') {
-			this.clearQueue();
+			let spellbook = this.spellbook;
+			if (spellbook.isCasting())
+				spellbook.stopCasting();
+			else
+				this.clearQueue();
+			
 			return;
 		}
 
-		if (action.priority) {
-			if (action.action === 'spell') {
-				const canCast = this.spellbook.canCast(action);
+		//Priority actions always replace other priority actions
+		if (action.action === 'spell') {
+			let spellbook = this.spellbook;
+			const isCasting = spellbook.isCasting();
 
-				if (canCast) {
-					this.spellbook.stopCasting();
-					this.actionQueue.spliceWhere(a => a.priority);
-				} else
-					return;
-			}
-			
+			if (!action.priority && isCasting) 
+				return;
+			else if (isCasting && !spellbook.canCast(action))
+				return;
+
+			if (isCasting)
+				spellbook.stopCasting();
+
+			this.actionQueue.spliceWhere(a => a.priority);
 			this.actionQueue.splice(0, 0, action);
 		} else
 			this.actionQueue.push(action);
@@ -255,9 +263,7 @@ module.exports = {
 			let success = this.performMove(q);
 			if (!success) 
 				this.clearQueue();
-		} else if (q.action === 'clearQueue')
-			this.clearQueue();
-		else if (q.action === 'spell') {
+		} else if (q.action === 'spell') {
 			let success = this.spellbook.cast(q);
 			if (!success)
 				this.performQueue();

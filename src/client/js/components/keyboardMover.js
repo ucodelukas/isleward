@@ -80,22 +80,26 @@ define([
 		},
 
 		addQueue: function (x, y) {
+			let pather = this.obj.pather;
+			const isPriority = !pather.path.length;
+
 			if (this.obj.moveAnimation)
 				return;
-			else if (!this.obj.pather.add(x, y))
+			else if (!pather.add(x, y))
 				return;
 
 			this.obj.dirty = true;			
 
-			this.obj.pather.pathPos.x = x;
-			this.obj.pather.pathPos.y = y;
+			pather.pathPos.x = x;
+			pather.pathPos.y = y;
 
 			client.request({
 				cpn: 'player',
 				method: 'move',
 				data: {
 					x: x,
-					y: y
+					y: y,
+					priority: isPriority
 				}
 			});
 		}
