@@ -177,7 +177,7 @@ module.exports = {
 			}
 
 			return;
-		} else if (action.action === 'clearQueue' && action.priority) {
+		} else if (action.action === 'clearQueue') {
 			this.clearQueue();
 			return;
 		}

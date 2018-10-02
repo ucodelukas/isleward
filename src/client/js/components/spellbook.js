@@ -160,7 +160,7 @@ define([
 				method: 'queueAction',
 				data: {
 					action: 'spell',
-					priority: true,
+					priority: input.isKeyDown('ctrl'),
 					spell: spell.id,
 					auto: spell.auto,
 					target: target,
