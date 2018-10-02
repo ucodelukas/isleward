@@ -163,21 +163,7 @@ module.exports = {
 	},
 
 	queue: function (action) {
-		if (action.list) {
-			const type = action.type;
-			let data = action.data;
-			let dLen = data.length;
-			for (let i = 0; i < dLen; i++) {
-				let d = data[i];
-
-				this.actionQueue.push({
-					action: type,
-					data: d
-				});
-			}
-
-			return;
-		} else if (action.action === 'clearQueue') {
+		if (action.action === 'clearQueue') {
 			let spellbook = this.spellbook;
 			if (spellbook.isCasting())
 				spellbook.stopCasting();
@@ -185,18 +171,17 @@ module.exports = {
 				this.clearQueue();
 			
 			return;
-		}
-
-		//Priority actions always replace other priority actions
-		if (action.action === 'spell') {
+		} else if (action.action === 'spell') {
 			let spellbook = this.spellbook;
 			const isCasting = spellbook.isCasting();
 
-			if (!action.priority && isCasting) 
-				return;
-			else if (isCasting && !spellbook.canCast(action))
-				return;
+			if (isCasting && (!action.priority || !spellbook.canCast(action))) {
+				if (action.auto)
+					spellbook.queueAuto(action);
 
+				return;
+			}
+		
 			if (isCasting)
 				spellbook.stopCasting();
 

@@ -231,14 +231,17 @@ module.exports = {
 		if (!action.auto)
 			return true;
 
-		let exists = this.auto.find(a => (a.spell === action.spell));
+		let exists = this.auto.find(a => a.spell === action.spell);
 		if (!exists) {
 			this.auto.push({
 				spell: action.spell,
 				target: action.target
 			});
+			
 			return true;
-		} exists.target = action.target;
+		} 
+
+		exists.target = action.target;
 	},
 
 	getRandomSpell: function (target) {
