@@ -86,6 +86,9 @@ module.exports = {
 
 			file = file.replace('/' + root + '/', '');
 
+			if (root === 'server' && (file.indexOf('mods') === -1 || file.indexOf('png') === -1))
+				return null;
+
 			res.sendFile(file, {
 				root: '../' + root
 			});
