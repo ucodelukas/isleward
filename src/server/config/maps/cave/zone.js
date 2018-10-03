@@ -216,7 +216,7 @@ module.exports = {
 				range: 6,
 				selfCast: 0.25,
 				statMult: 1,
-				damage: 0.55,
+				damage: 0.05,
 				element: 'arcane',
 				cdMax: 8,
 				particles: {
