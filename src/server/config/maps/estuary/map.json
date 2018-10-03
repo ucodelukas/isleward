@@ -1246,6 +1246,66 @@
                  "width":8,
                  "x":320,
                  "y":544
+                }, 
+                {
+                 "gid":294,
+                 "height":8,
+                 "id":758,
+                 "name":"ironskull goat",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":544,
+                 "y":544
+                }, 
+                {
+                 "gid":294,
+                 "height":8,
+                 "id":759,
+                 "name":"ironskull goat",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":576,
+                 "y":520
+                }, 
+                {
+                 "gid":301,
+                 "height":8,
+                 "id":760,
+                 "name":"huge flamingo",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":568,
+                 "y":536
+                }, 
+                {
+                 "gid":303,
+                 "height":8,
+                 "id":761,
+                 "name":"overgrown beaver",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":592,
+                 "y":592
+                }, 
+                {
+                 "gid":303,
+                 "height":8,
+                 "id":762,
+                 "name":"overgrown beaver",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":608,
+                 "y":600
                 }],
          "opacity":1,
          "properties":
@@ -1333,7 +1393,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":758,
+ "nextobjectid":763,
  "orientation":"orthogonal",
  "properties":
     {
