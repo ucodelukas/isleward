@@ -29,7 +29,8 @@ module.exports = {
 	},
 
 	transfer: function () {
-		let spells = this.spells = [];
+		let spells = this.spells;
+		this.spells = [];
 
 		spells.forEach(s => this.addSpell(s, -1));
 	},

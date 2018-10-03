@@ -75,7 +75,7 @@ define([
 		},
 
 		onProphecyClick: function (e) {
-			let el = $(e.target);
+			let el = $(e.currentTarget);
 
 			el.toggleClass('selected');
 
