@@ -120,6 +120,17 @@ module.exports = {
 	setActive: function (active) {
 		this.active = active;
 		this.obj.syncer.set(true, 'stash', 'active', this.active);
+
+		if (this.active && this.items.length > 50) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You have more than 50 items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+		}
 	},
 
 	simplify: function (self) {

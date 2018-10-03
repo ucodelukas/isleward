@@ -35,8 +35,9 @@ define([
 				.empty();
 
 			let items = this.items;
+			let iLen = Math.max(items.length, 50);
 
-			for (let i = 0; i < 50; i++) {
+			for (let i = 0; i < iLen; i++) {
 				let item = items[i];
 
 				let itemEl = $(tplItem)
