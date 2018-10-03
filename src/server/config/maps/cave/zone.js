@@ -352,6 +352,7 @@ module.exports = {
 							frames: 6,
 							frameDelay: 7,
 							loop: -1,
+							noSprite: true,
 							hideSprite: true
 						};
 					}

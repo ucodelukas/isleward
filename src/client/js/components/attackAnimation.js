@@ -49,6 +49,9 @@ define([
 				flipX: this.flipped
 			});
 			this.sprite.alpha = 1;
+
+			if (this.noSprite)
+				this.obj.sheetName = null;
 		},
 
 		renderManual: function () {
