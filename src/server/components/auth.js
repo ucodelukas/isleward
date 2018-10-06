@@ -220,7 +220,7 @@ module.exports = {
 		this.skins.push(skinId);
 
 		await io.setAsync({
-			ent: this.username,
+			key: this.username,
 			table: 'skins',
 			value: JSON.stringify(this.skins)
 		});
