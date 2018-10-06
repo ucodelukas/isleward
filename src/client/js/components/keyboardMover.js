@@ -1,20 +1,22 @@
 define([
 	'js/input',
 	'js/system/client',
-	'js/misc/physics'
+	'js/misc/physics',
+	'js/system/events'
 ], function (
 	input,
 	client,
-	physics
+	physics,
+	events
 ) {
 	return {
 		type: 'keyboardMover',
 
 		moveCd: 0,
 		moveCdMax: 8,
-		direction: {
-			x: 0,
-			y: 0
+
+		init: function () {
+			events.on('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
 		},
 
 		update: function () {
@@ -24,7 +26,16 @@ define([
 			if (this.obj.moveAnimation)
 				this.obj.pather.clearPath();
 
-			if (input.isKeyDown('esc')) {
+			if (this.moveCd > 0) {
+				this.moveCd--;
+				return;
+			}
+
+			this.keyMove();
+		},
+
+		onCanvasKeyDown: function (keyEvent) {
+			if (keyEvent.key === 'esc') {
 				client.request({
 					cpn: 'player',
 					method: 'queueAction',
@@ -34,13 +45,6 @@ define([
 					}
 				});
 			}
-
-			if (this.moveCd > 0) {
-				this.moveCd--;
-				return;
-			}
-
-			this.keyMove();
 		},
 
 		bump: function (dx, dy) {
@@ -62,9 +66,6 @@ define([
 			if ((!delta.x) && (!delta.y))
 				return;
 
-			this.direction.x = delta.x;
-			this.direction.y = delta.y;
-
 			let newX = this.obj.pather.pathPos.x + delta.x;
 			let newY = this.obj.pather.pathPos.y + delta.y;
 
@@ -77,20 +78,25 @@ define([
 
 			this.addQueue(newX, newY);
 		},
+
 		addQueue: function (x, y) {
+			let pather = this.obj.pather;
+			const isPriority = !pather.path.length;
+
 			if (this.obj.moveAnimation)
 				return;
-			else if (!this.obj.pather.add(x, y))
+			else if (!pather.add(x, y))
 				return;
 
 			this.obj.dirty = true;			
 
-			this.obj.pather.pathPos.x = x;
-			this.obj.pather.pathPos.y = y;
+			pather.pathPos.x = x;
+			pather.pathPos.y = y;
 
 			client.request({
 				cpn: 'player',
 				method: 'move',
+				priority: isPriority ? true : null,
 				data: {
 					x: x,
 					y: y

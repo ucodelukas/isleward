@@ -55,7 +55,7 @@ module.exports = {
 
 	setupTemplates: function (map) {
 		this.templates.forEach(function (r, typeId) {
-			if (r.properties.mapping)
+			if (r.properties.mapping || r.properties.noRotate)
 				return;
 
 			r.typeId = typeId;

@@ -89,6 +89,16 @@ define([
 			}
 		},
 
+		setVisible: function (visible) {
+			this.patches.forEach(function (p) {
+				p.visible = visible;
+			});
+
+			this.rays.forEach(function (r) {
+				r.visible = visible;
+			});
+		},
+
 		destroy: function () {
 			this.patches.forEach(function (p) {
 				p.parent.removeChild(p);

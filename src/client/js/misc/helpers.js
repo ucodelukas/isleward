@@ -82,15 +82,6 @@ Object.defineProperty(Object.prototype, 'has', {
 });
 
 window._ = {
-	create: function () {
-		let result = {};
-
-		[].slice.call(arguments).forEach(function (a) {
-			$.extend(true, result, a);
-		});
-
-		return result;
-	},
 	get2dArray: function (w, h, def) {
 		def = def || 0;
 
@@ -108,15 +99,6 @@ window._ = {
 		}
 
 		return result;
-	},
-	randWeighted: function (weights) {
-		let sample = [];
-		weights.forEach(function (w, i) {
-			for (let j = 0; j < w; j++) 
-				sample.push(i);
-		});
-
-		return sample[~~(Math.random() * sample.length)];
 	}
 };
 

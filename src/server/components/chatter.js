@@ -38,7 +38,7 @@ module.exports = {
 				//This shouldn't always be pink, but only events use this atm so it's fine
 				this.obj.instance.syncer.queue('onGetMessages', {
 					messages: {
-						class: 'color-pinkB',
+						class: 'color-pinkA',
 						message: this.obj.name + ': ' + pick.msg
 					}
 				}, -1);

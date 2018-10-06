@@ -2,12 +2,14 @@ define([
 	'js/system/events',
 	'js/system/client',
 	'html!ui/templates/equipment/template',
-	'css!ui/templates/equipment/styles'
+	'css!ui/templates/equipment/styles',
+	'js/input'
 ], function (
 	events,
 	client,
 	template,
-	styles
+	styles,
+	input
 ) {
 	return {
 		tpl: template,
@@ -22,11 +24,14 @@ define([
 		hoverItem: null,
 		hoverEl: null,
 		hoverCompare: null,
-		shiftDown: false,
+
+		isInspecting: false,
 
 		postRender: function () {
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
+
+			this.onEvent('onInspectTarget', this.onInspectTarget.bind(this));
 
 			this.onEvent('onShowEquipment', this.toggle.bind(this));
 
@@ -36,8 +41,13 @@ define([
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
+		beforeHide: function () {
+			this.isInspecting = false;
+		},
+
 		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
+			this.isInspecting = false;
 
 			if (this.shown) {
 				this.find('.itemList').hide();
@@ -55,38 +65,32 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'j')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
-			}
+			else if (key === 'shift' && this.hoverItem)
+				this.onHoverItem(this.hoverEl, this.hoverItem, this.hoverCompare);
 		},
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHoverItem(this.hoverEl, this.hoverItem, null);
-			}
+			if (key === 'shift' && this.hoverItem)
+				this.onHoverItem(this.hoverEl, this.hoverItem, null);
 		},
 
 		onTabClick: function (e) {
 			this.find('.tab.selected').removeClass('selected');
 
-			$(e.currentTarget).addClass('selected');
+			$(e.target).addClass('selected');
 
 			this.onGetStats(this.stats);
 		},
 
 		onGetItems: function (items) {
 			items = items || this.items;
-			this.items = items;
+
+			if (!this.isInspecting)
+				this.items = items;
 
 			if (!this.shown)
 				return;
 
 			this.find('.slot').addClass('empty');
-
-			let skipSpellId = 0;
 
 			this.find('[slot]')
 				.removeData('item')
@@ -118,10 +122,6 @@ define([
 
 			items
 				.filter(function (item) {
-					let runeSlot = item.runeSlot;
-					if ((runeSlot !== null) && (item.slot))
-						skipSpellId = runeSlot;
-
 					return (item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))));
 				}, this)
 				.forEach(function (item) {
@@ -131,8 +131,6 @@ define([
 					let slot = item.slot;
 					if (item.has('runeSlot')) {
 						let runeSlot = item.runeSlot;
-						if (runeSlot > skipSpellId)
-							runeSlot--;
 						slot = 'rune-' + runeSlot;
 					} else if (item.has('quickSlot'))
 						slot = 'quick-' + item.quickSlot;
@@ -156,9 +154,18 @@ define([
 				}, this);
 		},
 
+		onInspectTarget: function (result) {
+			this.isInspecting = true;
+
+			this.show();
+
+			this.onGetStats(result.stats);
+			this.onGetItems(result.equipment);
+		},
+
 		buildSlot: function (el) {
-			if (el.currentTarget)
-				el = $(el.currentTarget).parent();
+			if (el.target)
+				el = $(el.target).parent();
 
 			let slot = el.attr('slot');
 			let isRune = (slot.indexOf('rune') === 0);
@@ -309,7 +316,7 @@ define([
 					};
 				}
 
-				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare, false, this.shiftDown);
+				events.emit('onShowItemTooltip', item, ttPos, this.hoverCompare);
 			} else {
 				events.emit('onHideItemTooltip', this.hoverItem);
 				this.hoverItem = null;
@@ -317,10 +324,10 @@ define([
 		},
 
 		onGetStats: function (stats) {
-			if (stats)
+			if (stats && !this.isInspecting)
 				this.stats = stats;
 
-			stats = this.stats;
+			stats = stats || this.stats;
 
 			if (!this.shown)
 				return;

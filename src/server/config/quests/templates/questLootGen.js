@@ -69,7 +69,7 @@ module.exports = {
 				quantity: 1,
 				quest: true,
 				sprite: this.item.sprite,
-				ownerId: this.obj.serverId
+				ownerName: this.obj.name
 			});
 		},
 

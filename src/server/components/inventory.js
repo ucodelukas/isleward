@@ -79,47 +79,48 @@ module.exports = {
 		if (!self)
 			return null;
 
-		let reputation = this.obj.reputation;
-
 		return {
 			type: 'inventory',
-			items: this.items
-				.map(function (i) {
-					let item = extend({}, i);
-
-					if (item.effects) {
-						item.effects = item.effects.map(e => ({
-							factionId: e.factionId,
-							text: e.text,
-							properties: e.properties,
-							mtx: e.mtx,
-							type: e.type,
-							rolls: e.rolls
-						}));
-					}
-
-					if (item.factions) {
-						item.factions = item.factions.map(function (f) {
-							let faction = reputation.getBlueprint(f.id);
-							let factionTier = reputation.getTier(f.id);
-
-							let noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
-
-							return {
-								id: f.id,
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-
-					return item;
-				})
+			items: this.items.map(this.simplifyItem.bind(this))
 		};
+	},
+
+	simplifyItem: function (item) {
+		let result = extend({}, item);
+
+		if (result.effects) {
+			result.effects = result.effects.map(e => ({
+				factionId: e.factionId,
+				text: e.text,
+				properties: e.properties,
+				mtx: e.mtx,
+				type: e.type,
+				rolls: e.rolls
+			}));
+		}
+
+		if (result.factions) {
+			let reputation = this.obj.reputation;
+
+			result.factions = result.factions.map(function (f) {
+				let faction = reputation.getBlueprint(f.id);
+				let factionTier = reputation.getTier(f.id);
+
+				let noEquip = null;
+				if (factionTier < f.tier)
+					noEquip = true;
+
+				return {
+					id: f.id,
+					name: faction.name,
+					tier: f.tier,
+					tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
+					noEquip: noEquip
+				};
+			}, this);
+		}
+
+		return result;
 	},
 
 	update: function () {
@@ -239,10 +240,22 @@ module.exports = {
 
 	splitStack: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if (!item)
+		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1)
 			return;
-		else if ((!item.quantity) || (item.quantity <= msg.stackSize) || (msg.stackSize < 1))
+
+		const hasSpace = this.hasSpace(item, true);
+		if (!hasSpace) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'Your bags are too full to split that stack',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+
 			return;
+		}
 
 		let newItem = extend({}, item);
 		item.quantity -= msg.stackSize;
@@ -307,6 +320,8 @@ module.exports = {
 		let eLen = effects.length;
 		for (let j = 0; j < eLen; j++) {
 			let effect = effects[j];
+			if (!effect.events)
+				continue;
 
 			let effectEvent = effect.events.onConsumeItem;
 			if (!effectEvent)
@@ -372,7 +387,7 @@ module.exports = {
 
 	stashItem: function (id) {
 		let item = this.findItem(id);
-		if ((!item) || (item.quest) || (item.noStash))
+		if (!item || item.quest || item.noStash)
 			return;
 
 		delete item.pos;
@@ -382,8 +397,11 @@ module.exports = {
 			return;
 
 		let clonedItem = extend({}, item);
+		const success = stash.deposit(clonedItem);
+		if (!success)
+			return;
+
 		this.destroyItem(id, null, true);
-		stash.deposit(clonedItem);
 	},
 
 	salvageItem: function (id) {
@@ -536,9 +554,10 @@ module.exports = {
 						statGenerator.generate(item);
 					} else {
 						let effectUrl = itemEffects.get(e.type);
-						let effectModule = require('../' + effectUrl);
-
-						e.events = effectModule.events;
+						try {
+							let effectModule = require('../' + effectUrl);
+							e.events = effectModule.events;
+						} catch (error) {}
 					}
 				});
 			}
@@ -645,10 +664,7 @@ module.exports = {
 		}, this);
 	},
 
-	createBag: function (x, y, items, ownerId) {
-		if (!ownerId)
-			ownerId = -1;
-
+	createBag: function (x, y, items, ownerName) {
 		let bagCell = 50;
 
 		let topQuality = 0;
@@ -678,7 +694,7 @@ module.exports = {
 			y: y,
 			properties: {
 				cpnChest: {
-					ownerId: ownerId,
+					ownerName: ownerName,
 					ttl: 1710
 				},
 				cpnInventory: {
@@ -690,8 +706,14 @@ module.exports = {
 		return obj;
 	},
 
-	hasSpace: function () {
+	hasSpace: function (item, noStack) {
 		if (this.inventorySize !== -1) {
+			if (item) {
+				let exists = this.items.find(i => (i.name === item.name));
+				if (exists && !noStack && (exists.quantity || item.quantity))
+					return true;
+			}
+
 			let nonEqItems = this.items.filter(f => !f.eq).length;
 			return (nonEqItems < this.inventorySize);
 		} return true;
@@ -732,13 +754,13 @@ module.exports = {
 			let items = this.items;
 			let iLen = items.length;
 
-			if (!this.hasSpace()) {
+			if (!this.hasSpace(item)) {
 				if (!hideMessage) {
 					this.obj.instance.syncer.queue('onGetMessages', {
 						id: this.obj.id,
 						messages: [{
 							class: 'color-redA',
-							message: 'your bags are too full to loot any more items',
+							message: 'Your bags are too full to loot any more items',
 							type: 'info'
 						}]
 					}, [this.obj.serverId]);
@@ -809,11 +831,11 @@ module.exports = {
 					e.events = mtxModule.events;
 				} else if (e.type) {
 					let effectUrl = itemEffects.get(e.type);
-					let effectModule = require('../' + effectUrl);
-
-					e.text = effectModule.events.onGetText(item, e);
-
-					e.events = effectModule.events;
+					try {
+						let effectModule = require('../' + effectUrl);
+						e.text = effectModule.events.onGetText(item, e);
+						e.events = effectModule.events;
+					} catch (error) {}
 				}
 			});
 		}
@@ -831,39 +853,8 @@ module.exports = {
 				itemId: item.id,
 				slot: item.quickSlot
 			});
-		} else if (!item.effects)
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', item, true);
-		else {
-			let result = extend({}, item);
-			result.effects = result.effects.map(e => ({
-				factionId: e.factionId,
-				text: e.text,
-				properties: e.properties
-			}));
-
-			let reputation = this.obj.reputation;
-
-			//Don't do this check if we don't have a reputation cpn. That means this is most likely a bag
-			if ((reputation) && (result.factions)) {
-				result.factions = result.factions.map(function (f) {
-					let faction = reputation.getBlueprint(f.id);
-					let factionTier = reputation.getTier(f.id);
-
-					let noEquip = null;
-					if (factionTier < f.tier)
-						noEquip = true;
-
-					return {
-						name: faction.name,
-						tier: f.tier,
-						tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-						noEquip: noEquip
-					};
-				}, this);
-			}
-
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', result, true);
-		}
+		} else 
+			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
 
 		if (!hideMessage) {
 			if (fromMob)
@@ -873,26 +864,14 @@ module.exports = {
 		return item;
 	},
 
-	dropBag: function (ownerId, killSource) {
+	dropBag: function (ownerName, killSource) {
 		if (!this.blueprint)
 			return;
 
 		//Only drop loot if this player is in the zone
-		let playerObject = this.obj.instance.objects.find(o => o.serverId === ownerId);
+		let playerObject = this.obj.instance.objects.find(o => o.name === ownerName);
 		if (!playerObject)
 			return;
-
-		//Get player's spells' statTypes
-		let stats = [];
-		playerObject.spellbook.spells.forEach(function (s) {
-			let spellStatType = s.statType;
-			if (!(spellStatType instanceof Array))
-				spellStatType = [spellStatType];
-			spellStatType.forEach(function (ss) {
-				if (stats.indexOf(ss) === -1)
-					stats.push(ss);
-			});
-		});
 
 		let items = this.items;
 		let iLen = items.length;
@@ -968,7 +947,7 @@ module.exports = {
 		this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
 
 		if (this.items.length > 0)
-			this.createBag(this.obj.x, this.obj.y, this.items, ownerId);
+			this.createBag(this.obj.x, this.obj.y, this.items, ownerName);
 
 		this.items = savedItems;
 	},
@@ -985,11 +964,10 @@ module.exports = {
 				items.splice(i, 1);
 				i--;
 				iLen--;
-			} else
-				return false;
+			}
 		}
 
-		return true;
+		return !iLen;
 	},
 
 	fireEvent: function (event, args) {
@@ -998,8 +976,10 @@ module.exports = {
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
 
-			if ((!item.eq) && (!item.active))
-				continue;
+			if (!item.eq && !item.active) {
+				if (event !== 'afterUnequipItem' || item !== args[0])
+					continue;
+			}
 
 			let effects = item.effects;
 			if (!effects)

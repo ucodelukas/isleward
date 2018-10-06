@@ -6,14 +6,10 @@ require.config({
 	waitSeconds: 120,
 	paths: {
 		socket: 'plugins/socket',
-		jquery: 'plugins/jquery.min',
-		json: 'plugins/json',
+		wquery: 'plugins/jquery.min',
 		text: 'plugins/text',
 		html: 'plugins/html',
 		css: 'plugins/css',
-		bin: 'plugins/bin',
-		audio: 'plugins/audio',
-		worker: 'plugins/worker',
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
 		particles: 'plugins/pixi.particles',
@@ -28,12 +24,12 @@ require.config({
 		socket: {
 			exports: 'io'
 		},
-		jquery: {
+		wquery: {
 			exports: '$'
 		},
 		helpers: {
 			deps: [
-				'jquery'
+				'wquery'
 			]
 		},
 		pixi: {

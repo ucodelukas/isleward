@@ -81,8 +81,12 @@ module.exports = {
 			} else if ((c.ttl) && (c.ttl > 0)) {
 				c.ttl--;
 				continue;
-			} else if ((c.cron) && (!scheduler.shouldRun(c)))
-				continue;
+			} else if (c.cron) {
+				if (c.durationEvent && !scheduler.isActive(c))
+					continue;
+				else if (!c.durationEvent && !scheduler.shouldRun(c))
+					continue;
+			}
 
 			c.event = this.startEvent(c);
 			this.updateEvent(c.event);
@@ -154,7 +158,7 @@ module.exports = {
 		if (event.winText) {
 			this.instance.syncer.queue('onGetMessages', {
 				messages: {
-					class: 'color-pinkB',
+					class: 'color-pinkA',
 					message: event.winText
 				}
 			}, -1);
@@ -206,7 +210,7 @@ module.exports = {
 			if (n) {
 				this.instance.syncer.queue('onGetMessages', {
 					messages: {
-						class: 'color-pinkB',
+						class: 'color-pinkA',
 						message: n.msg
 					}
 				}, -1);

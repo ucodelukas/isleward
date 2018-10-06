@@ -9,17 +9,17 @@ define([
 ) {
 	return {
 		mappings: {
-			'8': 'backspace',
-			'9': 'tab',
-			'13': 'enter',
-			'16': 'shift',
-			'17': 'ctrl',
-			'27': 'esc',
-			'37': 'left',
-			'38': 'up',
-			'39': 'right',
-			'40': 'down',
-			'46': 'del'
+			8: 'backspace',
+			9: 'tab',
+			13: 'enter',
+			16: 'shift',
+			17: 'ctrl',
+			27: 'esc',
+			37: 'left',
+			38: 'up',
+			39: 'right',
+			40: 'down',
+			46: 'del'
 		},
 
 		mouse: {
@@ -43,9 +43,8 @@ define([
 		},
 
 		resetKeys: function () {
-			for (var k in this.keys) {
+			for (let k in this.keys) 
 				events.emit('onKeyUp', k);
-			}
 
 			this.keys = {};
 		},
@@ -58,20 +57,17 @@ define([
 				this.mappings[charCode] ||
 				String.fromCharCode(charCode).toLowerCase()
 			);
-
 		},
 
 		isKeyDown: function (key, consume) {
-			var down = this.keys[key];
+			let down = this.keys[key];
 			if (down != null) {
 				if (!consume)
 					return true;
-				else {
-					this.keys[key] = 2;
-					return (down == 1);
-				}
-			} else
-				return false;
+				
+				this.keys[key] = 2;
+				return (down == 1);
+			} return false;
 		},
 
 		events: {
@@ -82,7 +78,7 @@ define([
 					if ((e.keyCode == 9) || (e.keyCode == 8) || (e.keyCode == 122))
 						e.preventDefault();
 
-					var key = this.getMapping(e.which);
+					let key = this.getMapping(e.which);
 
 					if (this.keys[key] != null)
 						this.keys[key] = 2;
@@ -99,7 +95,7 @@ define([
 					if (e.target != document.body)
 						return;
 
-					var key = this.getMapping(e.which);
+					let key = this.getMapping(e.which);
 
 					delete this.keys[key];
 
@@ -109,11 +105,11 @@ define([
 
 			mouse: {
 				onMouseDown: function (e) {
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var button = e.button;
+					let button = e.button;
 					this.mouse.button = button;
 					this.mouse.down = true;
 					this.mouse.event = e;
@@ -122,11 +118,11 @@ define([
 				},
 
 				onMouseUp: function (e) {
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var button = e.button;
+					let button = e.button;
 					this.mouse.down = false;
 
 					events.emit('onMouseUp', this.mouse);
@@ -143,12 +139,12 @@ define([
 					if (!e)
 						return;
 
-					var el = $(e.target);
+					let el = $(e.target);
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					var x = ~~((renderer.pos.x + (e.offsetX / renderer.currentZoom)) / constants.gridSize);
-					var y = ~~((renderer.pos.y + (e.offsetY / renderer.currentZoom)) / constants.gridSize);
+					let x = ~~((renderer.pos.x + (e.offsetX / renderer.currentZoom)) / constants.gridSize);
+					let y = ~~((renderer.pos.y + (e.offsetY / renderer.currentZoom)) / constants.gridSize);
 
 					this.mouse.x = x;
 					this.mouse.y = y;
@@ -158,7 +154,7 @@ define([
 
 				onMouseWheel: function (e) {
 					events.emit('onMouseWheel', {
-						delta: (e.originalEvent.deltaY > 0) ? 1 : -1
+						delta: (e.deltaY > 0) ? 1 : -1
 					});
 				}
 			}

@@ -34,7 +34,7 @@ define([
 			let collisionChanges = blueprint.collisionChanges;
 			delete blueprint.collisionChanges;
 
-			if (collisionChanges) 
+			if (collisionChanges)
 				collisionChanges.forEach(c => physics.setCollision(c));
 		},
 

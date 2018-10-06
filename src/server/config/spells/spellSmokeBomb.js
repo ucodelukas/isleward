@@ -2,6 +2,7 @@ let cpnSmokePatch = {
 	type: 'smokePatch',
 
 	contents: [],
+	ttl: 0,
 
 	applyDamage: function (o, amount) {
 		o.stats.takeDamage(amount, 1, this.caster);
@@ -29,8 +30,9 @@ let cpnSmokePatch = {
 	},
 
 	update: function () {
-		if (this.caster.destroyed)
-			return;
+		this.ttl--;
+		if (this.ttl <= 0)
+			this.obj.destroyed = true;
 
 		let contents = this.contents;
 		for (let i = 0; i < contents.length; i++) {
@@ -110,7 +112,7 @@ module.exports = {
 						x: i,
 						y: j,
 						properties: {
-							cpnHealPatch: cpnSmokePatch,
+							cpnSmokePatch: cpnSmokePatch,
 							cpnParticles: {
 								simplify: function () {
 									return {
@@ -125,9 +127,10 @@ module.exports = {
 							smokePatch: {
 								caster: obj,
 								statType: this.statType,
-								getDamage: this.getDamage.bind(this)
+								getDamage: this.getDamage.bind(this),
+								ttl: this.duration
 							}
-						}
+						} 
 					}]);
 
 					patches.push(patch);

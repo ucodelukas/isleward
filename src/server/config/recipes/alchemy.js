@@ -8,6 +8,7 @@ module.exports = [{
 		noSalvage: true,
 		noAugment: true,
 		uses: 1,
+		cdMax: 85,
 		effects: [{
 			type: 'gainStat',
 			rolls: {

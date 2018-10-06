@@ -4,7 +4,6 @@ define([
 	'html!ui/templates/inventory/template',
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
-	'html!ui/templates/inventory/templateTooltip',
 	'js/input'
 ], function (
 	events,
@@ -12,7 +11,6 @@ define([
 	template,
 	styles,
 	tplItem,
-	tplTooltip,
 	input
 ) {
 	return {
@@ -21,9 +19,6 @@ define([
 		centered: true,
 
 		items: [],
-
-		shiftDown: false,
-		ctrlDown: false,
 
 		dragItem: null,
 		dragEl: null,
@@ -114,16 +109,19 @@ define([
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
 
-				if (item.quantity > 1)
-					itemEl.find('.quantity').html(item.quantity);
-				else if (item.eq)
-					itemEl.find('.quantity').html('EQ');
-				else if (item.active)
-					itemEl.find('.quantity').html('EQ');
+				if (item.quantity > 1 || item.eq || item.active || item.has('quickSlot')) {
+					let elQuantity = itemEl.find('.quantity');
+					let txtQuantity = item.quantity;
+					if (!txtQuantity)
+						txtQuantity = item.has('quickSlot') ? 'QS' : 'EQ';
 
-				if (item.eq)
-					itemEl.addClass('eq');
-				else if (item.isNew) {
+					elQuantity.html(txtQuantity);
+
+					//If the item doesn't have a quantity and we reach this point
+					//it must mean that it's active, EQd or QSd
+					if (!item.quantity)
+						itemEl.addClass('eq');
+				} else if (item.isNew) {
 					itemEl.addClass('new');
 					itemEl.find('.quantity').html('NEW');
 				}
@@ -140,7 +138,7 @@ define([
 			if (!msg.success)
 				return;
 
-			if (!this.ctrlDown)
+			if (!input.isKeyDown('ctrl', true))
 				return;
 
 			client.request({
@@ -264,6 +262,10 @@ define([
 					text: 'learn',
 					callback: this.performItemAction.bind(this, item, 'learnAbility')
 				},
+				quickSlot: {
+					text: 'quickslot',
+					callback: this.performItemAction.bind(this, item, 'setQuickSlot')
+				},
 				activate: {
 					text: 'activate',
 					callback: this.performItemAction.bind(this, item, 'activateMtx')
@@ -305,9 +307,13 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type === 'mtx')
 				config.push(menuItems.activate);
-			else if ((item.type === 'toy') || (item.type === 'consumable'))
+			else if (item.type === 'toy' || item.type === 'consumable' || item.useText) {
+				if (item.useText)
+					menuItems.use.text = item.useText;
 				config.push(menuItems.use);
-			else if (item.slot) {
+				if (!item.has('quickSlot'))
+					config.push(menuItems.quickSlot);
+			} else if (item.slot) {
 				config.push(menuItems.equip);
 				if (!item.eq)
 					config.push(menuItems.divider);
@@ -387,7 +393,7 @@ define([
 			let delta = amount;
 			if (e)
 				delta = (e.originalEvent.deltaY > 0) ? -1 : 1;
-			if (this.shiftDown)
+			if (input.isKeyDown('shift', true))
 				delta *= 10;
 			let elAmount = this.find('.split-box .amount');
 
@@ -450,69 +456,7 @@ define([
 				};
 			}
 
-			let compare = null;
-			if (item.slot) {
-				compare = this.items.find(function (i) {
-					return ((i.eq) && (i.slot === item.slot));
-				});
-
-				// check special cases for mismatched weapon/offhand scenarios (only valid when comparing)
-				if ((!compare) && (this.shiftDown)) {
-					let equippedTwoHanded = this.items.find(function (i) {
-						return ((i.eq) && (i.slot === 'twoHanded'));
-					});
-
-					let equippedOneHanded = this.items.find(function (i) {
-						return ((i.eq) && (i.slot === 'oneHanded'));
-					});
-
-					let equippedOffhand = this.items.find(function (i) {
-						return ((i.eq) && (i.slot === 'offHand'));
-					});
-
-					if (item.slot === 'twoHanded') {
-						if (!equippedOneHanded) 
-							compare = equippedOffhand;
-						else if (!equippedOffhand) 
-							compare = equippedOneHanded;
-						else {
-							// compare against oneHanded and offHand combined by creating a virtual item that is the sum of the two
-							compare = $.extend(true, {}, equippedOneHanded);
-							compare.refItem = equippedOneHanded;
-
-							for (let s in equippedOffhand.stats) {
-								if (!compare.stats[s])
-									compare.stats[s] = 0;
-
-								compare.stats[s] += equippedOffhand.stats[s];
-							}
-						}
-					}
-
-					if (item.slot === 'oneHanded') 
-						compare = equippedTwoHanded;
-
-					// this case is kind of ugly, but we don't want to go in when comparing an offHand to (oneHanded + empty offHand) - that should just use the normal compare which is offHand to empty
-					if ((item.slot === 'offHand') && (equippedTwoHanded)) {
-						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
-						// the player would lose by switching to the offhand (which would remove the twoHander)
-						// keep a reference to the original item for use in onHideToolTip
-						let spellClone = $.extend(true, {}, equippedTwoHanded.spell);
-						spellClone.name = '';
-						spellClone.values.damage = 0;
-
-						let clone = $.extend(true, {}, item, {
-							spell: spellClone
-						});
-						clone.refItem = item;
-						item = clone;
-
-						compare = equippedTwoHanded;
-					}
-				}
-			}
-
-			events.emit('onShowItemTooltip', item, ttPos, compare, false, this.shiftDown);
+			events.emit('onShowItemTooltip', item, ttPos, true);
 		},
 
 		onGetItems: function (items, rerender) {
@@ -572,9 +516,19 @@ define([
 			else if ((action === 'activateMtx') && (item.type !== 'mtx'))
 				return;
 
+			let data = item.id;
+
 			let cpn = 'inventory';
-			if (action === 'equip')
+			if (['equip', 'setQuickSlot'].includes(action)) {
 				cpn = 'equipment';
+
+				if (action === 'setQuickSlot') {
+					data = {
+						itemId: item.id,
+						slot: 0
+					};
+				}
+			}
 
 			if (action === 'useItem')
 				this.hide();
@@ -585,7 +539,7 @@ define([
 				data: {
 					cpn: cpn,
 					method: action,
-					data: item.id
+					data: data
 				}
 			});
 		},
@@ -605,20 +559,13 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'i')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHover();
-			} else if (key === 'ctrl')
-				this.ctrlDown = true;
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		},
+		
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHover();
-			} else if (key === 'ctrl')
-				this.ctrlDown = false;
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
 	};
 });

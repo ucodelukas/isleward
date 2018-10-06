@@ -229,12 +229,13 @@ let types = {
 			spellName: 'melee',
 			spellConfig: {
 				statType: 'str',
-				statMult: 0.84,
+				statMult: 1,
 				threatMult: 4,
 				cdMax: 5,
+				castTimeMax: 0,
 				useWeaponRange: true,
 				random: {
-					damage: [3, 11.4]
+					damage: [1.47, 9.65]
 				}
 			},
 			implicitStat: {
@@ -248,11 +249,12 @@ let types = {
 			spellName: 'melee',
 			spellConfig: {
 				statType: 'dex',
-				statMult: 0.88,
+				statMult: 1,
 				cdMax: 3,
+				castTimeMax: 0,
 				useWeaponRange: true,
 				random: {
-					damage: [1, 3.8]
+					damage: [0.88, 5.79]
 				}
 			},
 			implicitStat: {
@@ -268,11 +270,12 @@ let types = {
 				statType: 'int',
 				statMult: 1,
 				element: 'holy',
-				cdMax: 4,
+				cdMax: 5,
+				castTimeMax: 0,
 				manaCost: 0,
 				range: 6,
 				random: {
-					damage: [2, 12]
+					damage: [1.17, 7.72]
 				}
 			},
 			implicitStat: {
@@ -288,12 +291,13 @@ let types = {
 			spellName: 'melee',
 			spellConfig: {
 				statType: 'str',
-				statMult: 0.84,
+				statMult: 1,
 				threatMult: 4,
-				cdMax: 5,
+				cdMax: 9,
+				castTimeMax: 0,
 				useWeaponRange: true,
 				random: {
-					damage: [3, 15.4]
+					damage: [2.64, 17.37]
 				}
 			},
 			implicitStat: {
@@ -307,14 +311,15 @@ let types = {
 			spellName: 'projectile',
 			spellConfig: {
 				statType: 'int',
-				statMult: 0.9,
+				statMult: 1,
 				element: 'arcane',
 				auto: true,
 				cdMax: 7,
+				castTimeMax: 0,
 				manaCost: 0,
 				range: 9,
 				random: {
-					damage: [2, 15]
+					damage: [1.65, 10.81]
 				}
 			},
 			implicitStat: {
@@ -329,12 +334,13 @@ let types = {
 			range: 2,
 			spellConfig: {
 				statType: 'dex',
-				statMult: 0.84,
+				statMult: 1,
 				threatMult: 4,
-				cdMax: 5,
+				cdMax: 6,
+				castTimeMax: 0,
 				useWeaponRange: true,
 				random: {
-					damage: [3, 11.4]
+					damage: [1.76, 11.58]
 				}
 			},
 			implicitStat: {

@@ -9,6 +9,9 @@ module.exports = {
 	list: [],
 	ignoreList: [],
 
+	threatDecay: 0.0052,
+	threatCeiling: 0.15,
+
 	init: function (blueprint) {
 		this.physics = this.obj.instance.physics;
 
@@ -163,9 +166,9 @@ module.exports = {
 		this.ignoreList.spliceWhere(o => o === obj);
 	},
 
-	tryEngage: function (obj, amount, threatMult) {
+	tryEngage: function (source, amount, threatMult) {
 		//Don't aggro yourself, stupid
-		if (obj === this.obj)
+		if (source === this.obj)
 			return;
 
 		let result = {
@@ -176,36 +179,35 @@ module.exports = {
 			return false;
 
 		//Mobs shouldn't aggro players that are too far from their home
-		let mob = this.obj.mob;
-		if (!mob)
-			mob = obj.mob;
+		let mob = this.obj.mob || source.mob;
 		if (mob) {
-			let notMob = (obj === mob) ? this.obj : obj;
+			let notMob = source.mob ? this.obj : source;
 			if (!mob.canChase(notMob))
 				return false;
 		}
 
-		let oId = obj.id;
+		let oId = source.id;
 		let list = this.list;
 
-		amount = amount || 0;
-		threatMult = threatMult || 1;
+		amount = (amount || 0);
+		let threat = (amount / this.obj.stats.values.hpMax) * (threatMult || 1);
 
 		let exists = list.find(l => l.obj.id === oId);
-		if (exists) {
-			exists.damage += amount;
-			exists.threat += amount * threatMult;
-		} else {
-			let l = {
-				obj: obj,
-				damage: amount,
-				threat: amount * threatMult
+		if (!exists) {
+			exists = {
+				obj: source,
+				damage: 0,
+				threat: 0
 			};
 
-			list.push(l);
+			list.push(exists);
 		}
 
-		//this.sortThreat();
+		exists.damage += amount;
+		exists.threat += threat;
+
+		if (exists.threat > this.threatCeiling)
+			exists.threat = this.threatCeiling;
 
 		return true;
 	},
@@ -238,6 +240,7 @@ module.exports = {
 
 		this.list = [];
 	},
+
 	unAggro: function (obj, amount) {
 		let list = this.list;
 		let lLen = list.length;
@@ -313,9 +316,42 @@ module.exports = {
 
 		if (highest)
 			return highest.obj;
-		
-			//We have aggro but can't reach our target. Don't let the mob run away as if not in combat!
+			
+		//We have aggro but can't reach our target. Don't let the mob run away as if not in combat!
 		return true;
+	},
+
+	getFurthest: function () {
+		let furthest = null;
+		let distance = 0;
+
+		let list = this.list;
+		let lLen = list.length;
+
+		let thisObj = this.obj;
+		let x = thisObj.x;
+		let y = thisObj.y;
+
+		for (let i = 0; i < lLen; i++) {
+			let l = list[i];
+			let obj = l.obj;
+
+			if (this.ignoreList.some(o => o === obj))
+				continue;
+
+			let oDistance = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
+			if (oDistance > distance) {
+				furthest = l;
+				distance = oDistance;
+			}
+		}
+
+		return furthest.obj;
+	},
+
+	getRandom: function () {
+		let useList = this.list.filter(l => (!this.ignoreList.some(o => (o === l.obj))));
+		return useList[~~(Math.random() * useList.length)];
 	},
 
 	update: function () {
@@ -324,10 +360,15 @@ module.exports = {
 
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
+
 			if (l.obj.destroyed) {
 				this.unAggro(l.obj);
 				i--;
 				lLen--;
+			} else if (l.threat > 0) {
+				l.threat -= this.threatDecay;
+				if (l.threat < 0)
+					l.threat = 0;
 			}
 		}
 	}

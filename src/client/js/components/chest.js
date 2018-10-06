@@ -30,19 +30,12 @@ define([
 	return {
 		type: 'chest',
 
-		ownerId: null,
+		ownerName: null,
 
 		init: function (blueprint) {
-			if (this.ownerId !== -1) {
-				if (!window.player) {
-					this.hideSprite();
-					return;
-				}
-
-				if (this.ownerId !== window.player.serverId) {
-					this.hideSprite();
-					return;
-				}
+			if (this.ownerName && (!window.player || window.player.name !== this.ownerName)) {
+				this.obj.sheetName = null;
+				return;
 			}
 
 			let index = indices[this.obj.cell];
@@ -71,11 +64,6 @@ define([
 					}
 				}
 			});
-		},
-
-		hideSprite: function () {
-			if (this.obj.sprite)
-				this.obj.sprite.visible = false;
 		}
 	};
 });

@@ -7,6 +7,7 @@ module.exports = {
 	exists: false,
 
 	buffer: [],
+	processing: [],
 
 	tables: {
 		character: null,
@@ -131,9 +132,10 @@ module.exports = {
 	},
 
 	process: async function () {
-		let next = this.buffer[0];
-		if (!next)
+		let next = this.buffer.splice(0, 1);
+		if (!next.length)
 			return;
+		next = next[0];
 
 		let config = next.config;
 		let options = config.options;
@@ -151,11 +153,11 @@ module.exports = {
 				await this.processDelete(options);
 		} catch (e) {
 			console.log(e);
+			this.buffer.splice(0, 0, next);
 			setTimeout(this.process.bind(this), 10);
 			return;
 		}
 
-		this.buffer.splice(0, 1);
 		next.resolve(res);
 
 		setTimeout(this.process.bind(this), 10);

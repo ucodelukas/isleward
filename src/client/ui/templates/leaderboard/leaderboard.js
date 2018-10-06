@@ -39,7 +39,7 @@ define([
 		},
 
 		onPage: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			let offset = ~~el.attr('offset');
 
 			this.offset += offset;

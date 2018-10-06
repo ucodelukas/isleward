@@ -4,7 +4,7 @@ module.exports = {
 	resources: {
 		Skyblossom: {
 			type: 'herb',
-			max: 7
+			max: 4
 		},
 		Emberleaf: {
 			type: 'herb',

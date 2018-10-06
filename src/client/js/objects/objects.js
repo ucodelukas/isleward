@@ -2,12 +2,14 @@ define([
 	'js/objects/objBase',
 	'js/system/events',
 	'js/rendering/renderer',
-	'js/sound/sound'
+	'js/sound/sound',
+	'js/config'
 ], function (
 	objBase,
 	events,
 	renderer,
-	sound
+	sound,
+	config
 ) {
 	return {
 		showNames: false,
@@ -20,10 +22,12 @@ define([
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
+			events.on('onTilesVisible', this.onTilesVisible.bind(this));
 
 			//Get saved value for showNames, or use the value set above
 			let showNames = window.localStorage.getItem('iwd_opt_shownames');
 			this.showNames = showNames ? (showNames === 'true') : this.showNames;
+			config.showNames = this.showNames;
 		},
 
 		getLocation: function (x, y) {
@@ -34,7 +38,8 @@ define([
 			let mob = null;
 			for (let i = 0; i < oLen; i++) {
 				let o = objects[i];
-				if ((!o.stats) || (o.nonSelectable))
+				
+				if ((!o.stats) || (o.nonSelectable) || (o === window.player) || (!o.sprite.visible))
 					continue;
 
 				let dx = Math.abs(o.x - x);
@@ -54,7 +59,7 @@ define([
 			let objects = this.objects;
 
 			let list = objects.filter(function (o) {
-				if ((!o.stats) || (o.nonSelectable) || (o === window.player))
+				if ((!o.stats) || (o.nonSelectable) || (o === window.player) || (!o.sprite.visible))
 					return false;
 
 				let dx = Math.abs(o.x - x);
@@ -120,13 +125,14 @@ define([
 			else
 				this.updateObject(exists, obj);
 		},
+
 		buildObject: function (template) {
 			let obj = $.extend(true, {}, objBase);
 
 			let components = template.components || [];
 			delete template.components;
 
-			let syncTypes = ['portrait'];
+			let syncTypes = ['portrait', 'area'];
 
 			for (let p in template) {
 				let value = template[p];
@@ -137,19 +143,6 @@ define([
 						obj[p] = value;
 				} else
 					obj[p] = value;
-			}
-
-			if (obj.sheetName) {
-				obj.sprite = renderer.buildObject(obj);
-				if (template.hidden) {
-					obj.sprite.visible = false;
-					if (obj.nameSprite)
-						obj.nameSprite.visible = false;
-					if ((obj.stats) && (obj.stats.hpSprite)) {
-						obj.stats.hpSprite.visible = false;
-						obj.stats.hpSpriteInner.visible = false;
-					}
-				}
 			}
 
 			components.forEach(function (c) {
@@ -170,13 +163,26 @@ define([
 				obj.addComponent(c.type, c);
 			}, this);
 
+			if (obj.sheetName) {
+				obj.sprite = renderer.buildObject(obj);
+				if (template.hidden) {
+					obj.sprite.visible = false;
+					if (obj.nameSprite)
+						obj.nameSprite.visible = false;
+					if ((obj.stats) && (obj.stats.hpSprite)) {
+						obj.stats.hpSprite.visible = false;
+						obj.stats.hpSpriteInner.visible = false;
+					}
+				}
+			}
+
 			this.objects.push(obj);
 
 			if (obj.self) {
 				events.emit('onGetPlayer', obj);
 				window.player = obj;
 
-				sound.init(obj.zoneName);
+				sound.unload(obj.zoneId);
 
 				renderer.setPosition({
 					x: (obj.x - (renderer.width / (scale * 2))) * scale,
@@ -191,11 +197,16 @@ define([
 					x: (obj.x * scale) + (scale / 2),
 					y: (obj.y * scale) + scale
 				});
-				obj.nameSprite.visible = this.showNames;
+			}
+
+			if (renderer.sprites) {
+				let isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
+				obj.setVisible(isVisible);
 			}
 
 			return obj;
 		},
+
 		updateObject: function (obj, template) {
 			let components = template.components || [];
 
@@ -239,6 +250,13 @@ define([
 
 				if ((p === 'x') || (p === 'y'))
 					moved = true;
+
+				if (p === 'casting') {
+					if (obj === window.player)
+						events.emit('onGetSelfCasting', value);
+					else
+						events.emit('onGetTargetCasting', value);
+				}
 
 				if (sprite) {
 					if (p === 'x') {
@@ -285,8 +303,14 @@ define([
 				obj.nameSprite.visible = this.showNames;
 			}
 
+			if (obj.sprite) {
+				let isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
+				obj.setVisible(isVisible);
+			}
+
 			obj.setSpritePosition();
 		},
+
 		update: function () {
 			let objects = this.objects;
 			let len = objects.length;
@@ -314,6 +338,7 @@ define([
 
 				//Set new value in localStorage for showNames
 				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
+				config.showNames = this.showNames;
 
 				let showNames = this.showNames;
 
@@ -322,11 +347,27 @@ define([
 				for (let i = 0; i < oLen; i++) {
 					let obj = objects[i];
 					let ns = obj.nameSprite;
-					if ((!ns) || (obj.dead))
+					if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
 						continue;
 
 					ns.visible = showNames;
 				}
+			}
+		},
+
+		onTilesVisible: function (tiles, visible) {
+			let objects = this.objects;
+			let oLen = objects.length;
+			for (let i = 0; i < oLen; i++) {
+				let o = objects[i];
+
+				let onPos = tiles.some(function (t) {
+					return (!(t.x !== o.x || t.y !== o.y));
+				});
+				if (!onPos)
+					continue;
+
+				o.setVisible(visible);
 			}
 		}
 	};

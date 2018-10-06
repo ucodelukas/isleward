@@ -1,8 +1,10 @@
 define([
+	'js/system/client',
 	'js/system/events',
 	'html!ui/templates/target/template',
 	'css!ui/templates/target/styles'
 ], function (
+	client,
 	events,
 	template,
 	styles
@@ -18,16 +20,43 @@ define([
 		postRender: function () {
 			this.onEvent('onSetTarget', this.onSetTarget.bind(this));
 			this.onEvent('onDeath', this.onSetTarget.bind(this, null));
+			this.onEvent('onGetTargetCasting', this.onGetCasting.bind(this));
+		},
+
+		onGetCasting: function (casting) {
+			let box = this.el.find('.statBox')
+				.eq(2);
+
+			if ((casting === 0) || (casting === 1)) {
+				box.hide();
+				return;
+			} box.show();
+
+			let w = ~~(casting * 100);
+			box.find('[class^="stat"]').css('width', w + '%');
 		},
 
 		onContextMenu: function (e) {
 			let target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
-			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies))
-				return;
+			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies)) {
+				if (target.prophecies) {
+					let inspectContext = [
+						target.name,
+						'----------', {
+							text: 'inspect',
+							callback: this.onInspect.bind(this)
+						}
+					];
 
-			let context = [
+					events.emit('onContextMenu', inspectContext, e.event);
+				}
+
+				return;
+			}
+
+			let talkContext = [
 				target.name,
 				'----------', {
 					text: 'talk',
@@ -35,7 +64,7 @@ define([
 				}
 			];
 
-			events.emit('onContextMenu', context, e.event);
+			events.emit('onContextMenu', talkContext, e.event);
 
 			e.event.preventDefault();
 			return false;
@@ -43,6 +72,20 @@ define([
 
 		onTalk: function () {
 			window.player.dialogue.talk(this.target);
+		},
+
+		onInspect: function () {
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'equipment',
+					method: 'inspect',
+					data: {
+						playerId: this.target.id
+					}
+				}
+			});
 		},
 
 		onSetTarget: function (target, e) {

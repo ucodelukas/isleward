@@ -36,6 +36,7 @@ define([
 
 			this.onEvent('onHideInventory', this.hackMethod.bind(this));
 			this.onEvent('beforeInventoryClickItem', this.hackMethod.bind(this));
+			this.onEvent('onGetItems', this.onGetItems.bind(this));
 
 			this.onEvent('onSetSmithItem', this.onHideInventory.bind(this));
 
@@ -43,7 +44,7 @@ define([
 		},
 
 		clickAction: function (e) {
-			let el = $(e.currentTarget);
+			let el = $(e.target);
 			this.find('.col-btn').removeClass('selected');
 
 			let action = el.attr('action');
@@ -179,7 +180,7 @@ define([
 
 			msg.success = false;
 
-			if ((!msg) || (!msg.item) || (!msg.item.slot) || (msg.item.eq))
+			if (!msg || !msg.item || !msg.item.slot || msg.item.eq)
 				return;
 
 			this.item = msg.item;
@@ -214,9 +215,7 @@ define([
 			if (result.materials) {
 				let material = result.materials[0];
 				if (material) {
-					let hasMaterials = window.player.inventory.items.find(function (i) {
-						return (i.name === material.name);
-					});
+					let hasMaterials = window.player.inventory.items.find(i => i.name === material.name);
 					if (hasMaterials) {
 						material.quantityText = hasMaterials.quantity + '/' + material.quantity;
 						hasMaterials = hasMaterials.quantity >= material.quantity;
@@ -234,6 +233,26 @@ define([
 			}
 
 			this.setDisabled(false);
+		},
+
+		onGetItems: function (items) {
+			let elMaterial = this.find('.material .item');
+			if (!elMaterial.length)
+				return;
+
+			let itemMaterial = elMaterial.data('item');
+			let elQuantity = elMaterial.find('.quantity');
+			let invMaterial = items.find(i => i.name === itemMaterial.name) || { quantity: 0 };
+			
+			let newText = elQuantity.html().split('/');
+			newText = invMaterial.quantity + '/' + newText[1];
+			elQuantity.html(newText);
+
+			let elButton = this.find('.actionButton').removeClass('disabled');
+			if (invMaterial.quantity < newText[1]) {
+				elButton.addClass('disabled');
+				elQuantity.addClass('red');
+			}
 		},
 
 		drawItem: function (container, item, redQuantity) {
@@ -283,7 +302,7 @@ define([
 				};
 			}
 
-			events.emit('onShowItemTooltip', item, ttPos);
+			events.emit('onShowItemTooltip', item, ttPos, true);
 		},
 
 		hideTooltip: function (el, item, e) {
@@ -292,6 +311,7 @@ define([
 		},
 
 		beforeHide: function () {
+			this.item = null;
 			this.offEvent(this.eventCloseInv);
 			this.offEvent(this.eventClickInv);
 		},
@@ -304,12 +324,20 @@ define([
 				this.find('.icon').show();
 				this.find('.actionButton').removeClass('disabled').addClass('disabled');
 				this.show();
-			} else
+			} else 
 				this.hide();
 		},
+
 		onKeyDown: function (key) {
 			if (key === 'm')
 				this.toggle();
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
+		},
+
+		onKeyUp: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();	
 		}
 	};
 });

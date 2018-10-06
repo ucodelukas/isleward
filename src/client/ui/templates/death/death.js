@@ -29,7 +29,7 @@ define([
 
 		onRespawn: function () {
 			events.emit('onHideOverlay', this.el);
-			this.hide();
+			this.hide(true);
 
 			client.request({
 				cpn: 'player',
@@ -39,6 +39,14 @@ define([
 					method: 'respawn'
 				}
 			});
+		},
+
+		hide: function (force) {
+			if (!force)
+				return;
+
+			this.shown = false;
+			this.el.hide();
 		},
 
 		doShow: function () {

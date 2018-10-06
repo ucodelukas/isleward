@@ -12,8 +12,6 @@ window.addons = {
 	init: function (events) {
 		this.events = events;
 
-		this.addons.forEach(function (m) {
-			m.init(this.events);
-		}, this);
+		this.addons.forEach(a => a.init(this.events));
 	}
 };

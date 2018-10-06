@@ -3,21 +3,21 @@ define([
 	'js/system/client',
 	'html!ui/templates/stash/template',
 	'css!ui/templates/stash/styles',
-	'html!ui/templates/inventory/templateItem'
+	'html!ui/templates/inventory/templateItem',
+	'js/input'
 ], function (
 	events,
 	client,
 	template,
 	styles,
-	tplItem
+	tplItem,
+	input
 ) {
 	return {
 		tpl: template,
 
 		centered: true,
 		hoverItem: null,
-
-		shiftDown: false,
 
 		items: [],
 
@@ -35,22 +35,19 @@ define([
 				.empty();
 
 			let items = this.items;
-			let iLen = items.length;
-
-			let remainder = iLen % 8;
-			let startNoPad = ~~(iLen / 8);
-			if (remainder === 0)
-				startNoPad--;
-			startNoPad *= 8;
+			let iLen = Math.max(items.length, 50);
 
 			for (let i = 0; i < iLen; i++) {
 				let item = items[i];
 
-				let imgX = -item.sprite[0] * 64;
-				let imgY = -item.sprite[1] * 64;
-
 				let itemEl = $(tplItem)
 					.appendTo(container);
+
+				if (!item)
+					continue;
+
+				let imgX = -item.sprite[0] * 64;
+				let imgY = -item.sprite[1] * 64;
 
 				let spritesheet = item.spritesheet || '../../../images/items.png';
 				if (!item.spritesheet) {
@@ -77,13 +74,6 @@ define([
 					itemEl.addClass('eq');
 				if (item.isNew)
 					itemEl.addClass('new');
-
-				if (i >= startNoPad) {
-					if (i === iLen - 1)
-						itemEl.css('margin', '0px 0px 0px 0px');
-					else
-						itemEl.css('margin', '0px 8px 0px 0px');
-				}
 			}
 		},
 
@@ -101,6 +91,7 @@ define([
 			events.emit('onHideItemTooltip', this.hoverItem);
 			this.hoverItem = null;
 		},
+		
 		onHover: function (el, item, e) {
 			if (item)
 				this.hoverItem = item;
@@ -119,16 +110,10 @@ define([
 					y: ~~(elOffset.top + 4)
 				};
 			}
-
-			let compare = null;
-			if (this.shiftDown) {
-				compare = window.player.inventory.items.find(function (i) {
-					return ((i.eq) && (i.slot === item.slot));
-				});
-			}
-
-			events.emit('onShowItemTooltip', item, ttPos, compare);
+		
+			events.emit('onShowItemTooltip', item, ttPos, true);
 		},
+
 		onClick: function (el, item) {
 			client.request({
 				cpn: 'player',
@@ -144,41 +129,10 @@ define([
 		onGetStashItems: function (items) {
 			this.items = items;
 
-			//Sort by slot
-			this.items.sort(function (a, b) {
-				if (((a.material) && (b.material)) || ((a.quest) && (b.quest)) || ((a.slot !== null) && (a.slot === b.slot))) {
-					if (a.type === b.type) {
-						if (a.name < b.name)
-							return -1;
-						else if (a.name === b.name)
-							return 0;
-						else if (a.name > b.name)
-							return 1;
-					} else if ((a.type || '') < (b.type || ''))
-						return -1;
-					else if ((a.type || '') === (b.type || ''))
-						return 0;
-					else if ((a.type || '') > (b.type || ''))
-						return 1;
-				} else if ((a.quest) && (!b.quest))
-					return -1;
-				else if ((b.quest) && (!a.quest))
-					return 1;
-				else if ((a.material) && (!b.material))
-					return -1;
-				else if (b.material && (!a.material))
-					return 1;
-				else if (a.slot > b.slot)
-					return -1;
-				else if (a.slot < b.slot)
-					return 1;
-				else 
-					return b.id - a.id;
-			});
-
 			if (this.shown)
 				this.build();
 		},
+
 		onDestroyStashItems: function (itemIds) {
 			itemIds.forEach(function (id) {
 				let item = this.items.find(i => i.id === id);
@@ -235,19 +189,15 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'u')
 				this.toggle();
-			else if (key === 'shift') {
-				this.shiftDown = true;
-				if (this.hoverItem)
-					this.onHover();
-			} else if ((key === 'esc') && (this.shown))
+			else if (key === 'shift' && this.hoverItem)
+				this.onHover();
+			else if (key === 'esc' && this.shown)
 				this.toggle();
 		},
+
 		onKeyUp: function (key) {
-			if (key === 'shift') {
-				this.shiftDown = false;
-				if (this.hoverItem)
-					this.onHover();
-			}
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
 	};
 });

@@ -290,7 +290,7 @@ let spells = [{
 	type: 'stealth',
 	icon: [2, 2]
 },
-	/*, {
+/*, {
 				name: 'Web Bolt',
 				description: 'Encases your target in webs, preventing them from doing anything for a short period',
 				type: 'cocoon',

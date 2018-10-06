@@ -50,11 +50,12 @@ define([
 			let obj = this.obj;
 
 			let yOffset = -12;
-			if (obj.isChampion)
-				yOffset = -18;
+			let sprite = this.obj.sprite;
+			if (sprite)
+				yOffset = (sprite.height / 2) - 10;
 
 			let x = obj.x * scale;
-			let y = (obj.y * scale) + yOffset;
+			let y = (obj.y * scale) - yOffset;
 
 			renderer.moveRectangle({
 				sprite: this.hpSprite,

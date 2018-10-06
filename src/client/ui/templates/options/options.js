@@ -26,7 +26,8 @@ define([
 		postRender: function () {
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
-			this.el.find('.btnScreen').on('click', this.toggleScreen.bind(this));
+			//Can only toggle fullscreen directly in a listener, not deferred the way wQuery does it
+			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
@@ -61,9 +62,9 @@ define([
 			sound.unload();
 
 			events.emit('onShowCharacterSelect');
-			$('[class^="ui"]:not(.ui-container)').each(function (i, el) {
+			$('[class^="ui"]:not(.ui-container)').toArray().forEach(el => {
 				let ui = $(el).data('ui');
-				if ((ui) && (ui.destroy))
+				if (ui && ui.destroy)
 					ui.destroy();
 			});
 			factory.build('characters', {});

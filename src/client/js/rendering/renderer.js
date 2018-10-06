@@ -20,6 +20,7 @@ define([
 	picture
 ) {
 	let pixi = PIXI;
+	let mRandom = Math.random.bind(Math);
 
 	return {
 		stage: null,
@@ -89,19 +90,14 @@ define([
 			window.onresize = this.onResize.bind(this);
 
 			$(this.renderer.view)
-				.appendTo('.canvasContainer');
+				.appendTo('.canvas-container');
 
 			this.stage = new pixi.Container();
 
 			let layers = this.layers;
 			Object.keys(layers).forEach(function (l) {
-				if (l === 'tileSprites') {
-					layers[l] = new pixi.Container();
-					layers[l].layer = 'tiles';
-				} else {
-					layers[l] = new pixi.Container();
-					layers[l].layer = l;
-				}
+				layers[l] = new pixi.Container();
+				layers[l].layer = (l === 'tileSprites') ? 'tiles' : l;
 
 				this.stage.addChild(layers[l]);
 			}, this);
@@ -151,22 +147,17 @@ define([
 		},
 
 		toggleScreen: function () {
-			let screenMode = 0;
-
 			let isFullscreen = (window.innerHeight === screen.height);
-			if (isFullscreen)
-				screenMode = 0;
-			else
-				screenMode = 1;
 
-			if (screenMode === 0) {
-				(document.cancelFullscreen || document.msCancelFullscreen || document.mozCancelFullscreen || document.webkitCancelFullScreen).call(document);
+			if (isFullscreen) {
+				let doc = document;
+				(doc.cancelFullscreen || doc.msCancelFullscreen || doc.mozCancelFullscreen || doc.webkitCancelFullScreen).call(doc);
 				return 'Windowed';
-			} else if (screenMode === 1) {
-				let el = $('body')[0];
-				(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
-				return 'Fullscreen';
-			}
+			} 
+
+			let el = $('body')[0];
+			(el.requestFullscreen || el.msRequestFullscreen || el.mozRequestFullscreen || el.webkitRequestFullscreen).call(el);
+			return 'Fullscreen';
 		},
 
 		buildTitleScreen: function () {
@@ -183,39 +174,31 @@ define([
 			let container = this.layers.tileSprites;
 
 			for (let i = 0; i < w; i++) {
+				let ii = i / 10;
 				for (let j = 0; j < h; j++) {
-					let ii = i / 10;
-					let alpha = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
-					let tile = 5;
-					if (j < 7)
-						tile = 5;
-					else if (alpha < -0.2)
-						tile = 3;
-					else if (alpha < 0.2)
-						tile = 4;
-					else if ((alpha < 0.5) && (j > 7))
-						tile = 53;
+					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
 
-					alpha = Math.random();
+					let tile = 61;
+					if (roll < -0.2)
+						tile = 63;
+					else if (roll < 0.2)
+						tile = 64;
+					else if (roll < 0.5)
+						tile = 34;
 
-					if (tile === 5)
-						alpha *= 2;
-					else if (tile === 3)
-						alpha *= 1;
-					else if (tile === 4)
-						alpha *= 1;
-					else if (tile === 53)
+					let alpha = mRandom();
+
+					if ([5, 53].indexOf(tile) > -1)
 						alpha *= 2;
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
-					if (Math.random() < 0.35) {
+					if (mRandom() < 0.35) {
 						tile = {
-							2: 7,
-							5: 6,
-							3: 0,
-							4: 1,
-							53: 54
+							61: 62,
+							63: 64,
+							64: 63,
+							34: 33
 						}[tile];
 					}
 
@@ -227,7 +210,7 @@ define([
 					sprite.width = scale;
 					sprite.height = scale;
 
-					if (Math.random() < 0.5) {
+					if (mRandom() < 0.5) {
 						sprite.position.x += scale;
 						sprite.scale.x = -scaleMult;
 					}
@@ -303,44 +286,7 @@ define([
 				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
-			}, this);
-		},
-
-		onGetMapCustomization: function (msg) {
-			if (!msg.collide) {
-				let children = this.layers.tiles.children;
-				let cLen = children.length;
-				let x = msg.x * scale;
-				let y = msg.y * scale;
-				for (let i = cLen - 1; i >= 0; i--) {
-					let c = children[i];
-					let cx = c.x;
-					if (c.scale.x < 0)
-						cx -= scale;
-					if ((cx === x) && (c.y === y)) {
-						c.parent.removeChild(c);
-						break;
-					}
-				}
-			}
-
-			let tile = new pixi.Sprite(this.getTexture('sprites', msg.tile));
-
-			tile.alpha = tileOpacity.map(msg.tile);
-			tile.position.x = msg.x * scale;
-			tile.position.y = msg.y * scale;
-			tile.width = scale;
-			tile.height = scale;
-
-			if (Math.random() < 0.5) {
-				tile.position.x += scale;
-				tile.scale.x = -scaleMult;
-			}
-
-			this.layers.tiles.addChild(tile);
-
-			physics.collisionMap[msg.x][msg.y] = msg.collide;
-			physics.graph.grid[msg.x][msg.y] = !msg.collide;
+			});
 		},
 
 		buildTile: function (c, i, j) {
@@ -355,11 +301,9 @@ define([
 			tile.width = scale;
 			tile.height = scale;
 
-			if (canFlip) {
-				if (Math.random() < 0.5) {
-					tile.position.x += scale;
-					tile.scale.x = -scaleMult;
-				}
+			if (canFlip && mRandom() < 0.5) {
+				tile.position.x += scale;
+				tile.scale.x = -scaleMult;
 			}
 
 			return tile;
@@ -373,13 +317,23 @@ define([
 			let w = this.w = map.length;
 			let h = this.h = map[0].length;
 
+			for (let i = 0; i < w; i++) {
+				let row = map[i];
+				for (let j = 0; j < h; j++) {
+					if (!row[j].split)
+						row[j] += '';
+
+					row[j] = row[j].split(',');
+				}
+			}
+
 			this.clean();
 			spritePool.clean();
 
 			this.stage.filters = [new PIXI.filters.VoidFilter()];
 			this.stage.filterArea = new PIXI.Rectangle(0, 0, w * scale, h * scale);
 
-			this.buildHiddenRooms(msg);
+			this.hiddenRooms = msg.hiddenRooms;
 
 			this.sprites = _.get2dArray(w, h, 'array');
 
@@ -401,64 +355,33 @@ define([
 			}, this);
 		},
 
-		buildHiddenRooms: function (msg) {
-			let hiddenWalls = msg.hiddenWalls;
-			let hiddenTiles = msg.hiddenTiles;
-
-			this.hiddenRooms = msg.hiddenRooms;
-			this.hiddenRooms.forEach(function (h) {
-				h.container = new pixi.Container();
-				this.layers.hiders.addChild(h.container);
-				this.buildRectangle({
-					x: h.x * scale,
-					y: h.y * scale,
-					w: h.width * scale,
-					h: h.height * scale,
-					color: 0x2d2136,
-					parent: h.container
-				});
-				for (let i = h.x; i < h.x + h.width; i++) {
-					for (let j = h.y; j < h.y + h.height; j++) {
-						[hiddenTiles, hiddenWalls].forEach(function (k) {
-							let cell = k[i][j];
-							if (cell === 0)
-								return;
-
-							let tile = this.buildTile(cell - 1, i, j);
-							tile.width = scale;
-							tile.height = scale;
-							h.container.addChild(tile);
-						}, this);
-					}
-				}
-			}, this);
-		},
-		hideHiders: function () {
-			let player = window.player;
-			if (!player)
-				return;
-
-			let x = player.x;
-			let y = player.y;
-
-			let hiddenRooms = this.hiddenRooms;
-			let hLen = hiddenRooms.length;
-			for (let i = 0; i < hLen; i++) {
-				let h = hiddenRooms[i];
-				h.container.visible = (
-					(x < h.x) ||
-                    (x >= h.x + h.width) ||
-                    (y < h.y) ||
-                    (y >= h.y + h.height)
-				);
-			}
-		},
-
 		setPosition: function (pos, instant) {
 			pos.x += 16;
 			pos.y += 16;
 
-			this.hideHiders();
+			let player = window.player;
+			if (player) {
+				let px = player.x;
+				let py = player.y;
+
+				let hiddenRooms = this.hiddenRooms;
+				let hLen = hiddenRooms.length;
+				for (let i = 0; i < hLen; i++) {
+					let h = hiddenRooms[i];
+					if (!h.discoverable)
+						continue;
+					if (
+						px < h.x ||
+						px >= h.x + h.width ||
+						py < h.y ||
+						py >= h.y + h.height ||
+						!physics.isInPolygon(px, py, h.area)
+					)
+						continue;
+
+					h.discovered = true;
+				}
+			}
 
 			if (instant) {
 				this.moveTo = null;
@@ -479,7 +402,61 @@ define([
 			let sw = this.width;
 			let sh = this.height;
 
-			return (!((x < sx) || (y < sy) || (x >= sx + sw) || (y >= sy + sh)));
+			return (!(x < sx || y < sy || x >= sx + sw || y >= sy + sh));
+		},
+
+		isHidden: function (x, y) {
+			let hiddenRooms = this.hiddenRooms;
+			let hLen = hiddenRooms.length;
+			if (!hLen)
+				return false;
+
+			let player = window.player;
+			let px = player.x;
+			let py = player.y;
+
+			let hidden = false;
+			for (let i = 0; i < hLen; i++) {
+				let h = hiddenRooms[i];
+
+				let outsideHider = (
+					x < h.x ||
+					x >= h.x + h.width ||
+					y < h.y ||
+					y >= h.y + h.height
+				);
+
+				if (outsideHider)
+					continue;
+
+				let inHider = physics.isInPolygon(x, y, h.area);
+
+				if (!inHider)
+					continue;
+
+				if (h.discovered)
+					return false;
+
+				outsideHider = (
+					px < h.x ||
+					px >= h.x + h.width ||
+					py < h.y ||
+					py >= h.y + h.height
+				);
+
+				if (outsideHider) {
+					hidden = true;
+					continue;
+				}
+
+				inHider = physics.isInPolygon(px, py, h.area);
+
+				if (inHider)
+					return false;
+				hidden = true;
+			}
+
+			return hidden;
 		},
 
 		updateSprites: function () {
@@ -513,28 +490,63 @@ define([
 
 			let addedSprite = false;
 
+			let checkHidden = this.isHidden.bind(this);
+
+			let newVisible = [];
+			let newHidden = [];
+
 			for (let i = lowX; i < highX; i++) {
+				let mapRow = map[i];
+				let spriteRow = sprites[i];
+
 				for (let j = lowY; j < highY; j++) {
-					let cell = map[i][j];
+					let cell = mapRow[j];
 					if (!cell)
 						continue;
 
-					let rendered = sprites[i][j];
-					if (rendered.length > 0)
+					let cLen = cell.length;
+					if (!cLen)
+						return;
+
+					let rendered = spriteRow[j];
+					let isHidden = checkHidden(i, j);
+					if (rendered.length > 0) {
+						if (!isHidden)
+							continue;
+						else {
+							newHidden.push({
+								x: i,
+								y: j
+							});
+
+							let rLen = rendered.length;
+							for (let k = 0; k < rLen; k++) {
+								let sprite = rendered[k];
+								sprite.visible = false;
+								spritePool.store(sprite);
+							}
+							spriteRow[j] = [];
+
+							continue;
+						}
+					} else if (isHidden)
 						continue;
-					else if (!cell.split)
-						cell += '';
-					cell = cell.split(',');
-					for (let k = 0; k < cell.length; k++) {
+						
+					newVisible.push({
+						x: i,
+						y: j
+					});
+
+					for (let k = 0; k < cLen; k++) {
 						let c = cell[k];
-						if (c === '0')
+						if (c === '0' || c === '')
 							continue;
 
 						c--;
 
 						let flipped = '';
 						if (tileOpacity.canFlip(c)) {
-							if (Math.random() < 0.5)
+							if (mRandom() < 0.5)
 								flipped = 'flip';
 						}
 
@@ -553,6 +565,8 @@ define([
 							tile.visible = true;
 						}
 
+						tile.z = k;
+
 						rendered.push(tile);
 					}
 				}
@@ -564,28 +578,28 @@ define([
 			highY = Math.min(h - 1, highY + 10);
 
 			for (let i = lowX; i < highX; i++) {
+				let spriteRow = sprites[i];
 				let outside = ((i >= x - sw) && (i < x + sw));
 				for (let j = lowY; j < highY; j++) {
 					if ((outside) && (j >= y - sh) && (j < y + sh))
 						continue;
 
-					let list = sprites[i][j];
+					let list = spriteRow[j];
 					let lLen = list.length;
 					for (let k = 0; k < lLen; k++) {
 						let sprite = list[k];
 						sprite.visible = false;
 						spritePool.store(sprite);
 					}
-					sprites[i][j] = [];
+					spriteRow[j] = [];
 				}
 			}
 
-			//Reorder
-			if (addedSprite) {
-				container.children.sort(function (a, b) {
-					return (a.sheetNum - b.sheetNum);
-				});
-			}
+			events.emit('onTilesVisible', newVisible, true);
+			events.emit('onTilesVisible', newHidden, false);
+
+			if (addedSprite)
+				container.children.sort((a, b) => a.z - b.z);
 		},
 
 		update: function () {
@@ -595,7 +609,7 @@ define([
 				let deltaX = this.moveTo.x - this.pos.x;
 				let deltaY = this.moveTo.y - this.pos.y;
 
-				if ((deltaX !== 0) || (deltaY !== 0)) {
+				if (deltaX !== 0 || deltaY !== 0) {
 					let moveSpeed = this.moveSpeed;
 					let distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
@@ -614,8 +628,8 @@ define([
 					deltaX = (deltaX / distance) * moveSpeed;
 					deltaY = (deltaY / distance) * moveSpeed;
 
-					this.pos.x = this.pos.x + (deltaX);
-					this.pos.y = this.pos.y + (deltaY);
+					this.pos.x = this.pos.x + deltaX;
+					this.pos.y = this.pos.y + deltaY;
 				} else {
 					this.moveSpeed = 0;
 					this.moveTo = null;
@@ -626,7 +640,7 @@ define([
 				stage.y = -~~this.pos.y;
 
 				let halfScale = scale / 2;
-				if ((Math.abs(stage.x - this.lastUpdatePos.x) > halfScale) || (Math.abs(stage.y - this.lastUpdatePos.y) > halfScale))
+				if (Math.abs(stage.x - this.lastUpdatePos.x) > halfScale || Math.abs(stage.y - this.lastUpdatePos.y) > halfScale)
 					this.updateSprites();
 
 				events.emit('onSceneMove');
@@ -720,12 +734,9 @@ define([
 		},
 
 		addFilter: function (sprite) {
-			let thickness = 16;
-			if (sprite.width > scale)
-				thickness = 8;
+			let thickness = (sprite.width > scale) ? 8 : 16;
 
 			let filter = new shaderOutline(this.renderer.width, this.renderer.height, thickness, '0xffffff');
-
 			if (!sprite.filters)
 				sprite.filters = [filter];
 			else
@@ -735,10 +746,8 @@ define([
 		},
 
 		removeFilter: function (sprite, filter) {
-			if (!sprite.filters)
-				return;
-
-			sprite.filters = null;
+			if (sprite.filters)
+				sprite.filters = null;
 		},
 
 		buildText: function (obj) {
@@ -773,17 +782,12 @@ define([
 		},
 
 		reorder: function (sprite) {
-			let mobLayer = this.layers.mobs;
-			let mobs = mobLayer.children;
-			mobs.sort(function (a, b) {
-				return (b.y - a.y);
-			});
+			this.layers.mobs.children.sort((a, b) => b.y - a.y);
 		},
 
 		destroyObject: function (obj) {
-			if (!obj.sprite.parent)
-				return;
-			obj.sprite.parent.removeChild(obj.sprite);
+			if (obj.sprite.parent)
+				obj.sprite.parent.removeChild(obj.sprite);
 		},
 
 		render: function () {

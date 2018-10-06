@@ -86,14 +86,7 @@ define([
 		},
 
 		onMouseDown: function (e, target) {
-			this.target = target || this.hoverTarget;
-
-			if (this.target) {
-				this.targetSprite.x = this.target.x * scale;
-				this.targetSprite.y = this.target.y * scale;
-
-				this.targetSprite.visible = true;
-			} else {
+			if (!target && this.target && (!this.hoverTarget || this.hoverTarget.id != this.target.id)) {
 				client.request({
 					cpn: 'player',
 					method: 'queueAction',
@@ -103,9 +96,17 @@ define([
 						target: null
 					}
 				});
-
-				this.targetSprite.visible = false;
 			}
+
+			this.target = target || this.hoverTarget;
+
+			if (this.target) {
+				this.targetSprite.x = this.target.x * scale;
+				this.targetSprite.y = this.target.y * scale;
+
+				this.targetSprite.visible = true;
+			} else
+				this.targetSprite.visible = false;
 
 			events.emit('onSetTarget', this.target, e);
 		},
@@ -119,32 +120,9 @@ define([
 			events.emit('onSetTarget', this.target, null);
 		},
 
-		build: function (destroy) {
-			client.request({
-				cpn: 'player',
-				method: 'performAction',
-				data: {
-					instanceModule: 'customMap',
-					method: 'customize',
-					data: {
-						tile: 189,
-						direction: this.obj.keyboardMover.direction,
-						destroy: destroy
-					}
-				},
-				callback: renderer.onGetMapCustomization.bind(renderer)
-			});
-		},
-
 		onKeyDown: function (key) {
-			let handler = ({
-				b: this.build.bind(this),
-				n: this.build.bind(this, true),
-				tab: this.tabTarget.bind(this)
-			})[key];
-
-			if (handler) {
-				handler();
+			if (key === 'tab') {
+				this.tabTarget();
 				return;
 			} else if (isNaN(key))
 				return;
@@ -182,7 +160,7 @@ define([
 				method: 'queueAction',
 				data: {
 					action: 'spell',
-					priority: true,
+					priority: input.isKeyDown('ctrl'),
 					spell: spell.id,
 					auto: spell.auto,
 					target: target,

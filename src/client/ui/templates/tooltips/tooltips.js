@@ -59,9 +59,9 @@ define([
 			}
 
 			if ((zIndex) && (zIndex !== 'auto'))
-				this.tooltip.css('zIndex', zIndex);
+				this.tooltip.css('z-index', zIndex);
 			else
-				this.tooltip.css('zIndex', '');
+				this.tooltip.css('z-index', '');
 		}
 	};
 });

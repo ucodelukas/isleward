@@ -212,19 +212,7 @@ module.exports = {
 			targetTrade.genLeft++;
 		}
 
-		if (item.worth.currency) {
-			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
-			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
-		} else {
-			targetTrade.gold += ~~(item.worth * markup);
-			this.gold -= ~~(item.worth * markup);
-			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
-		}
-
 		if (item.type !== 'skin') {
-			if (!item.infinite)
-				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
-
 			let clonedItem = extend({}, item);
 			if (item.worth.currency)
 				clonedItem.worth = 0;
@@ -243,7 +231,13 @@ module.exports = {
 					clonedItem.factions = item.factions;
 			}
 
-			this.obj.inventory.getItem(clonedItem);
+			if (!this.obj.inventory.getItem(clonedItem)) {
+				this.resolveCallback(msg);
+				return;
+			}
+
+			if (!item.infinite)
+				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 		} else {
 			this.obj.auth.saveSkin(item.skinId);
 
@@ -255,6 +249,15 @@ module.exports = {
 					type: 'info'
 				}]
 			}, [this.obj.serverId]);
+		}
+
+		if (item.worth.currency) {
+			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
+			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
+		} else {
+			targetTrade.gold += ~~(item.worth * markup);
+			this.gold -= ~~(item.worth * markup);
+			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
 		}
 
 		//Hack to always redraw the UI (to give items the red overlay if they can't be afforded)
@@ -315,36 +318,13 @@ module.exports = {
 
 		this.target = target;
 
-		let reputation = this.obj.reputation;
-
 		let itemList = this.obj.inventory.items
 			.filter(i => ((i.worth > 0) && (!i.eq)));
 		itemList = extend([], itemList);
 
 		this.obj.syncer.set(true, 'trade', 'sellList', {
 			markup: target.trade.markup.buy,
-			items: itemList
-				.map(function (i) {
-					if (i.factions) {
-						i.factions = i.factions.map(function (f) {
-							let faction = reputation.getBlueprint(f.id);
-							let factionTier = reputation.getTier(f.id);
-
-							let noEquip = null;
-							if (factionTier < f.tier)
-								noEquip = true;
-
-							return {
-								name: faction.name,
-								tier: f.tier,
-								tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-								noEquip: noEquip
-							};
-						}, this);
-					}
-
-					return i;
-				})
+			items: itemList.map(i => this.obj.inventory.simplifyItem(i))
 		});
 	},
 
@@ -362,31 +342,7 @@ module.exports = {
 	},
 
 	getItems: function (requestedBy) {
-		let reputation = requestedBy.reputation;
-
-		let items = this.items.map(function (i) {
-			let item = extend({}, i);
-
-			if (item.factions) {
-				item.factions = item.factions.map(function (f) {
-					let faction = reputation.getBlueprint(f.id);
-					let factionTier = reputation.getTier(f.id);
-
-					let noEquip = null;
-					if (factionTier < f.tier)
-						noEquip = true;
-
-					return {
-						name: faction.name,
-						tier: f.tier,
-						tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-						noEquip: noEquip
-					};
-				}, this);
-			}
-
-			return item;
-		});
+		let items = this.items.map(i => requestedBy.inventory.simplifyItem(i));
 
 		return items;
 	},
@@ -404,7 +360,7 @@ module.exports = {
 	},
 
 	resolveCallback: function (msg, result) {
-		let callbackId = msg.has('callbackId ') ? msg.callbackId : msg;
+		let callbackId = msg.has('callbackId') ? msg.callbackId : msg;
 		result = result || [];
 
 		if (!callbackId)

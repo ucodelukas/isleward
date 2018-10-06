@@ -1,13 +1,13 @@
 module.exports = {
 	type: 'chest',
 
-	ownerId: -1,
+	ownerName: null,
 
 	ttl: -1,
 
 	init: function (blueprint) {
-		if (blueprint.ownerId)
-			this.ownerId = blueprint.ownerId;
+		if (blueprint.has('ownerName'))
+			this.ownerName = blueprint.ownerName;
 
 		if (blueprint.ttl)
 			this.ttl = blueprint.ttl;
@@ -16,7 +16,7 @@ module.exports = {
 	simplify: function (self) {
 		return {
 			type: 'chest',
-			ownerId: this.ownerId
+			ownerName: this.ownerName
 		};
 	},
 
@@ -24,7 +24,7 @@ module.exports = {
 		if (this.ttl > 0) {
 			this.ttl--;
 
-			if (this.ttl === 0)
+			if (!this.ttl)
 				this.obj.destroyed = true;
 		}
 	},
@@ -33,12 +33,12 @@ module.exports = {
 		if (!obj.player)
 			return;
 
-		let ownerId = this.ownerId;
-		if (ownerId !== -1) {
-			if (ownerId instanceof Array) {
-				if (ownerId.indexOf(obj.serverId) === -1)
+		let ownerName = this.ownerName;
+		if (ownerName) {
+			if (ownerName instanceof Array) {
+				if (ownerName.indexOf(obj.name) === -1)
 					return;
-			} else if (ownerId !== obj.serverId)
+			} else if (ownerName !== obj.name)
 				return;
 		}
 

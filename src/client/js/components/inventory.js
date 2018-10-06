@@ -29,14 +29,13 @@ define([
 					let nItem = newItems[i];
 					let nId = nItem.id;
 
-					let findItem = items.find(function (item) {
-						return (item.id === nId);
-					});
+					let findItem = items.find(f => f.id === nId);
 					if (findItem) {
 						if (!rerender) {
 							rerender = (
 								(findItem.pos !== nItem.pos) ||
 								(findItem.eq !== nItem.eq) ||
+								(findItem.quickSlot !== nItem.quickSlot) || 
 								(findItem.quantity !== nItem.quantity)
 							);
 						}
@@ -68,13 +67,11 @@ define([
 			if (item.level > stats.level)
 				errors.push('level');
 
-			if ((item.requires) && (stats[item.requires[0].stat] < item.requires[0].value))
+			if (item.requires && item.requires[0] && stats[item.requires[0].stat] < item.requires[0].value)
 				errors.push('stats');
 
 			if (item.factions) {
-				if (item.factions.some(function (f) {
-					return f.noEquip;
-				}))
+				if (item.factions.some(f => f.noEquip))
 					errors.push('faction');
 			}
 

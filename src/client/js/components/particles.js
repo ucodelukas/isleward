@@ -14,8 +14,16 @@ define([
 				y: (this.obj.y * scale) + (scale / 2)
 			};
 			this.ttl = blueprint.ttl;
+			this.blueprint.obj = this.obj;
 
 			this.emitter = renderer.buildEmitter(this.blueprint);
+		},
+
+		setVisible: function (visible) {
+			//Sometimes, we make emitters stop emitting for a reason
+			// for example, when an explosion stops
+			if (!this.emitter.disabled)
+				this.emitter.emit = visible;
 		},
 
 		update: function () {

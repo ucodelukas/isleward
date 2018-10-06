@@ -51,21 +51,15 @@ define([
 			// before instantiating it
 			let oList = response.onGetObject;
 			if (oList) {
-				let prepend = oList.filter(function (o) {
-					return o.self;
-				});
-				oList.spliceWhere(function (o) {
-					return prepend.some(function (p) {
-						return p === o;
-					});
-				});
+				let prepend = oList.filter(o => o.self);
+				oList.spliceWhere(o => prepend.some(p => p === o));
 				oList.unshift.apply(oList, prepend);
 			}
 
 			for (let e in response) {
 				let r = response[e];
 
-				//Certain messages expect to be performed last (because the object they act on hasn't been greated when they get queued)
+				//Certain messages expect to be performed last (because the object they act on hasn't been created when they get queued)
 				r.sort(function (a, b) {
 					if (a.performLast)
 						return 1;

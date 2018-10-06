@@ -6,10 +6,7 @@ define([
 	return {
 		type: 'explosion',
 
-		count: 10,
-
 		blueprint: null,
-		particles: null,
 
 		init: function (blueprint) {
 			this.blueprint = {
@@ -39,14 +36,14 @@ define([
 							max: 18
 						}
 					},
-					
+
 					particlesPerWave: 14,
-					particleSpacing: 0,	
+					particleSpacing: 0,
 					lifetime: {
 						min: 1,
 						max: 3
 					},
-					randomColor: true, 
+					randomColor: true,
 					randomScale: true,
 					randomSpeed: true,
 					frequency: 1
@@ -65,14 +62,15 @@ define([
 						}
 					}
 				})
-			};	
+			};
 		},
 
 		explode: function (blueprint) {
-			this.particles = this.obj.addComponent('particles', this.blueprint);
+			let particles = this.obj.addComponent('particles', this.blueprint);
 
-			this.particles.emitter.update(0.2);
-			this.particles.emitter.emit = false;
+			particles.emitter.update(0.2);
+			particles.emitter.emit = false;
+			particles.emitter.disabled = true;
 		}
 	};
 });

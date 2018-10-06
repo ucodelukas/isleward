@@ -30,6 +30,7 @@ module.exports = {
 	save: function () {
 		return {
 			type: 'social',
+			customChannels: this.customChannels,
 			muted: this.muted
 		};
 	},
@@ -143,10 +144,6 @@ module.exports = {
 		if (msg.data.message.trim() === '')
 			return;
 
-		this.onBeforeChat(msg.data);
-		if (msg.data.ignore)
-			return;
-
 		if (this.muted) {
 			this.sendMessage('You have been muted from talking', 'color-redA');
 			return;
@@ -170,6 +167,10 @@ module.exports = {
 				return;
 			}
 		}
+
+		this.onBeforeChat(msg.data);
+		if (msg.data.ignore)
+			return;
 
 		history.push({
 			msg: messageString,

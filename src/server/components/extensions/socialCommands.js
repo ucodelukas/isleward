@@ -9,6 +9,7 @@ let commandRoles = {
 	join: 0,
 	leave: 0,
 	unEq: 0,
+	roll: 0,
 
 	//Mods
 	mute: 5,
@@ -34,7 +35,8 @@ let localCommands = [
 	'leave',
 	'mute',
 	'unmute',
-	'setPassword'
+	'setPassword',
+	'roll'
 ];
 
 module.exports = {
@@ -96,10 +98,22 @@ module.exports = {
 			.trim()
 			.split(' ').join('');
 
+		let obj = this.obj;
+
 		if (value.length === 0)
 			return;
-
-		let obj = this.obj;
+		else if (value.length > 15) {
+			obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'Channel names can not be longer than 15 characters.',
+						type: 'info'
+					}]
+				}]
+			});
+			return;
+		}
 
 		let channels = obj.auth.customChannels;
 		if (!channels.some(c => (c === value)))
@@ -180,6 +194,20 @@ module.exports = {
 
 	isInChannel: function (character, channel) {
 		return character.auth.customChannels.some(c => (c === channel));
+	},
+
+	roll: function () {
+		let roll = 1 + ~~(Math.random() * 100);
+		cons.emit('event', {
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-grayB',
+					message: this.obj.name + ' rolled ' + roll,
+					type: 'chat'
+				}]
+			}
+		});
 	},
 
 	unEq: function () {

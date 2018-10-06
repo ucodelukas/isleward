@@ -1,3 +1,5 @@
+let compression = require('compression');
+let minify = require('express-minify');
 let config = require('./config/serverConfig');
 let router = require('./security/router');
 
@@ -8,6 +10,9 @@ module.exports = {
 		let socketServer = require('socket.io')(server);
 
 		global.cons.sockets = socketServer.sockets;
+
+		app.use(compression());
+		app.use(minify());
 
 		app.use(function (req, res, next) {
 			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
@@ -80,6 +85,9 @@ module.exports = {
 			let file = req.params[0];
 
 			file = file.replace('/' + root + '/', '');
+
+			if (root === 'server' && (file.indexOf('mods') === -1 || file.indexOf('png') === -1))
+				return null;
 
 			res.sendFile(file, {
 				root: '../' + root

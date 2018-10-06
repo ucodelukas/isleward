@@ -52,7 +52,7 @@ define([
 
 		onSelectFaction: function (el, faction) {
 			this.find('.selected').removeClass('selected');
-			$(el).addClass('selected');
+			el.addClass('selected');
 
 			this.find('.info .heading-bottom').html(faction.name.toLowerCase());
 			this.find('.info .description').html(faction.description.toLowerCase());
@@ -72,7 +72,7 @@ define([
 
 			let w = ~~(this.find('.front').width() / 5) * 5;
 			this.find('.front').css({
-				width: w + 'px'
+				width: w
 			});
 
 			percentage = ~~(percentage * 10) / 10;

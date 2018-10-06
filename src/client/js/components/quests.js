@@ -8,18 +8,14 @@ define([
 		quests: [],
 
 		init: function () {
-			this.quests.forEach(function (q) {
-				events.emit('onObtainQuest', q);
-			});
+			this.quests.forEach(q => events.emit('onObtainQuest', q));
 		},
 
 		extend: function (blueprint) {
 			if (blueprint.updateQuests) {
 				blueprint.updateQuests.forEach(function (q) {
 					events.emit('onUpdateQuest', q);
-					let index = this.quests.firstIndex(function (qq) {
-						return (qq.id === q.id);
-					});
+					let index = this.quests.firstIndex(f => f.id === q.id);
 					this.quests.splice(index, 1, q);
 				}, this);
 			}

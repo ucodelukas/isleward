@@ -58,13 +58,13 @@ define([
 			this.skin = skin;
 
 			let costume = skin.sprite.split(',');
-			let spirteX = -costume[0] * 8;
+			let spriteX = -costume[0] * 8;
 			let spriteY = -costume[1] * 8;
 
 			let spritesheet = skin.spritesheet || '../../../images/characters.png';
 
 			this.find('.sprite')
-				.css('background', 'url("' + spritesheet + '") ' + spirteX + 'px ' + spriteY + 'px');
+				.css('background', 'url("' + spritesheet + '") ' + spriteX + 'px ' + spriteY + 'px');
 		},
 
 		apply: function () {

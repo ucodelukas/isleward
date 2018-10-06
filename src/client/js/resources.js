@@ -5,7 +5,6 @@ define([
 ) {
 	let resources = {
 		spriteNames: [
-			'charas',
 			'tiles',
 			'walls',
 			'mobs',
@@ -16,19 +15,12 @@ define([
 			'characters',
 			'attacks',
 			'ui',
-			'abilityIcons',
-			'uiIcons',
-			'items',
-			'materials',
-			'questItems',
 			'auras',
-			'sprites',
 			'animChar',
 			'animMob',
 			'animBoss',
 			'white',
 			'ray',
-			'consumables',
 			'images/skins/0001.png',
 			'images/skins/0010.png'
 		],

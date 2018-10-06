@@ -1,0 +1,31 @@
+@import "../../../css/colors.less";
+
+.middleHud {
+	position: absolute;
+	left: calc(50% - 12px);
+	top: calc(50% + 31px);
+
+	.casting {
+		display: none;
+		width: 32px;
+		height: 5px;
+		position: relative;
+		background-color: @brownD;
+
+		.bar {
+			width: 0%;
+			height: 100%;
+			background-color: @yellowB;
+		}
+
+		.text {
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			padding-top: 2px;
+			width: 100%;
+			text-align: center;
+			color: @black;
+		}
+	}
+}

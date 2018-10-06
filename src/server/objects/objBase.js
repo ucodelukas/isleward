@@ -99,7 +99,7 @@ module.exports = {
 			o = this;
 		}
 
-		let syncTypes = ['portrait'];
+		let syncTypes = ['portrait', 'area'];
 
 		for (let p in o) {
 			let value = o[p];
@@ -163,26 +163,35 @@ module.exports = {
 	},
 
 	queue: function (action) {
-		if (action.list) {
-			let type = action.action;
-			let data = action.data;
-			let dLen = data.length;
-			for (let i = 0; i < dLen; i++) {
-				let d = data[i];
-
-				this.actionQueue.push({
-					action: type,
-					data: d
-				});
-			}
-
+		if (action.action === 'clearQueue') {
+			let spellbook = this.spellbook;
+			if (spellbook.isCasting())
+				spellbook.stopCasting();
+			else
+				this.clearQueue();
+			
 			return;
-		}
+		} else if (action.action === 'spell') {
+			let spellbook = this.spellbook;
+			const isCasting = spellbook.isCasting();
 
-		if (action.priority)
-			this.actionQueue.splice(this.actionQueue.firstIndex(a => !a.priority), 0, action);
-		else
+			if (isCasting && (!action.priority || !spellbook.canCast(action))) {
+				if (action.auto)
+					spellbook.queueAuto(action);
+
+				return;
+			}
+		
+			if (isCasting)
+				spellbook.stopCasting();
+
+			this.actionQueue.spliceWhere(a => a.priority);
+			this.actionQueue.splice(0, 0, action);
+		} else {
+			if (action.priority)
+				this.spellbook.stopCasting();
 			this.actionQueue.push(action);
+		}
 	},
 
 	dequeue: function () {
@@ -200,6 +209,8 @@ module.exports = {
 		}
 
 		this.actionQueue = [];
+
+		this.fireEvent('clearQueue');
 	},
 
 	performAction: function (action) {
@@ -219,20 +230,28 @@ module.exports = {
 			return;
 
 		if (q.action === 'move') {
+			let maxDistance = 1;
 			if ((this.actionQueue[0]) && (this.actionQueue[0].action === 'move')) {
-				let sprintChance = this.stats.values.sprintChance || 0;
+				let moveEvent = {
+					sprintChance: this.stats.values.sprintChance || 0
+				};
+				this.fireEvent('onBeforeTryMove', moveEvent);
+
 				let physics = this.instance.physics;
-				if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
-					q = this.dequeue();
-					q.isDouble = true;
-				}
+				let sprintChance = moveEvent.sprintChance;				
+				do {
+					if ((~~(Math.random() * 100) < sprintChance) && (!physics.isTileBlocking(q.data.x, q.data.y))) {
+						q = this.dequeue();
+						maxDistance++;
+					}
+					sprintChance -= 100;
+				} while (sprintChance > 0 && this.actionQueue.length > 0);
 			}
+			q.maxDistance = maxDistance;
 			let success = this.performMove(q);
 			if (!success) 
 				this.clearQueue();
-		} else if (q.action === 'clearQueue')
-			this.clearQueue();
-		else if (q.action === 'spell') {
+		} else if (q.action === 'spell') {
 			let success = this.spellbook.cast(q);
 			if (!success)
 				this.performQueue();
@@ -255,7 +274,7 @@ module.exports = {
 				return true;
 			}
 
-			let maxDistance = action.isDouble ? 2 : 1;
+			let maxDistance = action.maxDistance || 1;
 
 			let deltaX = Math.abs(this.x - data.x);
 			let deltaY = Math.abs(this.y - data.y);

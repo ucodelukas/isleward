@@ -113,6 +113,9 @@ module.exports = {
 		return key;
 	},
 	getDeepProperty: function (obj, path) {
+		if (!path.push)
+			path = path.split('.');
+
 		let o = obj;
 		let pLen = path.length;
 

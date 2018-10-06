@@ -8,14 +8,16 @@ define([
 	return {
 		uis: [],
 		root: '',
+
 		init: function (root) {
 			if (root)
 				this.root = root + '/';
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
-			events.on('onKeyDown', this.onKeyDown.bind(this));
+			events.on('onUiKeyDown', this.onUiKeyDown.bind(this));
 			events.on('onResize', this.onResize.bind(this));
 		},
+
 		onEnterGame: function () {
 			events.clearQueue();
 
@@ -52,7 +54,8 @@ define([
 				'mail',
 				'wardrobe',
 				'passives',
-				'workbench'
+				'workbench',
+				'middleHud'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);
@@ -67,17 +70,25 @@ define([
 
 			this.getTemplate(type, options);
 		},
+
 		getTemplate: function (type, options) {
 			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
 		},
+
 		onGetTemplate: function (options, template) {
-			let ui = _.create(uiBase, template);
+			let ui = $.extend(true, {}, uiBase, template);
 			ui.setOptions(options);
+
+			requestAnimationFrame(this.renderUi.bind(this, ui));
+		},
+
+		renderUi: function (ui) {
 			ui.render();
 			ui.el.data('ui', ui);
 
 			this.uis.push(ui);
 		},
+
 		onResize: function () {
 			this.uis.forEach(function (ui) {
 				if (ui.centered)
@@ -87,18 +98,40 @@ define([
 			}, this);
 		},
 
-		onKeyDown: function (key) {
-			if (key === 'esc') {
+		onUiKeyDown: function (keyEvent) {
+			if (keyEvent.key === 'esc') {
 				this.uis.forEach(function (u) {
-					if (!u.modal)
+					if (!u.modal || !u.shown)
 						return;
 
+					keyEvent.consumed = true;
 					u.hide();
 				});
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
-			} else if (['o', 'j', 'h', 'i'].indexOf(key) > -1)
+			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
 				$('.uiOverlay').hide();
+		},
+
+		preload: function () {
+			require([
+				'death',
+				'dialogue',
+				'equipment',
+				'events',
+				'hud',
+				'inventory',
+				'overlay',
+				'passives',
+				'quests',
+				'reputation',
+				'smithing',
+				'stash'
+			].map(m => 'ui/templates/' + m + '/' + m), this.afterPreload.bind(this));
+		},
+
+		afterPreload: function () {
+			this.build('characters', {});
 		},
 
 		update: function () {

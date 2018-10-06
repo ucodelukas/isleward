@@ -42,6 +42,12 @@ define([
 		},
 
 		useQuickItem: function () {
+			const quickItem = this.items.find(f => f.has('quickSlot'));
+			if (!quickItem)
+				return;
+
+			events.emit('onHideItemTooltip', quickItem);
+
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
@@ -53,6 +59,21 @@ define([
 					}
 				}
 			});
+		},
+
+		showQuickItemTooltip: function (show, item, e) {
+			if (show) {
+				let ttPos = null;
+				if (e) {
+					ttPos = {
+						x: ~~(e.clientX + 32),
+						y: ~~(e.clientY)
+					};
+				}
+
+				events.emit('onShowItemTooltip', item, ttPos);
+			} else
+				events.emit('onHideItemTooltip', item);
 		},
 
 		events: {
@@ -81,6 +102,9 @@ define([
 						.hide()
 						.find('.icon')
 						.css('background', '');
+
+					if (quickItem)
+						events.emit('onHideItemTooltip', quickItem);
 				}
 			},
 
@@ -89,8 +113,13 @@ define([
 
 				const quickItem = items.find(f => f.has('quickSlot'));
 				if (!quickItem) {
+					const oldQuickItem = this.find('.quickItem').data('item');
+					if (oldQuickItem)
+						events.emit('onHideItemTooltip', oldQuickItem);
+
 					this.find('.quickItem')
 						.hide()
+						.removeData('item')
 						.find('.icon')
 						.css('background', '');
 					return;
@@ -105,8 +134,11 @@ define([
 
 				let el = this.find('.quickItem').show();
 				el
+					.data('item', quickItem)
 					.find('.icon')
-					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px');
+					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
+					.on('mousemove', this.showQuickItemTooltip.bind(this, true, quickItem))
+					.on('mouseleave', this.showQuickItemTooltip.bind(this, false, quickItem));
 			},
 
 			onKeyDown: function (key) {

@@ -55,12 +55,26 @@ module.exports = {
 	deposit: function (item) {
 		if (!this.active)
 			return;
+		else if (this.items.length >= 50) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You do not have room in your stash to deposit that item',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+
+			return;
+		}
 
 		this.getItem(item);
 
 		this.obj.syncer.setArray(true, 'stash', 'getItems', item);
 
 		this.changed = true;
+
+		return true;
 	},
 
 	destroyItem: function (id) {
@@ -82,6 +96,18 @@ module.exports = {
 		let item = this.items.find(i => i.id === id);
 		if (!item)
 			return;
+		else if (!this.obj.inventory.hasSpace(item)) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You do not have room in your inventory to withdraw that item',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+			
+			return;
+		}
 
 		this.obj.inventory.getItem(item);
 		this.items.spliceWhere(i => i === item);
@@ -94,6 +120,17 @@ module.exports = {
 	setActive: function (active) {
 		this.active = active;
 		this.obj.syncer.set(true, 'stash', 'active', this.active);
+
+		if (this.active && this.items.length > 50) {
+			this.obj.instance.syncer.queue('onGetMessages', {
+				id: this.obj.id,
+				messages: [{
+					class: 'color-redA',
+					message: 'You have more than 50 items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit',
+					type: 'info'
+				}]
+			}, [this.obj.serverId]);
+		}
 	},
 
 	simplify: function (self) {
