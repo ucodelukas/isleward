@@ -165,7 +165,7 @@ define([
 				reforge.removeClass('disabled');
 
 			let reslot = this.find('[action="reslot"]').addClass('disabled');
-			if (!msg.item.effects)
+			if (!msg.item.effects && item.slot !== 'tool')
 				reslot.removeClass('disabled');
 
 			let relevel = this.find('[action="relevel"]').addClass('disabled');

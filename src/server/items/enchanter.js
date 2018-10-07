@@ -85,7 +85,7 @@ module.exports = {
 				item.level = Math.min(20, item.level + offset);
 			}
 		} else if (msg.action === 'reslot') {
-			if (item.effects)
+			if (item.effects || item.slot === 'tool')
 				return;
 
 			if (item.originalLevel)
