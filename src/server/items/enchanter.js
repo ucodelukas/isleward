@@ -171,7 +171,7 @@ module.exports = {
 			this.addStat(item, result);
 		}
 
-		obj.syncer.setArray(true, 'inventory', 'getItems', item);
+		obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 
 		inventory.resolveCallback(msg, result);
 	},
