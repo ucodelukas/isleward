@@ -34,6 +34,12 @@ module.exports = {
 			});
 
 		items
+			.filter(i => i.factions && i.factions.indexOf && i.factions.some(f => f.id === 'pumpkinSailor') && i.slot === 'finger')
+			.forEach(i => {
+				i.noDestroy = false;
+			});
+
+		items
 			.filter(i => i.quantity > 20000)
 			.forEach(function (i) {
 				i.quantity = ~~Math.pow(i.quantity, 1 / 18);
