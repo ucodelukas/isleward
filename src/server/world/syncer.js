@@ -35,6 +35,8 @@ module.exports = {
 			for (let i = 0; i < oLen; i++) {
 				let o = oList[i];
 				let oId = o.id;
+				let ox = o.x;
+				let oy = o.y;
 
 				if (!o.syncer)
 					continue;
@@ -67,21 +69,33 @@ module.exports = {
 
 				for (let j = 0; j < pLen; j++) {
 					let p = pList[j];
+					let px = p.x;
+					let py = p.y;
+
+					let canSee = true;
+					if (!o.width)
+						canSee = (Math.abs(ox - px) <= 25 && Math.abs(oy - py) < 14);
 
 					let hasSeen = p.player.hasSeen(oId);
 
 					if (hasSeen) {
-						if ((p.id === oId) && (syncSelf))
-							queueFunction(syncSelf, [ p.serverId ]);
+						if (canSee) {
+							if (p.id === oId && syncSelf)
+								queueFunction(syncSelf, [ p.serverId ]);
 
-						if (sync) {
-							toList.push(p.serverId);
-							sendTo = true;
+							if (sync) {
+								toList.push(p.serverId);
+								sendTo = true;
+							}
 						}
 
-						if (destroyed)
+						if (destroyed || !canSee) {
+							if (!canSee)
+								queueFunction({ id: oId, destroyed: true }, [ p.serverId ]);
+
 							p.player.unsee(oId);
-					} else if (!destroyed) {
+						}
+					} else if (!destroyed && canSee) {
 						let cached = null;
 						if (p.id === oId) {
 							let syncO = o.getSimple(true);
