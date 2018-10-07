@@ -27,7 +27,8 @@ let commandRoles = {
 	setStat: 10,
 	die: 10,
 	getXp: 10,
-	setPassword: 10
+	setPassword: 10,
+	giveSkin: 10
 };
 
 let localCommands = [
@@ -36,7 +37,8 @@ let localCommands = [
 	'mute',
 	'unmute',
 	'setPassword',
-	'roll'
+	'roll',
+	'giveSkin'
 ];
 
 module.exports = {
@@ -518,6 +520,26 @@ module.exports = {
 			ent: username,
 			field: 'login',
 			value: hashedPassword
+		});
+	},
+
+	giveSkin: async function (config) {
+		let keys = Object.keys(config);
+		let username = keys[0];
+		let skinId = keys[1];
+
+		let skins = await io.getAsync({
+			key: username,
+			table: 'skins',
+			isArray: true
+		});
+
+		skins.push(skinId);
+
+		await io.setAsync({
+			key: username,
+			table: 'skins',
+			value: JSON.stringify(skins)
 		});
 	}
 };
