@@ -66,7 +66,7 @@ define([
 						if (this.destroyObject)
 							this.obj.destroyed = true;
 						else {
-							if (this.hideSprite)
+							if (this.obj.sprite && this.hideSprite)
 								this.obj.sprite.visible = true;
 
 							this.destroyed = true;
