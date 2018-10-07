@@ -34,6 +34,26 @@ module.exports = {
 			});
 
 		items
+			.filter(i => (
+				i.enchantedStats && 
+				i.slot !== 'tool' && 
+				Object.keys(i.enchantedStats).some(e => e.indexOf('catch') === 0 || e.indexOf('fish') === 0)
+			))
+			.forEach(function (i) {
+				let enchanted = i.enchantedStats;
+				let stats = i.stats;
+				Object.keys(enchanted).forEach(e => {
+					if (e.indexOf('catch') === 0 || e.indexOf('fish') === 0) {
+						delete stats[e];
+						delete enchanted[e];
+					}
+				});
+
+				if (!Object.keys(enchanted).length)
+					delete i.enchantedStats;
+			});
+
+		items
 			.filter(i => i.factions && i.factions.indexOf && i.factions.some(f => f.id === 'pumpkinSailor') && i.slot === 'finger')
 			.forEach(i => {
 				i.noDestroy = false;
