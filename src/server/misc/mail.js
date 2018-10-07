@@ -100,7 +100,8 @@ module.exports = {
 	},
 
 	processQueue: function (playerName) {
-		this.busy[playerName]--;
+		if (this.busy[playerName] > 0)
+			this.busy[playerName]--;
 		if (this.busy[playerName])
 			return;
 
