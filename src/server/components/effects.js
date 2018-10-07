@@ -223,9 +223,6 @@ module.exports = {
 				this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
 				effects.splice(i, 1);
 
-				if (effect.destroy)
-					effect.destroy();
-
 				return;
 			}
 		}
