@@ -153,9 +153,9 @@ module.exports = {
 				await this.processDelete(options);
 		} catch (e) {
 			if (e.toString().indexOf('unrecognized token') > -1)
-				console.log(options);
+				_.log(e);
 			
-			console.log(e);
+			_.log(e);
 			this.buffer.splice(0, 0, next);
 			setTimeout(this.process.bind(this), 10);
 			return;
