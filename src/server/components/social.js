@@ -10,6 +10,7 @@ module.exports = {
 	party: null,
 
 	customChannels: null,
+	blockedPlayers: [],
 
 	messageHistory: [],
 
@@ -24,6 +25,7 @@ module.exports = {
 			type: 'social',
 			party: this.party,
 			customChannels: self ? this.customChannels : null,
+			blockedPlayers: self ? this.blockedPlayers : null,
 			muted: this.muted
 		};
 	},
@@ -32,6 +34,7 @@ module.exports = {
 		return {
 			type: 'social',
 			customChannels: this.customChannels,
+			blockedPlayers: this.blockedPlayers,
 			muted: this.muted
 		};
 	},
@@ -294,19 +297,19 @@ module.exports = {
 		if (!this.party) {
 			this.isPartyLeader = true;
 			this.party = [this.obj.id];
-			this.updatePartyOnThread();
+			this.updateMainThread('party', this.party);
 		}
 
 		// Only add if not yet in party
 		if (!this.party.find(id => (id === sourceId)))
 			this.party.push(sourceId);
 
-		this.updatePartyOnThread();
+		this.updateMainThread('party', this.party);
 
 		this.party.forEach(function (p) {
 			let player = cons.players.find(c => c.id === p);
 			player.social.party = this.party;
-			player.social.updatePartyOnThread();
+			player.social.updateMainThread('party', player.social.party);
 
 			let returnMsg = source.name + ' has joined the party';
 			if (p === sourceId)
@@ -351,7 +354,7 @@ module.exports = {
 
 				player.social.isPartyLeader = false;
 				player.social.party = null;
-				player.social.updatePartyOnThread();
+				player.social.updateMainThread('party', player.social.party);
 				party = null;
 			}
 
@@ -395,7 +398,7 @@ module.exports = {
 		}
 
 		this.party = null;
-		this.updatePartyOnThread();
+		this.updateMainThread('party', this.party);
 	},
 
 	//Gets called on the player that requested the removal
@@ -436,22 +439,22 @@ module.exports = {
 
 		target.social.party = null;
 		target.social.isPartyLeader = false;
-		target.social.updatePartyOnThread();
+		target.social.updateMainThread('party', target.social.party);
 
 		if (this.party.length === 1) {
 			this.party = null;
 			this.isPartyLeader = null;
-			this.updatePartyOnThread();
+			this.updateMainThread('party', this.party);
 
 			this.sendMessage('your party has been disbanded', 'color-yellowB');
 		}
 	},
 
-	updatePartyOnThread: function () {
+	updateMainThread: function (property, value) {
 		atlas.updateObject(this.obj, {
 			components: [{
 				type: 'social',
-				party: this.party
+				[property]: value
 			}]
 		});
 	}
