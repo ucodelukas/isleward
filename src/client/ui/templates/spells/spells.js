@@ -72,8 +72,6 @@ define([
 				y: pos.top + el.height() + 16
 			};
 
-			let cd = ~~((spell.cdMax * 350) / 1000);
-
 			let values = Object.keys(spell.values).filter(function (v) {
 				return ((v !== 'damage') && (v !== 'healing'));
 			}).map(function (v) {
@@ -88,7 +86,7 @@ define([
 				.replace('$NAME$', spell.name)
 				.replace('$DESCRIPTION$', spell.description)
 				.replace('$MANA$', manaCost)
-				.replace('$CD$', cd + 's')
+				.replace('$CD$', spell.cdMax + ' Ticks')
 				.replace('$VALUES$', values)
 				.replace('$ELEMENT$', spell.element ? 'element: ' + spell.element : '');
 
