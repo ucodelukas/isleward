@@ -60,9 +60,7 @@ define([
 			$('.ui-container')
 				.on('mousedown', this.events.mouse.mouseDown.bind(this))
 				.on('mouseup', this.events.mouse.mouseUp.bind(this))
-				.on('mousemove', this.events.mouse.mouseMove.bind(this));
-
-			$('.canvas-container');
+				.on('mousemove', this.events.mouse.mouseMove.bind(this))
 				.on('touchstart', this.events.touch.touchStart.bind(this))
 				.on('touchmove', this.events.touch.touchMove.bind(this))
 				.on('touchend', this.events.touch.touchEnd.bind(this))
@@ -221,7 +219,9 @@ define([
 					let touch = e.touches[0];
 					events.emit('onTouchStart', {
 						x: touch.clientX,
-						y: touch.clientY
+						y: touch.clientY,
+						worldX: touch.clientX + renderer.pos.x,
+						worldY: touch.clientY + renderer.pos.y
 					});
 				},
 

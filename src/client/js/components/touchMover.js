@@ -13,14 +13,29 @@ define([
 		lastNode: null,
 		nodes: [],
 
-		minSqrDistance: 9,
+		hoverTile: null,
+
+		minSqrDistance: 1200,
+		diagonalThreshold: 35,
 
 		init: function () {
-			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => this[e].bind(this));
+			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {
+				events.on(e, this[e].bind(this));
+			});
 		},
 
 		onTouchStart: function (e) {
 			this.lastNode = e;
+
+			let tileX = ~~(e.worldX / scale);
+			let tileY = ~~(e.worldY / scale);
+
+			this.hoverTile = {
+				x: tileX,
+				y: tileY
+			};
+
+			events.emit('onChangeHoverTile', tileX, tileY);
 		},
 
 		onTouchMove: function (e) {
@@ -30,8 +45,22 @@ define([
 			if (sqrDistance < this.minSqrDistance)
 				return;
 
-			let dx = 1;
-			let dy = 0;
+			let dx = e.x - lastNode.x;
+			let dy = e.y - lastNode.y;
+
+			let diff = Math.abs(dx - dy);
+			if (diff < this.diagonalThreshold) {
+				dx = ~~(dx / Math.abs(dx));
+				dy = ~~(dy / Math.abs(dy));
+			} else if (Math.abs(dx) > Math.abs(dy)) {
+				dx = ~~(dx / Math.abs(dx));
+				dy = 0;
+			} else {
+				dx = 0;
+				dy = ~~(dy / Math.abs(dy));
+			}
+
+			this.lastNode = e;
 
 			let newX = this.obj.pather.pathPos.x + dx;
 			let newY = this.obj.pather.pathPos.y + dy;
@@ -41,10 +70,10 @@ define([
 				return;
 			}
 
-			this.obj.pather.addQueue(newX, newY);
+			this.obj.pather.add(newX, newY);
 		},
 
-		onTouchEnd: function () {
+		onTouchEnd: function (e) {
 			this.lastNode = null;
 		},
 
@@ -52,7 +81,7 @@ define([
 			this.lastNode = null;
 		},
 
-		ump: function (dx, dy) {
+		bump: function (dx, dy) {
 			if (this.obj.pather.path.length > 0)
 				return;
 

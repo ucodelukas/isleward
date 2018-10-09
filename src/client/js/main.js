@@ -25,6 +25,9 @@ define([
 		hasFocus: true,
 
 		init: function () {
+			if (isMobile)
+				$('.ui-container').addClass('mobile');
+
 			client.init(this.onClientReady.bind(this));
 		},
 

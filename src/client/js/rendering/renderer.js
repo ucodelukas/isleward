@@ -221,6 +221,9 @@ define([
 		},
 
 		onResize: function () {
+			if (isMobile)
+				return;
+			
 			let zoom = window.devicePixelRatio;
 
 			this.width = $('body').width() * zoom;
