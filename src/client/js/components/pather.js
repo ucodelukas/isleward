@@ -51,8 +51,11 @@ define([
 		},
 
 		add: function (x, y) {
-			if (this.path.length >= maxPathLength)
+			if (this.path.length >= maxPathLength || this.obj.moveAnimation)
 				return;
+
+			pather.pathPos.x = x;
+			pather.pathPos.y = y;
 
 			this.path.push({
 				x: x,
@@ -68,10 +71,21 @@ define([
 				})
 			});
 
-			return true;
+			client.request({
+				cpn: 'player',
+				method: 'move',
+				priority: !this.path.length,
+				data: {
+					x: x,
+					y: y
+				}
+			});
 		},
 
 		update: function () {
+			if (this.obj.moveAnimation)
+				this.clearPath();
+
 			let x = this.obj.x;
 			let y = this.obj.y;
 
@@ -100,13 +114,6 @@ define([
 					return;
 				}
 			}
-		},
-
-		setPath: function (path) {
-			this.path = this.path.concat(path);
-
-			this.pathPos.x = round(path[path.length - 1].x);
-			this.pathPos.y = round(path[path.length - 1].y);
 		}
 	};
 });

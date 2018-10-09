@@ -47,8 +47,6 @@ define([
 					this.direction *= -1;
 					if ((this.direction === 1) && (!this.infinite))
 						this.destroyed = true;
-					else
-						this.obj.dirty = true;
 				}
 			}
 
