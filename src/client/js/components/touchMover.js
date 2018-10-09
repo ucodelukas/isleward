@@ -16,7 +16,6 @@ define([
 		hoverTile: null,
 
 		minSqrDistance: 1200,
-		diagonalThreshold: 35,
 
 		init: function () {
 			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {
@@ -48,8 +47,7 @@ define([
 			let dx = e.x - lastNode.x;
 			let dy = e.y - lastNode.y;
 
-			let diff = Math.abs(dx - dy);
-			if (diff < this.diagonalThreshold) {
+			if (e.touches > 1) {
 				dx = ~~(dx / Math.abs(dx));
 				dy = ~~(dy / Math.abs(dy));
 			} else if (Math.abs(dx) > Math.abs(dy)) {

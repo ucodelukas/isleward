@@ -23,9 +23,11 @@ body {
 		top: 100px;
 	}
 
-	.uiMenu, .uiQuests, .uiEvents, .uiTooltipInfo {
-		display: none;
-	}
+	&.mobile {
+		.uiMenu, .uiQuests, .uiEvents, .uiTooltipInfo {
+			display: none;
+		}
+	} 
 }
 
 * {

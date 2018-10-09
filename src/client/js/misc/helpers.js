@@ -1,8 +1,8 @@
 /* global _, scale, scaleMult, isMobile */
 
-window.scale = 40;
-window.scaleMult = 5;
 window.isMobile = /Mobi|Android/i.test(navigator.userAgent);
+window.scale = isMobile ? 32 : 40;
+window.scaleMult = isMobile ? 4 : 5;
 
 //eslint-disable-next-line no-extend-native
 Array.prototype.firstIndex = function (callback, thisArg) {

@@ -229,7 +229,8 @@ define([
 					let touch = e.touches[0];
 					events.emit('onTouchMove', {
 						x: touch.clientX,
-						y: touch.clientY
+						y: touch.clientY,
+						touches: e.touches.length
 					});
 				},
 
