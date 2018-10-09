@@ -55,7 +55,8 @@
     "_": false,
     "PIXI": false,
     "scale": false,
-    "scaleMult": false
+    "scaleMult": false,
+    "isMobile": false
   },
 
   "rules": {
