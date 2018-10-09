@@ -44,6 +44,7 @@ define([
 				let el = $(html)
 					.appendTo(this.el);
 				el
+					.on('click', this.onClickSpell.bind(this, hotkey))
 					.on('mouseover', this.onShowTooltip.bind(this, el, spell))
 					.on('mouseleave', this.onHideTooltip.bind(this, el));
 
@@ -66,7 +67,20 @@ define([
 			}
 		},
 
+		onClickSpell: function (hotkey, e) {
+			e.preventDefault();
+
+			let key = (hotkey === 'space') ? ' ' : hotkey;
+
+			window.player.spellbook.onKeyDown(key);
+
+			return false;
+		},
+
 		onShowTooltip: function (el, spell) {
+			if (isMobile)
+				return false;
+
 			let pos = el.offset();
 			pos = {
 				x: pos.left + 56,

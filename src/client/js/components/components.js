@@ -1,6 +1,7 @@
 let components = [
 	'keyboardMover',
 	'mouseMover',
+	'touchMover',
 	'player',
 	'pather',
 	'attackAnimation',

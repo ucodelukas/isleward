@@ -142,7 +142,7 @@ define([
 			if (!spell.aura && !spell.targetGround && !spell.autoTargetFollower && !this.target)
 				return;
 
-			let hoverTile = this.obj.mouseMover.hoverTile;
+			let hoverTile = (this.obj.mouseMover || this.obj.touchMover).hoverTile;
 			let target = hoverTile;
 			if (spell.autoTargetFollower && !this.target)
 				target = null;

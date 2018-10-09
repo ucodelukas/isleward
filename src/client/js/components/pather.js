@@ -1,9 +1,11 @@
 define([
 	'js/rendering/renderer',
-	'js/system/events'
+	'js/system/events',
+	'js/system/client'
 ], function (
 	renderer,
-	events
+	events,
+	client
 ) {
 	let round = Math.round.bind(Math);
 	let maxPathLength = 50;
@@ -54,8 +56,8 @@ define([
 			if (this.path.length >= maxPathLength || this.obj.moveAnimation)
 				return;
 
-			pather.pathPos.x = x;
-			pather.pathPos.y = y;
+			this.pathPos.x = x;
+			this.pathPos.y = y;
 
 			this.path.push({
 				x: x,
