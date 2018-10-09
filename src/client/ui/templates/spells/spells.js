@@ -19,6 +19,7 @@ define([
 		postRender: function () {
 			this.onEvent('onGetSpells', this.onGetSpells.bind(this));
 			this.onEvent('onGetSpellCooldowns', this.onGetSpellCooldowns.bind(this));
+			this.onEvent('onGetSpellActive', this.onGetSpellActive.bind(this));
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 
 			setInterval(this.update.bind(this), 100);
@@ -105,6 +106,16 @@ define([
 			});
 			spell.ttl = options.cd;
 			spell.ttlStart = +new Date();
+		},
+
+		onGetSpellActive: function (options) {
+			let spellIndex = this.spells.findIndex(s => s.id === options.spell);
+			let el = this.el.children('div')
+				.eq(spellIndex)
+				.removeClass('active');
+
+			if (options.active)
+				el.addClass('active');			
 		},
 
 		onGetStats: function (stats) {

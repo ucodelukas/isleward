@@ -231,13 +231,13 @@ module.exports = {
 			return true;
 
 		this.spells.forEach(s => {
-			delete s.autoActive;
+			s.setAuto(null);
 		});
 
-		spell.autoActive = {
+		spell.setAuto({
 			target: action.target,
 			spell: spell.id
-		};
+		});
 	},
 
 	getRandomSpell: function (target) {
@@ -472,7 +472,7 @@ module.exports = {
 			let auto = s.autoActive;
 			if (auto) {
 				if (!auto.target || auto.target.destroyed)
-					delete s.autoActive;
+					s.setAuto(null);
 				else if (!isCasting && this.cast(auto, true))
 					didCast = true;
 			}
@@ -587,7 +587,7 @@ module.exports = {
 
 	stopCasting: function (ignore) {
 		this.spells.forEach(s => {
-			delete s.autoActive;
+			s.setAuto(null);
 
 			if (!s.currentAction || s === ignore)
 				return;

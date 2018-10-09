@@ -114,6 +114,18 @@ module.exports = {
 		}
 	},
 
+	setAuto: function (autoConfig) {
+		this.autoActive = autoConfig;
+
+		if (this.obj.player) {
+			this.obj.instance.syncer.queue('onGetSpellActive', {
+				id: this.obj.id,
+				spell: this.id,
+				active: !!autoConfig
+			}, [this.obj.serverId]);
+		}
+	},
+
 	calcDps: function (target, noSync) {
 		if ((!this.values) || (this.spellType === 'buff'))
 			return;
