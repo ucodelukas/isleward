@@ -162,7 +162,6 @@ define([
 					action: 'spell',
 					priority: input.isKeyDown('ctrl'),
 					spell: spell.id,
-					auto: spell.auto,
 					target: target,
 					self: isShiftDown
 				}

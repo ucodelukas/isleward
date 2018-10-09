@@ -7,7 +7,6 @@ module.exports = {
 	type: 'spellbook',
 
 	spells: [],
-	auto: [],
 
 	physics: null,
 	objects: null,
@@ -36,9 +35,9 @@ module.exports = {
 	},
 
 	die: function () {
-		this.auto = [];
+		this.stopCasting();
 
-		this.spells.forEach(function (s) {
+		this.spells.forEach(s => {
 			let reserve = s.manaReserve;
 
 			if (reserve && reserve.percentage && s.active) {
@@ -224,25 +223,21 @@ module.exports = {
 				exists.unlearn();
 
 			this.obj.syncer.setArray(true, 'spellbook', 'removeSpells', id);
-			this.auto.spliceWhere(a => a.spell === id);
 		}
 	},
 
-	queueAuto: function (action) {
+	queueAuto: function (action, spell) {
 		if (!action.auto)
 			return true;
 
-		let exists = this.auto.find(a => a.spell === action.spell);
-		if (!exists) {
-			this.auto.push({
-				spell: action.spell,
-				target: action.target
-			});
-			
-			return true;
-		} 
+		this.spells.forEach(s => {
+			delete s.autoActive;
+		});
 
-		exists.target = action.target;
+		spell.autoActive = {
+			target: action.target,
+			spell: spell.id
+		};
 	},
 
 	getRandomSpell: function (target) {
@@ -332,12 +327,11 @@ module.exports = {
 
 	cast: function (action, isAuto) {
 		if (!action.has('spell')) {
-			this.auto = [];
+			this.stopCasting();
 			return true;
 		}
 
 		let spell = this.spells.find(s => (s.id === action.spell));
-
 		if (!spell)
 			return false;
 
@@ -345,9 +339,11 @@ module.exports = {
 		if (!action.target)
 			return false;
 
+		action.auto = spell.auto;
+
 		let success = true;
 		if (spell.cd > 0) {
-			if ((!isAuto) && (!spell.isAuto)) {
+			if (!isAuto) {
 				let type = (spell.auto) ? 'Weapon' : 'Spell';
 				this.sendAnnouncement(`${type} is on cooldown`);
 			}
@@ -393,7 +389,7 @@ module.exports = {
 
 		//LoS check
 		//Null means we don't have LoS and as such, we should move
-		if ((spell.needLos) && (success)) {
+		if (spell.needLos && success) {
 			if (!this.physics.hasLos(~~this.obj.x, ~~this.obj.y, ~~action.target.x, ~~action.target.y)) {
 				if (!isAuto)
 					this.sendAnnouncement('Target not in line of sight');
@@ -403,9 +399,9 @@ module.exports = {
 		}
 
 		if (!success) {
-			this.queueAuto(action);
+			this.queueAuto(action, spell);
 			return success;
-		} else if (!this.queueAuto(action))
+		} else if (!this.queueAuto(action, spell))
 			return false;
 
 		let castSuccess = {
@@ -467,31 +463,24 @@ module.exports = {
 
 		return cds;
 	},
+
 	update: function () {
 		let didCast = false;
+		const isCasting = this.isCasting();
 
-		this.spells.forEach(function (s, i) {
+		this.spells.forEach(s => {
+			let auto = s.autoActive;
+			if (auto) {
+				if (!auto.target || auto.target.destroyed)
+					delete s.autoActive;
+				else if (!isCasting && this.cast(auto, true))
+					didCast = true;
+			}
+
 			s.updateBase();
 			if (s.update)
 				s.update();
 		});
-
-		const isCasting = this.isCasting();
-
-		let auto = this.auto;
-		let aLen = auto.length;
-		for (let i = 0; i < aLen; i++) {
-			let a = auto[i];
-			if ((!a.target) || (a.target.destroyed)) {
-				auto.splice(i, 1);
-				aLen--;
-				i--;
-				continue;
-			}
-
-			if (!isCasting && this.cast(a, true))
-				didCast = true;
-		}
 
 		let callbacks = this.callbacks;
 		let cLen = callbacks.length;
@@ -535,6 +524,7 @@ module.exports = {
 
 		return obj;
 	},
+
 	unregisterCallback: function (sourceId, target) {
 		let callbacks = this.callbacks;
 		let cLen = callbacks.length;
@@ -596,7 +586,9 @@ module.exports = {
 	},
 
 	stopCasting: function (ignore) {
-		this.spells.forEach(function (s) {
+		this.spells.forEach(s => {
+			delete s.autoActive;
+
 			if (!s.currentAction || s === ignore)
 				return;
 
@@ -605,7 +597,7 @@ module.exports = {
 
 			if (!ignore || !ignore.castTimeMax)
 				this.obj.syncer.set(false, null, 'casting', 0);
-		}, this);
+		});
 	},
 
 	events: {
@@ -614,11 +606,12 @@ module.exports = {
 		},
 
 		clearQueue: function () {
-			this.auto = [];
 			this.stopCasting();
 		},
 
 		beforeDeath: function () {
+			this.stopCasting();
+
 			this.spells.forEach(function (s) {
 				if (!s.castOnDeath)
 					return;
