@@ -73,7 +73,7 @@ define([
 
 			this.moveCd = this.moveCdMax;
 
-			this.obj.pather.addQueue(newX, newY);
+			this.obj.pather.add(newX, newY);
 		}
 	};
 });
