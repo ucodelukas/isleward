@@ -104,7 +104,18 @@ module.exports = {
 
 		if (value.length === 0)
 			return;
-		else if (value.length > 15) {
+		else if (!value.match(/^[0-9a-zA-Z]+$/)) {
+			obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'Channel names may only contain letters and numbers.',
+						type: 'info'
+					}]
+				}]
+			});
+			return;
+		} else if (value.length > 15) {
 			obj.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{

@@ -15,8 +15,13 @@ module.exports = {
 	},
 
 	fixCustomChannels: function (customChannels) {
-		customChannels = customChannels
-			.filter(c => c.length <= 15);
+		return customChannels
+			.filter(c => {
+				return (
+					c.length <= 15 &&
+					c.match(/^[0-9a-zA-Z]+$/)
+				);
+			});
 	},
 
 	fixStash: function (stash) {

@@ -175,7 +175,7 @@ module.exports = {
 		});
 
 		let social = character.components.find(c => (c.type === 'social'));
-		fixes.fixCustomChannels(this.customChannels);
+		this.customChannels = fixes.fixCustomChannels(this.customChannels);
 		if (social)
 			social.customChannels = this.customChannels;
 	},
