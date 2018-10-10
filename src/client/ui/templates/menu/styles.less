@@ -96,3 +96,31 @@
 		}
 	}
 }
+
+.mobile .uiMenu {
+	bottom: auto;
+	top: 18px;
+	right: 18px;
+	width: 32px;
+	height: 32px;
+
+	> * {
+		display: none;
+	}
+
+	&.active {
+		display: flex;
+		flex-direction: column;
+		height: calc(100% - 20px);
+		width: 200px;
+		z-index: 2;
+		flex-wrap: wrap-reverse;
+		align-items: center;
+		justify-content: center;
+
+		> * {
+			display: block;
+			margin: 0px;
+		}
+	}
+}
