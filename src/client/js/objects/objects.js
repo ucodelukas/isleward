@@ -255,7 +255,7 @@ define([
 					if (obj === window.player)
 						events.emit('onGetSelfCasting', value);
 					else
-						events.emit('onGetTargetCasting', value);
+						events.emit('onGetTargetCasting', obj.id, value);
 				}
 
 				if (sprite) {

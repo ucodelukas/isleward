@@ -20,17 +20,22 @@ define([
 		postRender: function () {
 			this.onEvent('onSetTarget', this.onSetTarget.bind(this));
 			this.onEvent('onDeath', this.onSetTarget.bind(this, null));
-			this.onEvent('onGetTargetCasting', this.onGetCasting.bind(this));
+			this.onEvent('onGetTargetCasting', this.onGetTargetCasting.bind(this));
 		},
 
-		onGetCasting: function (casting) {
+		onGetTargetCasting: function (objId, casting) {
+			if (!this.target || this.target.id !== objId)
+				return;
+
 			let box = this.el.find('.statBox')
 				.eq(2);
 
 			if ((casting === 0) || (casting === 1)) {
 				box.hide();
 				return;
-			} box.show();
+			} 
+
+			box.show();
 
 			let w = ~~(casting * 100);
 			box.find('[class^="stat"]').css('width', w + '%');
