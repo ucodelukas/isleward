@@ -21,6 +21,7 @@ define([
 		tpl: tpl,
 
 		modal: true,
+		hasClose: true,
 
 		canvas: null,
 		size: {},
