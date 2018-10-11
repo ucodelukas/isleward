@@ -95,6 +95,9 @@ define([
 
 		onSetTarget: function (target, e) {
 			this.target = target;
+			this.el.find('.statBox')
+				.eq(2)
+				.hide();
 
 			if (!this.target) {
 				this.lastHp = null;
