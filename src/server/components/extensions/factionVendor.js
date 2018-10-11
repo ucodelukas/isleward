@@ -45,7 +45,14 @@ module.exports = {
 		} else if (list.level !== requestLevel)
 			this.regenList(list);
 
-		let result = list.items.map(m => requestedBy.inventory.simplifyItem(m));
+		let result = list.items.map(m => {
+			let item = requestedBy.inventory.simplifyItem(m);
+			if (item.stats)
+				item.stats = { stats: '???' };
+			delete item.effects;
+
+			return item;
+		});
 
 		return result;
 	},
