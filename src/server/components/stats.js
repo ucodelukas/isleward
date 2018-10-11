@@ -482,26 +482,30 @@ module.exports = {
 
 		damage.dealt = amount;
 
+		let msg = {
+			id: this.obj.id,
+			source: source.id,
+			crit: damage.crit,
+			amount: amount
+		};
+
 		this.values.hp -= amount;
 		let recipients = [];
 		if (this.obj.serverId)
 			recipients.push(this.obj.serverId);
 		if (source.serverId)
 			recipients.push(source.serverId);
-		if ((source.follower) && (source.follower.master.serverId))
+		if (source.follower && source.follower.master.serverId)
 			recipients.push(source.follower.master.serverId);
-		if ((this.obj.follower) && (this.obj.follower.master.serverId))
+		if (this.obj.follower && this.obj.follower.master.serverId) {
 			recipients.push(this.obj.follower.master.serverId);
+			msg.masterSource = this.obj.follower.master.serverId;
+		}
 
-		if (recipients.length > 0) {
-			if ((!damage.blocked) && (!damage.dodged)) {
-				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					source: source.id,
-					crit: damage.crit,
-					amount: amount
-				}, recipients);
-			} else {
+		if (recipients.length) {
+			if (!damage.blocked && !damage.dodged)
+				this.syncer.queue('onGetDamage', msg, recipients);
+			else {
 				this.syncer.queue('onGetDamage', {
 					id: this.obj.id,
 					source: source.id,
