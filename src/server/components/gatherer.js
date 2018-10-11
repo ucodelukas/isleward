@@ -199,11 +199,38 @@ module.exports = {
 
 		this.sendAnnouncement(msg);
 
+		process.send({
+			method: 'events',
+			data: {
+				onEnterGatherNode: [{
+					obj: {
+						id: node.id
+					},
+					to: [this.obj.serverId]
+				}]
+			}
+		});
+
 		this.nodes.spliceWhere(n => (n === node));
 		this.nodes.push(node);
 	},
 
 	exit: function (node) {
+		if (!this.nodes.includes(node))
+			return;
+
+		process.send({
+			method: 'events',
+			data: {
+				onExitGatherNode: [{
+					obj: {
+						id: node.id
+					},
+					to: [this.obj.serverId]
+				}]
+			}
+		});
+
 		this.nodes.spliceWhere(n => (n === node));
 	},
 
