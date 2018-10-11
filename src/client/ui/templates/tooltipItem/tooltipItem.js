@@ -210,7 +210,7 @@ define([
 				})
 				.join('');
 
-			let implicitStats = (item.implicitStats || []).map(function (s) {
+			let implicitStats = (item.implicitStats || []).map(s => {
 				let stat = s.stat;
 
 				let value = this.getStatValue(stat, s.value);
