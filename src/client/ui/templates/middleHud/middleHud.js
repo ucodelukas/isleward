@@ -15,10 +15,11 @@ define([
 		postRender: function () {
 			this.onEvent('onGetSelfCasting', this.onGetCasting.bind(this));
 
-			if (!isMobile) {
+			if (isMobile) {
 				this.onEvent('onEnterGatherNode', this.onEnterGatherNode.bind(this));
 				this.onEvent('onExitGatherNode', this.onExitGatherNode.bind(this));
 				this.onEvent('onRespawn', this.onExitGatherNode.bind(this));
+				this.onEvent('onShowProgress', this.onExitGatherNode.bind(this));
 
 				this.find('.btnGather').on('click', this.gather.bind(this));
 			}
