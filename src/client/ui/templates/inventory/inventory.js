@@ -25,6 +25,8 @@ define([
 		hoverCell: null,
 
 		modal: true,
+		hasClose: true,
+		
 		oldSpellsZIndex: 0,
 
 		postRender: function () {

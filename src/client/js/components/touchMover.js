@@ -15,7 +15,7 @@ define([
 
 		hoverTile: null,
 
-		minSqrDistance: 1800,
+		minSqrDistance: 1650,
 
 		init: function () {
 			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {

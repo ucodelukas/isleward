@@ -2,6 +2,7 @@
 
 body, html {
 	position: fixed;
+	overscroll-behavior: none;
 }
 
 body {
@@ -102,6 +103,21 @@ body {
 
 	.spacer-h {
 		width: 100%;
+	}
+
+	&.modal {
+		.btnClose {
+			position: absolute;
+			background-color: @blackA;
+			color: @orange;
+			height: 31px;
+			width: 31px;
+			text-align: center;
+			right: 0px;
+			top: 0px;
+			padding-top: 8px;
+			padding-left: 2px
+		}
 	}
 }
 

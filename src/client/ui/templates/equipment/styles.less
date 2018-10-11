@@ -94,7 +94,7 @@
 					&[slot="legs"] 		.icon { background-position: -384px -448px; }
 					&[slot="feet"] 		.icon { background-position: -448px -448px; }
 					&[slot="trinket"] 	.icon { background-position: -448px -384px; }
-					&[slot="oneHanded"] 	.icon { background-position: -384px -384px; }
+					&[slot="oneHanded"] .icon { background-position: -384px -384px; }
 					&[slot="offHand"] 	.icon { background-position: -192px -384px; }
 					&[slot="tool"] 		.icon { background-position: -256px -384px; }
 					&[slot^="rune"] 	.icon { background-position: -320px -384px; }
@@ -283,4 +283,41 @@
 			}
 		}
 	}	
+}
+
+.mobile .uiEquipment {
+	width: 100%;
+	height: 100%;
+	margin-left: 5px;
+	margin-top: 5px;
+
+	.bottom {
+		.left, .right {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.left {
+			flex-wrap: wrap;
+
+			.slot {
+				margin-right: 8px;
+			}
+		}
+
+		.right {
+			flex-wrap: wrap-reverse;
+
+			.slot {
+				margin-left: 8px;
+			}
+		}
+
+		.middle {
+			.stats {
+				height: calc(100% - 88px);
+			}
+		}
+	}
 }

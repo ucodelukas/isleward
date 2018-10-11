@@ -43,6 +43,7 @@ define([
 				let el = $(html)
 					.appendTo(this.el);
 				el
+					.on('dblclick', this.onDblClickSpell.bind(this, hotkey))
 					.on('click', this.onClickSpell.bind(this, hotkey))
 					.on('mouseover', this.onShowTooltip.bind(this, el, spells[i]))
 					.on('mouseleave', this.onHideTooltip.bind(this, el));
@@ -70,6 +71,11 @@ define([
 			window.player.spellbook.onKeyDown(key);
 
 			return false;
+		},
+
+		onDblClickSpell: function (hotkey, e) {
+			window.player.spellbook.tabTarget(true);
+			return this.onClickSpell(hotkey, e);
 		},
 
 		onShowTooltip: function (el, spell) {
