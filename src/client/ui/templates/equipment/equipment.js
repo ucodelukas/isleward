@@ -17,6 +17,7 @@ define([
 		centered: true,
 
 		modal: true,
+		hasClose: true,
 
 		stats: null,
 		equipment: null,

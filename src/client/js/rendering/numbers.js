@@ -21,6 +21,9 @@ define([
 			if (!target)
 				return;
 
+			if (isMobile && msg.source === window.player.id && msg.crit)
+				window.navigator.vibrate(250);
+
 			let ttl = 35;
 
 			let numberObj = {

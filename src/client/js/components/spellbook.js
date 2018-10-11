@@ -111,8 +111,10 @@ define([
 			events.emit('onSetTarget', this.target, e);
 		},
 
-		tabTarget: function () {
-			let closest = objects.getClosest(window.player.x, window.player.y, 10, input.isKeyDown('shift'), this.target);
+		tabTarget: function (ignoreIfSet) {
+			let compareAgainst = ignoreIfSet ? null : this.target;
+			
+			let closest = objects.getClosest(window.player.x, window.player.y, 10, input.isKeyDown('shift'), compareAgainst);
 
 			this.target = closest;
 			this.targetSprite.visible = !!this.target;
