@@ -21,6 +21,7 @@ define([
 		blockedList: [],
 
 		modal: true,
+		hasClose: true,
 
 		postRender: function () {
 			globals.onlineList = this.onlineList;

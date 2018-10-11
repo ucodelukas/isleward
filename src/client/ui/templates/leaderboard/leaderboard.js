@@ -16,6 +16,7 @@ define([
 
 		centered: true,
 		modal: true,
+		hasClose: true,
 
 		prophecyFilter: null,
 
