@@ -144,7 +144,7 @@ module.exports = {
 		io.set({
 			ent: charname,
 			field: 'customChannels',
-			value: JSON.stringify(channels)
+			value: channels
 		});
 
 		obj.socket.emit('events', {
@@ -190,7 +190,7 @@ module.exports = {
 		io.set({
 			ent: charname,
 			field: 'customChannels',
-			value: JSON.stringify(channels)
+			value: channels
 		});
 
 		obj.socket.emit('event', {
@@ -310,12 +310,12 @@ module.exports = {
 		io.set({
 			ent: new Date(),
 			field: 'modLog',
-			value: JSON.stringify({
+			value: {
 				source: this.obj.name,
 				command: 'mute',
 				target: target,
 				reason: reason
-			})
+			}
 		});
 	},
 
@@ -361,12 +361,12 @@ module.exports = {
 		io.set({
 			ent: new Date(),
 			field: 'modLog',
-			value: JSON.stringify({
+			value: {
 				source: this.obj.name,
 				command: 'unmute',
 				target: target,
 				reason: reason
-			})
+			}
 		});
 	},
 

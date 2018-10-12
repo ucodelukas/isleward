@@ -95,14 +95,14 @@ module.exports = {
 		await leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
-	doSave: async function (callback) {
+	doSave: async function (callback) {	
 		const simple = this.obj.getSimple(true, true);
 		simple.components.spliceWhere(f => (f.type === 'stash'));
 
 		await io.setAsync({
 			key: this.charname,
 			table: 'character',
-			value: JSON.stringify(simple).split('\'').join('`')
+			value: simple
 		});
 
 		await io.setAsync({
@@ -223,7 +223,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'skins',
-			value: JSON.stringify(this.skins)
+			value: this.skins
 		});
 	},
 
@@ -414,7 +414,7 @@ module.exports = {
 		await io.setAsync({
 			key: name,
 			table: 'character',
-			value: JSON.stringify(simple)
+			value: simple
 		});
 
 		this.characters[name] = simple;
@@ -423,7 +423,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(this.characterList)
+			value: this.characterList
 		});
 
 		this.play({
@@ -462,7 +462,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(characterList)
+			value: characterList
 		});
 
 		await leaderboard.deleteCharacter(name);

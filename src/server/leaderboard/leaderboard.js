@@ -121,7 +121,7 @@ module.exports = {
 	save: async function (character) {
 		let value = {
 			level: character.level,
-			prophecies: character.prophecies
+			prophecies: character.prophecies || []
 		};
 
 		if (character.dead)
@@ -130,7 +130,7 @@ module.exports = {
 		io.set({
 			ent: character.name,
 			field: 'leaderboard',
-			value: JSON.stringify(character)
+			value: value
 		});
 	}
 };

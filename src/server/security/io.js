@@ -1,6 +1,9 @@
 let fs = require('fs');
 let util = require('util');
 
+const useFirebase = true;
+const doConvert = false;
+
 module.exports = {
 	db: null,
 	file: '../../data/storage.db',
@@ -25,6 +28,12 @@ module.exports = {
 	},
 
 	init: function (cbReady) {
+		if (useFirebase && !doConvert) {
+			firebase.init(this, false);
+			cbReady();
+			return;
+		}
+
 		let sqlite = require('sqlite3').verbose();
 		this.exists = fs.existsSync(this.file);
 		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
@@ -40,6 +49,8 @@ module.exports = {
 				`, scope.onTableCreated.bind(scope, t));
 			}
 
+			if (useFirebase)
+				firebase.init(this, true);
 			cbReady();
 		}, this);
 

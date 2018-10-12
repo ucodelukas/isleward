@@ -121,7 +121,7 @@ module.exports = {
 			io.set({
 				ent: username,
 				field: 'skins',
-				value: JSON.stringify(skins)
+				value: skins
 			});
 		}
 	}

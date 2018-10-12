@@ -94,7 +94,7 @@ module.exports = {
 			obj.y = spawnPos.y;
 		}
 
-		obj.instanceId = map.seed;
+		obj.instanceId = map.seed || null;
 
 		obj.spawn = map.spawn;
 

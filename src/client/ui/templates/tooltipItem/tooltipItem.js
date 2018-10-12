@@ -173,7 +173,7 @@ define([
 			}
 
 			let stats = Object.keys(tempStats)
-				.map(function (s) {
+				.map(s => {
 					let isEnchanted = (s[0] === '_');
 					let statName = s;
 					if (isEnchanted)
@@ -197,7 +197,7 @@ define([
 					row = '<div class="' + rowClass + '">' + row + '</div>';
 
 					return row;
-				}, this)
+				}, )
 				.sort(function (a, b) {
 					return (a.replace(' enchanted', '').length - b.replace(' enchanted', '').length);
 				})
