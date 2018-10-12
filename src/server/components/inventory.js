@@ -47,7 +47,7 @@ module.exports = {
 			let pos = item.pos;
 
 			let newItem = this.getItem(item, true, true);
-			newItem.pos = pos;
+			newItem.pos = pos || null;
 		}
 
 		//Hack to skip attr checks on equip

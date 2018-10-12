@@ -35,7 +35,7 @@ module.exports = {
 			type: 'social',
 			customChannels: this.customChannels,
 			blockedPlayers: this.blockedPlayers,
-			muted: this.muted
+			muted: this.muted || null
 		};
 	},
 

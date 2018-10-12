@@ -145,6 +145,6 @@ module.exports = {
 	},
 
 	serialize: function () {
-		return JSON.stringify(this.items).split('\'').join('`');
+		return this.items;
 	}
 };

@@ -25,7 +25,7 @@ module.exports = {
 		io.set({
 			ent: this.ent,
 			field: 'customMap',
-			value: JSON.stringify(this.tiles)
+			value: this.tiles
 		});
 	},
 
