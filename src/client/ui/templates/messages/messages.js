@@ -186,6 +186,12 @@ define([
 						if (this.find('.filter[filter="' + m.type + '"]').hasClass('active'))
 							el.show();
 					}
+
+					if (m.type === 'loot') {
+						events.emit('onGetAnnouncement', {
+							msg: m.message
+						});
+					}
 				}
 
 				this.messages.push({

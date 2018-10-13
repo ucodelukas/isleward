@@ -1,19 +1,24 @@
 @import "../../../css/colors.less";
 
-.middleHud {
+.uiMiddleHud {
 	position: absolute;
 	left: calc(50% - 12px);
 	top: calc(50% + 31px);
 
 	.btnGather {
 		display: none;
-		background-color: @greenC;
+		background-color: fade(#3a3b4a, 90%);
 		padding: 8px 10px 8px 10px;
 		color: @white;
 		width: 120px;
 		margin-top: 8px;
 		margin-left: calc(12px - 60px);
-		text-align:center;
+		text-align: center;
+		position: absolute;
+		left: calc(50vw - 86px);
+		top: calc(50vh - 113px);
+		width: 64px;
+		height: 64px;
 	}
 
 	.casting {

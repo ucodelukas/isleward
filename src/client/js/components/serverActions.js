@@ -30,6 +30,8 @@ define([
 		extend: function (blueprint) {
 			if (blueprint.addActions) {
 				blueprint.addActions.forEach(function (a) {
+					this.actions.spliceWhere(f => f.key === a.key);
+
 					let exists = this.actions.some(function (ta) {
 						return ((ta.targetId === a.targetId) && (ta.cpn === a.cpn) && (ta.method === a.method));
 					});
@@ -51,6 +53,8 @@ define([
 
 				delete blueprint.removeActions;
 			}
+
+			events.emit('onGetServerActions', this.actions);
 		}
 	};
 });

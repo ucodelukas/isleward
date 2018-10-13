@@ -20,6 +20,11 @@ define([
 		},
 
 		onGetAnnouncement: function (e) {
+			if (isMobile) {
+				if (['press g to', 'press u to'].some(f => e.msg.toLowerCase().indexOf(f) > -1))
+					return;
+			}
+
 			this.clearMessage();
 
 			let container = this.find('.list');

@@ -54,6 +54,7 @@ module.exports = {
 
 		obj.syncer.setArray(true, 'serverActions', 'addActions', {
 			key: 'u',
+			name: 'open wardrobe',
 			action: {
 				targetId: this.obj.id,
 				cpn: 'wardrobe',
