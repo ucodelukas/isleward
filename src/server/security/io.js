@@ -2,7 +2,7 @@ let fs = require('fs');
 let util = require('util');
 
 const useFirebase = true;
-const doConvert = false;
+const doConvert = true;
 
 module.exports = {
 	db: null,
@@ -167,7 +167,12 @@ module.exports = {
 				_.log(e);
 			
 			_.log(e);
-			this.buffer.splice(0, 0, next);
+			if (!doConvert) 
+				this.buffer.splice(0, 0, next);
+			else {
+				next.resolve(null);
+				return;
+			}
 			setTimeout(this.process.bind(this), 10);
 			return;
 		}
