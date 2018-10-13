@@ -10,16 +10,16 @@ define([
 	return {
 		tpl: template,
 
-		isOnGatherNode: false,
-
 		postRender: function () {
 			this.onEvent('onGetSelfCasting', this.onGetCasting.bind(this));
 
 			if (isMobile) {
-				this.onEvent('onEnterGatherNode', this.onEnterGatherNode.bind(this));
-				this.onEvent('onExitGatherNode', this.onExitGatherNode.bind(this));
-				this.onEvent('onRespawn', this.onExitGatherNode.bind(this));
-				this.onEvent('onShowProgress', this.onExitGatherNode.bind(this));
+				this.onEvent('onEnterGatherNode', this.toggleGatherButton.bind(this, true));
+				this.onEvent('onExitGatherNode', this.toggleGatherButton.bind(this, false));
+				this.onEvent('onRespawn', this.toggleGatherButton.bind(this, false));
+				this.onEvent('onShowProgress', this.toggleGatherButton.bind(this, false));
+
+				this.onEvent('onGetServerActions', this.onGetServerActions.bind(this));
 
 				this.find('.btnGather').on('click', this.gather.bind(this));
 			}
@@ -38,26 +38,33 @@ define([
 			}
 		},
 
-		onEnterGatherNode: function (msg) {
-			this.isOnGatherNode = true;
-
-			this.toggleGatherButton(true);
-		},
-
-		onExitGatherNode: function (msg) {
-			this.isOnGatherNode = false;
-
-			this.toggleGatherButton(false);
-		},
-
 		toggleGatherButton: function (show) {
-			let btn = this.find('.btnGather').hide();
+			let btn = this.find('.btnGather').hide().html('gather');
 			if (show)
 				btn.show();
 		},
 
 		gather: function () {
-			events.emit('onKeyDown', 'g');
+			let btn = this.find('.btnGather');
+			let action = btn.data('action');
+			if (action) {
+				//Server actions use keyUp
+				events.emit('onKeyUp', action.key);
+			} else
+				events.emit('onKeyDown', 'g');
+		},
+
+		onGetServerActions: function (actions) {
+			let btn = this.find('.btnGather').hide().data('action', null);
+
+			let firstAction = actions[0];
+			if (!firstAction)
+				return;
+
+			btn
+				.data('action', firstAction)
+				.html(firstAction.name)
+				.show();
 		}
 	};
 });

@@ -84,6 +84,7 @@ module.exports = {
 		if (canAction) {
 			obj.syncer.setArray(true, 'serverActions', 'addActions', {
 				key: 'u',
+				name: this.closed ? 'open door' : 'close door',
 				action: {
 					targetId: this.obj.id,
 					cpn: 'door',

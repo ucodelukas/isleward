@@ -58,6 +58,7 @@ module.exports = {
 
 		obj.syncer.setArray(true, 'serverActions', 'addActions', {
 			key: 'u',
+			name: 'access workbench',
 			action: {
 				targetId: this.obj.id,
 				cpn: 'workbench',

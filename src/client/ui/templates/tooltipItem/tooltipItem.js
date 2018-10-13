@@ -197,7 +197,7 @@ define([
 					row = '<div class="' + rowClass + '">' + row + '</div>';
 
 					return row;
-				}, )
+				})
 				.sort(function (a, b) {
 					return (a.replace(' enchanted', '').length - b.replace(' enchanted', '').length);
 				})
