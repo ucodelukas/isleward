@@ -1,6 +1,8 @@
 let firebase = require('firebase');
 let fConfig = require('./firebaseConfig');
 
+let fs = require('fs');
+
 module.exports = {
 	db: null,
 	io: null,
@@ -33,8 +35,23 @@ module.exports = {
 	},
 
 	convert: async function () {
+		const skip = [
+			'character',
+			'characterList',
+			'stash',
+			'skins',
+			'login',
+			'leaderboard',
+			'customMap',
+			//'mail',
+			'customChannels',
+			'error',
+			'modLog',
+			'accountInfo'
+		];
+
 		let tables = Object.keys(io.tables);
-		for (table of tables) {
+		for (let table of tables) {
 			if (await this.tableExists(table))
 				continue;
 
@@ -50,19 +67,82 @@ module.exports = {
 			},
 			error: {
 				noParse: true
+			},
+			skins: {
+				noParse: true
 			}
 		};
 
-		for (table of tables) {
+		for (let table of tables) {
+			if (skip.includes(table)) {
+				console.log(`Skipping ${table}`);
+				continue;
+			}
+
 			console.log(`Converting ${table}`);
+			if (table === 'character') {
+				await this.convertCorrupted('character', {}, true);
+
+				continue; 
+			} else if (table === 'mail') {
+				await this.convertCorrupted('mail', {
+					noParse: true
+				});
+
+				continue; 
+			}
+
 			let records = await io.getAllAsync({
 				table: table,
 				...options[table]
 			});
 
-			console.log(`${records.length} records`);
-			for (record of records) 
-				await this.write(table, record.key, record.value);
+			let length = records.length;
+			console.log(`${length} records`);
+			let i = 0;
+			for (let record of records) {
+				console.log(++i + '/' + length);
+				//if (table === 'login' && i < 12400)
+				//	continue;
+
+				if (!record.key || record.key.indexOf('.') > -1 || record.key.indexOf('$') > -1 || record.key.indexOf('#') > -1) {
+					console.log(`Invalid key ${record.key}`);
+					fs.appendFileSync(`failed-${table}`, record.key + '\r\n');
+					continue;
+				} else
+					await this.write(table, record.key, record.value);
+			}
+		}
+	},
+
+	convertCorrupted: async function (table, options, showErrors) {
+		let records = await io.getAllAsync({
+			table: 'characterList'
+		});
+
+		let length = records.length;
+		let i = 0;
+		let failed = [];
+		for (let record of records) {
+			console.log(++i + '/' + length);
+			let charList = record.value;
+			for (let charName of charList) {
+				charName = charName.name || charName;
+
+				try {
+					let character = await io.getAsync({
+						table: table,
+						key: charName,
+						...options
+					});
+
+					if (!character) {
+						if (showErrors)
+							console.log(charName + ' failed');
+					} else
+						await this.write(table, charName, character);
+				} catch (e) {}
+			}
 		}
 	},
 
