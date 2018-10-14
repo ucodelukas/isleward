@@ -227,12 +227,10 @@ module.exports = {
 	},
 
 	queueAuto: function (action, spell) {
-		if (!action.auto)
+		if (!action.auto || spell.autoActive)
 			return true;
 
-		this.spells.forEach(s => {
-			s.setAuto(null);
-		});
+		this.spells.forEach(s => s.setAuto(null));
 
 		spell.setAuto({
 			target: action.target,
@@ -587,9 +585,12 @@ module.exports = {
 
 	stopCasting: function (ignore) {
 		this.spells.forEach(s => {
+			if (s === ignore)
+				return;
+
 			s.setAuto(null);
 
-			if (!s.currentAction || s === ignore)
+			if (!s.currentAction)
 				return;
 
 			s.castTime = 0;
