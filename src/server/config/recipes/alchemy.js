@@ -1,4 +1,6 @@
 module.exports = [{
+	name: 'Minor Healing Potion',
+	description: 'Does not affect emotional scars.',
 	item: {
 		name: 'Minor Healing Potion',
 		type: 'consumable',
