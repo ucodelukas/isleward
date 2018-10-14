@@ -685,7 +685,7 @@ module.exports = {
 			let quality = items[i].quality;
 			items[i].fromMob = !!this.obj.mob;
 			if (quality > topQuality)
-				topQuality = quality;
+				topQuality = ~~quality;
 		}
 
 		if (topQuality === 0)
