@@ -1,5 +1,6 @@
 const baseRecipes = {
 	carp: {
+		description: 'It\'s a fish on a stick, what more do you want to know?',
 		item: {
 			name: 'Carp on a Stick',
 			type: 'consumable',
@@ -27,6 +28,7 @@ const baseRecipes = {
 
 const buildRecipe = function (recipeName, itemName, effectAmount, materialName, quantity) {
 	return extend({}, baseRecipes[recipeName], {
+		name: itemName,
 		item: {
 			name: itemName,
 			quantity: quantity,

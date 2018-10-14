@@ -73,8 +73,8 @@ define([
 		onGetRecipe: function (recipe) {
 			this.currentRecipe = recipe;
 
-			this.find('.title').html(recipe.item.name);
-			this.find('.description').html(recipe.item.description);
+			this.find('.title').html(recipe.name);
+			this.find('.description').html(recipe.description);
 
 			this.find('.materialList .material').remove();
 

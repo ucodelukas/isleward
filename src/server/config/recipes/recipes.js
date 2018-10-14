@@ -19,11 +19,11 @@ module.exports = {
 
 	getList: function (type) {
 		return (recipes[type] || [])
-			.map(r => r.item.name);
+			.map(r => r.name);
 	},
 
 	getRecipe: function (type, name) {
-		let recipe = (recipes[type] || []).find(r => r.item.name === name);
+		let recipe = (recipes[type] || []).find(r => r.name === name);
 		return recipe;
 	}
 };
