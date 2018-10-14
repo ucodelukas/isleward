@@ -9,7 +9,7 @@ module.exports = {
 	list: [],
 	ignoreList: [],
 
-	threatDecay: 0.0052,
+	threatDecay: 0.9,
 	threatCeiling: 0.15,
 
 	init: function (blueprint) {
@@ -365,11 +365,8 @@ module.exports = {
 				this.unAggro(l.obj);
 				i--;
 				lLen--;
-			} else if (l.threat > 0) {
-				l.threat -= this.threatDecay;
-				if (l.threat < 0)
-					l.threat = 0;
-			}
+			} else if (l.threat > 0)
+				l.threat *= this.threatDecay;
 		}
 	}
 };

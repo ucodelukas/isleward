@@ -578,7 +578,7 @@ module.exports = {
 						for (let i = 0; i < aLen; i++) {
 							let a = aggroList[i];
 
-							if ((!a.threat) || (!a.obj.has('serverId')))
+							if (a.damage <= 0 || !a.obj.has('serverId'))
 								continue;
 
 							this.obj.inventory.dropBag(a.obj.name, killSource);
