@@ -92,7 +92,7 @@ module.exports = {
 		if (player.social)
 			player.social.dc();
 
-		atlas.removeObject(player, true, this.onUnzone.bind(this, msg));
+		atlas.removeObject(player, true, this.onUnzone.bind(this, player, msg));
 
 		let keys = Object.keys(player);
 		keys.forEach(function (k) {
@@ -121,7 +121,9 @@ module.exports = {
 		player.dead = false;
 	},
 
-	onUnzone: function (msg) {
+	onUnzone: async function (player, msg) {
+		await player.auth.getSkins();
+		
 		msg.callback();
 	},
 
