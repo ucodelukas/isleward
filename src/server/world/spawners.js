@@ -109,6 +109,8 @@ module.exports = {
 					}, -1);
 
 					l.mob.destroyed = true;
+					delete l.age;
+					delete l.mob;
 				}
 			}
 
@@ -143,6 +145,9 @@ module.exports = {
 			if (doSpawn) {
 				if (!l.cron)
 					l.cd = -1;
+				else
+					l.lastRun = cronInfo.lastRun;
+
 				let mob = this.spawn(l);
 				if (!mob)
 					continue;
