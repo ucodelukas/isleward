@@ -495,11 +495,15 @@ module.exports = {
 			recipients.push(this.obj.serverId);
 		if (source.serverId)
 			recipients.push(source.serverId);
-		if (source.follower && source.follower.master.serverId)
+
+		if (source.follower && source.follower.master.serverId) {
 			recipients.push(source.follower.master.serverId);
+			msg.masterSource = source.follower.master.id;
+		}
+		
 		if (this.obj.follower && this.obj.follower.master.serverId) {
 			recipients.push(this.obj.follower.master.serverId);
-			msg.masterSource = this.obj.follower.master.serverId;
+			msg.masterId = this.obj.follower.master.id;
 		}
 
 		if (recipients.length) {
