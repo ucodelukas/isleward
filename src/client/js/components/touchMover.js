@@ -19,7 +19,7 @@ define([
 
 		init: function () {
 			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {
-				events.on(e, this[e].bind(this));
+				this.obj.on(e, this[e].bind(this));
 			});
 		},
 
