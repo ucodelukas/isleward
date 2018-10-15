@@ -39,6 +39,12 @@ module.exports = {
 			});
 
 		items
+			.filter(i => i.mtx)
+			.forEach(i => {
+				delete i.noDestroy;
+			});
+
+		items
 			.filter(i => (
 				i.enchantedStats && 
 				i.slot !== 'tool' && 
