@@ -99,9 +99,8 @@ module.exports = {
 			}));
 		}
 
-		if (result.factions) {
-			let reputation = this.obj.reputation;
-
+		let reputation = this.obj.reputation;
+		if (result.factions && reputation) {
 			result.factions = result.factions.map(function (f) {
 				let faction = reputation.getBlueprint(f.id);
 				let factionTier = reputation.getTier(f.id);
