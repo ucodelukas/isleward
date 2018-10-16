@@ -403,7 +403,7 @@ define([
 		onEnterStackAmount: function (e) {
 			let el = this.find('.split-box .amount');
 			let val = el.val();
-			if (val !== ~~val)
+			if (+val !== ~~+val)
 				el.val('');
 			else if (val) {
 				let item = this.find('.split-box').data('item');
