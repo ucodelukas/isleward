@@ -5,8 +5,8 @@ define([
 ) {
 	let colors = [
 		'929398',
+		'80f643',
 		'3fa7dd',
-		'faac45',
 		'a24eff',
 		'ffeb38'
 	];
