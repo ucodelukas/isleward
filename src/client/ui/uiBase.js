@@ -89,8 +89,13 @@ define([
 				el.css('top', posY);
 		},
 		show: function () {
-			if (this.modal)
-				$('.modal').hide();
+			if (this.modal) {
+				$('.modal').toArray().forEach(u => {
+					let ui = $(u).data('ui');
+					if (ui.shown)
+						ui.hide();
+				});
+			}
 
 			this.shown = true;
 			this.el.show();

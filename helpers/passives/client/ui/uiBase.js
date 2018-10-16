@@ -14,7 +14,7 @@ define([
 		eventCallbacks: {},
 
 		render: function () {
-			var container = '.ui-container';
+			let container = '.ui-container';
 			if (this.container)
 				container += ' > ' + this.container;
 
@@ -50,13 +50,13 @@ define([
 		},
 
 		on: function (el, event, callback) {
-			if (typeof (el) == 'string')
+			if (typeof (el) === 'string')
 				el = this.find(el);
 			else
 				el = $(el);
 
 			el.on(event, function (e) {
-				var args = [].slice.call(arguments, 1);
+				let args = [].slice.call(arguments, 1);
 				args.splice(0, 0, event);
 
 				callback.apply(null, [...args, e]);
@@ -76,11 +76,11 @@ define([
 			this.centeredX = x;
 			this.centeredY = y;
 
-			var el = this.el;
-			var pat = el.parent();
+			let el = this.el;
+			let pat = el.parent();
 
-			var posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
-			var posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
+			let posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
+			let posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
 
 			el.css('position', 'absolute');
 			if (x)
@@ -119,15 +119,15 @@ define([
 		},
 
 		setDisabled: function (isDisabled) {
-			this.el.removeClass('disabled')
+			this.el.removeClass('disabled');
 
 			if (isDisabled)
 				this.el.addClass('disabled');
 		},
 
 		onEvent: function (event, callback) {
-			var list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
-			var eventCallback = events.on(event, callback);
+			let list = this.eventCallbacks[event] || (this.eventCallbacks[event] = []);
+			let eventCallback = events.on(event, callback);
 			list.push(eventCallback);
 
 			return eventCallback;
