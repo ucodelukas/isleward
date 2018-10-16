@@ -35,6 +35,7 @@ define([
 							rerender = (
 								(findItem.pos !== nItem.pos) ||
 								(findItem.eq !== nItem.eq) ||
+								(findItem.active !== nItem.active) ||
 								(findItem.quickSlot !== nItem.quickSlot) || 
 								(findItem.quantity !== nItem.quantity)
 							);
