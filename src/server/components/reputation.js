@@ -98,11 +98,12 @@ module.exports = {
 	},
 
 	getReputation: function (factionId, gain) {
-		let fullSync = (!this.factions[factionId]);
+		let fullSync = false;
 		let blueprint = this.getBlueprint(factionId);
 
 		let faction = this.list.find(l => l.id === factionId);
 		if (!faction) {
+			fullSync = true;
 			this.list.push({
 				id: factionId,
 				rep: blueprint.initialRep,
@@ -152,7 +153,6 @@ module.exports = {
 		if (this.list.some(l => l.id === factionId))
 			return;
 
-		let fullSync = (!this.factions[factionId]);
 		let blueprint = this.getBlueprint(factionId);
 
 		if (!blueprint)
@@ -177,7 +177,7 @@ module.exports = {
 			}, [this.obj.serverId]);
 		}
 
-		this.syncFaction(factionId, fullSync);
+		this.syncFaction(factionId, true);
 	},
 
 	save: function () {
