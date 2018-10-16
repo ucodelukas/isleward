@@ -415,6 +415,9 @@ module.exports = {
 	},
 
 	respawn: function () {
+		if (!this.obj.dead)
+			return;
+		
 		this.obj.syncer.set(true, null, 'dead', false);
 
 		let obj = this.obj;
