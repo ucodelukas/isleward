@@ -52,6 +52,8 @@ define([
 		},
 
 		getCompareItem: function (msg) {
+			const shiftDown = input.isKeyDown('shift', true);
+
 			let item = msg.item;
 			let items = window.player.inventory.items;
 
@@ -88,7 +90,7 @@ define([
 						compare = equippedTwoHanded;
 
 					// this case is kind of ugly, but we don't want to go in when comparing an offHand to (oneHanded + empty offHand) - that should just use the normal compare which is offHand to empty
-					if ((item.slot === 'offHand') && (equippedTwoHanded)) {
+					if (item.slot === 'offHand' && equippedTwoHanded && shiftDown) {
 						// since we're comparing an offhand to an equipped Twohander, we need to clone the 'spell' values over (setting damage to zero) so that we can properly display how much damage
 						// the player would lose by switching to the offhand (which would remove the twoHander)
 						// keep a reference to the original item for use in onHideToolTip
