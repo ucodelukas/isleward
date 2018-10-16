@@ -246,5 +246,12 @@ module.exports = {
 	canChase: function (obj) {
 		let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
 		return ((!this.goHome) && (distanceFromHome <= this.maxChaseDistance));
+	},
+
+	events: {
+		beforeTakeDamage: function (msg) {
+			if (this.goHome)
+				msg.failed = true;
+		}
 	}
 };
