@@ -95,7 +95,6 @@ module.exports = {
 		}
 
 		delete item.pos;
-		obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 
 		if (slot === 'finger') {
 			let f1 = (this.eq.has('finger-1'));
@@ -137,7 +136,7 @@ module.exports = {
 			if (item.spell)
 				inventory.learnAbility(itemId, item.runeSlot);
 			else
-				obj.syncer.setArray(true, 'inventory', 'getItems', item);
+				obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 		}
 
 		obj.fireEvent('afterEquipItem', item);
