@@ -22,9 +22,12 @@ define([
 		hasClose: true,
 
 		eventCloseInv: null,
+		eventClickInv: null,
 
 		hoverItem: null,
 		item: null,
+
+		waiting: false,
 
 		action: 'augment',
 
@@ -114,16 +117,19 @@ define([
 		},
 
 		openInventory: function () {
+			this.waiting = true;
+
 			this.eventCloseInv = this.onEvent('onHideInventory', this.onHideInventory.bind(this));
 			this.eventClickInv = this.onEvent('beforeInventoryClickItem', this.onHideInventory.bind(this));
 
 			events.emit('onShowInventory');
-			this.el.hide();
 		},
 
 		onHideInventory: function (msg) {
 			if (msg)
 				msg.success = false;
+
+			this.waiting = false;
 
 			if (!msg || !msg.item) {
 				this.offEvent(this.eventCloseInv);
@@ -311,6 +317,9 @@ define([
 		},
 
 		beforeHide: function () {
+			if (this.waiting)
+				return;
+
 			this.item = null;
 			this.offEvent(this.eventCloseInv);
 			this.offEvent(this.eventClickInv);
