@@ -622,12 +622,15 @@ module.exports = {
 	},
 
 	getDefaultAbilities: function () {
-		let hasWeapon = this.items.some(function (i) {
+		let hasWeapon = this.items.some(i => {
 			return (
-				(i.spell) &&
-				(i.spell.rolls) &&
-				(i.spell.rolls.has('damage')) &&
-				((i.slot === 'twoHanded') || (i.slot === 'oneHanded'))
+				i.spell &&
+				i.spell.rolls &&
+				i.spell.rolls.has('damage') &&
+				(
+					i.slot === 'twoHanded' || 
+					i.slot === 'oneHanded'
+				)
 			);
 		});
 
@@ -637,16 +640,17 @@ module.exports = {
 				quality: 0,
 				spellQuality: 'basic'
 			});
+			item.worth = 0;
 			item.eq = true;
 			item.noSalvage = true;
 			this.getItem(item);
 		}
 
-		classes.spells[this.obj.class].forEach(function (spellName) {
-			let hasSpell = this.items.some(function (i) {
+		classes.spells[this.obj.class].forEach(spellName => {
+			let hasSpell = this.items.some(i => {
 				return (
-					(i.spell) &&
-					(i.spell.name.toLowerCase() === spellName)
+					i.spell &&
+					i.spell.name.toLowerCase() === spellName
 				);
 			});
 
@@ -656,11 +660,12 @@ module.exports = {
 					spellQuality: 'basic',
 					spellName: spellName
 				});
+				item.worth = 0;
 				item.eq = true;
 				item.noSalvage = true;
 				this.getItem(item);
 			}
-		}, this);
+		});
 	},
 
 	createBag: function (x, y, items, ownerName) {
