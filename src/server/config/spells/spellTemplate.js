@@ -144,8 +144,8 @@ module.exports = {
 
 			let statValues = this.obj.stats.values;
 
-			let critChance = isAttack ? statValues.attackCritChance : statValues.spellCritChance;
-			let critMultiplier = isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier;
+			let critChance = statValues.critChance + (isAttack ? statValues.attackCritChance : statValues.spellCritChance);
+			let critMultiplier = statValues.critMultiplier + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
 			let attackSpeed = (statValues.attackSpeed / 100);
 			attackSpeed += 1;
 
