@@ -91,7 +91,7 @@ module.exports = {
 
 		let builtSpell = extend({}, spellTemplate, typeTemplate.template, options);
 		builtSpell.obj = this.obj;
-		builtSpell.baseDamage = builtSpell.damage;
+		builtSpell.baseDamage = builtSpell.damage || 0;
 		builtSpell.damage += (options.damageAdd || 0);
 		if (options.damage)
 			builtSpell.damage = options.damage;
