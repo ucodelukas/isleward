@@ -12,6 +12,7 @@ define([
 		centered: true,
 
 		modal: true,
+		hasClose: true,
 
 		postRender: function () {
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
