@@ -415,7 +415,7 @@ module.exports = {
 			spell.target = this.obj.aggro.getRandom();
 
 		success = spell.castBase(action);
-		this.stopCasting(spell);
+		this.stopCasting(spell, true);
 
 		if (success) {
 			spell.consumeMana();
@@ -583,12 +583,13 @@ module.exports = {
 		return this.spells.some(s => s.currentAction);
 	},
 
-	stopCasting: function (ignore) {
+	stopCasting: function (ignore, skipAuto) {
 		this.spells.forEach(s => {
 			if (s === ignore)
 				return;
 
-			s.setAuto(null);
+			if (!skipAuto)
+				s.setAuto(null);
 
 			if (!s.currentAction)
 				return;
@@ -607,11 +608,11 @@ module.exports = {
 		},
 
 		clearQueue: function () {
-			this.stopCasting();
+			this.stopCasting(null, true);
 		},
 
 		beforeDeath: function () {
-			this.stopCasting();
+			this.stopCasting(null, true);
 
 			this.spells.forEach(function (s) {
 				if (!s.castOnDeath)
