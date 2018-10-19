@@ -28,6 +28,7 @@ define([
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way wQuery does it
 			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
+			this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
