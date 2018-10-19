@@ -99,10 +99,20 @@
 
 .mobile .uiMenu {
 	bottom: auto;
-	top: 18px;
-	right: 18px;
-	width: 32px;
-	height: 32px;
+	top: 10px;
+	right: 10px;
+	width: @btnSize;
+	height: @btnSize;
+
+	&:after {
+		content: '';
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		background: url('../../../images/uiIcons.png') 0px -64px;
+		width: @btnSize;
+		height: @btnSize;
+	}
 
 	> * {
 		display: none;
@@ -117,6 +127,10 @@
 		flex-wrap: wrap-reverse;
 		align-items: center;
 		justify-content: center;
+
+		&:after {
+			display: none;
+		}
 
 		> * {
 			display: block;
