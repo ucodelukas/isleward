@@ -106,9 +106,12 @@ define([
 					.replace('$LEVEL$', l.level)
 					.replace('$CLASS$', l.class);
 
-				$(html)
+				let el = $(html)
 					.appendTo(container)
 					.on('contextmenu', this.showContext.bind(this, l));
+
+				if (isMobile)
+					el.on('mousedown', this.showContext.bind(this, l));
 			}, this);
 		},
 

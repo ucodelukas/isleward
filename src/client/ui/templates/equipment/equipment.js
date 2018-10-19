@@ -146,9 +146,9 @@ define([
 						.find('.icon')
 						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.off()
+						.on('mousedown', this.buildSlot.bind(this, elSlot))
 						.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
-						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.buildSlot.bind(this, elSlot));
+						.on('mouseleave', this.onHoverItem.bind(this, null, null));
 				});
 		},
 
@@ -161,7 +161,7 @@ define([
 			this.onGetItems(result.equipment);
 		},
 
-		buildSlot: function (el) {
+		buildSlot: function (el, e) {
 			if (this.isInspecting)
 				return;
 
@@ -221,9 +221,9 @@ define([
 					itemEl
 						.find('.icon')
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
+						.on('mousedown', this.equipItem.bind(this, item, slot))
 						.on('mousemove', this.onHoverItem.bind(this, itemEl, item, null))
-						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.equipItem.bind(this, item, slot));
+						.on('mouseleave', this.onHoverItem.bind(this, null, null));
 
 					if (item === hoverCompare)
 						itemEl.find('.icon').addClass('eq');
@@ -233,9 +233,12 @@ define([
 
 			if (!items.length)
 				container.hide();
+
+			e.preventDefault();
+			return false;
 		},
 
-		equipItem: function (item, slot) {
+		equipItem: function (item, slot, e) {
 			let isNew = window.player.inventory.items.some(f => (f.equipSlot === slot && f.isNew));
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
@@ -293,6 +296,9 @@ define([
 			});
 
 			this.find('.itemList').hide();
+
+			e.preventDefault();
+			return false;
 		},
 
 		onHoverItem: function (el, item, compare, e) {

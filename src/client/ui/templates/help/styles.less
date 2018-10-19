@@ -32,6 +32,10 @@
 			color: darken(@white, 25%);
 			padding: 16px;
 
+			&.mobile {
+				display: none;
+			}
+
 			.topic {
 				color: @white;
 			}
@@ -41,4 +45,12 @@
 
 .mobile .uiHelp {
 	height: 80vh;
+
+	.row {
+		display: none;
+
+		&.mobile {
+			display: block;
+		}
+	}
 }
