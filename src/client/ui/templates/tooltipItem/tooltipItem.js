@@ -128,7 +128,7 @@ define([
 		},
 
 		onShowItemTooltip: function (item, pos, canCompare, bottomAlign) {
-			const shiftDown = input.isKeyDown('shift', true);
+			let shiftDown = input.isKeyDown('shift', true);
 
 			let msg = {
 				item: item,
@@ -136,7 +136,11 @@ define([
 			};
 			this.getCompareItem(msg);
 
-			this.item = item = msg.item;
+			let useItem = item = msg.item;
+			if (isMobile && useItem === this.item)
+				shiftDown = true;
+			this.item = useItem;
+
 			let compare = canCompare ? msg.compare : null;
 
 			let tempStats = $.extend(true, {}, item.stats);
@@ -396,6 +400,8 @@ define([
 
 			if (shiftDown || !compare)
 				tooltip.find('.info').hide();
+			else if (isMobile && compare && !shiftDown)
+				tooltip.find('.info').html('tap again to compare');
 
 			if (item.cd) {
 				tooltip.find('.info')

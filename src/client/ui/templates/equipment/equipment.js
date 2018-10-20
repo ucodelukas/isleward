@@ -234,8 +234,10 @@ define([
 			if (!items.length)
 				container.hide();
 
-			e.preventDefault();
-			return false;
+			if (e) {
+				e.preventDefault();
+				return false;
+			}
 		},
 
 		equipItem: function (item, slot, e) {

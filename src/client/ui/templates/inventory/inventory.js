@@ -101,15 +101,18 @@ define([
 				}
 
 				let clickHandler = this.onMouseDown.bind(this, itemEl, item, true);
-				if (isMobile)
+				let moveHandler = this.onHover.bind(this, itemEl, item);
+				if (isMobile) {
 					clickHandler = this.onHover.bind(this, itemEl, item);
+					moveHandler = () => {};
+				}
 
 				itemEl
 					.data('item', item)
 					.on('click', this.onClick.bind(this, item))
 					.on('mousedown', clickHandler)
 					.on('mouseup', this.onMouseDown.bind(this, null, null, false))
-					.on('mousemove', this.onHover.bind(this, itemEl, item))
+					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
@@ -352,11 +355,11 @@ define([
 			if ((!item.noDrop) && (!item.quest))
 				config.push(menuItems.mail);
 
+			if (isMobile)
+				this.hideTooltip(null, this.hoverItem);
+
 			if (config.length > 0)
 				events.emit('onContextMenu', config, e);
-
-			if (isMobile) 
-				this.hideTooltip(null, this.hoverItem);
 
 			e.preventDefault();
 			return false;

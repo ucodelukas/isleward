@@ -39,7 +39,7 @@ define([
 		},
 
 		toggleGatherButton: function (show) {
-			let btn = this.find('.btnGather').hide().html('gather');
+			let btn = this.find('.btnGather').hide();
 			if (show)
 				btn.show();
 		},
