@@ -65,6 +65,19 @@ define([
 				.on('touchmove', this.events.touch.touchMove.bind(this))
 				.on('touchend', this.events.touch.touchEnd.bind(this))
 				.on('touchcancel', this.events.touch.touchCancel.bind(this));
+
+			require(['plugins/shake.js'], this.onLoadShake.bind(this));
+		},
+
+		onLoadShake: function (shake) {
+			let shaker = new shake({
+				threshold: 5,
+				timeout: 1000 
+			});
+
+			shaker.start();
+			window.addEventListener('shake', this.events.mobile.onShake.bind(this), false);
+			setTimeout(this.events.mobile.onShake.bind(this), 5000);
 		},
 
 		resetKeys: function () {
@@ -240,6 +253,12 @@ define([
 
 				touchCancel: function (e) {
 					events.emit('onTouchCancel');
+				}
+			},
+
+			mobile: {
+				onShake: function (e) {
+					events.emit('onShake', e);
 				}
 			}
 		}

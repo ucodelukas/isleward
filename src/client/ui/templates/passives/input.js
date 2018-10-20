@@ -49,7 +49,11 @@ define([
 			el
 				.on('mousedown', this.events.mouse.mouseDown.bind(this))
 				.on('mouseup', this.events.mouse.mouseUp.bind(this))
-				.on('mousemove', this.events.mouse.mouseMove.bind(this));
+				.on('mousemove', this.events.mouse.mouseMove.bind(this))
+				.on('touchstart', this.events.touch.touchStart.bind(this))
+				.on('touchmove', this.events.touch.touchMove.bind(this))
+				.on('touchend', this.events.touch.touchEnd.bind(this))
+				.on('touchcancel', this.events.touch.touchCancel.bind(this));
 		},
 
 		resetKeys: function () {
@@ -142,6 +146,7 @@ define([
 					events.emit('onKeyUp', key);
 				}
 			},
+
 			mouse: {
 				mouseDown: function (e) {
 					let el = $(e.target);
@@ -186,6 +191,61 @@ define([
 					this.mouse.raw = e;
 
 					events.emit('uiMouseMove', this.mouse);
+				}
+			},
+
+			touch: {
+				touchStart: function (e) {
+					let pos = this.events.touch.convertTouchPos(e);
+
+					this.mouse.raw = {
+						clientX: pos.x,
+						clientY: pos.y
+					};
+
+					events.emit('uiTouchStart', {
+						x: pos.x,
+						y: pos.y,
+						raw: {
+							clientX: pos.x,
+							clientY: pos.y
+						}
+					});
+				},
+
+				touchMove: function (e) {
+					let pos = this.events.touch.convertTouchPos(e);
+
+					this.mouse.raw = {
+						clientX: pos.x,
+						clientY: pos.y
+					};
+
+					events.emit('uiTouchMove', {
+						x: pos.x,
+						y: pos.y,
+						touches: e.touches.length,
+						raw: {
+							clientX: pos.x,
+							clientY: pos.y
+						}
+					});
+				},
+
+				touchEnd: function (e) {
+					events.emit('uiTouchEnd');
+				},
+
+				touchCancel: function (e) {
+					events.emit('uiTouchCancel');
+				},
+
+				convertTouchPos: function (e) {
+					let rect = e.target.getBoundingClientRect();
+					return {
+						x: e.targetTouches[0].pageX - rect.left,
+						y: e.targetTouches[0].pageY - rect.top
+					};
 				}
 			}
 		}

@@ -21,6 +21,8 @@ define([
 			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {
 				this.obj.on(e, this[e].bind(this));
 			});
+
+			this.obj.on('onShake', this.onShake.bind(this));
 		},
 
 		onTouchStart: function (e) {
@@ -77,6 +79,22 @@ define([
 
 		onTouchCancel: function () {
 			this.lastNode = null;
+		},
+
+		onShake: function () {
+			if (!this.obj.pather.path.length)
+				return;
+
+			client.request({
+				cpn: 'player',
+				method: 'queueAction',
+				data: {
+					action: 'clearQueue',
+					priority: true
+				}
+			});
+
+			window.navigator.vibrate(150);
 		},
 
 		bump: function (dx, dy) {

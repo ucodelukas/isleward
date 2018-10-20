@@ -90,12 +90,19 @@ define([
 			this.find('.btnReset').on('click', this.events.onReset.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
-			this.onEvent('uiMouseMove', this.events.onPan.bind(this));
-			this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 			this.onEvent('onGetPassives', this.events.onGetPassives.bind(this));
 			this.onEvent('onGetPassivePoints', this.events.onGetPassivePoints.bind(this));
 			this.onEvent('onShowPassives', this.toggle.bind(this));
+
+			if (isMobile) {
+				this.onEvent('uiTouchEnd', this.events.onPanEnd.bind(this));
+				this.onEvent('uiTouchStart', this.events.onPanStart.bind(this));
+				this.onEvent('uiTouchMove', this.events.onPan.bind(this));
+			} else {
+				this.onEvent('uiMouseMove', this.events.onPan.bind(this));
+				this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
+			}
 		},
 
 		renderNodes: function () {
@@ -137,11 +144,13 @@ define([
 				this.hide();
 
 			events.emit('onHideTooltip', this.el[0]);
+			this.tooltipId = null;
 		},
 
 		beforeHide: function () {
 			events.emit('onHideTooltip', this.el[0]);
 			events.emit('onHideTooltip', this.el[0]);
+			this.tooltipId = null;
 		},
 
 		onKeyDown: function (key) {
@@ -327,15 +336,42 @@ define([
 					};
 
 					events.emit('onShowTooltip', text, this.el[0], tooltipPos);
-				} else
+					this.tooltipId = node.id;
+				} else {
 					events.emit('onHideTooltip', this.el[0]);
+					this.tooltipId = null;
+				}
 			},
 
 			onPanStart: function (e) {
+				if (isMobile) {
+					let cell = {
+						x: ~~((this.pos.x + e.x) / constants.gridSize),
+						y: ~~((this.pos.y + e.y) / constants.gridSize)
+					};
+
+					let node = this.data.nodes.find(function (n) {
+						return (
+							(n.pos.x === cell.x) &&
+							(n.pos.y === cell.y)
+						);
+					});
+
+					if (this.hoverNode && node && node.id !== this.hoverNode.id) {
+						this.events.onMouseMove.call(this, e);
+						return;
+					}
+
+					if (!node)
+						this.hoverNode = null;
+				}
+
 				if (this.hoverNode) {
 					this.events.onTryClickNode.call(this, this.hoverNode);
 					return;
 				}
+
+				this.events.onMouseMove.call(this, e);
 
 				this.panOrigin = {
 					x: e.raw.clientX,
@@ -376,6 +412,8 @@ define([
 
 			onTryClickNode: function (node) {
 				if ((node.spiritStart) || (node.selected))
+					return;
+				else if (isMobile && this.tooltipId !== node.id)
 					return;
 
 				client.request({
