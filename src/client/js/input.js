@@ -229,6 +229,10 @@ define([
 
 			touch: {
 				touchStart: function (e) {
+					let el = $(e.target);
+					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+						return;
+
 					let touch = e.touches[0];
 					events.emit('onTouchStart', {
 						x: touch.clientX,
@@ -239,6 +243,10 @@ define([
 				},
 
 				touchMove: function (e) {
+					let el = $(e.target);
+					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+						return;
+
 					let touch = e.touches[0];
 					events.emit('onTouchMove', {
 						x: touch.clientX,
@@ -248,10 +256,18 @@ define([
 				},
 
 				touchEnd: function (e) {
+					let el = $(e.target);
+					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+						return;
+
 					events.emit('onTouchEnd');
 				},
 
 				touchCancel: function (e) {
+					let el = $(e.target);
+					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
+						return;
+					
 					events.emit('onTouchCancel');
 				}
 			},
