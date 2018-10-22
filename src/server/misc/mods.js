@@ -17,6 +17,8 @@ module.exports = {
 	},
 
 	onGetMod: function (name, mod) {
+		let isMapThread = !!process.send;
+		mod.isMapThread = isMapThread;
 		mod.events = events;
 		mod.folderName = 'server/mods/' + name;
 		mod.relativeFolderName = 'mods/' + name;
@@ -29,7 +31,13 @@ module.exports = {
 			this.onGetExtra(name, mod, extra);
 		}
 
-		mod.init();
+		if (isMapThread && typeof mod.initMap === 'function')
+			mod.initMap();
+		else if (typeof mod.initMain === 'function')
+			mod.initMain();
+
+		if (typeof mod.init === 'function')
+			mod.init();
 	},
 
 	onGetExtra: function (name, mod, extra) {
