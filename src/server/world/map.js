@@ -72,10 +72,10 @@ module.exports = {
 		if (dialogues)
 			this.zone.dialogues = dialogues;
 
-		this.zone = extend({}, globalZone, this.zone);	
+		this.zone = extend({}, globalZone, this.zone);
 
 		let resources = this.zone.resources || {};
-		for (let r in resources) 
+		for (let r in resources)
 			resourceSpawner.register(r, resources[r]);
 
 		mapFile = require('../config/maps/' + this.name + '/map');
@@ -130,7 +130,7 @@ module.exports = {
 					newCell += newC;
 
 					//Wall?
-					if ((c >= 160) && (c <= 352) && (newC === 0)) 
+					if ((c >= 160) && (c <= 352) && (newC === 0))
 						this.collisionMap[i][j] = 0;
 
 					if (k < cLen - 1)
@@ -157,7 +157,7 @@ module.exports = {
 				for (let i = x; i < x + w; i++) {
 					let row = this.layers[i];
 
-					for (let j = y; j < y + h; j++) 
+					for (let j = y; j < y + h; j++)
 						row[j] = '';
 				}
 			}, this);
@@ -206,7 +206,7 @@ module.exports = {
 
 			let data = layer.data || layer.objects;
 			let firstItem = data[0];
-			if (firstItem && firstItem.width) {
+			if (firstItem && typeof firstItem.width !== 'undefined') {
 				let info = {
 					map: this.name,
 					layer: layerName,
