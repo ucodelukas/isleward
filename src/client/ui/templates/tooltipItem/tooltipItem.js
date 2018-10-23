@@ -125,9 +125,13 @@ define([
 
 			this.item = null;
 			this.tooltip.hide();
+
+			this.removeButton();
 		},
 
 		onShowItemTooltip: function (item, pos, canCompare, bottomAlign) {
+			this.removeButton();
+
 			let shiftDown = input.isKeyDown('shift', true);
 
 			let msg = {
@@ -445,6 +449,30 @@ define([
 
 			if (!canAfford)
 				this.tooltip.find('.worth').addClass('no-afford');
+		},
+
+		addButton: function (label, cb) {
+			let tt = this.tooltip;
+			let pos = tt.offset();
+			let width = tt.outerWidth();
+			let height = tt.outerHeight();
+
+			let btn = $(`<div class='btn'>${label}</div>`)
+				.appendTo(this.el)
+				.on('click', cb)
+				.css({
+					width: width,
+					left: pos.left,
+					top: pos.top + height
+				});
+		},
+
+		beforeHide: function () {
+			this.removeButton();
+		},
+
+		removeButton: function () {
+			this.find('.btn').remove();
 		}
 	};
 });
