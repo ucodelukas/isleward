@@ -25,13 +25,8 @@ define([
 		hasFocus: true,
 
 		init: function () {
-			if (isMobile) {
-				window.addEventListener('touchmove', function (e) {
-					e.preventDefault();
-				}, { passive: false } );
-				
+			if (isMobile)			
 				$('.ui-container').addClass('mobile');
-			}
 
 			client.init(this.onClientReady.bind(this));
 		},
