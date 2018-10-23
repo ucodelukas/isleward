@@ -162,6 +162,15 @@ define([
 			}
 		},
 
+		toggle: function () {
+			this.shown = !this.el.is(':visible');
+
+			if (this.shown)
+				this.show();
+			else
+				this.hide();
+		},
+
 		buildClose: function () {
 			$('<div class="btn btnClose">x</div>')
 				.appendTo(this.find('.heading').eq(0))

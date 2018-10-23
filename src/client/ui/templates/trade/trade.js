@@ -17,7 +17,7 @@ define([
 		centered: true,
 
 		modal: true,
-		hasClose: true,
+		hasClose: true, 
 
 		list: null,
 		action: null,
