@@ -63,7 +63,6 @@ define([
 
 			btn
 				.data('action', firstAction)
-				.html(firstAction.name)
 				.show();
 		}
 	};
