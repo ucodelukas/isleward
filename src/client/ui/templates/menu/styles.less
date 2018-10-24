@@ -36,6 +36,10 @@
 			height: 100%;
 		}
 
+		&.btnCollapse {
+			display: none;
+		}
+
 		&.btnInventory {
 			margin: 0px 8px 0px 45px;
 		}
@@ -109,7 +113,8 @@
 		position: absolute;
 		left: 0px;
 		top: 0px;
-		background: url('../../../images/uiIcons.png') 0px -64px;
+		background: url('../../../images/uiIcons.png');
+		background-position: 0px -64px;
 		width: @btnSize;
 		height: @btnSize;
 	}
@@ -135,6 +140,23 @@
 		> * {
 			display: block;
 			margin: 0px;
+		}
+
+		.btnCollapse {
+			display: block;
+			position: absolute;
+			right: calc(100% + 10px);
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: fade(@darkGray, 90%);
+			width: @btnSize;
+			height: @btnSize;
+
+			.icon {
+				width: 100%;
+				height: 100%;
+				background: url('../../../images/uiIcons.png') -448px 0px;
+			}
 		}
 	}
 }
