@@ -10,8 +10,10 @@ define([
 	return {
 		tpl: template,
 		postRender: function () {
-			if (isMobile)
+			if (isMobile) {
 				this.el.on('click', this.toggleButtons.bind(this));
+				this.find('.btnCollapse').on('click', this.toggleButtons.bind(this));
+			}
 
 			this.find('.btnSmithing').on('click', this.handler.bind(this, 'onShowSmithing'));
 			this.find('.btnHelp').on('click', this.handler.bind(this, 'onShowHelp'));
