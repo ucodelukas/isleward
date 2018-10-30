@@ -8,6 +8,7 @@ let fixes = require('../fixes/fixes');
 let loginRewards = require('../config/loginRewards');
 let mail = require('../misc/mail');
 let scheduler = require('../misc/scheduler');
+let spirits = require('../config/spirits');
 
 module.exports = {
 	type: 'auth',
@@ -354,6 +355,8 @@ module.exports = {
 			error = messages.login.invalid;
 		else if (name.indexOf('  ') > -1)
 			msg.callback(messages.login.invalid);
+		else if (!spirits.list.includes(data.class))
+			return;
 
 		let nLen = name.length;
 		for (let i = 0; i < nLen; i++) {
