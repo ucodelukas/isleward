@@ -91,26 +91,31 @@ module.exports = {
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
 
-			if ((l.lifetime) && (l.mob) && (!l.mob.destroyed)) {
-				if (!l.age)
-					l.age = 1;
-				else
-					l.age++;
-
-				if (l.age >= l.lifetime) {
-					this.syncer.queue('onGetObject', {
-						x: l.mob.x,
-						y: l.mob.y,
-						components: [{
-							type: 'attackAnimation',
-							row: 0,
-							col: 4
-						}]
-					}, -1);
-
-					l.mob.destroyed = true;
+			if ((l.lifetime) && (l.mob)) {
+				if (l.mob.destroyed) {
 					delete l.age;
 					delete l.mob;
+				} else {
+					if (!l.age)
+						l.age = 1;
+					else
+						l.age++;
+
+					if (l.age >= l.lifetime) {
+						this.syncer.queue('onGetObject', {
+							x: l.mob.x,
+							y: l.mob.y,
+							components: [{
+								type: 'attackAnimation',
+								row: 0,
+								col: 4
+							}]
+						}, -1);
+
+						l.mob.destroyed = true;
+						delete l.age;
+						delete l.mob;
+					}
 				}
 			}
 
