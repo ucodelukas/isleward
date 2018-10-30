@@ -111,7 +111,6 @@ module.exports = {
 		let statValues = mob.stats.values;
 
 		let preferStat = ['str', 'dex', 'int'][~~(Math.random() * 3)];
-		let elementType = [null, 'poison', 'frost', 'fire', 'holy', 'arcane'][~~(Math.random() * 6)];
 
 		mob.equipment.unequipAll();
 		mob.inventory.clear();
@@ -191,7 +190,6 @@ module.exports = {
 		mob.spellbook.spells.forEach(function (s) {
 			s.dmgMult = dmgMult;
 			s.statType = preferStat;
-			s.element = elementType;
 			s.manaCost = 0;
 		}, this);
 
