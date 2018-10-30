@@ -351,7 +351,8 @@ module.exports = {
 					extend(g, {
 						name: 'Ancient Carp',
 						sprite: [11, 4],
-						noDrop: true
+						noDrop: true,
+						worth: 0
 					});
 				});
 			},
