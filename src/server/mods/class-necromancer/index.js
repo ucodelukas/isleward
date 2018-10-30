@@ -152,6 +152,7 @@ module.exports = {
 			cdMax: 10,
 			castTimeMax: 3,
 			manaCost: 5,
+			isAttack: true,
 			range: 1,
 			random: {
 				damage: [4, 14],

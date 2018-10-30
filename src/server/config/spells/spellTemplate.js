@@ -40,8 +40,7 @@ module.exports = {
 
 				let castTimeMax = this.castTimeMax;
 
-				let isAttack = (this.type === 'melee');
-				let speedModifier = this.obj.stats.values[isAttack ? 'attackSpeed' : 'castSpeed'];
+				let speedModifier = this.obj.stats.values[this.isAttack ? 'attackSpeed' : 'castSpeed'];
 				castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
 
 				let castEvent = {
@@ -140,12 +139,10 @@ module.exports = {
 				noCrit: true
 			}).amount;
 
-			let isAttack = (this.type === 'melee');
-
 			let statValues = this.obj.stats.values;
 
-			let critChance = statValues.critChance + (isAttack ? statValues.attackCritChance : statValues.spellCritChance);
-			let critMultiplier = statValues.critMultiplier + (isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
+			let critChance = statValues.critChance + (this.isAttack ? statValues.attackCritChance : statValues.spellCritChance);
+			let critMultiplier = statValues.critMultiplier + (this.isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
 			let attackSpeed = (statValues.attackSpeed / 100);
 			attackSpeed += 1;
 
@@ -240,7 +237,7 @@ module.exports = {
 			element: this.element,
 			statType: this.statType,
 			statMult: this.statMult,
-			isAttack: (this.type === 'melee'),
+			isAttack: this.isAttack,
 			noMitigate: noMitigate
 		};
 

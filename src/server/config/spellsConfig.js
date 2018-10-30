@@ -6,6 +6,7 @@ let spells = {
 		cdMax: 10,
 		castTimeMax: 0,
 		useWeaponRange: true,
+		isAttack: true,
 		random: {
 			damage: [3, 11.4]
 		}
@@ -93,6 +94,7 @@ let spells = {
 		cdMax: 9,
 		castTimeMax: 1,
 		manaCost: 4,
+		isAttack: true,
 		useWeaponRange: true,
 		random: {
 			damage: [6, 23]
@@ -106,6 +108,7 @@ let spells = {
 		castTimeMax: 1,
 		range: 10,
 		manaCost: 3,
+		isAttack: true,
 		random: {
 			damage: [2, 8],
 			i_stunDuration: [6, 10]
@@ -117,6 +120,7 @@ let spells = {
 		cdMax: 20,
 		castTimeMax: 0,
 		manaCost: 12,
+		isAttack: true,
 		random: {
 			i_duration: [4, 9]
 		}
@@ -127,6 +131,7 @@ let spells = {
 		element: 'poison',
 		cdMax: 5,
 		castTimeMax: 0,
+		isAttack: true,
 		manaCost: 6,
 		random: {
 			damage: [0.25, 1.45],
