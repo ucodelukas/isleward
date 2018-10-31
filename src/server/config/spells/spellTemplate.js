@@ -127,7 +127,7 @@ module.exports = {
 	},
 
 	calcDps: function (target, noSync) {
-		if ((!this.values) || (this.spellType === 'buff'))
+		if ((!this.values) || (this.spellType === 'buff') || (this.spellType === 'aura'))
 			return;
 
 		if ((!this.damage) && (!this.healing))
