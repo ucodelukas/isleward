@@ -1,8 +1,13 @@
 let fs = require('fs');
 let util = require('util');
 
-const useFirebase = true;
-const doConvert = true;
+let firebase = null;
+
+const useFirebase = false;
+const doConvert = false;
+
+if (useFirebase)
+	firebase = require('./ioFirebase');
 
 module.exports = {
 	db: null,
