@@ -531,7 +531,7 @@ module.exports = {
 		let blocked = false;
 		if (res.components) {
 			let social = res.components.find(f => f.type === 'social');
-			if (!social.blockedPlayers && social.blockedPlayers.includes(this.obj.name))
+			if (social.blockedPlayers && social.blockedPlayers.includes(this.obj.name))
 				blocked = true;
 		}
 
