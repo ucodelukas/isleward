@@ -130,7 +130,7 @@ module.exports = {
 		io.set({
 			ent: character.name,
 			field: 'leaderboard',
-			value: value
+			value: JSON.stringify(character)
 		});
 	}
 };

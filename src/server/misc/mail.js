@@ -142,7 +142,6 @@ module.exports = {
 	},
 
 	doSendMail: async function (playerName, items, callback, result) {
-		console.log(result);
 		if (result === 'null')
 			result = null;
 
@@ -152,7 +151,7 @@ module.exports = {
 			result.push(i);
 		});
 
-		let itemString = result;
+		let itemString = JSON.stringify(result).split('\'').join('`');
 
 		await io.setAsync({
 			key: playerName,
