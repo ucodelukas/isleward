@@ -102,7 +102,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.charname,
 			table: 'character',
-			value: simple
+			value: JSON.stringify(simple).split('\'').join('`')
 		});
 
 		await io.setAsync({
@@ -223,7 +223,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'skins',
-			value: this.skins
+			value: JSON.stringify(this.skins)
 		});
 	},
 
@@ -414,7 +414,7 @@ module.exports = {
 		await io.setAsync({
 			key: name,
 			table: 'character',
-			value: simple
+			value: JSON.stringify(simple)
 		});
 
 		this.characters[name] = simple;
@@ -423,7 +423,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: this.characterList
+			value: JSON.stringify(this.characterList)
 		});
 
 		this.play({
@@ -462,7 +462,7 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: characterList
+			value: JSON.stringify(characterList)
 		});
 
 		await leaderboard.deleteCharacter(name);
