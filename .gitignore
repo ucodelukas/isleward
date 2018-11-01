@@ -8,3 +8,4 @@ src/server/mods/iwd-*
 !helpers/passives/**/*.css
 creds.js
 .directory
+firebaseConfig.js
