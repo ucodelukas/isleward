@@ -525,7 +525,8 @@ module.exports = {
 		if (!res) {
 			this.resolveCallback(msg, 'Recipient does not exist');
 			return;
-		}
+		} else if (!this.findItem(msg.itemId)) 
+			return;
 
 		this.obj.instance.mail.sendMail(msg.recipient, [extend({}, item)]);
 
