@@ -144,7 +144,7 @@ module.exports = {
 				});
 			}
 
-			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
+			this.queueCallback(null, this.duration * consts.tickTime, this.endEffect.bind(this, patches), null, true);
 		}
 
 		return true;

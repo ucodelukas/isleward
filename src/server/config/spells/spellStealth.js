@@ -12,7 +12,7 @@ module.exports = {
 		//Clear Aggro
 		this.obj.aggro.die();
 
-		let ttl = this.duration * 350;
+		let ttl = this.duration * consts.tickTime;
 		let endCallback = this.queueCallback(this.endEffect.bind(this), ttl - 50);
 
 		this.obj.effects.addEffect({

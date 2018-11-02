@@ -492,7 +492,7 @@ module.exports = {
 				continue;
 			}
 
-			c.time -= 350;
+			c.time -= consts.tickTime;
 
 			if (c.time <= 0) {
 				if (c.callback)

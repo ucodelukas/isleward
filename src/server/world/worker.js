@@ -1,6 +1,7 @@
 global.extend = require('../misc/clone');
 global.io = require('../security/io');
 global._ = require('../misc/helpers');
+global.consts = require('../config/consts');
 global.instancer = require('./instancer');
 
 let components = require('../components/components');

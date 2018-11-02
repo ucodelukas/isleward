@@ -14,7 +14,7 @@ module.exports = {
 			threatMult: this.threatMult
 		});
 
-		let ttl = this.duration * 350;
+		let ttl = this.duration * consts.tickTime;
 
 		if (this.animation) {
 			this.obj.instance.syncer.queue('onGetObject', {

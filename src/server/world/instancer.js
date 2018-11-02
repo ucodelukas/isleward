@@ -16,7 +16,7 @@ let eventEmitter = require('../misc/events');
 module.exports = {
 	instances: [],
 	zoneId: -1,
-	speed: 350,
+	speed: consts.tickTime,
 
 	lastTime: 0,
 

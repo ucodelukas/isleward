@@ -109,7 +109,7 @@ module.exports = {
 			this.obj.instance.syncer.queue('onGetSpellCooldowns', {
 				id: this.obj.id,
 				spell: this.id,
-				cd: (this.cd * 350)
+				cd: (this.cd * consts.tickTime)
 			}, [this.obj.serverId]);
 		}
 	},
