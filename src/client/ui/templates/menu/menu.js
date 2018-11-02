@@ -50,8 +50,9 @@ define([
 			}
 		},
 
-		toggleButtons: function () {
+		toggleButtons: function (e) {
 			this.el.toggleClass('active');
+			e.stopPropagation();
 		}
 	};
 });
