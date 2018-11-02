@@ -170,6 +170,16 @@ define([
 			if (target === this.obj && spell.noTargetSelf)
 				return;
 			else if (isMobile && spell.targetGround && !this.groundTarget) {
+				if (this.groundTargetSpell === key) {
+					this.groundTargetSpell = null;
+
+					events.emit('onGetAnnouncement', {
+						msg: `Cancelled casting ${spell.name}`
+					});
+
+					return;
+				}
+				
 				this.groundTargetSpell = key;
 
 				events.emit('onGetAnnouncement', {
