@@ -37,10 +37,15 @@ define([
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
 
-			this.find('input')
-				.on('keydown', this.sendChat.bind(this))
-				.on('input', this.checkChatLength.bind(this))
-				.on('blur', this.toggle.bind(this, false, true));
+			if (isMobile) {
+				this.on('click', this.toggle(true));
+				this.renderKeyboard();
+			} else {
+				this.find('input')
+					.on('keydown', this.sendChat.bind(this))
+					.on('input', this.checkChatLength.bind(this))
+					.on('blur', this.toggle.bind(this, false, true));
+			}
 
 			this
 				.find('.filter:not(.channel)')
@@ -53,6 +58,9 @@ define([
 		},
 
 		update: function () {
+			if (isMobile)
+				return;
+			
 			if (this.el.hasClass('typing'))
 				return;
 
@@ -67,6 +75,41 @@ define([
 			);
 			if (elTime.html() !== timeString)
 				elTime.html(timeString);
+		},
+
+		renderKeyboard: function () {
+			let container = $('<div class="keyboard"></div>')
+				.appendTo(this.el);
+
+			'|1234567890|qwertyuiop|asdfghjkl|zxcvbnm>|'	
+				.split('')
+				.forEach(k => {
+					if (k === '|') {
+						$('<div class="newline"></div>')
+							.appendTo(container);
+
+						return;	
+					}
+
+					$(`<div class="key">${k}</div>`)
+						.appendTo(container)
+						.on('click', this.clickKey.bind(this, k));
+				});
+		},
+
+		clickKey: function (key) {
+			if (key === '>') {
+				this.sendChat({
+					which: 13
+				});
+				return;
+			}
+
+			let input = this.find('input');
+			input.val(input.val() + key);
+			this.checkChatLength();
+
+			this.find('.input').html(input.val());
 		},
 
 		checkChatLength: function () {
