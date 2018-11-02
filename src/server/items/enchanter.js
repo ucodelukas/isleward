@@ -77,12 +77,14 @@ module.exports = {
 
 			let offset = 1 + ~~(Math.random() * 2);
 
+			const maxLevel = consts.maxLevel;
+
 			if (!item.originalLevel)
-				item.level = Math.min(20, item.level + offset);
+				item.level = Math.min(maxLevel, item.level + offset);
 			else {
-				offset = Math.min(20 - item.originalLevel, offset);
-				item.originalLevel = Math.min(20, item.originalLevel + offset);
-				item.level = Math.min(20, item.level + offset);
+				offset = Math.min(maxLevel - item.originalLevel, offset);
+				item.originalLevel = Math.min(maxLevel, item.originalLevel + offset);
+				item.level = Math.min(maxLevel, item.level + offset);
 			}
 		} else if (msg.action === 'reslot') {
 			if (item.effects || item.slot === 'tool')
@@ -140,7 +142,7 @@ module.exports = {
 						delete item.stats[p];
 
 					if (p === 'lvlRequire') {
-						item.level = Math.min(20, item.level + value);
+						item.level = Math.min(consts.maxLevel, item.level + value);
 						delete item.originalLevel;
 					}
 				}

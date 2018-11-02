@@ -241,7 +241,7 @@ module.exports = {
 		let obj = this.obj;
 		let values = this.values;
 
-		if (values.level === 20)
+		if (values.level === consts.maxLevel)
 			return;
 
 		let xpEvent = {
@@ -279,7 +279,7 @@ module.exports = {
 
 			this.obj.fireEvent('onLevelUp', this.values.level);
 
-			if (values.level === 20)
+			if (values.level === consts.maxLevel)
 				values.xp = 0;
 
 			values.hpMax += 32.7;

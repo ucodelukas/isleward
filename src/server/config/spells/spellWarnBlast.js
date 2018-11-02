@@ -49,7 +49,7 @@ module.exports = {
 					continue;
 
 				if ((attackTemplate) && (~~attackTemplate[count] > 0)) {
-					this.queueCallback(this.spawnWarning.bind(this, i, j), ~~attackTemplate[count] * 350);
+					this.queueCallback(this.spawnWarning.bind(this, i, j), ~~attackTemplate[count] * consts.tickTime);
 					continue;
 				} else
 					this.spawnWarning(i, j);
@@ -78,7 +78,7 @@ module.exports = {
 
 		syncer.queue('onGetObject', effect, -1);
 
-		this.queueCallback(this.onWarningOver.bind(this, x, y), this.delay * 350);
+		this.queueCallback(this.onWarningOver.bind(this, x, y), this.delay * consts.tickTime);
 	},
 
 	onWarningOver: function (x, y) {

@@ -13,7 +13,7 @@ module.exports = {
 		}
 
 		if (!values.expire)
-			values.expire = (+new Date()) + (this.ttl * 350);
+			values.expire = (+new Date()) + (this.ttl * consts.tickTime);
 
 		return values;
 	},
