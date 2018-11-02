@@ -37,21 +37,27 @@ define([
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
 
+			this
+				.find('.filter:not(.channel):not(.btn)')
+				.on('mouseover', this.onFilterHover.bind(this, true))
+				.on('mouseleave', this.onFilterHover.bind(this, false))
+				.on('click', this.onClickFilter.bind(this));
+
 			if (isMobile) {
-				this.on('click', this.toggle(true));
+				this.el.on('click', this.toggle.bind(this, true));
 				this.renderKeyboard();
+
+				$(tplTab)
+					.appendTo(this.find('.filters'))
+					.addClass('btnClose')
+					.html('x')
+					.on('click', this.toggle.bind(this, false, true));
 			} else {
 				this.find('input')
 					.on('keydown', this.sendChat.bind(this))
 					.on('input', this.checkChatLength.bind(this))
 					.on('blur', this.toggle.bind(this, false, true));
 			}
-
-			this
-				.find('.filter:not(.channel)')
-				.on('mouseover', this.onFilterHover.bind(this, true))
-				.on('mouseleave', this.onFilterHover.bind(this, false))
-				.on('click', this.onClickFilter.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
@@ -81,7 +87,7 @@ define([
 			let container = $('<div class="keyboard"></div>')
 				.appendTo(this.el);
 
-			'|1234567890|qwertyuiop|asdfghjkl|zxcvbnm>|'	
+			'1234567890|qwertyuiop|asdfghjkl|zxcvbnm>'	
 				.split('')
 				.forEach(k => {
 					if (k === '|') {
@@ -98,18 +104,23 @@ define([
 		},
 
 		clickKey: function (key) {
+			window.navigator.vibrate(20);
+
 			if (key === '>') {
 				this.sendChat({
 					which: 13
 				});
+				this.find('.input').html('');
+				this.find('input').val('');
+
 				return;
 			}
 
-			let input = this.find('input');
-			input.val(input.val() + key);
+			let elInput = this.find('input');
+			elInput.val(elInput.val() + key);
 			this.checkChatLength();
 
-			this.find('.input').html(input.val());
+			this.find('.input').html(elInput.val());
 		},
 
 		checkChatLength: function () {
@@ -277,7 +288,7 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, true, true);
 		},
 
-		toggle: function (show, isFake) {
+		toggle: function (show, isFake, e) {
 			if ((isFake) && (this.hoverFilter))
 				return;
 
@@ -293,6 +304,9 @@ define([
 				this.find('.list').scrollTop(9999999);
 			} else 
 				textbox.val('');
+
+			if (e)
+				e.stopPropagation();
 		},
 
 		sendChat: function (e) {
