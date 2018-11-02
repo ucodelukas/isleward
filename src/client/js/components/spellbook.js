@@ -26,6 +26,8 @@ define([
 		reticleCdMax: 10,
 		reticleSprite: null,
 
+		groundTargetSpell: false,
+
 		init: function (blueprint) {
 			this.targetSprite = renderer.buildObject({
 				sheetName: 'ui',
@@ -86,6 +88,17 @@ define([
 		},
 
 		onMouseDown: function (e, target) {
+			if (isMobile && this.groundTargetSpell) {
+				this.groundTarget = {
+					x: ~~(e.x / scale),
+					y: ~~(e.y / scale)
+				};
+
+				this.onKeyDown(this.groundTargetSpell);
+
+				this.groundTargetSpell = null;
+			}
+
 			if (!target && this.target && (!this.hoverTarget || this.hoverTarget.id !== this.target.id)) {
 				client.request({
 					cpn: 'player',
@@ -144,7 +157,7 @@ define([
 			if (!spell.aura && !spell.targetGround && !spell.autoTargetFollower && !this.target)
 				return;
 
-			let hoverTile = (this.obj.mouseMover || this.obj.touchMover).hoverTile;
+			let hoverTile = this.groundTarget || (this.obj.mouseMover || this.obj.touchMover).hoverTile;
 			let target = hoverTile;
 			if (spell.autoTargetFollower && !this.target)
 				target = null;
@@ -156,6 +169,15 @@ define([
 
 			if (target === this.obj && spell.noTargetSelf)
 				return;
+			else if (isMobile && spell.targetGround && !this.groundTarget) {
+				this.groundTargetSpell = key;
+
+				events.emit('onGetAnnouncement', {
+					msg: `Pick a location to cast ${spell.name}`
+				});
+
+				return;
+			}
 
 			client.request({
 				cpn: 'player',
@@ -168,6 +190,9 @@ define([
 					self: isShiftDown
 				}
 			});
+
+			if (isMobile)
+				this.groundTarget = null;
 		},
 
 		onDeath: function () {
