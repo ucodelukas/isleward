@@ -59,7 +59,9 @@ define([
 				}
 
 				if (!item) {
-					$(tplItem).appendTo(container);
+					$(tplItem)
+						.appendTo(container)
+						.on('click', uiInventory.hideTooltip.bind(uiInventory));
 
 					continue;
 				}
@@ -185,6 +187,7 @@ define([
 
 		beforeHide: function () {
 			events.emit('onHideOverlay', this.el);
+			$('.uiInventory').data('ui').hideTooltip();
 		},
 
 		onServerRespond: function (el) {
