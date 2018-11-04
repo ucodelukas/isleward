@@ -742,7 +742,7 @@ module.exports = {
 			let mobName = mob.name;
 
 			if (!mobKillStreaks[mobName])
-				mobKillStreaks.mobName = 0;
+				mobKillStreaks[mobName] = 0;
 
 			if (mobKillStreaks[mobName] < 100)
 				mobKillStreaks[mobName]++;
