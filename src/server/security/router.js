@@ -19,7 +19,7 @@ module.exports = {
 			quests: ['complete'],
 			inventory: ['combineStacks', 'splitStack', 'activateMtx', 'useItem', 'moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem'],
 			equipment: ['equip', 'unequip', 'setQuickSlot', 'useQuickSlot', 'inspect'],
-			stash: ['withdraw'],
+			stash: ['withdraw', 'open'],
 			trade: ['buySell'],
 			door: ['lock', 'unlock'],
 			wardrobe: ['open', 'apply'],

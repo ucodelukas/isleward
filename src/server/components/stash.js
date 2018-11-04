@@ -118,19 +118,36 @@ module.exports = {
 	},
 
 	setActive: function (active) {
+		let obj = this.obj;
+
 		this.active = active;
-		this.obj.syncer.set(true, 'stash', 'active', this.active);
+		obj.syncer.set(true, 'stash', 'active', this.active);
+
+		const actionType = active ? 'addActions' : 'removeActions';
+		obj.syncer.setArray(true, 'serverActions', actionType, {
+			key: 'u',
+			action: {
+				targetId: obj.id,
+				cpn: 'stash',
+				method: 'open'
+			}
+		});
 
 		if (this.active && this.items.length > 50) {
-			this.obj.instance.syncer.queue('onGetMessages', {
+			obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
 					class: 'color-redA',
 					message: 'You have more than 50 items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit',
 					type: 'info'
 				}]
-			}, [this.obj.serverId]);
+			}, [obj.serverId]);
 		}
+	},
+
+	open: function () {
+		if (this.active)
+			this.obj.instance.syncer.queue('onOpenStash', {}, [this.obj.serverId]);
 	},
 
 	simplify: function (self) {
