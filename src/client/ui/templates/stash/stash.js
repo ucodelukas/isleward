@@ -61,9 +61,17 @@ define([
 						spritesheet = '../../../images/consumables.png';
 				}
 
+				let moveHandler = this.onHover.bind(this, itemEl, item);
+				let downHandler = () => {};
+				if (isMobile) {
+					moveHandler = () => {};
+					downHandler = this.onHover.bind(this, itemEl, item);
+				}
+
 				itemEl
 					.data('item', item)
-					.on('mousemove', this.onHover.bind(this, itemEl, item))
+					.on('mousedown', downHandler)
+					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')

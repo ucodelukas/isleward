@@ -44,10 +44,10 @@ module.exports = {
 
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
-			let pos = item.pos;
+			let pos = item.has('pos') ? item.pos : null;
 
 			let newItem = this.getItem(item, true, true);
-			newItem.pos = pos || null;
+			newItem.pos = pos;
 		}
 
 		//Hack to skip attr checks on equip
