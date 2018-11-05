@@ -6,8 +6,9 @@ module.exports = {
 		this.instance = instance;
 	},
 
-	getMail: async function (playerName, block) {
-		this.busy[playerName] = (this.busy[playerName] || 0) + 1;
+	getMail: async function (playerName, noBlock) {
+		if (!noBlock)
+			this.busy[playerName] = (this.busy[playerName] || 0) + 1;
 
 		let player = this.instance.objects.objects.find(o => (o.name === playerName));
 		if (!player) {
@@ -100,8 +101,6 @@ module.exports = {
 	},
 
 	processQueue: function (playerName) {
-		if (this.busy[playerName] > 0)
-			this.busy[playerName]--;
 		if (this.busy[playerName])
 			return;
 
@@ -158,6 +157,6 @@ module.exports = {
 			value: itemString
 		});
 
-		(callback || this.getMail.bind(this, playerName))();
+		(callback || this.getMail.bind(this, playerName, true))();
 	}
 };
