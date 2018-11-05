@@ -57,7 +57,8 @@
     "instancer": false,
     "leaderboard": false,
     "clientConfig": false,
-    "random": false
+    "random": false,
+    "consts": false
   },
 
   "rules": {

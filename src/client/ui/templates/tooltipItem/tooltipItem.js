@@ -457,7 +457,7 @@ define([
 			let width = tt.outerWidth();
 			let height = tt.outerHeight();
 
-			let btn = $(`<div class='btn'>${label}</div>`)
+			$(`<div class='btn'>${label}</div>`)
 				.appendTo(this.el)
 				.on('click', cb)
 				.css({
