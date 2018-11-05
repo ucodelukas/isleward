@@ -21,6 +21,9 @@ define([
 		},
 
 		onGetDialogue: function (msg) {
+			if (isMobile && msg.msg.includes('(U to'))
+				return;
+
 			this.text.spliceWhere(function (t) {
 				return (t.src === msg.src);
 			});
