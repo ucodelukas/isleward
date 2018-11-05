@@ -66,7 +66,8 @@ define([
 				.on('touchend', this.events.touch.touchEnd.bind(this))
 				.on('touchcancel', this.events.touch.touchCancel.bind(this));
 
-			require(['plugins/shake.js'], this.onLoadShake.bind(this));
+			if (isMobile)
+				require(['plugins/shake.js'], this.onLoadShake.bind(this));
 		},
 
 		onLoadShake: function (shake) {
@@ -77,7 +78,6 @@ define([
 
 			shaker.start();
 			window.addEventListener('shake', this.events.mobile.onShake.bind(this), false);
-			setTimeout(this.events.mobile.onShake.bind(this), 5000);
 		},
 
 		resetKeys: function () {
