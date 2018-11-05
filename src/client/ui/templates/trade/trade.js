@@ -120,7 +120,7 @@ define([
 						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);
 
 					if (!noAfford && item.factions) 
-						noAfford = item.factions.some(f.noEquip);
+						noAfford = item.factions.some(f => f.noEquip);
 
 					if (noAfford)
 						$('<div class="no-afford"></div>').appendTo(itemEl);
