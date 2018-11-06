@@ -19,6 +19,11 @@ define([
 		container: '.right',
 
 		postRender: function () {
+			if (isMobile) {
+				this.el.on('click', this.toggleButtons.bind(this));
+				this.find('.btnCollapse').on('click', this.toggleButtons.bind(this));
+			}
+			
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainEvent', this.onObtainEvent.bind(this));
@@ -102,6 +107,11 @@ define([
 			this.list.spliceWhere(function (l) {
 				return (l.id === id);
 			});
+		},
+
+		toggleButtons: function (e) {
+			this.el.toggleClass('active');
+			e.stopPropagation();
 		}
 	};
 });
