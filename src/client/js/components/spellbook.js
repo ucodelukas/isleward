@@ -174,7 +174,7 @@ define([
 					this.groundTargetSpell = null;
 
 					events.emit('onGetAnnouncement', {
-						msg: `Cancelled castingn ${spell.name}`
+						msg: `Cancelled casting ${spell.name}`
 					});
 
 					return;
