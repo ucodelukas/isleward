@@ -29,10 +29,16 @@ body {
 	}
 
 	&.mobile {
-		.uiQuests, .uiEvents, .uiTooltipInfo {
+		.uiEvents, .uiTooltipInfo {
 			display: none !important;
 		}
 	} 
+}
+
+.mobile .right {
+	top: 0px;
+	right: 0px;
+	z-index: 2;
 }
 
 * {
