@@ -184,7 +184,7 @@
 }
 
 .mobile .uiMessages {
-	padding: 0px;
+	padding: 10px 0px;
 	pointer-events: all;
 
 	.btnClose.active {
@@ -231,17 +231,32 @@
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
-			background-color: @blackB;
+			background-color: @blackC;
 			justify-content: center;
 			align-items: center;
-			height: 224px;
+			height: 258px;
 
 			.key {
 				flex: 1;
 				background-color: @blackA;
-				color: @blueA;
-				padding: 10px 10px;
+				color: @white;
+				padding: 6px 10px;
 				text-align: center;
+				border-top: 4px solid @blackC;
+				border-left: 2px solid @blackC;
+				border-right: 2px solid @blackC;
+
+				&.special {
+					color: @orange;
+				}
+
+				&.hidden {
+					color: @blackC;
+				}
+
+				&.space {
+					flex: 5;
+				}
 			}
 
 			.newline {
