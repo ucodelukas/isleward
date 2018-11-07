@@ -44,6 +44,8 @@ define([
 				.on('click', this.onClickFilter.bind(this));
 
 			if (isMobile) {
+				this.kbUpper = 0;
+
 				this.el.on('click', this.toggle.bind(this, true));
 				this.renderKeyboard();
 
@@ -84,11 +86,20 @@ define([
 		},
 
 		renderKeyboard: function () {
+			this.find('.keyboard').remove();
+
 			let container = $('<div class="keyboard"></div>')
 				.appendTo(this.el);
 
-			'1234567890|qwertyuiop|asdfghjkl|zxcvbnm>'	
-				.split('')
+			let controls = ['|', 'caps', 'space', 'backspace', 'enter'];
+
+			let keyboard = {
+				0: '1234567890|qwertyuiop|asdfghjkl|zxcvbnm',
+				1: '!@#$%^&*()|QWERTYUIOP|ASDFGHJKL|ZXCVBNM',
+				2: '!@#$%^&*()|     {}[]\\|`-=_+;\':"|~,./<>?'
+			}[this.kbUpper].split('').concat(controls);
+
+			keyboard
 				.forEach(k => {
 					if (k === '|') {
 						$('<div class="newline"></div>')
@@ -97,22 +108,51 @@ define([
 						return;	
 					}
 
-					$(`<div class="key">${k}</div>`)
-						.appendTo(container)
-						.on('click', this.clickKey.bind(this, k));
+					let className = (k.match(/[a-z]/i) || k.length > 1) ? 'key' : 'key special';
+					if (k === ' ') {
+						k = '.';
+						className = 'key hidden';
+					}
+
+					className += ' ' + k;
+
+					let elKey = $(`<div class="${className}">${k}</div>`)
+						.appendTo(container);
+
+					if (!className.includes('hidden')) 	
+						elKey.on('click', this.clickKey.bind(this, k));
 				});
 		},
 
 		clickKey: function (key) {
 			window.navigator.vibrate(20);
 
-			if (key === '>') {
-				this.sendChat({
-					which: 13
-				});
-				this.find('.input').html('');
-				this.find('input').val('');
+			const handler = {
+				caps: () => {
+					this.kbUpper = (this.kbUpper + 1) % 3;
+					this.renderKeyboard();
+				},
 
+				space: () => {
+					this.clickKey(' ');
+				},
+
+				backspace: () => {
+					let elInput = this.find('input');
+					elInput.val(elInput.val().slice(0, -1));
+					this.find('.input').html(elInput.val());
+				},
+
+				enter: () => {
+					this.sendChat({
+						which: 13
+					});
+					this.find('.input').html('');
+					this.find('input').val('');
+				}
+			}[key];
+			if (handler) {
+				handler();
 				return;
 			}
 
