@@ -156,12 +156,14 @@ module.exports = {
 		let ty = ~~target.y;
 
 		let distance = max(abs(x - tx), abs(y - ty));
-		let furthestRange = obj.spellbook.getFurthestRange();
+		let furthestAttackRange = obj.spellbook.getFurthestRange(null, true);
+		let furthestStayRange = obj.spellbook.getFurthestRange(null, false);
+
 		let doesCollide = null;
 		let hasLos = null;
 
-		if (distance <= furthestRange) {
-			doesCollide = this.physics.mobsCollide(x, y, obj);
+		if (distance <= furthestAttackRange) {
+			doesCollide = this.physics.mobsCollide(x, y, obj, target);
 			if (!doesCollide) {
 				hasLos = this.physics.hasLos(x, y, tx, ty);
 				if (hasLos) {
@@ -179,9 +181,12 @@ module.exports = {
 						return;
 				}
 			}
+		} else if (furthestAttackRange === 0) {
+			if (distance <= obj.spellbook.closestRange && !this.physics.mobsCollide(x, y, obj, target))
+				return;
 		}
 
-		let targetPos = this.physics.getClosestPos(x, y, tx, ty, target);
+		let targetPos = this.physics.getClosestPos(x, y, tx, ty, target, obj);
 		if (!targetPos) {
 			//Find a new target
 			obj.aggro.ignore(target);
@@ -190,25 +195,8 @@ module.exports = {
 		}
 		let newDistance = max(abs(targetPos.x - tx), abs(targetPos.y - ty));
 
-		if ((newDistance >= distance) && (newDistance > furthestRange)) {
-			if (hasLos === null)
-				hasLos = this.physics.hasLos(x, y, tx, ty);
-			if (hasLos) {
-				if (doesCollide === null)
-					doesCollide = this.physics.mobsCollide(x, y, obj);
-				if (!doesCollide) {
-					obj.aggro.ignore(target);
-					return;
-				}
-			} else {
-				if (doesCollide === null)
-					doesCollide = this.physics.mobsCollide(x, y, obj);
-				if (!doesCollide) {
-					obj.aggro.ignore(target);
-					return;
-				}
-			}
-		}
+		if (newDistance >= distance && newDistance > furthestStayRange)
+			obj.aggro.ignore(target);
 
 		if (abs(x - targetPos.x) <= 1 && abs(y - targetPos.y) <= 1) {
 			obj.queue({

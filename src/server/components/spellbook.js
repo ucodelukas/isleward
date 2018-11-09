@@ -118,7 +118,7 @@ module.exports = {
 		}
 
 		if (!builtSpell.castOnDeath) {
-			if ((this.closestRange === -1) || (builtSpell.range < this.closestRange))
+			if ((this.closestRange === -1) || (builtSpell.range < this.closestRange)) 
 				this.closestRange = builtSpell.range;
 			if ((this.furthestRange === -1) || (builtSpell.range > this.furthestRange))
 				this.furthestRange = builtSpell.range;
@@ -435,7 +435,7 @@ module.exports = {
 		return this.closestRange;
 	},
 
-	getFurthestRange: function (spellNum) {
+	getFurthestRange: function (spellNum, checkCanCast) {
 		if (spellNum)
 			return this.spells[spellNum].range;
 		
@@ -444,11 +444,9 @@ module.exports = {
 		let furthest = 0;
 		for (let i = 0; i < sLen; i++) {
 			let spell = spells[i];
-			if ((spell.range > furthest) && (spell.canCast()))
+			if (spell.range > furthest && (!checkCanCast || spell.canCast()))
 				furthest = spell.range;
 		}
-		if (furthest === 0)
-			furthest = this.furthestRange;
 
 		return furthest;
 	},

@@ -354,6 +354,13 @@ module.exports = {
 		return useList[~~(Math.random() * useList.length)];
 	},
 
+	hasAggroOn: function (obj) {
+		return (
+			this.list.find(l => l.obj === obj) &&
+			!this.ignoreList.find(l => l === obj)
+		);
+	},
+
 	update: function () {
 		let list = this.list;
 		let lLen = list.length;
