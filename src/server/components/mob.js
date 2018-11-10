@@ -136,6 +136,7 @@ module.exports = {
 		if (obj.follower)
 			this.goHome = false;
 	},
+
 	fight: function (target) {
 		let obj = this.obj;
 
@@ -195,8 +196,17 @@ module.exports = {
 		}
 		let newDistance = max(abs(targetPos.x - tx), abs(targetPos.y - ty));
 
-		if (newDistance >= distance && newDistance > furthestStayRange)
+		if (newDistance >= distance && newDistance > furthestStayRange) {
+			obj.clearQueue();
 			obj.aggro.ignore(target);
+			if (!obj.aggro.getHighest()) {
+				//Nobody left to attack so reset our aggro table
+				obj.aggro.die();
+				this.goHome = true;
+			}
+
+			return;
+		}
 
 		if (abs(x - targetPos.x) <= 1 && abs(y - targetPos.y) <= 1) {
 			obj.queue({

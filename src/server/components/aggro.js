@@ -239,6 +239,7 @@ module.exports = {
 		}
 
 		this.list = [];
+		this.ignoreList = [];
 	},
 
 	unAggro: function (obj, amount) {
@@ -317,8 +318,7 @@ module.exports = {
 		if (highest)
 			return highest.obj;
 			
-		//We have aggro but can't reach our target. Don't let the mob run away as if not in combat!
-		return true;
+		return null;
 	},
 
 	getFurthest: function () {
