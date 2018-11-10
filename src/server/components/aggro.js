@@ -239,7 +239,6 @@ module.exports = {
 		}
 
 		this.list = [];
-		this.ignoreList = [];
 	},
 
 	unAggro: function (obj, amount) {
