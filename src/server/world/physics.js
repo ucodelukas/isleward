@@ -471,7 +471,10 @@ module.exports = {
 		}
 	},
 
+	//If we pass through a cell it means we want to move to this location but need to check aggro
 	mobsCollide: function (x, y, obj, target, cell) {
+		const allowOne = !cell;
+
 		if (!cell) {
 			if (x < 0 || y < 0 || x >= this.width | y >= this.height)
 				return true;
@@ -481,12 +484,15 @@ module.exports = {
 
 		let cLen = cell.length;
 
-		if (cLen === 1)
+		if (allowOne && cLen === 1)
 			return false;
 
 		for (let i = 0; i < cLen; i++) {
 			let c = cell[i];
-			if (c === obj || !c.aggro)
+			//If we're first in the cell, we get preference
+			if (c === obj)
+				return false;
+			else if (!c.aggro)
 				continue;
 			else if (c === target || c.aggro.hasAggroOn(target) || obj.aggro.hasAggroOn(c))
 				return true;
