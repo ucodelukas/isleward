@@ -455,7 +455,7 @@ module.exports = {
 
 					if (target && obj) {
 						let cell = cellRow[j];
-						if (this.mobsCollide(obj.x, obj.y, obj, target, cell))
+						if (this.mobsCollide(i, j, obj, target, cell))
 							continue;
 					}
 
@@ -486,6 +486,8 @@ module.exports = {
 
 		if (allowOne && cLen === 1)
 			return false;
+		else if (target.x === x && target.y === y)
+			return true;
 
 		for (let i = 0; i < cLen; i++) {
 			let c = cell[i];
@@ -494,7 +496,7 @@ module.exports = {
 				return false;
 			else if (!c.aggro)
 				continue;
-			else if (c === target || c.aggro.hasAggroOn(target) || obj.aggro.hasAggroOn(c))
+			else if (c.aggro.hasAggroOn(target) || obj.aggro.hasAggroOn(c)) 
 				return true;
 		}
 
