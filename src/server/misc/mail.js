@@ -22,6 +22,8 @@ module.exports = {
 				}
 			});
 
+			this.busy[playerName]--;
+
 			this.processQueue(playerName);
 			return;
 		}
