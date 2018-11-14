@@ -2,6 +2,7 @@ let compression = require('compression');
 let minify = require('express-minify');
 let config = require('./config/serverConfig');
 let router = require('./security/router');
+let rest = require('./security/rest');
 
 module.exports = {
 	init: function (callback) {
@@ -15,7 +16,11 @@ module.exports = {
 		app.use(minify());
 
 		app.use(function (req, res, next) {
-			if ((req.url.indexOf('/server') !== 0) && (req.url.indexOf('/mods') !== 0))
+			if (
+				!rest.willHandle(req.url) && 
+				req.url.indexOf('/server') !== 0 && 
+				req.url.indexOf('/mods') !== 0
+			)
 				req.url = '/client/' + req.url;
 
 			next();
@@ -28,6 +33,8 @@ module.exports = {
 				strictMath: true
 			}
 		}));
+
+		rest.init(app);
 
 		app.get('/', this.requests.root.bind(this));
 		app.get(/^(.*)$/, this.requests.default.bind(this));
