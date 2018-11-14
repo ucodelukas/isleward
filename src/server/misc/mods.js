@@ -33,7 +33,7 @@ module.exports = {
 
 		if (isMapThread && typeof mod.initMap === 'function')
 			mod.initMap();
-		else if (typeof mod.initMain === 'function')
+		else if (!isMapThread && typeof mod.initMain === 'function')
 			mod.initMain();
 
 		if (typeof mod.init === 'function')
