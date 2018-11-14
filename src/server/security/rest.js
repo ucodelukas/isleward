@@ -5,11 +5,11 @@ const resVersion = {
 
 module.exports = {
 	init: function (app) {
-		app.get('/version', (req, res, next) => res.json(resVersion));
+		app.get('/version', (req, res, next) => res.jsonp(resVersion));
 	},
 
 	willHandle: function (url) {
-		if (url === '/version')
+		if (url.includes('/version'))
 			return true;
 	}
 };
