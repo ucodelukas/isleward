@@ -32,7 +32,6 @@ module.exports = {
 					sessionDuration: sessionDuration
 				}]
 			});
-			this.playing--;
 			atlas.removeObject(player);
 		}
 
@@ -46,6 +45,9 @@ module.exports = {
 				}],
 				onGetDisconnectedPlayer: [player.name]
 			});
+
+			if (player.has('id'))
+				this.playing--;
 		}
 
 		this.players.spliceWhere(p => p.socket.id === socket.id);
