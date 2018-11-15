@@ -15,6 +15,7 @@ let spellsConfig = require('../config/spellsConfig');
 let spells = require('../config/spells');
 let recipes = require('../config/recipes/recipes');
 let itemTypes = require('../items/config/types');
+let mapList = require('../config/maps/mapList');
 let sheets = require('../security/sheets');
 
 let onCpnsReady = function () {
@@ -26,6 +27,7 @@ let onCpnsReady = function () {
 	spellsConfig.init();
 	spells.init();
 	itemTypes.init();
+	mapList.init();
 	recipes.init();
 	sheets.init();
 
