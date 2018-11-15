@@ -51,9 +51,9 @@ module.exports = {
 			cpnMob.walkDistance = 1;
 
 		let spells = extend([], blueprint.spells);
-		spells.forEach(function (s) {
+		spells.forEach(s => {
 			if (!s.animation) {
-				if ((mob.sheetName === 'mobs') && (animations.mobs[mob.cell])) 
+				if (mob.sheetName === 'mobs' && animations.mobs[mob.cell]) 
 					s.animation = 'basic';
 			}
 		});
@@ -77,21 +77,21 @@ module.exports = {
 
 		if (this.zone) {
 			let chats = this.zone.chats;
-			if ((chats) && (chats[mob.name.toLowerCase()])) {
+			if (chats && chats[mob.name.toLowerCase()]) {
 				mob.addComponent('chatter', {
 					chats: chats[mob.name.toLowerCase()]
 				});
 			}
 
 			let dialogues = this.zone.dialogues;
-			if ((dialogues) && (dialogues[mob.name.toLowerCase()])) {
+			if (dialogues && dialogues[mob.name.toLowerCase()]) {
 				mob.addComponent('dialogue', {
 					config: dialogues[mob.name.toLowerCase()]
 				});
 			}
 		}
 
-		if ((blueprint.properties) && (blueprint.properties.cpnTrade))
+		if (blueprint.properties && blueprint.properties.cpnTrade)
 			mob.addComponent('trade', blueprint.properties.cpnTrade);
 
 		this.scale(mob, blueprint.level);
@@ -124,7 +124,7 @@ module.exports = {
 				'finger',
 				'trinket',
 				'twoHanded'
-			].forEach(function (slot) {
+			].forEach(slot => {
 				let item = itemGenerator.generate({
 					noSpell: true,
 					level: level,
@@ -132,20 +132,21 @@ module.exports = {
 					quality: 4,
 					forceStats: [preferStat]
 				});
+
 				delete item.spell;
 				mob.inventory.getItem(item);
 				mob.equipment.autoEquip(item.id);
-			}, this);
+			});
 		} else {
 			//TODO: Don't give the mob these items: he'll drop them anyway
-			drops.blueprints.forEach(function (d) {
+			drops.blueprints.forEach(d => {
 				let drop = extend({}, d);
 				d.level = level;
 				if (drop.type === 'key')
 					return;
 
 				mob.inventory.getItem(itemGenerator.generate(drop));
-			}, this);
+			});
 		}
 
 		let spellCount = (mob.isRare ? 1 : 0) + (mob.isChampion ? 2 : 0);
@@ -179,14 +180,12 @@ module.exports = {
 		statValues.hp = statValues.hpMax;
 		statValues.mana = statValues.manaMax;
 
-		mob.spellbook.spells.forEach(function (s) {
+		mob.spellbook.spells.forEach(s => {
 			s.dmgMult = dmgMult;
 			s.statType = preferStat;
 			s.manaCost = 0;
-		}, this);
-
-		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(function (s) {
-			mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]);
 		});
+
+		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));
 	}
 };
