@@ -4,6 +4,7 @@ module.exports = {
 	players: [],
 
 	sockets: null,
+	playing: 0,
 
 	onHandshake: function (socket) {
 		let p = objects.build();
@@ -31,6 +32,7 @@ module.exports = {
 					sessionDuration: sessionDuration
 				}]
 			});
+			this.playing--;
 			atlas.removeObject(player);
 		}
 
@@ -79,8 +81,13 @@ module.exports = {
 		if (!cpn)
 			return;
 
-		if (cpn[msg.method])
-			cpn[msg.method](msg);
+		let method = msg.method;
+		if (cpn[method]) {
+			if (method === 'play')
+				this.playing++;
+
+			cpn[method](msg);
+		}
 	},
 	unzone: function (msg) {
 		let socket = msg.socket;
