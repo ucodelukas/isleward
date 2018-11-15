@@ -11,24 +11,22 @@ module.exports = {
 			mob.nonSelectable = true;
 
 		mob.addComponent('effects');
-		if (type) {
-			if (type !== 'regular') {
-				mob.effects.addEffect({
-					type: type
-				});
+		if (type && type !== 'regular') {
+			mob.effects.addEffect({
+				type: type
+			});
 
-				mob['is' + type[0].toUpperCase() + type.substr(1)] = true;
+			mob['is' + type[0].toUpperCase() + type.substr(1)] = true;
 
-				mob.baseName = mob.name;
-				mob.name = typeDefinition.name || mob.baseName;
-
-				if (typeDefinition.sheetName)
-					mob.sheetName = typeDefinition.sheetName;
-
-				if (typeDefinition.cell)
-					mob.cell = typeDefinition.cell;
-			}
+			mob.baseName = mob.name;
+			mob.name = typeDefinition.name || mob.baseName;
 		}
+
+		if (typeDefinition.sheetName)
+			mob.sheetName = typeDefinition.sheetName;
+
+		if (typeDefinition.cell)
+			mob.cell = typeDefinition.cell;
 
 		mob.addComponent('stats', {
 			values: {
@@ -52,10 +50,8 @@ module.exports = {
 
 		let spells = extend([], blueprint.spells);
 		spells.forEach(s => {
-			if (!s.animation) {
-				if (mob.sheetName === 'mobs' && animations.mobs[mob.cell]) 
-					s.animation = 'basic';
-			}
+			if (!s.animation && mob.sheetName === 'mobs' && animations.mobs[mob.cell]) 
+				s.animation = 'basic';
 		});
 
 		mob.addComponent('spellbook', {
@@ -63,8 +59,7 @@ module.exports = {
 			dmgMult: typeDefinition.dmgMult
 		});
 
-		let attackable = blueprint.attackable;
-		if (!blueprint.has('attackable') || attackable === true) {
+		if (!blueprint.has('attackable') || blueprint.attackable === true) {
 			mob.addComponent('aggro', {
 				faction: blueprint.faction
 			});
@@ -140,10 +135,11 @@ module.exports = {
 		} else {
 			//TODO: Don't give the mob these items: he'll drop them anyway
 			drops.blueprints.forEach(d => {
-				let drop = extend({}, d);
-				d.level = level;
-				if (drop.type === 'key')
+				if (d.type === 'key')
 					return;
+
+				let drop = extend({}, d);
+				drop.level = level;
 
 				mob.inventory.getItem(itemGenerator.generate(drop));
 			});
@@ -184,6 +180,12 @@ module.exports = {
 			s.dmgMult = dmgMult;
 			s.statType = preferStat;
 			s.manaCost = 0;
+
+			if (mob.isRare && s.name) {
+				s.calcDps();
+				if (s.values.dmg)
+					console.log(mob.name, s.name, mob.stats.values.level, s.values.dmg);
+			}
 		});
 
 		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));
