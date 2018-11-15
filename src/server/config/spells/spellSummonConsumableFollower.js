@@ -60,7 +60,7 @@ module.exports = {
 				drops: 0,
 				hpMult: 0.5
 			}
-		}, false, 'regular');
+		}, 'regular');
 
 		mob.aggro.getHighest = this.getFollowerAggro.bind(this, mob);
 		mob.aggro.list.push({

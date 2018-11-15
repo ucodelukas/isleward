@@ -42,7 +42,7 @@ module.exports = {
 
 			regular: {
 				hpMult: 4,
-				dmgMult: 2.2,
+				dmgMult: 1.5,
 
 				drops: {
 					chance: 45,
@@ -52,8 +52,8 @@ module.exports = {
 			},
 
 			rare: {
-				hpMult: 7,
-				dmgMult: 3,
+				hpMult: 10,
+				dmgMult: 2,
 
 				drops: {
 					chance: 100,

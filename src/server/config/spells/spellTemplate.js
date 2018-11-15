@@ -155,15 +155,17 @@ module.exports = {
 
 			let critChance = statValues.critChance + (this.isAttack ? statValues.attackCritChance : statValues.spellCritChance);
 			let critMultiplier = statValues.critMultiplier + (this.isAttack ? statValues.attackCritMultiplier : statValues.spellCritMultiplier);
-			let attackSpeed = (statValues.attackSpeed / 100);
-			attackSpeed += 1;
 
-			dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100))) * attackSpeed;
+			let castTimeMax = this.castTimeMax;
+			let speedModifier = this.obj.stats.values[this.isAttack ? 'attackSpeed' : 'castSpeed'];
+			castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
+
+			dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100)));
 			let duration = this.values.duration;
 			if (duration) 
 				dmg *= duration;
 
-			const div = (this.cdMax + this.castTimeMax) || 1;
+			const div = (this.cdMax + castTimeMax) || 1;
 			dmg /= div;
 
 			if (this.damage) 
