@@ -11,6 +11,7 @@ let spellsConfig = require('./config/spellsConfig');
 let spells = require('./config/spells');
 let itemTypes = require('./items/config/types');
 let recipes = require('./config/recipes/recipes');
+let mapList = require('./config/maps/mapList');
 let sheets = require('./security/sheets');
 let fixes = require('./fixes/fixes');
 let profanities = require('./misc/profanities');
@@ -40,6 +41,7 @@ let startup = {
 		recipes.init();
 		itemTypes.init();
 		profanities.init();
+		mapList.init();
 		components.init(this.onComponentsReady.bind(this));
 	},
 

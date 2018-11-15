@@ -120,7 +120,7 @@ module.exports = {
 	},
 
 	getMapFiles: function () {
-		mapList.forEach(m => this.spawnMap(m));
+		mapList.mapList.forEach(m => this.spawnMap(m));
 	},
 	spawnMap: function (name) {
 		let worker = childProcess.fork('./world/worker');
