@@ -162,30 +162,14 @@ module.exports = {
 
 		statValues.hpMax = ~~(statValues.hpMax * [0.1, 0.2, 0.4, 0.7, 0.78, 0.91, 1.16, 1.19, 1.65, 2.36, 3.07, 3.55, 4.1, 4.85, 5.6, 5.9, 6.5, 7.1, 7.9, 12][level - 1]);
 
-		if (mob.isRare) {
-			dmgMult *= 1.25;
-			hpMult *= 1.25;
-		}
-
-		if (mob.isChampion) {
-			dmgMult *= 2;
-			hpMult *= 3;
-		}
-
 		statValues.hpMax *= hpMult;
 		statValues.hp = statValues.hpMax;
 		statValues.mana = statValues.manaMax;
 
 		mob.spellbook.spells.forEach(s => {
-			s.dmgMult = dmgMult;
+			s.dmgMult = s.name ? dmgMult / 3 : dmgMult;
 			s.statType = preferStat;
 			s.manaCost = 0;
-
-			if (mob.isRare && s.name) {
-				s.calcDps();
-				if (s.values.dmg)
-					console.log(mob.name, s.name, mob.stats.values.level, s.values.dmg);
-			}
 		});
 
 		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));

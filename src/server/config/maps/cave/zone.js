@@ -7,7 +7,6 @@ module.exports = {
 		default: {
 			spells: [{
 				type: 'melee',
-				statMult: 0.1356,
 				element: 'arcane'
 			}],
 

@@ -48,7 +48,7 @@ module.exports = {
 				};
 				this.obj.fireEvent('beforeGetSpellCastTime', castEvent);
 
-				this.currentAction.castTimeMax = castEvent.castTimeMax; c;
+				this.currentAction.castTimeMax = castEvent.castTimeMax;
 				this.castTime = castEvent.castTimeMax;
 				this.obj.syncer.set(false, null, 'casting', 0);
 			}

@@ -25,10 +25,10 @@ module.exports = {
 			},
 
 			rare: {
-				count: 1,
-				chance: 4,
+				count: 10,
+				chance: 400,
 
-				hpMult: 1.5,
+				hpMult: 3,
 				dmgMult: 1.5,
 
 				drops: {
@@ -39,7 +39,7 @@ module.exports = {
 			},
 
 			champion: {
-				hpMult: 2,
+				hpMult: 5,
 				dmgMult: 2,
 
 				drops: {
