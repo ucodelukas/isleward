@@ -57,7 +57,7 @@ module.exports = {
 		//If we're attacking something, don't try and look for more trouble. SAVE THE CPU!
 		// this only counts for mobs, players can have multiple attackers
 		let list = this.list;
-		if (obj.isMob) {
+		if (obj.mob) {
 			let lLen = list.length;
 			for (let i = 0; i < lLen; i++) {
 				let l = list[i];

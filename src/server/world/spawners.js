@@ -155,7 +155,7 @@ module.exports = {
 				let name = (l.blueprint.objZoneName || l.blueprint.name).toLowerCase();
 
 				if ((l.blueprint.sheetName === 'mobs') || (l.blueprint.sheetName === 'bosses'))
-					this.setupMob(mob, l.zonePrint, l.blueprint.scaleDrops);
+					this.setupMob(mob, l.zonePrint);
 				else {
 					let blueprint = extend({}, this.zone.objects.default, this.zone.objects[name] || {});
 					this.setupObj(mob, blueprint);
@@ -169,22 +169,7 @@ module.exports = {
 		}
 	},
 
-	scale: function (level) {
-		level += (this.zone.addLevel || 0);
-		this.list.forEach(function (l) {
-			if (!l.zonePrint)
-				return;
-
-			l.zonePrint.level = level;
-
-			if (!l.mob || l.mob.destroyed)
-				return;
-
-			this.mobBuilder.scale(l.mob, level);
-		}, this);
-	},
-
-	setupMob: function (mob, blueprint, scaleDrops) {
+	setupMob: function (mob, blueprint) {
 		let type = 'regular';
 		if (blueprint.isChampion)
 			type = 'champion';
@@ -204,7 +189,7 @@ module.exports = {
 
 		this.setupObj(mob, blueprint);
 
-		this.mobBuilder.build(mob, blueprint, scaleDrops, type, this.zone.name);
+		this.mobBuilder.build(mob, blueprint, type, this.zone.name);
 	},
 
 	setupObj: function (obj, blueprint) {

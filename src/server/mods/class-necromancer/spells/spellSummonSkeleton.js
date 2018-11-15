@@ -62,7 +62,7 @@ module.exports = {
 				statMult: 1,
 				animation: 'melee'
 			}]
-		}, false, 'regular');
+		}, 'regular');
 		mob.stats.values.hpMax = obj.stats.values.hpMax * (this.hpPercent / 100);
 		mob.stats.values.hp = mob.stats.values.hpMax;
 		mob.stats.values.regenHp = mob.stats.values.hpMax / 100;

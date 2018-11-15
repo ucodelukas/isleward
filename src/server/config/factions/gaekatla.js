@@ -90,7 +90,7 @@ module.exports = {
 						damage: 1,
 						statMult: 0.1
 					}]
-				}, false, 'regular');
+				}, 'regular');
 
 				spawnedMob.follower.bindEvents();
 			}

@@ -2,15 +2,10 @@ let animations = require('../config/animations');
 let itemGenerator = require('../items/generator');
 
 module.exports = {
-	build: function (mob, blueprint, scaleDrops, type, zoneName) {
+	build: function (mob, blueprint, type, zoneName) {
 		mob.instance.eventEmitter.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
 
 		let typeDefinition = blueprint[type] || blueprint;
-
-		let drops = typeDefinition.drops;
-
-		mob.isMob = true;
-		mob.scaleDrops = scaleDrops;
 
 		if (blueprint.nonSelectable)
 			mob.nonSelectable = true;
@@ -76,7 +71,7 @@ module.exports = {
 		}
 
 		mob.addComponent('equipment');
-		mob.addComponent('inventory', drops);
+		mob.addComponent('inventory', typeDefinition.drops);
 		mob.inventory.inventorySize = -1;
 		mob.inventory.dailyDrops = blueprint.dailyDrops;
 
@@ -103,9 +98,6 @@ module.exports = {
 	},
 
 	scale: function (mob, level) {
-		if ((mob.aggro) && (mob.aggro.list > 0))
-			return;
-
 		let drops = mob.inventory.blueprint || {};
 
 		let statValues = mob.stats.values;
