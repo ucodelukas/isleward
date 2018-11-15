@@ -1,11 +1,26 @@
 let events = require('../../misc/events');
 
 let config = [
-	'cave',
-	'estuary',
-	'sewer',
-	'fjolarok',
-	'dungeon'
+	{
+		name: 'cave',
+		path: 'config/maps'
+	},
+	{
+		name: 'estuary',
+		path: 'config/maps'
+	},
+	{
+		name: 'sewer',
+		path: 'config/maps'
+	},
+	{
+		name: 'fjolarok',
+		path: 'config/maps'
+	},
+	{
+		name: 'dungeon',
+		path: 'config/maps'
+	}
 ];
 
 module.exports = {

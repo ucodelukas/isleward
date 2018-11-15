@@ -12,6 +12,7 @@ let padding = null;
 
 module.exports = {
 	name: null,
+	path: null,
 	layers: [],
 
 	mapFile: null,
@@ -49,9 +50,10 @@ module.exports = {
 
 	init: function (args) {
 		this.name = args.name;
-
+		this.path = args.path;
+		
 		try {
-			this.zone = require('../config/maps/' + this.name + '/zone');
+			this.zone = require('../' + this.path + '/' + this.name + '/zone');
 		} catch (e) {
 			this.zone = globalZone;
 		}
@@ -59,14 +61,14 @@ module.exports = {
 
 		let chats = null;
 		try {
-			chats = require('../config/maps/' + this.name + '/chats');
+			chats = require('../' + this.path + '/' + this.name + '/chats');
 		} catch (e) {}
 		if (chats)
 			this.zone.chats = chats;
 
 		let dialogues = null;
 		try {
-			dialogues = require('../config/maps/' + this.name + '/dialogues');
+			dialogues = require('../' + this.path + '/' + this.name + '/dialogues');
 		} catch (e) {}
 		events.emit('onBeforeGetDialogue', this.name, dialogues);
 		if (dialogues)
@@ -78,7 +80,7 @@ module.exports = {
 		for (let r in resources)
 			resourceSpawner.register(r, resources[r]);
 
-		mapFile = require('../config/maps/' + this.name + '/map');
+		mapFile = require('../' + this.path + '/' + this.name + '/map');
 		this.mapFile = mapFile;
 		this.mapFile.properties = this.mapFile.properties || {};
 		mapScale = mapFile.tilesets[0].tileheight;

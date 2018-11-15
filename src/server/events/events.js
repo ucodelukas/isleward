@@ -1,5 +1,6 @@
 let phaseTemplate = require('../config/eventPhases/phaseTemplate');
 let fs = require('fs');
+let mapList = require('../config/maps/mapList');
 
 module.exports = {
 	configs: [],
@@ -8,14 +9,16 @@ module.exports = {
 	init: function (instance) {
 		this.instance = instance;
 
-		let path = 'config/maps/' + this.instance.map.name + '/events';
+		let zoneName = this.instance.map.name;
+		let zonePath = mapList.mapList.find(z => z.name === zoneName).path;
+		let path = zonePath + '/' + zoneName + '/events';
 		if (!fs.existsSync(path))
 			return;
 
 		let files = fs.readdirSync(path)
 			.map(f => ('../' + path + '/' + f));
 
-		this.instance.eventEmitter.emit('onBeforeGetEventList', this.instance.map.name, files);
+		this.instance.eventEmitter.emit('onBeforeGetEventList', zoneName, files);
 
 		files.forEach(function (f) {
 			let e = require(f);

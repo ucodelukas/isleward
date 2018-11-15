@@ -1,5 +1,6 @@
 let questTemplate = require('./templates/questTemplate');
 let globalQuests = require('../questsBase');
+let mapList = require('../maps/mapList');
 
 module.exports = {
 	instance: null,
@@ -9,6 +10,7 @@ module.exports = {
 	},
 	obtain: function (obj, template) {
 		let zoneName = template ? template.zoneName : obj.zoneName;
+		let zonePath = mapList.mapList.find(m => m.name === zoneName);
 		let oQuests = obj.quests;
 		if (oQuests.quests.filter(q => q.zoneName === zoneName).length > 0)
 			return;
@@ -16,7 +18,7 @@ module.exports = {
 		let zoneTemplate = null;
 
 		try {
-			zoneTemplate = require('../../config/maps/' + zoneName + '/quests.js');
+			zoneTemplate = require('../../' + zonePath + '/' + zoneName + '/quests.js');
 		} catch (e) {
 			zoneTemplate = globalQuests;
 		}
