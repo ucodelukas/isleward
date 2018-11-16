@@ -865,8 +865,10 @@ module.exports = {
 				itemId: item.id,
 				slot: item.quickSlot
 			});
-		} else 
+		} else {
+			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === item.id);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
+		}
 
 		if (!hideMessage) {
 			if (fromMob)
