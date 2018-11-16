@@ -49,6 +49,7 @@ define([
 			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this, null));
 			this.find('.split-box .btnLess').on('click', this.onChangeStackAmount.bind(this, null, -1));
 			this.find('.split-box .btnMore').on('click', this.onChangeStackAmount.bind(this, null, 1));
+			this.find('.btnSortInv').on('click', this.onSortInventory.bind(this));
 		},
 
 		build: function () {
@@ -247,6 +248,18 @@ define([
 				top: e.clientY - offset.top - 40,
 				display: 'block'
 			});
+		},
+
+		onSortInventory: function () {
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'inventory',
+					method: 'sortInventory',
+					data: {}
+				}
+			});	
 		},
 
 		showContext: function (item, e) {

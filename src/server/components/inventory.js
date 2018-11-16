@@ -605,6 +605,28 @@ module.exports = {
 		}
 	},
 
+	sortInventory: function () {
+		this.items
+			.filter(i => !i.eq)
+			.map(i => {
+				return {
+					item: i,
+					sortId: `${i.slot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
+				};
+			})
+			.sort((a, b) => {
+				if (a.sortId < b.sortId)
+					return 1;
+				else if (a.sortId > b.sortId)
+					return -1;
+				return 0;
+			})
+			.forEach((i, index) => {
+				i.item.pos = index;
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(i.item));
+			});
+	},
+
 	resolveCallback: function (msg, result) {
 		let callbackId = msg.has('callbackId') ? msg.callbackId : msg;
 		result = result || [];
