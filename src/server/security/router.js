@@ -17,7 +17,7 @@ module.exports = {
 			dialogue: ['talk'],
 			gatherer: ['gather'],
 			quests: ['complete'],
-			inventory: ['combineStacks', 'splitStack', 'activateMtx', 'useItem', 'moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem'],
+			inventory: ['combineStacks', 'splitStack', 'activateMtx', 'useItem', 'moveItem', 'enchantItem', 'getEnchantMaterials', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem', 'sortInventory'],
 			equipment: ['equip', 'unequip', 'setQuickSlot', 'useQuickSlot', 'inspect'],
 			stash: ['withdraw', 'open'],
 			trade: ['buySell'],
