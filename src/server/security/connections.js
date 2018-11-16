@@ -128,6 +128,8 @@ module.exports = {
 
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
+
+		this.playing--;
 	},
 
 	onUnzone: async function (player, msg) {
