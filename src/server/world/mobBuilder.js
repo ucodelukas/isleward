@@ -25,7 +25,7 @@ module.exports = {
 		if (typeDefinition.sheetName)
 			mob.sheetName = typeDefinition.sheetName;
 
-		if (typeDefinition.cell)
+		if (typeDefinition.has('cell'))
 			mob.cell = typeDefinition.cell;
 
 		mob.addComponent('stats', {
