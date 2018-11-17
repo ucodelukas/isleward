@@ -120,7 +120,7 @@ module.exports = {
 	},
 
 	getMapFiles: function () {
-		mapList.mapList.forEach(m => this.spawnMap(m));
+		mapList.mapList.filter(m => !m.disabled).forEach(m => this.spawnMap(m));
 	},
 	spawnMap: function (map) {
 		let worker = childProcess.fork('./world/worker');
