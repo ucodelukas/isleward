@@ -7,6 +7,7 @@ module.exports = {
 	range: 9,
 
 	speed: 150,
+	isAttack: true,
 
 	row: 3,
 	col: 0,

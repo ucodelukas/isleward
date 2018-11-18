@@ -7,6 +7,7 @@ module.exports = {
 
 	damage: 5,
 	speed: 70,
+	isAttack: true,
 
 	stunDuration: 15,
 	needLos: true,

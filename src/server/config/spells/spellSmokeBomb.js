@@ -54,6 +54,7 @@ module.exports = {
 
 	damage: 1,
 	duration: 10,
+	isAttack: true,
 
 	radius: 1,
 	targetGround: true,

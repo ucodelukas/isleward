@@ -4,6 +4,7 @@ module.exports = {
 	cdMax: 5,
 	manaCost: 0,
 	range: 1,
+	isAttack: true,
 
 	damage: 1,
 
