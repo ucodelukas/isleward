@@ -1,6 +1,5 @@
 let bcrypt = require('bcrypt-nodejs');
 let messages = require('../misc/messages');
-let connections = require('../security/connections');
 let skins = require('../config/skins');
 let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
@@ -39,6 +38,8 @@ module.exports = {
 		this.charname = character.name;
 
 		this.checkLoginReward(data, character);
+
+		cons.increasePlayerCount();
 	},
 
 	checkLoginReward: function (data, character) {
@@ -272,7 +273,7 @@ module.exports = {
 		}
 		
 		this.username = msg.data.username;
-		connections.logOut(this.obj);
+		cons.logOut(this.obj);
 
 		await this.getSkins();
 
@@ -336,7 +337,7 @@ module.exports = {
 		});
 
 		this.username = msg.data.username;
-		connections.logOut(this.obj);
+		cons.logOut(this.obj);
 
 		await this.getSkins();
 
