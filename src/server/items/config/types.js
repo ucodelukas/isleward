@@ -353,14 +353,24 @@ let types = {
 		'Wooden Shield': {
 			attrRequire: 'str',
 			sprite: [13, 0],
-			armorMult: 0.3,
-			blockAttackMult: 1
+			implicitStat: [{
+				stat: 'armor',
+				valueMult: 0.3
+			}, {
+				stat: 'blockAttackChance',
+				valueMult: 1
+			}]
 		},
 		'Gilded Shield': {
 			attrRequire: 'str',
 			sprite: [13, 1],
-			armorMult: 0.6,
-			blockAttackMult: 0.5
+			implicitStat: [{
+				stat: 'armor',
+				valueMult: 0.6
+			}, {
+				stat: 'blockAttackChance',
+				valueMult: 0.5
+			}]
 		},
 		'Brittle Tome': {
 			attrRequire: 'int',

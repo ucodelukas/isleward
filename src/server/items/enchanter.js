@@ -95,12 +95,14 @@ module.exports = {
 			delete item.enchantedStats;
 			delete msg.addStatMsgs;
 
+			let possibleStats = Object.keys(item.stats || {});
+
 			let newItem = generator.generate({
 				slot: configSlots.getRandomSlot(item.slot),
 				level: item.level,
 				quality: item.quality,
-				stats: Object.keys(item.stats || {}),
-				implicitStat: (configTypes.types[item.slot][item.type] | {}).implicitStat
+				stats: possibleStats,
+				implicitStat: (configTypes.types[item.slot][item.type] || {}).implicitStat
 			});
 
 			delete item.spritesheet;

@@ -35,14 +35,5 @@ module.exports = {
 
 		if (typeBlueprint.attrRequire)
 			blueprint.attrRequire = typeBlueprint.attrRequire;
-
-		if (typeBlueprint.armorMult)
-			blueprint.statMult.armor = typeBlueprint.armorMult;
-
-		if (typeBlueprint.blockAttackMult)
-			blueprint.statMult.blockAttackChance = typeBlueprint.blockAttackMult;
-
-		if (typeBlueprint.blockSpellMult)
-			blueprint.statMult.blockSpellChance = typeBlueprint.blockSpellMult;
 	}
 };

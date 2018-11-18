@@ -488,15 +488,7 @@ module.exports = {
 			}
 		}
 
-		let implicitStat = blueprint.implicitStat;
-		if (implicitStat) {
-			let value = implicitStat.value[0] + ~~(Math.random() * (implicitStat.value[1] - implicitStat.value[0]));
-
-			item.implicitStats = [{
-				stat: implicitStat.stat,
-				value: value
-			}];
-		}
+		this.buildImplicitStats(item, blueprint.implicitStat);
 
 		if (blueprint.stats) {
 			let useStats = extend([], blueprint.stats);
@@ -614,5 +606,41 @@ module.exports = {
 		}
 
 		return nStats;
+	},
+
+	buildImplicitStats: function (item, implicits) {
+		if (!implicits)
+			return;
+
+		implicits = implicits.push ? implicits : [ implicits ];
+		implicits.forEach(i => {
+			let stat = {
+				stat: i.stat
+			};
+
+			if (i.value) 
+				stat.value = i.value[0] + ~~(Math.random() * (i.value[1] - i.value[0]));
+			else if (i.valueMult) {
+				let statBlueprint = this.stats[i.stat];
+
+				if (statBlueprint.generator) {
+					const generator = this.generators[statBlueprint.generator];
+
+					const blueprint = {
+						statMult: {
+							[i.stat]: i.valueMult
+						}
+					};
+
+					stat.value = Math.ceil(generator(item, item.level, blueprint));
+				} else
+					stat.value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max) * i.valueMult);		
+			}
+				
+			if (!item.implicitStats)
+				item.implicitStats = [];
+
+			item.implicitStats.push(stat);
+		});
 	}
 };
