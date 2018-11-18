@@ -44,11 +44,13 @@ define([
 
 		beforeHide: function () {
 			this.isInspecting = false;
+			delete this.result;
 		},
 
 		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
 			this.isInspecting = false;
+			delete this.result;
 
 			this.find('.itemList').hide();
 
@@ -77,8 +79,10 @@ define([
 			this.find('.tab.selected').removeClass('selected');
 
 			$(e.target).addClass('selected');
+			
+			let stats = this.isInspecting ? this.result.stats : this.stats;
 
-			this.onGetStats(this.stats);
+			this.onGetStats(stats);
 		},
 
 		onGetItems: function (items) {
@@ -156,6 +160,8 @@ define([
 			this.isInspecting = true;
 
 			this.show();
+
+			this.result = result;
 
 			this.onGetStats(result.stats);
 			this.onGetItems(result.equipment);
@@ -328,7 +334,7 @@ define([
 			}
 		},
 
-		onGetStats: function (stats) {
+		onGetStats: function (stats ) {	
 			if (stats && !this.isInspecting)
 				this.stats = stats;
 
