@@ -175,5 +175,9 @@ module.exports = {
 		}
 
 		return result;
+	},
+
+	increasePlayerCount: function () {
+		this.playing++;
 	}
 };
