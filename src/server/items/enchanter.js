@@ -101,8 +101,7 @@ module.exports = {
 				slot: configSlots.getRandomSlot(item.slot),
 				level: item.level,
 				quality: item.quality,
-				stats: possibleStats,
-				implicitStat: (configTypes.types[item.slot][item.type] || {}).implicitStat
+				stats: possibleStats
 			});
 
 			delete item.spritesheet;
