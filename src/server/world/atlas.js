@@ -120,13 +120,14 @@ module.exports = {
 	},
 
 	getMapFiles: function () {
-		mapList.forEach(m => this.spawnMap(m));
+		mapList.mapList.filter(m => !m.disabled).forEach(m => this.spawnMap(m));
 	},
-	spawnMap: function (name) {
+	spawnMap: function (map) {
 		let worker = childProcess.fork('./world/worker');
 		let thread = {
 			id: this.nextId++,
-			name: name.replace('.json', ''),
+			name: map.name,
+			path: map.path,
 			worker: worker
 		};
 
@@ -152,6 +153,7 @@ module.exports = {
 				method: 'init',
 				args: {
 					name: thread.name,
+					path: thread.path,
 					zoneId: thread.id
 				}
 			});
