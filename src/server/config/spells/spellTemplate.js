@@ -151,6 +151,7 @@ module.exports = {
 				statType: this.statType,
 				statMult: this.statMult,
 				noMitigate: noMitigate,
+				isAttack: this.isAttack,
 				noCrit: true
 			}).amount;
 
@@ -162,7 +163,7 @@ module.exports = {
 			let castTimeMax = this.castTimeMax;
 			let speedModifier = this.obj.stats.values[this.isAttack ? 'attackSpeed' : 'castSpeed'];
 			castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
-
+			critChance = Math.min(critChance, 100);
 			dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100)));
 			let duration = this.values.duration;
 			if (duration) 
