@@ -518,7 +518,7 @@ module.exports = {
 					id: this.obj.id,
 					source: source.id,
 					event: true,
-					text: 'blocked'
+					text: damage.blocked ? 'blocked' : 'dodged'
 				}, recipients);
 			}
 		}

@@ -47,23 +47,23 @@ module.exports = {
 
 			let dmgPercent = 100 + (srcValues.dmgPercent || 0);	
 
+			if (config.isAttack)
+				dmgPercent += srcValues.physicalPercent || 0;
+			else
+				dmgPercent += srcValues.spellPercent || 0;
+
 			if (config.element) {
 				let elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 				dmgPercent += (srcValues[elementName + 'Percent'] || 0);
 				dmgPercent += srcValues.elementPercent || 0;
-
-				if (!config.isAttack)
-					dmgPercent += srcValues.spellPercent || 0;
 
 				//Don't mitigate heals
 				if (!config.noMitigate) {
 					let resist = tgtValues.elementAllResist + (tgtValues[elementName + 'Resist'] || 0);
 					amount *= max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5);
 				}
-			} else if (!config.noMitigate) {
-				dmgPercent += srcValues.physicalPercent || 0;
+			} else if (!config.noMitigate)
 				amount *= max(0.5 + max((1 - ((tgtValues.armor || 0) / (srcValues.level * 50))) / 2, -0.5), 0.5);
-			}
 
 			amount *= (dmgPercent / 100);
 
