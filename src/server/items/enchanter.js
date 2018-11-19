@@ -40,6 +40,7 @@ module.exports = {
 		if (msg.action === 'reroll') {
 			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
+			delete item.implicitStats;
 			delete msg.addStatMsgs;
 
 			if ((item.stats) && (item.stats.lvlRequire)) {
