@@ -163,7 +163,7 @@ module.exports = {
 			item.description += `<br /><br />(Crafted by ${obj.name})`;
 
 			const quantity = item.quantity;
-			if (quantity.push)
+			if (quantity && quantity.push)
 				item.quantity = quantity[0] + ~~(Math.random() * (quantity[1] - quantity[0]));
 
 			obj.inventory.getItem(item);

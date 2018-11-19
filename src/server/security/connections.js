@@ -47,7 +47,7 @@ module.exports = {
 			});
 
 			if (player.has('id'))
-				this.playing--;
+				this.modifyPlayerCount(-1);
 		}
 
 		this.players.spliceWhere(p => p.socket.id === socket.id);
@@ -84,12 +84,8 @@ module.exports = {
 			return;
 
 		let method = msg.method;
-		if (cpn[method]) {
-			if (method === 'play')
-				this.playing++;
-
+		if (cpn[method])
 			cpn[method](msg);
-		}
 	},
 	unzone: function (msg) {
 		let socket = msg.socket;
@@ -129,7 +125,7 @@ module.exports = {
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
 
-		this.playing--;
+		this.modifyPlayerCount(-1);
 	},
 
 	onUnzone: async function (player, msg) {
@@ -177,7 +173,7 @@ module.exports = {
 		return result;
 	},
 
-	increasePlayerCount: function () {
-		this.playing++;
+	modifyPlayerCount: function (delta) {
+		this.playing += delta;
 	}
 };
