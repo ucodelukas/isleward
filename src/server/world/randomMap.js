@@ -446,7 +446,7 @@ module.exports = {
 			return ((direction[0] === -exitDirection[0]) && (direction[1] === -exitDirection[1]));
 		});
 		templateExit = templateExit[this.randInt(0, templateExit.length)];
-		let exitIndex = template.exits.firstIndex(e => e === templateExit);
+		let exitIndex = template.exits.findIndex(e => e === templateExit);
 
 		template.exits.splice(exitIndex, 1);
 

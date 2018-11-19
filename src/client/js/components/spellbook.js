@@ -61,7 +61,7 @@ define([
 
 			if (blueprint.getSpells) {
 				blueprint.getSpells.forEach(function (s) {
-					let existIndex = this.spells.firstIndex(f => f.id === s.id);
+					let existIndex = this.spells.findIndex(f => f.id === s.id);
 
 					if (existIndex > -1) {
 						this.spells.splice(existIndex, 1, s);

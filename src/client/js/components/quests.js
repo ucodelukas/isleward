@@ -15,7 +15,7 @@ define([
 			if (blueprint.updateQuests) {
 				blueprint.updateQuests.forEach(function (q) {
 					events.emit('onUpdateQuest', q);
-					let index = this.quests.firstIndex(f => f.id === q.id);
+					let index = this.quests.findIndex(f => f.id === q.id);
 					this.quests.splice(index, 1, q);
 				}, this);
 			}

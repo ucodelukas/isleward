@@ -193,7 +193,7 @@ define([
 				});
 
 			if (isConsumable)
-				items = items.filter((item, i) => items.firstIndex(f => f.name === item.name) === i);
+				items = items.filter((item, i) => items.findIndex(f => f.name === item.name) === i);
 
 			items.splice(0, 0, {
 				name: 'None',
