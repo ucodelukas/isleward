@@ -84,7 +84,7 @@ define([
 			if (!fromMob)
 				return list[0];
 
-			let fromIndex = list.firstIndex(function (l) {
+			let fromIndex = list.findIndex(function (l) {
 				return (l.id === fromMob.id);
 			});
 

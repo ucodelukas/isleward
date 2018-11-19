@@ -5,29 +5,6 @@ window.scale = isMobile ? 32 : 40;
 window.scaleMult = isMobile ? 4 : 5;
 
 //eslint-disable-next-line no-extend-native
-Array.prototype.firstIndex = function (callback, thisArg) {
-	let T = thisArg;
-	let O = Object(this);
-	let len = O.length >>> 0;
-
-	let k = 0;
-
-	while (k < len) {
-		let kValue;
-
-		if (k in O) {
-			kValue = O[k];
-
-			if (callback.call(T, kValue, k, O))
-				return k;
-		}
-		k++;
-	}
-
-	return -1;
-};
-
-//eslint-disable-next-line no-extend-native
 Array.prototype.spliceWhere = function (callback, thisArg) {
 	let T = thisArg;
 	let O = Object(this);
@@ -81,6 +58,38 @@ Object.defineProperty(Object.prototype, 'has', {
 		return (this.hasOwnProperty(prop) && this[prop] !== undefined && this[prop] !== null);
 	}
 });
+
+//eslint-disable-next-line no-extend-native
+if (!String.prototype.padStart) {
+	String.prototype.padStart = function padStart (targetLength, padString) {
+		targetLength = targetLength >> 0;
+		padString = String(typeof padString !== 'undefined' ? padString : ' ');
+		if (this.length >= targetLength) 
+			return String(this);
+         
+		targetLength = targetLength - this.length;
+		if (targetLength > padString.length) 
+			padString += padString.repeat(targetLength / padString.length);
+            
+		return padString.slice(0, targetLength) + String(this);
+	};
+}
+
+//eslint-disable-next-line no-extend-native
+if (!String.prototype.padStart) {
+	String.prototype.padStart = function padStart (targetLength, padString) {
+		targetLength = targetLength >> 0; //truncate if number, or convert non-number to 0;
+		padString = String(typeof padString !== 'undefined' ? padString : ' ');
+		if (this.length >= targetLength) 
+			return String(this);
+         
+		targetLength = targetLength - this.length;
+		if (targetLength > padString.length) 
+			padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+            
+		return padString.slice(0, targetLength) + String(this);
+	};
+}
 
 window._ = {
 	get2dArray: function (w, h, def) {
