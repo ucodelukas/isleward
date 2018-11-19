@@ -39,7 +39,7 @@ module.exports = {
 
 		this.checkLoginReward(data, character);
 
-		cons.increasePlayerCount();
+		cons.modifyPlayerCount(1);
 	},
 
 	checkLoginReward: function (data, character) {
