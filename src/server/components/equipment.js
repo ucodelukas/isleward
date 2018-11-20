@@ -331,12 +331,14 @@ module.exports = {
 		if (!targetPlayer || !targetPlayer.player)
 			return;
 
-		const targetStats = targetPlayer.stats.values;
 		const targetEq = targetPlayer.inventory.items.filter(eq => eq.eq === true || eq.quickSlot === 0);
+		const targetStats = targetPlayer.stats.values;
+		
+		const mappedEq = targetEq.map(m => targetPlayer.inventory.simplifyItem(m));
 		const mappedStats = extend({}, targetStats);
 		
 		let result = {
-			equipment: targetEq,
+			equipment: mappedEq,
 			stats: mappedStats
 		};
 
