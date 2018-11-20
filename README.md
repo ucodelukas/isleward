@@ -1,6 +1,8 @@
 ![Isleward](https://gitlab.com/Isleward/isleward/raw/master/src/client/images/logo_1.png)
 
-A multiplayer, moddable, extensible roguelike built with NodeJS, JS, HTML and CSS
+### The world's only open source, moddable, roguelike MMO
+
+Built with NodeJS, JS, HTML and CSS.
 
 [Play Now](http://play.isleward.com/) | [Discord](https://discord.gg/gnsn7ZP) | [Subreddit](https://www.reddit.com/r/isleward) | [Blog](http://blog.isleward.com/) | [Wiki](http://wiki.isleward.com/Main_Page) | [Twitter](https://twitter.com/bigbadwofl) | [Patreon](http://patreon.com/bigbadwaffle)
 
