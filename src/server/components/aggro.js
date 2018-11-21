@@ -2,6 +2,7 @@ module.exports = {
 	type: 'aggro',
 
 	range: 7,
+	cascadeRange: 3,
 	faction: null,
 
 	physics: null,
@@ -41,22 +42,24 @@ module.exports = {
 		};
 	},
 
-	move: function () {
-		if (this.obj.dead)
+	//If we send through a proxy, we know it's for cascading threat
+	move: function (proxy) {
+		let obj = proxy || this.obj;
+		let aggro = obj.aggro;
+
+		if (obj.dead)
 			return;
 
 		let result = {
 			success: true
 		};
-		this.obj.fireEvent('beforeAggro', result);
+		obj.fireEvent('beforeAggro', result);
 		if (!result.success)
 			return;
 
-		let obj = this.obj;
-
 		//If we're attacking something, don't try and look for more trouble. SAVE THE CPU!
 		// this only counts for mobs, players can have multiple attackers
-		let list = this.list;
+		let list = aggro.list;
 		if (obj.mob) {
 			let lLen = list.length;
 			for (let i = 0; i < lLen; i++) {
@@ -83,36 +86,33 @@ module.exports = {
 			}
 		}
 
-		let x = obj.x;
-		let y = obj.y;
+		let x = this.obj.x;
+		let y = this.obj.y;
 
-		//find mobs in range
-		let range = this.range;
-		let inRange = this.physics.getArea(x - range, y - range, x + range, y + range, (c => (((!c.player) || (!obj.player)) && (!obj.dead) && (c.aggro) && (c.aggro.willAutoAttack(obj)))));
+		//Find mobs in range
+		let range = proxy ? aggro.cascadeRange : aggro.range;
+		let inRange = this.physics.getArea(x - range, y - range, x + range, y + range, c => (
+			c.aggro && 
+			!c.dead && 
+			(
+				!c.player || 
+				!obj.player
+			) && 
+			c.aggro.willAutoAttack(obj) &&
+			!list.some(l => l.obj === c)
+		));
 
-		if (inRange.length === 0)
+		if (!inRange.length)
 			return;
 
 		let iLen = inRange.length;
 		for (let i = 0; i < iLen; i++) {
 			let enemy = inRange[i];
 
-			//The length could change
-			let lLen = list.length;
-			for (let j = 0; j < lLen; j++) {
-				//Set the enemy to null so we need we need to continue
-				if (list[j].obj === enemy)
-					enemy = null;
-			}
-			if (!enemy)
-				continue;
-
-			//Do we have LoS?
 			if (!this.physics.hasLos(x, y, enemy.x, enemy.y))
 				continue;
-
-			if (enemy.aggro.tryEngage(obj))
-				this.tryEngage(enemy, 0);
+			else if (enemy.aggro.tryEngage(obj))
+				aggro.tryEngage(enemy, 0);
 		}
 	},
 
@@ -167,21 +167,23 @@ module.exports = {
 	},
 
 	tryEngage: function (source, amount, threatMult) {
+		let obj = this.obj;
+
 		//Don't aggro yourself, stupid
-		if (source === this.obj)
+		if (source === obj)
 			return;
 
 		let result = {
 			success: true
 		};
-		this.obj.fireEvent('beforeAggro', result);
+		obj.fireEvent('beforeAggro', result);
 		if (!result.success)
 			return false;
 
 		//Mobs shouldn't aggro players that are too far from their home
-		let mob = this.obj.mob || source.mob;
+		let mob = obj.mob || source.mob;
 		if (mob) {
-			let notMob = source.mob ? this.obj : source;
+			let notMob = source.mob ? obj : source;
 			if (!mob.canChase(notMob))
 				return false;
 		}
@@ -190,7 +192,7 @@ module.exports = {
 		let list = this.list;
 
 		amount = (amount || 0);
-		let threat = (amount / this.obj.stats.values.hpMax) * (threatMult || 1);
+		let threat = (amount / obj.stats.values.hpMax) * (threatMult || 1);
 
 		let exists = list.find(l => l.obj.id === oId);
 		if (!exists) {
@@ -201,6 +203,10 @@ module.exports = {
 			};
 
 			list.push(exists);
+
+			//Cascade threat
+			if (obj.mob)
+				this.move(source);
 		}
 
 		exists.damage += amount;
