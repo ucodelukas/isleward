@@ -605,7 +605,7 @@ module.exports = {
 
 	events: {
 		beforeMove: function () {
-			this.stopCasting();
+			this.stopCasting(null, true);
 		},
 
 		clearQueue: function () {
