@@ -54,6 +54,12 @@ module.exports = {
 
 		if (!this.goHome) {
 			if ((target) && (target !== obj) && ((!obj.follower) || (obj.follower.master !== target))) {
+				//If we just started attacking, patrols need to know where home is
+				if (!this.target && this.patrol) {
+					this.originX = obj.x;
+					this.originY = obj.y;
+				}
+
 				//Are we in fight mode?
 				this.fight(target);
 				return;
@@ -80,10 +86,11 @@ module.exports = {
 
 		let toX, toY;
 
-		if (!this.patrol) {
+		//Patrol mobs should not pick random locations unless they're going home
+		if (!this.patrol && !this.goHome) {
 			toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
-		} else {
+		} else if (this.patrol) {
 			do {
 				let toNode = this.patrol[this.patrolTargetNode];
 				toX = toNode[0];
@@ -97,7 +104,7 @@ module.exports = {
 			} while (toX - obj.x !== 0 || toY - obj.y !== 0);
 		}
 
-		if (!this.physics.isCellOpen(toX, toY))
+		if (!this.patrol && !this.physics.isCellOpen(toX, toY))
 			return;
 
 		if (abs(obj.x - toX) <= 1 && abs(obj.y - toY) <= 1) {
@@ -242,6 +249,10 @@ module.exports = {
 	},
 
 	canChase: function (obj) {
+		//Patrol mobs can always chase if they don't have a target yet (since they don't have a home yet)
+		if (this.patrol && !this.target && !this.goHome)
+			return true;
+
 		let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
 		return ((!this.goHome) && (distanceFromHome <= this.maxChaseDistance));
 	},
