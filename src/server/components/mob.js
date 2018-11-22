@@ -87,7 +87,7 @@ module.exports = {
 		let toX, toY;
 
 		//Patrol mobs should not pick random locations unless they're going home
-		if (!this.patrol && !this.goHome) {
+		if (this.goHome || !this.patrol) {
 			toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 		} else if (this.patrol) {
