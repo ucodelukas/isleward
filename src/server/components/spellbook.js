@@ -134,6 +134,9 @@ module.exports = {
 		}
 
 		builtSpell.id = !options.has('id') ? spellId : options.id;
+		if (builtSpell.cdMax)
+			builtSpell.cd = builtSpell.cdMax;
+
 		this.spells.push(builtSpell);
 		this.spells.sort(function (a, b) {
 			return (a.id - b.id);
