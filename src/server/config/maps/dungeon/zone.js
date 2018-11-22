@@ -1,7 +1,7 @@
 let balance = {
 	mobs: {
 		violetSerpent: {
-			level: 5,
+			level: 20,
 			meleeDmg: 1,
 			meleeCd: 5,
 			slowDmg: 0.1,
@@ -10,14 +10,14 @@ let balance = {
 			slowChance: 0.85
 		},
 		scarletSerpent: {
-			level: 5,
+			level: 20,
 			meleeDmg: 1,
 			meleeCd: 5,
 			chargeDmg: 1,
 			chargeCd: 20
 		},
 		viridianSerpent: {
-			level: 5,
+			level: 20,
 			spitCd: 20,
 			spitDmg: 1,
 			spitDotDuration: 10,
