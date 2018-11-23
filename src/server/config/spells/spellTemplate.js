@@ -84,8 +84,12 @@ module.exports = {
 			return;
 		}
 
-		if (this.cd > 0)
+		if (this.cd > 0) {
 			this.cd--;
+
+			if (this.cd === 0)
+				this.obj.syncer.setArray(true, 'spellbook', 'getSpells', this.simplify());
+		}
 	},
 
 	consumeMana: function () {
