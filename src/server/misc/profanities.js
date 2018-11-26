@@ -214,13 +214,40 @@ let config = [
 let cLen = config.length;
 	
 module.exports = {
+	tree: {},
+
+	init: function () {
+		config.forEach(c => {
+			this.buildPath(c);
+		});
+	},
+
+	buildPath: function (chain, node) {
+		node = node || this.tree;
+		const letter = chain[0];
+		
+		if (!node[letter])
+			node[letter] = {};
+
+		if (chain.length > 1)
+			this.buildPath(chain.substr(1), node[letter]);
+	},
+
 	isClean: function (text) {
 		text = text.toLowerCase();
-		let cb = text.indexOf.bind(text);
+		const tree = this.tree;
 
-		for (let i = 0; i < cLen; i++) {
-			if (cb(config[i]) > -1)
-				return false;
+		let tLen = text.length;
+		for (let i = 0; i < tLen; i++) {
+			let node = tree;
+
+			for (let j = i; j < tLen; j++) {
+				node = node[text[j]];
+				if (!node)
+					break;
+				else if (Object.keys(node).length === 0)
+					return false;
+			}
 		}
 
 		return true;

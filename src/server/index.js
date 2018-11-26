@@ -13,6 +13,7 @@ let itemTypes = require('./items/config/types');
 let recipes = require('./config/recipes/recipes');
 let sheets = require('./security/sheets');
 let fixes = require('./fixes/fixes');
+let profanities = require('./misc/profanities');
 
 let startup = {
 	init: function () {
@@ -38,6 +39,7 @@ let startup = {
 		spells.init();
 		recipes.init();
 		itemTypes.init();
+		profanities.init();
 		components.init(this.onComponentsReady.bind(this));
 	},
 
