@@ -916,9 +916,7 @@ module.exports = {
 					bonusMagicFind: bonusMagicFind
 				};
 
-				let statValues = this.obj.stats.values;
-				let useItem = generator.generate(itemBlueprint, statValues.level);
-
+				let useItem = generator.generate(itemBlueprint, playerObject.stats.values.level);
 				this.getItem(useItem);
 			}
 		}

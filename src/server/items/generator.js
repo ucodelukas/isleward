@@ -30,8 +30,15 @@ module.exports = {
 		let item = {};
 
 		let currencyChance = this.currencyChance;
-		if ((blueprint.level) && (ownerLevel))
-			currencyChance *= Math.max(0, (10 - Math.abs(ownerLevel - blueprint.level)) / 10);
+		//If you kill a mob that's too low of a level, idols are much more rare
+		if (
+			blueprint.level && 
+			ownerLevel && 
+			ownerLevel - blueprint.level > 4
+		) {
+			const levelDelta = ownerLevel - blueprint.level;
+			currencyChance /= Math.pow(levelDelta - 3, 2);
+		}
 
 		if ((!blueprint.slot) && (!blueprint.noSpell)) {
 			isSpell = blueprint.spell;

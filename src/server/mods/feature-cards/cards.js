@@ -8,7 +8,7 @@ let config = {
 		mobLevel: [3, 100]
 	},
 	'Godly Promise': {
-		chance: 0.015,
+		chance: 0.01,
 		reward: 'Level 15 Legendary Weapon',
 		setSize: 6,
 		zone: 'sewer'
@@ -32,7 +32,7 @@ let config = {
 		mobName: 'steelclaw'
 	},
 	'Tradesman\'s Pride': {
-		chance: 0.01,
+		chance: 0.007,
 		reward: 'Five Random Idols',
 		setSize: 10
 	}
