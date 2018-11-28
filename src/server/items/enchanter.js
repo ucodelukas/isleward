@@ -37,9 +37,9 @@ module.exports = {
 		});
 
 		if (msg.action === 'reroll') {
-			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
 			delete item.implicitStats;
+			delete item.power;
 			delete msg.addStatMsgs;
 
 			if ((item.stats) && (item.stats.lvlRequire)) {
@@ -57,20 +57,6 @@ module.exports = {
 			generatorSlots.generate(item, bpt);
 			generatorTypes.generate(item, bpt);
 			generatorStats.generate(item, bpt);
-
-			for (let p in enchantedStats) {
-				if (!item.stats[p])
-					item.stats[p] = 0;
-
-				item.stats[p] += enchantedStats[p];
-
-				if (p === 'lvlRequire') {
-					item.level -= enchantedStats[p];
-					if (item.level < 1)
-						item.level = 1;
-				}
-			}
-			item.enchantedStats = enchantedStats;
 		} else if (msg.action === 'relevel') {
 			if (item.slot === 'tool')
 				return;
@@ -91,7 +77,6 @@ module.exports = {
 			if (item.originalLevel)
 				item.level = item.originalLevel;
 
-			let enchantedStats = item.enchantedStats || {};
 			delete item.enchantedStats;
 			delete msg.addStatMsgs;
 
@@ -109,20 +94,7 @@ module.exports = {
 			delete item.stats;
 			delete item.spell;
 			delete item.implicitStats;
-
-			for (let p in enchantedStats) {
-				if (!newItem.stats[p])
-					newItem.stats[p] = 0;
-
-				newItem.stats[p] += enchantedStats[p];
-
-				if (p === 'lvlRequire') {
-					newItem.level -= enchantedStats[p];
-					if (newItem.level < 1)
-						newItem.level = 1;
-				}
-			}
-			newItem.enchantedStats = enchantedStats;
+			delete item.power;
 
 			extend(item, newItem);
 		} else if (msg.action === 'reforge') {
