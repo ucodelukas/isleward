@@ -555,7 +555,7 @@ module.exports = {
 
 		if (!value) {
 			if (statBlueprint.generator) {
-				let level = item.originalLevel || item.level;
+				let level = Math.min(20, item.originalLevel || item.level);
 				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
 			} else if (!blueprint.perfection)
 				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
@@ -639,7 +639,8 @@ module.exports = {
 						}
 					};
 
-					stat.value = Math.ceil(generator(item, item.level, blueprint));
+					const itemLevel = Math.min(20, item.level);
+					stat.value = Math.ceil(generator(item, itemLevel, blueprint));
 				} else
 					stat.value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max) * i.valueMult);		
 			}
