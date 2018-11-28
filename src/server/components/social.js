@@ -174,7 +174,7 @@ module.exports = {
 			return;
 
 		if (!profanities.isClean(messageString)) {
-			this.sendMessage('Message blocked because pottymouth', 'color-redA');
+			this.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
 			return;
 		}
 
