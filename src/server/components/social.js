@@ -1,5 +1,6 @@
 let roles = require('../config/roles');
 let events = require('../misc/events');
+const profanities = require('../misc/profanities');
 
 module.exports = {
 	type: 'social',
@@ -171,6 +172,11 @@ module.exports = {
 		this.onBeforeChat(msg.data);
 		if (msg.data.ignore)
 			return;
+
+		if (!profanities.isClean(messageString)) {
+			this.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
+			return;
+		}
 
 		history.push({
 			msg: messageString,
