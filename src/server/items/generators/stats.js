@@ -531,7 +531,14 @@ module.exports = {
 			value = split[1];
 		}
 
-		if ((!stat) || (!statOptions[stat])) {
+		if (
+			!stat || 
+			!statOptions[stat] ||
+			(
+				blueprint.limitSlotStats &&
+				statOptions[stat].ignore
+			)
+		) {
 			let options = Object.keys(statOptions).filter(function (s) {
 				let o = statOptions[s];
 				if (o.ignore)

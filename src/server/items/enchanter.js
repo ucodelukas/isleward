@@ -5,7 +5,6 @@ let generatorSpells = require('./generators/spellbook');
 let salvager = require('./salvager');
 let configCurrencies = require('./config/currencies');
 let configSlots = require('./config/slots');
-let configTypes = require('./config/types');
 let generator = require('./generator');
 
 module.exports = {
@@ -102,7 +101,8 @@ module.exports = {
 				slot: configSlots.getRandomSlot(item.slot),
 				level: item.level,
 				quality: item.quality,
-				stats: possibleStats
+				stats: possibleStats,
+				limitSlotStats: true
 			});
 
 			delete item.spritesheet;
