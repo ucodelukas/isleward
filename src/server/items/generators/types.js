@@ -25,9 +25,6 @@ module.exports = {
 		if (typeBlueprint.material) {
 			let material = armorMaterials[typeBlueprint.material];
 			blueprint.attrRequire = material.attrRequire;
-
-			if (blueprint.statMult.armor)
-				blueprint.statMult.armor *= material.statMult.armor;
 		}
 
 		if (typeBlueprint.implicitStat)

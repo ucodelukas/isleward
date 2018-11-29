@@ -33,18 +33,10 @@ module.exports = {
 
 	armorMult: {
 		head: 0.2,
-		neck: 0,
 		chest: 0.4,
 		hands: 0.1,
-		finger: 0,
-		waist: 0,
 		legs: 0.2,
-		feet: 0.1,
-		trinket: 0,
-		oneHanded: 0,
-		twoHanded: 0,
-		offHand: 0,
-		tool: 0
+		feet: 0.1
 	},
 
 	getRandomSlot: function (exclude) {

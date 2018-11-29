@@ -1,22 +1,45 @@
 let events = require('../../misc/events');
 
+const slotArmorMult = require('./slots').armorMult;
+const configMaterials = require('./armorMaterials');
+
+const plateArmorMult = configMaterials.plate.armorMult;
+const leatherArmorMult = configMaterials.leather.armorMult;
+const clothArmorMult = configMaterials.cloth.armorMult;
+
 let types = {
 	head: {
 		Helmet: {
 			sprite: [0, 0],
-			material: 'plate'
+			material: 'plate',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.head * plateArmorMult
+			}
 		},
 		Cowl: {
 			sprite: [0, 1],
-			material: 'cloth'
+			material: 'cloth',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.head * clothArmorMult
+			}
 		},
 		'Leather Cap': {
 			sprite: [0, 2],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.head * leatherArmorMult
+			}
 		},
 		Facemask: {
 			sprite: [0, 3],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.head * leatherArmorMult
+			}
 		}
 	},
 	neck: {
@@ -52,37 +75,69 @@ let types = {
 	chest: {
 		Breastplate: {
 			sprite: [2, 0],
-			material: 'plate'
+			material: 'plate',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.chest * plateArmorMult
+			}
 		},
 		Robe: {
 			material: 'cloth',
-			sprite: [2, 1]
+			sprite: [2, 1],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.chest * clothArmorMult
+			}
 		},
 		'Leather Armor': {
 			sprite: [2, 2],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.chest * leatherArmorMult
+			}
 		},
 		Scalemail: {
 			sprite: [2, 3],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.chest * leatherArmorMult
+			}
 		}
 	},
 	hands: {
 		Gauntlets: {
 			sprite: [3, 0],
-			material: 'plate'
+			material: 'plate',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.hands * plateArmorMult
+			}
 		},
 		Gloves: {
 			material: 'cloth',
-			sprite: [3, 1]
+			sprite: [3, 1],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.hands * clothArmorMult
+			}
 		},
 		'Leather Gloves': {
 			sprite: [3, 2],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.hands * leatherArmorMult
+			}
 		},
 		'Scale Gloves': {
 			sprite: [3, 3],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.hands * leatherArmorMult
+			}
 		}
 	},
 	finger: {
@@ -152,37 +207,69 @@ let types = {
 	legs: {
 		Legplates: {
 			material: 'plate',
-			sprite: [6, 0]
+			sprite: [6, 0],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.legs * plateArmorMult
+			}
 		},
 		Pants: {
 			material: 'cloth',
-			sprite: [6, 1]
+			sprite: [6, 1],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.legs * clothArmorMult
+			}
 		},
 		'Leather Pants': {
 			sprite: [6, 2],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.legs * leatherArmorMult
+			}
 		},
 		'Scale Leggings': {
 			sprite: [6, 3],
-			material: 'leather'
+			material: 'leather',
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.legs * leatherArmorMult
+			}
 		}
 	},
 	feet: {
 		'Steel Boots': {
 			material: 'plate',
-			sprite: [7, 0]
+			sprite: [7, 0],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.feet * plateArmorMult
+			}
 		},
 		Boots: {
 			material: 'cloth',
-			sprite: [7, 1]
+			sprite: [7, 1],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.feet * clothArmorMult
+			}
 		},
 		'Leather Boots': {
 			material: 'leather',
-			sprite: [7, 2]
+			sprite: [7, 2],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.feet * leatherArmorMult
+			}
 		},
 		'Scale Boots': {
 			material: 'leather',
-			sprite: [7, 3]
+			sprite: [7, 3],
+			implicitStat: {
+				stat: 'armor',
+				valueMult: slotArmorMult.feet * leatherArmorMult
+			}
 		}
 	},
 	trinket: {

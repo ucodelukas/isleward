@@ -1,20 +1,14 @@
 module.exports = {
 	plate: {
 		attrRequire: 'str',
-		statMult: {
-			armor: 1
-		}
+		armorMult: 1
 	},
 	leather: {
 		attrRequire: 'dex',
-		statMult: {
-			armor: 0.6
-		}
+		armorMult: 0.6
 	},
 	cloth: {
 		attrRequire: 'int',
-		statMult: {
-			armor: 0.35
-		}
+		armorMult: 0.35
 	}
 };

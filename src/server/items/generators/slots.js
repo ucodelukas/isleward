@@ -16,10 +16,5 @@ module.exports = {
 			item.slot = Object.keys(configTypes.types).find(c => configTypes.types[c][blueprint.type]);
 		else
 			item.slot = chances[~~(Math.random() * chances.length)];
-
-		if (!blueprint.statMult)
-			blueprint.statMult = {};
-		if (!blueprint.statMult.armor)
-			blueprint.statMult.armor = configSlots.armorMult[item.slot];
 	}
 };
