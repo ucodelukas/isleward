@@ -111,7 +111,6 @@ module.exports = {
 
 		if (this.obj.player) {
 			this.obj.instance.syncer.queue('onGetSpellCooldowns', {
-				id: this.obj.id,
 				spell: this.id,
 				cd: (this.cd * 350)
 			}, [this.obj.serverId]);

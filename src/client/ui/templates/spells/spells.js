@@ -30,11 +30,12 @@ define([
 			this.spells = spells;
 
 			for (let i = 0; i < spells.length; i++) {
-				let icon = spells[i].icon;
+				let spell = spells[i];
+				let icon = spell.icon;
 				let x = -(icon[0] * 64);
 				let y = -(icon[1] * 64);
 
-				let hotkey = (spells[i].id === 0) ? 'space' : spells[i].id;
+				let hotkey = (spell.id === 0) ? 'space' : spells[i].id;
 
 				let html = templateSpell
 					.replace('$HOTKEY$', hotkey);
@@ -42,10 +43,10 @@ define([
 				let el = $(html)
 					.appendTo(this.el);
 				el
-					.on('mouseover', this.onShowTooltip.bind(this, el, spells[i]))
+					.on('mouseover', this.onShowTooltip.bind(this, el, spell))
 					.on('mouseleave', this.onHideTooltip.bind(this, el));
 
-				let spritesheet = spells[i].spritesheet || '../../../images/abilityIcons.png';
+				let spritesheet = spell.spritesheet || '../../../images/abilityIcons.png';
 				el
 					.find('.icon').css({
 						background: 'url("' + spritesheet + '") ' + x + 'px ' + y + 'px'
@@ -53,10 +54,14 @@ define([
 					.next().html(hotkey);
 
 				//HACK - we don't actually know how long a tick is
-				this.onGetSpellCooldowns({
-					spell: spells[i].id,
-					cd: spells[i].cd * 350
-				});
+				if (spell.cd) {
+					this.onGetSpellCooldowns({
+						spell: spell.id,
+						cd: spell.cd * 350
+					});
+
+					delete spell.cd;
+				}
 			}
 		},
 
