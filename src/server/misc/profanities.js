@@ -1,5 +1,4 @@
-let config = [
-	'ahole',
+let blacklist = [
 	'anal',
 	'anilingus',
 	'anus',
@@ -7,58 +6,41 @@ let config = [
 	'ass',
 	'b1tch',
 	'ballsack',
-	'bimbo',
 	'bitch',
 	'blowjob',
-	'bollock',
 	'boner',
 	'boob',
 	'breast',
-	'breasts',
 	'bukkake',
-	'bullshit',
-	'busty',
-	'butt',
 	'cameltoe',
 	'carpetmuncher',
 	'chinc',
 	'chink',
 	'chode',
-	'climax',
 	'clit',
 	'cock',
 	'coital',
-	'condom',
 	'coon',
-	'crap',
 	'cum',
 	'cunilingus',
 	'cunnilingus',
 	'cunt',
-	'dammit',
-	'damn',
 	'dick',
 	'dike',
 	'dildo',
 	'dong',
 	'douche',
 	'dumbass',
-	'dumbasses',
 	'dyke',
 	'ejaculate',
 	'erection',
-	'erotic',
 	'fack',
 	'fag',
-	'fart',
 	'felch',
 	'fellate',
 	'fellatio',
 	'feltch',
-	'fisting',
-	'fondle',
 	'foreskin',
-	'fubar',
 	'fuck',
 	'fuk',
 	'gay',
@@ -67,44 +49,27 @@ let config = [
 	'goddammit',
 	'goddamn',
 	'goldenshower',
-	'gonad',
-	'gspot',
-	'gtfo',
 	'handjob',
 	'hardon',
-	'hell',
-	'herpes',
 	'hitler',
-	'hiv',
 	'homo',
-	'hooker',
-	'hooter',
 	'horny',
-	'hump',
-	'hymen',
-	'incest',
 	'jap',
 	'jerkoff',
 	'jism',
 	'jiz',
-	'kinky',
 	'kkk',
 	'labia',
-	'lech',
-	'lesbian',
 	'lesbo',
-	'lezbian',
 	'lezbo',
-	'lube',
 	'masterbat',
 	'masturbat',
 	'menstruat',
 	'muff',
-	'nad',
-	'naked',
 	'nazi',
 	'negro',
 	'nigga',
+	'niger',
 	'nigger',
 	'nipple',
 	'nympho',
@@ -122,12 +87,10 @@ let config = [
 	'penis',
 	'phalli',
 	'phuck',
-	'pimp',
 	'piss',
 	'pms',
 	'poon',
 	'porn',
-	'prick',
 	'prostitut',
 	'pube',
 	'pubic',
@@ -145,12 +108,8 @@ let config = [
 	'rectum',
 	'rectus',
 	'reich',
-	'retard',
 	'rimjob',
-	'ritard',
-	'rump',
 	'schlong',
-	'screw',
 	'scrote',
 	'scrotum',
 	'semen',
@@ -158,30 +117,19 @@ let config = [
 	'shit',
 	'skank',
 	'slut',
-	'smut',
-	'snatch',
 	'sodom',
 	'sperm',
 	'spunk',
 	'stfu',
-	'stiffy',
-	'strip',
-	'stroke',
-	'stupid',
-	'suck',
 	'tampon',
 	'tard',
-	'teabag',
-	'teat',
-	'teste',
+	'testes',
 	'testicle',
 	'testis',
-	'thrust',
-	'tit',
+	'tits',
 	'tramp',
 	'transsex',
 	'turd',
-	'tush',
 	'twat',
 	'undies',
 	'urinal',
@@ -191,33 +139,22 @@ let config = [
 	'vagina',
 	'viagra',
 	'virgin',
-	'vomit',
-	'voyeur',
 	'vulva',
 	'wang',
 	'wank',
-	'weenie',
-	'weewee',
 	'weiner',
-	'wench',
 	'wetback',
 	'whoralicious',
 	'whore',
 	'whoring',
-	'wigger',
-	'womb',
-	'woody',
-	'wtf',
-	'xxx'
+	'wigger'
 ];
 
-let cLen = config.length;
-	
 module.exports = {
 	tree: {},
 
 	init: function () {
-		config.forEach(c => {
+		blacklist.forEach(c => {
 			this.buildPath(c);
 		});
 	},
@@ -233,8 +170,12 @@ module.exports = {
 			this.buildPath(chain.substr(1), node[letter]);
 	},
 
-	isClean: function (text) {
-		text = text.toLowerCase();
+	isClean: function (text, finalLevel) {
+		text = text
+			.toLowerCase()
+			.split(' ')
+			.join('');
+
 		const tree = this.tree;
 
 		let tLen = text.length;
@@ -249,6 +190,9 @@ module.exports = {
 					return false;
 			}
 		}
+
+		if (!finalLevel)
+			return this.isClean(text.replace(/[^\w\s]|(.)(?=\1)/gi, ''), true);
 
 		return true;
 	}
