@@ -301,7 +301,7 @@ define([
 				tooltip.find('.implicitStats').show();
 
 			if (!item.requires) {
-				if (!item.level)
+				if (!item.level && (!item.factions || !item.factions.length))
 					tooltip.find('.requires').hide();
 				else
 					tooltip.find('.requires .stats').hide();
