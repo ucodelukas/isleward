@@ -49,6 +49,8 @@ module.exports = {
 			let item = requestedBy.inventory.simplifyItem(m);
 			if (item.stats)
 				item.stats = { stats: '???' };
+			if (item.implicitStats)
+				item.implicitStats = [ { stat: 'stats', value: '???' } ];
 			delete item.effects;
 
 			return item;
