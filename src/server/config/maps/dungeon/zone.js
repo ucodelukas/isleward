@@ -11,17 +11,17 @@ let balance = {
 		},
 		scarletSerpent: {
 			level: 20,
-			meleeDmg: 1,
+			meleeDmg: 0.25,
 			meleeCd: 5,
-			chargeDmg: 1,
-			chargeCd: 20
+			chargeDmg: 0.275,
+			chargeCd: 25
 		},
 		viridianSerpent: {
 			level: 20,
-			spitCd: 20,
-			spitDmg: 1,
-			spitDotDuration: 10,
-			spitDotAmount: 1,
+			spitCd: 9,
+			spitDmg: 0.15,
+			spitDotDuration: 11,
+			spitDotAmount: 20,
 			poolDuration: 40,
 			poolDmg: 5
 		}
