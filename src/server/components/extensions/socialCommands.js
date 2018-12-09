@@ -498,7 +498,7 @@ module.exports = {
 		let newValues = {
 			int: 10000000,
 			str: 10000000,
-			dex: 10000000,
+			dex: 40000,
 			hpMax: 10000000,
 			hp: 10000000,
 			manaMax: 10000000,

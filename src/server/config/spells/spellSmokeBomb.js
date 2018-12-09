@@ -144,17 +144,8 @@ module.exports = {
 					y: y - 1
 				});
 			}
-
-			this.queueCallback(null, this.duration * consts.tickTime, this.endEffect.bind(this, patches), null, true);
 		}
 
 		return true;
-	},
-	endEffect: function (patches) {
-		let pLen = patches.length;
-		for (let i = 0; i < pLen; i++) 
-			patches[i].destroyed = true;
-		
-		patches = null;
 	}
 };
