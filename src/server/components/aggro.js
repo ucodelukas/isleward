@@ -2,7 +2,7 @@ module.exports = {
 	type: 'aggro',
 
 	range: 7,
-	cascadeRange: 3,
+	cascadeRange: 5,
 	faction: null,
 
 	physics: null,

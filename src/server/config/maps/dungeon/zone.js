@@ -41,7 +41,7 @@ module.exports = {
 			},
 
 			regular: {
-				hpMult: 4,
+				hpMult: 8,
 				dmgMult: 1.5,
 
 				drops: {
