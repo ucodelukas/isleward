@@ -60,8 +60,6 @@ module.exports = {
 				//Don't mitigate heals
 				if (!config.noMitigate) {
 					let resist = tgtValues.elementAllResist + (tgtValues[elementName + 'Resist'] || 0);
-					if (config.target.name === 'Waffle')
-						res = 100;
 					amount *= max(0.5 + max((1 - (resist / 100)) / 2, -0.5), 0.5);
 				}
 			} else if (!config.noMitigate)
