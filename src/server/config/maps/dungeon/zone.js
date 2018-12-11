@@ -1,29 +1,49 @@
+const hpMult = 8;
+const dmgMult = 1.5;
+
 let balance = {
+	hpMult: hpMult,
+	dmgMult: dmgMult,
+
 	mobs: {
 		violetSerpent: {
 			level: 20,
+			hpMult: hpMult * 1,
+
 			meleeDmg: 0.25,
 			meleeCd: 5,
+			meleeElement: null,
 			slowDmg: 0.2,
 			slowTtl: 20,
 			slowCd: 50,
-			slowChance: 0.85
+			slowChance: 0.5,
+			slowElement: 'poison'
 		},
+
 		scarletSerpent: {
 			level: 20,
+			hpMult: hpMult * 1.25,
+
 			meleeDmg: 0.25,
 			meleeCd: 5,
-			chargeDmg: 0.275,
-			chargeCd: 25
+			meleeElement: null,
+			chargeDmg: 0.2,
+			chargeCd: 25,
+			chargeElement: null
 		},
+
 		viridianSerpent: {
 			level: 20,
+			hpMult: hpMult * 0.75,
+
 			spitCd: 9,
-			spitDmg: 0.15,
+			spitDmg: 0.12,
 			spitDotDuration: 11,
 			spitDotAmount: 20,
+			spitElement: 'poison',
 			poolDuration: 40,
-			poolDmg: 5
+			poolDmg: 5,
+			poolElement: 'poison'
 		}
 	}
 };
@@ -41,8 +61,8 @@ module.exports = {
 			},
 
 			regular: {
-				hpMult: 8,
-				dmgMult: 1.5,
+				hpMult: balance.hpMult,
+				dmgMult: balance.dmgMult,
 
 				drops: {
 					chance: 45,
@@ -52,8 +72,8 @@ module.exports = {
 			},
 
 			rare: {
-				hpMult: 10,
-				dmgMult: 2,
+				hpMult: balance.hpMult * 1.25,
+				dmgMult: balance.dmgMult * 1.25,
 
 				drops: {
 					chance: 100,
@@ -66,14 +86,18 @@ module.exports = {
 		'violet serpent': {
 			level: balance.mobs.violetSerpent.level,
 
+			regular: {
+				hpMult: balance.mobs.violetSerpent.hpMult
+			},
+
 			spells: [{
 				type: 'melee',
-				element: 'poison',
+				element: balance.mobs.violetSerpent.meleeElement,
 				statMult: balance.mobs.violetSerpent.meleeDmg,
 				cdMax: balance.mobs.violetSerpent.meleeCd
 			}, {
 				statMult: balance.mobs.violetSerpent.slowDmg,
-				element: 'poison',
+				element: balance.mobs.violetSerpent.slowElement,
 				cdMax: balance.mobs.violetSerpent.slowCd,
 				type: 'projectile',
 				row: 5,
@@ -141,14 +165,19 @@ module.exports = {
 		'scarlet serpent': {
 			level: balance.mobs.scarletSerpent.level,
 
+			regular: {
+				hpMult: balance.mobs.scarletSerpent.hpMult
+			},
+
 			spells: [{
 				type: 'melee',
-				element: 'poison',
+				element: balance.mobs.scarletSerpent.meleeElement,
 				statMult: balance.mobs.scarletSerpent.meleeDmg,
 				cdMax: balance.mobs.scarletSerpent.meleeCd
 			}, {
 				type: 'charge',
 				targetFurthest: true,
+				element: balance.mobs.scarletSerpent.chargeElement,
 				stunDuration: 0,
 				statMult: balance.mobs.scarletSerpent.chargeDmg,
 				cdMax: balance.mobs.scarletSerpent.chargeCd
@@ -158,14 +187,19 @@ module.exports = {
 		'viridian serpent': {
 			level: balance.mobs.viridianSerpent.level,
 
+			regular: {
+				hpMult: balance.mobs.viridianSerpent.hpMult
+			},
+
 			spells: [{
 				type: 'smokeBomb',
+				element: balance.mobs.viridianSerpent.poolElement,
 				castOnDeath: true,
 				duration: balance.mobs.viridianSerpent.poolDuration,
 				cdMult: balance.mobs.viridianSerpent.poolDmg
 			}, {
 				statMult: balance.mobs.viridianSerpent.spitDmg,
-				element: 'poison',
+				element: balance.mobs.viridianSerpent.spitElement,
 				cdMax: balance.mobs.viridianSerpent.spitCd,
 				type: 'projectile',
 				row: 5,
