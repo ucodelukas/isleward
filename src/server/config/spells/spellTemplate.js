@@ -124,6 +124,7 @@ module.exports = {
 			this.obj.instance.syncer.queue('onGetSpellActive', {
 				id: this.obj.id,
 				spell: this.id,
+				cd: (this.cd * consts.tickTime),
 				active: !!autoConfig
 			}, [this.obj.serverId]);
 		}
