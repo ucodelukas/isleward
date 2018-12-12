@@ -301,7 +301,14 @@ define([
 			}
 
 			if (obj.sprite) {
-				let isVisible = ((!!obj.player) || (renderer.sprites[obj.x][obj.y].length > 0));
+				let isVisible = (
+					!!obj.player || 
+					(
+						renderer.sprites[obj.x] &&
+						renderer.sprites[obj.x][obj.y] &&
+						renderer.sprites[obj.x][obj.y].length > 0
+					)
+				);
 				obj.setVisible(isVisible);
 			}
 
