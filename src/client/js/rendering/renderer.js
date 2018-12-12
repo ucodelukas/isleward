@@ -367,7 +367,7 @@ define([
 				let px = player.x;
 				let py = player.y;
 
-				let hiddenRooms = this.hiddenRooms;
+				let hiddenRooms = this.hiddenRooms || [];
 				let hLen = hiddenRooms.length;
 				for (let i = 0; i < hLen; i++) {
 					let h = hiddenRooms[i];
