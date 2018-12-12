@@ -18,6 +18,9 @@ module.exports = {
 
 	init: function (blueprint) {
 		this.obj.extendComponent('social', 'socialCommands', {});
+
+		if (blueprint)
+			this.blockedPlayers = blueprint.blockedPlayers || [];
 	},
 
 	simplify: function (self) {

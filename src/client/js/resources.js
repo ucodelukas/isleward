@@ -22,7 +22,8 @@ define([
 			'white',
 			'ray',
 			'images/skins/0001.png',
-			'images/skins/0010.png'
+			'images/skins/0010.png',
+			'images/skins/0012.png'
 		],
 		sprites: {},
 		ready: false,
