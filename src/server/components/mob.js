@@ -20,6 +20,8 @@ module.exports = {
 	patrolTargetNode: 0,
 
 	init: function (blueprint) {
+		if (!this.obj.name)
+			console.log(this.obj.x, this.obj.y);
 		this.physics = this.obj.instance.physics;
 
 		this.originX = this.obj.x;

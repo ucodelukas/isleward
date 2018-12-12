@@ -953,18 +953,6 @@
          "name":"mobs",
          "objects":[
                 {
-                 "gid":794,
-                 "height":24,
-                 "id":974,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":360,
-                 "y":856
-                }, 
-                {
                  "gid":263,
                  "height":8,
                  "id":979,
