@@ -15,7 +15,6 @@ define([
 		showNames: false,
 
 		objects: [],
-		dirty: false,
 
 		init: function () {
 			events.on('onKeyDown', this.onKeyDown.bind(this));
@@ -85,7 +84,7 @@ define([
 			if (!fromMob)
 				return list[0];
 
-			let fromIndex = list.firstIndex(function (l) {
+			let fromIndex = list.findIndex(function (l) {
 				return (l.id === fromMob.id);
 			});
 
@@ -113,8 +112,6 @@ define([
 		},
 
 		onGetObject: function (obj) {
-			this.dirty = true;
-
 			//Things like attacks don't have ids
 			let exists = null;
 			if (obj.has('id')) 
@@ -327,8 +324,6 @@ define([
 				}
 
 				o.update();
-				if (o.dirty)
-					this.dirty = true;
 			}
 		},
 

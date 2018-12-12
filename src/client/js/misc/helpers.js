@@ -1,30 +1,8 @@
-/* global _, scale, scaleMult */
+/* global _, scale, scaleMult, isMobile */
 
-window.scale = 40;
-window.scaleMult = 5;
-
-//eslint-disable-next-line no-extend-native
-Array.prototype.firstIndex = function (callback, thisArg) {
-	let T = thisArg;
-	let O = Object(this);
-	let len = O.length >>> 0;
-
-	let k = 0;
-
-	while (k < len) {
-		let kValue;
-
-		if (k in O) {
-			kValue = O[k];
-
-			if (callback.call(T, kValue, k, O))
-				return k;
-		}
-		k++;
-	}
-
-	return -1;
-};
+window.isMobile = /Mobi|Android/i.test(navigator.userAgent);
+window.scale = isMobile ? 32 : 40;
+window.scaleMult = isMobile ? 4 : 5;
 
 //eslint-disable-next-line no-extend-native
 Array.prototype.spliceWhere = function (callback, thisArg) {
@@ -81,6 +59,38 @@ Object.defineProperty(Object.prototype, 'has', {
 	}
 });
 
+//eslint-disable-next-line no-extend-native
+if (!String.prototype.padStart) {
+	String.prototype.padStart = function padStart (targetLength, padString) {
+		targetLength = targetLength >> 0;
+		padString = String(typeof padString !== 'undefined' ? padString : ' ');
+		if (this.length >= targetLength) 
+			return String(this);
+         
+		targetLength = targetLength - this.length;
+		if (targetLength > padString.length) 
+			padString += padString.repeat(targetLength / padString.length);
+            
+		return padString.slice(0, targetLength) + String(this);
+	};
+}
+
+//eslint-disable-next-line no-extend-native
+if (!String.prototype.padStart) {
+	String.prototype.padStart = function padStart (targetLength, padString) {
+		targetLength = targetLength >> 0; //truncate if number, or convert non-number to 0;
+		padString = String(typeof padString !== 'undefined' ? padString : ' ');
+		if (this.length >= targetLength) 
+			return String(this);
+         
+		targetLength = targetLength - this.length;
+		if (targetLength > padString.length) 
+			padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+            
+		return padString.slice(0, targetLength) + String(this);
+	};
+}
+
 window._ = {
 	get2dArray: function (w, h, def) {
 		def = def || 0;
@@ -99,6 +109,20 @@ window._ = {
 		}
 
 		return result;
+	},
+
+	toggleFullScreen: function () {
+		let doc = window.document;
+		let docEl = doc.documentElement;
+
+		let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+		let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+		if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) 
+			requestFullScreen.call(docEl);
+
+		else 
+			cancelFullScreen.call(doc);
 	}
 };
 

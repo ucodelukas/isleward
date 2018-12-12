@@ -63,7 +63,7 @@ module.exports = {
 			let negativeStat = (negativeStats.indexOf(r) > -1);
 			let range = randomProperties[r];
 
-			let max = Math.min(20, item.level) / 20;
+			let max = Math.min(consts.maxLevel, item.level) / consts.maxLevel;
 
 			let roll = random.expNorm(0, max);
 			if (spellQuality === 'basic')

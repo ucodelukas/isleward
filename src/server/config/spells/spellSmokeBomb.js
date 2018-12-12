@@ -54,6 +54,7 @@ module.exports = {
 
 	damage: 1,
 	duration: 10,
+	isAttack: true,
 
 	radius: 1,
 	targetGround: true,
@@ -143,17 +144,8 @@ module.exports = {
 					y: y - 1
 				});
 			}
-
-			this.queueCallback(null, this.duration * 350, this.endEffect.bind(this, patches), null, true);
 		}
 
 		return true;
-	},
-	endEffect: function (patches) {
-		let pLen = patches.length;
-		for (let i = 0; i < pLen; i++) 
-			patches[i].destroyed = true;
-		
-		patches = null;
 	}
 };

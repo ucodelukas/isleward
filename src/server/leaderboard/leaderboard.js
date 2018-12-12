@@ -121,7 +121,7 @@ module.exports = {
 	save: async function (character) {
 		let value = {
 			level: character.level,
-			prophecies: character.prophecies
+			prophecies: character.prophecies || []
 		};
 
 		if (character.dead)

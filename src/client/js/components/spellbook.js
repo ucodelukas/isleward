@@ -26,6 +26,8 @@ define([
 		reticleCdMax: 10,
 		reticleSprite: null,
 
+		groundTargetSpell: false,
+
 		init: function (blueprint) {
 			this.targetSprite = renderer.buildObject({
 				sheetName: 'ui',
@@ -59,7 +61,7 @@ define([
 
 			if (blueprint.getSpells) {
 				blueprint.getSpells.forEach(function (s) {
-					let existIndex = this.spells.firstIndex(f => f.id === s.id);
+					let existIndex = this.spells.findIndex(f => f.id === s.id);
 
 					if (existIndex > -1) {
 						this.spells.splice(existIndex, 1, s);
@@ -86,6 +88,17 @@ define([
 		},
 
 		onMouseDown: function (e, target) {
+			if (isMobile && this.groundTargetSpell) {
+				this.groundTarget = {
+					x: ~~(e.x / scale),
+					y: ~~(e.y / scale)
+				};
+
+				this.onKeyDown(this.groundTargetSpell);
+
+				this.groundTargetSpell = null;
+			}
+
 			if (!target && this.target && (!this.hoverTarget || this.hoverTarget.id !== this.target.id)) {
 				client.request({
 					cpn: 'player',
@@ -111,8 +124,10 @@ define([
 			events.emit('onSetTarget', this.target, e);
 		},
 
-		tabTarget: function () {
-			let closest = objects.getClosest(window.player.x, window.player.y, 10, input.isKeyDown('shift'), this.target);
+		tabTarget: function (ignoreIfSet) {
+			let compareAgainst = ignoreIfSet ? null : this.target;
+			
+			let closest = objects.getClosest(window.player.x, window.player.y, 10, input.isKeyDown('shift'), compareAgainst);
 
 			this.target = closest;
 			this.targetSprite.visible = !!this.target;
@@ -142,7 +157,7 @@ define([
 			if (!spell.aura && !spell.targetGround && !spell.autoTargetFollower && !this.target)
 				return;
 
-			let hoverTile = this.obj.mouseMover.hoverTile;
+			let hoverTile = this.groundTarget || (this.obj.mouseMover || this.obj.touchMover).hoverTile;
 			let target = hoverTile;
 			if (spell.autoTargetFollower && !this.target)
 				target = null;
@@ -154,6 +169,25 @@ define([
 
 			if (target === this.obj && spell.noTargetSelf)
 				return;
+			else if (isMobile && spell.targetGround && !this.groundTarget) {
+				if (this.groundTargetSpell === key) {
+					this.groundTargetSpell = null;
+
+					events.emit('onGetAnnouncement', {
+						msg: `Cancelled casting ${spell.name}`
+					});
+
+					return;
+				}
+				
+				this.groundTargetSpell = key;
+
+				events.emit('onGetAnnouncement', {
+					msg: `Pick a location to cast ${spell.name}`
+				});
+
+				return;
+			}
 
 			client.request({
 				cpn: 'player',
@@ -162,11 +196,13 @@ define([
 					action: 'spell',
 					priority: input.isKeyDown('ctrl'),
 					spell: spell.id,
-					auto: spell.auto,
 					target: target,
 					self: isShiftDown
 				}
 			});
+
+			if (isMobile)
+				this.groundTarget = null;
 		},
 
 		onDeath: function () {

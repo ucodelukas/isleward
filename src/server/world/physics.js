@@ -387,7 +387,7 @@ module.exports = {
 		return true;
 	},
 
-	getClosestPos: function (fromX, fromY, toX, toY, target) {
+	getClosestPos: function (fromX, fromY, toX, toY, target, obj) {
 		let tried = {};
 
 		let hasLos = this.hasLos.bind(this, toX, toY);
@@ -453,22 +453,13 @@ module.exports = {
 					)
 						continue;
 
-					let cell = cellRow[j];
-					let cLen = cell.length;
-					let blocking = false;
-					if (target) {
-						for (let k = 0; k < cLen; k++) {
-							let aggro = cell[k].aggro;
-							if (aggro) {
-								blocking = aggro.list.some(a => a.obj === target);
-								if (blocking)
-									break;
-							}
-						}
+					if (target && obj) {
+						let cell = cellRow[j];
+						if (this.mobsCollide(i, j, obj, target, cell))
+							continue;
 					}
-					if (blocking)
-						continue;
-					else if (!hasLos(i, j))
+
+					if (!hasLos(i, j))
 						continue;
 
 					return {
@@ -480,25 +471,33 @@ module.exports = {
 		}
 	},
 
-	mobsCollide: function (x, y, obj) {
-		if ((x < 0) || (y < 0) || (x >= this.width) | (y >= this.height))
-			return true;
+	//If we pass through a cell it means we want to move to this location but need to check aggro
+	mobsCollide: function (x, y, obj, target, cell) {
+		const allowOne = !cell;
 
-		let cell = this.cells[x][y];
+		if (!cell) {
+			if (x < 0 || y < 0 || x >= this.width | y >= this.height)
+				return true;
+
+			cell = this.cells[x][y];
+		}
+
 		let cLen = cell.length;
 
-		if (cLen === 1)
+		if (allowOne && cLen === 1)
 			return false;
+		else if (target.x === x && target.y === y)
+			return true;
 
-		let found = false;
 		for (let i = 0; i < cLen; i++) {
 			let c = cell[i];
-			if (c.aggro) {
-				if ((!found) && (c === obj))
-					found = true;
-				else
-					return true;
-			}
+			//If we're first in the cell, we get preference
+			if (c === obj)
+				return false;
+			else if (!c.aggro)
+				continue;
+			else if (c.aggro.hasAggroOn(target) || obj.aggro.hasAggroOn(c)) 
+				return true;
 		}
 
 		return false;

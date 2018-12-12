@@ -19,6 +19,7 @@ define([
 		postRender: function () {
 			this.onEvent('onGetSpells', this.onGetSpells.bind(this));
 			this.onEvent('onGetSpellCooldowns', this.onGetSpellCooldowns.bind(this));
+			this.onEvent('onGetSpellActive', this.onGetSpellActive.bind(this));
 			this.onEvent('onGetStats', this.onGetStats.bind(this));
 
 			setInterval(this.update.bind(this), 100);
@@ -43,6 +44,8 @@ define([
 				let el = $(html)
 					.appendTo(this.el);
 				el
+					.on('dblclick', this.onDblClickSpell.bind(this, hotkey))
+					.on('click', this.onClickSpell.bind(this, hotkey))
 					.on('mouseover', this.onShowTooltip.bind(this, el, spell))
 					.on('mouseleave', this.onHideTooltip.bind(this, el));
 
@@ -65,14 +68,30 @@ define([
 			}
 		},
 
+		onClickSpell: function (hotkey, e) {
+			e.preventDefault();
+
+			let key = (hotkey === 'space') ? ' ' : hotkey;
+
+			window.player.spellbook.onKeyDown(key);
+
+			return false;
+		},
+
+		onDblClickSpell: function (hotkey, e) {
+			window.player.spellbook.tabTarget(true);
+			return this.onClickSpell(hotkey, e);
+		},
+
 		onShowTooltip: function (el, spell) {
+			if (isMobile)
+				return false;
+
 			let pos = el.offset();
 			pos = {
 				x: pos.left + 56,
 				y: pos.top + el.height() + 16
 			};
-
-			let cd = ~~((spell.cdMax * 350) / 1000);
 
 			let values = Object.keys(spell.values).filter(function (v) {
 				return ((v !== 'damage') && (v !== 'healing'));
@@ -88,7 +107,7 @@ define([
 				.replace('$NAME$', spell.name)
 				.replace('$DESCRIPTION$', spell.description)
 				.replace('$MANA$', manaCost)
-				.replace('$CD$', cd + 's')
+				.replace('$CD$', spell.cdMax + ' Ticks')
 				.replace('$VALUES$', values)
 				.replace('$ELEMENT$', spell.element ? 'element: ' + spell.element : '');
 
@@ -112,6 +131,16 @@ define([
 			});
 			spell.ttl = options.cd;
 			spell.ttlStart = +new Date();
+		},
+
+		onGetSpellActive: function (options) {
+			let spellIndex = this.spells.findIndex(s => s.id === options.spell);
+			let el = this.el.children('div')
+				.eq(spellIndex)
+				.removeClass('active');
+
+			if (options.active)
+				el.addClass('active');			
 		},
 
 		onGetStats: function (stats) {

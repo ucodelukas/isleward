@@ -28,6 +28,9 @@ define([
 			if (this.modal)
 				this.el.addClass('modal');
 
+			if (this.hasClose)
+				this.buildClose();
+
 			if (this.postRender)
 				this.postRender();
 
@@ -49,6 +52,7 @@ define([
 		setOptions: function (options) {
 			this.options = options;
 		},
+
 		on: function (el, eventName, callback) {
 			if (typeof (el) === 'string')
 				el = this.find(el);
@@ -62,9 +66,11 @@ define([
 				callback.apply(null, args);
 			});
 		},
+
 		find: function (selector) {
 			return this.el.find(selector);
 		},
+
 		center: function (x, y) {
 			if (x !== false)
 				x = true;
@@ -88,6 +94,7 @@ define([
 			if (y)
 				el.css('top', posY);
 		},
+
 		show: function () {
 			if (this.modal)
 				$('.modal').hide();
@@ -101,6 +108,7 @@ define([
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
 		},
+
 		hide: function () {
 			if (this.beforeHide)
 				this.beforeHide();
@@ -108,6 +116,7 @@ define([
 			this.shown = false;
 			this.el.hide();
 		},
+
 		destroy: function () {
 			this.offEvents();
 
@@ -116,6 +125,7 @@ define([
 
 			this.el.remove();
 		},
+
 		val: function (selector) {
 			return this.find(selector).val();
 		},
@@ -150,6 +160,21 @@ define([
 					events.off(e, c);
 				}, this);
 			}
+		},
+
+		toggle: function () {
+			this.shown = !this.el.is(':visible');
+
+			if (this.shown)
+				this.show();
+			else
+				this.hide();
+		},
+
+		buildClose: function () {
+			$('<div class="btn btnClose">x</div>')
+				.appendTo(this.find('.heading').eq(0))
+				.on('click', this.toggle.bind(this));	
 		}
 	};
 });

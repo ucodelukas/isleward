@@ -117,7 +117,7 @@ module.exports = {
 			spike.spikePatch.caster = this.obj;
 			spike.spikePatch.damage = this.damage;
 
-			this.queueCallback(null, this.spikeDuration * 350, this.endEffect.bind(this, spike), null, true);
+			this.queueCallback(null, this.spikeDuration * consts.tickTime, this.endEffect.bind(this, spike), null, true);
 
 			this.obj.x = x;
 			this.obj.y = y;

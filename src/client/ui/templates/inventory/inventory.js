@@ -25,6 +25,8 @@ define([
 		hoverCell: null,
 
 		modal: true,
+		hasClose: true,
+		
 		oldSpellsZIndex: 0,
 
 		postRender: function () {
@@ -47,6 +49,7 @@ define([
 			this.find('.split-box .btnSplit').on('click', this.splitStackEnd.bind(this, null));
 			this.find('.split-box .btnLess').on('click', this.onChangeStackAmount.bind(this, null, -1));
 			this.find('.split-box .btnMore').on('click', this.onChangeStackAmount.bind(this, null, 1));
+			this.find('.btnSortInv').on('click', this.onSortInventory.bind(this));
 		},
 
 		build: function () {
@@ -98,12 +101,19 @@ define([
 						spritesheet = '../../../images/consumables.png';
 				}
 
+				let clickHandler = this.onMouseDown.bind(this, itemEl, item, true);
+				let moveHandler = this.onHover.bind(this, itemEl, item);
+				if (isMobile) {
+					clickHandler = this.onHover.bind(this, itemEl, item);
+					moveHandler = () => {};
+				}
+
 				itemEl
 					.data('item', item)
 					.on('click', this.onClick.bind(this, item))
-					.on('mousedown', this.onMouseDown.bind(this, itemEl, item, true))
+					.on('mousedown', clickHandler)
 					.on('mouseup', this.onMouseDown.bind(this, null, null, false))
-					.on('mousemove', this.onHover.bind(this, itemEl, item))
+					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
@@ -240,6 +250,18 @@ define([
 			});
 		},
 
+		onSortInventory: function () {
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'inventory',
+					method: 'sortInventory',
+					data: {}
+				}
+			});	
+		},
+
 		showContext: function (item, e) {
 			let menuItems = {
 				drop: {
@@ -345,6 +367,9 @@ define([
 
 			if ((!item.noDrop) && (!item.quest))
 				config.push(menuItems.mail);
+
+			if (isMobile)
+				this.hideTooltip(null, this.hoverItem);
 
 			if (config.length > 0)
 				events.emit('onContextMenu', config, e);

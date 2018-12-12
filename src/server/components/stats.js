@@ -241,7 +241,7 @@ module.exports = {
 		let obj = this.obj;
 		let values = this.values;
 
-		if (values.level === 20)
+		if (values.level === consts.maxLevel)
 			return;
 
 		let xpEvent = {
@@ -279,10 +279,11 @@ module.exports = {
 
 			this.obj.fireEvent('onLevelUp', this.values.level);
 
-			if (values.level === 20)
+			if (values.level === consts.maxLevel)
 				values.xp = 0;
 
-			values.hpMax = values.level * 32.7;
+			values.hpMax += 32.7;
+			this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 
 			this.addLevelAttributes(true);
 
@@ -517,7 +518,7 @@ module.exports = {
 					id: this.obj.id,
 					source: source.id,
 					event: true,
-					text: 'blocked'
+					text: damage.blocked ? 'blocked' : 'dodged'
 				}, recipients);
 			}
 		}
@@ -741,7 +742,7 @@ module.exports = {
 			let mobName = mob.name;
 
 			if (!mobKillStreaks[mobName])
-				mobKillStreaks.mobName = 0;
+				mobKillStreaks[mobName] = 0;
 
 			if (mobKillStreaks[mobName] < 100)
 				mobKillStreaks[mobName]++;

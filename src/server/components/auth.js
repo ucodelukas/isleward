@@ -1,6 +1,5 @@
 let bcrypt = require('bcrypt-nodejs');
 let messages = require('../misc/messages');
-let connections = require('../security/connections');
 let skins = require('../config/skins');
 let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
@@ -39,6 +38,8 @@ module.exports = {
 		this.charname = character.name;
 
 		this.checkLoginReward(data, character);
+
+		cons.modifyPlayerCount(1);
 	},
 
 	checkLoginReward: function (data, character) {
@@ -46,7 +47,7 @@ module.exports = {
 
 		let time = scheduler.getTime();
 		let lastLogin = accountInfo.lastLogin;
-		if ((!lastLogin) || (lastLogin.day !== time.day)) {
+		if (!lastLogin || lastLogin.day !== time.day) {
 			let daysSkipped = 1;
 			if (lastLogin) {
 				if (time.day > lastLogin.day)
@@ -95,7 +96,7 @@ module.exports = {
 		await leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
-	doSave: async function (callback) {
+	doSave: async function (callback) {	
 		const simple = this.obj.getSimple(true, true);
 		simple.components.spliceWhere(f => (f.type === 'stash'));
 
@@ -272,7 +273,7 @@ module.exports = {
 		}
 		
 		this.username = msg.data.username;
-		connections.logOut(this.obj);
+		cons.logOut(this.obj);
 
 		await this.getSkins();
 
@@ -336,7 +337,7 @@ module.exports = {
 		});
 
 		this.username = msg.data.username;
-		connections.logOut(this.obj);
+		cons.logOut(this.obj);
 
 		await this.getSkins();
 
@@ -394,7 +395,9 @@ module.exports = {
 			skinId: data.skinId,
 			class: data.class,
 			cell: skins.getCell(data.skinId),
-			sheetName: skins.getSpritesheet(data.skinId)
+			sheetName: skins.getSpritesheet(data.skinId),
+			x: null,
+			y: null
 		});
 
 		let simple = this.obj.getSimple(true);

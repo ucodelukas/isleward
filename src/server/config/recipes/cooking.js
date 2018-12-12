@@ -1,5 +1,6 @@
 const baseRecipes = {
 	carp: {
+		description: 'It\'s a fish on a stick, what more do you want to know?',
 		item: {
 			name: 'Carp on a Stick',
 			type: 'consumable',
@@ -25,10 +26,12 @@ const baseRecipes = {
 	}
 };
 
-const buildRecipe = function (recipeName, itemName, effectAmount, materialName) {
+const buildRecipe = function (recipeName, itemName, effectAmount, materialName, quantity) {
 	return extend({}, baseRecipes[recipeName], {
+		name: itemName,
 		item: {
 			name: itemName,
+			quantity: quantity,
 			effects: [{
 				rolls: {
 					amount: effectAmount
@@ -42,9 +45,9 @@ const buildRecipe = function (recipeName, itemName, effectAmount, materialName) 
 };
 
 module.exports = [
-	buildRecipe('carp', 'Carp on a Stick', 10, 'Sun Carp'),
-	buildRecipe('carp', 'Big Carp on a Stick', 25, 'Big Sun Carp'),
-	buildRecipe('carp', 'Giant Carp on a Stick', 50, 'Giant Sun Carp'),
-	buildRecipe('carp', 'Trophy Carp on a Stick', 100, 'Trophy Sun Carp'),
-	buildRecipe('carp', 'Fabled Carp on a Stick', 200, 'Fabled Sun Carp')
+	buildRecipe('carp', 'Carp on a Stick', 50, 'Sun Carp', 1),
+	buildRecipe('carp', 'Big Carp on a Stick', 50, 'Big Sun Carp', 2),
+	buildRecipe('carp', 'Giant Carp on a Stick', 150, 'Giant Sun Carp', 1),
+	buildRecipe('carp', 'Trophy Carp on a Stick', 150, 'Trophy Sun Carp', 2),
+	buildRecipe('carp', 'Fabled Carp on a Stick', 200, 'Fabled Sun Carp', [3, 5])
 ];

@@ -44,7 +44,7 @@ module.exports = {
 
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
-			let pos = item.pos;
+			let pos = item.has('pos') ? item.pos : null;
 
 			let newItem = this.getItem(item, true, true);
 			newItem.pos = pos;
@@ -521,15 +521,22 @@ module.exports = {
 		});
 	},
 
-	onCheckCharExists: function (msg, item, res) {
+	onCheckCharExists: async function (msg, item, res) {
 		if (!res) {
 			this.resolveCallback(msg, 'Recipient does not exist');
 			return;
 		} else if (!this.findItem(msg.itemId)) 
 			return;
 
-		this.obj.instance.mail.sendMail(msg.recipient, [extend({}, item)]);
+		let blocked = false;
+		if (res.components) {
+			let social = res.components.find(f => f.type === 'social');
+			if (social.blockedPlayers && social.blockedPlayers.includes(this.obj.name)) 
+				blocked = true;
+		}
 
+		if (!blocked)
+			this.obj.instance.mail.sendMail(msg.recipient, [extend({}, item)]);
 		this.destroyItem(item.id);
 
 		this.resolveCallback(msg);
@@ -596,6 +603,28 @@ module.exports = {
 				break;
 			}
 		}
+	},
+
+	sortInventory: function () {
+		this.items
+			.filter(i => !i.eq)
+			.map(i => {
+				return {
+					item: i,
+					sortId: `${i.slot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
+				};
+			})
+			.sort((a, b) => {
+				if (a.sortId < b.sortId)
+					return 1;
+				else if (a.sortId > b.sortId)
+					return -1;
+				return 0;
+			})
+			.forEach((i, index) => {
+				i.item.pos = index;
+				this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(i.item));
+			});
 	},
 
 	resolveCallback: function (msg, result) {
@@ -678,7 +707,7 @@ module.exports = {
 			let quality = items[i].quality;
 			items[i].fromMob = !!this.obj.mob;
 			if (quality > topQuality)
-				topQuality = quality;
+				topQuality = ~~quality;
 		}
 
 		if (topQuality === 0)
@@ -858,8 +887,10 @@ module.exports = {
 				itemId: item.id,
 				slot: item.quickSlot
 			});
-		} else 
+		} else {
+			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === item.id);
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
+		}
 
 		if (!hideMessage) {
 			if (fromMob)

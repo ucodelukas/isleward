@@ -50,7 +50,7 @@ define([
 			this.show();
 		},
 
-		onLoginClick: function () {
+		onLoginClick: function () {		
 			if (this.el.hasClass('disabled'))
 				return;
 

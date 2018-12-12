@@ -17,6 +17,7 @@ define([
 		centered: true,
 
 		modal: true,
+		hasClose: true, 
 
 		list: null,
 		action: null,
@@ -58,7 +59,9 @@ define([
 				}
 
 				if (!item) {
-					$(tplItem).appendTo(container);
+					$(tplItem)
+						.appendTo(container)
+						.on('click', uiInventory.hideTooltip.bind(uiInventory));
 
 					continue;
 				}
@@ -90,12 +93,18 @@ define([
 
 				itemEl
 					.data('item', item)
-					.on('click', this.onClick.bind(this, itemEl, item, action))
-					.on('mousemove', this.onHover.bind(this, itemEl, item, action))
-					.on('mouseleave', uiInventory.hideTooltip.bind(uiInventory, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.addClass(item.type);
+
+				if (isMobile)
+					itemEl.on('click', this.onHover.bind(this, itemEl, item, action));
+				else {
+					itemEl
+						.on('click', this.onClick.bind(this, itemEl, item, action))
+						.on('mousemove', this.onHover.bind(this, itemEl, item, action))
+						.on('mouseleave', uiInventory.hideTooltip.bind(uiInventory, itemEl, item));
+				}
 
 				if (item.quantity)
 					itemEl.find('.quantity').html(item.quantity);
@@ -110,11 +119,9 @@ define([
 					} else
 						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);
 
-					if ((!noAfford) && (item.factions)) {
-						noAfford = item.factions.some(function (f) {
-							return f.noEquip;
-						});
-					}
+					if (!noAfford && item.factions) 
+						noAfford = item.factions.some(f => f.noEquip);
+
 					if (noAfford)
 						$('<div class="no-afford"></div>').appendTo(itemEl);
 				}
@@ -165,20 +172,22 @@ define([
 			let canAfford = true;
 			if (action === 'buy') {
 				if (item.worth.currency) {
-					let currencyItems = window.player.inventory.items.find(function (i) {
-						return (i.name === item.worth.currency);
-					});
-					canAfford = ((currencyItems) && (currencyItems.quantity >= item.worth.amount));
+					let currencyItems = window.player.inventory.items.find(i => i.name === item.worth.currency);
+					canAfford = (currencyItems && currencyItems.quantity >= item.worth.amount);
 				} else
 					canAfford = (item.worth * this.itemList.markup <= window.player.trade.gold);
 			}
 
 			let uiTooltipItem = $('.uiTooltipItem').data('ui');
 			uiTooltipItem.showWorth(canAfford);
+
+			if (isMobile)
+				uiTooltipItem.addButton(action, this.onClick.bind(this, el, item, action));
 		},
 
 		beforeHide: function () {
 			events.emit('onHideOverlay', this.el);
+			$('.uiInventory').data('ui').hideTooltip();
 		},
 
 		onServerRespond: function (el) {

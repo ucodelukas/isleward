@@ -112,13 +112,26 @@ module.exports = {
 		if (this.obj.player) {
 			this.obj.instance.syncer.queue('onGetSpellCooldowns', {
 				spell: this.id,
-				cd: (this.cd * 350)
+				cd: (this.cd * consts.tickTime)
+			}, [this.obj.serverId]);
+		}
+	},
+
+	setAuto: function (autoConfig) {
+		this.autoActive = autoConfig;
+
+		if (this.obj.player) {
+			this.obj.instance.syncer.queue('onGetSpellActive', {
+				id: this.obj.id,
+				spell: this.id,
+				cd: (this.cd * consts.tickTime),
+				active: !!autoConfig
 			}, [this.obj.serverId]);
 		}
 	},
 
 	calcDps: function (target, noSync) {
-		if ((!this.values) || (this.spellType === 'buff'))
+		if ((!this.values) || (this.spellType === 'buff') || (this.spellType === 'aura'))
 			return;
 
 		if ((!this.damage) && (!this.healing))
@@ -139,6 +152,7 @@ module.exports = {
 				statType: this.statType,
 				statMult: this.statMult,
 				noMitigate: noMitigate,
+				isAttack: this.isAttack,
 				noCrit: true
 			}).amount;
 
@@ -150,7 +164,7 @@ module.exports = {
 			let castTimeMax = this.castTimeMax;
 			let speedModifier = this.obj.stats.values[this.isAttack ? 'attackSpeed' : 'castSpeed'];
 			castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
-
+			critChance = Math.min(critChance, 100);
 			dmg = (((dmg / 100) * (100 - critChance)) + (((dmg / 100) * critChance) * (critMultiplier / 100)));
 			let duration = this.values.duration;
 			if (duration) 
@@ -216,7 +230,7 @@ module.exports = {
 		let values = {};
 		for (let p in this) {
 			let value = this[p];
-			if ((typeof (value) === 'function') || (p === 'obj') || (p === 'currentAction'))
+			if (typeof (value) === 'function' || ['obj', 'currentAction', 'autoActive'].includes(p))
 				continue;
 
 			values[p] = value;

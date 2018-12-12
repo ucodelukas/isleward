@@ -17,6 +17,7 @@ define([
 		centered: true,
 
 		modal: true,
+		hasClose: true,
 
 		stats: null,
 		equipment: null,
@@ -43,21 +44,22 @@ define([
 
 		beforeHide: function () {
 			this.isInspecting = false;
+			delete this.result;
 		},
 
 		toggle: function (show) {
 			this.shown = !this.el.is(':visible');
 			this.isInspecting = false;
+			delete this.result;
+
+			this.find('.itemList').hide();
 
 			if (this.shown) {
-				this.find('.itemList').hide();
 				this.show();
 				this.onGetStats();
 				this.onGetItems();
-			} else {
-				this.find('.itemList').hide();
+			} else
 				this.hide();
-			}
 
 			this.onHoverItem(null, null, null);
 		},
@@ -77,8 +79,10 @@ define([
 			this.find('.tab.selected').removeClass('selected');
 
 			$(e.target).addClass('selected');
+			
+			let stats = this.isInspecting ? this.result.stats : this.stats;
 
-			this.onGetStats(this.stats);
+			this.onGetStats(stats);
 		},
 
 		onGetItems: function (items) {
@@ -104,16 +108,16 @@ define([
 				.css('background-position', '')
 				.on('click', this.buildSlot.bind(this));
 
-			this.find('[slot]').toArray().forEach(function (el) {
+			this.find('[slot]').toArray().forEach(el => {
 				el = $(el);
 				let slot = el.attr('slot');
-				let newItems = window.player.inventory.items.some(function (i) {
+				let newItems = window.player.inventory.items.some(i => {
 					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
 					else if (slot === 'oneHanded')
-						return ((['oneHanded', 'twoHanded'].indexOf(slot) > -1) && (i.isNew));
+						return (['oneHanded', 'twoHanded'].includes(slot) && i.isNew);
 
-					return ((i.slot === slot) && (i.isNew));
+					return (i.slot === slot && i.isNew);
 				});
 
 				if (newItems)
@@ -121,10 +125,8 @@ define([
 			});
 
 			items
-				.filter(function (item) {
-					return (item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))));
-				}, this)
-				.forEach(function (item) {
+				.filter(item => item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))))
+				.forEach(item => {
 					let imgX = -item.sprite[0] * 64;
 					let imgY = -item.sprite[1] * 64;
 
@@ -148,10 +150,10 @@ define([
 						.find('.icon')
 						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.off()
+						.on('mousedown', this.buildSlot.bind(this, elSlot))
 						.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
-						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.buildSlot.bind(this, elSlot));
-				}, this);
+						.on('mouseleave', this.onHoverItem.bind(this, null, null));
+				});
 		},
 
 		onInspectTarget: function (result) {
@@ -159,11 +161,16 @@ define([
 
 			this.show();
 
+			this.result = result;
+
 			this.onGetStats(result.stats);
 			this.onGetItems(result.equipment);
 		},
 
-		buildSlot: function (el) {
+		buildSlot: function (el, e) {
+			if (this.isInspecting)
+				return;
+
 			if (el.target)
 				el = $(el.target).parent();
 
@@ -175,38 +182,34 @@ define([
 				.empty()
 				.show();
 
-			this.hoverCompare = el.data('item');
+			let hoverCompare = this.hoverCompare = el.data('item');
 
 			let items = this.items
-				.filter(function (item) {
+				.filter(item => {
 					if (isRune)
-						return ((!item.slot) && (item.spell) && (!item.eq));
+						return (!item.slot && item.spell && !item.eq);
 					else if (isConsumable)
 						return (item.type === 'consumable' && !item.has('quickSlot'));
 					
 					let checkSlot = (slot.indexOf('finger') === 0) ? 'finger' : slot;
 					if (slot === 'oneHanded')
-						return ((!item.eq) && ((item.slot === 'oneHanded') || (item.slot === 'twoHanded')));
+						return (!item.eq && (item.slot === 'oneHanded' || item.slot === 'twoHanded'));
 
-					return ((item.slot === checkSlot) && (!item.eq));
-				}, this);
+					return (item.slot === checkSlot && !item.eq);
+				});
 
-			if (isConsumable) {
-				items = items
-					.filter(function (item, i) {
-						return (items.firstIndex(f => f.name === item.name) === i);
-					});
-			}
+			if (isConsumable)
+				items = items.filter((item, i) => items.findIndex(f => f.name === item.name) === i);
 
 			items.splice(0, 0, {
 				name: 'None',
-				slot: this.hoverCompare ? this.hoverCompare.slot : null,
-				id: (this.hoverCompare && !isConsumable) ? this.hoverCompare.id : null,
+				slot: hoverCompare ? hoverCompare.slot : null,
+				id: (hoverCompare && !isConsumable) ? hoverCompare.id : null,
 				type: isConsumable ? 'consumable' : null,
 				empty: true
 			});
-			if (this.hoverCompare)
-				items.splice(1, 0, this.hoverCompare);
+			if (hoverCompare)
+				items.splice(1, 0, hoverCompare);
 
 			items
 				.forEach(function (item, i) {
@@ -224,21 +227,26 @@ define([
 					itemEl
 						.find('.icon')
 						.css('background', 'url("' + spriteSheet + '") ' + imgX + 'px ' + imgY + 'px')
+						.on('mousedown', this.equipItem.bind(this, item, slot))
 						.on('mousemove', this.onHoverItem.bind(this, itemEl, item, null))
-						.on('mouseleave', this.onHoverItem.bind(this, null, null))
-						.on('click', this.equipItem.bind(this, item, slot));
+						.on('mouseleave', this.onHoverItem.bind(this, null, null));
 
-					if (item === this.hoverCompare)
+					if (item === hoverCompare)
 						itemEl.find('.icon').addClass('eq');
 					else if (item.isNew)
 						el.find('.icon').addClass('new');
 				}, this);
 
-			if (items.length === 0)
+			if (!items.length)
 				container.hide();
+
+			if (e) {
+				e.preventDefault();
+				return false;
+			}
 		},
 
-		equipItem: function (item, slot) {
+		equipItem: function (item, slot, e) {
 			let isNew = window.player.inventory.items.some(f => (f.equipSlot === slot && f.isNew));
 			if (!isNew)
 				this.find('[slot="' + slot + '"] .info').html('');
@@ -296,6 +304,9 @@ define([
 			});
 
 			this.find('.itemList').hide();
+
+			e.preventDefault();
+			return false;
 		},
 
 		onHoverItem: function (el, item, compare, e) {
@@ -323,7 +334,7 @@ define([
 			}
 		},
 
-		onGetStats: function (stats) {
+		onGetStats: function (stats ) {	
 			if (stats && !this.isInspecting)
 				this.stats = stats;
 

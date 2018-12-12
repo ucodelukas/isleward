@@ -12,6 +12,7 @@
 		width: 100%;
 		height: 36px;
 		background-color: @blackB;
+		position: relative;
 
 		.heading-text {
 			padding-top: 8px;
@@ -112,6 +113,28 @@
 
 					-moz-filter: brightness(160%);
 				}
+			}
+		}
+	}
+
+	.menu-bar {
+		background-color: @blackB;
+	    width: 100%;
+	    height: 41px;
+	    padding: 5px 0px;
+	    clear: both;
+
+		.button {
+			background-color: @blueC;
+			color: @white;
+			padding: 10px;
+
+			&:hover {
+				background-color: @blueB;
+			}
+
+			&.btnSortInv {
+				float: left;
 			}
 		}
 	}

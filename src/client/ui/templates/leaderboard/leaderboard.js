@@ -16,6 +16,7 @@ define([
 
 		centered: true,
 		modal: true,
+		hasClose: true,
 
 		prophecyFilter: null,
 
@@ -119,7 +120,7 @@ define([
 			if (!keepOffset) {
 				this.offset = 0;
 
-				let foundIndex = this.records.list.firstIndex(function (r) {
+				let foundIndex = this.records.list.findIndex(function (r) {
 					return (r.name === window.player.name);
 				}, this);
 				if (foundIndex !== -1)

@@ -1,5 +1,7 @@
 @import "../../../css/colors.less";
 
+@btnSize: 64px;
+
 .uiEvents {
 	margin-top: 10px;
 	width: 320px;
@@ -43,6 +45,61 @@
 				.description {
 					display: none;
 				}
+			}
+		}
+	}
+
+	.btnClose {
+		display: none;
+	}
+}
+
+.mobile .uiEvents {
+	background-color: fade(@darkGray, 90%);
+
+	&:not(.active) {
+		position: absolute;
+		top: 0px;
+		right: 232px;
+		width: @btnSize;
+		height: @btnSize;
+
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			background: url('../../../images/uiIcons.png');
+			background-position: -128px -128px;
+			width: @btnSize;
+			height: @btnSize;
+		}
+
+		> * {
+			display: none;
+		}
+	}
+
+	&.active {
+		z-index: 3;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+
+		.btn {
+			display: block;
+			position: absolute;
+			right: calc(100% + 10px);
+			top: 50%;
+			transform: translateY(-50%);
+			background-color: fade(@darkGray, 90%);
+			width: @btnSize;
+			height: @btnSize;
+
+			.icon {
+				width: 100%;
+				height: 100%;
+				background: url('../../../images/uiIcons.png') -448px 0px;
 			}
 		}
 	}

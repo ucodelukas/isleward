@@ -1,6 +1,7 @@
 global.extend = require('../misc/clone');
 global.io = require('../security/io');
 global._ = require('../misc/helpers');
+global.consts = require('../config/consts');
 global.instancer = require('./instancer');
 
 let components = require('../components/components');
@@ -14,6 +15,7 @@ let spellsConfig = require('../config/spellsConfig');
 let spells = require('../config/spells');
 let recipes = require('../config/recipes/recipes');
 let itemTypes = require('../items/config/types');
+let mapList = require('../config/maps/mapList');
 let sheets = require('../security/sheets');
 
 let onCpnsReady = function () {
@@ -25,6 +27,7 @@ let onCpnsReady = function () {
 	spellsConfig.init();
 	spells.init();
 	itemTypes.init();
+	mapList.init();
 	recipes.init();
 	sheets.init();
 

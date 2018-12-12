@@ -27,29 +27,48 @@ define([
 
 		hoverFilter: false,
 
+		blockedPlayers: [],
+
 		postRender: function () {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
 			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
 			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
-
-			this.find('input')
-				.on('keydown', this.sendChat.bind(this))
-				.on('input', this.checkChatLength.bind(this))
-				.on('blur', this.toggle.bind(this, false, true));
+			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
 
 			this
-				.find('.filter:not(.channel)')
+				.find('.filter:not(.channel):not(.btn)')
 				.on('mouseover', this.onFilterHover.bind(this, true))
 				.on('mouseleave', this.onFilterHover.bind(this, false))
 				.on('click', this.onClickFilter.bind(this));
+
+			if (isMobile) {
+				this.kbUpper = 0;
+
+				this.el.on('click', this.toggle.bind(this, true));
+				this.renderKeyboard();
+
+				$(tplTab)
+					.appendTo(this.find('.filters'))
+					.addClass('btnClose')
+					.html('x')
+					.on('click', this.toggle.bind(this, false, true));
+			} else {
+				this.find('input')
+					.on('keydown', this.sendChat.bind(this))
+					.on('input', this.checkChatLength.bind(this))
+					.on('blur', this.toggle.bind(this, false, true));
+			}
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
 		update: function () {
+			if (isMobile)
+				return;
+			
 			if (this.el.hasClass('typing'))
 				return;
 
@@ -66,6 +85,84 @@ define([
 				elTime.html(timeString);
 		},
 
+		renderKeyboard: function () {
+			this.find('.keyboard').remove();
+
+			let container = $('<div class="keyboard"></div>')
+				.appendTo(this.el);
+
+			let controls = ['|', 'caps', 'space', 'backspace', 'enter'];
+
+			let keyboard = {
+				0: '1234567890|qwertyuiop|asdfghjkl|zxcvbnm',
+				1: '!@#$%^&*()|QWERTYUIOP|ASDFGHJKL|ZXCVBNM',
+				2: '!@#$%^&*()|     {}[]\\|`-=_+;\':"|~,./<>?'
+			}[this.kbUpper].split('').concat(controls);
+
+			keyboard
+				.forEach(k => {
+					if (k === '|') {
+						$('<div class="newline"></div>')
+							.appendTo(container);
+
+						return;	
+					}
+
+					let className = (k.match(/[a-z]/i) || k.length > 1) ? 'key' : 'key special';
+					if (k === ' ') {
+						k = '.';
+						className = 'key hidden';
+					}
+
+					className += ' ' + k;
+
+					let elKey = $(`<div class="${className}">${k}</div>`)
+						.appendTo(container);
+
+					if (!className.includes('hidden')) 	
+						elKey.on('click', this.clickKey.bind(this, k));
+				});
+		},
+
+		clickKey: function (key) {
+			window.navigator.vibrate(20);
+
+			const handler = {
+				caps: () => {
+					this.kbUpper = (this.kbUpper + 1) % 3;
+					this.renderKeyboard();
+				},
+
+				space: () => {
+					this.clickKey(' ');
+				},
+
+				backspace: () => {
+					let elInput = this.find('input');
+					elInput.val(elInput.val().slice(0, -1));
+					this.find('.input').html(elInput.val());
+				},
+
+				enter: () => {
+					this.sendChat({
+						which: 13
+					});
+					this.find('.input').html('');
+					this.find('input').val('');
+				}
+			}[key];
+			if (handler) {
+				handler();
+				return;
+			}
+
+			let elInput = this.find('input');
+			elInput.val(elInput.val() + key);
+			this.checkChatLength();
+
+			this.find('.input').html(elInput.val());
+		},
+
 		checkChatLength: function () {
 			let textbox = this.find('input');
 			let val = textbox.val();
@@ -75,6 +172,10 @@ define([
 
 			val = val.substr(0, this.maxChatLength);
 			textbox.val(val);
+		},
+
+		onGetBlockedPlayers: function (list) {
+			this.blockedPlayers = list;
 		},
 
 		onGetCustomChatChannels: function (channels) {
@@ -149,11 +250,15 @@ define([
 
 			let container = this.find('.list');
 
-			messages.forEach(function (m) {
+			messages.forEach(m => {
 				let message = m.message;
+
+				if (this.blockedPlayers.includes(m.source))
+					return;
+
 				if (m.item) {
-					let source = message.split(':')[0] + ': ';
-					message = source + '<span class="q' + (m.item.quality || 0) + '">' + message.replace(source, '') + '</span>';
+					let source = message.split(':')[0];
+					message = source + ': <span class="q' + (m.item.quality || 0) + '">' + message.replace(source + ': ', '') + '</span>';
 				}
 
 				let el = $('<div class="list-message ' + m.class + '">' + message + '</div>')
@@ -176,13 +281,19 @@ define([
 						if (this.find('.filter[filter="' + m.type + '"]').hasClass('active'))
 							el.show();
 					}
+
+					if (m.type === 'loot') {
+						events.emit('onGetAnnouncement', {
+							msg: m.message
+						});
+					}
 				}
 
 				this.messages.push({
 					ttl: this.maxTtl,
 					el: el
 				});
-			}, this);
+			});
 
 			container.scrollTop(9999999);
 		},
@@ -217,7 +328,7 @@ define([
 			events.emit('onShowItemTooltip', item, ttPos, true, true);
 		},
 
-		toggle: function (show, isFake) {
+		toggle: function (show, isFake, e) {
 			if ((isFake) && (this.hoverFilter))
 				return;
 
@@ -233,6 +344,9 @@ define([
 				this.find('.list').scrollTop(9999999);
 			} else 
 				textbox.val('');
+
+			if (e)
+				e.stopPropagation();
 		},
 
 		sendChat: function (e) {

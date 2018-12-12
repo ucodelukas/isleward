@@ -18,6 +18,11 @@ define([
 		container: '.right',
 
 		postRender: function () {
+			if (isMobile) {
+				this.el.on('click', this.toggleButtons.bind(this));
+				this.find('.btnCollapse').on('click', this.toggleButtons.bind(this));
+			}
+
 			this.onEvent('onRezone', this.onRezone.bind(this));
 
 			this.onEvent('onObtainQuest', this.onObtainQuest.bind(this));
@@ -91,6 +96,12 @@ define([
 			if (quest.isReady) {
 				q.el.removeClass('disabled');
 				q.el.addClass('ready');
+
+				if (isMobile) {
+					events.emit('onGetAnnouncement', {
+						msg: 'Quest ready for turn-in'
+					});
+				}
 			}
 		},
 
@@ -102,6 +113,11 @@ define([
 
 			q.el.remove();
 			this.quests.spliceWhere(f => f.id === id);
+		},
+
+		toggleButtons: function (e) {
+			this.el.toggleClass('active');
+			e.stopPropagation();
 		}
 	};
 });

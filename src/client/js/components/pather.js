@@ -1,9 +1,11 @@
 define([
 	'js/rendering/renderer',
-	'js/system/events'
+	'js/system/events',
+	'js/system/client'
 ], function (
 	renderer,
-	events
+	events,
+	client
 ) {
 	let round = Math.round.bind(Math);
 	let maxPathLength = 50;
@@ -51,8 +53,11 @@ define([
 		},
 
 		add: function (x, y) {
-			if (this.path.length >= maxPathLength)
+			if (this.path.length >= maxPathLength || this.obj.moveAnimation)
 				return;
+
+			this.pathPos.x = x;
+			this.pathPos.y = y;
 
 			this.path.push({
 				x: x,
@@ -68,10 +73,21 @@ define([
 				})
 			});
 
-			return true;
+			client.request({
+				cpn: 'player',
+				method: 'move',
+				priority: !this.path.length,
+				data: {
+					x: x,
+					y: y
+				}
+			});
 		},
 
 		update: function () {
+			if (this.obj.moveAnimation)
+				this.clearPath();
+
 			let x = this.obj.x;
 			let y = this.obj.y;
 
@@ -100,13 +116,6 @@ define([
 					return;
 				}
 			}
-		},
-
-		setPath: function (path) {
-			this.path = this.path.concat(path);
-
-			this.pathPos.x = round(path[path.length - 1].x);
-			this.pathPos.y = round(path[path.length - 1].y);
 		}
 	};
 });

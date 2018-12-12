@@ -10,17 +10,31 @@ define([
 	return {
 		tpl: template,
 		postRender: function () {
-			this.find('.btnSmithing').on('click', events.emit.bind(events, 'onShowSmithing'));
-			this.find('.btnHelp').on('click', events.emit.bind(events, 'onShowHelp'));
-			this.find('.btnInventory').on('click', events.emit.bind(events, 'onShowInventory'));
-			this.find('.btnEquipment').on('click', events.emit.bind(events, 'onShowEquipment'));
-			this.find('.btnOnline').on('click', events.emit.bind(events, 'onShowOnline'));
-			this.find('.btnLeaderboard').on('click', events.emit.bind(events, 'onShowLeaderboard'));
-			this.find('.btnReputation').on('click', events.emit.bind(events, 'onShowReputation'));
-			this.find('.btnOptions').on('click', events.emit.bind(events, 'onToggleOptions'));
-			this.find('.btnPassives').on('click', events.emit.bind(events, 'onShowPassives'));
+			if (isMobile) {
+				this.el.on('click', this.toggleButtons.bind(this));
+				this.find('.btnCollapse').on('click', this.toggleButtons.bind(this));
+			}
+
+			this.find('.btnSmithing').on('click', this.handler.bind(this, 'onShowSmithing'));
+			this.find('.btnHelp').on('click', this.handler.bind(this, 'onShowHelp'));
+			this.find('.btnInventory').on('click', this.handler.bind(this, 'onShowInventory'));
+			this.find('.btnEquipment').on('click', this.handler.bind(this, 'onShowEquipment'));
+			this.find('.btnOnline').on('click', this.handler.bind(this, 'onShowOnline'));
+			this.find('.btnLeaderboard').on('click', this.handler.bind(this, 'onShowLeaderboard'));
+			this.find('.btnReputation').on('click', this.handler.bind(this, 'onShowReputation'));
+			this.find('.btnOptions').on('click', this.handler.bind(this, 'onToggleOptions'));
+			this.find('.btnPassives').on('click', this.handler.bind(this, 'onShowPassives'));
 
 			this.onEvent('onGetPassivePoints', this.onGetPassivePoints.bind(this));
+		},
+
+		handler: function (e) {
+			if (isMobile)
+				this.el.removeClass('active');
+
+			events.emit(e);
+
+			return false;
 		},
 
 		onGetPassivePoints: function (points) {
@@ -34,6 +48,11 @@ define([
 					.html(points)
 					.show();
 			}
+		},
+
+		toggleButtons: function (e) {
+			this.el.toggleClass('active');
+			e.stopPropagation();
 		}
 	};
 });

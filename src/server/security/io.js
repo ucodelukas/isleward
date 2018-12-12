@@ -1,6 +1,14 @@
 let fs = require('fs');
 let util = require('util');
 
+let firebase = null;
+
+const useFirebase = false;
+const doConvert = false;
+
+if (useFirebase)
+	firebase = require('./ioFirebase');
+
 module.exports = {
 	db: null,
 	file: '../../data/storage.db',
@@ -25,6 +33,12 @@ module.exports = {
 	},
 
 	init: function (cbReady) {
+		if (useFirebase && !doConvert) {
+			firebase.init(this, false);
+			cbReady();
+			return;
+		}
+
 		let sqlite = require('sqlite3').verbose();
 		this.exists = fs.existsSync(this.file);
 		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
@@ -40,6 +54,8 @@ module.exports = {
 				`, scope.onTableCreated.bind(scope, t));
 			}
 
+			if (useFirebase)
+				firebase.init(this, true);
 			cbReady();
 		}, this);
 
@@ -153,10 +169,15 @@ module.exports = {
 				await this.processDelete(options);
 		} catch (e) {
 			if (e.toString().indexOf('unrecognized token') > -1)
-				console.log(options);
+				_.log(e);
 			
-			console.log(e);
-			this.buffer.splice(0, 0, next);
+			_.log(e);
+			if (!doConvert) 
+				this.buffer.splice(0, 0, next);
+			else {
+				next.resolve(null);
+				return;
+			}
 			setTimeout(this.process.bind(this), 10);
 			return;
 		}

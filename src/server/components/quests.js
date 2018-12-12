@@ -76,12 +76,9 @@ module.exports = {
 			type: 'quests'
 		};
 
-		if (this.quests.length > 0) {
-			if (this.quests[0].simplify)
-				result.quests = this.quests.map(q => q.simplify(true));
-			else
-				result.quests = this.quests;
-		}
+		result.quests = this.quests.map(q => {
+			return q.simplify ? q.simplify(true) : q;
+		});
 
 		return result;
 	}

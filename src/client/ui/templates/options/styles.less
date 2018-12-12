@@ -18,6 +18,10 @@
 	    padding-top: 8px;
 	    cursor: pointer;
 
+	    &.btnNames {
+	    	display: none;
+	    }
+
 	    &:hover {
 			background-color: lighten(@blue, 15%);
 			color: @black;
@@ -31,5 +35,15 @@
 			background-color: lighten(@red, 15%);
 			color: @black;
 		}
+	}
+}
+
+.mobile .uiOptions {
+	.btnScreen {
+		display: none;
+	}
+
+	.btnNames {
+		display: block;
 	}
 }

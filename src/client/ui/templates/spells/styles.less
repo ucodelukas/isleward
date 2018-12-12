@@ -25,6 +25,10 @@
 			background-color: fade(@white, 10%);
 		}
 
+		&.active .hotkey {
+			color: @green;
+		}
+
 		.icon {
 			position: absolute;
 			left: 0px;
@@ -58,6 +62,37 @@
 			&.no-mana {
 				color: @red;
 			}
+		}
+	}
+}
+
+.mobile .uiSpells {
+	top: auto;
+	bottom: 10px;
+	padding: 0px;
+	height: auto;
+	background-color: transparent;
+	display: flex;
+	flex-direction: column-reverse;
+
+
+	.spell {
+		position: relative;
+		margin: 8px 0px 0px 0px;
+		background-color: fade(#3a3b4a, 90%);
+
+		.hotkey {
+			display: none;
+		}
+
+		&.active:before {
+			content: '';
+		    width: 4px;
+		    height: 100%;
+		    left: -4px;
+		    top: 0%;
+		    background-color: @greenB;
+		    position: absolute;
 		}
 	}
 }

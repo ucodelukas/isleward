@@ -22,12 +22,14 @@ define([
 		items: [],
 
 		modal: true,
+		hasClose: true,
 
 		postRender: function () {
 			this.onEvent('onGetStashItems', this.onGetStashItems.bind(this));
 			this.onEvent('onDestroyStashItems', this.onDestroyStashItems.bind(this));
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
+			this.onEvent('onOpenStash', this.toggle.bind(this));
 		},
 
 		build: function () {
@@ -59,9 +61,17 @@ define([
 						spritesheet = '../../../images/consumables.png';
 				}
 
+				let moveHandler = this.onHover.bind(this, itemEl, item);
+				let downHandler = () => {};
+				if (isMobile) {
+					moveHandler = () => {};
+					downHandler = this.onHover.bind(this, itemEl, item);
+				}
+
 				itemEl
 					.data('item', item)
-					.on('mousemove', this.onHover.bind(this, itemEl, item))
+					.on('mousedown', downHandler)
+					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
 					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
@@ -187,9 +197,7 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'u')
-				this.toggle();
-			else if (key === 'shift' && this.hoverItem)
+			if (key === 'shift' && this.hoverItem)
 				this.onHover();
 			else if (key === 'esc' && this.shown)
 				this.toggle();

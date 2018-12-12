@@ -13,11 +13,15 @@
 
 	pointer-events: none;
 
+	.input {
+		display: none;
+	}
+
 	&.typing {
 		pointer-events: all;
 
 		.el.textbox {
-			&.message {
+			&.message:not(.input) {
 				display: block;
 			}
 
@@ -176,5 +180,113 @@
 
 		width: 100%;
 		color: @white;
+	}
+}
+
+.mobile .uiMessages {
+	padding: 10px 0px;
+	pointer-events: all;
+
+	.btnClose.active {
+		float: right;
+		margin-right: 0px;
+		padding: 5px 20px;
+		color: @redA;
+	}
+
+	input {
+		display: none;
+	}
+
+	.filters {
+		margin-bottom: 0px;
+	}
+
+	.list {
+		height: 100%;
+		max-height: 100%;
+	}
+
+	&.typing {
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		background-color: fade(@darkGray, 90%);
+		display: flex;
+		flex-direction: column;
+		z-index: 999999999;
+
+		.input {
+			display: block;
+		}
+
+		.el.textbox:not(.input) {
+			&.message, &.time {
+				display: none;
+			}
+		}
+
+		.keyboard {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			background-color: @blackC;
+			justify-content: center;
+			align-items: center;
+			height: 292px;
+
+			.key {
+				flex: 1;
+				background-color: @blackA;
+				color: @white;
+				padding: 8px 10px;
+				text-align: center;
+				border-top: 2px solid #373041;
+				border-left: 1px solid #373041;
+				border-right: 1px solid #373041;
+
+				&.special {
+					color: @orange;
+				}
+
+				&.hidden {
+					color: @blackC;
+				}
+
+				&.space {
+					flex: 5;
+				}
+			}
+
+			.newline {
+				width: 100%;
+			}
+		}
+	}
+
+	&:not(.typing) {
+		top: 10px;
+		right: 84px;
+		left: auto;
+		bottom: auto;
+		width: @btnSize;
+		height: @btnSize;
+		background-color: fade(@darkGray, 90%);
+
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			background: url('../../../images/uiIcons.png');
+			background-position: -0px -128px;
+			width: @btnSize;
+			height: @btnSize;
+		}
+
+		> * {
+			display: none;
+		}
 	}
 }

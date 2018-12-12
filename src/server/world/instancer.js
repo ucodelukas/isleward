@@ -16,7 +16,7 @@ let eventEmitter = require('../misc/events');
 module.exports = {
 	instances: [],
 	zoneId: -1,
-	speed: 350,
+	speed: consts.tickTime,
 
 	lastTime: 0,
 
@@ -94,7 +94,7 @@ module.exports = {
 			obj.y = spawnPos.y;
 		}
 
-		obj.instanceId = map.seed;
+		obj.instanceId = map.seed || null;
 
 		obj.spawn = map.spawn;
 

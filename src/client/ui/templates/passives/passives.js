@@ -21,6 +21,7 @@ define([
 		tpl: tpl,
 
 		modal: true,
+		hasClose: true,
 
 		canvas: null,
 		size: {},
@@ -51,7 +52,7 @@ define([
 			input.init(this.el);
 
 			this.data.nodes = temp.nodes;
-			this.data.links = temp.links.map(function (l) {
+			this.data.links = temp.links.map(l => {
 				return {
 					from: {
 						id: l.from
@@ -89,12 +90,19 @@ define([
 			this.find('.btnReset').on('click', this.events.onReset.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
-			this.onEvent('uiMouseMove', this.events.onPan.bind(this));
-			this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
 			this.onEvent('uiMouseUp', this.events.onPanEnd.bind(this));
 			this.onEvent('onGetPassives', this.events.onGetPassives.bind(this));
 			this.onEvent('onGetPassivePoints', this.events.onGetPassivePoints.bind(this));
 			this.onEvent('onShowPassives', this.toggle.bind(this));
+
+			if (isMobile) {
+				this.onEvent('uiTouchEnd', this.events.onPanEnd.bind(this));
+				this.onEvent('uiTouchStart', this.events.onPanStart.bind(this));
+				this.onEvent('uiTouchMove', this.events.onPan.bind(this));
+			} else {
+				this.onEvent('uiMouseMove', this.events.onPan.bind(this));
+				this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
+			}
 		},
 
 		renderNodes: function () {
@@ -106,21 +114,15 @@ define([
 			let links = this.data.links;
 			let nodes = this.data.nodes;
 
-			links.forEach(function (l) {
+			links.forEach(l => {
 				let linked = (
-					nodes.find(function (n) {
-						return (n.id === l.from.id);
-					}).selected &&
-					nodes.find(function (n) {
-						return (n.id === l.to.id);
-					}).selected
+					nodes.find(n => n.id === l.from.id).selected &&
+					nodes.find(n => n.id === l.to.id).selected
 				);
 				this.renderers.line.call(this, l.from, l.to, linked);
-			}, this);
+			});
 
-			nodes.forEach(function (n) {
-				this.renderers.node.call(this, n, n.pos.x, n.pos.y);
-			}, this);
+			nodes.forEach(n => this.renderers.node.call(this, n, n.pos.x, n.pos.y));
 		},
 
 		toggle: function (show) {
@@ -128,9 +130,7 @@ define([
 
 			if (this.shown) {
 				//Calculate midpoint
-				let start = this.data.nodes.find(function (n) {
-					return (n.spiritStart === window.player.class);
-				});
+				let start = this.data.nodes.find(n => n.spiritStart === window.player.class);
 
 				this.pos.x = start.pos.x * constants.gridSize;
 				this.pos.y = start.pos.y * constants.gridSize;
@@ -144,11 +144,13 @@ define([
 				this.hide();
 
 			events.emit('onHideTooltip', this.el[0]);
+			this.tooltipId = null;
 		},
 
 		beforeHide: function () {
 			events.emit('onHideTooltip', this.el[0]);
 			events.emit('onHideTooltip', this.el[0]);
+			this.tooltipId = null;
 		},
 
 		onKeyDown: function (key) {
@@ -165,7 +167,7 @@ define([
 
 			node: function (node) {
 				let color = (node.color >= 0) ? (node.color + 1) : -1;
-				if (((!node.stats) || (Object.keys(node.stats).length === 0)) && (!node.spiritStart))
+				if ((!node.stats || Object.keys(node.stats).length === 0) && !node.spiritStart)
 					color = 0;
 
 				if (node.spiritStart) {
@@ -192,17 +194,17 @@ define([
 				let x = (node.pos.x * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.x;
 				let y = (node.pos.y * constants.gridSize) - ((size - constants.blockSize) / 2) - this.pos.y;
 
-				let linked = this.data.links.some(function (l) {
-					if ((l.from.id !== node.id) && (l.to.id !== node.id))
+				let linked = this.data.links.some(l => {
+					if (l.from.id !== node.id && l.to.id !== node.id)
 						return false;
 
-					return this.data.nodes.some(function (n) {
+					return this.data.nodes.some(n => {
 						return (
-							((n.id === l.from.id) && (n.selected)) ||
-							((n.id === l.to.id) && (n.selected))
+							(n.id === l.from.id && n.selected) ||
+							(n.id === l.to.id && n.selected)
 						);
 					});
-				}, this);
+				});
 
 				if (!linked)
 					this.ctx.globalAlpha = 0.25;
@@ -237,13 +239,9 @@ define([
 				let ctx = this.ctx;
 				let halfSize = constants.blockSize / 2;
 
-				fromNode = this.data.nodes.find(function (n) {
-					return (n.id === fromNode.id);
-				});
+				fromNode = this.data.nodes.find(n => n.id === fromNode.id);
 
-				toNode = this.data.nodes.find(function (n) {
-					return (n.id === toNode.id);
-				});
+				toNode = this.data.nodes.find(n => n.id === toNode.id);
 
 				let fromX = (fromNode.pos.x * constants.gridSize) + halfSize - this.pos.x;
 				let fromY = (fromNode.pos.y * constants.gridSize) + halfSize - this.pos.y;
@@ -261,14 +259,14 @@ define([
 				ctx.closePath();
 				ctx.stroke();
 
-				if ((!linked) && (!fromNode.selected) && (!toNode.selected))
+				if (!linked && !fromNode.selected && !toNode.selected)
 					this.ctx.globalAlpha = 1;
 			}
 		},
 
 		events: {
 			onMouseMove: function (pos) {
-				if ((this.mouse.x === pos.x) && (this.mouse.y === pos.y))
+				if (this.mouse.x === pos.x && this.mouse.y === pos.y)
 					return;
 
 				this.mouse = {
@@ -292,13 +290,20 @@ define([
 					let percentageStats = [
 						'addCritChance',
 						'addCritMultiplier',
+						'addAttackCritChance',
+						'addAttackCritMultiplier',
+						'addSpellCritChance',
+						'addSpellCritMultiplier',
 						'sprintChance',
 						'xpIncrease',
 						'blockAttackChance',
 						'blockSpellChance',
+						'dodgeAttackChance',
+						'dodgeSpellChance',
 						'attackSpeed',
 						'castSpeed',
 						'itemQuantity',
+						'magicFind',
 						'catchChance',
 						'catchSpeed',
 						'fishRarity',
@@ -310,8 +315,10 @@ define([
 						.map(function (s) {
 							let statName = statTranslations.translate(s);
 							let statValue = node.stats[s];
+							if (s.indexOf('CritChance') > -1)
+								statValue /= 20;
 							let negative = ((statValue + '')[0] === '-');
-							if (percentageStats.indexOf(s) > -1)
+							if (percentageStats.includes(s))
 								statValue += '%';
 
 							return ((negative ? '' : '+') + statValue + ' ' + statName);
@@ -329,15 +336,42 @@ define([
 					};
 
 					events.emit('onShowTooltip', text, this.el[0], tooltipPos);
-				} else
+					this.tooltipId = node.id;
+				} else {
 					events.emit('onHideTooltip', this.el[0]);
+					this.tooltipId = null;
+				}
 			},
 
 			onPanStart: function (e) {
+				if (isMobile) {
+					let cell = {
+						x: ~~((this.pos.x + e.x) / constants.gridSize),
+						y: ~~((this.pos.y + e.y) / constants.gridSize)
+					};
+
+					let node = this.data.nodes.find(function (n) {
+						return (
+							(n.pos.x === cell.x) &&
+							(n.pos.y === cell.y)
+						);
+					});
+
+					if (this.hoverNode && node && node.id !== this.hoverNode.id) {
+						this.events.onMouseMove.call(this, e);
+						return;
+					}
+
+					if (!node)
+						this.hoverNode = null;
+				}
+
 				if (this.hoverNode) {
 					this.events.onTryClickNode.call(this, this.hoverNode);
 					return;
 				}
+
+				this.events.onMouseMove.call(this, e);
 
 				this.panOrigin = {
 					x: e.raw.clientX,
@@ -379,6 +413,8 @@ define([
 			onTryClickNode: function (node) {
 				if ((node.spiritStart) || (node.selected))
 					return;
+				else if (isMobile && this.tooltipId !== node.id)
+					return;
 
 				client.request({
 					cpn: 'player',
@@ -394,10 +430,8 @@ define([
 			},
 
 			onGetPassives: function (selected) {
-				this.data.nodes.forEach(function (n) {
-					n.selected = selected.some(function (s) {
-						return (s === n.id);
-					});
+				this.data.nodes.forEach(n => {
+					n.selected = selected.some(s => s === n.id);
 				});
 
 				this.renderNodes();

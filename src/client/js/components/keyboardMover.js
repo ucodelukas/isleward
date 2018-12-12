@@ -23,9 +23,6 @@ define([
 			if (this.obj.dead)
 				return;
 
-			if (this.obj.moveAnimation)
-				this.obj.pather.clearPath();
-
 			if (this.moveCd > 0) {
 				this.moveCd--;
 				return;
@@ -76,32 +73,7 @@ define([
 
 			this.moveCd = this.moveCdMax;
 
-			this.addQueue(newX, newY);
-		},
-
-		addQueue: function (x, y) {
-			let pather = this.obj.pather;
-			const isPriority = !pather.path.length;
-
-			if (this.obj.moveAnimation)
-				return;
-			else if (!pather.add(x, y))
-				return;
-
-			this.obj.dirty = true;			
-
-			pather.pathPos.x = x;
-			pather.pathPos.y = y;
-
-			client.request({
-				cpn: 'player',
-				method: 'move',
-				priority: isPriority ? true : null,
-				data: {
-					x: x,
-					y: y
-				}
-			});
+			this.obj.pather.add(newX, newY);
 		}
 	};
 });

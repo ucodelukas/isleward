@@ -54,6 +54,12 @@ module.exports = {
 
 		if (!this.goHome) {
 			if ((target) && (target !== obj) && ((!obj.follower) || (obj.follower.master !== target))) {
+				//If we just started attacking, patrols need to know where home is
+				if (!this.target && this.patrol) {
+					this.originX = obj.x;
+					this.originY = obj.y;
+				}
+
 				//Are we in fight mode?
 				this.fight(target);
 				return;
@@ -80,10 +86,11 @@ module.exports = {
 
 		let toX, toY;
 
-		if (!this.patrol) {
+		//Patrol mobs should not pick random locations unless they're going home
+		if (this.goHome || !this.patrol) {
 			toX = this.originX + ~~(rnd() * (walkDistance * 2)) - walkDistance;
 			toY = this.originY + ~~(rnd() * (walkDistance * 2)) - walkDistance;
-		} else {
+		} else if (this.patrol) {
 			do {
 				let toNode = this.patrol[this.patrolTargetNode];
 				toX = toNode[0];
@@ -97,7 +104,7 @@ module.exports = {
 			} while (toX - obj.x !== 0 || toY - obj.y !== 0);
 		}
 
-		if (!this.physics.isCellOpen(toX, toY))
+		if (!this.patrol && !this.physics.isCellOpen(toX, toY))
 			return;
 
 		if (abs(obj.x - toX) <= 1 && abs(obj.y - toY) <= 1) {
@@ -136,6 +143,7 @@ module.exports = {
 		if (obj.follower)
 			this.goHome = false;
 	},
+
 	fight: function (target) {
 		let obj = this.obj;
 
@@ -156,12 +164,14 @@ module.exports = {
 		let ty = ~~target.y;
 
 		let distance = max(abs(x - tx), abs(y - ty));
-		let furthestRange = obj.spellbook.getFurthestRange();
+		let furthestAttackRange = obj.spellbook.getFurthestRange(null, true);
+		let furthestStayRange = obj.spellbook.getFurthestRange(null, false);
+
 		let doesCollide = null;
 		let hasLos = null;
 
-		if (distance <= furthestRange) {
-			doesCollide = this.physics.mobsCollide(x, y, obj);
+		if (distance <= furthestAttackRange) {
+			doesCollide = this.physics.mobsCollide(x, y, obj, target);
 			if (!doesCollide) {
 				hasLos = this.physics.hasLos(x, y, tx, ty);
 				if (hasLos) {
@@ -179,9 +189,12 @@ module.exports = {
 						return;
 				}
 			}
+		} else if (furthestAttackRange === 0) {
+			if (distance <= obj.spellbook.closestRange && !this.physics.mobsCollide(x, y, obj, target))
+				return;
 		}
 
-		let targetPos = this.physics.getClosestPos(x, y, tx, ty, target);
+		let targetPos = this.physics.getClosestPos(x, y, tx, ty, target, obj);
 		if (!targetPos) {
 			//Find a new target
 			obj.aggro.ignore(target);
@@ -190,24 +203,16 @@ module.exports = {
 		}
 		let newDistance = max(abs(targetPos.x - tx), abs(targetPos.y - ty));
 
-		if ((newDistance >= distance) && (newDistance > furthestRange)) {
-			if (hasLos === null)
-				hasLos = this.physics.hasLos(x, y, tx, ty);
-			if (hasLos) {
-				if (doesCollide === null)
-					doesCollide = this.physics.mobsCollide(x, y, obj);
-				if (!doesCollide) {
-					obj.aggro.ignore(target);
-					return;
-				}
-			} else {
-				if (doesCollide === null)
-					doesCollide = this.physics.mobsCollide(x, y, obj);
-				if (!doesCollide) {
-					obj.aggro.ignore(target);
-					return;
-				}
+		if (newDistance >= distance && newDistance > furthestStayRange) {
+			obj.clearQueue();
+			obj.aggro.ignore(target);
+			if (!obj.aggro.getHighest()) {
+				//Nobody left to attack so reset our aggro table
+				obj.aggro.die();
+				this.goHome = true;
 			}
+
+			return;
 		}
 
 		if (abs(x - targetPos.x) <= 1 && abs(y - targetPos.y) <= 1) {
@@ -244,6 +249,10 @@ module.exports = {
 	},
 
 	canChase: function (obj) {
+		//Patrol mobs can always chase if they don't have a target yet (since they don't have a home yet)
+		if (this.patrol && !this.target && !this.goHome)
+			return true;
+
 		let distanceFromHome = Math.max(abs(this.originX - obj.x), abs(this.originY - obj.y));
 		return ((!this.goHome) && (distanceFromHome <= this.maxChaseDistance));
 	},
