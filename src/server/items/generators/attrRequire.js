@@ -36,7 +36,7 @@ module.exports = {
 
 		item.requires.push({
 			stat: blueprint.attrRequire,
-			value: 0
+			value: statValue
 		});
 	}
 };
