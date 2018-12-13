@@ -20,8 +20,6 @@ module.exports = {
 	patrolTargetNode: 0,
 
 	init: function (blueprint) {
-		if (!this.obj.name)
-			console.log(this.obj.x, this.obj.y);
 		this.physics = this.obj.instance.physics;
 
 		this.originX = this.obj.x;
@@ -105,9 +103,6 @@ module.exports = {
 					break;
 			} while (toX - obj.x !== 0 || toY - obj.y !== 0);
 		}
-
-		if (!this.patrol && !this.physics.isCellOpen(toX, toY))
-			return;
 
 		if (abs(obj.x - toX) <= 1 && abs(obj.y - toY) <= 1) {
 			obj.queue({
