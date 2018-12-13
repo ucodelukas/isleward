@@ -301,12 +301,15 @@ define([
 			}
 
 			if (obj.sprite) {
+				let ix = ~~obj.x;
+				let iy = ~~obj.y;
+
 				let isVisible = (
 					!!obj.player || 
 					(
-						renderer.sprites[obj.x] &&
-						renderer.sprites[obj.x][obj.y] &&
-						renderer.sprites[obj.x][obj.y].length > 0
+						renderer.spritesx] &&
+						renderer.spritesx][iy] &&
+						renderer.spritesx][iy].length > 0
 					)
 				);
 				obj.setVisible(isVisible);
