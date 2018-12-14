@@ -307,9 +307,9 @@ define([
 				let isVisible = (
 					!!obj.player || 
 					(
-						renderer.spritesx] &&
-						renderer.spritesx][iy] &&
-						renderer.spritesx][iy].length > 0
+						renderer.sprites[ix] &&
+						renderer.sprites[ix][iy] &&
+						renderer.sprites[ix][iy].length > 0
 					)
 				);
 				obj.setVisible(isVisible);
