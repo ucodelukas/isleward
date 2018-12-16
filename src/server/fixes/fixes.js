@@ -71,12 +71,6 @@ module.exports = {
 			});
 
 		items
-			.filter(i => i.quantity > 20000)
-			.forEach(function (i) {
-				i.quantity = ~~Math.pow(i.quantity, 1 / 18);
-			});
-
-		items
 			.filter(i => (i.name === 'Steelclaw\'s Bite'))
 			.forEach(function (i) {
 				let effect = i.effects[0];
