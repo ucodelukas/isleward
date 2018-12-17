@@ -1,6 +1,7 @@
 let roles = require('../../config/roles');
 let generator = require('../../items/generator');
 let configSlots = require('../../items/config/slots');
+let configMaterials = require('../../items/config/materials');
 let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
@@ -30,7 +31,8 @@ let commandRoles = {
 	die: 10,
 	getXp: 10,
 	setPassword: 10,
-	giveSkin: 10
+	giveSkin: 10,
+	getMaterials: 10
 };
 
 let localCommands = [
@@ -589,6 +591,19 @@ module.exports = {
 			key: username,
 			table: 'skins',
 			value: JSON.stringify(skins)
+		});
+	},
+
+	getMaterials: function (config) {
+		let inventory = this.obj.inventory;
+
+		Object.entries(configMaterials).forEach(([material, blueprint]) => {
+			inventory.getItem({
+				name: material,
+				quantity: config,
+				material: true,
+				...blueprint
+			});
 		});
 	}
 };
