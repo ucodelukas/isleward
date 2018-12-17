@@ -59,14 +59,11 @@ module.exports = {
 
 	events: {
 		afterKillMob: function (mob) {
-			if (!mob.name || !this.mobName) {
-				console.log(!!mob.name, !!this.mobName);
-				console.log(this.obj.name);
-				console.log(this.obj.instance.zone.name);
-				console.log(this.obj.x, this.obj.y);
-			}
-
-			if ((mob.name.toLowerCase() !== this.mobName.toLowerCase()) || (this.have >= this.need))
+			if (
+				this.obj.zoneName !== this.zoneName ||
+				mob.name.toLowerCase() !== this.mobName.toLowerCase() || 
+				this.have >= this.need
+			)
 				return;
 
 			this.have++;
