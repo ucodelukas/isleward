@@ -45,6 +45,13 @@ module.exports = {
 			});
 
 		items
+			.filter(i => i.stats && i.stats.magicFind > 135)
+			.forEach(i => {
+				let value = '' + i.stats.magicFind;
+				i.stats.magicFind = ~~(value.substr(value.length - 2));
+			});
+
+		items
 			.filter(i => (
 				i.enchantedStats && 
 				i.slot !== 'tool' && 

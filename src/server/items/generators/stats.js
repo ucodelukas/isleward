@@ -528,7 +528,7 @@ module.exports = {
 		if ((stat) && (stat.indexOf('|') > -1)) {
 			let split = stat.split('|');
 			stat = split[0];
-			value = split[1];
+			value = ~~split[1];
 		}
 
 		if (
