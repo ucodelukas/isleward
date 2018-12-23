@@ -1,7 +1,6 @@
 let classes = require('../config/spirits');
 let roles = require('../config/roles');
 let serverConfig = require('../config/serverConfig');
-let events = require('../misc/events');
 
 module.exports = {
 	type: 'player',
@@ -25,13 +24,6 @@ module.exports = {
 		if (character.dead)
 			obj.dead = true;
 
-		let spawnMessage = {
-			zoneName: character.zoneName || serverConfig.defaultZone,
-			x: character.x,
-			y: character.y
-		};
-		events.emit('onBeforeSetPlayerSpawn', spawnMessage);
-
 		extend(obj, {
 			layerName: 'mobs',
 			cell: character.cell,
@@ -39,9 +31,9 @@ module.exports = {
 			skinId: character.skinId,
 			name: character.name,
 			class: character.class,
-			zoneName: spawnMessage.zoneName,
-			x: spawnMessage.x,
-			y: spawnMessage.y,
+			zoneName: character.zoneName || serverConfig.defaultZone,
+			x: character.x,
+			y: character.y,
 			hidden: character.dead,
 			account: character.account,
 			instanceId: character.instanceId
