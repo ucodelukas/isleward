@@ -5,10 +5,12 @@ module.exports = {
 		if (!this.build())
 			return false;
 
-		let level = this.obj.instance.spawners.zone.level;
-		level = level[0];
-		let xp = ~~(level * 22 * this.getXpMultiplier());
-		this.xp = xp;
+		if (!this.xp) {
+			let level = this.obj.instance.spawners.zone.level;
+			level = level[0];
+			let xp = ~~(level * 22 * this.getXpMultiplier());
+			this.xp = xp;
+		}
 
 		this.obj.syncer.setArray(true, 'quests', 'obtainQuests', this.simplify(true));
 
