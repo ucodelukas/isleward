@@ -110,9 +110,10 @@ module.exports = {
 					let damage = this.getDamage(m);
 					m.stats.takeDamage(damage, 1, obj);
 
-					physics.removeObject(m, m.x, m.y);
-
-					this.queueCallback(this.endEffect.bind(this, m, targetPos, targetEffect), ttl);
+					if (!m.destroyed) {
+						physics.removeObject(m, m.x, m.y);
+						this.queueCallback(this.endEffect.bind(this, m, targetPos, targetEffect), ttl, null, m);
+					}
 				}
 			}
 		}

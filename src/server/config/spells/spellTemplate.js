@@ -272,6 +272,8 @@ module.exports = {
 	},
 
 	die: function () {
+		//We unregister callbacks where we are the source OR the target
 		this.obj.spellbook.unregisterCallback(this.obj.id);
+		this.obj.spellbook.unregisterCallback(this.obj.id, true);
 	}
 };

@@ -524,21 +524,24 @@ module.exports = {
 		return obj;
 	},
 
-	unregisterCallback: function (sourceId, target) {
+	unregisterCallback: function (objId, isTarget) {
 		let callbacks = this.callbacks;
 		let cLen = callbacks.length;
 		for (let i = 0; i < cLen; i++) {
 			let c = callbacks[i];
-
-			let match = false;
-			if (!target)
-				match = (c.sourceId === sourceId);
-			else 
-				match = (c.targetId === sourceId);
-
-			if (match) {
+			if (
+				(
+					isTarget &&
+					c.targetId === objId
+				) ||
+				(
+					!isTarget &&
+					c.sourceId === objId
+				)
+			) {
 				if (c.destroyCallback)
 					c.destroyCallback();
+				
 				callbacks.splice(i, 1);
 				i--;
 				cLen--;
