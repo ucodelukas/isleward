@@ -175,14 +175,15 @@ module.exports = {
 				spellName: 'projectile',
 				spellConfig: {
 					statType: 'int',
-					statMult: 0.9,
+					statMult: 1,
 					element: 'arcane',
 					auto: true,
 					cdMax: 7,
+					castTimeMax: 0,
 					manaCost: 0,
 					range: 9,
 					random: {
-						damage: [2, 15]
+						damage: [1.65, 10.81]
 					}
 				}
 			});
@@ -202,6 +203,7 @@ module.exports = {
 			return itemGenerator.generate({
 				name: 'Steelclaw\'s Bite',
 				level: [18, 20],
+				attrRequire: 'dex',
 				quality: 4,
 				noSpell: true,
 				slot: 'oneHanded',
@@ -225,11 +227,12 @@ module.exports = {
 				spellName: 'melee',
 				spellConfig: {
 					statType: 'dex',
-					statMult: 0.88,
+					statMult: 1,
 					cdMax: 3,
+					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
-						damage: [1, 3.8]
+						damage: [0.88, 5.79]
 					}
 				}
 			});
