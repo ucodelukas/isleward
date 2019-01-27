@@ -282,7 +282,7 @@ define([
 							el.show();
 					}
 
-					if (m.type === 'loot') {
+					if (isMobile && m.type === 'loot') {
 						events.emit('onGetAnnouncement', {
 							msg: m.message
 						});
