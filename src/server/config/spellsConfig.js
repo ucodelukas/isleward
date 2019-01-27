@@ -62,6 +62,7 @@ let spells = {
 	smite: {
 		statType: 'int',
 		statMult: 1,
+		element: 'holy',
 		cdMax: 4,
 		castTimeMax: 6,
 		range: 9,
