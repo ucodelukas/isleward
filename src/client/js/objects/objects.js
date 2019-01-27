@@ -12,7 +12,7 @@ define([
 	config
 ) {
 	return {
-		showNames: false,
+		showNames: true,
 
 		objects: [],
 
