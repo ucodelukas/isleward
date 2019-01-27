@@ -295,7 +295,8 @@ define([
 				});
 			});
 
-			container.scrollTop(9999999);
+			if (!this.el.hasClass('typing'))
+				container.scrollTop(9999999);
 		},
 
 		hideItemTooltip: function () {
