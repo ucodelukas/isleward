@@ -24,7 +24,7 @@ module.exports = {
 	stats: {
 		owl: {
 			values: {
-				hpMax: 50
+				hpMax: 35
 			},
 			gainStats: {
 				int: 1
@@ -32,7 +32,7 @@ module.exports = {
 		},
 		bear: {
 			values: {
-				hpMax: 80
+				hpMax: 55
 			},
 			gainStats: {
 				str: 1
@@ -40,7 +40,7 @@ module.exports = {
 		},
 		lynx: {
 			values: {
-				hpMax: 70
+				hpMax: 45
 			},
 			gainStats: {
 				dex: 1

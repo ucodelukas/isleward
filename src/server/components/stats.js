@@ -1,5 +1,5 @@
 let animations = require('../config/animations');
-let classes = require('../config/spirits');
+let spirits = require('../config/spirits');
 let scheduler = require('../misc/scheduler');
 
 let baseStats = {
@@ -116,7 +116,7 @@ module.exports = {
 		if (this.obj.player) {
 			this.calcXpMax();
 			this.addLevelAttributes();
-			this.values.hpMax = (this.values.level || 1) * 32.7;
+			this.calcHpMax();
 		}
 
 		if (blueprint)
@@ -235,6 +235,13 @@ module.exports = {
 		this.obj.syncer.setObject(true, 'stats', 'values', 'xpMax', this.values.xpMax);
 	},
 
+	calcHpMax: function () {
+		const spiritConfig = spirits.stats[this.obj.class];
+		const initialHp = spiritConfig ? spiritConfig.values.hpMax : 32.7;
+
+		this.values.hpMax = initialHp + (((this.values.level || 1) - 1) * 32.7);
+	},
+
 	//Source is the object that caused you to gain xp (mostly yourself)
 	//Target is the source of the xp (a mob or quest)
 	getXp: function (amount, source, target) {
@@ -282,7 +289,7 @@ module.exports = {
 			if (values.level === consts.maxLevel)
 				values.xp = 0;
 
-			values.hpMax += 32.7;
+			this.calcHpMax();
 			this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 
 			this.addLevelAttributes(true);
@@ -460,7 +467,7 @@ module.exports = {
 	},
 
 	addLevelAttributes: function (singleLevel) {
-		const gainStats = classes.stats[this.obj.class].gainStats;
+		const gainStats = spirits.stats[this.obj.class].gainStats;
 		const count = singleLevel ? 1 : this.values.level;
 
 		for (let s in gainStats) 
