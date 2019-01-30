@@ -237,9 +237,11 @@ module.exports = {
 
 	calcHpMax: function () {
 		const spiritConfig = spirits.stats[this.obj.class];
+		
 		const initialHp = spiritConfig ? spiritConfig.values.hpMax : 32.7;
+		let increase = spiritConfig ? spiritConfig.values.hpPerLevel : 32.7;
 
-		this.values.hpMax = initialHp + (((this.values.level || 1) - 1) * 32.7);
+		this.values.hpMax = initialHp + (((this.values.level || 1) - 1) * increase);
 	},
 
 	//Source is the object that caused you to gain xp (mostly yourself)
