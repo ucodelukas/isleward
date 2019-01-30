@@ -181,7 +181,7 @@ module.exports = {
 		if (msg.data.ignore)
 			return;
 
-		if (!profanities.isClean(messageString) && !msg.data.item) {
+		if (!msg.data.item && !profanities.isClean(messageString)) {
 			this.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
 			return;
 		}
