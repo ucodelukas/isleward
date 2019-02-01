@@ -182,7 +182,6 @@ define([
 
 					let compareImplicitStats = compare.implicitStats;
 					tempImplicitStats.forEach(s => {
-						let statName = s.stat;
 						let statValue = s.value;
 
 						let f = compareImplicitStats.find(c => c.stat === statValue);

@@ -54,7 +54,7 @@ module.exports = {
 				cpn.transfer();
 		}
 
-		this.physics.addObject(obj, obj.x, obj.y);
+		//this.physics.addObject(obj, obj.x, obj.y);
 
 		return obj;
 	},

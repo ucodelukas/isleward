@@ -1,5 +1,3 @@
-/* global _, scale, scaleMult, isMobile */
-
 window.isMobile = /Mobi|Android/i.test(navigator.userAgent);
 window.scale = isMobile ? 32 : 40;
 window.scaleMult = isMobile ? 4 : 5;
@@ -59,8 +57,8 @@ Object.defineProperty(Object.prototype, 'has', {
 	}
 });
 
-//eslint-disable-next-line no-extend-native
 if (!String.prototype.padStart) {
+	//eslint-disable-next-line no-extend-native
 	String.prototype.padStart = function padStart (targetLength, padString) {
 		targetLength = targetLength >> 0;
 		padString = String(typeof padString !== 'undefined' ? padString : ' ');
@@ -75,17 +73,17 @@ if (!String.prototype.padStart) {
 	};
 }
 
-//eslint-disable-next-line no-extend-native
 if (!String.prototype.padStart) {
+	//eslint-disable-next-line no-extend-native
 	String.prototype.padStart = function padStart (targetLength, padString) {
-		targetLength = targetLength >> 0; //truncate if number, or convert non-number to 0;
+		targetLength = targetLength >> 0;
 		padString = String(typeof padString !== 'undefined' ? padString : ' ');
 		if (this.length >= targetLength) 
 			return String(this);
          
 		targetLength = targetLength - this.length;
 		if (targetLength > padString.length) 
-			padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+			padString += padString.repeat(targetLength / padString.length);
             
 		return padString.slice(0, targetLength) + String(this);
 	};

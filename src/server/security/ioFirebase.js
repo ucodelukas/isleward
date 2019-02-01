@@ -7,8 +7,8 @@ module.exports = {
 	db: null,
 	io: null,
 
-	init: async function (io, convert) {
-		this.io = io;
+	init: async function (oldIo, convert) {
+		this.io = oldIo;
 
 		firebase.initializeApp(fConfig);
 		this.db = firebase.database();
@@ -75,10 +75,12 @@ module.exports = {
 
 		for (let table of tables) {
 			if (skip.includes(table)) {
+				//eslint-disable-next-line no-console
 				console.log(`Skipping ${table}`);
 				continue;
 			}
 
+			//eslint-disable-next-line no-console
 			console.log(`Converting ${table}`);
 			if (table === 'character') {
 				await this.convertCorrupted('character', {}, true);
@@ -98,14 +100,17 @@ module.exports = {
 			});
 
 			let length = records.length;
+			//eslint-disable-next-line no-console
 			console.log(`${length} records`);
 			let i = 0;
 			for (let record of records) {
+				//eslint-disable-next-line no-console
 				console.log(++i + '/' + length);
 				//if (table === 'login' && i < 12400)
 				//	continue;
 
 				if (!record.key || record.key.indexOf('.') > -1 || record.key.indexOf('$') > -1 || record.key.indexOf('#') > -1) {
+					//eslint-disable-next-line no-console
 					console.log(`Invalid key ${record.key}`);
 					fs.appendFileSync(`failed-${table}`, record.key + '\r\n');
 					continue;
@@ -122,8 +127,8 @@ module.exports = {
 
 		let length = records.length;
 		let i = 0;
-		let failed = [];
 		for (let record of records) {
+			//eslint-disable-next-line no-console
 			console.log(++i + '/' + length);
 			let charList = record.value;
 			for (let charName of charList) {
@@ -137,8 +142,10 @@ module.exports = {
 					});
 
 					if (!character) {
-						if (showErrors)
+						if (showErrors) {
+							//eslint-disable-next-line no-console
 							console.log(charName + ' failed');
+						}
 					} else
 						await this.write(table, charName, character);
 				} catch (e) {}

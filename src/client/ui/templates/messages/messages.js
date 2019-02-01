@@ -127,6 +127,8 @@ define([
 		clickKey: function (key) {
 			window.navigator.vibrate(20);
 
+			let elInput = this.find('input');
+
 			const handler = {
 				caps: () => {
 					this.kbUpper = (this.kbUpper + 1) % 3;
@@ -138,7 +140,6 @@ define([
 				},
 
 				backspace: () => {
-					let elInput = this.find('input');
 					elInput.val(elInput.val().slice(0, -1));
 					this.find('.input').html(elInput.val());
 				},
@@ -156,7 +157,6 @@ define([
 				return;
 			}
 
-			let elInput = this.find('input');
 			elInput.val(elInput.val() + key);
 			this.checkChatLength();
 
