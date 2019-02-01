@@ -6,7 +6,10 @@ Built with NodeJS, JS, HTML and CSS.
 
 [Play Now](http://play.isleward.com/) | [Discord](https://discord.gg/gnsn7ZP) | [Subreddit](https://www.reddit.com/r/isleward) | [Blog](http://blog.isleward.com/) | [Wiki](http://wiki.isleward.com/Main_Page) | [Twitter](https://twitter.com/bigbadwofl) | [Patreon](http://patreon.com/bigbadwaffle)
 
+[How to contribute](CONTRIBUTING.md)
+
 ### Installation and Usage
+
 * [Windows](https://gitlab.com/Isleward/isleward/wikis/installation-and-usage-(windows))
 * [Linux](https://gitlab.com/Isleward/isleward/wikis/installation-and-usage-(linux))
 * [MacOS](https://gitlab.com/Isleward/isleward/wikis/installation-and-usage-(macos))
