@@ -29,8 +29,8 @@ define([
 		sprite: null,
 
 		init: function () {
-			events.on('onUiHover', this.onUiHover.bind(this, true));
-			events.on('onUiLeave', this.onUiHover.bind(this, false));
+			this.hookEvent('onUiHover', this.onUiHover.bind(this, true));
+			this.hookEvent('onUiLeave', this.onUiHover.bind(this, false));
 
 			this.sprite = renderer.buildObject({
 				layerName: 'effects',
@@ -76,6 +76,8 @@ define([
 			renderer.destroyObject({
 				sprite: this.sprite
 			});
+
+			this.unhookEvents();
 		}
 	};
 });

@@ -30,7 +30,7 @@ define([
 			obj.addComponent('serverActions');
 			obj.addComponent('pather');
 
-			events.on('onRespawn', this.onRespawn.bind(this));
+			this.hookEvent('onRespawn', this.onRespawn.bind(this));
 
 			events.emit('onGetPortrait', obj.portrait);
 		},
@@ -70,6 +70,10 @@ define([
 
 		onRespawn: function (position) {
 			this.positionCamera(position.x, position.y, true);
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });

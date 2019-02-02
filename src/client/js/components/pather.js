@@ -116,6 +116,10 @@ define([
 					return;
 				}
 			}
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });

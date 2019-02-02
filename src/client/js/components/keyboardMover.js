@@ -16,7 +16,7 @@ define([
 		moveCdMax: 8,
 
 		init: function () {
-			events.on('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
+			this.hookEvent('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
 		},
 
 		update: function () {
@@ -74,6 +74,10 @@ define([
 			this.moveCd = this.moveCdMax;
 
 			this.obj.pather.add(newX, newY);
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });

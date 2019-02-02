@@ -11,7 +11,7 @@ define([
 		actions: [],
 
 		init: function (blueprint) {
-			events.on('onKeyUp', this.onKeyUp.bind(this));
+			this.hookEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
 		onKeyUp: function (key) {
@@ -55,6 +55,10 @@ define([
 			}
 
 			events.emit('onGetServerActions', this.actions);
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });

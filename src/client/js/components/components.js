@@ -37,10 +37,37 @@ let components = [
 	return 'js/components/' + c;
 });
 
-define(components, function () {
+define([
+	...components, 
+	'../system/events'
+], function () {
+	const events = arguments[arguments.length - 1];
+	
+	const hookEvent = function (e, cb) {
+		if (!this.eventList[e])
+			this.eventList[e] = [];
+
+		this.eventList[e].push(cb);
+		events.on(e, cb);
+	};
+
+	const unhookEvents = function () {
+		Object.entries(this.eventList).forEach(([eventName, callbacks]) => {
+			callbacks.forEach(c => events.off(eventName, c));
+		});
+	};
+
 	let templates = {};
 
-	[].forEach.call(arguments, function (t) {
+	[].forEach.call(arguments, function (t, i) {
+		//Don't do this for the events module
+		if (i === arguments.length - 1)
+			return;
+
+		t.eventList = {};
+		t.hookEvent = hookEvent.bind(t);
+		t.unhookEvents = unhookEvents.bind(t);
+
 		templates[t.type] = t;
 	});
 

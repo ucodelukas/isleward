@@ -13,7 +13,7 @@ define([
 
 		init: function () {
 			this.obj.on('onKeyDown', this.onKeyDown.bind(this));
-			events.on('onRezone', this.onRezone.bind(this));
+			this.hookEvent('onRezone', this.onRezone.bind(this));
 		},
 
 		extend: function (msg) {
@@ -72,6 +72,10 @@ define([
 					method: 'gather'
 				}
 			});
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });
