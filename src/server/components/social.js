@@ -79,7 +79,7 @@ module.exports = {
 			player.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'color-grayB',
+						class: 'color-tealC',
 						message: '(party: ' + charname + '): ' + message,
 						type: 'chat',
 						source: this.obj.name
