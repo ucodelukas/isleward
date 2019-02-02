@@ -253,7 +253,7 @@ define([
 			messages.forEach(m => {
 				let message = m.message;
 
-				if (this.blockedPlayers.includes(m.source))
+				if (m.source && this.blockedPlayers.includes(m.source))
 					return;
 
 				if (m.item) {

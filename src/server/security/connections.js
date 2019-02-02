@@ -173,6 +173,17 @@ module.exports = {
 		return result;
 	},
 
+	forceSaveAll: function () {
+		this.players
+			.filter(p => p.zone)
+			.forEach(p => {
+				atlas.performAction(p, {
+					cpn: 'auth',
+					method: 'doSave'
+				});
+			});
+	},
+
 	modifyPlayerCount: function (delta) {
 		this.playing += delta;
 	}
