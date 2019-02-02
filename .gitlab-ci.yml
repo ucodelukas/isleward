@@ -11,8 +11,6 @@ audit:
   only:
     - merge_requests
     - master
-  except:
-    - branches
 
 lint-server:
   stage: test
@@ -23,8 +21,6 @@ lint-server:
   only:
     - merge_requests
     - master
-  except:
-    - branches
 
 lint-client:
   stage: test
@@ -35,5 +31,3 @@ lint-client:
   only:
     - merge_requests
     - master
-  except:
-    - branches    
