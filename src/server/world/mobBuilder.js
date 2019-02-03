@@ -63,6 +63,8 @@ module.exports = {
 			mob.addComponent('aggro', {
 				faction: blueprint.faction
 			});
+
+			mob.aggro.calcThreatCeiling(type);
 		}
 
 		mob.addComponent('equipment');
