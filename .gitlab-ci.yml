@@ -2,6 +2,7 @@ image: node:lts-jessie
 
 stages:
   - test
+  - build
 
 audit:
   stage: test
@@ -31,3 +32,19 @@ lint-client:
   only:
     - merge_requests
     - master
+
+build-image:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    - master
+    - tags
