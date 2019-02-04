@@ -19,7 +19,7 @@ define([
 
 		init: function () {
 			['onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'].forEach(e => {
-				this.obj.on(e, this[e].bind(this));
+				this.hookEvent(e, this[e].bind(this));
 			});
 
 			this.obj.on('onShake', this.onShake.bind(this));
@@ -105,6 +105,10 @@ define([
 				deltaX: dx,
 				deltaY: dy
 			});
+		},
+
+		destroy: function () {
+			this.unhookEvents();
 		}
 	};
 });

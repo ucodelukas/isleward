@@ -61,7 +61,7 @@ define([
 
 	[].forEach.call(arguments, function (t, i) {
 		//Don't do this for the events module
-		if (i === arguments.length - 1)
+		if (i === arguments[2].length - 1)
 			return;
 
 		t.eventList = {};
