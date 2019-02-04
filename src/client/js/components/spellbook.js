@@ -163,13 +163,15 @@ define([
 				target = null;
 			else if (!spell.targetGround && this.target)
 				target = this.target.id;
+			else if (spell.targetPlayerPos)
+				isShiftDown = true;
 
 			if (isShiftDown)
 				this.target = oldTarget;
 
 			if (target === this.obj && spell.noTargetSelf)
 				return;
-			else if (isMobile && spell.targetGround && !this.groundTarget) {
+			else if (isMobile && spell.targetGround && !spell.targetPlayerPos && !this.groundTarget) {
 				if (this.groundTargetSpell === key) {
 					this.groundTargetSpell = null;
 

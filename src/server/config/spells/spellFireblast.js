@@ -2,6 +2,7 @@ module.exports = {
 	type: 'fireblast',
 
 	targetGround: true,
+	targetPlayerPos: true,
 
 	radius: 2,
 	pushback: 4,
