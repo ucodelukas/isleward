@@ -21,6 +21,7 @@ module.exports = {
 		return {
 			type: 'equipment',
 			eq: {},
+			quickSlots: this.quickSlots,
 			eqTransfer: this.eq
 		};
 	},
