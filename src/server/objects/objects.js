@@ -238,7 +238,9 @@ module.exports = {
 						let eventList = player.events[e] || (player.events[e] = []);
 						eventList.push(obj);
 					}
-				} else
+				} else if (obj.msg instanceof Array) 
+					global[obj.module][obj.method](...obj.msg);	
+				else
 					global[obj.module][obj.method](obj.msg);
 			}
 		}

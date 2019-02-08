@@ -159,12 +159,22 @@ module.exports = {
 		}, this);
 
 		if (event.winText) {
-			this.instance.syncer.queue('onGetMessages', {
-				messages: {
-					class: 'color-pinkA',
-					message: event.winText
-				}
-			}, -1);
+			this.instance.syncer.queue('serverModule', {
+				module: 'cons',
+				method: 'emit',
+				msg: [
+					'event',
+					{
+						event: 'onGetMessages',
+						data: {
+							messages: {
+								class: 'color-pinkA',
+								message: event.winText
+							}
+						}
+					}
+				]
+			}, 'server');
 		}
 
 		event.phases.forEach(function (p) {
@@ -211,12 +221,22 @@ module.exports = {
 		if (event.config.notifications) {
 			let n = event.config.notifications.find(f => (f.mark === event.age));
 			if (n) {
-				this.instance.syncer.queue('onGetMessages', {
-					messages: {
-						class: 'color-pinkA',
-						message: n.msg
-					}
-				}, -1);
+				this.instance.syncer.queue('serverModule', {
+					module: 'cons',
+					method: 'emit',
+					msg: [
+						'event',
+						{
+							event: 'onGetMessages',
+							data: {
+								messages: {
+									class: 'color-pinkA',
+									message: n.msg
+								}
+							}
+						}
+					]
+				}, 'server');
 
 				if (n.has('desc')) {
 					event.config.descTimer = n.desc;
