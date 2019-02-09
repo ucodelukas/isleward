@@ -34,17 +34,17 @@ module.exports = {
 			noParse: true
 		});
 
-		bcrypt.compare(config.pwd, storedPassword, this.doSaveAll.bind(this, config));
+		bcrypt.compare(config.pwd, storedPassword, this.doSaveAll.bind(this, res, config));
 	},
 
-	doSaveAll: function (config, err, compareResult) {
+	doSaveAll: function (res, config, err, compareResult) {
 		if (!compareResult)
 			return;
 
 		let roleLevel = roles.getRoleLevel({
 			account: config.username
 		});
-		if (roleLevel < 10)
+		if (roleLevel < 9)
 			return;
 
 		cons.emit('event', {
@@ -59,6 +59,10 @@ module.exports = {
 		});
 
 		connections.forceSaveAll();
+
+		res.jsonp({
+			success: true
+		});
 	},
 
 	willHandle: function (url) {
