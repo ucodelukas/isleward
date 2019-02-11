@@ -84,6 +84,9 @@ define([
 								compare.stats[s] += equippedOffhand.stats[s];
 							}
 
+							if (!compare.implicitStats)
+								compare.implicitStats = [];
+
 							(equippedOffhand.implicitStats || []).forEach(s => {
 								let f = compare.implicitStats.find(i => i.stat === s.stat);
 								if (!f) {
