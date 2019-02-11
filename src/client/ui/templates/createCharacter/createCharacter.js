@@ -188,6 +188,8 @@ define([
 				return;
 
 			this.costume = (this.costume + delta) % spriteList.length;
+			if (this.costume < 0)
+				this.costume = spriteList.length - 1;
 			this.skinId = spriteList[this.costume].id;
 
 			$('.txtCostume').html(spriteList[this.costume].name);
