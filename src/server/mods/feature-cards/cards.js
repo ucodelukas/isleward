@@ -157,6 +157,7 @@ module.exports = {
 			return itemGenerator.generate({
 				name: 'Princess Morgawsa\'s Trident',
 				level: [18, 20],
+				attrRequire: 'int',
 				quality: 4,
 				noSpell: true,
 				slot: 'twoHanded',
