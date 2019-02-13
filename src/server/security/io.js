@@ -1,13 +1,12 @@
 let fs = require('fs');
 let util = require('util');
 
-let firebase = null;
+let rethink = null;
 
-const useFirebase = false;
-const doConvert = false;
+const useRethink = true;
 
-if (useFirebase)
-	firebase = require('./ioFirebase');
+if (useRethink)
+	rethink = require('./ioRethink');
 
 module.exports = {
 	db: null,
@@ -32,12 +31,11 @@ module.exports = {
 		accountInfo: null
 	},
 
-	init: function (cbReady) {
-		if (useFirebase && !doConvert) {
-			firebase.init(this, false);
-			cbReady();
-			return;
-		}
+	init: async function (cbReady) {
+		if (rethink) 
+			await rethink.init(this);
+			//cbReady();
+			//return;
 
 		let sqlite = require('sqlite3').verbose();
 		this.exists = fs.existsSync(this.file);
@@ -54,8 +52,6 @@ module.exports = {
 				`, scope.onTableCreated.bind(scope, t));
 			}
 
-			if (useFirebase)
-				firebase.init(this, true);
 			cbReady();
 		}, this);
 
@@ -172,12 +168,9 @@ module.exports = {
 				_.log(e);
 			
 			_.log(e);
-			if (!doConvert) 
-				this.buffer.splice(0, 0, next);
-			else {
-				next.resolve(null);
-				return;
-			}
+
+			this.buffer.splice(0, 0, next);
+
 			setTimeout(this.process.bind(this), 10);
 			return;
 		}
