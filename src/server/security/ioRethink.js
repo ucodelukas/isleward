@@ -55,22 +55,33 @@ module.exports = {
 
 	getAsync: async function ({
 		table,
-		key
+		key,
+		isArray,
+		noDefault
 	}) {
 		let res = await r.table(table)
 			.get(key)
 			.run(this.connection);
+
+		if (res)
+			return res.value;
+		else if (isArray && !noDefault)
+			return [];
+
+		return res;
 	},
 
 	setAsync: async function ({
 		table,
-		key,
+		key: id,
 		value
 	}) {
 		await r.table(table)
 			.insert({
-				index: key,
+				id,
 				value
+			}, {
+				conflict: 'update'
 			})
 			.run(this.connection);
 	}

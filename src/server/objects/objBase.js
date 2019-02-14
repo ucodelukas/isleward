@@ -111,6 +111,8 @@ module.exports = {
 				continue;
 			else if (type !== 'object')
 				result[p] = value;
+			else if (type === 'undefined')
+				continue;
 			else {
 				if (value.type) {
 					if (!value.simplify) {

@@ -103,13 +103,15 @@ module.exports = {
 		await io.setAsync({
 			key: this.charname,
 			table: 'character',
-			value: JSON.stringify(simple).split('\'').join('`')
+			value: simple,
+			clean: true
 		});
 
 		await io.setAsync({
 			key: this.username,
 			table: 'stash',
-			value: this.obj.stash.serialize()
+			value: this.obj.stash.serialize(),
+			clean: true
 		});
 
 		if (callback)
@@ -224,7 +226,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'skins',
-			value: JSON.stringify(this.skins)
+			value: this.skins,
+			serialize: true
 		});
 	},
 
@@ -333,7 +336,8 @@ module.exports = {
 		await io.setAsync({
 			key: msg.data.username,
 			table: 'characterList',
-			value: '[]'
+			value: [],
+			serialize: true
 		});
 
 		this.username = msg.data.username;
@@ -415,7 +419,8 @@ module.exports = {
 		await io.setAsync({
 			key: name,
 			table: 'character',
-			value: JSON.stringify(simple)
+			value: simple,
+			serialize: true
 		});
 
 		this.characters[name] = simple;
@@ -424,7 +429,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(this.characterList)
+			value: this.characterList,
+			serialize: true
 		});
 
 		this.play({
@@ -463,7 +469,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(characterList)
+			value: characterList,
+			serialize: true
 		});
 
 		await leaderboard.deleteCharacter(name);
