@@ -127,10 +127,11 @@ module.exports = {
 		if (character.dead)
 			value.dead = true;
 
-		io.set({
-			ent: character.name,
-			field: 'leaderboard',
-			value: JSON.stringify(character)
+		await io.setAsync({
+			key: character.name,
+			table: 'leaderboard',
+			value: character,
+			serialize: true
 		});
 	}
 };

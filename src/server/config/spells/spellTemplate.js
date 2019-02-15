@@ -230,7 +230,17 @@ module.exports = {
 		let values = {};
 		for (let p in this) {
 			let value = this[p];
-			if (typeof (value) === 'function' || ['obj', 'currentAction', 'autoActive'].includes(p))
+			let type = typeof(value);
+
+			if (
+				type === 'undefined' ||
+				type === 'function' || 
+				(
+					type === 'number' &&
+					isNaN(value)
+				) ||
+				['obj', 'currentAction', 'autoActive'].includes(p)
+			)
 				continue;
 
 			values[p] = value;
