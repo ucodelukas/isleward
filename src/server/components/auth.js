@@ -5,7 +5,7 @@ let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
 let fixes = require('../fixes/fixes');
 let loginRewards = require('../config/loginRewards');
-let mail = require('../misc/mail');
+let mail = require('../mail/mail');
 let scheduler = require('../misc/scheduler');
 let spirits = require('../config/spirits');
 
@@ -80,7 +80,9 @@ module.exports = {
 	},
 
 	onSendRewards: async function (data, character) {
-		delete mail.busy[character.name];
+		//Bit of a hack. Rethink doesn't havve a busy list
+		if (mail.busy)
+			delete mail.busy[character.name];
 
 		await io.setAsync({
 			key: this.username,

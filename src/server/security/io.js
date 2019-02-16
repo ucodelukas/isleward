@@ -11,7 +11,6 @@ if (useRethink)
 module.exports = {
 	db: null,
 	file: '../../data/storage.db',
-	exists: false,
 
 	buffer: [],
 	processing: [],
@@ -38,7 +37,6 @@ module.exports = {
 			//return;
 
 		let sqlite = require('sqlite3').verbose();
-		this.exists = fs.existsSync(this.file);
 		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
 	},
 	onDbCreated: function (cbReady) {
@@ -54,8 +52,6 @@ module.exports = {
 
 			cbReady();
 		}, this);
-
-		this.exists = true;
 	},
 	onTableCreated: async function (table) {
 		

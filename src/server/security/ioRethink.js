@@ -53,6 +53,10 @@ module.exports = {
 		io.getAllAsync = this.getAllAsync.bind(this);
 		io.setAsync = this.setAsync.bind(this);
 		io.deleteAsync = this.deleteAsync.bind(this);
+
+		io.subscribe = this.subscribe.bind(this);
+		io.append = this.append.bind(this);
+		io.exists = this.exists.bind(this);
 	},
 
 	getAsync: async function ({
@@ -95,7 +99,8 @@ module.exports = {
 	setAsync: async function ({
 		table,
 		key: id,
-		value
+		value,
+		conflict = 'update'
 	}) {
 		let recurse = (o, i = 0) => {
 			if (!o)
@@ -118,7 +123,7 @@ module.exports = {
 				id,
 				value
 			}, {
-				conflict: 'update'
+				conflict
 			})
 			.run(this.connection);
 	},
@@ -131,5 +136,36 @@ module.exports = {
 			.get(key)
 			.delete()
 			.run(this.connection);
+	},
+
+	subscribe: function (table) {
+		return r.table(table)
+			.changes()
+			.run(this.connection);
+	},
+
+	append: async function ({
+		table,
+		key,
+		value,
+		field
+	}) {
+		await r.table(table)
+			.get(key)
+			.update({
+				[field]: r.row('value').append(...value)
+			})
+			.run(this.connection);
+	},
+
+	exists: async function ({
+		table,
+		key
+	}) {
+		let res = await r.table(table)
+			.get(key)
+			.run(this.connection);
+
+		return !!res;
 	}
 };

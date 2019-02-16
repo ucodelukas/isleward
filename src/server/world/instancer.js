@@ -9,7 +9,7 @@ let questBuilder = require('../config/quests/questBuilder');
 let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
-let mail = require('../misc/mail');
+let mail = require('../mail/mail');
 let herbs = require('../config/herbs');
 let eventEmitter = require('../misc/events');
 
