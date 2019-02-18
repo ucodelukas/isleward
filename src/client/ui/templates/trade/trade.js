@@ -17,7 +17,7 @@ define([
 		centered: true,
 
 		modal: true,
-		hasClose: true, 
+		hasClose: true,
 
 		list: null,
 		action: null,
@@ -75,17 +75,19 @@ define([
 					.appendTo(container);
 
 				let spritesheet = item.spritesheet || '../../../images/items.png';
-				if (item.material)
-					spritesheet = '../../../images/materials.png';
-				else if (item.quest)
-					spritesheet = '../../../images/questItems.png';
-				else if (item.type === 'consumable')
-					spritesheet = '../../../images/consumables.png';
-				else if (item.type === 'skin') {
+				if (!item.spritesheet) {
+					if (item.material)
+						spritesheet = '../../../images/materials.png';
+					else if (item.quest)
+						spritesheet = '../../../images/questItems.png';
+					else if (item.type === 'consumable')
+						spritesheet = '../../../images/consumables.png';
+					else if (item.type === 'skin')
+						spritesheet = '../../../images/characters.png';
+				}
+				if (item.type === 'skin') {
 					offset = 4;
 					size = 8;
-					if (!item.spritesheet)
-						spritesheet = '../../../images/characters.png';
 				}
 
 				let imgX = (-item.sprite[0] * size) + offset;
@@ -119,7 +121,7 @@ define([
 					} else
 						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);
 
-					if (!noAfford && item.factions) 
+					if (!noAfford && item.factions)
 						noAfford = item.factions.some(f => f.noEquip);
 
 					if (noAfford)
