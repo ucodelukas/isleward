@@ -160,10 +160,11 @@ module.exports = {
 		let outputItems = recipe.item ? [ recipe.item ] : recipe.items;
 		outputItems.forEach(itemBpt => {
 			let item = extend({}, itemBpt);
+			
 			if (item.description)
 				item.description += `<br /><br />(Crafted by ${obj.name})`;
 			else
-				item.description = `(Crafted by ${obj.name})`;
+				item.description = `<br /><br />(Crafted by ${obj.name})`;
 			
 			const quantity = item.quantity;
 			if (quantity && quantity.push)
