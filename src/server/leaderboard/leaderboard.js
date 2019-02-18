@@ -56,7 +56,7 @@ module.exports = {
 		});
 
 		this.list = list.map(l => ({
-			name: l.key,
+			name: l.id,
 			level: l.value.level,
 			prophecies: l.value.prophecies
 		}));
@@ -88,8 +88,9 @@ module.exports = {
 			};
 
 			this.list.push(exists);
-			this.sort();
 		}
+
+		this.sort();
 
 		this.save(exists);
 	},
