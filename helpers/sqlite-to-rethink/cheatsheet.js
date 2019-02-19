@@ -28,3 +28,22 @@ r.db('test').table('character')
 //Group by mod action source,a ggregate and order by count
 r.db('test').table('modLog')
 	.group(r => r('value')('source')).count().ungroup().orderBy('reduction');
+
+r.db('test').table('character')
+	.concatMap(row => {
+		return row('value')('components')
+			.filter(cpn => {
+				return cpn('type').eq('inventory');
+			})
+			.concatMap(c => {
+				return [{
+					name: row('value')('name'),
+					cpn: c('items').filter(item => {
+						return item('stats')('dex').ge(30);
+					})
+				}];
+			})
+			.filter(c => {
+				return c('cpn').count().ge(1);
+			});
+	});
