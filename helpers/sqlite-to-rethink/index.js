@@ -7,12 +7,11 @@ const config = {
 
 	dbName: 'dev',
 
-	dropTables: true,
+	dropTables: false,
 
 	maxBusy: 100,
 
 	tables: [
-		'character'/*,
 		'characterList',
 		'stash',
 		'skins',
@@ -23,7 +22,8 @@ const config = {
 		'customChannels',
 		'error',
 		'modLog',
-		'accountInfo'*/
+		'accountInfo',
+		'character'
 	]
 };
 
@@ -80,6 +80,7 @@ let converter = {
 			this.records = await util.promisify(this.dbS.all.bind(this.dbS))(`SELECT * FROM ${table}`);
 			console.log(`${table}: ${this.records.length} records`);
 			await this.startConvert();
+			console.log('done');
 		}
 	},
 
@@ -114,7 +115,13 @@ let converter = {
 			.split('`')
 			.join('\'');
 
-		let obj = JSON.parse(value);
+		let obj = value;
+		if (!['login'].includes(this.currentTable)) {
+			if (this.currentTable === 'mail' && value === '')
+				value = '{}';
+			
+			obj = JSON.parse(value);
+		}
 
 		await r.table(this.currentTable)
 			.insert({
