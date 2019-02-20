@@ -354,6 +354,11 @@ define([
 			if (e.which === 27) {
 				this.toggle(false);
 				return;
+			} else if (e.which === 9) {
+				e.preventDefault();
+				let textfield = this.find('input');
+				textfield.val(`${textfield.val()}    `);
+				return;
 			} else if (e.which !== 13)
 				return; 
 
