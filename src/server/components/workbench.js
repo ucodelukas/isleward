@@ -160,8 +160,12 @@ module.exports = {
 		let outputItems = recipe.item ? [ recipe.item ] : recipe.items;
 		outputItems.forEach(itemBpt => {
 			let item = extend({}, itemBpt);
-			item.description += `<br /><br />(Crafted by ${obj.name})`;
-
+			
+			if (item.description)
+				item.description += `<br /><br />(Crafted by ${obj.name})`;
+			else
+				item.description = `<br /><br />(Crafted by ${obj.name})`;
+			
 			const quantity = item.quantity;
 			if (quantity && quantity.push)
 				item.quantity = quantity[0] + ~~(Math.random() * (quantity[1] - quantity[0]));
