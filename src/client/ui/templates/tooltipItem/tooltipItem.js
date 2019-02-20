@@ -183,7 +183,7 @@ define([
 							tempStats[s] = -compareStats[s];
 					}
 
-					let compareImplicitStats = compare.implicitStats;
+					let compareImplicitStats = (compare.implicitStats || []);
 					tempImplicitStats.forEach(s => {
 						let statValue = s.value;
 
