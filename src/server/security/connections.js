@@ -97,9 +97,6 @@ module.exports = {
 		if (player.social)
 			player.social.dc();
 
-		if (player.permadead)
-			player.permadead = false;
-			
 		atlas.removeObject(player, true, this.onUnzone.bind(this, player, msg));
 
 		let keys = Object.keys(player);
@@ -127,6 +124,7 @@ module.exports = {
 
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
+		player.permadead = false;
 
 		this.modifyPlayerCount(-1);
 	},
