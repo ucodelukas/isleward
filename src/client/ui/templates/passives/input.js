@@ -1,7 +1,10 @@
 define([
-	'js/system/events'
+	'js/system/events',
+	'js/rendering/renderer'
+
 ], function (
-	events
+	events,
+	renderer
 ) {
 	return {
 		axes: {
@@ -185,8 +188,9 @@ define([
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					this.mouse.x = e.offsetX;
-					this.mouse.y = e.offsetY;
+					const zoom = window.devicePixelRatio;
+					this.mouse.x = e.offsetX * zoom + renderer.pos.x;
+					this.mouse.y = e.offsetY * zoom + renderer.pos.y;
 
 					this.mouse.raw = e;
 
