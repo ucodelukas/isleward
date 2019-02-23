@@ -97,6 +97,9 @@ module.exports = {
 		if (player.social)
 			player.social.dc();
 
+		if (player.permadead)
+			player.permadead = false;
+			
 		atlas.removeObject(player, true, this.onUnzone.bind(this, player, msg));
 
 		let keys = Object.keys(player);
