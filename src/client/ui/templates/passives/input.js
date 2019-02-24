@@ -1,10 +1,7 @@
 define([
-	'js/system/events',
-	'js/rendering/renderer'
-
+	'js/system/events'
 ], function (
-	events,
-	renderer
+	events
 ) {
 	return {
 		axes: {
@@ -189,8 +186,8 @@ define([
 						return;
 
 					const zoom = window.devicePixelRatio;
-					this.mouse.x = e.offsetX * zoom + renderer.pos.x;
-					this.mouse.y = e.offsetY * zoom + renderer.pos.y;
+					this.mouse.x = e.offsetX * zoom;
+					this.mouse.y = e.offsetY * zoom;
 
 					this.mouse.raw = e;
 
