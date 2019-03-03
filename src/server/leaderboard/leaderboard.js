@@ -56,7 +56,8 @@ module.exports = {
 		});
 
 		this.list = list.map(l => ({
-			name: l.id,
+			//This is a bit of a hack. RethinkDB uses 'id' whereas Sqlite uses 'key'
+			name: l.key || l.id,
 			level: l.value.level,
 			prophecies: l.value.prophecies
 		}));

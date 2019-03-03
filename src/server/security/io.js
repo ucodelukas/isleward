@@ -1,8 +1,8 @@
-let fs = require('fs');
 let util = require('util');
 let serverConfig = require('../config/serverConfig');
 
-if (serverConfig.db === 'rethink') {
+//eslint-disable-next-line no-process-env
+if ((process.env.db || serverConfig.db) === 'rethink') {
 	module.exports = require('./ioRethink');
 	return;
 }

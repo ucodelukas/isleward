@@ -106,14 +106,16 @@ module.exports = {
 			key: this.charname,
 			table: 'character',
 			value: simple,
-			clean: true
+			clean: true,
+			serialize: true
 		});
 
 		await io.setAsync({
 			key: this.username,
 			table: 'stash',
 			value: this.obj.stash.serialize(),
-			clean: true
+			clean: true,
+			serialize: true
 		});
 
 		if (callback)

@@ -7,7 +7,7 @@ module.exports = {
 	//Options: 
 	// sqlite
 	// rethink
-	db: 'rethink',
+	db: 'sqlite',
 	dbHost: 'localhost',
 	dbPort: 28015
 };
