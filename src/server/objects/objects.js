@@ -2,6 +2,7 @@ let objBase = require('./objBase');
 
 module.exports = {
 	lastId: 0,
+	instance: null,
 
 	objects: [],
 

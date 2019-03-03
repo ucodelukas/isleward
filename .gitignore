@@ -9,3 +9,7 @@ src/server/mods/iwd-*
 creds.js
 .directory
 firebaseConfig.js
+helpers/sqlite-to-rethink/rethinkdb_data
+helpers/sqlite-to-rethink/tmp
+helpers/sqlite-to-rethink/log_file
+helpers/sqlite-to-rethink/rethink.exe

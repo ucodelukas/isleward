@@ -590,7 +590,8 @@ module.exports = {
 		await io.setAsync({
 			key: username,
 			table: 'skins',
-			value: JSON.stringify(skins)
+			value: skins,
+			serialize: true
 		});
 	},
 

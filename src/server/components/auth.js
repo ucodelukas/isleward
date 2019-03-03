@@ -5,7 +5,7 @@ let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
 let fixes = require('../fixes/fixes');
 let loginRewards = require('../config/loginRewards');
-let mail = require('../misc/mail');
+let mail = require('../mail/mail');
 let scheduler = require('../misc/scheduler');
 let spirits = require('../config/spirits');
 
@@ -80,7 +80,9 @@ module.exports = {
 	},
 
 	onSendRewards: async function (data, character) {
-		delete mail.busy[character.name];
+		//Bit of a hack. Rethink doesn't havve a busy list
+		if (mail.busy)
+			delete mail.busy[character.name];
 
 		await io.setAsync({
 			key: this.username,
@@ -103,13 +105,17 @@ module.exports = {
 		await io.setAsync({
 			key: this.charname,
 			table: 'character',
-			value: JSON.stringify(simple).split('\'').join('`')
+			value: simple,
+			clean: true,
+			serialize: true
 		});
 
 		await io.setAsync({
 			key: this.username,
 			table: 'stash',
-			value: this.obj.stash.serialize()
+			value: this.obj.stash.serialize(),
+			clean: true,
+			serialize: true
 		});
 
 		if (callback)
@@ -224,7 +230,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'skins',
-			value: JSON.stringify(this.skins)
+			value: this.skins,
+			serialize: true
 		});
 	},
 
@@ -333,7 +340,8 @@ module.exports = {
 		await io.setAsync({
 			key: msg.data.username,
 			table: 'characterList',
-			value: '[]'
+			value: [],
+			serialize: true
 		});
 
 		this.username = msg.data.username;
@@ -415,7 +423,8 @@ module.exports = {
 		await io.setAsync({
 			key: name,
 			table: 'character',
-			value: JSON.stringify(simple)
+			value: simple,
+			serialize: true
 		});
 
 		this.characters[name] = simple;
@@ -424,7 +433,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(this.characterList)
+			value: this.characterList,
+			serialize: true
 		});
 
 		this.play({
@@ -463,7 +473,8 @@ module.exports = {
 		await io.setAsync({
 			key: this.username,
 			table: 'characterList',
-			value: JSON.stringify(characterList)
+			value: characterList,
+			serialize: true
 		});
 
 		await leaderboard.deleteCharacter(name);

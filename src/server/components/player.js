@@ -34,9 +34,9 @@ module.exports = {
 			zoneName: character.zoneName || serverConfig.defaultZone,
 			x: character.x,
 			y: character.y,
-			hidden: character.dead,
+			hidden: character.dead || null,
 			account: character.account,
-			instanceId: character.instanceId
+			instanceId: character.instanceId || null
 		});
 
 		character.components = character.components || [];
