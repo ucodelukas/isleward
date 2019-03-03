@@ -1,4 +1,5 @@
 let r = require('rethinkdb');
+let serverConfig = require('../config/serverConfig');
 
 const tables = [
 	'character',
@@ -19,16 +20,20 @@ module.exports = {
 	connection: null,
 	useDb: 'dev',
 
-	init: async function () {
-		this.connection = await r.connect({
-			host: 'localhost',
-			port: 28015
-		});
+	init: async function (cbReady) {
+		const dbConfig = {
+			//eslint-disable-next-line no-process-env
+			host: process.env.dbHost || serverConfig.dbHost || 'localhost',
+			//eslint-disable-next-line no-process-env
+			port: process.env.dbPort || serverConfig.dbPort || 28015
+		};
+
+		this.connection = await r.connect(dbConfig);
 
 		await this.connection.use(this.useDb);
 		await this.create();
 
-		this.bindHandlers();
+		cbReady();
 	},
 
 	create: async function () {
@@ -46,17 +51,6 @@ module.exports = {
 					console.log(e);
 			}
 		}
-	},
-
-	bindHandlers: function () {
-		io.getAsync = this.getAsync.bind(this);
-		io.getAllAsync = this.getAllAsync.bind(this);
-		io.setAsync = this.setAsync.bind(this);
-		io.deleteAsync = this.deleteAsync.bind(this);
-
-		io.subscribe = this.subscribe.bind(this);
-		io.append = this.append.bind(this);
-		io.exists = this.exists.bind(this);
 	},
 
 	getAsync: async function ({

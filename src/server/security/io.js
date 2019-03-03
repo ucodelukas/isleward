@@ -1,12 +1,11 @@
 let fs = require('fs');
 let util = require('util');
+let serverConfig = require('../config/serverConfig');
 
-let rethink = null;
-
-const useRethink = true;
-
-if (useRethink)
-	rethink = require('./ioRethink');
+if (serverConfig.db === 'rethink') {
+	module.exports = require('./ioRethink');
+	return;
+}
 
 module.exports = {
 	db: null,
@@ -31,11 +30,6 @@ module.exports = {
 	},
 
 	init: async function (cbReady) {
-		if (rethink) 
-			await rethink.init(this);
-			//cbReady();
-			//return;
-
 		let sqlite = require('sqlite3').verbose();
 		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
 	},

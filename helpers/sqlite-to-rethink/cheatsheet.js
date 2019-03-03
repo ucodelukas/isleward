@@ -25,7 +25,7 @@ r.db('test').table('character')
 		});
 	});
 
-//Group by mod action source,a ggregate and order by count
+//Group by mod action source, aggregate and order by count
 r.db('test').table('modLog')
 	.group(r => r('value')('source')).count().ungroup().orderBy('reduction');
 
@@ -47,3 +47,23 @@ r.db('test').table('character')
 				return c('cpn').count().ge(1);
 			});
 	});
+
+//Play time per account from low to thigh
+r.db('test').table('character')
+	.concatMap(row => {
+		return row('value')('components')
+			.filter(cpn => {
+				return cpn('type').eq('stats');
+			})
+			.concatMap(c => {      
+				return [{
+	      			account: row('value')('account'),
+				 	name: row('value')('name'),
+					played: c('stats')('played')
+				}];
+			});
+	})
+	.group('account')
+	.sum('played')
+	.ungroup()
+	.orderBy('reduction');
