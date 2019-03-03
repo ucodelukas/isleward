@@ -47,8 +47,8 @@ module.exports = {
 			try {
 				await r.tableCreate(table).run(this.connection);
 			} catch (e) {
-				if (!e.msg.includes('already exists'))
-					console.log(e);
+				if (!e.message.includes('already exists'))
+					_.log(e);
 			}
 		}
 	},
@@ -96,22 +96,6 @@ module.exports = {
 		value,
 		conflict = 'update'
 	}) {
-		let recurse = (o, i = 0) => {
-			if (!o)
-				return;
-
-			Object.entries(o).forEach(([k, v]) => {
-				if (typeof(v) === 'object') {
-					//console.log((k + '>').padStart(i));
-					recurse(v, i++);
-				} else if (typeof(v) !== 'string' && isNaN(v)) 
-					console.log((k + v).padStart(i));
-					//console.log();
-			});
-		};
-
-		recurse(value);
-
 		await r.table(table)
 			.insert({
 				id,

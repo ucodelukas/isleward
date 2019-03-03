@@ -151,6 +151,7 @@ module.exports = {
 			});
 		}
 
-		callback && callback();
+		if (callback)
+			callback();
 	}
 };
