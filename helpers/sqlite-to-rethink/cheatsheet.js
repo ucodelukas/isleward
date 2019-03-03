@@ -1,3 +1,6 @@
+//Hack to force eslint pass
+const r = null;
+
 //Count the amount of permadead characters
 r.db('test').table('character').filter({
 	value: {
@@ -27,7 +30,7 @@ r.db('test').table('character')
 
 //Group by mod action source, aggregate and order by count
 r.db('test').table('modLog')
-	.group(r => r('value')('source')).count().ungroup().orderBy('reduction');
+	.group(f => f('value')('source')).count().ungroup().orderBy('reduction');
 
 r.db('test').table('character')
 	.concatMap(row => {
@@ -57,8 +60,8 @@ r.db('test').table('character')
 			})
 			.concatMap(c => {      
 				return [{
-	      			account: row('value')('account'),
-				 	name: row('value')('name'),
+					account: row('value')('account'),
+					name: row('value')('name'),
 					played: c('stats')('played')
 				}];
 			});
