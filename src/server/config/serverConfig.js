@@ -7,7 +7,10 @@ module.exports = {
 	//Options: 
 	// sqlite
 	// rethink
-	db: 'rethink',
-	dbHost: 'localhost',
-	dbPort: 28015
+	//eslint-disable-next-line no-process-env
+	db: process.env.IWD_DB || 'rethink',
+	//eslint-disable-next-line no-process-env
+	dbHost: process.env.IWD_DB_HOST || 'localhost',
+	//eslint-disable-next-line no-process-env
+	dbPort: process.env.IWD_DB_PORT || 28015
 };

@@ -22,10 +22,8 @@ module.exports = {
 
 	init: async function (cbReady) {
 		const dbConfig = {
-			//eslint-disable-next-line no-process-env
-			host: process.env.dbHost || serverConfig.dbHost || 'localhost',
-			//eslint-disable-next-line no-process-env
-			port: process.env.dbPort || serverConfig.dbPort || 28015
+			host: serverConfig.dbHost,
+			port: serverConfig.dbPort
 		};
 
 		this.connection = await r.connect(dbConfig);

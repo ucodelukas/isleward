@@ -7,7 +7,7 @@ const config = {
 
 	dbName: 'dev',
 
-	dropTables: false,
+	dropTables: true,
 
 	maxBusy: 100,
 
