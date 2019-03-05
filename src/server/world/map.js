@@ -10,6 +10,18 @@ let mapFile = null;
 let mapScale = null;
 let padding = null;
 
+const objectifyProperties = oldProperties => {
+	if (!oldProperties || !oldProperties.push)
+		return oldProperties || {};
+
+	let newProperties = {};
+	oldProperties.forEach(p => {
+		newProperties[p.name] = p.value;
+	});
+			
+	return newProperties;
+};
+
 module.exports = {
 	name: null,
 	path: null,
@@ -82,7 +94,9 @@ module.exports = {
 
 		mapFile = require('../' + this.path + '/' + this.name + '/map');
 		this.mapFile = mapFile;
-		this.mapFile.properties = this.mapFile.properties || {};
+		//Fix for newer versions of Tiled
+		this.mapFile.properties = objectifyProperties(this.mapFile.properties);
+
 		mapScale = mapFile.tilesets[0].tileheight;
 
 		this.custom = mapFile.properties.custom;
@@ -147,6 +161,12 @@ module.exports = {
 				row[j] = newCell;
 			}
 		}
+
+		//Fix for newer versions of Tiled
+		randomMap.templates
+			.forEach(r => {
+				r.properties = objectifyProperties(r.properties); 
+			});
 
 		randomMap.templates
 			.filter(r => r.properties.mapping)
@@ -305,6 +325,9 @@ module.exports = {
 			}
 		},
 		object: function (layerName, cell) {
+			//Fix for newer versions of tiled
+			cell.properties = objectifyProperties(cell.properties);
+
 			let clientObj = (layerName === 'clientObjects');
 			let cellInfo = this.builders.getCellInfo(cell.gid);
 
