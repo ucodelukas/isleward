@@ -505,7 +505,7 @@ module.exports = {
 		}, this);
 	},
 
-	mailItem: function (msg) {
+	mailItem: async function (msg) {
 		let item = this.findItem(msg.itemId);
 		if ((!item) || (item.noDrop) || (item.quest)) {
 			this.resolveCallback(msg);
@@ -514,14 +514,11 @@ module.exports = {
 
 		delete item.pos;
 
-		io.get({
-			ent: msg.recipient,
-			field: 'character',
-			callback: this.onCheckCharExists.bind(this, msg, item)
+		let res = await io.getAsync({
+			key: msg.recipient,
+			table: 'character'
 		});
-	},
 
-	onCheckCharExists: async function (msg, item, res) {
 		if (!res) {
 			this.resolveCallback(msg, 'Recipient does not exist');
 			return;

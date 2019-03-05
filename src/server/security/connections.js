@@ -124,6 +124,7 @@ module.exports = {
 
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
+		player.permadead = false;
 
 		this.modifyPlayerCount(-1);
 	},

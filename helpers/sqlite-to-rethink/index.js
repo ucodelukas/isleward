@@ -5,7 +5,7 @@ let util = require('util');
 const config = {
 	file: './storage.db',
 
-	dbName: 'dev',
+	dbName: 'ptr',
 
 	dropTables: true,
 
@@ -48,7 +48,6 @@ let converter = {
 			port: 28015
 		});
 
-		await this.connection.use(this.useDb);
 		await this.setupRethink();
 
 		await this.convertTables();
@@ -57,14 +56,17 @@ let converter = {
 	setupRethink: async function () {
 		try {
 			await r.dbCreate(config.dbName).run(this.connection);
-		} catch (e) {
+		} catch (e) {}
 
-		}
+		await this.connection.use(config.dbName);
 
 		for (const table of config.tables) {
 			try {
-				if (config.dropTables)
-					await r.tableDrop(table).run(this.connection);
+				if (config.dropTables) {
+					try {
+						await r.tableDrop(table).run(this.connection);
+					} catch (e) {}
+				}
 				await r.tableCreate(table).run(this.connection);
 			} catch (e) {
 				if (!e.msg.includes('already exists'))

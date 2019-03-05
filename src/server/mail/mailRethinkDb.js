@@ -76,7 +76,7 @@ module.exports = {
 			table: 'mail'
 		});
 
-		if (!items)
+		if (!items || !(items instanceof Array))
 			return;
 
 		let player = this.instance.objects.objects.find(o => (o.name === playerName));

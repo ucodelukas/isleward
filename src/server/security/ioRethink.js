@@ -18,7 +18,7 @@ const tables = [
 
 module.exports = {
 	connection: null,
-	useDb: 'dev',
+	useDb: 'ptr',
 
 	init: async function (cbReady) {
 		const dbConfig = {
@@ -36,7 +36,7 @@ module.exports = {
 
 	create: async function () {
 		try {
-			await r.dbCreate('dev').run(this.connection);
+			await r.dbCreate(this.useDb).run(this.connection);
 		} catch (e) {
 
 		}
@@ -128,8 +128,16 @@ module.exports = {
 	}) {
 		await r.table(table)
 			.get(key)
-			.update({
-				[field]: r.row('value').append(...value)
+			.update(row => {
+				return r.branch(
+					row('value').typeOf().eq('ARRAY'),
+					{
+						[field]: row('value').append(...value)
+					},
+					{
+						[field]: value
+					}
+				);
 			})
 			.run(this.connection);
 	},
