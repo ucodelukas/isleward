@@ -31,7 +31,7 @@ module.exports = {
 
 		this.list.push(spawner);
 
-		if ((blueprint.sheetName !== 'mobs') && (blueprint.sheetName !== 'bosses'))
+		if (blueprint.layerName !== 'mobs')
 			return;
 
 		let name = blueprint.name.toLowerCase();
@@ -159,7 +159,7 @@ module.exports = {
 
 				let name = (l.blueprint.objZoneName || l.blueprint.name).toLowerCase();
 
-				if ((l.blueprint.sheetName === 'mobs') || (l.blueprint.sheetName === 'bosses'))
+				if (l.blueprint.layerName === 'mobs') 
 					this.setupMob(mob, l.zonePrint);
 				else {
 					let blueprint = extend({}, this.zone.objects.default, this.zone.objects[name] || {});

@@ -512,24 +512,6 @@
                  "y":1368
                 }, 
                 {
-                 "gid":726,
-                 "height":24,
-                 "id":659,
-                 "name":"crystal caves",
-                 "properties":[
-                        {
-                         "name":"cpnPortal",
-                         "type":"string",
-                         "value":"{\"zone\":\"cave\",\"pos\":{\"x\":269,\"y\":27}}"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":560,
-                 "y":688
-                }, 
-                {
                  "gid":297,
                  "height":8,
                  "id":665,
@@ -1533,6 +1515,24 @@
                  "width":24,
                  "x":1384,
                  "y":632
+                }, 
+                {
+                 "gid":726,
+                 "height":24,
+                 "id":881,
+                 "name":"crystal caves",
+                 "properties":[
+                        {
+                         "name":"cpnPortal",
+                         "type":"string",
+                         "value":"{\"zone\":\"cave\",\"pos\":{\"x\":269,\"y\":27}}"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":560,
+                 "y":688
                 }],
          "opacity":1,
          "properties":[
@@ -3815,7 +3815,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":881,
+ "nextobjectid":882,
  "orientation":"orthogonal",
  "properties":[
         {

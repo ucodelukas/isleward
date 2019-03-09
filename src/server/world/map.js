@@ -346,7 +346,8 @@ module.exports = {
 				x: cell.x / mapScale,
 				y: (cell.y / mapScale) - 1,
 				name: name,
-				properties: cell.properties || {}
+				properties: cell.properties || {},
+				layerName: layerName
 			};
 
 			if (objZoneName !== name)

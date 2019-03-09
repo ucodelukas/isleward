@@ -791,10 +791,21 @@
                  "width":8,
                  "x":824,
                  "y":240
-                }, 
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"notices",
+         "objects":[
                 {
                  "height":24,
-                 "id":912,
+                 "id":922,
                  "name":"shopYala",
                  "rotation":0,
                  "type":"",
@@ -2435,8 +2446,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
- "nextobjectid":922,
+ "nextlayerid":10,
+ "nextobjectid":923,
  "orientation":"orthogonal",
  "properties":[
         {
