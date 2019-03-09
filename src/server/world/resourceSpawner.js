@@ -66,9 +66,7 @@ module.exports = {
 		});
 	},
 
-	spawn: function (node) {
-		let blueprint = node.blueprint;
-
+	getRandomSpawnPosition: function (node, blueprint) {
 		//Get an accessible position
 		let w = this.physics.width;
 		let h = this.physics.height;
@@ -113,6 +111,15 @@ module.exports = {
 
 			position = position[~~(Math.random() * position.length)];
 		}
+
+		return position;
+	},
+
+	spawn: function (node) {
+		let blueprint = node.blueprint;
+		let position = this.getRandomSpawnPosition(node, blueprint);
+		if (!position)
+			return false;
 
 		let quantity = 1;
 		if (blueprint.quantity)

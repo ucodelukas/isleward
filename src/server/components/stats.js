@@ -477,15 +477,17 @@ module.exports = {
 	},
 
 	takeDamage: function (damage, threatMult, source) {
-		source.fireEvent('beforeDealDamage', damage, this.obj);
-		this.obj.fireEvent('beforeTakeDamage', damage, source);
+		let obj = this.obj;
+
+		source.fireEvent('beforeDealDamage', damage, obj);
+		obj.fireEvent('beforeTakeDamage', damage, source);
 
 		//Maybe the attacker was stunned?
 		if (damage.failed)
 			return;
 
 		//Maybe something else killed this mob already?
-		if (this.obj.destroyed)
+		if (obj.destroyed)
 			return;
 
 		let amount = damage.amount;
@@ -496,7 +498,7 @@ module.exports = {
 		damage.dealt = amount;
 
 		let msg = {
-			id: this.obj.id,
+			id: obj.id,
 			source: source.id,
 			crit: damage.crit,
 			amount: amount
@@ -504,8 +506,8 @@ module.exports = {
 
 		this.values.hp -= amount;
 		let recipients = [];
-		if (this.obj.serverId)
-			recipients.push(this.obj.serverId);
+		if (obj.serverId)
+			recipients.push(obj.serverId);
 		if (source.serverId)
 			recipients.push(source.serverId);
 
@@ -514,9 +516,9 @@ module.exports = {
 			msg.masterSource = source.follower.master.id;
 		}
 		
-		if (this.obj.follower && this.obj.follower.master.serverId) {
-			recipients.push(this.obj.follower.master.serverId);
-			msg.masterId = this.obj.follower.master.id;
+		if (obj.follower && obj.follower.master.serverId) {
+			recipients.push(obj.follower.master.serverId);
+			msg.masterId = obj.follower.master.id;
 		}
 
 		if (recipients.length) {
@@ -524,7 +526,7 @@ module.exports = {
 				this.syncer.queue('onGetDamage', msg, recipients);
 			else {
 				this.syncer.queue('onGetDamage', {
-					id: this.obj.id,
+					id: obj.id,
 					source: source.id,
 					event: true,
 					text: damage.blocked ? 'blocked' : 'dodged'
@@ -532,7 +534,7 @@ module.exports = {
 			}
 		}
 
-		this.obj.aggro.tryEngage(source, amount, threatMult);
+		obj.aggro.tryEngage(source, amount, threatMult);
 
 		let died = (this.values.hp <= 0);
 
@@ -540,7 +542,7 @@ module.exports = {
 			let death = {
 				success: true
 			};
-			this.obj.fireEvent('beforeDeath', death);
+			obj.fireEvent('beforeDeath', death);
 
 			if (death.success) {
 				let deathEvent = {};
@@ -551,46 +553,47 @@ module.exports = {
 					killSource = source.follower.master;
 
 				if (killSource.player)
-					killSource.stats.kill(this.obj);
+					killSource.stats.kill(obj);
 
-				this.obj.fireEvent('afterDeath', deathEvent);
+				obj.instance.eventEmitter.emitNoSticky('onActorDied', obj, killSource);
+				obj.fireEvent('afterDeath', deathEvent);
 
-				if (this.obj.player) {
-					this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
+				if (obj.player) {
+					obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 					if (deathEvent.permadeath) {
-						this.obj.auth.permadie();
+						obj.auth.permadie();
 
-						this.obj.instance.syncer.queue('onGetMessages', {
+						obj.instance.syncer.queue('onGetMessages', {
 							messages: {
 								class: 'color-redA',
-								message: `(level ${this.values.level}) ${this.obj.name} has forever left the shores of the living.`
+								message: `(level ${this.values.level}) ${obj.name} has forever left the shores of the living.`
 							}
 						}, -1);
 
 						this.syncer.queue('onPermadeath', {
 							source: killSource.name
-						}, [this.obj.serverId]);
+						}, [obj.serverId]);
 					} else
 						this.values.hp = 0;
 
-					this.obj.player.die(killSource, deathEvent.permadeath);
+					obj.player.die(killSource, deathEvent.permadeath);
 				} else {
-					this.obj.effects.die();
+					obj.effects.die();
 					if (this.obj.spellbook)
 						this.obj.spellbook.die();
-					this.obj.destroyed = true;
+					obj.destroyed = true;
 
-					let deathAnimation = _.getDeepProperty(animations, ['mobs', this.obj.sheetName, this.obj.cell, 'death']);
+					let deathAnimation = _.getDeepProperty(animations, ['mobs', obj.sheetName, obj.cell, 'death']);
 					if (deathAnimation) {
-						this.obj.instance.syncer.queue('onGetObject', {
-							x: this.obj.x,
-							y: this.obj.y,
+						obj.instance.syncer.queue('onGetObject', {
+							x: obj.x,
+							y: obj.y,
 							components: [deathAnimation]
 						}, -1);
 					}
 
-					if (this.obj.inventory) {
-						let aggroList = this.obj.aggro.list;
+					if (obj.inventory) {
+						let aggroList = obj.aggro.list;
 						let aLen = aggroList.length;
 						for (let i = 0; i < aLen; i++) {
 							let a = aggroList[i];
@@ -598,18 +601,18 @@ module.exports = {
 							if (a.damage <= 0 || !a.obj.has('serverId'))
 								continue;
 
-							this.obj.inventory.dropBag(a.obj.name, killSource);
+							obj.inventory.dropBag(a.obj.name, killSource);
 						}
 					}
 				}
 			}
 		} else {
-			source.aggro.tryEngage(this.obj, 0);
-			this.obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
+			source.aggro.tryEngage(obj, 0);
+			obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
 		}
 
 		if (!damage.noEvents)
-			source.fireEvent('afterDealDamage', damage, this.obj);
+			source.fireEvent('afterDealDamage', damage, obj);
 	},
 
 	getHp: function (heal, source) {

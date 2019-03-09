@@ -148,20 +148,22 @@ module.exports = {
 	},
 
 	die: function (source, permadeath) {
-		this.obj.clearQueue();
+		let obj = this.obj;
 
-		let physics = this.obj.instance.physics;
+		obj.clearQueue();
 
-		physics.removeObject(this.obj, this.obj.x, this.obj.y);
-		this.obj.dead = true;
+		let physics = obj.instance.physics;
 
-		this.obj.aggro.die();
+		physics.removeObject(obj, obj.x, obj.y);
+		obj.dead = true;
+
+		obj.aggro.die();
 
 		if (!permadeath) {
-			let level = this.obj.stats.values.level;
-			let spawns = this.obj.spawn;
-			let spawnPos = spawns.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
-			if ((spawnPos.length === 0) || (!source.name))
+			let level = obj.stats.values.level;
+			let spawns = obj.spawn;
+			let spawnPos = spawns.filter(s => ((s.maxLevel && s.maxLevel >= level) || !s.maxLevel));
+			if (!spawnPos.length || !source.name)
 				spawnPos = spawns[0];
 			else if (source.name) {
 				let sourceSpawnPos = spawnPos.find(s => ((s.source) && (s.source.toLowerCase() === source.name.toLowerCase())));
@@ -171,14 +173,17 @@ module.exports = {
 					spawnPos = spawnPos[0];
 			}
 
-			this.obj.x = spawnPos.x;
-			this.obj.y = spawnPos.y;
+			spawnPos = extend({}, spawnPos);
+			obj.instance.eventEmitter.emitNoSticky('onBeforePlayerRespawn', obj, spawnPos);
 
-			this.obj.stats.die(source);
+			obj.x = spawnPos.x;
+			obj.y = spawnPos.y;
+
+			obj.stats.die(source);
 
 			process.send({
 				method: 'object',
-				serverId: this.obj.serverId,
+				serverId: obj.serverId,
 				obj: {
 					dead: true
 				}
@@ -186,7 +191,7 @@ module.exports = {
 		} else {
 			process.send({
 				method: 'object',
-				serverId: this.obj.serverId,
+				serverId: obj.serverId,
 				obj: {
 					dead: true,
 					permadead: true
@@ -194,10 +199,10 @@ module.exports = {
 			});
 		}
 
-		this.obj.fireEvent('onAfterDeath', source);
+		obj.fireEvent('onAfterDeath', source);
 
-		this.obj.spellbook.die();
-		this.obj.effects.die();
+		obj.spellbook.die();
+		obj.effects.die();
 	},
 
 	respawn: function () {
