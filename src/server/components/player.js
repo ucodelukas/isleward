@@ -173,7 +173,6 @@ module.exports = {
 					spawnPos = spawnPos[0];
 			}
 
-			spawnPos = extend({}, spawnPos);
 			obj.instance.eventEmitter.emitNoSticky('onBeforePlayerRespawn', obj, spawnPos);
 
 			obj.x = spawnPos.x;
@@ -208,18 +207,46 @@ module.exports = {
 	respawn: function () {
 		const obj = this.obj;
 
-		let syncer = obj.syncer;
-		syncer.o.x = obj.x;
-		syncer.o.y = obj.y;
-
-		obj.aggro.move();
-
-		obj.instance.physics.addObject(obj, obj.x, obj.y);
-
-		obj.instance.syncer.queue('onRespawn', {
+		const spawnPos = {
 			x: obj.x,
 			y: obj.y
-		}, [obj.serverId]);
+		};
+		obj.instance.eventEmitter.emitNoSticky('onBeforePlayerRespawn', obj, spawnPos);
+
+		if (!spawnPos.zone) {
+			obj.x = spawnPos.x;
+			obj.y = spawnPos.y;
+
+			let syncer = obj.syncer;
+			syncer.o.x = obj.x;
+			syncer.o.y = obj.y;
+
+			obj.aggro.move();
+
+			obj.instance.physics.addObject(obj, obj.x, obj.y);
+
+			obj.instance.syncer.queue('onRespawn', {
+				x: obj.x,
+				y: obj.y
+			}, [obj.serverId]);
+		} else {
+			obj.fireEvent('beforeRezone');
+
+			obj.destroyed = true;
+
+			let simpleObj = obj.getSimple(true, false, true);
+			simpleObj.x = spawnPos.x;
+			simpleObj.y = spawnPos.y;
+
+			process.send({
+				method: 'rezone',
+				id: obj.serverId,
+				args: {
+					obj: simpleObj,
+					newZone: spawnPos.zone
+				}
+			});
+		}
 	},
 
 	move: function (msg) {

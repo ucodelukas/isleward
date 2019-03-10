@@ -542,6 +542,7 @@ module.exports = {
 			let death = {
 				success: true
 			};
+			obj.instance.eventEmitter.emitNoSticky('onBeforeActorDies', death, obj, source);
 			obj.fireEvent('beforeDeath', death);
 
 			if (death.success) {
@@ -555,7 +556,6 @@ module.exports = {
 				if (killSource.player)
 					killSource.stats.kill(obj);
 
-				obj.instance.eventEmitter.emitNoSticky('onActorDied', obj, killSource);
 				obj.fireEvent('afterDeath', deathEvent);
 
 				if (obj.player) {

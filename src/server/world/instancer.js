@@ -87,9 +87,11 @@ module.exports = {
 		if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
 			msg.keepPos = false;
 
-		let spawnPos = map.getSpawnPos(obj);
-
 		if (!msg.keepPos || !obj.has('x') || (map.mapFile.properties.isRandom && obj.instanceId !== map.seed)) {
+			let spawnPos = map.getSpawnPos(obj);
+			spawnPos = extend({}, spawnPos);
+			eventEmitter.emitNoSticky('onBeforePlayerSpawn', { name: obj.name, instance: { physics } }, spawnPos);
+
 			obj.x = spawnPos.x;
 			obj.y = spawnPos.y;
 		}
