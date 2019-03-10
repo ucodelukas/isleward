@@ -242,6 +242,9 @@ module.exports = {
 					event.config.descTimer = n.desc;
 					this.setEventDescription(event.config.name);
 				}
+
+				if (n.event && event.config.events[n.event])
+					event.config.events[n.event](this, event);
 			}
 		}
 
@@ -249,7 +252,7 @@ module.exports = {
 
 		if (event.age === event.config.duration)
 			event.done = true;
-		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime))
+		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime)) 
 			this.giveRewards(event.config);
 
 		if (stillBusy)
