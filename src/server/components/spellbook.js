@@ -64,7 +64,7 @@ module.exports = {
 		};
 
 		let spells = this.spells;
-		if ((spells.length > 0) && (spells[0].obj)) 
+		if (spells.length && spells[0].obj) 
 			spells = spells.map(f => f.simplify());
 		
 		s.spells = spells;
@@ -117,10 +117,10 @@ module.exports = {
 				builtSpell.animation = null;
 		}
 
-		if (!builtSpell.castOnDeath) {
-			if ((this.closestRange === -1) || (builtSpell.range < this.closestRange)) 
+		if (!builtSpell.castOnDeath && builtSpell.range) {
+			if (this.closestRange === -1 || builtSpell.range < this.closestRange) 
 				this.closestRange = builtSpell.range;
-			if ((this.furthestRange === -1) || (builtSpell.range > this.furthestRange))
+			if (this.furthestRange === -1 || builtSpell.range > this.furthestRange)
 				this.furthestRange = builtSpell.range;
 		}
 
