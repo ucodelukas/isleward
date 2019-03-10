@@ -132,7 +132,7 @@ module.exports = {
 				return r.branch(
 					row('value').typeOf().eq('ARRAY'),
 					{
-						[field]: row('value').append(...value)
+						[field]: row('value').setUnion(value)
 					},
 					{
 						[field]: value
