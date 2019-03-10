@@ -59,21 +59,20 @@ let startup = {
 		sheets.init();
 	},
 
-	onError: function (e) {
+	onError: async function (e) {
 		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 			return;
 
 		_.log('Error Logged: ' + e.toString());
 		_.log(e.stack);
 
-		io.set({
-			ent: new Date(),
-			field: 'error',
-			value: e.toString() + ' | ' + e.stack.toString(),
-			callback: function () {
-				process.exit();
-			}
+		await io.setAsync({
+			key: new Date(),
+			table: 'error',
+			value: e.toString() + ' | ' + e.stack.toString()
 		});
+
+		process.exit();
 	}
 };
 

@@ -114,15 +114,16 @@ module.exports = {
 			});
 	},
 
-	fixSkins: function (username, skins) {
+	fixSkins: async function (username, skins) {
 		let length = skins.length;
 		skins = skins.filter(s => !!configSkins.getBlueprint(s));
 
 		if (length !== skins.length) {
-			io.set({
-				ent: username,
-				field: 'skins',
-				value: JSON.stringify(skins)
+			await io.setAsync({
+				key: username,
+				table: 'skins',
+				value: skins,
+				serialize: true
 			});
 		}
 	}

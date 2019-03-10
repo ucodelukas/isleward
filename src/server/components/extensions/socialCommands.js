@@ -98,7 +98,7 @@ module.exports = {
 	},
 
 	//actions
-	join: function (value) {
+	join: async function (value) {
 		if (typeof (value) !== 'string')
 			return;
 
@@ -143,10 +143,11 @@ module.exports = {
 		channels.push(value);
 
 		let charname = obj.auth.charname;
-		io.set({
-			ent: charname,
-			field: 'customChannels',
-			value: JSON.stringify(channels)
+		await io.setAsync({
+			key: charname,
+			table: 'customChannels',
+			value: channels,
+			serialize: true
 		});
 
 		obj.socket.emit('events', {
@@ -165,7 +166,7 @@ module.exports = {
 		});
 	},
 
-	leave: function (value) {
+	leave: async function (value) {
 		if (typeof (value) !== 'string')
 			return;
 
@@ -189,10 +190,11 @@ module.exports = {
 		channels.spliceWhere(c => (c === value));
 
 		let charname = obj.auth.charname;
-		io.set({
-			ent: charname,
-			field: 'customChannels',
-			value: JSON.stringify(channels)
+		await io.setAsync({
+			key: charname,
+			table: 'customChannels',
+			value: channels,
+			serialize: true
 		});
 
 		obj.socket.emit('event', {
@@ -270,11 +272,11 @@ module.exports = {
 		});
 	},
 
-	mute: function (target, reason) {
+	mute: async function (target, reason = null) {
 		if (typeof (target) === 'object') {
 			let keys = Object.keys(target);
 			target = keys[0];
-			reason = keys[1];
+			reason = keys[1] || null;
 		}
 
 		if (target === this.obj.name)
@@ -309,23 +311,24 @@ module.exports = {
 			}]
 		});
 
-		io.set({
-			ent: new Date(),
-			field: 'modLog',
-			value: JSON.stringify({
+		await io.setAsync({
+			key: new Date(),
+			table: 'modLog',
+			value: {
 				source: this.obj.name,
 				command: 'mute',
 				target: target,
 				reason: reason
-			})
+			},
+			serialize: true
 		});
 	},
 
-	unmute: function (target, reason) {
+	unmute: async function (target, reason = null) {
 		if (typeof (target) === 'object') {
 			let keys = Object.keys(target);
 			target = keys[0];
-			reason = keys[1];
+			reason = keys[1] || null;
 		}
 
 		if (target === this.obj.name)
@@ -360,15 +363,16 @@ module.exports = {
 			}]
 		});
 
-		io.set({
-			ent: new Date(),
-			field: 'modLog',
-			value: JSON.stringify({
+		await io.setAsync({
+			key: new Date(),
+			table: 'modLog',
+			value: {
 				source: this.obj.name,
 				command: 'unmute',
 				target: target,
 				reason: reason
-			})
+			},
+			serialize: true
 		});
 	},
 
@@ -562,14 +566,14 @@ module.exports = {
 		}, 1, this.obj);
 	},
 
-	setPassword: function (config) {
+	setPassword: async function (config) {
 		let keys = Object.keys(config);
 		let username = keys[0];
 		let hashedPassword = keys[1];
 
-		io.set({
-			ent: username,
-			field: 'login',
+		await io.setAsync({
+			key: username,
+			table: 'login',
 			value: hashedPassword
 		});
 	},
