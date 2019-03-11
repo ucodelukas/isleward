@@ -71,7 +71,7 @@ module.exports = {
 	save: function () {
 		return {
 			type: 'inventory',
-			items: this.items
+			items: this.items.map(this.simplifyItem.bind(this))
 		};
 	},
 
@@ -90,10 +90,10 @@ module.exports = {
 
 		if (result.effects) {
 			result.effects = result.effects.map(e => ({
-				factionId: e.factionId,
+				factionId: e.factionId || null,
 				text: e.text,
-				properties: e.properties,
-				mtx: e.mtx,
+				properties: e.properties || null,
+				mtx: e.mtx || null,
 				type: e.type,
 				rolls: e.rolls
 			}));
