@@ -188,6 +188,10 @@ module.exports = {
 	},
 
 	updateEvent: function (event) {
+		const onTick = _.getDeepProperty(event, ['config', 'events', 'onTick']);
+		if (onTick)
+			onTick(this, event);
+
 		let objects = event.objects;
 		let oLen = objects.length;
 		for (let i = 0; i < oLen; i++) {
@@ -204,7 +208,7 @@ module.exports = {
 		for (let i = 0; i < cLen; i++) {
 			let phase = currentPhases[i];
 			if (!phase.destroyed) {
-				if ((phase.end) || (phase.endMark <= event.age)) {
+				if (phase.end || (phase.endMark !== -1 && phase.endMark <= event.age)) {
 					if ((phase.destroy) && (!phase.destroyed))
 						phase.destroy();
 					phase.destroyed = true;
@@ -250,8 +254,9 @@ module.exports = {
 
 		event.age++;
 
-		if (event.age === event.config.duration)
+		if (event.age === event.config.duration) 
 			event.done = true;
+		
 		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime)) 
 			this.giveRewards(event.config);
 
