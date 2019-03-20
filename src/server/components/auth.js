@@ -412,9 +412,11 @@ module.exports = {
 
 		this.verifySkin(simple);
 		
+		let prophecies = (data.prophecies || []).filter(p => p);
+		
 		simple.components.push({
 			type: 'prophecies',
-			list: data.prophecies || []
+			list: prophecies
 		}, {
 			type: 'social',
 			customChannels: this.customChannels
