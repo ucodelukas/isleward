@@ -32,7 +32,7 @@ define([
 				.on('mousemove', this.onClassHover.bind(this))
 				.on('mouseleave', this.onClassUnhover.bind(this));
 
-			this.find('.skinBox .button').on('click', this.changeCostume.bind(this));
+			this.find('.skinBox .btn').on('click', this.changeCostume.bind(this));
 
 			this.find('.btnBack').on('click', this.back.bind(this));
 			this.find('.btnCreate').on('click', this.create.bind(this));
