@@ -26,7 +26,7 @@ define([
 				.appendTo($('<div class="uiLoginExtra"></div>')
 					.appendTo('.ui-container'));
 
-			$('.uiLoginExtra').find('.button').on('click', this.redirect.bind(this));
+			$('.uiLoginExtra').find('.btn').on('click', this.redirect.bind(this));
 
 			$('.news, .version').on('click', this.redirect.bind(this));
 

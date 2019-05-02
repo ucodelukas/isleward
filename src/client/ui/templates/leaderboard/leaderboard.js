@@ -34,7 +34,7 @@ define([
 			this.find('.prophecy-mine').on('click', this.onMine.bind(this));
 			this.find('.prophecy-none').on('click', this.onNone.bind(this));
 
-			this.find('.button').on('click', this.onRefresh.bind(this));
+			this.find('.btn').on('click', this.onRefresh.bind(this));
 
 			this.find('.buttons .btn').on('click', this.onPage.bind(this));
 		},
