@@ -32,7 +32,7 @@ define([
 				.on('mousemove', this.onClassHover.bind(this))
 				.on('mouseleave', this.onClassUnhover.bind(this));
 
-			this.find('.txtCostume').on('click', this.changeCostume.bind(this));
+			this.find('.skinBox .btn').on('click', this.changeCostume.bind(this));
 
 			this.find('.btnBack').on('click', this.back.bind(this));
 			this.find('.btnCreate').on('click', this.create.bind(this));
@@ -61,14 +61,12 @@ define([
 
 			this.classSprites = result;
 
-			this.costume = -1;
+			this.costume = 0;
 
 			this.class = 'owl';
 			this.find('.txtClass').html('Owl');
 
-			this.changeCostume({
-				target: this.find('.txtCostume')
-			});
+			this.changeCostume();
 		},
 
 		onProphecyHover: function (e) {
@@ -84,10 +82,12 @@ define([
 			events.emit('onShowTooltip', text, el[0], pos);
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
+
 		onProphecyUnhover: function (e) {
 			let el = $(e.target);
 			events.emit('onHideTooltip', el[0]);
 		},
+
 		onProphecyClick: function (e) {
 			let el = $(e.target);
 			let pName = el.attr('prophecy');
@@ -131,6 +131,7 @@ define([
 				callback: this.onCreate.bind(this)
 			});
 		},
+
 		onCreate: function (result) {
 			this.el.removeClass('disabled');
 
@@ -159,10 +160,12 @@ define([
 			events.emit('onShowTooltip', text, el[0], pos, 200);
 			$('.uiTooltips .tooltip').addClass('bright');
 		},
+
 		onClassUnhover: function (e) {
 			let el = $(e.target);
 			events.emit('onHideTooltip', el[0]);
 		},
+
 		changeClass: function (e) {
 			let el = $(e.target);
 			let classes = ['owl', 'bear', 'lynx'];
@@ -178,16 +181,18 @@ define([
 		},
 
 		changeCostume: function (e) {
-			let el = $(e.target);
+			let delta = e ? ~~$(e.target).attr('delta') : 0;
 
 			let spriteList = this.classSprites;
 			if (!spriteList)
 				return;
 
-			this.costume = (this.costume + 1) % spriteList.length;
+			this.costume = (this.costume + delta) % spriteList.length;
+			if (this.costume < 0)
+				this.costume = spriteList.length - 1;
 			this.skinId = spriteList[this.costume].id;
 
-			el.html(spriteList[this.costume].name);
+			$('.txtCostume').html(spriteList[this.costume].name);
 
 			this.setSprite();
 		},

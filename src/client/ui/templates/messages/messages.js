@@ -127,6 +127,8 @@ define([
 		clickKey: function (key) {
 			window.navigator.vibrate(20);
 
+			let elInput = this.find('input');
+
 			const handler = {
 				caps: () => {
 					this.kbUpper = (this.kbUpper + 1) % 3;
@@ -138,7 +140,6 @@ define([
 				},
 
 				backspace: () => {
-					let elInput = this.find('input');
 					elInput.val(elInput.val().slice(0, -1));
 					this.find('.input').html(elInput.val());
 				},
@@ -156,7 +157,6 @@ define([
 				return;
 			}
 
-			let elInput = this.find('input');
 			elInput.val(elInput.val() + key);
 			this.checkChatLength();
 
@@ -253,7 +253,7 @@ define([
 			messages.forEach(m => {
 				let message = m.message;
 
-				if (this.blockedPlayers.includes(m.source))
+				if (m.source && this.blockedPlayers.includes(m.source))
 					return;
 
 				if (m.item) {
@@ -282,7 +282,7 @@ define([
 							el.show();
 					}
 
-					if (m.type === 'loot') {
+					if (isMobile && m.type === 'loot') {
 						events.emit('onGetAnnouncement', {
 							msg: m.message
 						});
@@ -295,7 +295,8 @@ define([
 				});
 			});
 
-			container.scrollTop(9999999);
+			if (!this.el.hasClass('typing'))
+				container.scrollTop(9999999);
 		},
 
 		hideItemTooltip: function () {
@@ -352,6 +353,11 @@ define([
 		sendChat: function (e) {
 			if (e.which === 27) {
 				this.toggle(false);
+				return;
+			} else if (e.which === 9) {
+				e.preventDefault();
+				let textfield = this.find('input');
+				textfield.val(`${textfield.val()}    `);
 				return;
 			} else if (e.which !== 13)
 				return; 

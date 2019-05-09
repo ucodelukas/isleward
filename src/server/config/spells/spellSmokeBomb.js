@@ -58,6 +58,7 @@ module.exports = {
 
 	radius: 1,
 	targetGround: true,
+	targetPlayerPos: true,
 
 	update: function () {
 		let selfCast = this.selfCast;

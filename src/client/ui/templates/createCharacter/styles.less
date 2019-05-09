@@ -47,16 +47,52 @@
 			}
 
 			.txtClass {
-				&:before {
-					content: 'Spirit: ';
-				}
+
 			}
 
-			.txtCostume {
-				&:before {
-					content: 'Skin: ';
-				}
+			.label {
+				color: @grayB;
+				text-align: center;
+				margin-bottom: 8.3px;
 			}
+
+			.skinBox {
+				display: flex;
+				flex-direction: row;
+				height: 35px;
+
+				.btn {
+					width: 35px;
+					margin: 0px;
+					flex-shrink: 0;
+					height: 100%;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 0px;
+					background-color: @grayD;
+
+					&:first-child {
+						margin-right: 15px;
+					}
+
+					&:last-child {
+						margin-left: 15px;
+					}
+
+					&:hover {
+						background-color: @grayC;
+					}
+				}
+
+				.txtCostume {
+					height: 100%;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 0px;
+				}
+			}			
 		}
 
 		.right {
@@ -88,10 +124,10 @@
 			background-color: darken(@gray, 15%);
 			border: 3px solid lighten(@gray, 25%);
 			color: @white;
-			margin-bottom: @boxPadding;
+			margin-bottom: 22px;
 		}
 
-		.button {
+		.btn {
 			background-color: @blueC;
 			width: calc((100% - @boxPadding) / 2);
 			float: left;
@@ -122,7 +158,7 @@
 		float: left;
 		height: @boxHeight;
 		width: 400px;
-		margin-left: 27px;
+		margin-left: 13px;
 		background-color: #3a3b4a;
 
 		.top {
@@ -188,6 +224,10 @@
 
 	.box-left {
 		width: 45%;
+
+		.skinBox {
+			height: 70px;
+		}
 	}
 
 	.box-right {

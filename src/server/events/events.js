@@ -159,12 +159,22 @@ module.exports = {
 		}, this);
 
 		if (event.winText) {
-			this.instance.syncer.queue('onGetMessages', {
-				messages: {
-					class: 'color-pinkA',
-					message: event.winText
-				}
-			}, -1);
+			this.instance.syncer.queue('serverModule', {
+				module: 'cons',
+				method: 'emit',
+				msg: [
+					'event',
+					{
+						event: 'onGetMessages',
+						data: {
+							messages: {
+								class: 'color-pinkA',
+								message: event.winText
+							}
+						}
+					}
+				]
+			}, 'server');
 		}
 
 		event.phases.forEach(function (p) {
@@ -178,6 +188,10 @@ module.exports = {
 	},
 
 	updateEvent: function (event) {
+		const onTick = _.getDeepProperty(event, ['config', 'events', 'onTick']);
+		if (onTick)
+			onTick(this, event);
+
 		let objects = event.objects;
 		let oLen = objects.length;
 		for (let i = 0; i < oLen; i++) {
@@ -194,7 +208,7 @@ module.exports = {
 		for (let i = 0; i < cLen; i++) {
 			let phase = currentPhases[i];
 			if (!phase.destroyed) {
-				if ((phase.end) || (phase.endMark <= event.age)) {
+				if (phase.end || (phase.endMark !== -1 && phase.endMark <= event.age)) {
 					if ((phase.destroy) && (!phase.destroyed))
 						phase.destroy();
 					phase.destroyed = true;
@@ -211,25 +225,39 @@ module.exports = {
 		if (event.config.notifications) {
 			let n = event.config.notifications.find(f => (f.mark === event.age));
 			if (n) {
-				this.instance.syncer.queue('onGetMessages', {
-					messages: {
-						class: 'color-pinkA',
-						message: n.msg
-					}
-				}, -1);
+				this.instance.syncer.queue('serverModule', {
+					module: 'cons',
+					method: 'emit',
+					msg: [
+						'event',
+						{
+							event: 'onGetMessages',
+							data: {
+								messages: {
+									class: 'color-pinkA',
+									message: n.msg
+								}
+							}
+						}
+					]
+				}, 'server');
 
 				if (n.has('desc')) {
 					event.config.descTimer = n.desc;
 					this.setEventDescription(event.config.name);
 				}
+
+				if (n.event && event.config.events[n.event])
+					event.config.events[n.event](this, event);
 			}
 		}
 
 		event.age++;
 
-		if (event.age === event.config.duration)
+		if (event.age === event.config.duration) 
 			event.done = true;
-		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime))
+		
+		else if ((event.config.prizeTime) && (event.age === event.config.prizeTime)) 
 			this.giveRewards(event.config);
 
 		if (stillBusy)

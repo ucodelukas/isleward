@@ -79,7 +79,7 @@ module.exports = {
 			player.socket.emit('events', {
 				onGetMessages: [{
 					messages: [{
-						class: 'color-grayB',
+						class: 'color-tealC',
 						message: '(party: ' + charname + '): ' + message,
 						type: 'chat',
 						source: this.obj.name
@@ -181,7 +181,7 @@ module.exports = {
 		if (msg.data.ignore)
 			return;
 
-		if (!profanities.isClean(messageString)) {
+		if (!msg.data.item && !profanities.isClean(messageString)) {
 			this.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
 			return;
 		}

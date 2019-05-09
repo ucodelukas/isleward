@@ -2,6 +2,7 @@ let objBase = require('./objBase');
 
 module.exports = {
 	lastId: 0,
+	instance: null,
 
 	objects: [],
 
@@ -53,6 +54,8 @@ module.exports = {
 			if (cpn.transfer)
 				cpn.transfer();
 		}
+
+		//this.physics.addObject(obj, obj.x, obj.y);
 
 		return obj;
 	},
@@ -236,7 +239,9 @@ module.exports = {
 						let eventList = player.events[e] || (player.events[e] = []);
 						eventList.push(obj);
 					}
-				} else
+				} else if (obj.msg instanceof Array) 
+					global[obj.module][obj.method](...obj.msg);	
+				else
 					global[obj.module][obj.method](obj.msg);
 			}
 		}

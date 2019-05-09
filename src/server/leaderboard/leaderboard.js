@@ -56,7 +56,8 @@ module.exports = {
 		});
 
 		this.list = list.map(l => ({
-			name: l.key,
+			//This is a bit of a hack. RethinkDB uses 'id' whereas Sqlite uses 'key'
+			name: l.key || l.id,
 			level: l.value.level,
 			prophecies: l.value.prophecies
 		}));
@@ -88,8 +89,9 @@ module.exports = {
 			};
 
 			this.list.push(exists);
-			this.sort();
 		}
+
+		this.sort();
 
 		this.save(exists);
 	},
@@ -127,10 +129,11 @@ module.exports = {
 		if (character.dead)
 			value.dead = true;
 
-		io.set({
-			ent: character.name,
-			field: 'leaderboard',
-			value: JSON.stringify(character)
+		await io.setAsync({
+			key: character.name,
+			table: 'leaderboard',
+			value: character,
+			serialize: true
 		});
 	}
 };

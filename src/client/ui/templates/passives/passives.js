@@ -373,9 +373,10 @@ define([
 
 				this.events.onMouseMove.call(this, e);
 
+				let windowZoom = window.devicePixelRatio;
 				this.panOrigin = {
-					x: e.raw.clientX,
-					y: e.raw.clientY
+					x: e.raw.clientX * windowZoom,
+					y: e.raw.clientY * windowZoom
 				};
 			},
 
@@ -392,15 +393,19 @@ define([
 					};
 				}
 
+				let windowZoom = window.devicePixelRatio;
 				let zoomPanMultiplier = this.currentZoom;
 				let scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
 
-				this.pos.x += (this.panOrigin.x - e.raw.clientX) * scrollSpeed;
-				this.pos.y += (this.panOrigin.y - e.raw.clientY) * scrollSpeed;
+				const rawX = e.raw.clientX * windowZoom;
+				const rawY = e.raw.clientY * windowZoom;
+
+				this.pos.x += (this.panOrigin.x - rawX) * scrollSpeed;
+				this.pos.y += (this.panOrigin.y - rawY) * scrollSpeed;
 
 				this.panOrigin = {
-					x: e.raw.clientX,
-					y: e.raw.clientY
+					x: rawX,
+					y: rawY
 				};
 
 				this.renderNodes();

@@ -83,6 +83,20 @@ define([
 
 								compare.stats[s] += equippedOffhand.stats[s];
 							}
+
+							if (!compare.implicitStats)
+								compare.implicitStats = [];
+
+							(equippedOffhand.implicitStats || []).forEach(s => {
+								let f = compare.implicitStats.find(i => i.stat === s.stat);
+								if (!f) {
+									compare.implicitStats.push({
+										stat: s.stat,
+										value: s.value
+									});
+								} else
+									f.value += s.value;
+							});
 						}
 					}
 
@@ -148,6 +162,7 @@ define([
 			let compare = canCompare ? msg.compare : null;
 
 			let tempStats = $.extend(true, {}, item.stats);
+			let tempImplicitStats = $.extend(true, [], item.implicitStats);
 			let enchantedStats = item.enchantedStats || {};
 
 			if (compare && shiftDown) {
@@ -167,6 +182,30 @@ define([
 						if (!tempStats[s]) 
 							tempStats[s] = -compareStats[s];
 					}
+
+					let compareImplicitStats = (compare.implicitStats || []);
+					tempImplicitStats.forEach(s => {
+						let statValue = s.value;
+
+						let f = compareImplicitStats.find(c => c.stat === statValue);
+
+						if (f) {
+							let delta = statValue - f.value;
+							if (delta > 0)
+								s.value = '+' + delta;
+							else if (delta < 0)
+								s.value = delta;
+						} else
+							s.value = '+' + s.value;
+					});
+					compareImplicitStats.forEach(s => {
+						if (!tempImplicitStats.find(f => f.stat === s.stat)) { 
+							tempImplicitStats.push({
+								stat: s.stat,
+								value: -s.value
+							});
+						}
+					});
 				}
 			} else {
 				Object.keys(tempStats).forEach(function (s) {
@@ -218,18 +257,27 @@ define([
 				})
 				.join('');
 
-			let implicitStats = (item.implicitStats || []).map(s => {
-				let stat = s.stat;
+			let implicitStats = tempImplicitStats
+				.map(s => {
+					let statName = s.stat;
+					let value = this.getStatValue(statName, s.value);
+					statName = statTranslations.translate(statName);
 
-				let value = this.getStatValue(stat, s.value);
-				let statName = statTranslations.translate(stat);
+					let row = value + ' ' + statName;
+					let rowClass = '';
 
-				let row = value + ' ' + statName;
-				let rowClass = '';
-				row = '<div class="' + rowClass + '">' + row + '</div>';
+					if (compare) {
+						if (row.indexOf('-') > -1)
+							rowClass = 'loseStat';
+						else if (row.indexOf('+') > -1)
+							rowClass = 'gainStat';
+					}
 
-				return row;
-			}).join('');
+					row = '<div class="' + rowClass + '">' + row + '</div>';
+
+					return row;
+				})
+				.join('');
 
 			let itemName = item.name;
 			if (item.quantity > 1)
@@ -438,7 +486,7 @@ define([
 			if (statName.indexOf('CritChance') > -1)
 				res = res / 20;
 
-			if (percentageStats.includes(statName) || (statName.indexOf('element') === 0 && statName.indexOf('Resist') === -1))
+			if (percentageStats.includes(statName) || statName.indexOf('Percent') > -1 || (statName.indexOf('element') === 0 && statName.indexOf('Resist') === -1))
 				res += '%';
 
 			return res;

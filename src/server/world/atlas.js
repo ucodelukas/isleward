@@ -3,6 +3,7 @@ let objects = require('../objects/objects');
 let mapList = require('../config/maps/mapList');
 let connections = require('../security/connections');
 let serverConfig = require('../config/serverConfig');
+let events = require('../misc/events');
 
 module.exports = {
 	nextId: 0,
@@ -15,6 +16,8 @@ module.exports = {
 	},
 
 	addObject: function (obj, keepPos, transfer) {
+		events.emit('onBeforePlayerEnterWorld', obj);
+
 		let thread = this.getThreadFromName(obj.zoneName);
 
 		let instanceId = obj.instanceId;

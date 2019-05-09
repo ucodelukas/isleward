@@ -1,3 +1,9 @@
+const configThreatCeiling = {
+	regular: 1,
+	rare: 0.5,
+	champion: 0.2
+};
+
 module.exports = {
 	type: 'aggro',
 
@@ -11,7 +17,7 @@ module.exports = {
 	ignoreList: [],
 
 	threatDecay: 0.9,
-	threatCeiling: 0.15,
+	threatCeiling: 1,
 
 	init: function (blueprint) {
 		this.physics = this.obj.instance.physics;
@@ -27,6 +33,10 @@ module.exports = {
 
 		if (this.physics.width > 0)
 			this.move();
+	},
+
+	calcThreatCeiling: function (mobType) {
+		this.threatCeiling = configThreatCeiling[mobType];
 	},
 
 	events: {

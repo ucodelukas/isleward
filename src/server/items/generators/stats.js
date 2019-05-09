@@ -626,7 +626,7 @@ module.exports = {
 			};
 
 			if (i.value) 
-				stat.value = i.value[0] + ~~(Math.random() * (i.value[1] - i.value[0]));
+				stat.value = i.value[0] + ~~(Math.random() * (i.value[1] - i.value[0] + 1));
 			else if (i.valueMult) {
 				let statBlueprint = this.stats[i.stat];
 

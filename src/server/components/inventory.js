@@ -71,7 +71,7 @@ module.exports = {
 	save: function () {
 		return {
 			type: 'inventory',
-			items: this.items
+			items: this.items.map(this.simplifyItem.bind(this))
 		};
 	},
 
@@ -90,10 +90,10 @@ module.exports = {
 
 		if (result.effects) {
 			result.effects = result.effects.map(e => ({
-				factionId: e.factionId,
+				factionId: e.factionId || null,
 				text: e.text,
-				properties: e.properties,
-				mtx: e.mtx,
+				properties: e.properties || null,
+				mtx: e.mtx || null,
 				type: e.type,
 				rolls: e.rolls
 			}));
@@ -505,7 +505,7 @@ module.exports = {
 		}, this);
 	},
 
-	mailItem: function (msg) {
+	mailItem: async function (msg) {
 		let item = this.findItem(msg.itemId);
 		if ((!item) || (item.noDrop) || (item.quest)) {
 			this.resolveCallback(msg);
@@ -514,14 +514,11 @@ module.exports = {
 
 		delete item.pos;
 
-		io.get({
-			ent: msg.recipient,
-			field: 'character',
-			callback: this.onCheckCharExists.bind(this, msg, item)
+		let res = await io.getAsync({
+			key: msg.recipient,
+			table: 'character'
 		});
-	},
 
-	onCheckCharExists: async function (msg, item, res) {
 		if (!res) {
 			this.resolveCallback(msg, 'Recipient does not exist');
 			return;

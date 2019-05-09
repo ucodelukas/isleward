@@ -21,11 +21,12 @@ module.exports = {
 		this.build(callback);
 	},
 
-	save: function () {
-		io.set({
-			ent: this.ent,
-			field: 'customMap',
-			value: JSON.stringify(this.tiles)
+	save: async function () {
+		await io.setAsync({
+			key: this.ent,
+			table: 'customMap',
+			value: this.tiles,
+			serialize: true
 		});
 	},
 

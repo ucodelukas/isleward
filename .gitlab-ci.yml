@@ -1,0 +1,50 @@
+image: node:lts-jessie
+
+stages:
+  - test
+  - build
+
+audit:
+  stage: test
+  script:
+    - cd src/server
+    - npm audit
+  only:
+    - merge_requests
+    - master
+
+lint-server:
+  stage: test
+  script:
+    - npm install -g eslint eslint-plugin-prettier prettier babel-eslint
+    - cd src/server
+    - eslint . 
+  only:
+    - merge_requests
+    - master
+
+lint-client:
+  stage: test
+  script:
+    - npm install -g eslint eslint-plugin-prettier prettier babel-eslint
+    - cd src/client
+    - eslint . 
+  only:
+    - merge_requests
+    - master
+
+build-image:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    - master
+    - tags

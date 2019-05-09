@@ -56,9 +56,9 @@ let onDbReady = function () {
 		_.log('Error Logged: ' + e.toString());
 		_.log(e.stack);
 
-		io.set({
-			ent: new Date(),
-			field: 'error',
+		io.setAsync({
+			key: new Date(),
+			table: 'error',
 			value: e.toString() + ' | ' + e.stack.toString(),
 			callback: function () {
 				process.send({

@@ -405,12 +405,18 @@ define([
 					'all resist': stats.elementAllResist
 				},
 				misc: {
-					'item quality': stats.magicFind,
+					'item quality': stats.magicFind + '%',
 					'item quantity': stats.itemQuantity + '%',
 					gap1: '',
 					'sprint chance': (stats.sprintChance || 0) + '%',
 					gap2: '',
-					'xp increase': stats.xpIncrease + '%'
+					'xp increase': stats.xpIncrease + '%',
+					gap3: '',
+					'chance to catch a fish': stats.catchChance + '%',
+					'fishing speed': stats.catchSpeed + '%',
+					'increased fish rarity': stats.fishRarity + '%',
+					'increased fish weight': stats.fishWeight + '%',
+					'chance to fish items': stats.fishItems + '%'
 				}
 			}[this.find('.tab.selected').html()];
 

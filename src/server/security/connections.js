@@ -124,6 +124,7 @@ module.exports = {
 
 		//A hack to allow us to actually call methods again (like retrieve the player list)
 		player.dead = false;
+		player.permadead = false;
 
 		this.modifyPlayerCount(-1);
 	},
@@ -171,6 +172,17 @@ module.exports = {
 		}
 
 		return result;
+	},
+
+	forceSaveAll: function () {
+		this.players
+			.filter(p => p.zone)
+			.forEach(p => {
+				atlas.performAction(p, {
+					cpn: 'auth',
+					method: 'doSave'
+				});
+			});
 	},
 
 	modifyPlayerCount: function (delta) {

@@ -9,7 +9,7 @@ let questBuilder = require('../config/quests/questBuilder');
 let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
-let mail = require('../misc/mail');
+let mail = require('../mail/mail');
 let herbs = require('../config/herbs');
 let eventEmitter = require('../misc/events');
 
@@ -84,10 +84,17 @@ module.exports = {
 		obj.serverId = obj.id;
 		delete obj.id;
 
-		if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
+		let spawnPos = map.getSpawnPos(obj);
+		let spawnEvent = {
+			spawnPos: extend({}, spawnPos),
+			changed: false
+		};
+		eventEmitter.emitNoSticky('onBeforePlayerSpawn', { name: obj.name, instance: { physics } }, spawnEvent);
+		if (spawnEvent.changed)
 			msg.keepPos = false;
 
-		let spawnPos = map.getSpawnPos(obj);
+		if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
+			msg.keepPos = false;
 
 		if (!msg.keepPos || !obj.has('x') || (map.mapFile.properties.isRandom && obj.instanceId !== map.seed)) {
 			obj.x = spawnPos.x;

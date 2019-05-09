@@ -2,6 +2,7 @@ let skins = require('../config/skins');
 
 module.exports = {
 	type: 'wardrobe',
+	proximalPlayers: [],
 
 	init: function (blueprint) {
 		this.obj.instance.objects.buildObjects([{
@@ -33,6 +34,10 @@ module.exports = {
 	exitArea: function (obj) {
 		if (!obj.player)
 			return;
+		else if (!this.proximalPlayers.some(p => p === obj)) 
+			return;
+
+		this.proximalPlayers.spliceWhere(p => p === obj);
 
 		obj.syncer.setArray(true, 'serverActions', 'removeActions', {
 			key: 'u',
@@ -49,6 +54,9 @@ module.exports = {
 	enterArea: function (obj) {
 		if (!obj.player)
 			return;
+
+		if (!this.proximalPlayers.some(p => p === obj))
+			this.proximalPlayers.push(obj);
 
 		let msg = 'Press U to access the wardrobe';
 
@@ -87,7 +95,11 @@ module.exports = {
 
 	apply: function (msg) {
 		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
-		if (!obj)
+		if (
+			!obj ||
+			!this.proximalPlayers.some(p => p === obj) ||
+			!obj.auth.doesOwnSkin(msg.skinId)
+		)
 			return;
 
 		obj.skinId = msg.skinId;

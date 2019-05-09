@@ -1,18 +1,14 @@
-let fs = require('fs');
 let util = require('util');
+let serverConfig = require('../config/serverConfig');
 
-let firebase = null;
-
-const useFirebase = false;
-const doConvert = false;
-
-if (useFirebase)
-	firebase = require('./ioFirebase');
+if (serverConfig.db === 'rethink') {
+	module.exports = require('./ioRethink');
+	return;
+}
 
 module.exports = {
 	db: null,
 	file: '../../data/storage.db',
-	exists: false,
 
 	buffer: [],
 	processing: [],
@@ -32,15 +28,8 @@ module.exports = {
 		accountInfo: null
 	},
 
-	init: function (cbReady) {
-		if (useFirebase && !doConvert) {
-			firebase.init(this, false);
-			cbReady();
-			return;
-		}
-
+	init: async function (cbReady) {
 		let sqlite = require('sqlite3').verbose();
-		this.exists = fs.existsSync(this.file);
 		this.db = new sqlite.Database(this.file, this.onDbCreated.bind(this, cbReady));
 	},
 	onDbCreated: function (cbReady) {
@@ -54,12 +43,8 @@ module.exports = {
 				`, scope.onTableCreated.bind(scope, t));
 			}
 
-			if (useFirebase)
-				firebase.init(this, true);
 			cbReady();
 		}, this);
-
-		this.exists = true;
 	},
 	onTableCreated: async function (table) {
 		
@@ -172,12 +157,9 @@ module.exports = {
 				_.log(e);
 			
 			_.log(e);
-			if (!doConvert) 
-				this.buffer.splice(0, 0, next);
-			else {
-				next.resolve(null);
-				return;
-			}
+
+			this.buffer.splice(0, 0, next);
+
 			setTimeout(this.process.bind(this), 10);
 			return;
 		}

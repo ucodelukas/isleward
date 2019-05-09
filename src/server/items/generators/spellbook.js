@@ -13,7 +13,7 @@ module.exports = {
 			spellName = spellList[~~(Math.random() * spellList.length)];
 		}
 
-		let spell = spellsConfig.spells[spellName];
+		let spell = extend({}, spellsConfig.spells[spellName], blueprint.spellConfig);
 		let spellAesthetic = spells.spells.find(s => s.name.toLowerCase() === spellName) || {};
 
 		if (!item.slot) {
@@ -52,7 +52,7 @@ module.exports = {
 		if (item.type) {
 			let typeConfig = configTypes.types[item.slot][item.type];
 			if (typeConfig)
-				spell = extend({}, spell, typeConfig.spellConfig);
+				extend(spell, typeConfig.spellConfig);
 		}
 
 		let propertyPerfection = [];

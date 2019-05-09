@@ -69,6 +69,9 @@ module.exports = {
 			grantRep: {
 				gaekatla: 120
 			},
+			rare: {
+				count: 0
+			},
 			regular: {
 				hpMult: 10,
 				dmgMult: 3,
