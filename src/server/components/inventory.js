@@ -94,8 +94,8 @@ module.exports = {
 				text: e.text,
 				properties: e.properties || null,
 				mtx: e.mtx || null,
-				type: e.type,
-				rolls: e.rolls
+				type: e.type || null,
+				rolls: e.rolls || null
 			}));
 		}
 
