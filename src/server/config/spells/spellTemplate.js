@@ -239,7 +239,7 @@ module.exports = {
 					type === 'number' &&
 					isNaN(value)
 				) ||
-				['obj', 'currentAction', 'autoActive'].includes(p)
+				['obj', 'currentAction', 'autoActive', 'events'].includes(p)
 			)
 				continue;
 
