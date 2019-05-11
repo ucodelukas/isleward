@@ -91,7 +91,7 @@ module.exports = {
 		if (result.effects) {
 			result.effects = result.effects.map(e => ({
 				factionId: e.factionId || null,
-				text: e.text,
+				text: e.text || null,
 				properties: e.properties || null,
 				mtx: e.mtx || null,
 				type: e.type || null,
