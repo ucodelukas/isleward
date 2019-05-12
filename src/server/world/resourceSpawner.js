@@ -161,7 +161,7 @@ module.exports = {
 
 		let item = {
 			material: true,
-			type: node.type,
+			type: node.type || null,
 			sprite: node.blueprint.itemSprite,
 			name: node.blueprint.name,
 			quantity: (blueprint.type !== 'fish') ? 1 : null,
