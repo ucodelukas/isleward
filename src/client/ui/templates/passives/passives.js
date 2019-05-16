@@ -69,9 +69,11 @@ define([
 				display: 'block'
 			});
 
+			let zoom = window.devicePixelRatio;
+
 			this.canvas = this.find('.canvas')[0];
-			this.size.w = this.canvas.width = this.find('.bottom').width();
-			this.size.h = this.canvas.height = this.find('.bottom').height();
+			this.size.w = this.canvas.width = this.find('.bottom').width() * zoom;
+			this.size.h = this.canvas.height = this.find('.bottom').height() * zoom;
 			this.ctx = this.canvas.getContext('2d');
 
 			//Reset styles after determining size
