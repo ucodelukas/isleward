@@ -100,22 +100,27 @@ module.exports = {
 		}
 
 		let reputation = this.obj.reputation;
-		if (result.factions && reputation) {
+		if (result.factions) {
 			result.factions = result.factions.map(function (f) {
-				let faction = reputation.getBlueprint(f.id);
-				let factionTier = reputation.getTier(f.id);
-
-				let noEquip = null;
-				if (factionTier < f.tier)
-					noEquip = true;
-
-				return {
+				let res = {
 					id: f.id,
-					name: faction.name,
 					tier: f.tier,
-					tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier],
-					noEquip: noEquip
+					tierName: ['Hated', 'Hostile', 'Unfriendly', 'Neutral', 'Friendly', 'Honored', 'Revered', 'Exalted'][f.tier]
 				};
+
+				if (reputation) {
+					let faction = reputation.getBlueprint(f.id);
+					let factionTier = reputation.getTier(f.id);
+
+					let noEquip = null;
+					if (factionTier < f.tier)
+						noEquip = true;
+
+					res.name = faction.name;
+					res.noEquip = noEquip;
+				}
+
+				return res;
 			}, this);
 		}
 

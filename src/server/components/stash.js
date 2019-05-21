@@ -1,3 +1,5 @@
+const cpnInventory = require('./inventory');
+
 module.exports = {
 	type: 'stash',
 
@@ -162,6 +164,6 @@ module.exports = {
 	},
 
 	serialize: function () {
-		return this.items;
+		return this.items.map(i => cpnInventory.simplifyItem.call({ obj: {} }, i));
 	}
 };
