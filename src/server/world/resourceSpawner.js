@@ -101,8 +101,7 @@ module.exports = {
 			if (cell.length > 0)
 				return false;
 				
-			blueprint.x = x;
-			blueprint.y = y;
+			position = { x, y };
 		} else if (blueprint.positions) {
 			//Find all possible positions in which a node hasn't spawned yet
 			position = blueprint.positions.filter(f => !node.spawns.some(s => ((s.x === f.x) && (s.y === f.y))));
@@ -161,7 +160,7 @@ module.exports = {
 
 		let item = {
 			material: true,
-			type: node.type,
+			type: node.type || null,
 			sprite: node.blueprint.itemSprite,
 			name: node.blueprint.name,
 			quantity: (blueprint.type !== 'fish') ? 1 : null,
@@ -192,7 +191,7 @@ module.exports = {
 			if (spawns.length < node.max) {
 				if (node.cd > 0)
 					node.cd--;
-				else if ((!node.chance || Math.random() < node.chance) && this.spawn(node))
+				else if ((!node.chance || Math.random() < node.chance) && this.spawn(node)) 
 					node.cd = node.cdMax || this.cdMax;
 			}
 		}

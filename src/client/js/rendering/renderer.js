@@ -77,8 +77,9 @@ define([
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
 
-			this.width = $('body').width();
-			this.height = $('body').height();
+			let zoom = window.devicePixelRatio;
+			this.width = $('body').width() * zoom;
+			this.height = $('body').height() * zoom;
 
 			this.showTilesW = Math.ceil((this.width / scale) / 2) + 3;
 			this.showTilesH = Math.ceil((this.height / scale) / 2) + 3;

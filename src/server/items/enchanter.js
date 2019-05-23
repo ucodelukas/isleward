@@ -70,7 +70,7 @@ module.exports = {
 						item.level = 1;
 				}
 			}
-			item.enchantedStats = enchantedStats;
+			item.enchantedStats = enchantedStats || null;
 		} else if (msg.action === 'relevel') {
 			if (item.slot === 'tool')
 				return;

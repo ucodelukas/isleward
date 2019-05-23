@@ -18,7 +18,7 @@ const tables = [
 
 module.exports = {
 	connection: null,
-	useDb: 'ptr',
+	useDb: 'live',
 
 	init: async function (cbReady) {
 		const dbConfig = {

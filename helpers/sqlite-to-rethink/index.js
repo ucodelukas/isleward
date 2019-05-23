@@ -5,7 +5,7 @@ let util = require('util');
 const config = {
 	file: './storage.db',
 
-	dbName: 'ptr',
+	dbName: 'live',
 
 	dropTables: true,
 
