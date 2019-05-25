@@ -391,7 +391,7 @@ define([
 			let box = this.find('.split-box');
 
 			if ((cancel) || (!e) || (e.target !== box.find('.btnSplit')[0])) {
-				if ((cancel) && (!$(e.target).hasClass('button')))
+				if ((cancel) && (!$(e.target).hasClass('btn')))
 					box.hide();
 
 				return;
