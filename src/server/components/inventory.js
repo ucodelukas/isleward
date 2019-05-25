@@ -537,8 +537,10 @@ module.exports = {
 				blocked = true;
 		}
 
-		if (!blocked)
-			this.obj.instance.mail.sendMail(msg.recipient, [extend({}, item)]);
+		if (!blocked) {
+			const mappedItem = this.simplifyItem(item);
+			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
+		}
 		this.destroyItem(item.id);
 
 		this.resolveCallback(msg);
