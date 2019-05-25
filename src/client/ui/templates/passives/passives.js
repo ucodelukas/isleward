@@ -48,6 +48,8 @@ define([
 
 		hoverNode: null,
 
+		handlerResize: null,
+
 		postRender: function () {
 			input.init(this.el);
 
@@ -68,6 +70,9 @@ define([
 				visibility: 'hidden',
 				display: 'block'
 			});
+
+			this.handlerResize = this.onResize.bind(this);
+			window.addEventListener('resize', this.handlerResize);
 
 			let zoom = window.devicePixelRatio;
 
@@ -105,6 +110,24 @@ define([
 				this.onEvent('uiMouseMove', this.events.onPan.bind(this));
 				this.onEvent('uiMouseDown', this.events.onPanStart.bind(this));
 			}
+		},
+
+		beforeDestroy: function () {
+			window.removeEventListener('resize', this.handlerResize);
+		},
+
+		onResize: function () {
+			if (isMobile)
+				return;
+			
+			let zoom = window.devicePixelRatio;
+
+			this.size.w = this.canvas.width = this.find('.bottom').width() * zoom;
+			this.size.h = this.canvas.height = this.find('.bottom').height() * zoom;
+
+			this.ctx.lineWidth = constants.lineWidth;
+
+			this.renderNodes();
 		},
 
 		renderNodes: function () {
