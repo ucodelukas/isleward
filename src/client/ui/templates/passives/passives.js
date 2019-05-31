@@ -117,7 +117,7 @@ define([
 		},
 
 		onResize: function () {
-			if (isMobile)
+			if (isMobile || !this.shown)
 				return;
 			
 			let zoom = window.devicePixelRatio;
@@ -164,6 +164,7 @@ define([
 				this.pos.y -= ~~(this.canvas.height / 2);
 
 				this.show();
+				this.onResize();
 				this.renderNodes();
 			} else
 				this.hide();
