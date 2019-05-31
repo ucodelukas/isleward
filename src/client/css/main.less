@@ -1,6 +1,7 @@
 @import "colors.less";
 
-body, html {
+body,
+html {
 	position: fixed;
 	overflow: hidden;
 	overscroll-behavior: none;
@@ -32,7 +33,9 @@ body {
 		.uiTooltipInfo {
 			display: none !important;
 		}
-	} 
+
+	}
+
 }
 
 .mobile .right {
@@ -66,6 +69,7 @@ body {
 		top: 0px;
 		width: 100vw;
 	}
+
 }
 
 .disabled {
@@ -74,7 +78,8 @@ body {
 }
 
 [class^="ui"] {
-	input, textarea {
+	input,
+	textarea {
 		-webkit-user-select: text;
 		-khtml-user-select: text;
 		-moz-user-select: text;
@@ -106,6 +111,7 @@ body {
 		&:hover {
 			background-color: lighten(@black, 10%);
 		}
+
 	}
 
 	.spacer-h {
@@ -129,25 +135,28 @@ body {
 			&:hover {
 				background-color: lighten(@black, 10%);
 			}
+
 		}
 
 	}
+
 }
 
 ::-webkit-scrollbar {
-    width: 16px;
-}
-::-webkit-scrollbar-track {
-	background-color: @gray;
-    -webkit-border-radius: 0px;
-    border-radius: 0px;
-}
-::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 0px;
-    background: @lightGray; 
+	width: 16px;
 }
 
+::-webkit-scrollbar-track {
+	background-color: @gray;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 10px;
+	border-radius: 0px;
+	background: @lightGray;
+}
 
 .q0 {
 	color: @white;
@@ -180,6 +189,7 @@ body {
 .color-blueA {
 	color: @blueA !important;
 }
+
 .color-blueB {
 	color: @blueB !important;
 }
@@ -199,6 +209,7 @@ body {
 .color-brownC {
 	color: @brownC !important;
 }
+
 .color-brownD {
 	color: @brownD !important;
 }
@@ -206,21 +217,25 @@ body {
 .color-grayA {
 	color: @white !important;
 }
+
 .color-grayB {
 	color: @grayB !important;
 }
+
 .color-grayC {
 	color: @grayC !important;
 }
+
 .color-grayD {
 	color: @grayD !important;
 }
 
 .color-pinkA {
-	color: @pinkA !important;	
+	color: @pinkA !important;
 }
+
 .color-pinkB {
-	color: @pinkB !important;	
+	color: @pinkB !important;
 }
 
 .color-purpleA {
