@@ -3,6 +3,7 @@ global.io = require('../security/io');
 global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
+global.perf = require('../misc/perflog');
 
 let components = require('../components/components');
 let mods = require('../misc/mods');

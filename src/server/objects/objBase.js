@@ -67,13 +67,18 @@ module.exports = {
 				len--;
 				i--;
 			} else if (c.update) {
+				const timer = perf.logComponent(c.type);
 				if (c.update())
 					usedTurn = true;
+				timer();
 			}
 		}
 
-		if (!usedTurn) 
+		if (!usedTurn) {
+			const timer = perf.logModule('performQueue');
 			this.performQueue();
+			timer();
+		}
 	},
 
 	getSimple: function (self, isSave, isTransfer) {

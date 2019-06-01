@@ -7,3 +7,4 @@ global.leaderboard = require('./leaderboard/leaderboard');
 global.clientConfig = require('./config/clientConfig');
 
 global.consts = require('./config/consts');
+global.perf = require('./misc/perflog');

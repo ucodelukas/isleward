@@ -65,16 +65,21 @@ module.exports = {
 
 		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
+		perf.init(args.name);
+
 		this.tick();
 	},
 
 	tick: function () {
-		events.update();
-		objects.update();
-		resourceSpawner.update();
-		spawners.update();
-		syncer.update();
-		scheduler.update();
+		const moduleNames = ['events', 'objects', 'resourceSpawner', 'spawners', 'syncer', 'scheduler'];
+		[events, objects, resourceSpawner, spawners, syncer, scheduler].forEach((m, i) => {
+			const moduleName = moduleNames[i];
+			const timer = perf.logModule(moduleName);
+			m.update();
+			timer();
+		});
+
+		perf.tick();
 
 		setTimeout(this.tick.bind(this), this.speed);
 	},
