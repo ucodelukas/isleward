@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const ticksPerLog = 17;
+const ticksPerLog = 171;
 let ticksLeft = ticksPerLog;
 let logCount = 0;
 
