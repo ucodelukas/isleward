@@ -96,6 +96,11 @@ module.exports = {
 		}
 
 		delete item.stats[stat];
+
+		if (stat === 'lvlRequire') {
+			item.level = item.originalLevel;
+			delete item.originalLevel;
+		}
 	},
 
 	pickRandomSlot: function () {
