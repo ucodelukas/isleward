@@ -948,7 +948,8 @@ module.exports = {
 				let itemBlueprint = {
 					level: this.obj.stats.values.level,
 					magicFind: magicFind,
-					bonusMagicFind: bonusMagicFind
+					bonusMagicFind: bonusMagicFind,
+					noCurrency: i > 0
 				};
 
 				let useItem = generator.generate(itemBlueprint, playerObject.stats.values.level);
