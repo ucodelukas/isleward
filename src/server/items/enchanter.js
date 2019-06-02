@@ -65,6 +65,9 @@ module.exports = {
 				item.stats[p] += enchantedStats[p];
 
 				if (p === 'lvlRequire') {
+					if (!item.originalLevel)
+						item.originalLevel = item.level;
+
 					item.level -= enchantedStats[p];
 					if (item.level < 1)
 						item.level = 1;
