@@ -251,7 +251,10 @@ module.exports = {
 	},
 
 	doesOwnSkin: function (skinId) {
-		return [...this.skins, ...roles.getSkins(this.username)].some(s => s === skinId || s === '*');
+		let list = [...this.skins, ...roles.getSkins(this.username)];
+		let skinList = skins.getSkinList(list);
+
+		return skinList.some(s => s.id === (skinId + '') || s === '*');
 	},
 
 	login: async function (msg) {

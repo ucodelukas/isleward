@@ -77,7 +77,7 @@ define([
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
 
-			let zoom = window.devicePixelRatio;
+			let zoom = isMobile ? 1 : window.devicePixelRatio;
 			this.width = $('body').width() * zoom;
 			this.height = $('body').height() * zoom;
 
@@ -88,7 +88,7 @@ define([
 				backgroundColor: '0x2d2136'
 			});
 
-			window.onresize = this.onResize.bind(this);
+			window.addEventListener('resize', this.onResize.bind(this));
 
 			$(this.renderer.view)
 				.appendTo('.canvas-container');
