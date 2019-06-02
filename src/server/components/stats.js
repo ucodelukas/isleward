@@ -477,6 +477,9 @@ module.exports = {
 	},
 
 	takeDamage: function (damage, threatMult, source) {
+		if (this.values.hp <= 0)
+			return;
+
 		let obj = this.obj;
 
 		source.fireEvent('beforeDealDamage', damage, obj);
