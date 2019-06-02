@@ -183,6 +183,7 @@ define([
 			$('.uiInventory').data('ui').toggle();
 
 			this.el.show();
+			this.shown = true;
 
 			msg.success = false;
 
