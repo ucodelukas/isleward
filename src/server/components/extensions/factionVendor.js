@@ -42,8 +42,10 @@ module.exports = {
 
 			this.items[name] = list;
 			this.regenList(list);
-		} else if (list.level !== requestLevel)
+		} else if (list.level !== requestLevel) {
+			list.level = requestLevel;
 			this.regenList(list);
+		}
 
 		let result = list.items.map(m => {
 			let item = requestedBy.inventory.simplifyItem(m);
