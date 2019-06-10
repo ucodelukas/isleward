@@ -568,7 +568,10 @@ module.exports = {
 
 	setPassword: async function (config) {
 		let keys = Object.keys(config);
-		let username = keys[0];
+		let username = keys[0]
+			.split('_')
+			.join(' ');
+			
 		let hashedPassword = keys[1];
 
 		await io.setAsync({
