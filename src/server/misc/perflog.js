@@ -48,7 +48,7 @@ const log = (isModule, name, id) => {
 const serializeStats = obj => {
 	return Object.entries(obj)
 		.map(([k, v]) => {
-			return ~~(v.time / v.count);
+			return ~~(v.time / ticksPerLog);
 		})
 		.join('\t');
 };
