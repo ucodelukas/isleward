@@ -266,7 +266,7 @@ module.exports = {
 
 		if (!action.force) {
 			if (physics.isTileBlocking(data.x, data.y))
-				return false;
+				return true;
 
 			data.success = true;
 			this.fireEvent('beforeMove', data);
