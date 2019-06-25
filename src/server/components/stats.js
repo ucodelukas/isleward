@@ -384,6 +384,70 @@ module.exports = {
 		}
 	},
 
+	preDeath: function (source) {
+		const obj = this.obj;
+
+		let deathEvent = {};
+
+		let killSource = source;
+
+		if (source.follower)
+			killSource = source.follower.master;
+
+		if (killSource.player)
+			killSource.stats.kill(obj);
+
+		obj.fireEvent('afterDeath', deathEvent);
+
+		if (obj.player) {
+			obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
+			if (deathEvent.permadeath) {
+				obj.auth.permadie();
+
+				obj.instance.syncer.queue('onGetMessages', {
+					messages: {
+						class: 'color-redA',
+						message: `(level ${this.values.level}) ${obj.name} has forever left the shores of the living.`
+					}
+				}, -1);
+
+				this.syncer.queue('onPermadeath', {
+					source: killSource.name
+				}, [obj.serverId]);
+			} else
+				this.values.hp = 0;
+
+			obj.player.die(killSource, deathEvent.permadeath);
+		} else {
+			obj.effects.die();
+			if (this.obj.spellbook)
+				this.obj.spellbook.die();
+			obj.destroyed = true;
+
+			let deathAnimation = _.getDeepProperty(animations, ['mobs', obj.sheetName, obj.cell, 'death']);
+			if (deathAnimation) {
+				obj.instance.syncer.queue('onGetObject', {
+					x: obj.x,
+					y: obj.y,
+					components: [deathAnimation]
+				}, -1);
+			}
+
+			if (obj.inventory) {
+				let aggroList = obj.aggro.list;
+				let aLen = aggroList.length;
+				for (let i = 0; i < aLen; i++) {
+					let a = aggroList[i];
+
+					if (a.damage <= 0 || !a.obj.has('serverId'))
+						continue;
+
+					obj.inventory.dropBag(a.obj.name, killSource);
+				}
+			}
+		}
+	},
+
 	die: function (source) {
 		let obj = this.obj;
 		let values = this.values;
@@ -485,18 +549,10 @@ module.exports = {
 		source.fireEvent('beforeDealDamage', damage, obj);
 		obj.fireEvent('beforeTakeDamage', damage, source);
 
-		//Maybe the attacker was stunned?
-		if (damage.failed)
+		if (damage.failed || obj.destroyed)
 			return;
 
-		//Maybe something else killed this mob already?
-		if (obj.destroyed)
-			return;
-
-		let amount = damage.amount;
-
-		if (amount > this.values.hp)
-			amount = this.values.hp;
+		let amount = Math.min(this.values.hp, damage.amount);
 
 		damage.dealt = amount;
 
@@ -548,67 +604,8 @@ module.exports = {
 			obj.instance.eventEmitter.emitNoSticky('onBeforeActorDies', death, obj, source);
 			obj.fireEvent('beforeDeath', death);
 
-			if (death.success) {
-				let deathEvent = {};
-
-				let killSource = source;
-
-				if (source.follower)
-					killSource = source.follower.master;
-
-				if (killSource.player)
-					killSource.stats.kill(obj);
-
-				obj.fireEvent('afterDeath', deathEvent);
-
-				if (obj.player) {
-					obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
-					if (deathEvent.permadeath) {
-						obj.auth.permadie();
-
-						obj.instance.syncer.queue('onGetMessages', {
-							messages: {
-								class: 'color-redA',
-								message: `(level ${this.values.level}) ${obj.name} has forever left the shores of the living.`
-							}
-						}, -1);
-
-						this.syncer.queue('onPermadeath', {
-							source: killSource.name
-						}, [obj.serverId]);
-					} else
-						this.values.hp = 0;
-
-					obj.player.die(killSource, deathEvent.permadeath);
-				} else {
-					obj.effects.die();
-					if (this.obj.spellbook)
-						this.obj.spellbook.die();
-					obj.destroyed = true;
-
-					let deathAnimation = _.getDeepProperty(animations, ['mobs', obj.sheetName, obj.cell, 'death']);
-					if (deathAnimation) {
-						obj.instance.syncer.queue('onGetObject', {
-							x: obj.x,
-							y: obj.y,
-							components: [deathAnimation]
-						}, -1);
-					}
-
-					if (obj.inventory) {
-						let aggroList = obj.aggro.list;
-						let aLen = aggroList.length;
-						for (let i = 0; i < aLen; i++) {
-							let a = aggroList[i];
-
-							if (a.damage <= 0 || !a.obj.has('serverId'))
-								continue;
-
-							obj.inventory.dropBag(a.obj.name, killSource);
-						}
-					}
-				}
-			}
+			if (death.success) 
+				this.preDeath(source);
 		} else {
 			source.aggro.tryEngage(obj, 0);
 			obj.syncer.setObject(false, 'stats', 'values', 'hp', this.values.hp);
