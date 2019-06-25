@@ -239,9 +239,12 @@ module.exports = {
 					type === 'number' &&
 					isNaN(value)
 				) ||
-				['obj', 'currentAction', 'autoActive', 'events'].includes(p)
+				['obj', 'currentAction', 'events'].includes(p)
 			)
 				continue;
+
+			if (p === 'autoActive') 
+				value = value !== null;
 
 			values[p] = value;
 		}

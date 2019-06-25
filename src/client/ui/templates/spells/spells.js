@@ -56,6 +56,9 @@ define([
 					})
 					.next().html(hotkey);
 
+				if (spell.autoActive) 
+					el.addClass('active');
+
 				//HACK - we don't actually know how long a tick is
 				if (spell.cd) {
 					this.onGetSpellCooldowns({
