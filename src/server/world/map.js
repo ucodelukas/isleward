@@ -6,6 +6,8 @@ let globalZone = require('../config/zoneBase');
 let randomMap = require('./randomMap');
 let events = require('../misc/events');
 
+const mapObjects = require('./map/mapObjects');
+
 let mapFile = null;
 let mapScale = null;
 let padding = null;
@@ -370,34 +372,8 @@ module.exports = {
 			} else if (cell.width === 24)
 				blueprint.x++;
 
-			if (cell.polyline) {
-				let lowX = this.size.w;
-				let lowY = this.size.h;
-				let highX = 0;
-				let highY = 0;
-
-				blueprint.area = cell.polyline.map(function (v) {
-					let x = ~~((v.x + cell.x) / mapScale);
-					let y = ~~((v.y + cell.y) / mapScale);
-
-					if (x < lowX)
-						lowX = x;
-					if (x > highX)
-						highX = x;
-
-					if (y < lowY)
-						lowY = y;
-					if (y > highY)
-						highY = y;
-
-					return [x, y];
-				});
-
-				blueprint.x = lowX;
-				blueprint.y = lowY;
-				blueprint.width = (highX - lowX);
-				blueprint.height = (highY - lowY);
-			}
+			if (cell.polyline) 
+				mapObjects.polyline(this.size, blueprint, cell, mapScale);
 
 			if (layerName === 'rooms') {
 				if (blueprint.properties.exit) {

@@ -81,6 +81,10 @@ module.exports = {
 			return;
 		}
 
+		this.completeGathering(gathering, isFish);
+	},
+
+	completeGathering: function (gathering, isFish) {
 		let resourceNode = gathering.resourceNode;
 		let gatherResult = extend({
 			obj: gathering

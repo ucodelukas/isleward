@@ -137,6 +137,49 @@ module.exports = {
 		}
 	},
 
+	sendPrivateMessage: function (messageString) {
+		let playerName = '';
+		//Check if there's a space in the name
+		if (messageString[1] === "'") {
+			playerName = messageString.substring(2, messageString.indexOf("'", 2));
+			messageString = messageString.replace("@'" + playerName + "' ", '');
+		} else {
+			playerName = messageString.substring(1, messageString.indexOf(' '));
+			messageString = messageString.replace('@' + playerName + ' ', '');
+		}
+
+		if (playerName === this.obj.name)
+			return;
+
+		let target = cons.players.find(p => p.name === playerName);
+		if (!target)
+			return;
+
+		this.obj.socket.emit('event', {
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-yellowB',
+					message: '(you to ' + playerName + '): ' + messageString,
+					type: 'chat',
+					source: this.obj.name
+				}]
+			}
+		});
+
+		target.socket.emit('event', {
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-yellowB',
+					message: '(' + this.obj.name + ' to you): ' + messageString,
+					type: 'chat',
+					source: this.obj.name
+				}]
+			}
+		});
+	},
+
 	chat: function (msg) {
 		if (!msg.data.message)
 			return;
@@ -201,48 +244,9 @@ module.exports = {
 		};
 		events.emit('onBeforeSendMessage', msgEvent);
 		messageString = msgEvent.msg;
-		if (messageString[0] === '@') {
-			let playerName = '';
-			//Check if there's a space in the name
-			if (messageString[1] === "'") {
-				playerName = messageString.substring(2, messageString.indexOf("'", 2));
-				messageString = messageString.replace("@'" + playerName + "' ", '');
-			} else {
-				playerName = messageString.substring(1, messageString.indexOf(' '));
-				messageString = messageString.replace('@' + playerName + ' ', '');
-			}
-
-			if (playerName === this.obj.name)
-				return;
-
-			let target = cons.players.find(p => p.name === playerName);
-			if (!target)
-				return;
-
-			this.obj.socket.emit('event', {
-				event: 'onGetMessages',
-				data: {
-					messages: [{
-						class: 'color-yellowB',
-						message: '(you to ' + playerName + '): ' + messageString,
-						type: 'chat',
-						source: this.obj.name
-					}]
-				}
-			});
-
-			target.socket.emit('event', {
-				event: 'onGetMessages',
-				data: {
-					messages: [{
-						class: 'color-yellowB',
-						message: '(' + this.obj.name + ' to you): ' + messageString,
-						type: 'chat',
-						source: this.obj.name
-					}]
-				}
-			});
-		} else if (messageString[0] === '$') 
+		if (messageString[0] === '@') 
+			this.sendPrivateMessage(messageString);
+		else if (messageString[0] === '$') 
 			this.sendCustomChannelMessage(msg);
 		else if (messageString[0] === '%') 
 			this.sendPartyMessage(msg);
