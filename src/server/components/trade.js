@@ -26,7 +26,7 @@ module.exports = {
 
 	init: function (blueprint) {
 		this.blueprint = blueprint;
-		this.gold = blueprint.gold;
+		this.gold = blueprint.gold;		
 		this.items = [];
 		this.regenCd = this.regenCdMax;
 
