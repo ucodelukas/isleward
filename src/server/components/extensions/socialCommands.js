@@ -18,6 +18,9 @@ let commandRoles = {
 	mute: 5,
 	unmute: 5,
 
+	//Super Mods
+	broadcast: 8,
+
 	//Admin
 	getItem: 10,
 	getGold: 10,
@@ -44,7 +47,8 @@ let localCommands = [
 	'roll',
 	'giveSkin',
 	'block',
-	'unblock'
+	'unblock',
+	'broadcast'
 ];
 
 module.exports = {
@@ -612,6 +616,22 @@ module.exports = {
 				material: true,
 				...blueprint
 			});
+		});
+	},
+
+	broadcast: function (msg) {
+		if (typeof(msg) === 'object')
+			msg = Object.keys(msg).join(' ');
+
+		cons.emit('event', {
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-blueA',
+					message: msg,
+					type: 'chat'
+				}]
+			}
 		});
 	}
 };
