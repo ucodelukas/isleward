@@ -20,6 +20,7 @@ let commandRoles = {
 
 	//Super Mods
 	broadcast: 8,
+	saveAll: 8,
 
 	//Admin
 	getItem: 10,
@@ -48,7 +49,8 @@ let localCommands = [
 	'giveSkin',
 	'block',
 	'unblock',
-	'broadcast'
+	'broadcast',
+	'saveAll'
 ];
 
 module.exports = {
@@ -90,7 +92,7 @@ module.exports = {
 			});
 		}
 
-		if (localCommands.indexOf(actionName) > -1) 
+		if (localCommands.includes(actionName)) 
 			this[actionName](config);
 		else {
 			atlas.performAction(this.obj, {
@@ -633,5 +635,9 @@ module.exports = {
 				}]
 			}
 		});
+	},
+
+	saveAll: function () {
+		connections.forceSaveAll();
 	}
 };
