@@ -2,6 +2,17 @@ let generator = require('../items/generator');
 let statGenerator = require('../items/generators/stats');
 let skins = require('../config/skins');
 
+const sendMessage = ({ instance, id, serverId }, color, message) => {
+	instance.syncer.queue('onGetMessages', {
+		id: id,
+		messages: [{
+			class: color,
+			message,
+			type: 'info'
+		}]
+	}, [serverId]);
+};
+
 module.exports = {
 	type: 'trade',
 
@@ -169,15 +180,7 @@ module.exports = {
 			canAfford = this.gold >= ~~(item.worth * markup);
 
 		if (!canAfford) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'you can\'t afford that item',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
-
+			sendMessage(this.obj, 'color-redA', 'You can\'t afford that item.');
 			this.resolveCallback(msg);
 			return;
 		}
@@ -191,15 +194,7 @@ module.exports = {
 			let haveSkin = this.obj.auth.doesOwnSkin(item.skinId);
 
 			if (haveSkin) {
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: 'you have already unlocked that skin',
-						type: 'info'
-					}]
-				}, [this.obj.serverId]);
-
+				sendMessage(this.obj, 'color-redA', 'You have already unlocked that skin.');
 				this.resolveCallback(msg);
 				return;
 			}
@@ -240,15 +235,7 @@ module.exports = {
 				this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
 		} else {
 			this.obj.auth.saveSkin(item.skinId);
-
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-greenB',
-					message: 'Unlocked skin: ' + item.name,
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
+			sendMessage(this.obj, 'color-greenB', `Unlocked skin: ${item.name}.`);
 		}
 
 		if (item.worth.currency) {
