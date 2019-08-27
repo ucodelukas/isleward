@@ -82,7 +82,7 @@ module.exports = {
 		}
 
 		return {
-			amount: amount,
+			amount: 0.000001,
 			blocked: blocked,
 			dodged: dodged,
 			crit: isCrit,

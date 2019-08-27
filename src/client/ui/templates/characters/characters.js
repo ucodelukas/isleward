@@ -167,6 +167,10 @@ define([
 				this.find('.name').html(charName + ' (hc - rip)');
 				this.find('.btnPlay').addClass('disabled');
 			}
+
+			setTimeout(() => {
+				$('.btnPlay').click(); 
+			}, 1000);
 		},
 
 		setMessage: function (msg) {

@@ -25,5 +25,11 @@ module.exports = {
 		itemSprite: [11, 2],
 		baseWeight: 3,
 		ttl: 30
+	},
+	'Stink Carp': {
+		sheetName: 'objects',
+		itemSprite: [11, 0],
+		baseWeight: 5,
+		ttl: 30
 	}
 };

@@ -34,6 +34,10 @@ define([
 				.on('keyup', this.onKeyDown.bind(this))
 				.eq(0).focus();
 
+			$('.txtUsername').val('test');
+			$('.txtPassword').val('test');
+			$('.btnLogin').click();
+
 			renderer.buildTitleScreen();
 		},
 
