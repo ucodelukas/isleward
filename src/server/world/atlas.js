@@ -161,15 +161,27 @@ module.exports = {
 				}
 			});
 		},
+
 		event: function (thread, message) {
 			objects.sendEvent(message);
 		},
+
 		events: function (thread, message) {
 			objects.sendEvents(message);
 		},
+
 		object: function (thread, message) {
 			objects.updateObject(message);
 		},
+
+		track: function (thread, message) {
+			let player = objects.objects.find(o => o.id === message.serverId);
+			if (!player)
+				return;
+
+			player.auth.gaTracker.track(message.obj);
+		},
+
 		callDifferentThread: function (thread, message) {
 			let obj = connections.players.find(p => (p.name === message.playerName));
 			if (!obj)
@@ -184,6 +196,7 @@ module.exports = {
 				args: message.data.args
 			});
 		},
+
 		rezone: function (thread, message) {
 			let obj = message.args.obj;
 			obj.destroyed = false;

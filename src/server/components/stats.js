@@ -333,6 +333,18 @@ module.exports = {
 	},
 
 	kill: function (target) {
+		//Analytics Tracking
+		process.send({
+			method: 'track',
+			serverId: this.obj.serverId,
+			obj: {
+				category: 'combat',
+				action: 'kill',
+				label: target.name,
+				value: 1
+			}
+		});
+
 		if (target.player)
 			return;
 
