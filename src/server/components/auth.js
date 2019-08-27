@@ -449,6 +449,8 @@ module.exports = {
 			serialize: true
 		});
 
+		this.initTracker();
+
 		this.play({
 			data: {
 				name: name
