@@ -286,7 +286,7 @@ module.exports = {
 		this.username = msg.data.username;
 		cons.logOut(this.obj);
 
-		this.gaTracker = ga.connect(this.username);
+		this.initTracker();
 
 		await this.getSkins();
 
@@ -299,6 +299,10 @@ module.exports = {
 		};
 
 		msg.callback();
+	},
+
+	initTracker: function () {
+		this.gaTracker = ga.connect(this.username);
 	},
 
 	register: async function (msg) {

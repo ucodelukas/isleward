@@ -112,6 +112,8 @@ module.exports = {
 		else {
 			let o = objects.transferObject(obj);
 			questBuilder.obtain(o);
+
+			o.auth.initTracker();
 		}
 	},
 
