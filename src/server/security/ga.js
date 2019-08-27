@@ -1,7 +1,7 @@
 const ua = require('universal-analytics');
 
 //eslint-disable-next-line no-process-env
-const analyticsId = process.env.ISLEWARD_GOOGLE_ANALYTICS_ID;
+const analyticsId = process.env.IWD_GOOGLE_ANALYTICS_ID;
 
 const tracker = {
 	id: null,
