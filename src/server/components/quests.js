@@ -38,17 +38,7 @@ module.exports = {
 		if ((!quest) || (!quest.isReady))
 			return;
 
-		//Analytics Tracking
-		process.send({
-			method: 'track',
-			serverId: this.obj.serverId,
-			obj: {
-				category: 'quest',
-				action: 'complete',
-				label: quest.name,
-				value: 1
-			}
-		});
+		this.obj.auth.track('quest', 'complete', quest.name);
 
 		quest.complete();
 
