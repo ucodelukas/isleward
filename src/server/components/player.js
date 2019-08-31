@@ -199,6 +199,7 @@ module.exports = {
 		}
 
 		obj.fireEvent('onAfterDeath', source);
+		obj.auth.track('combat', 'death', source.name, 1);
 
 		obj.spellbook.die();
 		obj.effects.die();

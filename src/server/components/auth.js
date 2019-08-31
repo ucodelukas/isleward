@@ -305,6 +305,19 @@ module.exports = {
 		this.gaTracker = ga.connect(this.username);
 	},
 
+	track: function (category, action, label, value = 1) {
+		process.send({
+			method: 'track',
+			serverId: this.obj.serverId,
+			obj: {
+				category,
+				action,
+				label,
+				value
+			}
+		});
+	},
+
 	register: async function (msg) {
 		let credentials = msg.data;
 
