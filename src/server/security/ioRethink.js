@@ -4,7 +4,7 @@ let serverConfig = require('../config/serverConfig');
 const dbConfig = {
 	host: serverConfig.dbHost,
 	port: serverConfig.dbPort,
-	db: 'live'
+	db: serverConfig.dbName
 };
 
 const tables = [
