@@ -16,9 +16,9 @@ audit:
 lint-server:
   stage: test
   script:
-    - npm install -g eslint eslint-plugin-prettier prettier babel-eslint
+    - npm install eslint eslint-plugin-prettier prettier babel-eslint
     - cd src/server
-    - eslint . 
+    - ../../node_modules/.bin/eslint . 
   only:
     - merge_requests
     - master
@@ -26,9 +26,9 @@ lint-server:
 lint-client:
   stage: test
   script:
-    - npm install -g eslint eslint-plugin-prettier prettier babel-eslint
+    - npm install eslint eslint-plugin-prettier prettier babel-eslint
     - cd src/client
-    - eslint . 
+    - ../../node_modules/.bin/eslint .
   only:
     - merge_requests
     - master
