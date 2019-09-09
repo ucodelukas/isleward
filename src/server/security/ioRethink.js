@@ -111,14 +111,18 @@ module.exports = {
 	}) {
 		const con = await this.getConnection();
 
-		await r.table(table)
-			.insert({
-				id,
-				value
-			}, {
-				conflict
-			})
-			.run(con);
+		try {
+			await r.table(table)
+				.insert({
+					id,
+					value
+				}, {
+					conflict
+				})
+				.run(con);
+		} catch (e) {
+			this.logError(e);
+		}
 
 		con.close();
 	},
@@ -151,20 +155,24 @@ module.exports = {
 	}) {
 		const con = await this.getConnection();
 
-		await r.table(table)
-			.get(key)
-			.update(row => {
-				return r.branch(
-					row('value').typeOf().eq('ARRAY'),
-					{
-						[field]: row('value').setUnion(value)
-					},
-					{
-						[field]: value
-					}
-				);
-			})
-			.run(con);
+		try {
+			await r.table(table)
+				.get(key)
+				.update(row => {
+					return r.branch(
+						row('value').typeOf().eq('ARRAY'),
+						{
+							[field]: row('value').setUnion(value)
+						},
+						{
+							[field]: value
+						}
+					);
+				})
+				.run(con);
+		} catch (e) {
+			this.logError(e);
+		}
 
 		con.close();
 	},
@@ -182,5 +190,19 @@ module.exports = {
 		con.close();
 
 		return !!res;
+	},
+
+	logError: async function (error) {
+		try {
+			await this.setAsync({
+				key: new Date(),
+				table: 'error',
+				value: error.toString() + ' | ' + error.stack.toString()
+			});
+
+			process.send({
+				event: 'onCrashed'
+			});
+		} catch (e) {}
 	}
 };
