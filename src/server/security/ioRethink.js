@@ -121,7 +121,7 @@ module.exports = {
 				})
 				.run(con);
 		} catch (e) {
-			this.logError(e, value);
+			this.logError(e, table, id);
 		}
 
 		con.close();
@@ -171,7 +171,7 @@ module.exports = {
 				})
 				.run(con);
 		} catch (e) {
-			this.logError(e, value);
+			this.logError(e, table, key);
 		}
 
 		con.close();
@@ -192,19 +192,19 @@ module.exports = {
 		return !!res;
 	},
 
-	logError: async function (error, value) {
+	logError: async function (error, table, key) {
 		try {
-			const stringValue = JSON.stringify(value);
+			const errorValue = `${error.toString()} | ${error.stack.toString()} | ${table} | ${key}`;
 
 			await this.setAsync({
 				key: new Date(),
 				table: 'error',
-				value: error.toString() + ' | ' + error.stack.toString() + ' | ' + stringValue
-			});
-
-			process.send({
-				event: 'onCrashed'
+				value: errorValue
 			});
 		} catch (e) {}
+
+		process.send({
+			event: 'onCrashed'
+		});
 	}
 };
