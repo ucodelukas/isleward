@@ -1,10 +1,55 @@
 define([
-	'js/rendering/renderer',
-	'picture'
+	'js/rendering/renderer'/*,
+	'picture'*/
 ], function (
-	renderer,
-	picture
+	renderer/*,
+	picture*/
 ) {
+	const frag = `
+	varying vec2 vTextureCoord;
+	uniform sampler2D uSampler;
+	uniform vec4 targetColor;
+	void main(void)
+	{
+	    vec4 source = texture2D(uSampler, vTextureCoord);
+
+	    //reverse hardlight
+	    if (source.a == 0.0) {
+	        gl_FragColor = vec4(0, 0, 0, 0);
+	        return;
+	    }
+		
+	    //yeah, premultiplied
+	    vec3 Cb = source.rgb/source.a, Cs;
+	    if (targetColor.a > 0.0) {
+	        Cs = targetColor.rgb / targetColor.a;
+	    }
+	    vec3 multiply = Cb * Cs * 2.0;
+	    vec3 Cb2 = Cb * 2.0 - 1.0;
+	    vec3 screen = Cb2 + Cs - Cb2 * Cs;
+	    vec3 B;
+	    if (Cs.r <= 0.5) {
+	        B.r = 0.0;
+	    } else {
+	        B.r = screen.r;
+	    }
+	    if (Cs.g <= 0.5) {
+	        B.g = 0.0;
+	    } else {
+	        B.g = screen.g;
+	    }
+	    if (Cs.b <= 0.5) {
+	        B.b = 0.0;
+	    } else {
+	        B.b = screen.b;
+	    }
+	    vec4 res;
+	    res.xyz = (1.0 - source.a) * Cs + source.a * B;
+	    res.a = source.a + targetColor.a * (1.0-source.a);
+	    gl_FragColor = vec4(res.xyz * res.a, res.a);
+
+	}`;
+
 	return {
 		type: 'lightPatch',
 
@@ -34,11 +79,19 @@ define([
 						layerName: 'lightPatches'
 					});
 					sprite.alpha = (0.2 + (Math.random() * 1)) * alpha;
-					sprite.tint = '0x' + this.color;
+					//sprite.tint = '0x' + this.color;
 
-					sprite.blendMode = PIXI.BLEND_MODES.OVERLAY;
-					sprite.pluginName = 'picture';
+					//We assume that target alpha is 1.0 always
+					let overlayFilter = new PIXI.Filter(undefined, frag, {
+						targetColor: [0.0, 0.0, 0.0, 1.0]
+					});
 
+					//assign the color to rgb array
+
+					//sprite.blendMode = PIXI.BLEND_MODES.OVERLAY;
+					//sprite.pluginName = 'picture';
+
+					sprite.filters = [overlayFilter];
 					this.patches.push(sprite);
 				}
 			}

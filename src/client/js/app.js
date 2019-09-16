@@ -5,16 +5,16 @@ require.config({
 	baseUrl: '',
 	waitSeconds: 120,
 	paths: {
-		socket: 'plugins/socket',
-		wquery: 'plugins/jquery.min',
+		socket: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim',
+		jquery: 'https://code.jquery.com/jquery-3.4.1.slim.min',
 		text: 'plugins/text',
 		html: 'plugins/html',
 		css: 'plugins/css',
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
 		particles: 'plugins/pixi.particles',
-		picture: 'plugins/pixi.picture',
-		pixi: 'plugins/pixi.min',
+		//picture: 'plugins/pixi.picture',
+		pixi: 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min',
 		howler: 'plugins/howler.min'
 	},
 	shim: {
@@ -24,12 +24,12 @@ require.config({
 		socket: {
 			exports: 'io'
 		},
-		wquery: {
+		jquery: {
 			exports: '$'
 		},
 		helpers: {
 			deps: [
-				'wquery'
+				'jquery'
 			]
 		},
 		pixi: {
@@ -40,11 +40,11 @@ require.config({
 				'pixi'
 			]
 		},
-		picture: {
+		/*picture: {
 			deps: [
 				'pixi'
 			]
-		},
+		},*/
 		main: {
 			deps: [
 				'helpers',
