@@ -17,4 +17,4 @@ RUN npm install --only-production
 EXPOSE 4000
 
 # Launch Isleward server
-CMD ["node", "--expose-gc", "index.js"]
+CMD ["node", "index.js"]
