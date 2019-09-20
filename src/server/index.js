@@ -24,10 +24,6 @@ let startup = {
 	onDbReady: async function () {
 		await fixes.fixDb();
 		
-		setInterval(function () {
-			global.gc();
-		}, 60000);
-
 		process.on('uncaughtException', this.onError.bind(this));
 
 		animations.init();

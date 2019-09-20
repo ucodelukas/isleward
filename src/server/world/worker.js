@@ -45,10 +45,6 @@ let onDbReady = function () {
 
 	mods.init(onModsReady);
 
-	setInterval(function () {
-		global.gc();
-	}, 60000);
-
 	process.on('uncaughtException', function (e) {
 		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 			return;
