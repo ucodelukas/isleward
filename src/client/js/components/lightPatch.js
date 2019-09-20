@@ -1,55 +1,8 @@
 define([
-	'js/rendering/renderer'/*,
-	'picture'*/
+	'js/rendering/renderer'
 ], function (
-	renderer/*,
-	picture*/
+	renderer
 ) {
-	const frag = `
-	varying vec2 vTextureCoord;
-	uniform sampler2D uSampler;
-	uniform vec4 targetColor;
-	void main(void)
-	{
-	    vec4 source = texture2D(uSampler, vTextureCoord);
-
-	    //reverse hardlight
-	    if (source.a == 0.0) {
-	        gl_FragColor = vec4(0, 0, 0, 0);
-	        return;
-	    }
-		
-	    //yeah, premultiplied
-	    vec3 Cb = source.rgb/source.a, Cs;
-	    if (targetColor.a > 0.0) {
-	        Cs = targetColor.rgb / targetColor.a;
-	    }
-	    vec3 multiply = Cb * Cs * 2.0;
-	    vec3 Cb2 = Cb * 2.0 - 1.0;
-	    vec3 screen = Cb2 + Cs - Cb2 * Cs;
-	    vec3 B;
-	    if (Cs.r <= 0.5) {
-	        B.r = 0.0;
-	    } else {
-	        B.r = screen.r;
-	    }
-	    if (Cs.g <= 0.5) {
-	        B.g = 0.0;
-	    } else {
-	        B.g = screen.g;
-	    }
-	    if (Cs.b <= 0.5) {
-	        B.b = 0.0;
-	    } else {
-	        B.b = screen.b;
-	    }
-	    vec4 res;
-	    res.xyz = (1.0 - source.a) * Cs + source.a * B;
-	    res.a = source.a + targetColor.a * (1.0-source.a);
-	    gl_FragColor = vec4(res.xyz * res.a, res.a);
-
-	}`;
-
 	return {
 		type: 'lightPatch',
 
@@ -65,11 +18,13 @@ define([
 			let x = obj.x;
 			let y = obj.y;
 
-			let maxDistance = Math.sqrt(Math.pow(obj.width / 2, 2) + Math.pow(obj.height / 2, 2));
+			let maxDistance = Math.sqrt(Math.pow(obj.width / 3, 2) + Math.pow(obj.height / 3, 2));
 			for (let i = 0; i < obj.width; i++) {
 				for (let j = 0; j < obj.height; j++) {
-					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - i, 2));
-					let alpha = distance / maxDistance;
+					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - j, 2));
+					const maxAlpha = (distance / maxDistance) * 0.2;
+					if (maxAlpha <= 0.05)
+						continue;
 
 					let sprite = renderer.buildObject({
 						x: (x + i),
@@ -78,20 +33,11 @@ define([
 						cell: 0,
 						layerName: 'lightPatches'
 					});
-					sprite.alpha = (0.2 + (Math.random() * 1)) * alpha;
-					//sprite.tint = '0x' + this.color;
+					sprite.alpha = (maxAlpha * 0.3) + (Math.random() * (maxAlpha * 0.7));
+					sprite.tint = '0x' + this.color;
 
-					//We assume that target alpha is 1.0 always
-					let overlayFilter = new PIXI.Filter(undefined, frag, {
-						targetColor: [0.0, 0.0, 0.0, 1.0]
-					});
+					sprite.blendMode = PIXI.BLEND_MODES.ADD;
 
-					//assign the color to rgb array
-
-					//sprite.blendMode = PIXI.BLEND_MODES.OVERLAY;
-					//sprite.pluginName = 'picture';
-
-					sprite.filters = [overlayFilter];
 					this.patches.push(sprite);
 				}
 			}

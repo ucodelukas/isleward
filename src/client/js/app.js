@@ -13,7 +13,6 @@ require.config({
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
 		particles: 'plugins/pixi.particles',
-		//picture: 'plugins/pixi.picture',
 		pixi: 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min',
 		howler: 'plugins/howler.min'
 	},
@@ -40,11 +39,6 @@ require.config({
 				'pixi'
 			]
 		},
-		/*picture: {
-			deps: [
-				'pixi'
-			]
-		},*/
 		main: {
 			deps: [
 				'helpers',

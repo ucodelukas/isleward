@@ -6,8 +6,7 @@ define([
 	'js/rendering/tileOpacity',
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
-	'js/rendering/spritePool'/*,
-	'picture'*/
+	'js/rendering/spritePool'
 ], function (
 	resources,
 	events,
@@ -16,8 +15,7 @@ define([
 	tileOpacity,
 	particles,
 	shaderOutline,
-	spritePool/*,
-	picture*/
+	spritePool
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);

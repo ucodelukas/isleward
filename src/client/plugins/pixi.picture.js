@@ -408,6 +408,8 @@ var pixi_picture;
 			if (sprite.tileTransform) 
 				tilingMode = this._isSimpleSprite(sprite) ? 1 : 2;
             
+			if (!this.drawModes)
+            	pixi_picture.mapFilterBlendModesToPixi(this.renderer.gl);
 			let blendShader = this.drawModes[sprite.blendMode];
 			if (blendShader) 
 				this._renderBlend(sprite, blendShader[tilingMode]);
@@ -665,4 +667,3 @@ var pixi_picture;
 (function (pixi_picture) {
 	PIXI.picture = pixi_picture;
 })(pixi_picture || (pixi_picture = {}));
-//# sourceMappingURL=pixi-picture.js.map
