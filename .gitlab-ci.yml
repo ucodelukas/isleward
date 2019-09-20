@@ -22,6 +22,7 @@ lint-server:
   only:
     - merge_requests
     - master
+  allow_failure: true
 
 lint-client:
   stage: test
@@ -32,6 +33,7 @@ lint-client:
   only:
     - merge_requests
     - master
+  allow_failure: true
 
 build-image:
   stage: build
