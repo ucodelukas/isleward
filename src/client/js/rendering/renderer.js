@@ -6,8 +6,7 @@ define([
 	'js/rendering/tileOpacity',
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
-	'js/rendering/spritePool',
-	'picture'
+	'js/rendering/spritePool'
 ], function (
 	resources,
 	events,
@@ -16,8 +15,7 @@ define([
 	tileOpacity,
 	particles,
 	shaderOutline,
-	spritePool,
-	picture
+	spritePool
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);
@@ -71,8 +69,8 @@ define([
 		hiddenRooms: null,
 
 		init: function () {
-			PIXI.GC_MODES.DEFAULT = PIXI.GC_MODES.AUTO;
-			PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
+			PIXI.settings.GC_MODE = PIXI.GC_MODES.AUTO;
+			PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
@@ -84,7 +82,9 @@ define([
 			this.showTilesW = Math.ceil((this.width / scale) / 2) + 3;
 			this.showTilesH = Math.ceil((this.height / scale) / 2) + 3;
 
-			this.renderer = pixi.autoDetectRenderer(this.width, this.height, {
+			this.renderer = new PIXI.Renderer({
+				width: this.width,
+				height: this.height,
 				backgroundColor: '0x2d2136'
 			});
 
@@ -334,7 +334,7 @@ define([
 			this.clean();
 			spritePool.clean();
 
-			this.stage.filters = [new PIXI.filters.VoidFilter()];
+			this.stage.filters = [new PIXI.filters.AlphaFilter()];
 			this.stage.filterArea = new PIXI.Rectangle(0, 0, w * scale, h * scale);
 
 			this.hiddenRooms = msg.hiddenRooms;

@@ -1,9 +1,7 @@
 define([
-	'js/rendering/renderer',
-	'picture'
+	'js/rendering/renderer'
 ], function (
-	renderer,
-	picture
+	renderer
 ) {
 	return {
 		build: function (config) {
