@@ -6,7 +6,7 @@ define([
 	return {
 		type: 'lightPatch',
 
-		color: 'f7ffb2',
+		color: 'ffeb38',
 		patches: [],
 		rays: [],
 

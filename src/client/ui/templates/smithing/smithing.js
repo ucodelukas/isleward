@@ -146,16 +146,6 @@ define([
 				events.emit('onGetAnnouncement', resultMsg);
 
 				return;
-			} else if (msg.item.eq) {
-				let resultMsg = {
-					msg: 'Cannot augment equipped items',
-					type: 'failure',
-					zIndex: 9999999,
-					top: 180
-				};
-				events.emit('onGetAnnouncement', resultMsg);
-
-				return;
 			}
 
 			this.find('.selected').removeClass('selected');
@@ -180,14 +170,15 @@ define([
 
 			this.offEvent(this.eventClickInv);
 
-			$('.uiInventory').data('ui').toggle();
+			$('.uiInventory').data('ui').hide();
+			this.show();
 
 			this.el.show();
 			this.shown = true;
 
 			msg.success = false;
 
-			if (!msg || !msg.item || !msg.item.slot || msg.item.eq)
+			if (!msg || !msg.item || !msg.item.slot)
 				return;
 
 			this.item = msg.item;

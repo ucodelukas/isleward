@@ -609,6 +609,9 @@ module.exports = {
 	},
 
 	getMaterials: function (config) {
+		if (typeof(config) === 'object')
+			config = 100;
+		
 		let inventory = this.obj.inventory;
 
 		Object.entries(configMaterials).forEach(([material, blueprint]) => {

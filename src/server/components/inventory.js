@@ -143,12 +143,20 @@ module.exports = {
 
 	enchantItem: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action === 'scour') && (item.power === 0))) {
+		if ((!item) || (!item.slot) || (item.noAugment) || ((msg.action === 'scour') && (item.power === 0))) {
 			this.resolveCallback(msg);
 			return;
 		}
 
+		const equipment = this.obj.equipment;
+		
+		if (item.eq)
+			equipment.unequip(item.id, true);
+
 		enchanter.enchant(this.obj, item, msg);
+
+		if (item.eq) 
+			equipment.equip(item.id);
 	},
 
 	getEnchantMaterials: function (msg) {
@@ -773,7 +781,7 @@ module.exports = {
 			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
-				existItem.quantity = (existItem.quantity || 1) + (item.quantity || 1);
+				existItem.quantity = ~~(existItem.quantity || 1) + ~~(item.quantity || 1);
 				item = existItem;
 			}
 		}

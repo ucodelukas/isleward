@@ -150,10 +150,54 @@ define([
 						.find('.icon')
 						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.off()
+						.on('contextmenu', this.showContext.bind(this, item))
 						.on('mousedown', this.buildSlot.bind(this, elSlot))
 						.on('mousemove', this.onHoverItem.bind(this, elSlot, item, null))
 						.on('mouseleave', this.onHoverItem.bind(this, null, null));
 				});
+		},
+
+		openAugmentUi: function (item) {
+			events.emit('onSetSmithItem', {
+				item: item
+			});
+		},
+
+		showContext: function (item, e) {
+			let menuItems = {
+				unequip: {
+					text: 'unequip',
+					callback: this.unequipItem.bind(this, item)
+				},
+				augment: {
+					text: 'craft',
+					callback: this.openAugmentUi.bind(this, item)
+				}				
+			};
+
+			let config = [];
+
+			config.push(menuItems.unequip);
+
+			if (item.slot)
+				config.push(menuItems.augment);
+
+			events.emit('onContextMenu', config, e);
+
+			e.preventDefault();
+			return false;
+		},
+
+		unequipItem: function (item) {
+			client.request({
+				cpn: 'player',
+				method: 'performAction',
+				data: {
+					cpn: 'equipment',
+					method: 'unequip',
+					data: item.id
+				}
+			});
 		},
 
 		onInspectTarget: function (result) {
@@ -168,6 +212,9 @@ define([
 		},
 
 		buildSlot: function (el, e) {
+			if (e && e.button !== 0) 
+				return;
+
 			if (this.isInspecting)
 				return;
 

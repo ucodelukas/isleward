@@ -142,7 +142,10 @@ const augment = (item, inventory, result, msg) => {
 	}
 
 	item.power = newPower;
-	this.addStat(item, result);
+
+	generatorStats.generate(item, {
+		statCount: 1
+	}, result);
 };
 
 module.exports = {
@@ -190,12 +193,6 @@ module.exports = {
 		obj.syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item));
 
 		inventory.resolveCallback(msg, result);
-	},
-
-	addStat: function (item, result) {
-		generatorStats.generate(item, {
-			statCount: 1
-		}, result);
 	},
 
 	getEnchantMaterials: function (item, action) {
