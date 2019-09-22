@@ -36,6 +36,13 @@ define([
 					sprite.alpha = (maxAlpha * 0.3) + (Math.random() * (maxAlpha * 0.7));
 					sprite.tint = '0x' + this.color;
 
+					const size = (3 + ~~(Math.random() * 6)) * scaleMult;
+
+					sprite.width = size;
+					sprite.height = size;
+					sprite.x += scaleMult * ~~(Math.random() * 4);
+					sprite.y += scaleMult * ~~(Math.random() * 4);
+
 					sprite.blendMode = PIXI.BLEND_MODES.ADD;
 
 					this.patches.push(sprite);
