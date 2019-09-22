@@ -23,10 +23,10 @@ let commandRoles = {
 	saveAll: 8,
 
 	//Admin
-	getItem: 0,
+	getItem: 10,
 	getGold: 10,
 	setLevel: 10,
-	godMode: 0,
+	godMode: 10,
 	clearInventory: 10,
 	completeQuests: 10,
 	getReputation: 10,
