@@ -455,7 +455,7 @@ define([
 					'item quality': stats.magicFind + '%',
 					'item quantity': stats.itemQuantity + '%',
 					gap1: '',
-					'sprint chance': (stats.sprintChance || 0) + '%',
+					'sprint chance': ((~~(stats.sprintChance * 100) / 100) || 0) + '%',
 					gap2: '',
 					'xp increase': stats.xpIncrease + '%',
 					gap3: '',
