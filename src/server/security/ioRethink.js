@@ -153,5 +153,21 @@ module.exports = {
 			.run();
 
 		return !!res;
+	},
+
+	logError: async function (error, table, key) {
+		try {
+			const errorValue = `${error.toString()} | ${error.stack.toString()} | ${table} | ${key}`;
+
+			await this.setAsync({
+				key: new Date(),
+				table: 'error',
+				value: errorValue
+			});
+		} catch (e) {}
+
+		process.send({
+			event: 'onCrashed'
+		});
 	}
 };
