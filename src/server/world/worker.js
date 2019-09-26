@@ -45,22 +45,21 @@ let onDbReady = function () {
 
 	mods.init(onModsReady);
 
-	process.on('uncaughtException', function (e) {
+	process.on('uncaughtException', async function (e) {
 		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
 			return;
 
 		_.log('Error Logged: ' + e.toString());
 		_.log(e.stack);
 
-		io.setAsync({
+		await io.setAsync({
 			key: new Date(),
 			table: 'error',
-			value: e.toString() + ' | ' + e.stack.toString(),
-			callback: function () {
-				process.send({
-					event: 'onCrashed'
-				});
-			}
+			value: e.toString() + ' | ' + e.stack.toString()
+		});
+
+		process.send({
+			event: 'onCrashed'
 		});
 	});
 };
