@@ -1,11 +1,10 @@
-let r = require('rethinkdb');
-let serverConfig = require('../config/serverConfig');
+const serverConfig = require('../config/serverConfig');
 
-const dbConfig = {
+const r = require('rethinkdbdash')({
 	host: serverConfig.dbHost,
 	port: serverConfig.dbPort,
 	db: serverConfig.dbName
-};
+});
 
 const tables = [
 	'character',
@@ -26,36 +25,26 @@ module.exports = {
 	staticCon: null,
 
 	init: async function (cbReady) {
-		this.staticCon = await this.getConnection();
-
 		await this.create();
 
 		cbReady();
 	},
 
-	getConnection: async function () {
-		return await r.connect(dbConfig);
-	},
-
 	create: async function () {
-		const con = await this.getConnection();
-
 		try {
-			await r.dbCreate(this.useDb).run(con);
+			await r.dbCreate(this.useDb).run();
 		} catch (e) {
 
 		}
 
 		for (const table of tables) {
 			try {
-				await r.tableCreate(table).run(con);
+				await r.tableCreate(table).run();
 			} catch (e) {
 				if (!e.message.includes('already exists'))
 					_.log(e);
 			}
 		}
-
-		con.close();
 	},
 
 	getAsync: async function ({
@@ -64,18 +53,14 @@ module.exports = {
 		isArray,
 		noDefault
 	}) {
-		const con = await this.getConnection();
-
 		let res = await r.table(table)
 			.get(key)
-			.run(con);
+			.run();
 
 		if (res)
 			return res.value;
 		else if (isArray && !noDefault)
 			return [];
-
-		con.close();
 
 		return res;
 	},
@@ -86,19 +71,13 @@ module.exports = {
 		isArray,
 		noDefault
 	}) {
-		const con = await this.getConnection();
-
 		let res = await r.table(table)
-			.run(con);
-
-		res = await res.toArray();
+			.run();
 
 		if (res)
 			return res;
 		else if (isArray && !noDefault)
 			return [];
-
-		con.close();
 
 		return res;
 	},
@@ -109,38 +88,34 @@ module.exports = {
 		value,
 		conflict = 'update'
 	}) {
-		const con = await this.getConnection();
-
-		await r.table(table)
-			.insert({
-				id,
-				value
-			}, {
-				conflict
-			})
-			.run(con);
-
-		con.close();
+		try {
+			await r.table(table)
+				.insert({
+					id,
+					value
+				}, {
+					conflict
+				})
+				.run();
+		} catch (e) {
+			this.logError(e, table, id);
+		}
 	},
 
 	deleteAsync: async function ({
 		key,
 		table
 	}) {
-		const con = await this.getConnection();
-
 		await r.table(table)
 			.get(key)
 			.delete()
-			.run(con);
-
-		con.close();
+			.run();
 	},
 
 	subscribe: function (table) {
 		return r.table(table)
 			.changes()
-			.run(this.staticCon);
+			.run();
 	},
 
 	append: async function ({
@@ -149,37 +124,33 @@ module.exports = {
 		value,
 		field
 	}) {
-		const con = await this.getConnection();
-
-		await r.table(table)
-			.get(key)
-			.update(row => {
-				return r.branch(
-					row('value').typeOf().eq('ARRAY'),
-					{
-						[field]: row('value').setUnion(value)
-					},
-					{
-						[field]: value
-					}
-				);
-			})
-			.run(con);
-
-		con.close();
+		try {
+			await r.table(table)
+				.get(key)
+				.update(row => {
+					return r.branch(
+						row('value').typeOf().eq('ARRAY'),
+						{
+							[field]: row('value').setUnion(value)
+						},
+						{
+							[field]: value
+						}
+					);
+				})
+				.run();
+		} catch (e) {
+			this.logError(e, table, key);
+		}
 	},
 
 	exists: async function ({
 		table,
 		key
 	}) {
-		const con = await this.getConnection();
-
 		let res = await r.table(table)
 			.get(key)
-			.run(con);
-
-		con.close();
+			.run();
 
 		return !!res;
 	}
