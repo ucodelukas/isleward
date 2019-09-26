@@ -12,7 +12,8 @@
     "rethinkdb": "^2.3.3",
     "rethinkdbdash": "^2.3.31",
     "socket.io": "^2.2.0",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "^4.0.6",
+    "universal-analytics": "^0.4.20"
   },
   "devDependencies": {}
 }

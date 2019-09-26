@@ -8,6 +8,7 @@ let loginRewards = require('../config/loginRewards');
 let mail = require('../mail/mail');
 let scheduler = require('../misc/scheduler');
 let spirits = require('../config/spirits');
+let ga = require('../security/ga');
 
 module.exports = {
 	type: 'auth',
@@ -284,6 +285,8 @@ module.exports = {
 		
 		this.username = msg.data.username;
 		cons.logOut(this.obj);
+
+		this.gaTracker = ga.connect(this.username);
 
 		await this.getSkins();
 
