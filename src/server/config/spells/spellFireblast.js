@@ -18,6 +18,10 @@ module.exports = {
 		let physics = obj.instance.physics;
 		let syncer = obj.instance.syncer;
 
+		const particleConfig = extend({}, this.particles);
+
+		this.obj.fireEvent('beforeSpawnParticles', this, particleConfig);
+
 		for (let i = x - radius; i <= x + radius; i++) {
 			for (let j = y - radius; j <= y + radius; j++) {
 				if (!physics.hasLos(~~x, ~~y, ~~i, ~~j))
@@ -29,7 +33,7 @@ module.exports = {
 					components: [{
 						type: 'particles',
 						ttl: 10,
-						blueprint: this.particles
+						blueprint: particleConfig
 					}]
 				};
 
