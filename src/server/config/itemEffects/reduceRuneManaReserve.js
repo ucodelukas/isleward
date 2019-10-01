@@ -20,13 +20,15 @@ module.exports = {
 			if (!rolls)
 				return;
 
-			let spell = this.spellbook.spells.find(s => s.active && s.name.toLowerCase() === rolls.rune);
-			if (!spell)
+			let spells = this.spellbook.spells.filter(s => s.active && s.name.toLowerCase() === rolls.rune);
+			if (!spells.length)
 				return;
 
-			let spellReserve = spell.manaReserve.percentage;
+			spells.forEach(spell => {
+				let spellReserve = spell.manaReserve.percentage;
 
-			this.stats.addStat('manaReservePercent', -Math.min(spellReserve, (rolls.amount / 100)));
+				this.stats.addStat('manaReservePercent', -Math.min(spellReserve, (rolls.amount / 100)));
+			});
 		},
 
 		afterUnequipItem: function (item) {
@@ -34,18 +36,20 @@ module.exports = {
 			if (!rolls)
 				return;
 
-			let spell = this.spellbook.spells.find(s => s.active && s.name.toLowerCase() === rolls.rune);
-			if (!spell)
+			let spells = this.spellbook.spells.filter(s => s.active && s.name.toLowerCase() === rolls.rune);
+			if (!spells.length)
 				return;
 
-			let spellReserve = spell.manaReserve.percentage;
+			spells.forEach(spell => {
+				let spellReserve = spell.manaReserve.percentage;
 
-			let stats = this.stats;
-			let newReserve = stats.manaReservePercent + (Math.max(0, (spellReserve * 100) - rolls.amount) / 100) - spellReserve;
+				let stats = this.stats;
+				let newReserve = stats.manaReservePercent + (Math.max(0, (spellReserve * 100) - rolls.amount) / 100) - spellReserve;
 
-			stats.addStat('manaReservePercent', Math.min(spellReserve, (rolls.amount / 100)));
-			if (newReserve < 0)
-				this.spellbook.removeSpellById(spell.id);
+				stats.addStat('manaReservePercent', Math.min(spellReserve, (rolls.amount / 100)));
+				if (newReserve < 0)
+					this.spellbook.removeSpellById(spell.id);
+			});
 		}
 	}
 };
