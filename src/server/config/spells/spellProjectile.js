@@ -16,6 +16,7 @@ module.exports = {
 
 	needLos: true,
 	shootAll: false,
+	percentDamage: false,
 
 	cast: function (action) {
 		if (this.shootAll) {

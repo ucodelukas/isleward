@@ -270,10 +270,14 @@ module.exports = {
 			statType: this.statType,
 			statMult: this.statMult,
 			isAttack: this.isAttack,
+			noScale: this.noScale,
 			noMitigate: noMitigate
 		};
 
 		this.obj.fireEvent('onBeforeCalculateDamage', config);
+
+		if (this.percentDamage)
+			config.damage = target.stats.values.hpMax * this.damage;
 
 		let damage = combat.getDamage(config);
 

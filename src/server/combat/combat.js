@@ -28,7 +28,7 @@ module.exports = {
 			}
 		}
 
-		if ((!blocked) && (!dodged)) {
+		if (!blocked && !dodged && !config.noScale) {
 			if (config.statType) {
 				let statValue = 0;
 				let statType = config.statType;
