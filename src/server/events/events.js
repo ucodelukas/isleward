@@ -187,6 +187,35 @@ module.exports = {
 		delete config.event;
 	},
 
+	handleNotification: function (event, { msg, desc, event: triggerEvent }) {
+		if (msg) {
+			this.instance.syncer.queue('serverModule', {
+				module: 'cons',
+				method: 'emit',
+				msg: [
+					'event',
+					{
+						event: 'onGetMessages',
+						data: {
+							messages: {
+								class: 'color-pinkA',
+								message: msg
+							}
+						}
+					}
+				]
+			}, 'server');
+		}
+
+		if (desc) {
+			event.config.descTimer = desc;
+			this.setEventDescription(event.config.name);
+		}
+
+		if (triggerEvent && event.config.events[triggerEvent])
+			event.config.events[triggerEvent](this, event);
+	},
+
 	updateEvent: function (event) {
 		const onTick = _.getDeepProperty(event, ['config', 'events', 'onTick']);
 		if (onTick)
@@ -222,35 +251,11 @@ module.exports = {
 			}
 		}
 
-		if (event.config.notifications) {
-			let n = event.config.notifications.find(f => (f.mark === event.age));
-			if (n) {
-				this.instance.syncer.queue('serverModule', {
-					module: 'cons',
-					method: 'emit',
-					msg: [
-						'event',
-						{
-							event: 'onGetMessages',
-							data: {
-								messages: {
-									class: 'color-pinkA',
-									message: n.msg
-								}
-							}
-						}
-					]
-				}, 'server');
-
-				if (n.has('desc')) {
-					event.config.descTimer = n.desc;
-					this.setEventDescription(event.config.name);
-				}
-
-				if (n.event && event.config.events[n.event])
-					event.config.events[n.event](this, event);
-			}
-		}
+		const notifications = event.config.notifications || [];
+		notifications.forEach(n => {
+			if (n.mark === event.age)
+				this.handleNotification(event, n);
+		});
 
 		event.age++;
 
