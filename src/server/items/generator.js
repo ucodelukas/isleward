@@ -59,10 +59,10 @@ module.exports = {
 			currencyGenerators.forEach(g => g.generate(item, blueprint));
 		else if (blueprint.material) {
 			item.material = true;
-			item.sprite = blueprint.sprite;
-			item.noDrop = blueprint.noDrop;
-			item.noSalvage = blueprint.noSalvage;
-			item.noDestroy = blueprint.noDestroy;
+			item.sprite = blueprint.sprite || null;
+			item.noDrop = blueprint.noDrop || null;
+			item.noSalvage = blueprint.noSalvage || null;
+			item.noDestroy = blueprint.noDestroy || null;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
 		} else if (blueprint.type === 'mtx') {
 			item = extend({}, blueprint);
