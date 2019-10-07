@@ -785,7 +785,7 @@ define([
 			obj.sprite.texture = this.getTexture(obj.sheetName, obj.cell, obj.sprite.width / scaleMult);
 		},
 
-		reorder: function (sprite) {
+		reorder: function () {
 			this.layers.mobs.children.sort((a, b) => b.y - a.y);
 		},
 

@@ -86,7 +86,7 @@ define([
 				return;
 
 			this.sprite.x = (this.x * scale) + (this.flipX ? scale : 0) + this.offsetX;
-			const oldY = this.sprite.x;
+			const oldY = this.sprite.y;
 			this.sprite.y = (this.y * scale) + this.offsetY;
 
 			if (this.sprite.width > scale) {
