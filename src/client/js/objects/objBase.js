@@ -18,8 +18,8 @@ define([
 		addComponent: function (type, options) {
 			let c = this[type];
 
-			if ((!c) || (options.new)) {
-				let template = components.getTemplate(type);
+			if (!c || options.new) {
+				const template = components.getTemplate(type);
 				if (!template)
 					return;
 
@@ -30,7 +30,7 @@ define([
 					c[o] = options[o];
 
 				//Only use component to initialize other components?
-				if ((c.init) && (c.init(options)))
+				if (c.init && c.init(options))
 					return null;
 
 				this[c.type] = c;
@@ -49,18 +49,18 @@ define([
 			if (!cpn)
 				return;
 
-			this.components.spliceWhere(function (c) {
-				return (c === cpn);
+			this.components.spliceWhere(c => {
+				return c === cpn;
 			});
 
 			delete this[type];
 		},
 
 		update: function () {
-			let oComponents = this.components;
+			const oComponents = this.components;
 			let len = oComponents.length;
 			for (let i = 0; i < len; i++) {
-				let c = oComponents[i];
+				const c = oComponents[i];
 				if (c.update)
 					c.update();
 
@@ -86,7 +86,7 @@ define([
 				return;
 
 			this.sprite.x = (this.x * scale) + (this.flipX ? scale : 0) + this.offsetX;
-			let oldY = this.sprite.x;
+			const oldY = this.sprite.x;
 			this.sprite.y = (this.y * scale) + this.offsetY;
 
 			if (this.sprite.width > scale) {
@@ -101,10 +101,10 @@ define([
 			if (oldY !== this.sprite.y)
 				renderer.reorder();
 
-			this.sprite.scale.x = (this.flipX ? -scaleMult : scaleMult);
+			this.sprite.scale.x = this.flipX ? -scaleMult : scaleMult;
 
-			['nameSprite', 'chatSprite'].forEach(function (s, i) {
-				let sprite = this[s];
+			['nameSprite', 'chatSprite'].forEach((s, i) => {
+				const sprite = this[s];
 				if (!sprite)
 					return;
 
@@ -116,7 +116,7 @@ define([
 
 				sprite.x = (this.x * scale) + (scale / 2) - (sprite.width / 2);
 				sprite.y = (this.y * scale) + yAdd;
-			}, this);
+			});
 
 			if (this.stats)
 				this.stats.updateHpSprite();
@@ -127,9 +127,9 @@ define([
 				this.sprite.visible = visible;
 
 			if (this.nameSprite)
-				this.nameSprite.visible = ((visible) && (config.showNames));
+				this.nameSprite.visible = (visible && config.showNames);
 
-			this.components.forEach(function (c) {
+			this.components.forEach(c => {
 				if (c.setVisible)
 					c.setVisible(visible);
 			});
@@ -145,10 +145,10 @@ define([
 				});
 			}
 
-			let oComponents = this.components;
-			let cLen = oComponents.length;
+			const oComponents = this.components;
+			const cLen = oComponents.length;
 			for (let i = 0; i < cLen; i++) {
-				let c = oComponents[i];
+				const c = oComponents[i];
 				if (c.destroy)
 					c.destroy();
 			}
@@ -162,11 +162,8 @@ define([
 			if (this.pather)
 				this.pather.onDeath();
 
-			for (let e in this.eventCallbacks) {
-				this.eventCallbacks[e].forEach(function (c) {
-					events.off(e, c);
-				}, this);
-			}
+			for (let e in this.eventCallbacks)
+				this.eventCallbacks[e].forEach(c => events.off(e, c));
 		}
 	};
 });
