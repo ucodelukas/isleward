@@ -15,6 +15,7 @@ module.exports = {
 				target: this.obj,
 				damage: this.amount,
 				element: this.element,
+				noScale: this.noScale,
 				noCrit: true
 			});
 				

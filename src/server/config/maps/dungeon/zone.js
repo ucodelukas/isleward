@@ -207,6 +207,7 @@ module.exports = {
 				applyEffect: {
 					type: 'lifeDrain',
 					element: 'poison',
+					noScale: true,
 					ttl: balance.mobs.viridianSerpent.spitDotDuration,
 					amount: balance.mobs.viridianSerpent.spitDotAmount
 				},
