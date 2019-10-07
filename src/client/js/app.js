@@ -12,7 +12,7 @@ require.config({
 		css: 'plugins/css',
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
-		particles: 'plugins/pixi.particles',
+		particles: 'plugins/pixi.particles.min',
 		pixi: 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min',
 		howler: 'plugins/howler.min'
 	},
