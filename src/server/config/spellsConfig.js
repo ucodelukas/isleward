@@ -119,8 +119,7 @@ let spells = {
 		castTimeMax: 0,
 		manaCost: 12,
 		random: {
-			i_duration: [10, 20],
-			i_chance: [20, 50]
+			i_duration: [4, 9]
 		}
 	},
 	smokebomb: {
