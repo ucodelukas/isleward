@@ -9,14 +9,9 @@ module.exports = {
 
 	cast: function (action) {
 		let obj = this.obj;
+		let { x, y, instance: { physics, syncer } } = obj;
 
 		let radius = this.radius;
-
-		let x = obj.x;
-		let y = obj.y;
-
-		let physics = obj.instance.physics;
-		let syncer = obj.instance.syncer;
 
 		const particleConfig = extend({}, this.particles);
 
