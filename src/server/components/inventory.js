@@ -5,6 +5,7 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+const { applyItemStats } = require('./equipment/helpers');
 
 module.exports = {
 	type: 'inventory',
@@ -143,20 +144,21 @@ module.exports = {
 
 	enchantItem: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if ((!item) || (!item.slot) || (item.noAugment) || ((msg.action === 'scour') && (item.power === 0))) {
+		if (!item || !item.slot || item.noAugment || (msg.action === 'scour' && !item.power)) {
 			this.resolveCallback(msg);
 			return;
 		}
 
-		const equipment = this.obj.equipment;
-		
-		if (item.eq)
-			equipment.unequip(item.id, true);
+		const obj = this.obj;
 
-		enchanter.enchant(this.obj, item, msg);
+		if (item.eq) {
+			applyItemStats(obj, item, false);
+			enchanter.enchant(obj, item, msg);
+			applyItemStats(obj, item, true);
+		} else
+			enchanter.enchant(obj, item, msg);
 
-		if (item.eq) 
-			equipment.equip(item.id);
+		obj.equipment.unequipAttrRqrGear();
 	},
 
 	getEnchantMaterials: function (msg) {
