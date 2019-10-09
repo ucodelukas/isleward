@@ -104,7 +104,17 @@ module.exports = {
 			} while (toX - obj.x !== 0 || toY - obj.y !== 0);
 		}
 
-		if (abs(obj.x - toX) <= 1 && abs(obj.y - toY) <= 1) {
+		//We use goHome to force followers to follow us around but they should never stay in that state
+		// since it messes with combat
+		if (obj.follower)
+			this.goHome = false;
+
+		const dx = abs(obj.x - toX);
+		const dy = abs(obj.y - toY);
+
+		if (dx + dy === 0)
+			return;
+		else if (dx <= 1 && dy <= 1) {
 			obj.queue({
 				action: 'move',
 				data: {
@@ -134,11 +144,6 @@ module.exports = {
 				});
 			}
 		}
-
-		//We use goHome to force followers to follow us around but they should never stay in that state
-		// since it messes with combat
-		if (obj.follower)
-			this.goHome = false;
 	},
 
 	fight: function (target) {
