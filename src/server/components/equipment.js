@@ -266,7 +266,8 @@ module.exports = {
 				let message = ({
 					int: `You suddenly feel too stupid to wear your ${item.name}`,
 					str: `Your weak body can no longer equip your ${item.name}`,
-					dex: `Your sluggish physique cannot possibly equip your ${item.name}`
+					dex: `Your sluggish physique cannot possibly equip your ${item.name}`,
+					level: `Your level is too low to equip your ${item.name}`
 				})[errors[0]];
 
 				this.obj.instance.syncer.queue('onGetMessages', {
