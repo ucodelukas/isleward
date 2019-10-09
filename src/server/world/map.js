@@ -329,7 +329,7 @@ module.exports = {
 		object: function (layerName, cell) {
 			//Fixes for newer versions of tiled
 			cell.properties = objectifyProperties(cell.properties);
-			cell.polyline = cell.polygon;
+			cell.polyline = cell.polyline || cell.polygon;
 
 			let clientObj = (layerName === 'clientObjects');
 			let cellInfo = this.builders.getCellInfo(cell.gid);
