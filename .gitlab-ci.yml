@@ -35,7 +35,7 @@ lint-client:
     - master
   allow_failure: true
 
-build-image:
+build-image-latest:
   stage: build
   image: docker:stable
   services:
@@ -43,10 +43,28 @@ build-image:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:latest
   script:
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - docker build -t $IMAGE_TAG_REF -t $IMAGE_TAG_ALIAS .
+    - docker push $IMAGE_TAG_REF
+    - docker push $IMAGE_TAG_ALIAS
   only:
     - master
-    - tags
+
+build-image-stable:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  variables:
+    IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:stable
+  script:
+    - docker build -t $IMAGE_TAG_REF -t $IMAGE_TAG_ALIAS .
+    - docker push $IMAGE_TAG_REF
+    - docker push $IMAGE_TAG_ALIAS
+  only:
+    - tags    
