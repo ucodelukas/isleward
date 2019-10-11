@@ -56,6 +56,7 @@ module.exports = {
 				mob.syncer.set(false, 'chatter', 'msg', text);
 			}
 		},
+
 		addComponents: function (config) {
 			let objects = this.instance.objects.objects;
 
@@ -70,13 +71,17 @@ module.exports = {
 			let mLen = mobs.length;
 
 			for (let i = 0; i < mLen; i++) {
-				let mob = objects.find(o => (o.id === mobs[i]));
+				let mob = objects.find(o => o.id === mobs[i]);
 				for (let j = 0; j < cLen; j++) {
 					let c = components[j];
-					mob.addComponent(c.type, components[j]);
+					const newComponent = mob.addComponent(c.type, components[j]);
+
+					//Likely, nobody knows about this new component, so we need to sync it
+					mob.syncer.setComponent(false, c.type, newComponent.simplify());
 				}
 			}
 		},
+
 		removeComponents: function (config) {
 			let objects = this.instance.objects.objects;
 
