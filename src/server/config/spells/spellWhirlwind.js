@@ -2,7 +2,7 @@ const coordinates = [
 	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]
 ];
 
-const maxTicks = 8;
+//const maxTicks = 8;
 
 module.exports = {
 	type: 'whirlwind',
@@ -25,7 +25,7 @@ module.exports = {
 
 		//this.isCasting = true;
 
-		const { effects, x: playerX, y: playerY } = this.obj;
+		const { x: playerX, y: playerY } = this.obj;
 
 		const coords = coordinates[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
 
@@ -54,7 +54,7 @@ module.exports = {
 	},
 
 	spawnDamager: function (x, y) {
-		const { effects, destroyed, instance } = this.obj;
+		const { destroyed, instance } = this.obj;
 		if (destroyed)
 			return;
 

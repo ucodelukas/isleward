@@ -62,7 +62,7 @@ module.exports = {
 
 		let exists = o.components.find(c => c.type === cpnType);
 		if (exists)
-			clone(exists, cpn);
+			extend(exists, cpn);
 		else
 			o.components.push(cpn);
 	},
