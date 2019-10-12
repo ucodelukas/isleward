@@ -128,8 +128,6 @@ module.exports = {
 		key,
 		table
 	}) {
-		const con = await this.getConnection();
-
 		await r.table(table)
 			.get(key)
 			.delete()
@@ -172,8 +170,6 @@ module.exports = {
 		table,
 		key
 	}) {
-		const con = await this.getConnection();
-
 		let res = await r.table(table)
 			.get(key)
 			.run();
