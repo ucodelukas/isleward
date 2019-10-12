@@ -148,7 +148,7 @@ module.exports = {
 		if (!item)
 			return;
 
-		const { slot, power, noAugment } = item;
+		const { eq, slot, power, noAugment } = item;
 
 		if (!slot || noAugment || (action === 'scour' && !power)) {
 			this.resolveCallback(msg);
@@ -157,15 +157,15 @@ module.exports = {
 
 		const obj = this.obj;
 
-		if (item.eq) {
+		if (eq) {
 			applyItemStats(obj, item, false);
 			enchanter.enchant(obj, item, msg);
 			applyItemStats(obj, item, true);
+
+			if (item.slot !== slot)
+				obj.equipment.unequip(itemId);
 		} else
 			enchanter.enchant(obj, item, msg);
-
-		if (item.slot !== slot)
-			obj.equipment.unequip(itemId);
 
 		obj.equipment.unequipAttrRqrGear();
 	},
