@@ -1,5 +1,5 @@
 module.exports = {
-	version: '0.3.2',
+	version: '0.3.3',
 	port: 4000,
 	startupMessage: 'Server: ready',
 	defaultZone: 'fjolarok',
@@ -12,5 +12,7 @@ module.exports = {
 	//eslint-disable-next-line no-process-env
 	dbHost: process.env.IWD_DB_HOST || 'localhost',
 	//eslint-disable-next-line no-process-env
-	dbPort: process.env.IWD_DB_PORT || 28015
+	dbPort: process.env.IWD_DB_PORT || 28015,
+	//eslint-disable-next-line no-process-env
+	dbName: process.env.IWD_DB_NAME || 'live'
 };

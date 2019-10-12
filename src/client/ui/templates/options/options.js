@@ -26,7 +26,7 @@ define([
 		postRender: function () {
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
-			//Can only toggle fullscreen directly in a listener, not deferred the way wQuery does it
+			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
 			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
 			this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));

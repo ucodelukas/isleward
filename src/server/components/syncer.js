@@ -1,11 +1,13 @@
 module.exports = {
 	type: 'syncer',
+
 	o: {
 		components: []
 	},
 	oSelf: {
 		components: []
 	},
+
 	reset: function () {
 		this.o = {
 			components: []
@@ -15,6 +17,7 @@ module.exports = {
 			components: []
 		};
 	},
+
 	get: function (self) {
 		let o = this.o;
 		if (self)
@@ -31,6 +34,7 @@ module.exports = {
 
 		return o;
 	},
+
 	set: function (self, cpnType, property, value) {
 		let o = this.o;
 		if (self)
@@ -50,6 +54,19 @@ module.exports = {
 		} else 
 			o[property] = value;
 	},
+
+	setComponent: function (self, cpnType, cpn) {
+		let o = this.o;
+		if (self)
+			o = this.oSelf;
+
+		let exists = o.components.find(c => c.type === cpnType);
+		if (exists)
+			extend(exists, cpn);
+		else
+			o.components.push(cpn);
+	},
+
 	setObject: function (self, cpnType, object, property, value) {
 		let o = this.o;
 		if (self)
@@ -71,6 +88,7 @@ module.exports = {
 
 		obj[property] = value;
 	},
+
 	setArray: function (self, cpnType, property, value, noDuplicate) {
 		let o = this.o;
 		if (self)

@@ -18,6 +18,10 @@ let commandRoles = {
 	mute: 5,
 	unmute: 5,
 
+	//Super Mods
+	broadcast: 8,
+	saveAll: 8,
+
 	//Admin
 	getItem: 10,
 	getGold: 10,
@@ -44,7 +48,9 @@ let localCommands = [
 	'roll',
 	'giveSkin',
 	'block',
-	'unblock'
+	'unblock',
+	'broadcast',
+	'saveAll'
 ];
 
 module.exports = {
@@ -86,7 +92,7 @@ module.exports = {
 			});
 		}
 
-		if (localCommands.indexOf(actionName) > -1) 
+		if (localCommands.includes(actionName)) 
 			this[actionName](config);
 		else {
 			atlas.performAction(this.obj, {
@@ -603,6 +609,9 @@ module.exports = {
 	},
 
 	getMaterials: function (config) {
+		if (typeof(config) === 'object')
+			config = 100;
+		
 		let inventory = this.obj.inventory;
 
 		Object.entries(configMaterials).forEach(([material, blueprint]) => {
@@ -613,5 +622,25 @@ module.exports = {
 				...blueprint
 			});
 		});
+	},
+
+	broadcast: function (msg) {
+		if (typeof(msg) === 'object')
+			msg = Object.keys(msg).join(' ');
+
+		cons.emit('event', {
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-blueA',
+					message: msg,
+					type: 'chat'
+				}]
+			}
+		});
+	},
+
+	saveAll: function () {
+		connections.forceSaveAll();
 	}
 };

@@ -5,6 +5,7 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+const { applyItemStats } = require('./equipment/helpers');
 
 module.exports = {
 	type: 'inventory',
@@ -142,13 +143,31 @@ module.exports = {
 	},
 
 	enchantItem: function (msg) {
-		let item = this.findItem(msg.itemId);
-		if ((!item) || (!item.slot) || (item.eq) || (item.noAugment) || ((msg.action === 'scour') && (item.power === 0))) {
+		const { itemId, action } = msg;
+		const item = this.findItem(itemId);
+		if (!item)
+			return;
+
+		const { eq, slot, power, noAugment } = item;
+
+		if (!slot || noAugment || (action === 'scour' && !power)) {
 			this.resolveCallback(msg);
 			return;
 		}
 
-		enchanter.enchant(this.obj, item, msg);
+		const obj = this.obj;
+
+		if (eq) {
+			applyItemStats(obj, item, false);
+			enchanter.enchant(obj, item, msg);
+			applyItemStats(obj, item, true);
+
+			if (item.slot !== slot)
+				obj.equipment.unequip(itemId);
+		} else
+			enchanter.enchant(obj, item, msg);
+
+		obj.equipment.unequipAttrRqrGear();
 	},
 
 	getEnchantMaterials: function (msg) {
@@ -249,15 +268,7 @@ module.exports = {
 
 		const hasSpace = this.hasSpace(item, true);
 		if (!hasSpace) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'Your bags are too full to split that stack',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
-
+			this.notifyNoBagSpace();
 			return;
 		}
 
@@ -548,6 +559,8 @@ module.exports = {
 
 	hookItemEvents: function (items) {
 		items = items || this.items;
+		if (!items.push)
+			items = [ items ];
 		let iLen = items.length;
 		for (let i = 0; i < iLen; i++) {
 			let item = items[i];
@@ -568,6 +581,7 @@ module.exports = {
 						try {
 							let effectModule = require('../' + effectUrl);
 							e.events = effectModule.events;
+							e.text = effectModule.events.onGetText(item, e);
 						} catch (error) {}
 					}
 				});
@@ -778,7 +792,7 @@ module.exports = {
 			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
-				existItem.quantity = (existItem.quantity || 1) + (item.quantity || 1);
+				existItem.quantity = ~~(existItem.quantity || 1) + ~~(item.quantity || 1);
 				item = existItem;
 			}
 		}
@@ -793,16 +807,8 @@ module.exports = {
 			let iLen = items.length;
 
 			if (!this.hasSpace(item)) {
-				if (!hideMessage) {
-					this.obj.instance.syncer.queue('onGetMessages', {
-						id: this.obj.id,
-						messages: [{
-							class: 'color-redA',
-							message: 'Your bags are too full to loot any more items',
-							type: 'info'
-						}]
-					}, [this.obj.serverId]);
-				}
+				if (!hideMessage) 
+					this.notifyNoBagSpace();
 
 				return false;
 			}
@@ -830,19 +836,18 @@ module.exports = {
 		}
 
 		if (this.obj.player) {
-			let messages = [];
-
 			let msg = item.name;
 			if (quantity)
 				msg += ' x' + quantity;
 			else if ((item.stats) && (item.stats.weight))
 				msg += ` ${item.stats.weight}lb`;
-			messages.push({
+			
+			const messages = [{
 				class: 'q' + item.quality,
 				message: 'loot: {' + msg + '}',
 				item: item,
 				type: 'loot'
-			});
+			}];
 
 			if (!hideAlert) {
 				this.obj.instance.syncer.queue('onGetDamage', {
@@ -860,23 +865,8 @@ module.exports = {
 			}
 		}
 
-		if (item.effects) {
-			item.effects.forEach(function (e) {
-				if (e.mtx) {
-					let mtxUrl = mtx.get(e.mtx);
-					let mtxModule = require('../' + mtxUrl);
-
-					e.events = mtxModule.events;
-				} else if (e.type) {
-					let effectUrl = itemEffects.get(e.type);
-					try {
-						let effectModule = require('../' + effectUrl);
-						e.text = effectModule.events.onGetText(item, e);
-						e.events = effectModule.events;
-					} catch (error) {}
-				}
-			});
-		}
+		if (item.effects) 
+			this.hookItemEvents([item]);
 
 		if (!exists)
 			this.items.push(item);
@@ -896,10 +886,8 @@ module.exports = {
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
 		}
 
-		if (!hideMessage) {
-			if (fromMob)
-				this.obj.fireEvent('afterLootMobItem', item);
-		}
+		if (!hideMessage && fromMob) 
+			this.obj.fireEvent('afterLootMobItem', item);
 
 		return item;
 	},
@@ -948,7 +936,8 @@ module.exports = {
 				let itemBlueprint = {
 					level: this.obj.stats.values.level,
 					magicFind: magicFind,
-					bonusMagicFind: bonusMagicFind
+					bonusMagicFind: bonusMagicFind,
+					noCurrency: i > 0
 				};
 
 				let useItem = generator.generate(itemBlueprint, playerObject.stats.values.level);
@@ -1067,5 +1056,16 @@ module.exports = {
 
 	canEquipItem: function (item) {
 		return (this.equipItemErrors(item).length === 0);
+	},
+
+	notifyNoBagSpace: function () {
+		this.obj.instance.syncer.queue('onGetMessages', {
+			id: this.obj.id,
+			messages: [{
+				class: 'color-redA',
+				message: 'Your bags are too full to loot any more items',
+				type: 'info'
+			}]
+		}, [this.obj.serverId]);
 	}
 };

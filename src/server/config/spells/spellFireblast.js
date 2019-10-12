@@ -9,14 +9,13 @@ module.exports = {
 
 	cast: function (action) {
 		let obj = this.obj;
+		let { x, y, instance: { physics, syncer } } = obj;
 
 		let radius = this.radius;
 
-		let x = obj.x;
-		let y = obj.y;
+		const particleConfig = extend({}, this.particles);
 
-		let physics = obj.instance.physics;
-		let syncer = obj.instance.syncer;
+		this.obj.fireEvent('beforeSpawnParticles', this, particleConfig);
 
 		const particleConfig = extend({}, this.particles);
 

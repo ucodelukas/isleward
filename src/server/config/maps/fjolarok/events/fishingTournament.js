@@ -2,7 +2,7 @@ module.exports = {
 	name: 'Fishing Tournament',
 	description: 'Catch the heaviest Ancient Carp for a chance to win Angler\'s Marks. Speak with Angler Nayla for more info.',
 	distance: -1,
-	cron: '0 19 * * *',
+	cron: '0 7,19 * * *',
 
 	notifications: [{
 		mark: 0,
@@ -77,7 +77,7 @@ module.exports = {
 					fish.push(t);
 			});
 
-			let rewardCounts = [35, 20, 10];
+			let rewardCounts = [25, 15, 7];
 			let tpl = {
 				name: 'Angler\'s Mark',
 				sprite: [12, 9],

@@ -73,22 +73,6 @@ if (!String.prototype.padStart) {
 	};
 }
 
-if (!String.prototype.padStart) {
-	//eslint-disable-next-line no-extend-native
-	String.prototype.padStart = function padStart (targetLength, padString) {
-		targetLength = targetLength >> 0;
-		padString = String(typeof padString !== 'undefined' ? padString : ' ');
-		if (this.length >= targetLength) 
-			return String(this);
-         
-		targetLength = targetLength - this.length;
-		if (targetLength > padString.length) 
-			padString += padString.repeat(targetLength / padString.length);
-            
-		return padString.slice(0, targetLength) + String(this);
-	};
-}
-
 window._ = {
 	get2dArray: function (w, h, def) {
 		def = def || 0;

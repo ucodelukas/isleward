@@ -1,3 +1,5 @@
+const { applyItemStats } = require('./equipment/helpers');
+
 module.exports = {
 	type: 'equipment',
 
@@ -116,16 +118,7 @@ module.exports = {
 			this.unequip(this.eq[slot], true);
 		}
 
-		let stats = item.stats;
-		for (let s in stats) {
-			let val = stats[s];
-
-			obj.stats.addStat(s, val);
-		}
-
-		(item.implicitStats || []).forEach(function (s) {
-			obj.stats.addStat(s.stat, s.value);
-		}, this);
+		applyItemStats(obj, item, true);
 
 		item.eq = true;
 		this.eq[slot] = itemId;
@@ -142,6 +135,7 @@ module.exports = {
 
 		obj.fireEvent('afterEquipItem', item);
 	},
+
 	unequip: function (itemId, ignoreSpaceCheck) {
 		let item = itemId;
 		if (typeof (itemId) === 'object')
@@ -168,21 +162,11 @@ module.exports = {
 			return;
 		}
 
-		let stats = item.stats;
-
 		delete item.eq;
 		delete this.eq[item.equipSlot];
 		delete item.equipSlot;
 
-		for (let s in stats) {
-			let val = stats[s];
-
-			obj.stats.addStat(s, -val);
-		}
-
-		(item.implicitStats || []).forEach(function (s) {
-			obj.stats.addStat(s.stat, -s.value);
-		}, this);
+		applyItemStats(obj, item, false);
 
 		inventory.setItemPosition(itemId);
 
@@ -198,6 +182,7 @@ module.exports = {
 
 		this.unequipAttrRqrGear();
 	},
+
 	unequipAll: function () {
 		let eq = this.eq;
 		Object.keys(this.eq).forEach(function (slot) {
@@ -281,7 +266,8 @@ module.exports = {
 				let message = ({
 					int: `You suddenly feel too stupid to wear your ${item.name}`,
 					str: `Your weak body can no longer equip your ${item.name}`,
-					dex: `Your sluggish physique cannot possibly equip your ${item.name}`
+					dex: `Your sluggish physique cannot possibly equip your ${item.name}`,
+					level: `Your level is too low to equip your ${item.name}`
 				})[errors[0]];
 
 				this.obj.instance.syncer.queue('onGetMessages', {

@@ -1,14 +1,12 @@
 define([
-	'js/rendering/renderer',
-	'picture'
+	'js/rendering/renderer'
 ], function (
-	renderer,
-	picture
+	renderer
 ) {
 	return {
 		type: 'lightPatch',
 
-		color: 'f7ffb2',
+		color: 'ffeb38',
 		patches: [],
 		rays: [],
 
@@ -20,11 +18,13 @@ define([
 			let x = obj.x;
 			let y = obj.y;
 
-			let maxDistance = Math.sqrt(Math.pow(obj.width / 2, 2) + Math.pow(obj.height / 2, 2));
+			let maxDistance = Math.sqrt(Math.pow(obj.width / 3, 2) + Math.pow(obj.height / 3, 2));
 			for (let i = 0; i < obj.width; i++) {
 				for (let j = 0; j < obj.height; j++) {
-					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - i, 2));
-					let alpha = distance / maxDistance;
+					let distance = maxDistance - Math.sqrt(Math.pow((obj.width / 2) - i, 2) + Math.pow((obj.width / 2) - j, 2));
+					const maxAlpha = (distance / maxDistance) * 0.2;
+					if (maxAlpha <= 0.05)
+						continue;
 
 					let sprite = renderer.buildObject({
 						x: (x + i),
@@ -33,11 +33,17 @@ define([
 						cell: 0,
 						layerName: 'lightPatches'
 					});
-					sprite.alpha = (0.2 + (Math.random() * 1)) * alpha;
+					sprite.alpha = (maxAlpha * 0.3) + (Math.random() * (maxAlpha * 0.7));
 					sprite.tint = '0x' + this.color;
 
-					sprite.blendMode = PIXI.BLEND_MODES.OVERLAY;
-					sprite.pluginName = 'picture';
+					const size = (3 + ~~(Math.random() * 6)) * scaleMult;
+
+					sprite.width = size;
+					sprite.height = size;
+					sprite.x += scaleMult * ~~(Math.random() * 4);
+					sprite.y += scaleMult * ~~(Math.random() * 4);
+
+					sprite.blendMode = PIXI.BLEND_MODES.ADD;
 
 					this.patches.push(sprite);
 				}

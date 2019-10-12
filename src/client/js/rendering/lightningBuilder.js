@@ -1,9 +1,7 @@
 define([
-	'js/rendering/renderer',
-	'picture'
+	'js/rendering/renderer'
 ], function (
-	renderer,
-	picture
+	renderer
 ) {
 	return {
 		build: function (config) {
@@ -80,8 +78,7 @@ define([
 						lightPatch.width = scaleMult * 3;
 						lightPatch.height = scaleMult * 3;
 
-						lightPatch.blendMode = PIXI.BLEND_MODES.OVERLAY;
-						lightPatch.pluginName = 'picture';
+						lightPatch.blendMode = PIXI.BLEND_MODES.ADD;
 
 						line.sprites.push(lightPatch);
 					}

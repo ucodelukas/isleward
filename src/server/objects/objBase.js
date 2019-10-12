@@ -190,8 +190,12 @@ module.exports = {
 			this.actionQueue.spliceWhere(a => a.priority);
 			this.actionQueue.splice(0, 0, action);
 		} else {
-			if (action.priority)
+			if (action.priority) {
 				this.spellbook.stopCasting();
+				this.actionQueue.splice(0, 0, action);
+				return;
+			}
+
 			this.actionQueue.push(action);
 		}
 	},
@@ -266,7 +270,7 @@ module.exports = {
 
 		if (!action.force) {
 			if (physics.isTileBlocking(data.x, data.y))
-				return false;
+				return true;
 
 			data.success = true;
 			this.fireEvent('beforeMove', data);
@@ -289,7 +293,7 @@ module.exports = {
 					(deltaX === 0) &&
 					(deltaY === 0)
 				)
-			)
+			) 
 				return false;
 		}
 
@@ -300,7 +304,7 @@ module.exports = {
 
 				this.x = data.x;
 				this.y = data.y;
-			} else
+			} else 
 				return false;
 		} else {
 			physics.removeObject(this, this.x, this.y, data.x, data.y);

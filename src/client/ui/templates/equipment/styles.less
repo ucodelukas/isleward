@@ -5,7 +5,7 @@
 	z-index: 2;
 	border: 5px solid @blackB;
 	text-align: center;
-	width: 474px;
+	width: 500px;
 	height: 712px;
 
 	> .heading {
@@ -68,12 +68,16 @@
 			flex-direction: column;
 			flex-wrap: wrap;
 
-			.left, .right {
+			.left,
+			.right {
 				width: 96px;
 				padding: 8px;
 			}
 
-			.left, .stats, .right, .bottom {
+			.left,
+			.stats,
+			.right,
+			.bottom {
 				height: 528px;
 			}
 
@@ -105,8 +109,11 @@
 						font {
 							color: @yellowB;
 						}
+
 					}
+
 				}
+
 			}
 
 			.quick {
@@ -117,9 +124,10 @@
 				justify-content: center;
 
 				.slot {
-
 				}
+
 			}
+
 		}
 
 		.runes {
@@ -134,10 +142,17 @@
 				&:last-child {
 					margin-right: 0px;
 				}
+
 			}
+
 		}
 
-		.left, .right, .itemList, .runes, .tools, .quick {
+		.left,
+		.right,
+		.itemList,
+		.runes,
+		.tools,
+		.quick {
 			.slot {
 				width: 80px;
 				height: 80px;
@@ -216,6 +231,7 @@
 					&[slot^="quick-0"] 	.icon {
 						background-position: -128px -384px;
 					}
+
 				}
 
 				.icon {
@@ -246,8 +262,11 @@
 					&.empty {
 						background-color: fade(@blueA, 10%);
 					}
+
 				}
+
 			}
+
 		}
 
 		.itemList {
@@ -284,6 +303,7 @@
 							drop-shadow(2px 0px 0px @blackD) 
 							drop-shadow(-2px 0px 0px @blackD);
 						}
+
 					}
 
 					&.new {
@@ -302,11 +322,17 @@
 							drop-shadow(2px 0px 0px @blackD) 
 							drop-shadow(-2px 0px 0px @blackD);
 						}
+
 					}
+
 				}
+
 			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiEquipment {
@@ -327,7 +353,9 @@
 			justify-content: space-between;
 			position: relative;
 
-			.left, .right, .quick {
+			.left,
+			.right,
+			.quick {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
@@ -337,6 +365,7 @@
 				.slot {
 					margin-bottom: 0px;
 				}
+
 			}
 
 			.stats {
@@ -361,6 +390,7 @@
 				order: 2;
 				padding: 0px 8px 0px 0px;
 			}
+
 		}
 
 		.runes {
@@ -371,5 +401,7 @@
 			bottom: 8px;
 			padding: 0px 8px 0px 8px;
 		}
+
 	}
+
 }

@@ -1,5 +1,5 @@
 # Base image on Node.js 10.x LTS (dubnium)
-FROM node:10
+FROM node:10-alpine
 
 # Create app directory
 WORKDIR /usr/src/isleward
@@ -17,4 +17,4 @@ RUN npm install --only-production
 EXPOSE 4000
 
 # Launch Isleward server
-CMD ["node", "--expose-gc", "index.js"]
+CMD ["node", "index.js"]

@@ -54,12 +54,8 @@ module.exports = {
 		this.obj.syncer.set(true, 'dialogue', 'state', null);
 	},
 
-	getState: function (sourceObj, state) {
+	getState: function (sourceObj, state = 1) {
 		let result = null;
-
-		state = state || 1;
-
-		//Goto?
 		if ((state + '').indexOf('.') > -1) {
 			let config = this.states[(state + '').split('.')[0]];
 			if (!config)
@@ -89,7 +85,6 @@ module.exports = {
 			return null;
 
 		let useMsg = stateConfig.msg;
-
 		if (stateConfig.cpn) {
 			let cpn = sourceObj[stateConfig.cpn];
 			let newArgs = extend([], stateConfig.args);

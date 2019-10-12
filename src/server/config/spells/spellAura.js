@@ -54,7 +54,7 @@ module.exports = {
 
 		let range = this.auraRange;
 
-		members.forEach(function (m) {
+		members.forEach(m => {
 			let effect = effects[m];
 
 			let obj = objects.find(f => (f.serverId === m));
@@ -88,7 +88,16 @@ module.exports = {
 				ttl: -1,
 				new: true
 			});
-		}, this);
+		});
+
+		//Remove effects from players who are no longer in the party
+		Object.entries(effects).forEach(([serverId, effect]) => {
+			if (!members.find(m => ~~m === ~~serverId)) {
+				delete effects[serverId];
+				const obj = objects.find(f => ~~f.serverId === ~~serverId);
+				obj.effects.removeEffect(effect);
+			}
+		});
 	},
 
 	updateInactive: function () {

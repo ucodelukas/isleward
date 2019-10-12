@@ -5,17 +5,16 @@ require.config({
 	baseUrl: '',
 	waitSeconds: 120,
 	paths: {
-		socket: 'plugins/socket',
-		wquery: 'plugins/jquery.min',
-		text: 'plugins/text',
+		socket: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.slim',
+		jquery: 'https://code.jquery.com/jquery-3.4.1.slim.min',
+		text: 'https://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min',
 		html: 'plugins/html',
-		css: 'plugins/css',
+		css: 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min',
 		main: 'js/main',
 		helpers: 'js/misc/helpers',
-		particles: 'plugins/pixi.particles',
-		picture: 'plugins/pixi.picture',
-		pixi: 'plugins/pixi.min',
-		howler: 'plugins/howler.min'
+		particles: 'plugins/pixi.particles.min',
+		pixi: 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min',
+		howler: 'https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min'
 	},
 	shim: {
 		howler: {
@@ -24,23 +23,18 @@ require.config({
 		socket: {
 			exports: 'io'
 		},
-		wquery: {
+		jquery: {
 			exports: '$'
 		},
 		helpers: {
 			deps: [
-				'wquery'
+				'jquery'
 			]
 		},
 		pixi: {
 			exports: 'PIXI'
 		},
 		particles: {
-			deps: [
-				'pixi'
-			]
-		},
-		picture: {
 			deps: [
 				'pixi'
 			]

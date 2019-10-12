@@ -146,6 +146,14 @@
     "func-style": [1,"expression"],
     "indent": [2, "tab"],
     "key-spacing": [2,{"afterColon":true}],
+    "max-lines-per-function": [
+        2,
+        {
+            "max": 120,
+            "skipBlankLines": false,
+            "skipComments": false
+        }
+    ],
     "new-parens": 2,
     "no-inline-comments": 2,
     "no-lonely-if": 2,

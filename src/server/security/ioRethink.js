@@ -1,5 +1,10 @@
-let r = require('rethinkdb');
-let serverConfig = require('../config/serverConfig');
+const serverConfig = require('../config/serverConfig');
+
+const r = require('rethinkdbdash')({
+	host: serverConfig.dbHost,
+	port: serverConfig.dbPort,
+	db: serverConfig.dbName
+});
 
 const dbConfig = {
 	host: serverConfig.dbHost,
@@ -26,8 +31,6 @@ module.exports = {
 	staticCon: null,
 
 	init: async function (cbReady) {
-		this.staticCon = await this.getConnection();
-
 		await this.create();
 
 		cbReady();
@@ -41,14 +44,14 @@ module.exports = {
 		const con = await this.getConnection();
 
 		try {
-			await r.dbCreate(this.useDb).run(con);
+			await r.dbCreate(this.useDb).run();
 		} catch (e) {
 
 		}
 
 		for (const table of tables) {
 			try {
-				await r.tableCreate(table).run(con);
+				await r.tableCreate(table).run();
 			} catch (e) {
 				if (!e.message.includes('already exists'))
 					_.log(e);
@@ -68,7 +71,7 @@ module.exports = {
 
 		let res = await r.table(table)
 			.get(key)
-			.run(con);
+			.run();
 
 		if (res)
 			return res.value;
@@ -89,9 +92,7 @@ module.exports = {
 		const con = await this.getConnection();
 
 		let res = await r.table(table)
-			.run(con);
-
-		res = await res.toArray();
+			.run();
 
 		if (res)
 			return res;
@@ -109,8 +110,6 @@ module.exports = {
 		value,
 		conflict = 'update'
 	}) {
-		const con = await this.getConnection();
-
 		try {
 			await r.table(table)
 				.insert({
@@ -119,12 +118,10 @@ module.exports = {
 				}, {
 					conflict
 				})
-				.run(con);
+				.run();
 		} catch (e) {
 			this.logError(e, table, id);
 		}
-
-		con.close();
 	},
 
 	deleteAsync: async function ({
@@ -136,15 +133,13 @@ module.exports = {
 		await r.table(table)
 			.get(key)
 			.delete()
-			.run(con);
-
-		con.close();
+			.run();
 	},
 
 	subscribe: function (table) {
 		return r.table(table)
 			.changes()
-			.run(this.staticCon);
+			.run();
 	},
 
 	append: async function ({
@@ -153,8 +148,6 @@ module.exports = {
 		value,
 		field
 	}) {
-		const con = await this.getConnection();
-
 		try {
 			await r.table(table)
 				.get(key)
@@ -169,12 +162,10 @@ module.exports = {
 						}
 					);
 				})
-				.run(con);
+				.run();
 		} catch (e) {
 			this.logError(e, table, key);
 		}
-
-		con.close();
 	},
 
 	exists: async function ({
@@ -185,9 +176,7 @@ module.exports = {
 
 		let res = await r.table(table)
 			.get(key)
-			.run(con);
-
-		con.close();
+			.run();
 
 		return !!res;
 	},

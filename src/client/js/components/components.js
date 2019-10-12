@@ -32,7 +32,8 @@ let components = [
 	'serverActions',
 	'social',
 	'passives',
-	'sound'
+	'sound',
+	'whirlwind'
 ].map(function (c) {
 	return 'js/components/' + c;
 });

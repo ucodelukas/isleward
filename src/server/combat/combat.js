@@ -82,9 +82,9 @@ module.exports = {
 		}
 
 		return {
-			amount: amount,
-			blocked: blocked,
-			dodged: dodged,
+			amount,
+			blocked,
+			dodged,
 			crit: isCrit,
 			element: config.element
 		};

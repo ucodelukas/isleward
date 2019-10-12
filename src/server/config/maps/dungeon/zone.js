@@ -206,6 +206,7 @@ module.exports = {
 				col: 4,
 				applyEffect: {
 					type: 'lifeDrain',
+					element: 'poison',
 					ttl: balance.mobs.viridianSerpent.spitDotDuration,
 					amount: balance.mobs.viridianSerpent.spitDotAmount
 				},

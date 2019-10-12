@@ -39,6 +39,8 @@ module.exports = {
 			const levelDelta = ownerLevel - blueprint.level;
 			currencyChance /= Math.pow(levelDelta - 3, 2);
 		}
+		if (blueprint.noCurrency)
+			currencyChance = 0;
 
 		if ((!blueprint.slot) && (!blueprint.noSpell)) {
 			isSpell = blueprint.spell;
@@ -94,6 +96,11 @@ module.exports = {
 		}
 
 		delete item.stats[stat];
+
+		if (stat === 'lvlRequire') {
+			item.level = item.originalLevel;
+			delete item.originalLevel;
+		}
 	},
 
 	pickRandomSlot: function () {

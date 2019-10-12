@@ -321,7 +321,10 @@ module.exports = {
 			if (!highest || l.threat > highest.threat) {
 				highest = l;
 				closest = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
-			} else if (l.threat === highest.threat) {
+			} else if (l.threat === highest.threat && l.threat !== 0) {
+				//Don't chase a closer target if both targets are at 0 threat because
+				// this means that neither of them have attacked the target.
+				// This stops people from griefing other players by pulling mobs to them.
 				let distance = Math.max(Math.abs(x - obj.x), Math.abs(y - obj.y));
 				if (distance < closest) {
 					highest = l;
