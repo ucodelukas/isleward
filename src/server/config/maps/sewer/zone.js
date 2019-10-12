@@ -17,7 +17,7 @@ module.exports = {
 
 			regular: {
 				drops: {
-					rolls: 1,
+					rolls: 2,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
@@ -29,6 +29,12 @@ module.exports = {
 						singleUse: true,
 						sprite: [12, 1],
 						quantity: 1
+					}, {
+						chance: 200,
+						name: 'Muddy Runestone',
+						material: true,
+						sprite: [6, 0],
+						spritesheet: 'images/materials.png'
 					}]
 				}
 			},
@@ -143,6 +149,62 @@ module.exports = {
 		vaultdoor: {
 			properties: {
 				cpnDoor: {}
+			}
+		},
+
+		etchbench: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['ff4252', 'ff4252'],
+									end: ['a82841', 'a82841']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 4
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -15,
+									y: -28,
+									w: 30,
+									h: 8
+								}
+							}
+						};
+					}
+				},
+				cpnWorkbench: {
+					type: 'etching'
+				}
 			}
 		},
 

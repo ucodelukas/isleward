@@ -285,6 +285,11 @@ let spells = [{
 		blendMode: 'screen'
 	}
 }, {
+	name: 'Whirlwind',
+	description: 'WWWWWWW.',
+	type: 'whirlwind',
+	icon: [2, 2]
+}, {
 	name: 'Stealth',
 	description: 'The thief slips into the shadows and becomes undetectable by foes. Performing an attack removes this effect.',
 	type: 'stealth',

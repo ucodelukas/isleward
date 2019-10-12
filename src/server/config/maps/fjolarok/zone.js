@@ -513,6 +513,20 @@ module.exports = {
 		eagle: {
 			level: 10,
 			faction: 'hostile',
+			regular: {
+				drops: {
+					chance: 200,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Eagle Feather',
+						material: true,
+						sprite: [0, 0],
+						spritesheet: 'images/questItems.png'
+					}]
+				}
+			},
 			rare: {
 				name: 'Fleshripper'
 			}

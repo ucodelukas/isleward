@@ -122,6 +122,17 @@ let spells = {
 			i_duration: [4, 9]
 		}
 	},
+	whirlwind: {
+		statType: 'str',
+		statMult: 1,
+		cdMax: 1,
+		castTimeMax: 0,
+		manaCost: 1,
+		random: {
+			damage: [5, 12],
+			range: [1, 3]
+		}
+	},
 	smokebomb: {
 		statType: 'dex',
 		statMult: 1,

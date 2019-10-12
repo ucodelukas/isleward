@@ -1,4 +1,5 @@
 const recipes = require('../config/recipes/recipes');
+const generator = require('../items/generator');
 
 module.exports = {
 	type: 'workbench',
@@ -159,7 +160,11 @@ module.exports = {
 
 		let outputItems = recipe.item ? [ recipe.item ] : recipe.items;
 		outputItems.forEach(itemBpt => {
-			let item = extend({}, itemBpt);
+			let item = null;
+			if (itemBpt.generate)
+				item = generator.generate(itemBpt);
+			else
+				item = extend({}, itemBpt);
 			
 			if (item.description)
 				item.description += `<br /><br />(Crafted by ${obj.name})`;

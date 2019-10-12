@@ -36,6 +36,9 @@ module.exports = {
 			if ((item.pos >= this.inventorySize) || (item.eq))
 				delete item.pos;
 
+			if (!item.name)
+				console.log(item);
+
 			while (item.name.indexOf('\'\'') > -1) 
 				item.name = item.name.replace('\'\'', '\'');
 		}

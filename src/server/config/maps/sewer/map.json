@@ -952,6 +952,18 @@
                  "width":8,
                  "x":168,
                  "y":200
+                }, 
+                {
+                 "gid":572,
+                 "height":8,
+                 "id":894,
+                 "name":"Etchbench",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":424,
+                 "y":712
                 }],
          "opacity":1,
          "properties":[
@@ -1046,7 +1058,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":893,
+ "nextobjectid":895,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1070,7 +1082,7 @@
          "value":"{\"x\":58,\"y\":99}"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.2.2",
+ "tiledversion":"1.2.4",
  "tileheight":8,
  "tilesets":[
         {

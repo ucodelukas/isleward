@@ -2,6 +2,7 @@ let events = require('../../misc/events');
 
 const recipesAlchemy = require('./alchemy');
 const recipesCooking = require('./cooking');
+const recipesEtching = require('./etching');
 
 let recipes = {
 	alchemy: [
@@ -9,6 +10,9 @@ let recipes = {
 	],
 	cooking: [
 		...recipesCooking
+	],
+	etching: [
+		...recipesEtching
 	]
 };
 
