@@ -143,8 +143,14 @@ module.exports = {
 	},
 
 	enchantItem: function (msg) {
-		let item = this.findItem(msg.itemId);
-		if (!item || !item.slot || item.noAugment || (msg.action === 'scour' && !item.power)) {
+		const { itemId, action } = msg;
+		const item = this.findItem(itemId);
+		if (!item)
+			return;
+
+		const { slot, power, noAugment } = item;
+
+		if (!slot || noAugment || (action === 'scour' && !power)) {
 			this.resolveCallback(msg);
 			return;
 		}
@@ -157,6 +163,9 @@ module.exports = {
 			applyItemStats(obj, item, true);
 		} else
 			enchanter.enchant(obj, item, msg);
+
+		if (item.slot !== slot)
+			obj.equipment.unequip(itemId);
 
 		obj.equipment.unequipAttrRqrGear();
 	},
