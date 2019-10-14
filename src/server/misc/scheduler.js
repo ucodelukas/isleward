@@ -18,7 +18,7 @@ module.exports = {
 
 		let time = this.getTime();
 
-		return Object.keys(time).every((t, i) => {
+		return ['minute', 'hour', 'day', 'month', 'weekday'].every((t, i) => {
 			let f = cron[i].split('-');
 			if (f[0] === '*')
 				return true;

@@ -5,7 +5,10 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+
 const { applyItemStats } = require('./equipment/helpers');
+
+const getItem = require('./inventory/getItem');
 
 module.exports = {
 	type: 'inventory',
@@ -772,124 +775,7 @@ module.exports = {
 	},
 
 	getItem: function (item, hideMessage, noStack, hideAlert) {
-		this.obj.instance.eventEmitter.emit('onBeforeGetItem', item, this.obj);
-
-		//We need to know if a mob dropped it for quest purposes
-		let fromMob = item.fromMob;
-
-		if (!item.has('quality'))
-			item.quality = 0;
-
-		//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
-		if (this.obj.player)
-			delete item.fromMob;
-
-		//Store the quantity to send to the player
-		let quantity = item.quantity;
-
-		let exists = false;
-		if ((item.material || item.quest || item.quantity) && !item.noStack && !item.uses && !noStack) {
-			let existItem = this.items.find(i => i.name === item.name);
-			if (existItem) {
-				exists = true;
-				existItem.quantity = ~~(existItem.quantity || 1) + ~~(item.quantity || 1);
-				item = existItem;
-			}
-		}
-
-		if (!exists)
-			delete item.pos;
-
-		//Get next id
-		if (!exists) {
-			let id = 0;
-			let items = this.items;
-			let iLen = items.length;
-
-			if (!this.hasSpace(item)) {
-				if (!hideMessage) 
-					this.notifyNoBagSpace();
-
-				return false;
-			}
-
-			for (let i = 0; i < iLen; i++) {
-				let fItem = items[i];
-				if (fItem.id >= id) 
-					id = fItem.id + 1;
-			}
-			item.id = id;
-
-			if (item.eq)
-				delete item.pos;
-
-			if (!item.has('pos') && !item.eq) {
-				let pos = iLen;
-				for (let i = 0; i < iLen; i++) {
-					if (!items.some(fi => (fi.pos === i))) {
-						pos = i;
-						break;
-					}
-				}
-				item.pos = pos;
-			}
-		}
-
-		if (this.obj.player) {
-			let msg = item.name;
-			if (quantity)
-				msg += ' x' + quantity;
-			else if ((item.stats) && (item.stats.weight))
-				msg += ` ${item.stats.weight}lb`;
-			
-			const messages = [{
-				class: 'q' + item.quality,
-				message: 'loot: {' + msg + '}',
-				item: item,
-				type: 'loot'
-			}];
-
-			if (!hideAlert) {
-				this.obj.instance.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					event: true,
-					text: 'loot'
-				}, -1);
-			}
-
-			if (!hideMessage) {
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: messages
-				}, [this.obj.serverId]);
-			}
-		}
-
-		if (item.effects) 
-			this.hookItemEvents([item]);
-
-		if (!exists)
-			this.items.push(item);
-
-		if (item.eq) {
-			if (item.ability)
-				this.learnAbility(item.id, item.runeSlot);
-			else
-				this.obj.equipment.equip(item.id);
-		} else if (item.has('quickSlot')) {
-			this.obj.equipment.setQuickSlot({
-				itemId: item.id,
-				slot: item.quickSlot
-			});
-		} else {
-			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === item.id);
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
-		}
-
-		if (!hideMessage && fromMob) 
-			this.obj.fireEvent('afterLootMobItem', item);
-
-		return item;
+		return getItem(this, item, hideMessage, noStack, hideAlert);
 	},
 
 	dropBag: function (ownerName, killSource) {
