@@ -1,5 +1,5 @@
 let util = require('util');
-const tableNames = require('./tables');
+const tableNames = require('./tableNames');
 
 module.exports = {
 	db: null,

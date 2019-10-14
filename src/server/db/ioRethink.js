@@ -1,5 +1,5 @@
 const serverConfig = require('../config/serverConfig');
-const tableNames = require('./tables');
+const tableNames = require('./tableNames');
 
 const r = require('rethinkdbdash')({
 	host: serverConfig.dbHost,

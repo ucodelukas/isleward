@@ -1,6 +1,6 @@
 const scheduler = require('../../misc/scheduler');
 const loginRewards = require('../../config/loginRewards');
-const mail = require('../mail/mail');
+const mail = require('../../mail/mail');
 
 const calculateDaysSkipped = (oldTime, newTime) => {
 	let daysSkipped = 1;

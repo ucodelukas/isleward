@@ -1,5 +1,5 @@
 global.extend = require('../misc/clone');
-global.io = require('../security/io');
+global.io = require('../db/io');
 global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
