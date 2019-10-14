@@ -100,6 +100,7 @@ module.exports = {
 			hour: time.getHours(),
 			day: time.getDate(),
 			month: time.getMonth() + 1,
+			year: time.getUTCFullYear(),
 			weekday: time.getDay()
 		};
 	},

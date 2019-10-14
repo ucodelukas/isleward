@@ -4,11 +4,11 @@ let skins = require('../config/skins');
 let roles = require('../config/roles');
 let profanities = require('../misc/profanities');
 let fixes = require('../fixes/fixes');
-let loginRewards = require('../config/loginRewards');
 let mail = require('../mail/mail');
-let scheduler = require('../misc/scheduler');
 let spirits = require('../config/spirits');
 let ga = require('../security/ga');
+
+const checkLoginRewards = require('./auth/checkLoginRewards');
 
 module.exports = {
 	type: 'auth',
@@ -22,15 +22,14 @@ module.exports = {
 
 	customChannels: [],
 
-	play: function (data) {
+	play: async function (data) {
 		if (!this.username)
 			return;
 
 		let character = this.characters[data.data.name];
 		if (!character)
 			return;
-
-		if (character.permadead)
+		else if (character.permadead)
 			return;
 
 		character.stash = this.stash;
@@ -38,50 +37,13 @@ module.exports = {
 
 		this.charname = character.name;
 
-		this.checkLoginReward(data, character);
+		checkLoginRewards(this, data, character, this.onSendRewards.bind(this, data, character));
 
 		cons.modifyPlayerCount(1);
 	},
 
-	checkLoginReward: function (data, character) {
-		let accountInfo = this.accountInfo;
-
-		let time = scheduler.getTime();
-		let lastLogin = accountInfo.lastLogin;
-		if (!lastLogin || lastLogin.day !== time.day) {
-			let daysSkipped = 1;
-			if (lastLogin) {
-				if (time.day > lastLogin.day)
-					daysSkipped = time.day - lastLogin.day;
-				else {
-					let daysInMonth = scheduler.daysInMonth(lastLogin.month);
-					daysSkipped = (daysInMonth - lastLogin.day) + time.day;
-
-					for (let i = lastLogin.month + 1; i < time.month - 1; i++) 
-						daysSkipped += scheduler.daysInMonth(i);
-				}
-			}
-
-			if (daysSkipped === 1) {
-				accountInfo.loginStreak++;
-				if (accountInfo.loginStreak > 21)
-					accountInfo.loginStreak = 21;
-			} else {
-				accountInfo.loginStreak -= (daysSkipped - 1);
-				if (accountInfo.loginStreak < 1)
-					accountInfo.loginStreak = 1;
-			}
-
-			let rewards = loginRewards.generate(accountInfo.loginStreak);
-			mail.sendMail(character.name, rewards, this.onSendRewards.bind(this, data, character));
-		} else
-			this.onSendRewards(data, character);
-
-		accountInfo.lastLogin = time;
-	},
-
 	onSendRewards: async function (data, character) {
-		//Bit of a hack. Rethink doesn't havve a busy list
+		//Bit of a hack. Rethink doesn't have a busy list
 		if (mail.busy)
 			delete mail.busy[character.name];
 

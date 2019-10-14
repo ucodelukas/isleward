@@ -1,25 +1,11 @@
 const serverConfig = require('../config/serverConfig');
+const tableNames = require('./tables');
 
 const r = require('rethinkdbdash')({
 	host: serverConfig.dbHost,
 	port: serverConfig.dbPort,
 	db: serverConfig.dbName
 });
-
-const tables = [
-	'character',
-	'characterList',
-	'stash',
-	'skins',
-	'login',
-	'leaderboard',
-	'customMap',
-	'mail',
-	'customChannels',
-	'error',
-	'modLog',
-	'accountInfo'
-];
 
 module.exports = {
 	staticCon: null,
@@ -37,7 +23,7 @@ module.exports = {
 
 		}
 
-		for (const table of tables) {
+		for (const table of tableNames) {
 			try {
 				await r.tableCreate(table).run();
 			} catch (e) {
