@@ -1,4 +1,4 @@
-global.io = require('./security/io');
+global.io = require('./db/io');
 global.extend = require('./misc/clone');
 global.cons = require('./security/connections');
 global._ = require('./misc/helpers');
