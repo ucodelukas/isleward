@@ -365,8 +365,8 @@ define([
 			if (item.quantity > 1)
 				config.push(menuItems.split);
 
-			if ((!item.noDrop) && (!item.quest))
-				config.push(menuItems.mail);
+			//if ((!item.noDrop) && (!item.quest))
+			//	config.push(menuItems.mail);
 
 			if (isMobile)
 				this.hideTooltip(null, this.hoverItem);
