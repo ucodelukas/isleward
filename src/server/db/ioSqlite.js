@@ -19,7 +19,7 @@ module.exports = {
 		let scope = this;
 
 		db.serialize(function () {
-			for (let t in tableNames) {
+			for (let t of tableNames) {
 				db.run(`
 					CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
 				`, scope.onTableCreated.bind(scope, t));
