@@ -27,8 +27,10 @@ module.exports = [{
 		quantity: 1
 	}]
 }, {
+	id: 'runeAmbush',
 	name: 'Stinky Oil',
 	description: 'Makes your weapon both stinkier, and hurtier.',
+	default: false,
 	item: {
 		name: 'Stinky Oil',
 		type: 'consumable',
