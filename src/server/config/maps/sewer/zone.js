@@ -95,6 +95,22 @@ module.exports = {
 				fjolgard: 22
 			},
 
+			regular: {
+				drops: {
+					chance: 100,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Rune of Ambush',
+						profession: 'alchemy',
+						teaches: 'runeAmbush'
+					}]
+				}
+			},
+
 			rare: {
 				count: 0
 			}

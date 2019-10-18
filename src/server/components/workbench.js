@@ -73,7 +73,7 @@ module.exports = {
 		}, [obj.serverId]);
 	},
 
-	open: function (msg) {
+	open: async function (msg) {
 		if (!msg.has('sourceId'))
 			return;
 
@@ -85,10 +85,15 @@ module.exports = {
 		if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
 			return;
 
+		const unlocked = await io.getAsync({
+			key: obj.name,
+			table: 'recipes'
+		});
+
 		this.obj.instance.syncer.queue('onOpenWorkbench', {
 			workbenchId: this.obj.id,
 			name: this.obj.name,
-			recipes: recipes.getList(this.craftType)
+			recipes: recipes.getList(this.craftType, unlocked)
 		}, [obj.serverId]);
 	},
 

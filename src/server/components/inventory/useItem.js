@@ -1,10 +1,6 @@
-module.exports = (cpnInv, itemId) => {
-	let item = cpnInv.findItem(itemId);
-	if (!item)
-		return;
+const learnRecipe = require('./learnRecipe');
 
-	let obj = cpnInv.obj;
-
+const isOnCooldown = (obj, cpnInv, item) => {
 	if (item.cdMax) {
 		if (item.cd) {
 			process.send({
@@ -26,13 +22,32 @@ module.exports = (cpnInv, itemId) => {
 
 		//Find similar items and put them on cooldown too
 		cpnInv.items.forEach(function (i) {
-			if ((i.name === item.name) && (i.cdMax === item.cdMax))
+			if (i.name === item.name && i.cdMax === item.cdMax)
 				i.cd = i.cdMax;
 		});
 	}
+};
+
+module.exports = async (cpnInv, itemId) => {
+	let item = cpnInv.findItem(itemId);
+	if (!item)
+		return;
+
+	let obj = cpnInv.obj;
+
+	if (isOnCooldown(obj, cpnInv, item))
+		return;
 
 	let result = {};
 	obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
+
+	if (item.recipe) {
+		const didLearn = await learnRecipe(obj, item);
+		if (didLearn)
+			cpnInv.destroyItem(itemId, 1);
+
+		return;
+	}
 
 	let effects = (item.effects || []);
 	let eLen = effects.length;
