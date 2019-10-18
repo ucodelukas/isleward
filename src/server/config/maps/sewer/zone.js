@@ -91,6 +91,7 @@ module.exports = {
 
 			regular: {
 				drops: {
+					chance: 100,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,

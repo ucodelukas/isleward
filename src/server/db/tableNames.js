@@ -11,5 +11,6 @@ module.exports = [
 	'error',
 	'modLog',
 	'accountInfo',
-	'mtxStash'
+	'mtxStash',
+	'recipes'
 ];
