@@ -34,11 +34,5 @@ module.exports = async ({ serverId, name }, { recipe: { profession, teaches } })
 		serialize: true
 	});
 
-	const now = await io.getAsync({
-		key: name,
-		table: 'recipes',
-		isArray: true
-	});
-
 	return true;
 };

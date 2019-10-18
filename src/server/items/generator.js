@@ -73,7 +73,7 @@ module.exports = {
 			delete item.chance;
 		} else if (blueprint.type === 'recipe') 
 			recipeGenerators.forEach(g => g.generate(item, blueprint));
-		 else {
+		else {
 			generators.forEach(g => g.generate(item, blueprint));
 			if (blueprint.spellName)
 				g9.generate(item, blueprint);
