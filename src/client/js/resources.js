@@ -23,8 +23,8 @@ define([
 			'ray',
 			'images/skins/0001.png',
 			'images/skins/0010.png',
-			'images/skins/0012.png',
-			'images/skins/0090.png'
+			'images/skins/0012.png'/*,
+			'images/skins/0090.png'*/
 		],
 		sprites: {},
 		ready: false,

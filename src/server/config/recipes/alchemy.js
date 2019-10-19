@@ -27,12 +27,12 @@ module.exports = [{
 		quantity: 1
 	}]
 }, {
-	id: 'runeAmbush',
-	name: 'Stinky Oil',
+	id: 'noxiousOil',
+	name: 'Noxious Oil',
 	description: 'Makes your weapon both stinkier, and hurtier.',
 	default: false,
 	item: {
-		name: 'Stinky Oil',
+		name: 'Noxious Oil',
 		type: 'consumable',
 		sprite: [0, 1],
 		description: 'Makes your weapon both stinkier, and hurtier.',
@@ -49,7 +49,10 @@ module.exports = [{
 		}]
 	},
 	materials: [{
-		name: 'Stink Carp',
+		name: 'Mudfish',
+		quantity: 3
+	}, {
+		name: 'Stinkcap',
 		quantity: 3
 	}, {
 		name: 'Empty Vial',

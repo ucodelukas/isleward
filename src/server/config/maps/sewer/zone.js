@@ -35,6 +35,12 @@ module.exports = {
 						material: true,
 						sprite: [6, 0],
 						spritesheet: 'images/materials.png'
+					}, {
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Noxious Oil',
+						profession: 'alchemy',
+						teaches: 'noxiousOil'
 					}]
 				}
 			},
@@ -65,6 +71,12 @@ module.exports = {
 						singleUse: true,
 						sprite: [12, 1],
 						quantity: 1
+					}, {
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Rune of Whirlwind',
+						profession: 'etching',
+						teaches: 'runeWhirlwind'
 					}]
 				}
 			},
@@ -95,22 +107,6 @@ module.exports = {
 				fjolgard: 22
 			},
 
-			regular: {
-				drops: {
-					chance: 100,
-					rolls: 1,
-					noRandom: true,
-					alsoRandom: true,
-					blueprints: [{
-						chance: 100,
-						type: 'recipe',
-						name: 'Recipe: Rune of Ambush',
-						profession: 'alchemy',
-						teaches: 'runeAmbush'
-					}]
-				}
-			},
-
 			rare: {
 				count: 0
 			}
@@ -137,6 +133,12 @@ module.exports = {
 						singleUse: true,
 						sprite: [12, 1],
 						quantity: 1
+					}, {
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Rune of Ambush',
+						profession: 'etching',
+						teaches: 'runeAmbush'
 					}]
 				}
 			},
