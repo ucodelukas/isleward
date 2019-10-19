@@ -35,6 +35,7 @@ module.exports = {
 		this.obj.effects.addEffect({
 			type: 'frenzy',
 			ttl: this.duration,
+			chance: this.chance,
 			newCd: 1
 		});
 	}
