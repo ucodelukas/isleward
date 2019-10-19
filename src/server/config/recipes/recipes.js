@@ -21,7 +21,7 @@ module.exports = {
 		events.emit('onBeforeGetRecipes', recipes);
 	},
 
-	getList: function (type, unlocked = []) {
+	getList: function (type, unlocked) {
 		return (recipes[type] || [])
 			.filter(r => {
 				let hasUnlocked = (r.default !== false);

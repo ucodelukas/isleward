@@ -61,6 +61,7 @@ module.exports = {
 				drops: {
 					rolls: 1,
 					noRandom: true,
+					chance: 100,
 					alsoRandom: true,
 					blueprints: [{
 						chance: 0.5,
@@ -149,6 +150,11 @@ module.exports = {
 		}
 	},
 	objects: {
+		'mudfish school': {
+			max: 9,
+			type: 'fish',
+			quantity: [6, 12]
+		},
 		sewerdoor: {
 			properties: {
 				cpnDoor: {

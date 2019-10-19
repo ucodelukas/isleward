@@ -588,6 +588,40 @@
                  "width":96,
                  "x":192,
                  "y":880
+                }, 
+                {
+                 "height":32,
+                 "id":897,
+                 "name":"mudfish school",
+                 "properties":[
+                        {
+                         "name":"resource",
+                         "type":"string",
+                         "value":"Mudfish"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":440,
+                 "y":648
+                }, 
+                {
+                 "height":40,
+                 "id":898,
+                 "name":"mudfish school",
+                 "properties":[
+                        {
+                         "name":"resource",
+                         "type":"string",
+                         "value":"Mudfish"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":280,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1058,7 +1092,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":895,
+ "nextobjectid":899,
  "orientation":"orthogonal",
  "properties":[
         {

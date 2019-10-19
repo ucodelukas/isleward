@@ -87,7 +87,8 @@ module.exports = {
 
 		const unlocked = await io.getAsync({
 			key: obj.name,
-			table: 'recipes'
+			table: 'recipes',
+			isArray: true
 		});
 
 		this.obj.instance.syncer.queue('onOpenWorkbench', {

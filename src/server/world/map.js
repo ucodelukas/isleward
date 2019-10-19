@@ -388,7 +388,7 @@ module.exports = {
 					});
 
 					room.exits.push(blueprint);
-				} else if (blueprint.properties.resource)
+				} else if (blueprint.properties.resource) 
 					resourceSpawner.register(blueprint.properties.resource, blueprint);
 				else {
 					blueprint.exits = [];

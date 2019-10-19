@@ -23,7 +23,8 @@ let startup = {
 
 	onDbReady: async function () {
 		await fixes.fixDb();
-		
+
+		process.on('unhandledRejection', this.onError.bind(this));
 		process.on('uncaughtException', this.onError.bind(this));
 
 		animations.init();
