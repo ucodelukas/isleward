@@ -386,6 +386,61 @@ module.exports = {
 				}
 			}
 		},
+		etchbench: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['ff4252', 'ff4252'],
+									end: ['a82841', 'a82841']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 4
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -15,
+									y: -28,
+									w: 30,
+									h: 8
+								}
+							}
+						};
+					}
+				},
+				cpnWorkbench: {
+					type: 'etching'
+				}
+			}
+		},
 		fireplace: {
 			components: {
 				cpnWorkbench: {
@@ -615,6 +670,7 @@ module.exports = {
 			}
 		},
 		vikar: {
+			level: 15,
 			walkDistance: 0,
 			attackable: false,
 			rare: {
@@ -696,6 +752,15 @@ module.exports = {
 			}
 		},
 		luta: {
+			level: 15,
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
+			}
+		},
+		vetch: {
+			level: 15,
 			walkDistance: 0,
 			attackable: false,
 			rare: {
@@ -731,7 +796,7 @@ module.exports = {
 			}
 		},
 		priest: {
-			level: 50,
+			level: 20,
 			attackable: false,
 			walkDistance: 0,
 			rare: {
