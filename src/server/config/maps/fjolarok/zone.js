@@ -83,6 +83,25 @@ module.exports = {
 				}
 			}
 		},
+		shopvetch: {
+			properties: {
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'dialogue',
+							method: 'talk',
+							args: [{
+								targetName: 'vetch'
+							}]
+						},
+						exit: {
+							cpn: 'dialogue',
+							method: 'stopTalk'
+						}
+					}
+				}
+			}
+		},
 		shoppriest: {
 			properties: {
 				cpnNotice: {
@@ -675,6 +694,22 @@ module.exports = {
 			attackable: false,
 			rare: {
 				count: 0
+			}
+		},
+		luta: {
+			level: 15,
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
+			}
+		},
+		vetch: {
+			level: 15,
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
 			},
 
 			properties: {
@@ -749,22 +784,6 @@ module.exports = {
 						sell: 10
 					}
 				}
-			}
-		},
-		luta: {
-			level: 15,
-			walkDistance: 0,
-			attackable: false,
-			rare: {
-				count: 0
-			}
-		},
-		vetch: {
-			level: 15,
-			walkDistance: 0,
-			attackable: false,
-			rare: {
-				count: 0
 			}
 		},
 		rodriguez: {

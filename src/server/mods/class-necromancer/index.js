@@ -38,8 +38,8 @@ module.exports = {
 			worth: 3
 		}];
 
-		let vikarTrade = config.mobs.vikar.properties.cpnTrade;
-		Array.prototype.push.apply(vikarTrade.items.extra, newRunes);
+		let vetchTrade = config.mobs.vetch.properties.cpnTrade;
+		Array.prototype.push.apply(vetchTrade.items.extra, newRunes);
 	},
 
 	beforeGetAnimations: function (animations) {

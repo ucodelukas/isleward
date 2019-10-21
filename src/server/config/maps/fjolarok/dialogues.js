@@ -180,7 +180,7 @@ module.exports = {
 		1: {
 			msg: [{
 				msg: 'Is there anything I can help you with today?',
-				options: [1.1, 1.2, 1.3, 1.4]
+				options: [1.1]
 			}],
 			options: {
 				1.1: {
@@ -190,18 +190,6 @@ module.exports = {
 						return !!fullSet;
 					},
 					goto: 'tradeCards'
-				},
-				1.2: {
-					msg: 'I would like to buy some runes',
-					goto: 'tradeBuy'
-				},
-				1.3: {
-					msg: 'I have some items I would like to sell',
-					goto: 'tradeSell'
-				},
-				1.4: {
-					msg: 'Could I see the items I sold to you?',
-					goto: 'tradeBuyback'
 				}
 			}
 		},
@@ -251,6 +239,49 @@ module.exports = {
 			method: 'startBuyback',
 			args: [{
 				targetName: 'vikar'
+			}]
+		}
+	},
+	vetch: {
+		1: {
+			msg: [{
+				msg: 'Is there anything I can help you with today?',
+				options: [1.1, 1.2, 1.3]
+			}],
+			options: {
+				1.1: {
+					msg: 'I would like to buy some runes',
+					goto: 'tradeBuy'
+				},
+				1.2: {
+					msg: 'I have some items I would like to sell',
+					goto: 'tradeSell'
+				},
+				1.3: {
+					msg: 'Could I see the items I sold to you?',
+					goto: 'tradeBuyback'
+				}
+			}
+		},
+		tradeBuy: {
+			cpn: 'trade',
+			method: 'startBuy',
+			args: [{
+				targetName: 'vetch'
+			}]
+		},
+		tradeSell: {
+			cpn: 'trade',
+			method: 'startSell',
+			args: [{
+				targetName: 'vetch'
+			}]
+		},
+		tradeBuyback: {
+			cpn: 'trade',
+			method: 'startBuyback',
+			args: [{
+				targetName: 'vetch'
 			}]
 		}
 	},

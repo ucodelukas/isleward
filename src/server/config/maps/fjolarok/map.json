@@ -2387,6 +2387,17 @@
                  "width":8,
                  "x":552,
                  "y":200
+                }, 
+                {
+                 "height":24,
+                 "id":899,
+                 "name":"shopVetch",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":560,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3964,7 +3975,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":899,
+ "nextobjectid":900,
  "orientation":"orthogonal",
  "properties":[
         {
