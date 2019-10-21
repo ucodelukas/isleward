@@ -375,6 +375,12 @@ let spells = [{
 		randomColor: true
 	}
 }, {
+	name: 'Whirlwind',
+	description: 'Wooooo, bitches!.',
+	type: 'whirlwind',
+	icon: [0, 1],
+	animation: 'raiseStaff'
+}, {
 	name: 'Chain Lightning',
 	description: 'Creates a circle of pure holy energy that heals allies for a brief period.',
 	type: 'chainLightning',

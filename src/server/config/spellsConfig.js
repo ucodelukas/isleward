@@ -126,12 +126,13 @@ let spells = {
 	whirlwind: {
 		statType: 'str',
 		statMult: 1,
-		cdMax: 1,
-		castTimeMax: 0,
-		manaCost: 1,
+		threatMult: 4,
+		cdMax: 9,
+		castTimeMax: 1,
+		manaCost: 4,
+		useWeaponRange: true,
 		random: {
-			damage: [5, 12],
-			range: [1, 3]
+			damage: [6, 23]
 		}
 	},
 	smokebomb: {

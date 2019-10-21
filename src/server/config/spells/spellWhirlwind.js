@@ -19,6 +19,9 @@ module.exports = {
 	isCasting: false,
 	ticker: 0,
 
+	targetGround: true,
+	targetPlayerPos: true,
+
 	cast: function (action) {
 		if (this.isCasting)
 			return;

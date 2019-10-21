@@ -34,5 +34,17 @@ module.exports = async ({ serverId, name }, { recipe: { profession, teaches } })
 		serialize: true
 	});
 
+	process.send({
+		method: 'events',
+		data: {
+			onGetAnnouncement: [{
+				obj: {
+					msg: 'The recipe imprints itself in your mind, then vanishes'
+				},
+				to: [serverId]
+			}]
+		}
+	});
+
 	return true;
 };
