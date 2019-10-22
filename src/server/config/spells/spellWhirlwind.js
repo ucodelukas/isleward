@@ -1,8 +1,34 @@
 const coordinates = [
+	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]],
+	[[0, -2], [0, -1], [1, -2], [2, -2], [1, -1], [2, -1], [2, 0], [1, 0], [2, 1], [2, 2], [1, 1], [1, 2], [0, 2], [0, 1], [-1, 2], [-2, 2], [-2, 1], [-1, 1], [-2, 0], [-1, 0], [-2, -1], [-2, -2], [-1, -1], [-1, -2]],
 	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]
 ];
 
-//const maxTicks = 8;
+const dealDamage = (spell, obj, coords) => {
+	const physics = obj.instance.physics;
+
+	coords.forEach(([x, y]) => {
+		const mobs = physics.getCell(x, y);
+		let mLen = mobs.length;
+		for (let k = 0; k < mLen; k++) {
+			const m = mobs[k];
+
+			if (!m) {
+				mLen--;
+				continue;
+			}
+
+			if (!m.aggro || !m.effects)
+				continue;
+
+			if (!obj.aggro.canAttack(m))
+				continue;
+
+			const damage = spell.getDamage(m);
+			m.stats.takeDamage(damage, 1, obj);
+		}
+	});
+};
 
 module.exports = {
 	type: 'whirlwind',
@@ -11,64 +37,39 @@ module.exports = {
 	manaCost: 10,
 	range: 1,
 
-	damage: 0.0001,
+	damage: 1,
 	isAttack: true,
-
-	channelDuration: 100,
-
-	isCasting: false,
-	ticker: 0,
 
 	targetGround: true,
 	targetPlayerPos: true,
 
 	cast: function (action) {
-		if (this.isCasting)
-			return;
-
-		//this.isCasting = true;
-
-		const { x: playerX, y: playerY } = this.obj;
+		const { frames, row, col, obj } = this;
+		const { id, instance, x: playerX, y: playerY } = obj;
 
 		const coords = coordinates[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
 
 		let blueprint = {
-			caster: this.obj.id,
+			caster: id,
 			components: [{
-				idSource: this.obj.id,
+				idSource: id,
 				type: 'whirlwind',
 				coordinates: coords,
-				row: 3,
-				col: 0
+				frames,
+				row,
+				col
 			}]
 		};
 
-		this.obj.instance.syncer.queue('onGetObject', blueprint, -1);
+		this.sendBump({
+			x: playerX,
+			y: playerY - 1
+		});
+
+		instance.syncer.queue('onGetObject', blueprint, -1);
+
+		dealDamage(this, obj, coords);
 
 		return true;
-	},
-
-	reachDestination: function (selfEffect) {
-		const { effects, destroyed } = this.obj;
-		if (destroyed)
-			return;
-
-		effects.removeEffect(selfEffect);
-	},
-
-	spawnDamager: function (x, y) {
-		const { destroyed, instance } = this.obj;
-		if (destroyed)
-			return;
-
-		instance.syncer.queue('onGetObject', {
-			x,
-			y,
-			components: [{
-				type: 'attackAnimation',
-				row: 3,
-				col: 0
-			}]
-		}, -1);
 	}
 };

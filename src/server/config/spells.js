@@ -286,9 +286,12 @@ let spells = [{
 	}
 }, {
 	name: 'Whirlwind',
-	description: 'WWWWWWW.',
+	description: 'You furiously spin in a circle, striking all foes around you.',
 	type: 'whirlwind',
-	icon: [2, 2]
+	icon: [2, 2],
+	row: 5,
+	col: 0,
+	frames: 3
 }, {
 	name: 'Stealth',
 	description: 'The thief slips into the shadows and becomes undetectable by foes. Performing an attack removes this effect.',
