@@ -21,10 +21,6 @@ module.exports = (cpnInv, item, hideMessage, noStack, hideAlert) => {
 	if (!item.has('quality'))
 		item.quality = 0;
 
-	//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
-	if (obj.player)
-		delete item.fromMob;
-
 	//Store the quantity to send to the player
 	let quantity = item.quantity;
 
@@ -68,6 +64,10 @@ module.exports = (cpnInv, item, hideMessage, noStack, hideAlert) => {
 			item.pos = pos;
 		}
 	}
+
+	//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
+	if (obj.player)
+		delete item.fromMob;
 
 	if (obj.player) {
 		let msg = item.name;
