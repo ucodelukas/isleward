@@ -288,7 +288,7 @@ let spells = [{
 	name: 'Whirlwind',
 	description: 'You furiously spin in a circle, striking all foes around you.',
 	type: 'whirlwind',
-	icon: [2, 2],
+	icon: [5, 0],
 	row: 5,
 	col: 0,
 	frames: 3
