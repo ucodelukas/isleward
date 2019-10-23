@@ -1,5 +1,5 @@
 # Base image on Node.js 10.x LTS (dubnium)
-FROM node:10-alpine
+FROM node:12-alpine
 
 # Create app directory
 WORKDIR /usr/src/isleward
@@ -10,8 +10,8 @@ COPY . .
 # Change directory to src/server/
 WORKDIR /usr/src/isleward/src/server/
 
-# Install npm modules specified in package.json
-RUN npm install --only-production
+# Install only production npm modules specified in package.json
+RUN npm install --only=production
 
 # Expose container's port 4000
 EXPOSE 4000
