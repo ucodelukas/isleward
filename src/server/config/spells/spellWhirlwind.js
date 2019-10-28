@@ -1,13 +1,18 @@
-const coordinates = [
+const coordinateDeltas = [
 	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]],
-	[[0, -2], [0, -1], [1, -2], [2, -2], [1, -1], [2, -1], [2, 0], [1, 0], [2, 1], [2, 2], [1, 1], [1, 2], [0, 2], [0, 1], [-1, 2], [-2, 2], [-2, 1], [-1, 1], [-2, 0], [-1, 0], [-2, -1], [-2, -2], [-1, -1], [-1, -2]],
-	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]
+	[[0, -2], [0, -1], [1, -2], [2, -2], [1, -1], [2, -1], [2, 0], [1, 0], [2, 1], [2, 2], [1, 1], [1, 2], [0, 2], [0, 1], [-1, 2], [-2, 2], [-2, 1], [-1, 1], [-2, 0], [-1, 0], [-2, -1], [-2, -2], [-1, -1], [-1, -2]]
 ];
 
-const dealDamage = (spell, obj, coords) => {
+const applyDamage = (target, damage, threat, source) => {
+	target.stats.takeDamage(damage, threat, source);
+};
+
+const dealDamage = ({ delay, getDamage, queueCallback }, obj, coords) => {
 	const physics = obj.instance.physics;
 
-	coords.forEach(([x, y]) => {
+	coords.forEach(([x, y], i) => {
+		const cellDelay = i * delay;
+
 		const mobs = physics.getCell(x, y);
 		let mLen = mobs.length;
 		for (let k = 0; k < mLen; k++) {
@@ -18,14 +23,12 @@ const dealDamage = (spell, obj, coords) => {
 				continue;
 			}
 
-			if (!m.aggro || !m.effects)
+			if (!m.aggro || !m.effects || !obj.aggro.canAttack(m))
 				continue;
 
-			if (!obj.aggro.canAttack(m))
-				continue;
+			const damage = getDamage(m);
 
-			const damage = spell.getDamage(m);
-			m.stats.takeDamage(damage, 1, obj);
+			queueCallback(applyDamage.bind(null, m, damage, 1, obj), cellDelay);
 		}
 	});
 };
@@ -36,6 +39,8 @@ module.exports = {
 	cdMax: 5,
 	manaCost: 10,
 	range: 1,
+	//The delay is sent to the client and is how long (in ms) each tick takes to display
+	delay: 32,
 
 	damage: 1,
 	isAttack: true,
@@ -44,20 +49,21 @@ module.exports = {
 	targetPlayerPos: true,
 
 	cast: function (action) {
-		const { frames, row, col, obj } = this;
+		const { frames, row, col, delay, obj } = this;
 		const { id, instance, x: playerX, y: playerY } = obj;
 
-		const coords = coordinates[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
+		const coordinates = coordinateDeltas[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
 
 		let blueprint = {
 			caster: id,
 			components: [{
 				idSource: id,
 				type: 'whirlwind',
-				coordinates: coords,
+				coordinates,
 				frames,
 				row,
-				col
+				col,
+				delay
 			}]
 		};
 
@@ -68,7 +74,7 @@ module.exports = {
 
 		instance.syncer.queue('onGetObject', blueprint, -1);
 
-		dealDamage(this, obj, coords);
+		dealDamage(this, obj, coordinates);
 
 		return true;
 	}
