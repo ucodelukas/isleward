@@ -5,6 +5,8 @@ let configMaterials = require('../../items/config/materials');
 let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
+const ban = require('../social/ban');
+
 let commandRoles = {
 	//Regular players
 	join: 0,
@@ -15,6 +17,7 @@ let commandRoles = {
 	unblock: 0,
 
 	//Mods
+	ban: 5,
 	mute: 5,
 	unmute: 5,
 
@@ -41,6 +44,7 @@ let commandRoles = {
 
 //Commands that should be run on the main thread (not the zone thread)
 const localCommands = [
+	'ban',
 	'join',
 	'leave',
 	'mute',
@@ -51,7 +55,8 @@ const localCommands = [
 	'block',
 	'unblock',
 	'broadcast',
-	'saveAll'
+	'saveAll',
+	'ban'
 ];
 
 //Actions that should appear when a player is right clicked
@@ -63,6 +68,10 @@ const contextActions = [
 	{
 		command: 'unmute',
 		text: 'unmute'
+	},
+	{
+		command: 'ban',
+		text: 'ban'
 	}
 ];
 
@@ -82,7 +91,7 @@ module.exports = {
 
 	calculateActions: function () {
 		this.actions = contextActions
-			.filter(c => this.roleLevel >= commandRoles[c.action]);
+			.filter(c => this.roleLevel >= commandRoles[c.command]);
 	},
 
 	onBeforeChat: function (msg) {
@@ -661,5 +670,9 @@ module.exports = {
 
 	saveAll: function () {
 		connections.forceSaveAll();
+	},
+
+	ban: function (msg) {
+		ban(this, msg);
 	}
 };

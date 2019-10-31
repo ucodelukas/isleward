@@ -131,6 +131,8 @@ define([
 					};
 				});
 
+				const isBlocked = this.blockedPlayers.includes(char.name);
+
 				const actions = [{
 					text: 'invite to party',
 					callback: this.invite.bind(this, char.id)
@@ -142,7 +144,6 @@ define([
 					callback: this.block.bind(this, char.name)
 				}, ...extraActions];
 			
-				const isBlocked = this.blockedPlayers.includes(char.name);
 				events.emit('onContextMenu', actions, e);
 			}
 
