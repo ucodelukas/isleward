@@ -1,6 +1,4 @@
-let roles = require('../config/roles');
-let events = require('../misc/events');
-const profanities = require('../misc/profanities');
+const chat = require('./social/chat');
 
 module.exports = {
 	type: 'social',
@@ -11,6 +9,8 @@ module.exports = {
 
 	customChannels: null,
 	blockedPlayers: [],
+
+	actions: null,
 
 	messageHistory: [],
 
@@ -24,13 +24,23 @@ module.exports = {
 	},
 
 	simplify: function (self) {
-		return {
+		const { party, customChannels, blockedPlayers, actions, muted } = this;
+
+		const res = {
 			type: 'social',
-			party: this.party,
-			customChannels: self ? this.customChannels : null,
-			blockedPlayers: self ? this.blockedPlayers : null,
-			muted: this.muted
+			party,
+			muted
 		};
+
+		if (self) {
+			Object.assign(res, {
+				actions,
+				customChannels,
+				blockedPlayers
+			});
+		}
+
+		return res;
 	},
 
 	save: function () {
@@ -181,91 +191,7 @@ module.exports = {
 	},
 
 	chat: function (msg) {
-		if (!msg.data.message)
-			return;
-
-		msg.data.message = msg.data.message
-			.split('<')
-			.join('&lt;')
-			.split('>')
-			.join('&gt;');
-
-		if (!msg.data.message)
-			return;
-
-		if (msg.data.message.trim() === '')
-			return;
-
-		if (this.muted) {
-			this.sendMessage('You have been muted from talking', 'color-redA');
-			return;
-		}
-
-		let messageString = msg.data.message;
-		if (messageString.length > this.maxChatLength)
-			return;
-
-		let history = this.messageHistory;
-
-		let time = +new Date();
-		history.spliceWhere(h => ((time - h.time) > 5000));
-
-		if (history.length > 0) {
-			if (history[history.length - 1].msg === messageString) {
-				this.sendMessage('You have already sent that message', 'color-redA');
-				return;
-			} else if (history.length >= 3) {
-				this.sendMessage('You are sending too many messages', 'color-redA');
-				return;
-			}
-		}
-
-		this.onBeforeChat(msg.data);
-		if (msg.data.ignore)
-			return;
-
-		if (!msg.data.item && !profanities.isClean(messageString)) {
-			this.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
-			return;
-		}
-
-		history.push({
-			msg: messageString,
-			time: time
-		});
-
-		let charname = this.obj.auth.charname;
-
-		let msgStyle = roles.getRoleMessageStyle(this.obj) || ('color-grayB');
-
-		let msgEvent = {
-			source: charname,
-			msg: messageString
-		};
-		events.emit('onBeforeSendMessage', msgEvent);
-		messageString = msgEvent.msg;
-		if (messageString[0] === '@') 
-			this.sendPrivateMessage(messageString);
-		else if (messageString[0] === '$') 
-			this.sendCustomChannelMessage(msg);
-		else if (messageString[0] === '%') 
-			this.sendPartyMessage(msg);
-		else {
-			let prefix = roles.getRoleMessagePrefix(this.obj) || '';
-
-			cons.emit('event', {
-				event: 'onGetMessages',
-				data: {
-					messages: [{
-						class: msgStyle,
-						message: prefix + charname + ': ' + msg.data.message,
-						item: msg.data.item,
-						type: 'chat',
-						source: this.obj.name
-					}]
-				}
-			});
-		}
+		chat(this, msg);
 	},
 
 	dc: function () {
