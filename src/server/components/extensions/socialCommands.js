@@ -39,7 +39,8 @@ let commandRoles = {
 	getMaterials: 10
 };
 
-let localCommands = [
+//Commands that should be run on the main thread (not the zone thread)
+const localCommands = [
 	'join',
 	'leave',
 	'mute',
@@ -53,6 +54,18 @@ let localCommands = [
 	'saveAll'
 ];
 
+//Actions that should appear when a player is right clicked
+const contextActions = [
+	{
+		command: 'mute',
+		text: 'mute'
+	},
+	{
+		command: 'unmute',
+		text: 'unmute'
+	}
+];
+
 module.exports = {
 	customChannels: [],
 	roleLevel: null,
@@ -64,6 +77,12 @@ module.exports = {
 		}
 
 		this.roleLevel = roles.getRoleLevel(this.obj);
+		this.calculateActions();
+	},
+
+	calculateActions: function () {
+		this.actions = contextActions
+			.filter(c => this.roleLevel >= commandRoles[c.action]);
 	},
 
 	onBeforeChat: function (msg) {

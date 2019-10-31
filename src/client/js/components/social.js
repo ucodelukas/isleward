@@ -17,6 +17,11 @@ define([
 				this.blockedList = blueprint.blockedList;
 				events.emit('onGetBlockedPlayers', this.blockedPlayers);
 			}
+
+			if (blueprint.actions) {
+				this.actions = blueprint.actions;
+				events.emit('onGetSocialActions', this.actions);
+			}
 		}
 	};
 });

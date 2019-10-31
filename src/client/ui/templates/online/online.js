@@ -23,6 +23,8 @@ define([
 		modal: true,
 		hasClose: true,
 
+		actions: [],
+
 		postRender: function () {
 			globals.onlineList = this.onlineList;
 
@@ -30,9 +32,14 @@ define([
 			this.onEvent('onGetDisconnectedPlayer', this.onGetDisconnectedPlayer.bind(this));
 
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
+			this.onEvent('onGetSocialActions', this.onGetSocialActions.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onShowOnline', this.toggle.bind(this));
+		},
+
+		onGetSocialActions: function (actions) {
+			this.actions = actions;
 		},
 
 		onGetBlockedPlayers: function (list) {
@@ -117,8 +124,14 @@ define([
 
 		showContext: function (char, e) {
 			if (char.name !== window.player.name) {
-				let isBlocked = this.blockedPlayers.includes(char.name);
-				events.emit('onContextMenu', [{
+				const extraActions = this.actions.map(({ command, text }) => {
+					return {
+						text,
+						callback: this.performAction.bind(this, command, char.name)
+					};
+				});
+
+				const actions = [{
 					text: 'invite to party',
 					callback: this.invite.bind(this, char.id)
 				}, {
@@ -127,24 +140,31 @@ define([
 				}, {
 					text: isBlocked ? 'unblock' : 'block',
 					callback: this.block.bind(this, char.name)
-				}], e);
+				}, ...extraActions];
+			
+				const isBlocked = this.blockedPlayers.includes(char.name);
+				events.emit('onContextMenu', actions, e);
 			}
 
 			e.preventDefault();
 			return false;
 		},
 
-		block: function (charName) {
-			let isBlocked = this.blockedPlayers.includes(charName);
-			let method = isBlocked ? 'unblock' : 'block';
-
+		performAction: function (command, charName) {
 			client.request({
 				cpn: 'social',
 				method: 'chat',
 				data: {
-					message: `/${method} ${charName}`
+					message: `/${command} ${charName}`
 				}
 			});
+		},
+
+		block: function (charName) {
+			let isBlocked = this.blockedPlayers.includes(charName);
+			let method = isBlocked ? 'unblock' : 'block';
+
+			this.performAction(method, charName);
 		},
 
 		invite: function (charId) {
