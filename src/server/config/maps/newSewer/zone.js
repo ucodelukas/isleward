@@ -8,6 +8,29 @@ module.exports = {
 			deathRep: -5
 		},
 
+		rat: {
+			faction: 'fjolgard',
+			grantRep: {
+				fjolgard: 6
+			},
+			level: 11,
+
+			regular: {
+				drops: {
+					chance: 200,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Rat Claw',
+						material: true,
+						sprite: [3, 0],
+						spritesheet: 'images/materials.png'
+					}]
+				}
+			}
+		},
+
 		stinktooth: {
 			faction: 'fjolgard',
 			grantRep: {
