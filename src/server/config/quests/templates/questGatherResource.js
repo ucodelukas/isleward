@@ -60,6 +60,8 @@ module.exports = {
 				return;
 			else if ((this.requiredQuality) && (gatherResult.items[0].quality < this.requiredQuality))
 				return;
+			else if (gatherResult.items[0].stats === undefined)
+				return;
 
 			if ((this.obj.zoneName !== this.zoneName) || (this.have >= this.need))
 				return;
