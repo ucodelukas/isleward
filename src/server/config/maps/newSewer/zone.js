@@ -49,6 +49,9 @@ module.exports = {
 			spells: [{
 				type: 'whirlwind',
 				range: 1
+			}, {
+				type: 'whirlwind',
+				range: 1
 			}]
 		}
 	},
