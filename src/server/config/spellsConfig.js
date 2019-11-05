@@ -127,12 +127,12 @@ let spells = {
 		statType: 'str',
 		statMult: 1,
 		threatMult: 6,
-		cdMax: 4,
-		castTimeMax: 1,
-		manaCost: 4,
+		cdMax: 12,
+		castTimeMax: 2,
+		manaCost: 7,
 		random: {
 			i_range: [1, 2.5],
-			damage: [1, 4]
+			damage: [4, 15]
 		}
 	},
 	smokebomb: {

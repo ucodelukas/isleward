@@ -7,7 +7,9 @@ const applyDamage = (target, damage, threat, source) => {
 	target.stats.takeDamage(damage, threat, source);
 };
 
-const dealDamage = ({ delay, getDamage, queueCallback }, obj, coords) => {
+const dealDamage = (spell, obj, coords) => {
+	const { delay } = spell;
+
 	const physics = obj.instance.physics;
 
 	coords.forEach(([x, y], i) => {
@@ -26,9 +28,9 @@ const dealDamage = ({ delay, getDamage, queueCallback }, obj, coords) => {
 			if (!m.aggro || !m.effects || !obj.aggro.canAttack(m))
 				continue;
 
-			const damage = getDamage(m);
+			const damage = spell.getDamage(m);
 
-			queueCallback(applyDamage.bind(null, m, damage, 1, obj), cellDelay);
+			spell.queueCallback(applyDamage.bind(null, m, damage, 1, obj), cellDelay);
 		}
 	});
 };
