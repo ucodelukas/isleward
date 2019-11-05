@@ -44,6 +44,10 @@ module.exports = {
 	//The delay is sent to the client and is how long (in ms) each tick takes to display
 	delay: 32,
 
+	row: 5,
+	col: 0,
+	frames: 3,
+
 	damage: 1,
 	isAttack: true,
 
