@@ -51,7 +51,7 @@ module.exports = {
 				range: 2
 			}, {
 				type: 'charge',
-				range: 1
+				castOnEnd: 3
 			}, {
 				type: 'summonSkeleton',
 				killMinionsOnDeath: false,
@@ -61,6 +61,10 @@ module.exports = {
 				sheetName: 'mobs',
 				cell: 16,
 				positions: [[30, 30], [40, 30], [30, 40], [40, 40]]
+			}, {
+				type: 'fireblast',
+				range: 2,
+				procCast: true
 			}]
 		}
 	},

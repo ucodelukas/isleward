@@ -242,18 +242,14 @@ module.exports = {
 	},
 
 	getRandomSpell: function (target) {
-		let valid = [];
-		this.spells.forEach(function (s) {
-			if (s.castOnDeath)
-				return;
-
-			if (s.canCast(target))
-				valid.push(s.id);
+		const valid = this.spells.filter(s => {
+			return (!s.selfCast && !s.procCast && !s.castOnDeath && s.canCast(target));
 		});
 
-		if (valid.length > 0)
-			return valid[~~(Math.random() * valid.length)];
-		return null;
+		if (!valid.length)
+			return null;
+
+		return valid[~~(Math.random() * valid.length)].id;
 	},
 
 	getTarget: function (spell, action) {

@@ -119,6 +119,9 @@ module.exports = {
 
 		let damage = this.getDamage(target);
 		target.stats.takeDamage(damage, this.threatMult, obj);
+
+		if (this.castOnEnd)
+			this.obj.spellbook.spells[this.castOnEnd].cast();
 	},
 
 	isTileValid: function (physics, fromX, fromY, toX, toY) {
