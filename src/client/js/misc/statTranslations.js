@@ -52,6 +52,8 @@ define([
 		attackSpeed: 'attack speed',
 		castSpeed: 'cast speed',
 
+		lifeOnHit: 'life gained on hit',
+
 		auraReserveMultiplier: 'aura mana reservation multiplier',
 
 		//This stat is used for gambling when you can't see the stats

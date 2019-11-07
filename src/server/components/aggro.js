@@ -201,7 +201,7 @@ module.exports = {
 		let oId = source.id;
 		let list = this.list;
 
-		amount = (amount || 0);
+		amount = (amount || 0);	
 		let threat = (amount / obj.stats.values.hpMax) * (threatMult || 1);
 
 		let exists = list.find(l => l.obj.id === oId);

@@ -449,7 +449,9 @@ define([
 					'holy resist': stats.elementHolyResist,
 					'poison resist': stats.elementPoisonResist,
 					gap3: '',
-					'all resist': stats.elementAllResist
+					'all resist': stats.elementAllResist,
+					gap4: '',
+					'life gained on hit': stats.lifeOnHit
 				},
 				misc: {
 					'item quality': stats.magicFind + '%',

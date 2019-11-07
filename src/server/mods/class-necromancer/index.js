@@ -129,17 +129,17 @@ module.exports = {
 				attrRequire: ['int'],
 				spellConfig: {
 					statType: ['str', 'int'],
-					statMult: 0.76,
-					cdMax: 6,
+					statMult: 1,
+					cdMax: 4,
 					castTimeMax: 0,
 					useWeaponRange: true,
 					random: {
-						damage: [1.5, 5.7]
+						damage: [1, 7]
 					}
 				},
 				implicitStat: {
-					stat: 'attackSpeed',
-					value: [1, 5]
+					stat: 'lifeOnHit',
+					value: [1, 30]
 				}
 			};
 		}, this);

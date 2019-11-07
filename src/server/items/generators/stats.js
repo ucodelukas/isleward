@@ -258,6 +258,12 @@ module.exports = {
 			ignore: true
 		},
 
+		lifeOnHit: {
+			min: 1,
+			max: 10,
+			ignore: true
+		},
+
 		armor: {
 			generator: 'armor',
 			ignore: true
@@ -367,7 +373,10 @@ module.exports = {
 		},
 
 		offHand: {
-
+			lifeOnHit: {
+				min: 1,
+				max: 10
+			}
 		},
 
 		trinket: {
@@ -378,6 +387,10 @@ module.exports = {
 			castSpeed: {
 				min: 1,
 				max: 8.75
+			},
+			lifeOnHit: {
+				min: 1,
+				max: 10
 			}
 		},
 
