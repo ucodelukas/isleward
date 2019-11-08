@@ -34,7 +34,7 @@ module.exports = (cpnInv, ownerName, killSource) => {
 		let bonusMagicFind = killSource.stats.values.magicFind;
 
 		let rolls = blueprint.rolls;
-		let itemQuantity = killSource.stats.values.itemQuantity;
+		let itemQuantity = Math.min(200, killSource.stats.values.itemQuantity);
 		rolls += ~~(itemQuantity / 100);
 		if ((Math.random() * 100) < (itemQuantity % 100))
 			rolls++;

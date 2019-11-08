@@ -19,8 +19,8 @@ let currencyGenerators = [g10];
 let recipeGenerators = [g6, g13];
 
 module.exports = {
-	spellChance: 0.02,
-	currencyChance: 0.025,
+	spellChance: 0.035,
+	currencyChance: 0.035,
 
 	generate: function (blueprint, ownerLevel) {
 		let isSpell = false;
