@@ -5,7 +5,7 @@ module.exports = {
 	manaCost: 10,
 	range: 9,
 
-	damage: 5,
+	damage: 1,
 	speed: 70,
 	isAttack: true,
 

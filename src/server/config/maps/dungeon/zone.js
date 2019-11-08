@@ -10,7 +10,7 @@ let balance = {
 			level: 20,
 			hpMult: hpMult * 1,
 
-			meleeDmg: 0.25,
+			meleeDmg: 0.02,
 			meleeCd: 5,
 			meleeElement: null,
 			slowDmg: 0.2,
@@ -24,12 +24,13 @@ let balance = {
 			level: 20,
 			hpMult: hpMult * 1.25,
 
-			meleeDmg: 0.25,
+			meleeDmg: 0.035,
 			meleeCd: 5,
 			meleeElement: null,
-			chargeDmg: 0.2,
+			chargeDmg: 0.4,
 			chargeCd: 25,
-			chargeElement: null
+			chargeElement: null,
+			chargeStunDuration: 0			
 		},
 
 		viridianSerpent: {
@@ -42,7 +43,7 @@ let balance = {
 			spitDotAmount: 20,
 			spitElement: 'poison',
 			poolDuration: 40,
-			poolDmg: 5,
+			poolDmg: 0.01,
 			poolElement: 'poison'
 		}
 	}
@@ -59,6 +60,11 @@ module.exports = {
 			grantRep: {
 				gaekatla: 15
 			},
+
+			spells: [{
+				type: 'melee',
+				statMult: 1
+			}],
 
 			regular: {
 				hpMult: balance.hpMult,
@@ -93,10 +99,10 @@ module.exports = {
 			spells: [{
 				type: 'melee',
 				element: balance.mobs.violetSerpent.meleeElement,
-				statMult: balance.mobs.violetSerpent.meleeDmg,
+				damage: balance.mobs.violetSerpent.meleeDmg,
 				cdMax: balance.mobs.violetSerpent.meleeCd
 			}, {
-				statMult: balance.mobs.violetSerpent.slowDmg,
+				damage: balance.mobs.violetSerpent.slowDmg,
 				element: balance.mobs.violetSerpent.slowElement,
 				cdMax: balance.mobs.violetSerpent.slowCd,
 				type: 'projectile',
@@ -172,14 +178,14 @@ module.exports = {
 			spells: [{
 				type: 'melee',
 				element: balance.mobs.scarletSerpent.meleeElement,
-				statMult: balance.mobs.scarletSerpent.meleeDmg,
+				damage: balance.mobs.scarletSerpent.meleeDmg,
 				cdMax: balance.mobs.scarletSerpent.meleeCd
 			}, {
 				type: 'charge',
 				targetFurthest: true,
 				element: balance.mobs.scarletSerpent.chargeElement,
-				stunDuration: 0,
-				statMult: balance.mobs.scarletSerpent.chargeDmg,
+				stunDuration: balance.mobs.scarletSerpent.chargeStunDuration,
+				damage: balance.mobs.scarletSerpent.chargeDmg,
 				cdMax: balance.mobs.scarletSerpent.chargeCd
 			}]
 		},
@@ -196,9 +202,9 @@ module.exports = {
 				element: balance.mobs.viridianSerpent.poolElement,
 				castOnDeath: true,
 				duration: balance.mobs.viridianSerpent.poolDuration,
-				cdMult: balance.mobs.viridianSerpent.poolDmg
+				damage: balance.mobs.viridianSerpent.poolDmg
 			}, {
-				statMult: balance.mobs.viridianSerpent.spitDmg,
+				damage: balance.mobs.viridianSerpent.spitDmg,
 				element: balance.mobs.viridianSerpent.spitElement,
 				cdMax: balance.mobs.viridianSerpent.spitCd,
 				type: 'projectile',

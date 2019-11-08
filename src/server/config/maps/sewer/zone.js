@@ -39,11 +39,15 @@ module.exports = {
 			level: 13,
 
 			regular: {
+				hpMult: 10,
+				dmgMult: 3,
+
 				drops: {
-					chance: 200,
-					rolls: 1,
+					chance: 100,
+					rolls: 3,
 					noRandom: true,
 					alsoRandom: true,
+					magicFind: [2000, 125],
 					blueprints: [{
 						name: 'Putrid shank',
 						level: 13,
@@ -93,7 +97,7 @@ module.exports = {
 	},
 	objects: {
 		'stink carp school': {
-			max: 3000,
+			max: 1,
 			type: 'fish',
 			quantity: [1, 3]
 		}

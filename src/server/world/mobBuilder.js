@@ -1,6 +1,8 @@
 let animations = require('../config/animations');
 let itemGenerator = require('../items/generator');
 
+//const track = {};
+
 module.exports = {
 	build: function (mob, blueprint, type, zoneName) {
 		mob.instance.eventEmitter.emit('onBeforeBuildMob', zoneName, mob.name.toLowerCase(), blueprint);
@@ -172,6 +174,21 @@ module.exports = {
 			s.dmgMult = s.name ? dmgMult / 3 : dmgMult;
 			s.statType = preferStat;
 			s.manaCost = 0;
+
+			/*if (mob.name.toLowerCase().includes('serpent')) {
+				mob.stats.values.critChance = 0;
+				mob.stats.values.attackCritChance = 0;
+				mob.stats.values.spellCritChance = 0;
+
+				const n = mob.name + '-' + s.type;
+				if (!track[n])
+					track[n] = [];
+
+				track[n].push(~~s.getDamage(mob, true).amount);
+				track[n].sort((a, b) => a - b);
+				console.log(track);
+				console.log('');
+			}*/
 		});
 
 		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));
