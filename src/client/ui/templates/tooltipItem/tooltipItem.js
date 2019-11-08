@@ -187,7 +187,7 @@ define([
 					tempImplicitStats.forEach(s => {
 						let statValue = s.value;
 
-						let f = compareImplicitStats.find(c => c.stat === statValue);
+						let f = compareImplicitStats.find(compare => compare.stat === s.stat);
 
 						if (f) {
 							let delta = statValue - f.value;
