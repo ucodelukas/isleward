@@ -39,7 +39,23 @@ module.exports = {
 			level: 13,
 
 			regular: {
-
+				drops: {
+					chance: 200,
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						name: 'Putrid shank',
+						level: 13,
+						quality: 3,
+						slot: 'oneHanded',
+						type: 'Dagger',
+						implicitStat: {
+							stat: 'lifeOnHit',
+							value: [5, 20]
+						}
+					}]
+				}
 			},
 
 			rare: {
