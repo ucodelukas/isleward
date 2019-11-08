@@ -47,13 +47,20 @@ module.exports = {
 					blueprints: [{
 						name: 'Putrid shank',
 						level: 13,
-						quality: 3,
+						quality: 4,
 						slot: 'oneHanded',
 						type: 'Dagger',
 						implicitStat: {
 							stat: 'lifeOnHit',
 							value: [5, 20]
-						}
+						},
+						effects: [{
+							type: 'castSpellOnHit',
+							rolls: {
+								i_chance: [20, 60],
+								spell: 'smokeBomb'
+							}
+						}]
 					}]
 				}
 			},
