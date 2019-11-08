@@ -22,6 +22,9 @@ module.exports = {
 	sheetName: null,
 	positions: null,
 
+	damagePercent: 20,
+	hpPercent: 40,
+
 	cast: function (action) {
 		if (this.killMinionsBeforeSummon)
 			this.killMinions();

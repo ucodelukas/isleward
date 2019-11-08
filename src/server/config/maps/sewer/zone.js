@@ -74,11 +74,10 @@ module.exports = {
 			},
 
 			spells: [{
+				type: 'melee'
+			}, {
 				type: 'whirlwind',
 				range: 2
-			}, {
-				type: 'charge',
-				castOnEnd: 3
 			}, {
 				type: 'summonSkeleton',
 				killMinionsOnDeath: false,
@@ -86,11 +85,20 @@ module.exports = {
 				needLos: false,
 				count: 4,
 				sheetName: 'mobs',
+				cdMax: 30,
 				cell: 16,
+				hpPercent: 10,
 				positions: [[30, 30], [40, 30], [30, 40], [40, 40]]
+			}, {
+				type: 'charge',
+				castOnEnd: 1,
+				cdMax: 30,
+				targetRandom: true
 			}, {
 				type: 'fireblast',
 				range: 2,
+				damage: 0.01,
+				pushback: 2,
 				procCast: true
 			}]
 		}
