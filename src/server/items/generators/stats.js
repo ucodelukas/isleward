@@ -9,6 +9,7 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.elementDmgPercent || 1);
+
 			return max * perfection * (blueprint.statMult.elementDmgPercent || 1);
 		},
 
@@ -23,6 +24,7 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.addCritMultiplier || 1);
+
 			return max * perfection * (blueprint.statMult.addCritMultiplier || 1);
 		},
 
@@ -37,6 +39,7 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.addCritChance || 1);
+
 			return max * perfection * (blueprint.statMult.addCritChance || 1);
 		},
 
@@ -51,6 +54,7 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.vit || 1);
+
 			return max * perfection * (blueprint.statMult.vit || 1);
 		},
 
@@ -66,6 +70,7 @@ module.exports = {
 				return ((calcPerfection - min) / (max - min));
 			else if (!perfection)
 				return random.norm(min, max) * (blueprint.statMult.mainStat || 1);
+
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.mainStat || 1);
 		},
 		armor: function (item, level, blueprint, perfection, calcPerfection) {
@@ -76,6 +81,7 @@ module.exports = {
 				return ((calcPerfection - min) / (max - min));
 			else if (!perfection)
 				return random.norm(min, max) * blueprint.statMult.armor;
+
 			return (min + ((max - min) * perfection)) * (blueprint.statMult.armor || 1);
 		},
 		elementResist: function (item, level, blueprint, perfection, calcPerfection) {
@@ -87,6 +93,7 @@ module.exports = {
 				return (calcPerfection / (100 * div));
 			else if (!perfection)
 				return random.norm(1, 100) * (blueprint.statMult.elementResist || 1) * div;
+
 			return ~~((1 + (99 * perfection)) * (blueprint.statMult.elementResist || 1) * div);
 		},
 		regenHp: function (item, level, blueprint, perfection, calcPerfection) {
@@ -100,6 +107,7 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.regenHp || 1);
+
 			return max * perfection * (blueprint.statMult.regenHp || 1);
 		},
 		lvlRequire: function (item, level, blueprint, perfection, calcPerfection) {
@@ -109,7 +117,20 @@ module.exports = {
 				return (calcPerfection / max);
 			else if (!perfection)
 				return random.norm(1, max) * (blueprint.statMult.lvlRequire || 1);
+
 			return max * perfection * (blueprint.statMult.lvlRequire || 1);
+		},
+		lifeOnHit: function (item, level, blueprint, perfection, calcPerfection, statBlueprint) {
+			const { min, max } = statBlueprint;
+			const scale = level / consts.maxLevel;
+			const maxRoll = scale * (max - min);
+
+			if (calcPerfection)
+				return ((calcPerfection - min) / maxRoll);
+			else if (!perfection)
+				return (min + random.norm(1, maxRoll)) * (blueprint.statMult.lifeOnHit || 1);
+
+			return (min + (maxRoll * perfection)) * (blueprint.statMult.lifeOnHit || 1);
 		}
 	},
 
@@ -261,7 +282,8 @@ module.exports = {
 		lifeOnHit: {
 			min: 1,
 			max: 10,
-			ignore: true
+			ignore: true,
+			generator: 'lifeOnHit'
 		},
 
 		armor: {
@@ -569,7 +591,7 @@ module.exports = {
 		if (!value) {
 			if (statBlueprint.generator) {
 				let level = Math.min(20, item.originalLevel || item.level);
-				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection));
+				value = Math.ceil(this.generators[statBlueprint.generator](item, level, blueprint, blueprint.perfection, null, statBlueprint));
 			} else if (!blueprint.perfection)
 				value = Math.ceil(random.norm(statBlueprint.min, statBlueprint.max));
 			else
