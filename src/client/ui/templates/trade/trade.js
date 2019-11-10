@@ -119,7 +119,7 @@ define([
 						let currencyItems = window.player.inventory.items.find(f => f.name === item.worth.currency);
 						noAfford = ((!currencyItems) || (currencyItems.quantity < item.worth.amount));
 					} else
-						noAfford = (item.worth * this.itemList.markup > window.player.trade.gold);
+						noAfford = (~~(item.worth * this.itemList.markup) > window.player.trade.gold);
 
 					if (!noAfford && item.factions)
 						noAfford = item.factions.some(f => f.noEquip);
