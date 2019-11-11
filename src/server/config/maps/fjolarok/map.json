@@ -4090,7 +4090,7 @@
          "value":"[{\"maxLevel\":1,\"x\":100,\"y\":186},{\"maxLevel\":999,\"x\":132,\"y\":118}]"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.2.2",
+ "tiledversion":"1.2.5",
  "tileheight":8,
  "tilesets":[
         {

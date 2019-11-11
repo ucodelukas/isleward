@@ -527,19 +527,18 @@ define([
 							rendered.spliceWhere(s => s === sprite);
 						}
 
-						if (rLen) {
-							newHidden.push({
-								x: i,
-								y: j
-							});
-						}
+						newHidden.push({
+							x: i,
+							y: j
+						});
 
 						const hasFake = cell.some(c => c[0] === '-');
 						if (hasFake) {
 							const isFakeRendered = rendered.some(r => r.isFake);
 							if (isFakeRendered)
 								continue;
-						}
+						} else
+							continue;
 					} else {
 						const fakeRendered = rendered.filter(r => r.isFake);
 
@@ -552,19 +551,18 @@ define([
 							rendered.spliceWhere(s => s === sprite);
 						}
 
-						if (rLen) {
-							newVisible.push({
-								x: i,
-								y: j
-							});
-						}
+						newVisible.push({
+							x: i,
+							y: j
+						});
 
-						const hasNonFake = rendered.some(r => !r.isFake);
+						const hasNonFake = cell.some(c => c[0] !== '-');
 						if (hasNonFake) {
 							const isNonFakeRendered = rendered.some(r => !r.isFake);
 							if (isNonFakeRendered)
 								continue;
-						}
+						} else
+							continue;
 					}
 
 					for (let k = 0; k < cLen; k++) {
