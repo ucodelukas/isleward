@@ -514,37 +514,70 @@ define([
 
 					let rendered = spriteRow[j];
 					let isHidden = checkHidden(i, j);
-					if (rendered.length > 0) {
-						if (!isHidden)
-							continue;
-						else {
+
+					if (isHidden) {
+						const nonFakeRendered = rendered.filter(r => !r.isFake);
+
+						let rLen = nonFakeRendered.length;
+						for (let k = 0; k < rLen; k++) {
+							let sprite = nonFakeRendered[k];
+
+							sprite.visible = false;
+							spritePool.store(sprite);
+							rendered.spliceWhere(s => s === sprite);
+						}
+
+						if (rLen) {
 							newHidden.push({
 								x: i,
 								y: j
 							});
-
-							let rLen = rendered.length;
-							for (let k = 0; k < rLen; k++) {
-								let sprite = rendered[k];
-								sprite.visible = false;
-								spritePool.store(sprite);
-							}
-							spriteRow[j] = [];
-
-							continue;
 						}
-					} else if (isHidden)
-						continue;
-						
-					newVisible.push({
-						x: i,
-						y: j
-					});
+
+						const hasFake = cell.some(c => c[0] === '-');
+						if (hasFake) {
+							const isFakeRendered = rendered.some(r => r.isFake);
+							if (isFakeRendered)
+								continue;
+						}
+					} else {
+						const fakeRendered = rendered.filter(r => r.isFake);
+
+						let rLen = fakeRendered.length;
+						for (let k = 0; k < rLen; k++) {
+							let sprite = fakeRendered[k];
+
+							sprite.visible = false;
+							spritePool.store(sprite);
+							rendered.spliceWhere(s => s === sprite);
+						}
+
+						if (rLen) {
+							newVisible.push({
+								x: i,
+								y: j
+							});
+						}
+
+						const hasNonFake = rendered.some(r => !r.isFake);
+						if (hasNonFake) {
+							const isNonFakeRendered = rendered.some(r => !r.isFake);
+							if (isNonFakeRendered)
+								continue;
+						}
+					}
 
 					for (let k = 0; k < cLen; k++) {
 						let c = cell[k];
 						if (c === '0' || c === '')
 							continue;
+
+						const isFake = +c < 0;
+						if (isFake && !isHidden)
+							continue;
+
+						if (isFake)
+							c = -c;
 
 						c--;
 
@@ -568,6 +601,9 @@ define([
 								tile.position.x += scale;
 							tile.visible = true;
 						}
+
+						if (isFake)
+							tile.isFake = isFake;
 
 						tile.z = k;
 

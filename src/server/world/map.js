@@ -115,8 +115,6 @@ module.exports = {
 		this.clientMap = {
 			zoneId: -1,
 			map: this.layers,
-			hiddenWalls: this.hiddenWalls,
-			hiddenTiles: this.hiddenTiles,
 			collisionMap: this.collisionMap,
 			clientObjects: this.objBlueprints,
 			padding: padding,
@@ -155,10 +153,17 @@ module.exports = {
 						newCell += ',';
 				}
 
-				if (this.hiddenWalls[i][j])
-					this.hiddenWalls[i][j] = randomMap.randomizeTile(this.hiddenWalls[i][j]);
-				if (this.hiddenTiles[i][j])
-					this.hiddenTiles[i][j] = randomMap.randomizeTile(this.hiddenTiles[i][j]);
+				let fakeContents = [];
+				const hiddenWall = this.hiddenWalls[i][j];
+				const hiddenTile = this.hiddenTiles[i][j];
+
+				if (hiddenTile)
+					fakeContents.push(-randomMap.randomizeTile(hiddenTile));
+				if (hiddenWall)
+					fakeContents.push(-randomMap.randomizeTile(hiddenWall));
+
+				if (fakeContents.length)
+					newCell += ',' + fakeContents.join(',');
 
 				row[j] = newCell;
 			}

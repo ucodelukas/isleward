@@ -28,6 +28,8 @@ define([
 			if (!list) 
 				list = pool[type] = [];
 
+			delete sprite.isFake;
+
 			list.push(sprite);
 		}
 	};
