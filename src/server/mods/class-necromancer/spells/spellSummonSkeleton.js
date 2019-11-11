@@ -44,7 +44,7 @@ module.exports = {
 				y,
 				cell: this.cell,
 				sheetName,
-				name: 'Skeletal Minion',
+				name: this.name || 'Skeletal Minion',
 				properties: {
 					cpnFollower: {
 						maxDistance: 3

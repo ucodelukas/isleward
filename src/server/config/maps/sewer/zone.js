@@ -74,30 +74,37 @@ module.exports = {
 			},
 
 			spells: [{
-				type: 'melee'
+				type: 'melee',
+				statMult: 1,
+				damage: 0.08
 			}, {
 				type: 'whirlwind',
-				range: 2
+				range: 2,
+				damage: 0.2,
+				cdMax: 50
 			}, {
 				type: 'summonSkeleton',
 				killMinionsOnDeath: false,
 				killMinionsBeforeSummon: false,
 				needLos: false,
 				count: 4,
+				name: 'Rat Guard',
 				sheetName: 'mobs',
-				cdMax: 30,
+				cdMax: 50,
 				cell: 16,
 				hpPercent: 10,
+				dmgPercent: 0.1,
 				positions: [[30, 30], [40, 30], [30, 40], [40, 40]]
 			}, {
 				type: 'charge',
 				castOnEnd: 1,
-				cdMax: 30,
-				targetRandom: true
+				cdMax: 50,
+				targetRandom: true,
+				damage: 0.3
 			}, {
 				type: 'fireblast',
 				range: 2,
-				damage: 0.01,
+				damage: 0.001,
 				pushback: 2,
 				procCast: true
 			}]

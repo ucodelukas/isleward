@@ -175,7 +175,7 @@ module.exports = {
 			s.statType = preferStat;
 			s.manaCost = 0;
 
-			/*if (mob.name.toLowerCase().includes('serpent')) {
+			/*if (mob.name.toLowerCase().includes('stinktooth')) {
 				mob.stats.values.critChance = 0;
 				mob.stats.values.attackCritChance = 0;
 				mob.stats.values.spellCritChance = 0;

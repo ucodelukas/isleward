@@ -573,6 +573,8 @@ define([
 						const isFake = +c < 0;
 						if (isFake && !isHidden)
 							continue;
+						else if (!isFake && isHidden)
+							continue;
 
 						if (isFake)
 							c = -c;
