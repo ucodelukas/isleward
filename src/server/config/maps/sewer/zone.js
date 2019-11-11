@@ -101,6 +101,46 @@ module.exports = {
 				pushback: 2,
 				procCast: true
 			}]
+		},
+
+		bandit: {
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 18
+			},
+			level: 11,
+
+			rare: {
+				count: 0
+			}
+		},
+
+		whiskers: {
+			level: 13,
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 22
+			},
+
+			rare: {
+				count: 0
+			}
+		},
+
+		'bera the blade': {
+			faction: 'hostile',
+			grantRep: {
+				fjolgard: 25
+			},
+			level: 14,
+
+			regular: {
+
+			},
+
+			rare: {
+				count: 0
+			}
 		}
 	},
 	objects: {
