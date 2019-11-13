@@ -82,11 +82,13 @@ define([
 
 		onGetReputations: function (list) {
 			this.list = list;
+
 			this.list.sort(function (a, b) {
 				if (a.name[0] < b.name[0])
 					return -1;
 				return 1;
 			});
+			
 			let selElement = this.find(".selected");
 			if (this.el.is(':visible') && selElement.index() !== -1){
 				this.onSelectFaction(selElement,list[selElement.index() + 1]);
