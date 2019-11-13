@@ -88,14 +88,22 @@ module.exports = {
 				killMinionsBeforeSummon: false,
 				needLos: false,
 				count: 4,
-				name: 'Rat Guard',
 				sheetName: 'mobs',
-				basicSpell: ['melee', 'projectile'],
 				cdMax: 50,
-				cell: 16,
-				hpPercent: 10,
-				dmgPercent: 0.1,
-				positions: [[30, 30], [40, 30], [30, 40], [40, 40]]
+				positions: [[30, 30], [40, 30], [30, 40], [40, 40]],
+				summonTemplates: [{
+					name: 'Biter Rat',
+					cell: 16,
+					hpPercent: 20,
+					dmgPercent: 0.1,
+					basicSpell: 'melee'
+				}, {
+					name: 'Spitter Rat',
+					cell: 24,
+					hpPercent: 10,
+					dmgPercent: 0.2,
+					basicSpell: 'projectile'
+				}]
 			}, {
 				type: 'charge',
 				castOnEnd: 1,

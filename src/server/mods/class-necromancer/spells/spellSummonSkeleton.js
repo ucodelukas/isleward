@@ -18,12 +18,13 @@ module.exports = {
 
 	count: 1,
 
+	name: 'Skeletal Minion',
+
 	cell: 0,
 	sheetName: null,
 	positions: null,
 
-	name: null,
-	basicAbility: null,
+	basicSpell: 'melee',
 
 	damagePercent: 20,
 	hpPercent: 40,
@@ -42,12 +43,16 @@ module.exports = {
 		positions.forEach(pos => {
 			const [ x, y ] = pos;
 
-			let blueprint = {
+			let template = {};
+			if (this.summonTemplates)
+				template = this.summonTemplates[~~(Math.random() * this.summonTemplates.length)];
+
+			const blueprint = {
 				x,
 				y,
-				cell: this.cell,
+				cell: template.cell || this.cell,
 				sheetName,
-				name: this.name || 'Skeletal Minion',
+				name: template.name || this.name,
 				properties: {
 					cpnFollower: {
 						maxDistance: 3
@@ -68,21 +73,17 @@ module.exports = {
 				blueprint: blueprint
 			});
 
-			let spellName = this.basicSpell || 'melee';
-			if (spellName.push)
-				spellName = spellName[~~(Math.random() * spellName.length)];
-
 			mobBuilder.build(mob, {
 				level: obj.stats.values.level,
 				faction: obj.aggro.faction,
 				walkDistance: 2,
 				regular: {
 					drops: 0,
-					hpMult: this.hpPercent / 100,
-					dmgMult: this.damagePercent / 100
+					hpMult: (template.hpPercent || this.hpPercent) / 100,
+					dmgMult: (template.damagePercent || this.damagePercent) / 100
 				},
 				spells: [{
-					type: spellName,
+					type: template.basicSpell || this.basicSpell,
 					damage: 1,
 					statMult: 1,
 					animation: 'melee'
