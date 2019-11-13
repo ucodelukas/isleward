@@ -90,6 +90,7 @@ module.exports = {
 				count: 4,
 				name: 'Rat Guard',
 				sheetName: 'mobs',
+				basicSpell: ['melee', 'projectile'],
 				cdMax: 50,
 				cell: 16,
 				hpPercent: 10,

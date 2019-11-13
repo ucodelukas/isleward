@@ -22,6 +22,9 @@ module.exports = {
 	sheetName: null,
 	positions: null,
 
+	name: null,
+	basicAbility: null,
+
 	damagePercent: 20,
 	hpPercent: 40,
 
@@ -65,6 +68,10 @@ module.exports = {
 				blueprint: blueprint
 			});
 
+			let spellName = this.basicSpell || 'melee';
+			if (spellName.push)
+				spellName = spellName[~~(Math.random() * spellName.length)];
+
 			mobBuilder.build(mob, {
 				level: obj.stats.values.level,
 				faction: obj.aggro.faction,
@@ -75,7 +82,7 @@ module.exports = {
 					dmgMult: this.damagePercent / 100
 				},
 				spells: [{
-					type: 'melee',
+					type: spellName,
 					damage: 1,
 					statMult: 1,
 					animation: 'melee'
