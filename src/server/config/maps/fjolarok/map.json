@@ -1,12 +1,5 @@
 { "backgroundcolor":"#32222e",
  "compressionlevel":0,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":200,
  "infinite":false,
  "layers":[
