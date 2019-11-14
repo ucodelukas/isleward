@@ -25,6 +25,7 @@ define([
 
 		build: function () {
 			let list = this.list;
+			
 			this.find('.info .heading-bottom').html('');
 			this.find('.info .description').html('');
 			this.find('.bar-outer').hide();
@@ -88,11 +89,10 @@ define([
 					return -1;
 				return 1;
 			});
-			
-			let selElement = this.find(".selected");
-			if (this.el.is(':visible') && selElement.index() !== -1){
-				this.onSelectFaction(selElement,list[selElement.index() + 1]);
-			}
+
+			let selElement = this.find('.selected');
+			if (this.el.is(':visible') && selElement.index() !== -1)
+				this.onSelectFaction(selElement, list[selElement.index() + 1]);
 		},
 
 		toggle: function () {
