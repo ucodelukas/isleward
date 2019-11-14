@@ -44,7 +44,7 @@ define([
 		},
 
 		spawnThing: function (x, y) {
-			const { frames, row, col } = this;
+			const { frames: frameCount, row, col } = this;
 
 			this.objects.buildObject({
 				x,
@@ -53,7 +53,7 @@ define([
 					type: 'attackAnimation',
 					row,
 					col,
-					frames
+					frames: frameCount
 				}]
 			});
 		},
