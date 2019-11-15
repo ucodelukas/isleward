@@ -115,7 +115,7 @@ define([
 					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
 					else if (slot === 'oneHanded')
-						return (['oneHanded', 'twoHanded'].includes(slot) && i.isNew);
+						return (['oneHanded', 'twoHanded'].includes(i.slot) && i.isNew);
 
 					return (i.slot === slot && i.isNew);
 				});
