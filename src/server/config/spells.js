@@ -293,6 +293,12 @@ let spells = [{
 	col: 0,
 	frames: 3
 }, {
+	name: 'Ambush',
+	type: 'ambush',
+	description: 'Step into the shadows and reappear behind your target before delivering a concussing blow.',
+	icon: [3, 1],
+	animation: 'raiseShield'
+}, {
 	name: 'Stealth',
 	description: 'The thief slips into the shadows and becomes undetectable by foes. Performing an attack removes this effect.',
 	type: 'stealth',
