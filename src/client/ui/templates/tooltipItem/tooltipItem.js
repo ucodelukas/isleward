@@ -472,6 +472,15 @@ define([
 				if (bottomAlign)
 					pos.y -= this.tooltip.height();
 
+				//correct tooltips that are appearing offscreen
+				//arbitrary constant -30 is there to stop resize code
+				//completely squishing the popup
+				if ( (pos.x+this.tooltip.width() ) > window.innerWidth)
+					pos.x = window.innerWidth - this.tooltip.width()-30;
+
+				if( (pos.y+this.tooltip.height() ) > window.innerHeight)
+					pos.y = window.innerHeight - this.tooltip.height()-30;
+
 				this.tooltip.css({
 					left: pos.x,
 					top: pos.y
