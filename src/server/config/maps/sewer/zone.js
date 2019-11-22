@@ -106,7 +106,6 @@ module.exports = {
 				killMinionsOnDeath: false,
 				killMinionsBeforeSummon: false,
 				needLos: false,
-				count: 4,
 				sheetName: 'mobs',
 				cdMax: 50,
 				positions: [[30, 30], [40, 30], [30, 40], [40, 40]],
@@ -171,19 +170,11 @@ module.exports = {
 
 			regular: {
 				drops: {
+					chance: 100,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 100,
-						type: 'key',
-						noSalvage: true,
-						name: 'Rusted Key',
-						keyId: 'rustedSewer',
-						singleUse: true,
-						sprite: [12, 1],
-						quantity: 1
-					}, {
 						chance: 100,
 						type: 'recipe',
 						name: 'Recipe: Rune of Ambush',

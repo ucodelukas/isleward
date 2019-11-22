@@ -440,6 +440,9 @@ module.exports = {
 		let furthest = 0;
 		for (let i = 0; i < sLen; i++) {
 			let spell = spells[i];
+			if (spell.procCast || spell.castOnDeath)
+				continue;
+
 			if (spell.range > furthest && (!checkCanCast || spell.canCast()))
 				furthest = spell.range;
 		}
