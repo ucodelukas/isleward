@@ -151,8 +151,8 @@ let spells = {
 	ambush: {
 		statType: 'dex',
 		statMult: 1,
-		cdMax: 20,
-		castTimeMax: 3,
+		cdMax: 2,
+		castTimeMax: 20,
 		range: 10,
 		manaCost: 5,
 		random: {

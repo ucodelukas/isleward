@@ -80,8 +80,12 @@ module.exports = {
 					this.setCd();
 					this.currentAction = null;
 				}
-			} else
+			} else {
+				if (this.onCastTick)
+					this.onCastTick();
+				
 				this.sendBump(null, 0, -1);
+			}
 
 			return;
 		}

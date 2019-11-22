@@ -2,6 +2,13 @@ module.exports = {
 	name: 'Sewer',
 	level: [11, 13],
 
+	resources: {
+		Stinkcap: {
+			type: 'herb',
+			max: 100
+		}
+	},
+
 	mobs: {
 		default: {
 			faction: 'fjolgard',
@@ -25,6 +32,12 @@ module.exports = {
 						name: 'Rat Claw',
 						material: true,
 						sprite: [3, 0],
+						spritesheet: 'images/materials.png'
+					}, {
+						chance: 200,
+						name: 'Muddy Runestone',
+						material: true,
+						sprite: [6, 0],
 						spritesheet: 'images/materials.png'
 					}]
 				}
@@ -64,6 +77,12 @@ module.exports = {
 								i_chance: [20, 60],
 								spell: 'smokeBomb'
 							}
+						}, {
+							chance: 100,
+							type: 'recipe',
+							name: 'Recipe: Rune of Whirlwind',
+							profession: 'etching',
+							teaches: 'runeWhirlwind'
 						}]
 					}]
 				}
@@ -151,7 +170,27 @@ module.exports = {
 			level: 14,
 
 			regular: {
-
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 100,
+						type: 'key',
+						noSalvage: true,
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1],
+						quantity: 1
+					}, {
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Rune of Ambush',
+						profession: 'etching',
+						teaches: 'runeAmbush'
+					}]
+				}
 			},
 
 			rare: {
@@ -160,10 +199,10 @@ module.exports = {
 		}
 	},
 	objects: {
-		'stink carp school': {
-			max: 1,
+		'mudfish school': {
+			max: 9,
 			type: 'fish',
-			quantity: [1, 3]
+			quantity: [6, 12]
 		}
 	}
 };

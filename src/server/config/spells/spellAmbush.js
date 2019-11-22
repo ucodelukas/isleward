@@ -1,3 +1,15 @@
+const particlePatch = {
+	type: 'particlePatch',
+
+	ttl: 0,
+
+	update: function () {
+		this.ttl--;
+		if (this.ttl <= 0)
+			this.obj.destroyed = true;
+	}
+};
+
 module.exports = {
 	type: 'ambush',
 
@@ -11,6 +23,42 @@ module.exports = {
 
 	stunDuration: 20,
 	needLos: true,
+
+	tickParticles: {
+		ttl: 5,
+		blueprint: { color: {
+			start: ['a24eff', '7a3ad3'],
+			end: ['533399', '393268']
+		},
+		scale: {
+			start: {
+				min: 2,
+				max: 12
+			},
+			end: {
+				min: 0,
+				max: 6
+			}
+		},
+		lifetime: {
+			min: 1,
+			max: 2
+		},
+		alpha: {
+			start: 0.8,
+			end: 0
+		},
+		spawnType: 'rect',
+		spawnRect: {
+			x: -12,
+			y: -12,
+			w: 24,
+			h: 24
+		},
+		randomScale: true,
+		randomColor: true,
+		frequency: 0.25 }
+	},
 
 	cast: function (action) {
 		let obj = this.obj;
@@ -79,6 +127,37 @@ module.exports = {
 		return true;
 	},
 
+	onCastTick: function (particleFrequency) {
+		const { obj, tickParticles } = this;
+		const { x, y, instance: { objects } } = obj;
+
+		const particleBlueprint = extend({}, tickParticles.blueprint, {
+			frequency: particleFrequency
+		});
+
+		objects.buildObjects([{
+			x,
+			y,
+			properties: {
+				cpnParticlePatch: particlePatch,
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: particleBlueprint
+						};
+					},
+					blueprint: this.particles
+				}
+			},
+			extraProperties: {
+				particlePatch: {
+					ttl: tickParticles.ttl
+				}
+			} 
+		}]);
+	},
+
 	reachDestination: function (target, targetPos) {
 		if (this.obj.destroyed)
 			return;
@@ -93,6 +172,8 @@ module.exports = {
 		syncer.o.y = targetPos.y;
 
 		obj.instance.physics.addObject(obj, obj.x, obj.y);
+
+		this.onCastTick(0.01);
 
 		this.obj.aggro.move();
 
