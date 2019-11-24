@@ -309,9 +309,9 @@ module.exports = {
 			let sheetName = cellInfo.sheetName;
 			cell = cellInfo.cell;
 			if (sheetName === 'walls')
-				cell += 192;
+				cell += 224;
 			else if (sheetName === 'objects')
-				cell += 448;
+				cell += 480;
 
 			if ((layerName !== 'hiddenWalls') && (layerName !== 'hiddenTiles')) {
 				let layer = this.layers;
@@ -327,7 +327,7 @@ module.exports = {
 				this.collisionMap[x][y] = 1;
 			else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
 				//Check for water and water-like tiles
-				if ([6, 7, 54, 55, 62, 63, 154, 189, 190].indexOf(cell) > -1)
+				if ([6, 7, 54, 55, 62, 63, 154, 189, 190, 192, 193, 194, 195, 196, 197].indexOf(cell) > -1)
 					this.collisionMap[x][y] = 1;
 			}
 		},

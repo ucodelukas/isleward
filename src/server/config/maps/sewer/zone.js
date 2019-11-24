@@ -5,7 +5,7 @@ module.exports = {
 	resources: {
 		Stinkcap: {
 			type: 'herb',
-			max: 100
+			max: 3
 		}
 	},
 
