@@ -296,7 +296,7 @@ let spells = [{
 	name: 'Ambush',
 	type: 'ambush',
 	description: 'Step into the shadows and reappear behind your target before delivering a concussing blow.',
-	icon: [3, 1],
+	icon: [2, 4],
 	animation: 'raiseShield'
 }, {
 	name: 'Stealth',

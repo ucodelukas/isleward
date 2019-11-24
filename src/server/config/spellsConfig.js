@@ -151,13 +151,13 @@ let spells = {
 	ambush: {
 		statType: 'dex',
 		statMult: 1,
-		cdMax: 2,
-		castTimeMax: 20,
+		cdMax: 16,
+		castTimeMax: 8,
 		range: 10,
-		manaCost: 5,
+		manaCost: 7,
 		random: {
-			damage: [2, 8],
-			i_stunDuration: [6, 10]
+			damage: [8, 28],
+			i_stunDuration: [4, 6]
 		}
 	},
 	'crystal spikes': {

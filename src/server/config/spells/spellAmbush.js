@@ -70,14 +70,16 @@ module.exports = {
 		let dx = target.x - x;
 		let dy = target.y - y;
 
-		//We need to stop just short of the target
+		//This calculation is much like the charge one except we land on the
+		// furthest side of the target instead of the closest. Hence, we multiply
+		// the delta by -1
 		let offsetX = 0;
 		if (dx !== 0)
-			offsetX = dx / Math.abs(dx);
+			offsetX = (dx / Math.abs(dx)) * -1;
 
 		let offsetY = 0;
 		if (dy !== 0)
-			offsetY = dy / Math.abs(dy);
+			offsetY = (dy / Math.abs(dy)) * -1;
 
 		let targetPos = {
 			x: target.x,
