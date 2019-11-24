@@ -169,6 +169,8 @@ module.exports = {
 
 			if (item.slot !== slot)
 				obj.equipment.unequip(itemId);
+			else
+				obj.spellbook.calcDps();
 		} else
 			enchanter.enchant(obj, item, msg);
 
