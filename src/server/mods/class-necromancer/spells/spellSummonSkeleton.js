@@ -16,8 +16,6 @@ module.exports = {
 
 	minions: [],
 
-	count: 1,
-
 	name: 'Skeletal Minion',
 
 	cell: 0,
@@ -39,6 +37,7 @@ module.exports = {
 		const sheetName = this.sheetName || `${this.folderName}/images/mobs.png`;
 
 		const positions = this.positions || [target.x, target.y];
+		const currentTarget = obj.aggro.getHighest();
 
 		positions.forEach(pos => {
 			const [ x, y ] = pos;
@@ -102,8 +101,12 @@ module.exports = {
 			mob.follower.noNeedMaster = !this.killMinionsOnDeath;
 			if (this.killMinionsOnDeath)
 				mob.follower.bindEvents();
-			else
+			else {
 				mob.removeComponent('follower');
+
+				if (currentTarget)
+					mob.aggro.tryEngage(currentTarget);
+			}
 
 			this.minions.push(mob);
 		});
