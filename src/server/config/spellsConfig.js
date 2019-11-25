@@ -152,7 +152,7 @@ let spells = {
 		statType: 'dex',
 		statMult: 1,
 		cdMax: 16,
-		castTimeMax: 8,
+		castTimeMax: 7,
 		range: 10,
 		manaCost: 7,
 		random: {

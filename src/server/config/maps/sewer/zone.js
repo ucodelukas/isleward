@@ -194,6 +194,122 @@ module.exports = {
 			max: 9,
 			type: 'fish',
 			quantity: [6, 12]
+		},
+
+		bubbles: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['51fc9a', '80f643'],
+									end: ['386646', '44cb95']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 8
+									},
+									end: {
+										min: 2,
+										max: 4
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 3
+								},
+								alpha: {
+									start: 0.5,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -40,
+									y: -40,
+									w: 80,
+									h: 80
+								}
+							}
+						};
+					}
+				}
+			}
+		},
+
+		gas: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['c0c3cf', '80f643'],
+									end: ['386646', '69696e']
+								},
+								scale: {
+									start: {
+										min: 18,
+										max: 64
+									},
+									end: {
+										min: 8,
+										max: 24
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 4,
+									max: 24
+								},
+								alpha: {
+									start: 0.05,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.02,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -80,
+									y: -80,
+									w: 160,
+									h: 160
+								}
+							}
+						};
+					}
+				}
+			}
 		}
 	}
 };
