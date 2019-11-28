@@ -18,7 +18,7 @@ module.exports = {
 
 	create: async function () {
 		try {
-			await r.dbCreate(this.useDb).run();
+			await r.dbCreate(serverConfig.dbName).run();
 		} catch (e) {
 
 		}
