@@ -8,7 +8,9 @@ let configSlots = require('./config/slots');
 let generator = require('./generator');
 
 const reroll = (item, msg) => {
-	let enchantedStats = item.enchantedStats;
+	const enchantedStats = item.enchantedStats;
+	const implicitStats = item.implicitStats;
+
 	delete item.enchantedStats;
 	delete item.implicitStats;
 	delete msg.addStatMsgs;
@@ -45,6 +47,18 @@ const reroll = (item, msg) => {
 		}
 	}
 	item.enchantedStats = enchantedStats || null;
+
+	//Some items have special implicits (different stats than their types imply)
+	// We add the old one back in if this is the case. Ideally we'd like to reroll
+	// these but that'd be a pretty big hack. We'll solve this one day
+	if (
+		item.implicitStats &&
+		implicitStats &&
+		item.implicitStats[0] &&
+		implicitStats[0] &&
+		item.implicitStats[0].stat !== implicitStats[0].stat
+	)
+		item.implicitStats = implicitStats;
 };
 
 const relevel = item => {

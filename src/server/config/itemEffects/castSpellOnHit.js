@@ -5,10 +5,15 @@ module.exports = {
 		onGetText: function (item) {
 			const { rolls: { chance, spell } } = item.effects.find(e => (e.type === 'castSpellOnHit'));
 
-			return `${chance}% chance on cast ${spell} on hit`;
+			return `${chance}% chance to cast ${spell} on hit`;
 		},
 
 		afterDealDamage: function (item, damage, target) {
+			//Should only proc for attacks...this is kind of a hack
+			const { element } = damage;
+			if (element)
+				return;
+
 			const { rolls: { chance, spell } } = item.effects.find(e => (e.type === 'castSpellOnHit'));
 
 			const chanceRoll = Math.random() * 100;

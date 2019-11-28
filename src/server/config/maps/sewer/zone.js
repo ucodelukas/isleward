@@ -77,13 +77,13 @@ module.exports = {
 								i_chance: [20, 60],
 								spell: 'smokeBomb'
 							}
-						}, {
-							chance: 100,
-							type: 'recipe',
-							name: 'Recipe: Rune of Whirlwind',
-							profession: 'etching',
-							teaches: 'runeWhirlwind'
 						}]
+					}, {
+						chance: 100,
+						type: 'recipe',
+						name: 'Recipe: Rune of Whirlwind',
+						profession: 'etching',
+						teaches: 'runeWhirlwind'
 					}]
 				}
 			},
