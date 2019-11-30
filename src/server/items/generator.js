@@ -44,7 +44,7 @@ module.exports = {
 		if (blueprint.noCurrency)
 			currencyChance = 0;
 
-		if ((!blueprint.slot) && (!blueprint.noSpell)) {
+		if (!blueprint.slot && !blueprint.noSpell && !blueprint.material) {
 			isSpell = blueprint.spell;
 			isCurrency = blueprint.currency;
 			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
