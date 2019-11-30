@@ -36,7 +36,7 @@ module.exports = {
 
 		const sheetName = this.sheetName || `${this.folderName}/images/mobs.png`;
 
-		const positions = this.positions || [target.x, target.y];
+		const positions = this.positions || [[target.x, target.y]];
 		const currentTarget = obj.aggro.getHighest();
 
 		positions.forEach(pos => {
