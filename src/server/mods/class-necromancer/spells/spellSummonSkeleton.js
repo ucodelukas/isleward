@@ -13,6 +13,7 @@ module.exports = {
 	needLos: true,
 	killMinionsBeforeSummon: true,
 	killMinionsOnDeath: true,
+	minionsDieOnAggroClear: false,
 
 	minions: [],
 
@@ -102,6 +103,7 @@ module.exports = {
 			if (this.killMinionsOnDeath)
 				mob.follower.bindEvents();
 			else {
+				mob.aggro.dieOnAggroClear = this.minionsDieOnAggroClear;
 				mob.removeComponent('follower');
 
 				if (currentTarget)

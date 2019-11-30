@@ -1340,7 +1340,7 @@
                         {
                          "name":"cpnPortal",
                          "type":"string",
-                         "value":"{\"zone\":\"sewer\",\"pos\":{\"x\":31,\"y\":42}}"
+                         "value":"{\"zone\":\"sewer\",\"pos\":{\"x\":97,\"y\":87}}"
                         }],
                  "rotation":0,
                  "type":"",

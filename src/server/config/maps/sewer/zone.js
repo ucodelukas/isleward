@@ -105,6 +105,7 @@ module.exports = {
 				type: 'summonSkeleton',
 				killMinionsOnDeath: false,
 				killMinionsBeforeSummon: false,
+				minionsDieOnAggroClear: true,
 				needLos: false,
 				sheetName: 'mobs',
 				cdMax: 60,
