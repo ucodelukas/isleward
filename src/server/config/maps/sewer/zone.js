@@ -62,7 +62,7 @@ module.exports = {
 					alsoRandom: true,
 					magicFind: [2000, 125],
 					blueprints: [{
-						name: 'Putrid shank',
+						name: 'Putrid Shank',
 						level: 13,
 						quality: 4,
 						slot: 'oneHanded',
@@ -100,14 +100,14 @@ module.exports = {
 				type: 'whirlwind',
 				range: 2,
 				damage: 0.2,
-				cdMax: 50
+				cdMax: 40
 			}, {
 				type: 'summonSkeleton',
 				killMinionsOnDeath: false,
 				killMinionsBeforeSummon: false,
 				needLos: false,
 				sheetName: 'mobs',
-				cdMax: 50,
+				cdMax: 60,
 				positions: [[30, 30], [40, 30], [30, 40], [40, 40]],
 				summonTemplates: [{
 					name: 'Biter Rat',

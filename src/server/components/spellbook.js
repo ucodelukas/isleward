@@ -133,7 +133,9 @@ module.exports = {
 		}
 
 		builtSpell.id = !options.has('id') ? spellId : options.id;
-		if (builtSpell.cdMax)
+
+		//Mobs don't get abilities put on CD when they learn them
+		if (!this.obj.mob && builtSpell.cdMax)
 			builtSpell.cd = builtSpell.cdMax;
 
 		this.spells.push(builtSpell);
