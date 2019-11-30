@@ -150,11 +150,17 @@ module.exports = {
 			}
 		},
 
-		whiskers: {
+		'dire rat': {
 			level: 13,
+			walkDistance: 0,
 			faction: 'hostile',
 			grantRep: {
 				fjolgard: 22
+			},
+
+			regular: {
+				hpMult: 5,
+				dmgMult: 1.2
 			},
 
 			rare: {
@@ -168,8 +174,12 @@ module.exports = {
 				fjolgard: 25
 			},
 			level: 14,
+			walkDistance: 0,
 
 			regular: {
+				hpMult: 3,
+				dmgMult: 1.5,
+
 				drops: {
 					chance: 100,
 					rolls: 1,
