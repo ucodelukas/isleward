@@ -8,21 +8,29 @@
 	right: 10px;
 	top: 10px;
 
-	height: (@btnSize + (@pad * 2));
-	padding: @pad;
-	background-color: fade(#3a3b4a, 90%);
+	height: (@btnSize + @pad);
 
 	.spell {
 		width: @btnSize;
 		height: @btnSize;
 		float: left;
-		margin: 0px 8px;
-
+		margin-left: 10px;
+		background-color: #2d2136;
 		cursor: pointer;
 		position: relative;
+		box-sizing: content-box;
+		border: 5px solid fade(#3a3b4a, 90%);
+		transition-property: filter;
+		transition-duration: 0.1s;
+
+		&:first-child {
+			margin-left: 0px;
+		}
 
 		&:hover {
-			background-color: fade(@white, 10%);
+			filter: brightness(160%);
+
+			-moz-filter: brightness(160%);
 		}
 
 		&.active .hotkey {
