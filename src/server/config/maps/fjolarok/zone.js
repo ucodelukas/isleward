@@ -592,6 +592,7 @@ module.exports = {
 		},
 		thumper: {
 			level: 5,
+			cron: '0 * * * *',
 			regular: {
 				hpMult: 3,
 				dmgMult: 3,
