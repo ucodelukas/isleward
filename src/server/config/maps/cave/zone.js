@@ -259,9 +259,6 @@ module.exports = {
 				}
 			}, {
 				type: 'summonConsumableFollower'
-			}, {
-				type: 'summonSkeleton',
-				killMinionsOnDeath: false
 			}]
 		},
 

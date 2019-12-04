@@ -242,7 +242,7 @@ module.exports = {
 			}]
 		}
 	},
-	vetch: {
+	asvald: {
 		1: {
 			msg: [{
 				msg: 'Is there anything I can help you with today?',
@@ -267,21 +267,21 @@ module.exports = {
 			cpn: 'trade',
 			method: 'startBuy',
 			args: [{
-				targetName: 'vetch'
+				targetName: 'asvald'
 			}]
 		},
 		tradeSell: {
 			cpn: 'trade',
 			method: 'startSell',
 			args: [{
-				targetName: 'vetch'
+				targetName: 'asvald'
 			}]
 		},
 		tradeBuyback: {
 			cpn: 'trade',
 			method: 'startBuyback',
 			args: [{
-				targetName: 'vetch'
+				targetName: 'asvald'
 			}]
 		}
 	},

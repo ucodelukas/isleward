@@ -83,7 +83,7 @@ module.exports = {
 				}
 			}
 		},
-		shopvetch: {
+		shopasvald: {
 			properties: {
 				cpnNotice: {
 					actions: {
@@ -91,7 +91,7 @@ module.exports = {
 							cpn: 'dialogue',
 							method: 'talk',
 							args: [{
-								targetName: 'vetch'
+								targetName: 'asvald'
 							}]
 						},
 						exit: {
@@ -166,6 +166,63 @@ module.exports = {
 									y: -48,
 									w: 64,
 									h: 64
+								}
+							}
+						};
+					}
+				}
+			}
+		},
+		gas: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['c0c3cf', '80f643'],
+									end: ['386646', '69696e']
+								},
+								scale: {
+									start: {
+										min: 18,
+										max: 64
+									},
+									end: {
+										min: 8,
+										max: 24
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 4,
+									max: 24
+								},
+								alpha: {
+									start: 0.05,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.02,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -80,
+									y: -80,
+									w: 160,
+									h: 160
 								}
 							}
 						};
@@ -526,7 +583,27 @@ module.exports = {
 				}
 			},
 			rare: {
-				name: 'Thumper'
+				count: 0
+			},
+			questItem: {
+				name: "Rabbit's Foot",
+				sprite: [0, 1]
+			}
+		},
+		thumper: {
+			level: 5,
+			regular: {
+				hpMult: 3,
+				dmgMult: 3,
+
+				drops: {
+					chance: 100,
+					rolls: 2,
+					magicFind: [1300]
+				}
+			},
+			rare: {
+				count: 0
 			},
 			questItem: {
 				name: "Rabbit's Foot",
@@ -704,7 +781,7 @@ module.exports = {
 				count: 0
 			}
 		},
-		vetch: {
+		asvald: {
 			level: 15,
 			walkDistance: 0,
 			attackable: false,
