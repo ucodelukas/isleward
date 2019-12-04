@@ -51,6 +51,16 @@ module.exports = (cpnSocial, msg) => {
 		return;
 	}
 
+	let playerLevel = cpnSocial.obj.level;
+	let playedTime = cpnSocial.obj.stats.stats.played * 1000;
+	let sessionStart = cpnSocial.obj.player.sessionStart;
+	let sessionDelta = time - sessionStart;
+
+	if (playerLevel < 3 || playedTime + sessionDelta < 180000) {
+		cpnSocial.sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
+		return;
+	}
+
 	history.push({
 		msg: messageString,
 		time: time
