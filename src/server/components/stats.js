@@ -471,7 +471,7 @@ module.exports = {
 		syncO.hidden = true;
 		syncO.nonSelectable = true;
 
-		let xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+		let xpLoss = ~~Math.min(values.xp, values.xpMax * 0.05);
 
 		values.xp -= xpLoss;
 		obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
