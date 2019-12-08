@@ -1,3 +1,21 @@
+const balance = {
+	rat: {
+		clawChance: 3
+	},
+	stinktooth: {
+		runestoneChance: 10,
+		recipeChance: 3,
+		shankChance: 0.1
+	},
+	bandit: {
+		keyChance: 1
+	},
+	bera: {
+		recipeChance: 3,
+		keyChance: 3
+	}
+};
+
 module.exports = {
 	name: 'Sewer',
 	level: [11, 13],
@@ -5,7 +23,7 @@ module.exports = {
 	resources: {
 		Stinkcap: {
 			type: 'herb',
-			max: 3
+			max: 1
 		}
 	},
 
@@ -24,23 +42,22 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 200,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: balance.rat.clawChance,
 						name: 'Rat Claw',
 						material: true,
 						sprite: [3, 0],
 						spritesheet: 'images/materials.png'
-					}, {
-						chance: 200,
-						name: 'Muddy Runestone',
-						material: true,
-						sprite: [6, 0],
-						spritesheet: 'images/materials.png'
 					}]
 				}
+			},
+
+			rare: {
+				name: 'Enraged Rat',
+				cell: 24
 			}
 		},
 
@@ -50,18 +67,19 @@ module.exports = {
 				fjolgard: 15
 			},
 			level: 13,
+			cron: '*/10 * * * *',
 
 			regular: {
 				hpMult: 10,
 				dmgMult: 3,
 
 				drops: {
-					chance: 100,
 					rolls: 3,
 					noRandom: true,
 					alsoRandom: true,
 					magicFind: [2000, 125],
 					blueprints: [{
+						chance: balance.stinktooth.shankChance,
 						name: 'Putrid Shank',
 						level: 13,
 						quality: 4,
@@ -74,16 +92,22 @@ module.exports = {
 						effects: [{
 							type: 'castSpellOnHit',
 							rolls: {
-								i_chance: [20, 60],
+								i_chance: [5, 20],
 								spell: 'smokeBomb'
 							}
 						}]
 					}, {
-						chance: 100,
+						chance: balance.stinktooth.recipeChance,
 						type: 'recipe',
 						name: 'Recipe: Rune of Whirlwind',
 						profession: 'etching',
 						teaches: 'runeWhirlwind'
+					}, {
+						chance: balance.stinktooth.runestoneChance,
+						name: 'Muddy Runestone',
+						material: true,
+						sprite: [6, 0],
+						spritesheet: 'images/materials.png'
 					}]
 				}
 			},
@@ -145,8 +169,25 @@ module.exports = {
 			},
 			level: 11,
 
+			regular: {
+				drops: {
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: balance.bandit.keyChance,
+						type: 'key',
+						noSalvage: true,
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1],
+						quantity: 1
+					}]
+				}
+			},
+
 			rare: {
-				count: 0
+				name: 'Cutthroat'
 			}
 		},
 
@@ -181,16 +222,24 @@ module.exports = {
 				dmgMult: 1.5,
 
 				drops: {
-					chance: 100,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
-						chance: 100,
+						chance: balance.bera.recipeChance,
 						type: 'recipe',
 						name: 'Recipe: Rune of Ambush',
 						profession: 'etching',
 						teaches: 'runeAmbush'
+					}, {
+						chance: balance.bera.keyChance,
+						type: 'key',
+						noSalvage: true,
+						name: 'Rusted Key',
+						keyId: 'rustedSewer',
+						singleUse: true,
+						sprite: [12, 1],
+						quantity: 1
 					}]
 				}
 			},
@@ -205,6 +254,17 @@ module.exports = {
 			max: 9,
 			type: 'fish',
 			quantity: [6, 12]
+		},
+
+		sewerdoor: {
+			properties: {
+				cpnDoor: {
+					autoClose: 171,
+					locked: true,
+					key: 'rustedSewer',
+					destroyKey: true
+				}
+			}
 		},
 
 		bubbles: {

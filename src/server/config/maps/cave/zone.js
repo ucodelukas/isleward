@@ -23,11 +23,11 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 30,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: 30,
 						name: 'Digested Crystal',
 						quality: 0,
 						quest: true,
@@ -97,11 +97,11 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 30,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: 35,
 						name: 'Digested Crystal',
 						quality: 0,
 						quest: true,

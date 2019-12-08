@@ -543,10 +543,10 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 100,
 					rolls: 1,
 					noRandom: true,
 					blueprints: [{
+						chance: 100,
 						maxLevel: 2,
 						name: 'Family Heirloom',
 						quality: 1,
@@ -667,11 +667,11 @@ module.exports = {
 			faction: 'hostile',
 			regular: {
 				drops: {
-					chance: 200,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: 3,
 						name: 'Eagle Feather',
 						material: true,
 						sprite: [0, 0],

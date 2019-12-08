@@ -415,52 +415,44 @@ define([
 			if (!hLen)
 				return false;
 
-			let player = window.player;
-			let px = player.x;
-			let py = player.y;
+			const { player: { x: px, y: py } } = window;
 
-			let hidden = false;
-			for (let i = 0; i < hLen; i++) {
-				let h = hiddenRooms[i];
-
-				let outsideHider = (
-					x < h.x ||
-					x >= h.x + h.width ||
-					y < h.y ||
-					y >= h.y + h.height
-				);
-
-				if (outsideHider)
-					continue;
-
-				let inHider = physics.isInPolygon(x, y, h.area);
-
-				if (!inHider)
-					continue;
-
+			const isVisible = hiddenRooms.every(h => {
 				if (h.discovered)
+					return true;
+
+				const { x: hx, y: hy, width, height, area } = h;
+
+				//Is the tile outside the hider
+				if (
+					x < hx ||
+					x >= hx + width ||
+					y < hy ||
+					y >= hy + height
+				)
+					return true;
+
+				//Is the tile inside the hider
+				if (!physics.isInPolygon(x, y, area))
+					return true;
+
+				//Is the player outside the hider
+				if (
+					px < hx ||
+					px >= hx + width ||
+					py < hy ||
+					py >= hy + height
+				) 
 					return false;
 
-				outsideHider = (
-					px < h.x ||
-					px >= h.x + h.width ||
-					py < h.y ||
-					py >= h.y + h.height
-				);
-
-				if (outsideHider) {
-					hidden = true;
-					continue;
-				}
-
-				inHider = physics.isInPolygon(px, py, h.area);
-
-				if (inHider)
+				//Is the player inside the hider
+				if (!physics.isInPolygon(px, py, area)) 
 					return false;
-				hidden = true;
-			}
 
-			return hidden;
+				return true;
+			});
+
+			return !isVisible;
 		},
 
 		updateSprites: function () {

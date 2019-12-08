@@ -59,9 +59,7 @@ module.exports = (cpnInv, ownerName, killSource) => {
 		let blueprints = blueprint.blueprints;
 		for (let i = 0; i < blueprints.length; i++) {
 			let drop = blueprints[i];
-			if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance * dropEvent.chanceMultiplier))
-				continue;
-			else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
+			if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
 				continue;
 			else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance * dropEvent.chanceMultiplier)) 
 				continue;

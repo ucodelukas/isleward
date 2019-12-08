@@ -26,10 +26,10 @@ let config = {
 		zone: 'estuary'
 	},
 	'Fangs of Fury': {
-		chance: 0.2,
+		chance: 0.05,
 		reward: 'Steelclaw\'s Bite',
 		setSize: 20,
-		mobName: 'steelclaw'
+		mobName: 'stinktooth'
 	},
 	'Tradesman\'s Pride': {
 		chance: 0.007,

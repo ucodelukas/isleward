@@ -46,6 +46,39 @@ let cpnSmokePatch = {
 	}
 };
 
+const particles = {
+	scale: {
+		start: {
+			min: 16,
+			max: 30
+		},
+		end: {
+			min: 8,
+			max: 14
+		}
+	},
+	opacity: {
+		start: 0.02,
+		end: 0
+	},
+	lifetime: {
+		min: 1,
+		max: 3
+	},
+	speed: {
+		start: 12,
+		end: 2
+	},
+	color: {
+		start: ['fcfcfc', '80f643'],
+		end: ['c0c3cf', '2b4b3e']
+	},
+	chance: 0.03,
+	randomColor: true,
+	randomScale: true,
+	blendMode: 'screen'
+};
+
 module.exports = {
 	type: 'smokeBomb',
 
@@ -59,6 +92,8 @@ module.exports = {
 	radius: 1,
 	targetGround: true,
 	targetPlayerPos: true,
+
+	particles: particles,
 
 	update: function () {
 		let selfCast = this.selfCast;
