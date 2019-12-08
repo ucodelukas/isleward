@@ -5,7 +5,7 @@ module.exports = {
 	manaCost: 10,
 	range: 9,
 
-	damage: 5,
+	damage: 1,
 	speed: 70,
 	isAttack: true,
 
@@ -119,6 +119,9 @@ module.exports = {
 
 		let damage = this.getDamage(target);
 		target.stats.takeDamage(damage, this.threatMult, obj);
+
+		if (this.castOnEnd)
+			this.obj.spellbook.spells[this.castOnEnd].cast();
 	},
 
 	isTileValid: function (physics, fromX, fromY, toX, toY) {

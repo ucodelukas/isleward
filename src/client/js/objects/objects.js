@@ -197,7 +197,15 @@ define([
 			}
 
 			if (renderer.sprites) {
-				let isVisible = ((obj.self) || ((renderer.sprites[obj.x]) && (renderer.sprites[obj.x][obj.y].length > 0)));
+				let isVisible = (
+					obj.self || 
+					(
+						renderer.sprites[obj.x] && 
+						renderer.sprites[obj.x][obj.y].length > 0 &&
+						!renderer.isHidden(obj.x, obj.y)
+					)
+				);
+
 				obj.setVisible(isVisible);
 			}
 
@@ -309,7 +317,8 @@ define([
 					(
 						renderer.sprites[ix] &&
 						renderer.sprites[ix][iy] &&
-						renderer.sprites[ix][iy].length > 0
+						renderer.sprites[ix][iy].length > 0 &&
+						!renderer.isHidden(obj.x, obj.y)
 					)
 				);
 				obj.setVisible(isVisible);

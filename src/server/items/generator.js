@@ -10,15 +10,17 @@ let g9 = require('./generators/spellbook');
 let g10 = require('./generators/currency'); 
 let g11 = require('./generators/effects'); 
 let g12 = require('./generators/attrRequire');
+let g13 = require('./generators/recipeBook');
 
 let generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
 let materialGenerators = [g6, g8];
 let spellGenerators = [g1, g9, g7];
 let currencyGenerators = [g10];
+let recipeGenerators = [g6, g13];
 
 module.exports = {
-	spellChance: 0.02,
-	currencyChance: 0.025,
+	spellChance: 0.035,
+	currencyChance: 0.035,
 
 	generate: function (blueprint, ownerLevel) {
 		let isSpell = false;
@@ -42,7 +44,7 @@ module.exports = {
 		if (blueprint.noCurrency)
 			currencyChance = 0;
 
-		if ((!blueprint.slot) && (!blueprint.noSpell)) {
+		if (!blueprint.slot && !blueprint.noSpell && !blueprint.material) {
 			isSpell = blueprint.spell;
 			isCurrency = blueprint.currency;
 			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
@@ -69,7 +71,9 @@ module.exports = {
 		} else if (blueprint.type === 'mtx') {
 			item = extend({}, blueprint);
 			delete item.chance;
-		} else {
+		} else if (blueprint.type === 'recipe') 
+			recipeGenerators.forEach(g => g.generate(item, blueprint));
+		else {
 			generators.forEach(g => g.generate(item, blueprint));
 			if (blueprint.spellName)
 				g9.generate(item, blueprint);

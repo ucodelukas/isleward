@@ -2,6 +2,7 @@ let events = require('../../misc/events');
 
 const recipesAlchemy = require('./alchemy');
 const recipesCooking = require('./cooking');
+const recipesEtching = require('./etching');
 
 let recipes = {
 	alchemy: [
@@ -9,6 +10,9 @@ let recipes = {
 	],
 	cooking: [
 		...recipesCooking
+	],
+	etching: [
+		...recipesEtching
 	]
 };
 
@@ -17,8 +21,15 @@ module.exports = {
 		events.emit('onBeforeGetRecipes', recipes);
 	},
 
-	getList: function (type) {
+	getList: function (type, unlocked) {
 		return (recipes[type] || [])
+			.filter(r => {
+				let hasUnlocked = (r.default !== false);
+				if (!hasUnlocked)
+					hasUnlocked = unlocked.some(u => u.profession === type && u.teaches === r.id);
+
+				return hasUnlocked;
+			})
 			.map(r => r.name);
 	},
 

@@ -83,6 +83,25 @@ module.exports = {
 				}
 			}
 		},
+		shopasvald: {
+			properties: {
+				cpnNotice: {
+					actions: {
+						enter: {
+							cpn: 'dialogue',
+							method: 'talk',
+							args: [{
+								targetName: 'asvald'
+							}]
+						},
+						exit: {
+							cpn: 'dialogue',
+							method: 'stopTalk'
+						}
+					}
+				}
+			}
+		},
 		shoppriest: {
 			properties: {
 				cpnNotice: {
@@ -147,6 +166,63 @@ module.exports = {
 									y: -48,
 									w: 64,
 									h: 64
+								}
+							}
+						};
+					}
+				}
+			}
+		},
+		gas: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['c0c3cf', '80f643'],
+									end: ['386646', '69696e']
+								},
+								scale: {
+									start: {
+										min: 18,
+										max: 64
+									},
+									end: {
+										min: 8,
+										max: 24
+									}
+								},
+								speed: {
+									start: {
+										min: 2,
+										max: 6
+									},
+									end: {
+										min: 0,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 4,
+									max: 24
+								},
+								alpha: {
+									start: 0.05,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.02,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'screen',
+								spawnRect: {
+									x: -80,
+									y: -80,
+									w: 160,
+									h: 160
 								}
 							}
 						};
@@ -386,6 +462,61 @@ module.exports = {
 				}
 			}
 		},
+		etchbench: {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['ff4252', 'ff4252'],
+									end: ['a82841', 'a82841']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 4
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -15,
+									y: -28,
+									w: 30,
+									h: 8
+								}
+							}
+						};
+					}
+				},
+				cpnWorkbench: {
+					type: 'etching'
+				}
+			}
+		},
 		fireplace: {
 			components: {
 				cpnWorkbench: {
@@ -412,10 +543,10 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 100,
 					rolls: 1,
 					noRandom: true,
 					blueprints: [{
+						chance: 100,
 						maxLevel: 2,
 						name: 'Family Heirloom',
 						quality: 1,
@@ -452,7 +583,28 @@ module.exports = {
 				}
 			},
 			rare: {
-				name: 'Thumper'
+				count: 0
+			},
+			questItem: {
+				name: "Rabbit's Foot",
+				sprite: [0, 1]
+			}
+		},
+		thumper: {
+			level: 5,
+			cron: '0 * * * *',
+			regular: {
+				hpMult: 3,
+				dmgMult: 3,
+
+				drops: {
+					chance: 100,
+					rolls: 2,
+					magicFind: [1300]
+				}
+			},
+			rare: {
+				count: 0
 			},
 			questItem: {
 				name: "Rabbit's Foot",
@@ -513,6 +665,20 @@ module.exports = {
 		eagle: {
 			level: 10,
 			faction: 'hostile',
+			regular: {
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 3,
+						name: 'Eagle Feather',
+						material: true,
+						sprite: [0, 0],
+						spritesheet: 'images/questItems.png'
+					}]
+				}
+			},
 			rare: {
 				name: 'Fleshripper'
 			}
@@ -601,6 +767,23 @@ module.exports = {
 			}
 		},
 		vikar: {
+			level: 15,
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
+			}
+		},
+		luta: {
+			level: 15,
+			walkDistance: 0,
+			attackable: false,
+			rare: {
+				count: 0
+			}
+		},
+		asvald: {
+			level: 15,
 			walkDistance: 0,
 			attackable: false,
 			rare: {
@@ -681,13 +864,6 @@ module.exports = {
 				}
 			}
 		},
-		luta: {
-			walkDistance: 0,
-			attackable: false,
-			rare: {
-				count: 0
-			}
-		},
 		rodriguez: {
 			attackable: false,
 			level: 10,
@@ -717,7 +893,7 @@ module.exports = {
 			}
 		},
 		priest: {
-			level: 50,
+			level: 20,
 			attackable: false,
 			walkDistance: 0,
 			rare: {

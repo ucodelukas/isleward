@@ -11,6 +11,11 @@ module.exports = {
 				let fieldName = p.replace('i_', '');
 
 				let range = rolls[p];
+				if (!range.push) {
+					newRolls[fieldName] = range;
+					continue;
+				}
+
 				let value = range[0] + (Math.random() * (range[1] - range[0]));
 				if (isInt)
 					value = ~~value;

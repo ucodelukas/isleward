@@ -1,10 +1,5 @@
 let util = require('util');
-let serverConfig = require('../config/serverConfig');
-
-if (serverConfig.db === 'rethink') {
-	module.exports = require('./ioRethink');
-	return;
-}
+const tableNames = require('./tableNames');
 
 module.exports = {
 	db: null,
@@ -13,20 +8,7 @@ module.exports = {
 	buffer: [],
 	processing: [],
 
-	tables: {
-		character: null,
-		characterList: null,
-		stash: null,
-		skins: null,
-		login: null,
-		leaderboard: null,
-		customMap: null,
-		mail: null,
-		customChannels: null,
-		error: null,
-		modLog: null,
-		accountInfo: null
-	},
+	tables: {},
 
 	init: async function (cbReady) {
 		let sqlite = require('sqlite3').verbose();
@@ -34,10 +16,10 @@ module.exports = {
 	},
 	onDbCreated: function (cbReady) {
 		let db = this.db;
-		let tables = this.tables;
 		let scope = this;
+
 		db.serialize(function () {
-			for (let t in tables) {
+			for (let t of tableNames) {
 				db.run(`
 					CREATE TABLE ${t} (key VARCHAR(50), value TEXT)
 				`, scope.onTableCreated.bind(scope, t));
@@ -46,6 +28,7 @@ module.exports = {
 			cbReady();
 		}, this);
 	},
+	
 	onTableCreated: async function (table) {
 		
 	},

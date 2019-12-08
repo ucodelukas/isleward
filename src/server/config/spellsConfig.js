@@ -119,7 +119,20 @@ let spells = {
 		castTimeMax: 0,
 		manaCost: 12,
 		random: {
-			i_duration: [4, 9]
+			i_duration: [10, 20],
+			i_chance: [20, 50]
+		}
+	},
+	whirlwind: {
+		statType: 'str',
+		statMult: 1,
+		threatMult: 6,
+		cdMax: 12,
+		castTimeMax: 2,
+		manaCost: 7,
+		random: {
+			i_range: [1, 2.5],
+			damage: [4, 15]
 		}
 	},
 	smokebomb: {
@@ -133,6 +146,18 @@ let spells = {
 			damage: [0.25, 1.45],
 			i_radius: [1, 3],
 			i_duration: [7, 13]
+		}
+	},
+	ambush: {
+		statType: 'dex',
+		statMult: 1,
+		cdMax: 16,
+		castTimeMax: 7,
+		range: 10,
+		manaCost: 7,
+		random: {
+			damage: [8, 28],
+			i_stunDuration: [4, 6]
 		}
 	},
 	'crystal spikes': {

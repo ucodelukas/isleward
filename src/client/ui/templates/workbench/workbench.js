@@ -15,6 +15,7 @@ define([
 		centered: true,
 
 		modal: true,
+		hasClose: true,
 
 		workbenchId: null,
 

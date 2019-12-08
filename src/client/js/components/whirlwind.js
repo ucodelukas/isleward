@@ -10,8 +10,9 @@ define([
 
 		row: null,
 		col: null,
+		frames: 4,
 
-		delay: 40,
+		delay: 32,
 		coordinates: [],
 
 		objects: null,
@@ -43,7 +44,7 @@ define([
 		},
 
 		spawnThing: function (x, y) {
-			const { row, col } = this;
+			const { frames: frameCount, row, col } = this;
 
 			this.objects.buildObject({
 				x,
@@ -51,7 +52,8 @@ define([
 				components: [{
 					type: 'attackAnimation',
 					row,
-					col
+					col,
+					frames: frameCount
 				}]
 			});
 		},

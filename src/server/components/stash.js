@@ -58,16 +58,18 @@ module.exports = {
 		if (!this.active)
 			return;
 		else if (this.items.length >= 50) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'You do not have room in your stash to deposit that item',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
-
-			return;
+			let isMaterial = this.items.some(stashedItem => item.name === stashedItem.name && item.quantity);
+			if (!isMaterial) {
+				this.obj.instance.syncer.queue('onGetMessages', {
+					id: this.obj.id,
+					messages: [{
+						class: 'color-redA',
+						message: 'You do not have room in your stash to deposit that item',
+						type: 'info'
+					}]
+				}, [this.obj.serverId]);
+				return;
+			}
 		}
 
 		this.getItem(item);

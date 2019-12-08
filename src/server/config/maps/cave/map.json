@@ -2037,7 +2037,7 @@
                  "y":224
                 }, 
                 {
-                 "gid":801,
+                 "gid":833,
                  "height":24,
                  "id":870,
                  "name":"|bigPortal",
@@ -2249,7 +2249,7 @@
                  "y":320
                 }, 
                 {
-                 "gid":721,
+                 "gid":753,
                  "height":24,
                  "id":886,
                  "name":"|bigGem",
@@ -2261,7 +2261,7 @@
                  "y":72
                 }, 
                 {
-                 "gid":722,
+                 "gid":754,
                  "height":24,
                  "id":889,
                  "name":"|bigGem",
@@ -2273,7 +2273,7 @@
                  "y":184
                 }, 
                 {
-                 "gid":724,
+                 "gid":756,
                  "height":24,
                  "id":890,
                  "name":"|bigGem",
@@ -2285,7 +2285,7 @@
                  "y":16
                 }, 
                 {
-                 "gid":725,
+                 "gid":757,
                  "height":24,
                  "id":896,
                  "name":"|bigGem",
@@ -2466,7 +2466,7 @@
          "value":"[{\"x\":16,\"y\":136}, {\"source\": \"radulos\", \"x\": 163, \"y\": 35}]"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.2.2",
+ "tiledversion":"1.2.5",
  "tileheight":8,
  "tilesets":[
         {
@@ -2558,12 +2558,12 @@
          "columns":8,
          "firstgid":345,
          "image":"..\/..\/..\/..\/client\/images\/tiles.png",
-         "imageheight":192,
+         "imageheight":224,
          "imagewidth":64,
          "margin":0,
          "name":"tiles",
          "spacing":0,
-         "tilecount":192,
+         "tilecount":224,
          "tileheight":8,
          "tiles":[
                 {
@@ -2658,7 +2658,7 @@
         }, 
         {
          "columns":8,
-         "firstgid":537,
+         "firstgid":569,
          "image":"..\/..\/..\/..\/client\/images\/objects.png",
          "imageheight":176,
          "imagewidth":64,
@@ -2676,7 +2676,7 @@
         }, 
         {
          "columns":8,
-         "firstgid":713,
+         "firstgid":745,
          "image":"..\/..\/..\/..\/client\/images\/bigObjects.png",
          "imageheight":240,
          "imagewidth":192,
@@ -2689,7 +2689,7 @@
         }, 
         {
          "columns":8,
-         "firstgid":793,
+         "firstgid":825,
          "image":"..\/..\/..\/..\/client\/images\/animBigObjects.png",
          "imageheight":240,
          "imagewidth":192,

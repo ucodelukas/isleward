@@ -5,7 +5,12 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+
 const { applyItemStats } = require('./equipment/helpers');
+
+const getItem = require('./inventory/getItem');
+const dropBag = require('./inventory/dropBag');
+const useItem = require('./inventory/useItem');
 
 module.exports = {
 	type: 'inventory',
@@ -164,6 +169,8 @@ module.exports = {
 
 			if (item.slot !== slot)
 				obj.equipment.unequip(itemId);
+			else
+				obj.spellbook.calcDps();
 		} else
 			enchanter.enchant(obj, item, msg);
 
@@ -296,87 +303,7 @@ module.exports = {
 	},
 
 	useItem: function (itemId) {
-		let item = this.findItem(itemId);
-		if (!item)
-			return;
-
-		let obj = this.obj;
-
-		if (item.cdMax) {
-			if (item.cd) {
-				process.send({
-					method: 'events',
-					data: {
-						onGetAnnouncement: [{
-							obj: {
-								msg: 'That item is on cooldown'
-							},
-							to: [obj.serverId]
-						}]
-					}
-				});
-
-				return;
-			}
-
-			item.cd = item.cdMax;
-
-			//Find similar items and put them on cooldown too
-			this.items.forEach(function (i) {
-				if ((i.name === item.name) && (i.cdMax === item.cdMax))
-					i.cd = i.cdMax;
-			});
-		}
-
-		let result = {};
-		obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
-
-		let effects = (item.effects || []);
-		let eLen = effects.length;
-		for (let j = 0; j < eLen; j++) {
-			let effect = effects[j];
-			if (!effect.events)
-				continue;
-
-			let effectEvent = effect.events.onConsumeItem;
-			if (!effectEvent)
-				continue;
-
-			let effectResult = {
-				success: true,
-				errorMessage: null
-			};
-
-			effectEvent.call(obj, effectResult, item, effect);
-
-			if (!effectResult.success) {
-				obj.instance.syncer.queue('onGetMessages', {
-					id: obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: effectResult.errorMessage,
-						type: 'info'
-					}]
-				}, [obj.serverId]);
-
-				return;
-			}
-		}
-
-		if (item.type === 'consumable') {
-			if (item.uses) {
-				item.uses--;
-
-				if (item.uses) {
-					obj.syncer.setArray(true, 'inventory', 'getItems', item);
-					return;
-				}
-			}
-
-			this.destroyItem(itemId, 1);
-			if (item.has('quickSlot'))
-				this.obj.equipment.replaceQuickSlot(item);
-		}
+		useItem(this, itemId);
 	},
 
 	unlearnAbility: function (itemId) {
@@ -773,211 +700,11 @@ module.exports = {
 	},
 
 	getItem: function (item, hideMessage, noStack, hideAlert) {
-		this.obj.instance.eventEmitter.emit('onBeforeGetItem', item, this.obj);
-
-		//We need to know if a mob dropped it for quest purposes
-		let fromMob = item.fromMob;
-
-		if (!item.has('quality'))
-			item.quality = 0;
-
-		//Players can't have fromMob items in their inventory but bags can (dropped by a mob)
-		if (this.obj.player)
-			delete item.fromMob;
-
-		//Store the quantity to send to the player
-		let quantity = item.quantity;
-
-		let exists = false;
-		if ((item.material || item.quest || item.quantity) && !item.noStack && !item.uses && !noStack) {
-			let existItem = this.items.find(i => i.name === item.name);
-			if (existItem) {
-				exists = true;
-				existItem.quantity = ~~(existItem.quantity || 1) + ~~(item.quantity || 1);
-				item = existItem;
-			}
-		}
-
-		if (!exists)
-			delete item.pos;
-
-		//Get next id
-		if (!exists) {
-			let id = 0;
-			let items = this.items;
-			let iLen = items.length;
-
-			if (!this.hasSpace(item)) {
-				if (!hideMessage) 
-					this.notifyNoBagSpace();
-
-				return false;
-			}
-
-			for (let i = 0; i < iLen; i++) {
-				let fItem = items[i];
-				if (fItem.id >= id) 
-					id = fItem.id + 1;
-			}
-			item.id = id;
-
-			if (item.eq)
-				delete item.pos;
-
-			if (!item.has('pos') && !item.eq) {
-				let pos = iLen;
-				for (let i = 0; i < iLen; i++) {
-					if (!items.some(fi => (fi.pos === i))) {
-						pos = i;
-						break;
-					}
-				}
-				item.pos = pos;
-			}
-		}
-
-		if (this.obj.player) {
-			let msg = item.name;
-			if (quantity)
-				msg += ' x' + quantity;
-			else if ((item.stats) && (item.stats.weight))
-				msg += ` ${item.stats.weight}lb`;
-			
-			const messages = [{
-				class: 'q' + item.quality,
-				message: 'loot: {' + msg + '}',
-				item: item,
-				type: 'loot'
-			}];
-
-			if (!hideAlert) {
-				this.obj.instance.syncer.queue('onGetDamage', {
-					id: this.obj.id,
-					event: true,
-					text: 'loot'
-				}, -1);
-			}
-
-			if (!hideMessage) {
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: messages
-				}, [this.obj.serverId]);
-			}
-		}
-
-		if (item.effects) 
-			this.hookItemEvents([item]);
-
-		if (!exists)
-			this.items.push(item);
-
-		if (item.eq) {
-			if (item.ability)
-				this.learnAbility(item.id, item.runeSlot);
-			else
-				this.obj.equipment.equip(item.id);
-		} else if (item.has('quickSlot')) {
-			this.obj.equipment.setQuickSlot({
-				itemId: item.id,
-				slot: item.quickSlot
-			});
-		} else {
-			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === item.id);
-			this.obj.syncer.setArray(true, 'inventory', 'getItems', this.simplifyItem(item), true);
-		}
-
-		if (!hideMessage && fromMob) 
-			this.obj.fireEvent('afterLootMobItem', item);
-
-		return item;
+		return getItem(this, item, hideMessage, noStack, hideAlert);
 	},
 
 	dropBag: function (ownerName, killSource) {
-		if (!this.blueprint)
-			return;
-
-		//Only drop loot if this player is in the zone
-		let playerObject = this.obj.instance.objects.find(o => o.name === ownerName);
-		if (!playerObject)
-			return;
-
-		let items = this.items;
-		let iLen = items.length;
-		for (let i = 0; i < iLen; i++) {
-			delete items[i].eq;
-			delete items[i].pos;
-		}
-
-		let blueprint = this.blueprint;
-		let magicFind = (blueprint.magicFind || 0);
-
-		let savedItems = extend([], this.items);
-		this.items = [];
-
-		let dropEvent = {
-			chanceMultiplier: 1,
-			source: this.obj
-		};
-		playerObject.fireEvent('beforeGenerateLoot', dropEvent);
-
-		if ((!blueprint.noRandom) || (blueprint.alsoRandom)) {
-			let bonusMagicFind = killSource.stats.values.magicFind;
-
-			let rolls = blueprint.rolls;
-			let itemQuantity = killSource.stats.values.itemQuantity;
-			rolls += ~~(itemQuantity / 100);
-			if ((Math.random() * 100) < (itemQuantity % 100))
-				rolls++;
-
-			for (let i = 0; i < rolls; i++) {
-				if (Math.random() * 100 >= (blueprint.chance || 35) * dropEvent.chanceMultiplier)
-					continue;
-
-				let itemBlueprint = {
-					level: this.obj.stats.values.level,
-					magicFind: magicFind,
-					bonusMagicFind: bonusMagicFind,
-					noCurrency: i > 0
-				};
-
-				let useItem = generator.generate(itemBlueprint, playerObject.stats.values.level);
-				this.getItem(useItem);
-			}
-		}
-
-		if (blueprint.noRandom) {
-			let blueprints = blueprint.blueprints;
-			for (let i = 0; i < blueprints.length; i++) {
-				let drop = blueprints[i];
-				if ((blueprint.chance) && (~~(Math.random() * 100) >= blueprint.chance * dropEvent.chanceMultiplier))
-					continue;
-				else if ((drop.maxLevel) && (drop.maxLevel < killSource.stats.values.level))
-					continue;
-				else if ((drop.chance) && (~~(Math.random() * 100) >= drop.chance * dropEvent.chanceMultiplier)) 
-					continue;
-
-				drop.level = drop.level || this.obj.stats.values.level;
-				drop.magicFind = magicFind;
-
-				let item = drop;
-				if ((!item.quest) && (item.type !== 'key'))
-					item = generator.generate(drop);
-
-				if (!item.slot)
-					delete item.level;
-
-				this.getItem(item, true);
-			}
-		}
-
-		playerObject.fireEvent('beforeTargetDeath', this.obj, this.items);
-		this.obj.instance.eventEmitter.emit('onBeforeDropBag', this.obj, this.items, killSource);
-
-		if (this.items.length > 0)
-			this.createBag(this.obj.x, this.obj.y, this.items, ownerName);
-
-		this.items = savedItems;
+		dropBag(this, ownerName, killSource);
 	},
 
 	giveItems: function (obj, hideMessage) {

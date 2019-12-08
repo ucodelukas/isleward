@@ -26,9 +26,14 @@ module.exports = {
 		baseWeight: 3,
 		ttl: 30
 	},
-	'Stink Carp': {
+	Stinkcap: {
+		sheetName: 'tiles',
+		cell: 57,
+		itemSprite: [2, 0]
+	},
+	Mudfish: {
 		sheetName: 'objects',
-		itemSprite: [11, 0],
+		itemSprite: [11, 3],
 		baseWeight: 5,
 		ttl: 30
 	}

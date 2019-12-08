@@ -60,6 +60,10 @@ module.exports = {
 				return;
 			else if ((this.requiredQuality) && (gatherResult.items[0].quality < this.requiredQuality))
 				return;
+			else if (gatherResult.items[0].name.toLowerCase() === 'cerulean pearl') {
+				//This is a hack but we have no other way to tell fish from pearls at the moment
+				return;
+			}
 
 			if ((this.obj.zoneName !== this.zoneName) || (this.have >= this.need))
 				return;

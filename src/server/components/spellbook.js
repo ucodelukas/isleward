@@ -133,7 +133,9 @@ module.exports = {
 		}
 
 		builtSpell.id = !options.has('id') ? spellId : options.id;
-		if (builtSpell.cdMax)
+
+		//Mobs don't get abilities put on CD when they learn them
+		if (!this.obj.mob && builtSpell.cdMax)
 			builtSpell.cd = builtSpell.cdMax;
 
 		this.spells.push(builtSpell);
@@ -242,18 +244,14 @@ module.exports = {
 	},
 
 	getRandomSpell: function (target) {
-		let valid = [];
-		this.spells.forEach(function (s) {
-			if (s.castOnDeath)
-				return;
-
-			if (s.canCast(target))
-				valid.push(s.id);
+		const valid = this.spells.filter(s => {
+			return (!s.selfCast && !s.procCast && !s.castOnDeath && s.canCast(target));
 		});
 
-		if (valid.length > 0)
-			return valid[~~(Math.random() * valid.length)];
-		return null;
+		if (!valid.length)
+			return null;
+
+		return valid[~~(Math.random() * valid.length)].id;
 	},
 
 	getTarget: function (spell, action) {
@@ -444,6 +442,9 @@ module.exports = {
 		let furthest = 0;
 		for (let i = 0; i < sLen; i++) {
 			let spell = spells[i];
+			if (spell.procCast || spell.castOnDeath)
+				continue;
+
 			if (spell.range > furthest && (!checkCanCast || spell.canCast()))
 				furthest = spell.range;
 		}

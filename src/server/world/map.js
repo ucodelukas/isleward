@@ -69,6 +69,7 @@ module.exports = {
 		try {
 			this.zone = require('../' + this.path + '/' + this.name + '/zone');
 		} catch (e) {
+			console.log(e);
 			this.zone = globalZone;
 		}
 		events.emit('onAfterGetZone', this.name, this.zone);
@@ -115,8 +116,6 @@ module.exports = {
 		this.clientMap = {
 			zoneId: -1,
 			map: this.layers,
-			hiddenWalls: this.hiddenWalls,
-			hiddenTiles: this.hiddenTiles,
 			collisionMap: this.collisionMap,
 			clientObjects: this.objBlueprints,
 			padding: padding,
@@ -155,10 +154,17 @@ module.exports = {
 						newCell += ',';
 				}
 
-				if (this.hiddenWalls[i][j])
-					this.hiddenWalls[i][j] = randomMap.randomizeTile(this.hiddenWalls[i][j]);
-				if (this.hiddenTiles[i][j])
-					this.hiddenTiles[i][j] = randomMap.randomizeTile(this.hiddenTiles[i][j]);
+				let fakeContents = [];
+				const hiddenWall = this.hiddenWalls[i][j];
+				const hiddenTile = this.hiddenTiles[i][j];
+
+				if (hiddenTile)
+					fakeContents.push(-randomMap.randomizeTile(hiddenTile));
+				if (hiddenWall)
+					fakeContents.push(-randomMap.randomizeTile(hiddenWall));
+
+				if (fakeContents.length)
+					newCell += ',' + fakeContents.join(',');
 
 				row[j] = newCell;
 			}
@@ -304,9 +310,9 @@ module.exports = {
 			let sheetName = cellInfo.sheetName;
 			cell = cellInfo.cell;
 			if (sheetName === 'walls')
-				cell += 192;
+				cell += 224;
 			else if (sheetName === 'objects')
-				cell += 448;
+				cell += 480;
 
 			if ((layerName !== 'hiddenWalls') && (layerName !== 'hiddenTiles')) {
 				let layer = this.layers;
@@ -322,7 +328,7 @@ module.exports = {
 				this.collisionMap[x][y] = 1;
 			else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
 				//Check for water and water-like tiles
-				if ([6, 7, 54, 55, 62, 63, 154, 189, 190].indexOf(cell) > -1)
+				if ([6, 7, 54, 55, 62, 63, 154, 189, 190, 192, 193, 194, 195, 196, 197].indexOf(cell) > -1)
 					this.collisionMap[x][y] = 1;
 			}
 		},
@@ -388,7 +394,7 @@ module.exports = {
 					});
 
 					room.exits.push(blueprint);
-				} else if (blueprint.properties.resource)
+				} else if (blueprint.properties.resource) 
 					resourceSpawner.register(blueprint.properties.resource, blueprint);
 				else {
 					blueprint.exits = [];

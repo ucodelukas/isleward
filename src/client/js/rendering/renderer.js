@@ -415,52 +415,44 @@ define([
 			if (!hLen)
 				return false;
 
-			let player = window.player;
-			let px = player.x;
-			let py = player.y;
+			const { player: { x: px, y: py } } = window;
 
-			let hidden = false;
-			for (let i = 0; i < hLen; i++) {
-				let h = hiddenRooms[i];
-
-				let outsideHider = (
-					x < h.x ||
-					x >= h.x + h.width ||
-					y < h.y ||
-					y >= h.y + h.height
-				);
-
-				if (outsideHider)
-					continue;
-
-				let inHider = physics.isInPolygon(x, y, h.area);
-
-				if (!inHider)
-					continue;
-
+			const isVisible = hiddenRooms.every(h => {
 				if (h.discovered)
+					return true;
+
+				const { x: hx, y: hy, width, height, area } = h;
+
+				//Is the tile outside the hider
+				if (
+					x < hx ||
+					x >= hx + width ||
+					y < hy ||
+					y >= hy + height
+				)
+					return true;
+
+				//Is the tile inside the hider
+				if (!physics.isInPolygon(x, y, area))
+					return true;
+
+				//Is the player outside the hider
+				if (
+					px < hx ||
+					px >= hx + width ||
+					py < hy ||
+					py >= hy + height
+				) 
 					return false;
 
-				outsideHider = (
-					px < h.x ||
-					px >= h.x + h.width ||
-					py < h.y ||
-					py >= h.y + h.height
-				);
-
-				if (outsideHider) {
-					hidden = true;
-					continue;
-				}
-
-				inHider = physics.isInPolygon(px, py, h.area);
-
-				if (inHider)
+				//Is the player inside the hider
+				if (!physics.isInPolygon(px, py, area)) 
 					return false;
-				hidden = true;
-			}
 
-			return hidden;
+				return true;
+			});
+
+			return !isVisible;
 		},
 
 		updateSprites: function () {
@@ -514,37 +506,70 @@ define([
 
 					let rendered = spriteRow[j];
 					let isHidden = checkHidden(i, j);
-					if (rendered.length > 0) {
-						if (!isHidden)
-							continue;
-						else {
-							newHidden.push({
-								x: i,
-								y: j
-							});
 
-							let rLen = rendered.length;
-							for (let k = 0; k < rLen; k++) {
-								let sprite = rendered[k];
-								sprite.visible = false;
-								spritePool.store(sprite);
-							}
-							spriteRow[j] = [];
+					if (isHidden) {
+						const nonFakeRendered = rendered.filter(r => !r.isFake);
 
-							continue;
+						let rLen = nonFakeRendered.length;
+						for (let k = 0; k < rLen; k++) {
+							let sprite = nonFakeRendered[k];
+
+							sprite.visible = false;
+							spritePool.store(sprite);
+							rendered.spliceWhere(s => s === sprite);
 						}
-					} else if (isHidden)
-						continue;
-						
-					newVisible.push({
-						x: i,
-						y: j
-					});
+
+						newHidden.push({
+							x: i,
+							y: j
+						});
+
+						const hasFake = cell.some(c => c[0] === '-');
+						if (hasFake) {
+							const isFakeRendered = rendered.some(r => r.isFake);
+							if (isFakeRendered)
+								continue;
+						} else
+							continue;
+					} else {
+						const fakeRendered = rendered.filter(r => r.isFake);
+
+						let rLen = fakeRendered.length;
+						for (let k = 0; k < rLen; k++) {
+							let sprite = fakeRendered[k];
+
+							sprite.visible = false;
+							spritePool.store(sprite);
+							rendered.spliceWhere(s => s === sprite);
+						}
+
+						newVisible.push({
+							x: i,
+							y: j
+						});
+
+						const hasNonFake = cell.some(c => c[0] !== '-');
+						if (hasNonFake) {
+							const isNonFakeRendered = rendered.some(r => !r.isFake);
+							if (isNonFakeRendered)
+								continue;
+						} else
+							continue;
+					}
 
 					for (let k = 0; k < cLen; k++) {
 						let c = cell[k];
 						if (c === '0' || c === '')
 							continue;
+
+						const isFake = +c < 0;
+						if (isFake && !isHidden)
+							continue;
+						else if (!isFake && isHidden)
+							continue;
+
+						if (isFake)
+							c = -c;
 
 						c--;
 
@@ -568,6 +593,9 @@ define([
 								tile.position.x += scale;
 							tile.visible = true;
 						}
+
+						if (isFake)
+							tile.isFake = isFake;
 
 						tile.z = k;
 

@@ -1,5 +1,5 @@
 global.extend = require('../misc/clone');
-global.io = require('../security/io');
+global.io = require('../db/io');
 global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
@@ -40,28 +40,31 @@ let onModsReady = function () {
 	components.init(onCpnsReady);
 };
 
+const onCrash = async e => {
+	if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
+		return;
+
+	_.log('Error Logged: ' + e.toString());
+	_.log(e.stack);
+
+	await io.setAsync({
+		key: new Date(),
+		table: 'error',
+		value: e.toString() + ' | ' + e.stack.toString()
+	});
+
+	process.send({
+		event: 'onCrashed'
+	});
+};
+
 let onDbReady = function () {
 	require('../misc/random');
 
 	mods.init(onModsReady);
 
-	process.on('uncaughtException', async function (e) {
-		if (e.toString().indexOf('ERR_IPC_CHANNEL_CLOSED') > -1)
-			return;
-
-		_.log('Error Logged: ' + e.toString());
-		_.log(e.stack);
-
-		await io.setAsync({
-			key: new Date(),
-			table: 'error',
-			value: e.toString() + ' | ' + e.stack.toString()
-		});
-
-		process.send({
-			event: 'onCrashed'
-		});
-	});
+	process.on('uncaughtException', onCrash);
+	process.on('unhandledRejection', onCrash);
 };
 
 io.init(onDbReady);

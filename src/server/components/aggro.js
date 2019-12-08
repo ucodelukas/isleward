@@ -19,6 +19,9 @@ module.exports = {
 	threatDecay: 0.9,
 	threatCeiling: 1,
 
+	//Certain summoned minions need to despawn when they lose their last target
+	dieOnAggroClear: false,
+
 	init: function (blueprint) {
 		this.physics = this.obj.instance.physics;
 
@@ -201,7 +204,7 @@ module.exports = {
 		let oId = source.id;
 		let list = this.list;
 
-		amount = (amount || 0);
+		amount = (amount || 0);	
 		let threat = (amount / obj.stats.values.hpMax) * (threatMult || 1);
 
 		let exists = list.find(l => l.obj.id === oId);
@@ -280,6 +283,9 @@ module.exports = {
 				}
 			}
 		}
+
+		if (list.length !== lLen && this.dieOnAggroClear)
+			this.obj.destroyed = true;
 
 		this.ignoreList.spliceWhere(o => o === obj);
 

@@ -329,7 +329,7 @@ define([
 				config.push(menuItems.learn);
 			else if (item.type === 'mtx')
 				config.push(menuItems.activate);
-			else if (item.type === 'toy' || item.type === 'consumable' || item.useText) {
+			else if (item.type === 'toy' || item.type === 'consumable' || item.useText || item.type === 'recipe') {
 				if (item.useText)
 					menuItems.use.text = item.useText;
 				config.push(menuItems.use);

@@ -149,7 +149,7 @@ define([
 			let isShiftDown = input.isKeyDown('shift');
 
 			let oldTarget = null;
-			if (isShiftDown) {
+			if (isShiftDown || spell.targetPlayerPos) {
 				oldTarget = this.target;
 				this.target = this.obj;
 			}

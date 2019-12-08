@@ -69,6 +69,8 @@ let baseStats = {
 
 	xpIncrease: 0,
 
+	lifeOnHit: 0,
+
 	//Fishing stats
 	catchChance: 0,
 	catchSpeed: 0,
@@ -469,7 +471,7 @@ module.exports = {
 		syncO.hidden = true;
 		syncO.nonSelectable = true;
 
-		let xpLoss = ~~Math.min(values.xp, values.xpMax / 10);
+		let xpLoss = ~~Math.min(values.xp, values.xpMax * 0.05);
 
 		values.xp -= xpLoss;
 		obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
@@ -796,6 +798,15 @@ module.exports = {
 				if (mobKillStreaks[p] <= 0)
 					delete mobKillStreaks[p];
 			}
+		},
+
+		afterDealDamage: function (damageEvent, target) {
+			const { obj, values: { lifeOnHit } } = this;
+
+			if (target === obj || !lifeOnHit)
+				return;
+
+			this.getHp({ amount: lifeOnHit }, obj);
 		}
 	}
 };

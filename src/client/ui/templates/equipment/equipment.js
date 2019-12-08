@@ -115,7 +115,7 @@ define([
 					if (slot.indexOf('finger') === 0)
 						slot = 'finger';
 					else if (slot === 'oneHanded')
-						return (['oneHanded', 'twoHanded'].includes(slot) && i.isNew);
+						return (['oneHanded', 'twoHanded'].includes(i.slot) && i.isNew);
 
 					return (i.slot === slot && i.isNew);
 				});
@@ -449,7 +449,9 @@ define([
 					'holy resist': stats.elementHolyResist,
 					'poison resist': stats.elementPoisonResist,
 					gap3: '',
-					'all resist': stats.elementAllResist
+					'all resist': stats.elementAllResist,
+					gap4: '',
+					'life gained on hit': stats.lifeOnHit
 				},
 				misc: {
 					'item quality': stats.magicFind + '%',

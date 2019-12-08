@@ -11,6 +11,8 @@ module.exports = {
 	castTimeMax: 0,
 
 	needLos: false,
+	//Should damage/heals caused by this spell cause events to be fired on objects?
+	noEvents: false,
 
 	currentAction: null,
 
@@ -78,8 +80,12 @@ module.exports = {
 					this.setCd();
 					this.currentAction = null;
 				}
-			} else
+			} else {
+				if (this.onCastTick)
+					this.onCastTick();
+				
 				this.sendBump(null, 0, -1);
+			}
 
 			return;
 		}
@@ -280,6 +286,7 @@ module.exports = {
 			config.damage = target.stats.values.hpMax * this.damage;
 
 		let damage = combat.getDamage(config);
+		damage.noEvents = this.noEvents;
 
 		return damage;
 	},

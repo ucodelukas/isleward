@@ -25,7 +25,7 @@ define([
 
 		build: function () {
 			let list = this.list;
-
+			
 			this.find('.info .heading-bottom').html('');
 			this.find('.info .description').html('');
 			this.find('.bar-outer').hide();
@@ -83,14 +83,16 @@ define([
 
 		onGetReputations: function (list) {
 			this.list = list;
+
 			this.list.sort(function (a, b) {
 				if (a.name[0] < b.name[0])
 					return -1;
 				return 1;
 			});
 
-			if (this.el.is(':visible'))
-				this.build();
+			let selElement = this.find('.selected');
+			if (this.el.is(':visible') && selElement.index() !== -1)
+				this.onSelectFaction(selElement, list[selElement.index() + 1]);
 		},
 
 		toggle: function () {

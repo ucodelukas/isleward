@@ -104,10 +104,16 @@ let config = {
 		sprite: [5, 0]
 	},
 
+	//Frozen Pack
 	'12.0': {
 		name: 'Frozen Lance Knight',
 		spritesheet: 'images/skins/0012.png',
 		sprite: [0, 0]
+	},
+	12.1: {
+		name: 'Frozen Invoker',
+		spritesheet: 'images/skins/0012.png',
+		sprite: [1, 0]
 	}
 };
 

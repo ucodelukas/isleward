@@ -285,6 +285,20 @@ let spells = [{
 		blendMode: 'screen'
 	}
 }, {
+	name: 'Whirlwind',
+	description: 'You furiously spin in a circle, striking all foes around you.',
+	type: 'whirlwind',
+	icon: [5, 0],
+	row: 5,
+	col: 0,
+	frames: 3
+}, {
+	name: 'Ambush',
+	type: 'ambush',
+	description: 'Step into the shadows and reappear behind your target before delivering a concussing blow.',
+	icon: [2, 4],
+	animation: 'raiseShield'
+}, {
 	name: 'Stealth',
 	description: 'The thief slips into the shadows and becomes undetectable by foes. Performing an attack removes this effect.',
 	type: 'stealth',
@@ -369,6 +383,12 @@ let spells = [{
 		chance: 0.075,
 		randomColor: true
 	}
+}, {
+	name: 'Whirlwind',
+	description: 'Wooooo, bitches!.',
+	type: 'whirlwind',
+	icon: [0, 1],
+	animation: 'raiseStaff'
 }, {
 	name: 'Chain Lightning',
 	description: 'Creates a circle of pure holy energy that heals allies for a brief period.',

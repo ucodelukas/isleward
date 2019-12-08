@@ -1,4 +1,5 @@
 const recipes = require('../config/recipes/recipes');
+const generator = require('../items/generator');
 
 module.exports = {
 	type: 'workbench',
@@ -72,7 +73,7 @@ module.exports = {
 		}, [obj.serverId]);
 	},
 
-	open: function (msg) {
+	open: async function (msg) {
 		if (!msg.has('sourceId'))
 			return;
 
@@ -84,10 +85,16 @@ module.exports = {
 		if ((Math.abs(thisObj.x - obj.x) > 1) || (Math.abs(thisObj.y - obj.y) > 1))
 			return;
 
+		const unlocked = await io.getAsync({
+			key: obj.name,
+			table: 'recipes',
+			isArray: true
+		});
+
 		this.obj.instance.syncer.queue('onOpenWorkbench', {
 			workbenchId: this.obj.id,
 			name: this.obj.name,
-			recipes: recipes.getList(this.craftType)
+			recipes: recipes.getList(this.craftType, unlocked)
 		}, [obj.serverId]);
 	},
 
@@ -159,7 +166,11 @@ module.exports = {
 
 		let outputItems = recipe.item ? [ recipe.item ] : recipe.items;
 		outputItems.forEach(itemBpt => {
-			let item = extend({}, itemBpt);
+			let item = null;
+			if (itemBpt.generate)
+				item = generator.generate(itemBpt);
+			else
+				item = extend({}, itemBpt);
 			
 			if (item.description)
 				item.description += `<br /><br />(Crafted by ${obj.name})`;

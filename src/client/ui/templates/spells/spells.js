@@ -90,10 +90,10 @@ define([
 			if (isMobile)
 				return false;
 
-			let pos = el.offset();
+			let pos = el.parent().offset();
 			pos = {
-				x: pos.left + 56,
-				y: pos.top + el.height() + 16
+				x: pos.left - 26,
+				y: pos.top
 			};
 
 			let values = Object.keys(spell.values).filter(function (v) {
@@ -122,7 +122,7 @@ define([
 					.replace('range', 'range hidden');
 			}
 
-			events.emit('onShowTooltip', tooltip, el[0], pos, 200, false, true, this.el.css('z-index'));
+			events.emit('onShowTooltip', tooltip, el[0], pos, 250, false, true, this.el.css('z-index'));
 		},
 		onHideTooltip: function (el) {
 			events.emit('onHideTooltip', el[0]);

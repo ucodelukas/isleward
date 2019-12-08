@@ -187,7 +187,7 @@ define([
 					tempImplicitStats.forEach(s => {
 						let statValue = s.value;
 
-						let f = compareImplicitStats.find(c => c.stat === statValue);
+						let f = compareImplicitStats.find(c => c.stat === s.stat);
 
 						if (f) {
 							let delta = statValue - f.value;
@@ -471,6 +471,15 @@ define([
 			if (pos) {
 				if (bottomAlign)
 					pos.y -= this.tooltip.height();
+
+				//correct tooltips that are appearing offscreen
+				// arbitrary constant -30 is there to stop resize code
+				// completely squishing the popup
+				if ((pos.x + this.tooltip.width()) > window.innerWidth)
+					pos.x = window.innerWidth - this.tooltip.width() - 30;
+
+				if ((pos.y + this.tooltip.height()) > window.innerHeight)
+					pos.y = window.innerHeight - this.tooltip.height() - 30;
 
 				this.tooltip.css({
 					left: pos.x,

@@ -23,11 +23,11 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 30,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: 30,
 						name: 'Digested Crystal',
 						quality: 0,
 						quest: true,
@@ -97,11 +97,11 @@ module.exports = {
 
 			regular: {
 				drops: {
-					chance: 30,
 					rolls: 1,
 					noRandom: true,
 					alsoRandom: true,
 					blueprints: [{
+						chance: 35,
 						name: 'Digested Crystal',
 						quality: 0,
 						quest: true,
@@ -269,14 +269,14 @@ module.exports = {
 			deathRep: -3
 		},
 		biorn: {
-			level: 22,
+			level: 20,
 			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
 			deathRep: -3
 		},
 		veleif: {
-			level: 22,
+			level: 20,
 			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',
@@ -284,13 +284,13 @@ module.exports = {
 		},
 
 		'akarei artificer': {
-			level: 24,
+			level: 20,
 			attackable: false,
 			faction: 'akarei',
 			deathRep: -6
 		},
 		'thaumaturge yala': {
-			level: 30,
+			level: 20,
 			attackable: false,
 			walkDistance: 0,
 			faction: 'akarei',

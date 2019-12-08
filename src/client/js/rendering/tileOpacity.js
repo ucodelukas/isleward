@@ -106,9 +106,9 @@ define([
 		],
 
 		getSheetNum: function (tile) {
-			if (tile < 192)
+			if (tile < 224)
 				return 0;
-			else if (tile < 448)
+			else if (tile < 480)
 				return 1;
 			return 2;
 		},
@@ -116,13 +116,13 @@ define([
 		map: function (tile) {
 			let sheetNum;
 
-			if (tile < 192)
+			if (tile < 224)
 				sheetNum = 0;
-			else if (tile < 448) {
-				tile -= 192;
+			else if (tile < 480) {
+				tile -= 224;
 				sheetNum = 1;
 			} else {
-				tile -= 448;
+				tile -= 480;
 				sheetNum = 2;
 			}
 
@@ -140,13 +140,13 @@ define([
 		canFlip: function (tile) {
 			let sheetNum;
 
-			if (tile < 192)
+			if (tile < 224)
 				sheetNum = 0;
-			else if (tile < 448) {
-				tile -= 192;
+			else if (tile < 480) {
+				tile -= 224;
 				sheetNum = 1;
 			} else {
-				tile -= 448;
+				tile -= 480;
 				sheetNum = 2;
 			}
 

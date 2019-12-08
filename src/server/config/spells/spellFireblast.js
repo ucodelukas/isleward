@@ -7,6 +7,8 @@ module.exports = {
 	radius: 2,
 	pushback: 4,
 
+	damage: 1,
+
 	cast: function (action) {
 		let obj = this.obj;
 		let { x, y, instance: { physics, syncer } } = obj;
@@ -54,7 +56,8 @@ module.exports = {
 
 					let targetEffect = m.effects.addEffect({
 						type: 'stunned',
-						noMsg: true
+						noMsg: true,
+						new: true
 					});
 
 					let targetPos = {

@@ -1,8 +1,39 @@
-const coordinates = [
-	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]]
+const coordinateDeltas = [
+	[[0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1]],
+	[[0, -2], [0, -1], [1, -2], [2, -2], [1, -1], [2, -1], [2, 0], [1, 0], [2, 1], [2, 2], [1, 1], [1, 2], [0, 2], [0, 1], [-1, 2], [-2, 2], [-2, 1], [-1, 1], [-2, 0], [-1, 0], [-2, -1], [-2, -2], [-1, -1], [-1, -2]]
 ];
 
-//const maxTicks = 8;
+const applyDamage = (target, damage, threat, source) => {
+	target.stats.takeDamage(damage, threat, source);
+};
+
+const dealDamage = (spell, obj, coords) => {
+	const { delay } = spell;
+
+	const physics = obj.instance.physics;
+
+	coords.forEach(([x, y], i) => {
+		const cellDelay = i * delay;
+
+		const mobs = physics.getCell(x, y);
+		let mLen = mobs.length;
+		for (let k = 0; k < mLen; k++) {
+			const m = mobs[k];
+
+			if (!m) {
+				mLen--;
+				continue;
+			}
+
+			if (!m.aggro || !m.effects || !obj.aggro.canAttack(m))
+				continue;
+
+			const damage = spell.getDamage(m);
+
+			spell.queueCallback(applyDamage.bind(null, m, damage, 1, obj), cellDelay);
+		}
+	});
+};
 
 module.exports = {
 	type: 'whirlwind',
@@ -10,62 +41,47 @@ module.exports = {
 	cdMax: 5,
 	manaCost: 10,
 	range: 1,
+	//The delay is sent to the client and is how long (in ms) each tick takes to display
+	delay: 32,
 
-	damage: 0.0001,
+	row: 5,
+	col: 0,
+	frames: 3,
+
+	damage: 1,
 	isAttack: true,
 
-	channelDuration: 100,
-
-	isCasting: false,
-	ticker: 0,
+	targetGround: true,
+	targetPlayerPos: true,
 
 	cast: function (action) {
-		if (this.isCasting)
-			return;
+		const { frames, row, col, delay, obj } = this;
+		const { id, instance, x: playerX, y: playerY } = obj;
 
-		//this.isCasting = true;
-
-		const { x: playerX, y: playerY } = this.obj;
-
-		const coords = coordinates[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
+		const coordinates = coordinateDeltas[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
 
 		let blueprint = {
-			caster: this.obj.id,
+			caster: id,
 			components: [{
-				idSource: this.obj.id,
+				idSource: id,
 				type: 'whirlwind',
-				coordinates: coords,
-				row: 3,
-				col: 0
+				coordinates,
+				frames,
+				row,
+				col,
+				delay
 			}]
 		};
 
-		this.obj.instance.syncer.queue('onGetObject', blueprint, -1);
+		this.sendBump({
+			x: playerX,
+			y: playerY - 1
+		});
+
+		instance.syncer.queue('onGetObject', blueprint, -1);
+
+		dealDamage(this, obj, coordinates);
 
 		return true;
-	},
-
-	reachDestination: function (selfEffect) {
-		const { effects, destroyed } = this.obj;
-		if (destroyed)
-			return;
-
-		effects.removeEffect(selfEffect);
-	},
-
-	spawnDamager: function (x, y) {
-		const { destroyed, instance } = this.obj;
-		if (destroyed)
-			return;
-
-		instance.syncer.queue('onGetObject', {
-			x,
-			y,
-			components: [{
-				type: 'attackAnimation',
-				row: 3,
-				col: 0
-			}]
-		}, -1);
 	}
 };
