@@ -67,7 +67,7 @@ module.exports = {
 				fjolgard: 15
 			},
 			level: 13,
-			cron: '*/10 * * * *',
+			spawnCd: 1714,
 
 			regular: {
 				hpMult: 10,
