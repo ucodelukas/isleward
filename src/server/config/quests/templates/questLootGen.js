@@ -1,3 +1,9 @@
+const resetQuest = q => {
+	q.mobName = null;
+	q.mobType = null;
+	q.item = null;
+};
+
 module.exports = {
 	type: 'lootGen',
 
@@ -9,32 +15,43 @@ module.exports = {
 	item: null,
 
 	build: function () {
-		if ((!this.mobName) || (!this.item)) {
+		//If we're not in the correct zone, don't do this check, it'll just crash the server
+		// since the mob won't be available (most likely) in the zoneFile
+		if (this.obj.zoneName === this.zoneName) {
 			let mobTypes = this.obj.instance.spawners.zone.mobs;
 
-			let keys = Object.keys(mobTypes).filter(function (m) {
-				let mobBlueprint = mobTypes[m];
+			if (this.mobType && this.item) {
+				//Check if the zoneFile changed
+				const mobBlueprint = mobTypes[this.mobType];
+				if (!mobBlueprint || !mobBlueprint.questItem || mobBlueprint.questItem.name !== this.item.name)
+					resetQuest(this);
+			}
 
-				return (
-					(m !== 'default') &&
+			if (!this.mobName || !this.item) {
+				let keys = Object.keys(mobTypes).filter(function (m) {
+					let mobBlueprint = mobTypes[m];
+
+					return (
+						(m !== 'default') &&
 					(mobBlueprint.questItem) &&
 					(mobBlueprint.level <= (this.obj.stats.values.level * 1.35))
-				);
-			}, this);
+					);
+				}, this);
 
-			//No level appropriate mobs found
-			if (keys.length === 0)
-				return false;
+				//No level appropriate mobs found
+				if (keys.length === 0)
+					return false;
 
-			this.mobType = keys[~~(Math.random() * keys.length)];
-			let needMax = 8;
-			this.mobName = this.mobType.replace(/\w\S*/g, function (txt) {
-				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-			});
+				this.mobType = keys[~~(Math.random() * keys.length)];
+				let needMax = 8;
+				this.mobName = this.mobType.replace(/\w\S*/g, function (txt) {
+					return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+				});
 
-			this.need = Math.max(1, ~~((needMax * 0.2) + (Math.random() * needMax * 0.8)));
+				this.need = Math.max(1, ~~((needMax * 0.2) + (Math.random() * needMax * 0.8)));
 
-			this.item = mobTypes[this.mobType].questItem || mobTypes.default.questItem;
+				this.item = mobTypes[this.mobType].questItem || mobTypes.default.questItem;
+			}
 		}
 
 		this.name = this.item.name + ' Gatherer';

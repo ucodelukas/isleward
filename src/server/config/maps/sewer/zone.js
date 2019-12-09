@@ -2,6 +2,9 @@ const balance = {
 	rat: {
 		clawChance: 3
 	},
+	giantRat: {
+		clawChance: 5
+	},
 	stinktooth: {
 		runestoneChance: 10,
 		recipeChance: 3,
@@ -9,6 +12,9 @@ const balance = {
 	},
 	bandit: {
 		keyChance: 1
+	},
+	direRat: {
+		clawChance: 7
 	},
 	bera: {
 		recipeChance: 3,
@@ -58,6 +64,36 @@ module.exports = {
 			rare: {
 				name: 'Enraged Rat',
 				cell: 24
+			}
+		},
+
+		'giant rat': {
+			faction: 'fjolgard',
+			grantRep: {
+				fjolgard: 6
+			},
+			level: 12,
+
+			regular: {
+				hpMult: 2,
+				dmgMult: 1.2,
+
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: balance.giantRat.clawChance,
+						name: 'Rat Claw',
+						material: true,
+						sprite: [3, 0],
+						spritesheet: 'images/materials.png'
+					}]
+				}
+			},
+
+			rare: {
+				count: 0
 			}
 		},
 
@@ -201,7 +237,20 @@ module.exports = {
 
 			regular: {
 				hpMult: 5,
-				dmgMult: 1.2
+				dmgMult: 1.2,
+
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: balance.direRat.clawChance,
+						name: 'Rat Claw',
+						material: true,
+						sprite: [3, 0],
+						spritesheet: 'images/materials.png'
+					}]
+				}
 			},
 
 			rare: {
