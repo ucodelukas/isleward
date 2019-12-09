@@ -9,7 +9,7 @@ module.exports = {
 		let spellName = blueprint.spellName;
 
 		if (!spellName) {
-			let spellList = Object.keys(spellsConfig.spells).filter(s => ((!spellsConfig.spells[s].auto) && (!s.noDrop)));
+			let spellList = Object.keys(spellsConfig.spells).filter(s => !spellsConfig.spells[s].auto && !spellsConfig.spells[s].noDrop);
 			spellName = spellList[~~(Math.random() * spellList.length)];
 		}
 

@@ -592,7 +592,6 @@ module.exports = {
 		},
 		thumper: {
 			level: 5,
-			cron: '0 * * * *',
 			regular: {
 				hpMult: 3,
 				dmgMult: 3,
@@ -604,11 +603,7 @@ module.exports = {
 				}
 			},
 			rare: {
-				count: 0
-			},
-			questItem: {
-				name: "Rabbit's Foot",
-				sprite: [0, 1]
+				chance: 100
 			}
 		},
 		elk: {

@@ -33,7 +33,7 @@ module.exports = {
 
 				drops: {
 					chance: 100,
-					rolls: 1,
+					rolls: 2,
 					magicFind: 2000
 				}
 			},
