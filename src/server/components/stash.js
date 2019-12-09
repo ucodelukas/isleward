@@ -27,7 +27,7 @@ module.exports = {
 				exists = true;
 				if (!existItem.quantity)
 					existItem.quantity = 1;
-				existItem.quantity += item.quantity;
+				existItem.quantity += (item.quantity || 1);
 
 				//We modify the old object because it gets sent to the client
 				item.id = existItem.id;
@@ -58,7 +58,7 @@ module.exports = {
 		if (!this.active)
 			return;
 		else if (this.items.length >= 50) {
-			let isMaterial = this.items.some(stashedItem => item.name === stashedItem.name && item.quantity);
+			let isMaterial = this.items.some(stashedItem => item.name === stashedItem.name && (item.quantity || item.material));
 			if (!isMaterial) {
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
