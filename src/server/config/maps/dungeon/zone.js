@@ -5,6 +5,8 @@ let balance = {
 	hpMult: hpMult,
 	dmgMult: dmgMult,
 
+	rareDmgMult: 1.25,
+
 	mobs: {
 		violetSerpent: {
 			level: 20,
@@ -30,7 +32,7 @@ let balance = {
 			chargeDmg: 0.4,
 			chargeCd: 25,
 			chargeElement: null,
-			chargeStunDuration: 0			
+			chargeStunDuration: 0
 		},
 
 		viridianSerpent: {
@@ -79,13 +81,7 @@ module.exports = {
 
 			rare: {
 				hpMult: balance.hpMult * 1.25,
-				dmgMult: balance.dmgMult * 1.25,
-
-				drops: {
-					chance: 100,
-					rolls: 1,
-					magicFind: 2000
-				}
+				dmgMult: balance.dmgMult * 1.25
 			}
 		},
 
@@ -94,6 +90,13 @@ module.exports = {
 
 			regular: {
 				hpMult: balance.mobs.violetSerpent.hpMult
+			},
+
+			rare: {
+				name: 'Albino Serpent',
+				cell: 82,
+				hpMult: balance.mobs.violetSerpent.hpMult * 1.25,
+				dmgMult: balance.mobs.rareDmgMult
 			},
 
 			spells: [{
@@ -175,6 +178,13 @@ module.exports = {
 				hpMult: balance.mobs.scarletSerpent.hpMult
 			},
 
+			rare: {
+				name: 'Albino Serpent',
+				cell: 82,
+				hpMult: balance.mobs.scarletSerpent.hpMult * 1.25,
+				dmgMult: balance.mobs.rareDmgMult
+			},
+
 			spells: [{
 				type: 'melee',
 				element: balance.mobs.scarletSerpent.meleeElement,
@@ -195,6 +205,13 @@ module.exports = {
 
 			regular: {
 				hpMult: balance.mobs.viridianSerpent.hpMult
+			},
+
+			rare: {
+				name: 'Albino Serpent',
+				cell: 82,
+				hpMult: balance.mobs.viridianSerpent.hpMult * 1.25,
+				dmgMult: balance.mobs.rareDmgMult
 			},
 
 			spells: [{
