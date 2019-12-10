@@ -31,6 +31,7 @@ module.exports = {
 
 		let projectileConfig = {
 			caster: this.obj.id,
+			extraTargets: 0,
 			components: [{
 				idSource: this.obj.id,
 				idTarget: target.id,

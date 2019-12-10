@@ -5,9 +5,46 @@ let balance = {
 	hpMult: hpMult,
 	dmgMult: dmgMult,
 
-	rareDmgMult: 1.25,
-
 	mobs: {
+		rare: {
+			dmgMult: 1.25,
+			wandChance: 1000
+		},
+
+		albinoSerpent: {
+			name: 'Albino Serpent',
+			cell: 82,
+			count: 100,
+			chance: 100,
+			hpMult: hpMult * 1.5,
+			dmgMult: dmgMult * 1.5,
+
+			drops: {
+				noRandom: true,
+				alsoRandom: true,
+				blueprints: [{
+					chance: 100,
+					name: 'Gaekatlan Offshoot',
+					level: 20,
+					quality: 4,
+					slot: 'oneHanded',
+					type: 'Wand',
+					sprite: [8, 6],
+					implicitStat: {
+						stat: 'lifeOnHit',
+						value: [5, 20]
+					},
+					effects: [{
+						type: 'doubleProjectile',
+						rolls: {
+							i_chance: [5, 25],
+							spellName: 'Magic Missile'
+						}
+					}]
+				}]
+			}
+		},
+
 		violetSerpent: {
 			level: 20,
 			hpMult: hpMult * 1,
@@ -92,12 +129,7 @@ module.exports = {
 				hpMult: balance.mobs.violetSerpent.hpMult
 			},
 
-			rare: {
-				name: 'Albino Serpent',
-				cell: 82,
-				hpMult: balance.mobs.violetSerpent.hpMult * 1.25,
-				dmgMult: balance.mobs.rareDmgMult
-			},
+			rare: balance.mobs.albinoSerpent,
 
 			spells: [{
 				type: 'melee',
@@ -178,12 +210,7 @@ module.exports = {
 				hpMult: balance.mobs.scarletSerpent.hpMult
 			},
 
-			rare: {
-				name: 'Albino Serpent',
-				cell: 82,
-				hpMult: balance.mobs.scarletSerpent.hpMult * 1.25,
-				dmgMult: balance.mobs.rareDmgMult
-			},
+			rare: balance.mobs.albinoSerpent,
 
 			spells: [{
 				type: 'melee',
@@ -207,12 +234,7 @@ module.exports = {
 				hpMult: balance.mobs.viridianSerpent.hpMult
 			},
 
-			rare: {
-				name: 'Albino Serpent',
-				cell: 82,
-				hpMult: balance.mobs.viridianSerpent.hpMult * 1.25,
-				dmgMult: balance.mobs.rareDmgMult
-			},
+			rare: balance.mobs.albinoSerpent,
 
 			spells: [{
 				type: 'smokeBomb',
