@@ -24,16 +24,17 @@ let balance = {
 				alsoRandom: true,
 				blueprints: [{
 					chance: 100,
-					name: 'Gaekatlan Offshoot',
+					name: 'Corrupted Blossom',
 					level: 20,
 					quality: 4,
 					slot: 'oneHanded',
 					type: 'Wand',
-					sprite: [8, 6],
+					sprite: [9, 10],
 					implicitStat: {
-						stat: 'lifeOnHit',
-						value: [5, 20]
+						stat: 'castSpeed',
+						value: [5, 15]
 					},
+					stats: ['int', 'int', 'regenMana', 'elementPoisonResist', 'elementPoisonResist'],
 					effects: [{
 						type: 'doubleProjectile',
 						rolls: {

@@ -180,7 +180,7 @@ module.exports = {
 					name: 'Spitter Rat',
 					cell: 24,
 					hpPercent: 10,
-					dmgPercent: 0.2,
+					dmgPercent: 0.175,
 					basicSpell: 'projectile'
 				}]
 			}, {
