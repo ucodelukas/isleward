@@ -360,7 +360,7 @@ let types = {
 				cdMax: 5,
 				castTimeMax: 0,
 				manaCost: 0,
-				range: 6,
+				range: 9,
 				random: {
 					damage: [1.17, 7.72]
 				}

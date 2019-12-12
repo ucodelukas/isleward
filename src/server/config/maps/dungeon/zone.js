@@ -6,16 +6,11 @@ let balance = {
 	dmgMult: dmgMult,
 
 	mobs: {
-		rare: {
-			dmgMult: 1.25,
-			wandChance: 1000
-		},
-
 		albinoSerpent: {
 			name: 'Albino Serpent',
 			cell: 82,
-			count: 100,
-			chance: 100,
+			count: 1,
+			chance: 1,
 			hpMult: hpMult * 1.5,
 			dmgMult: dmgMult * 1.5,
 
@@ -23,7 +18,7 @@ let balance = {
 				noRandom: true,
 				alsoRandom: true,
 				blueprints: [{
-					chance: 100,
+					chance: 2,
 					name: 'Corrupted Blossom',
 					level: 20,
 					quality: 4,
