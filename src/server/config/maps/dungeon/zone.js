@@ -6,6 +6,41 @@ let balance = {
 	dmgMult: dmgMult,
 
 	mobs: {
+		albinoSerpent: {
+			name: 'Albino Serpent',
+			cell: 82,
+			count: 1,
+			chance: 1,
+			hpMult: hpMult * 1.5,
+			dmgMult: dmgMult * 1.5,
+
+			drops: {
+				noRandom: true,
+				alsoRandom: true,
+				blueprints: [{
+					chance: 2,
+					name: 'Corrupted Blossom',
+					level: 20,
+					quality: 4,
+					slot: 'oneHanded',
+					type: 'Wand',
+					sprite: [9, 10],
+					implicitStat: {
+						stat: 'castSpeed',
+						value: [5, 15]
+					},
+					stats: ['int', 'int', 'regenMana', 'elementPoisonResist', 'elementPoisonResist'],
+					effects: [{
+						type: 'doubleProjectile',
+						rolls: {
+							i_chance: [5, 25],
+							spellName: 'Magic Missile'
+						}
+					}]
+				}]
+			}
+		},
+
 		violetSerpent: {
 			level: 20,
 			hpMult: hpMult * 1,
@@ -30,7 +65,7 @@ let balance = {
 			chargeDmg: 0.4,
 			chargeCd: 25,
 			chargeElement: null,
-			chargeStunDuration: 0			
+			chargeStunDuration: 0
 		},
 
 		viridianSerpent: {
@@ -79,13 +114,7 @@ module.exports = {
 
 			rare: {
 				hpMult: balance.hpMult * 1.25,
-				dmgMult: balance.dmgMult * 1.25,
-
-				drops: {
-					chance: 100,
-					rolls: 1,
-					magicFind: 2000
-				}
+				dmgMult: balance.dmgMult * 1.25
 			}
 		},
 
@@ -95,6 +124,8 @@ module.exports = {
 			regular: {
 				hpMult: balance.mobs.violetSerpent.hpMult
 			},
+
+			rare: balance.mobs.albinoSerpent,
 
 			spells: [{
 				type: 'melee',
@@ -175,6 +206,8 @@ module.exports = {
 				hpMult: balance.mobs.scarletSerpent.hpMult
 			},
 
+			rare: balance.mobs.albinoSerpent,
+
 			spells: [{
 				type: 'melee',
 				element: balance.mobs.scarletSerpent.meleeElement,
@@ -196,6 +229,8 @@ module.exports = {
 			regular: {
 				hpMult: balance.mobs.viridianSerpent.hpMult
 			},
+
+			rare: balance.mobs.albinoSerpent,
 
 			spells: [{
 				type: 'smokeBomb',

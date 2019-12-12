@@ -8,7 +8,7 @@ const balance = {
 	stinktooth: {
 		runestoneChance: 10,
 		recipeChance: 3,
-		shankChance: 0.1
+		shankChance: 0.2
 	},
 	bandit: {
 		keyChance: 1
@@ -180,7 +180,7 @@ module.exports = {
 					name: 'Spitter Rat',
 					cell: 24,
 					hpPercent: 10,
-					dmgPercent: 0.2,
+					dmgPercent: 0.175,
 					basicSpell: 'projectile'
 				}]
 			}, {

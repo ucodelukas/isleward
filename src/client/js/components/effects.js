@@ -114,6 +114,12 @@ define([
 			}, this);
 		},
 
+		setVisible: function (visible) {
+			this.effects.forEach(function (e) {
+				e.sprite.visible = visible;
+			}, this);
+		},
+
 		destroy: function () {
 			this.effects.forEach(function (e) {
 				renderer.destroyObject({

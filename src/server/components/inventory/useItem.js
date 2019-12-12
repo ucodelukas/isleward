@@ -15,7 +15,7 @@ const isOnCooldown = (obj, cpnInv, item) => {
 				}
 			});
 
-			return;
+			return true;
 		}
 
 		item.cd = item.cdMax;
