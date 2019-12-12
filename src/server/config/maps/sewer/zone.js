@@ -8,7 +8,7 @@ const balance = {
 	stinktooth: {
 		runestoneChance: 10,
 		recipeChance: 3,
-		shankChance: 0.1
+		shankChance: 0.2
 	},
 	bandit: {
 		keyChance: 1
