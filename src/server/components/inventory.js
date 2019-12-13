@@ -270,7 +270,7 @@ module.exports = {
 
 	splitStack: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1)
+		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1 || item.quest)
 			return;
 
 		const hasSpace = this.hasSpace(item, true);

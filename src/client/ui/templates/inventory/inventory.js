@@ -363,7 +363,7 @@ define([
 					config.push(menuItems.destroy);
 			}
 
-			if (item.quantity > 1)
+			if (item.quantity > 1 && !item.quest)
 				config.push(menuItems.split);
 
 			//if ((!item.noDrop) && (!item.quest))
