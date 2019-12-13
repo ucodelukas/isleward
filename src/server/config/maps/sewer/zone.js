@@ -111,6 +111,7 @@ module.exports = {
 
 				drops: {
 					rolls: 3,
+					chance: 100,
 					noRandom: true,
 					alsoRandom: true,
 					magicFind: [2000, 125],

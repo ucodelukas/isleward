@@ -373,7 +373,7 @@ define([
 				message: textbox.val()
 			};
 
-			event.emit('onBeforeChat', val);
+			events.emit('onBeforeChat', val);
 
 			if (!val.success)
 				return;
