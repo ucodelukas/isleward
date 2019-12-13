@@ -368,7 +368,17 @@ define([
 			}
 
 			let textbox = this.find('input');
-			let val = textbox.val()
+			let val = {
+				success: true,
+				message: textbox.val()
+			};
+
+			event.emit('onBeforeChat', val);
+
+			if (!val.success)
+				return;
+
+			val = val.message
 				.split('<')
 				.join('&lt;')
 				.split('>')
