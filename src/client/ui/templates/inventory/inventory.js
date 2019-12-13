@@ -274,7 +274,8 @@ define([
 				},
 				salvage: {
 					text: 'salvage',
-					callback: this.performItemAction.bind(this, item, 'salvageItem')
+					callback: this.performItemAction.bind(this, item, 'salvageItem'),
+					hotkey: 'f'
 				},
 				stash: {
 					text: 'stash',
