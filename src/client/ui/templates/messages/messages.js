@@ -29,6 +29,8 @@ define([
 
 		blockedPlayers: [],
 
+		lastChannel: null,
+
 		postRender: function () {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
@@ -223,8 +225,10 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'enter')
+			if (key === 'enter') {
 				this.toggle(true);
+				this.find('input').val(this.lastChannel);
+			}
 			else if (key === 'shift')
 				this.showItemTooltip();
 		},
@@ -378,6 +382,21 @@ define([
 
 			if (val.trim() === '')
 				return;
+
+			switch (val.charAt(0)) {
+				case '@':
+				case '$':
+					this.lastChannel = val.substr(0, val.indexOf(' ')) + ' ';
+					break;
+				
+				case '%':
+					this.lastChannel = '%';
+					break;
+			
+				default:
+					this.lastChannel = null;
+					break;
+			}
 
 			client.request({
 				cpn: 'social',
