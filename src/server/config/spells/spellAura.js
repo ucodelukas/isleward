@@ -95,7 +95,8 @@ module.exports = {
 			if (!members.find(m => ~~m === ~~serverId)) {
 				delete effects[serverId];
 				const obj = objects.find(f => ~~f.serverId === ~~serverId);
-				obj.effects.removeEffect(effect);
+				if (obj)
+					obj.effects.removeEffect(effect);
 			}
 		});
 	},
