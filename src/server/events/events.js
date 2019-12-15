@@ -243,10 +243,18 @@ module.exports = {
 					phase.destroyed = true;
 					continue;
 				} else {
-					if (!phase.auto)
+					if (phase.has('ttl')) { 
+						if (phase.ttl === 0) {
+							phase.end = true;
+							continue;
+						}
+
+						phase.ttl--;
+						stillBusy = true;
+					} else if (!phase.auto)
 						stillBusy = true;
 
-					phase.update();
+					phase.update(event);
 				}
 			}
 		}
@@ -275,18 +283,20 @@ module.exports = {
 		for (let i = event.nextPhase; i < pLen; i++) {
 			let p = phases[i];
 
-			let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
-			let typeTemplate = require('../config/eventPhases/' + phaseFile);
-			let phase = extend({
-				instance: this.instance,
-				event: event
-			}, phaseTemplate, typeTemplate, p);
+			let phase = event.phases[i];
+			if (!phase) {
+				let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
+				let typeTemplate = require('../config/eventPhases/' + phaseFile);
+				phase = extend({
+					instance: this.instance,
+					event: event
+				}, phaseTemplate, typeTemplate, p);
 
-			event.phases.push(phase);
-
-			phase.init();
+				event.phases.push(phase);
+			}
 
 			event.nextPhase = i + 1;
+			phase.init(event);
 
 			if (!p.auto) {
 				stillBusy = true;

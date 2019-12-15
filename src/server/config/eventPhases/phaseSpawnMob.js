@@ -77,6 +77,15 @@ module.exports = {
 						mob.id = id;
 					}
 
+					if (l.originX) {
+						mob.mob.originX = l.originX;
+						mob.mob.originY = l.originY;
+						mob.mob.goHome = true;
+						mob.mob.maxChaseDistance = l.maxChaseDistance;
+						//This is a hack to make mobs that run somewhere able to take damage
+						delete mob.mob.events.beforeTakeDamage;
+					}
+
 					this.event.objects.push(mob);
 
 					if (l.dialogue) {
