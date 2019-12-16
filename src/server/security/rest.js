@@ -19,7 +19,7 @@ module.exports = {
 
 		let pars = req.originalUrl.split('?').pop().split('&');
 		pars.forEach(p => {
-			let [par, val] = p.split('=');
+			let [par, val = ''] = p.split('=');
 			config[par] = val
 				.split('%20')
 				.join(' ');
