@@ -266,10 +266,11 @@ module.exports = {
 		let targetTrade = target.trade;
 
 		const item = this.obj.inventory.findItem(msg.itemId);
-		const oldQuantity = item.quantity;
-		this.obj.inventory.destroyItem(msg.itemId);
 		if (!item)
 			return;
+
+		const oldQuantity = item.quantity;
+		this.obj.inventory.destroyItem(msg.itemId);
 
 		if (oldQuantity)
 			item.quantity = oldQuantity;
