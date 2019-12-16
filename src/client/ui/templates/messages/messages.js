@@ -368,23 +368,23 @@ define([
 			}
 
 			let textbox = this.find('input');
-			let val = {
+			let config = {
 				success: true,
 				message: textbox.val()
 			};
 
-			events.emit('onBeforeChat', val);
+			events.emit('onBeforeChat', config);
 
-			if (!val.success)
-				return;
-
-			val = val.message
+			let val = config.message
 				.split('<')
 				.join('&lt;')
 				.split('>')
 				.join('&gt;');
 
 			textbox.blur();
+			
+			if (!config.success)
+				return;
 
 			if (val.trim() === '')
 				return;
