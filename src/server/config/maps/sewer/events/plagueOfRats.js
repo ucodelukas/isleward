@@ -16,7 +16,7 @@ const descriptionStrings = {
 	escapeCounter: 'Escapees: $ratEscapees$'
 };
 
-const idFirstSpawnPhase = 0;
+const idFirstSpawnPhase = 6;
 
 const ratTargetPos = {
 	x: 97,
@@ -111,7 +111,7 @@ const rat = {
 
 module.exports = {
 	name: 'Plague of Rats',
-	description: 'Oh lawd, they comin\'',
+	description: descriptionStrings.leadup,
 	distance: -1,
 	cron: '* * * * *',
 
@@ -176,6 +176,9 @@ module.exports = {
 	}, {
 		type: 'despawnMob',
 		id: 'banditAlchemist'
+	}, {
+		type: 'setDescription',
+		desc: descriptionStrings.active
 	}, {
 		type: 'spawnMob',
 		mobs: [rat],

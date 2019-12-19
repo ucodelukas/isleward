@@ -137,6 +137,7 @@ module.exports = {
 		let event = {
 			id: this.nextId++,
 			config: extend({}, config),
+			events: this,
 			variables: {},
 			phases: [],
 			participators: [],
