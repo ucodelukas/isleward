@@ -69,6 +69,8 @@ module.exports = {
 						properties: l.properties
 					}]);
 
+					mob.event = this.event;
+
 					mobBuilder.build(mob, l);
 					this.spawnAnimation(mob);
 
@@ -125,6 +127,13 @@ module.exports = {
 
 					if (l.chats)
 						mob.addComponent('chatter', l.chats);
+
+					if (l.events) {
+						mob.addBuiltComponent({
+							type: 'eventComponent',
+							events: l.events
+						});
+					}
 				}
 			}
 		}, this);

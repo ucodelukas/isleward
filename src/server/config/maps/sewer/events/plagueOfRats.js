@@ -8,11 +8,24 @@ Todo:
 * Send rewards to everyone that participated
 */
 
-const idFirstSpawnPhase = 5;
+const descriptionStrings = {
+	leadup: 'A bandit alchemist has been spotted in the sewer tunnels',
+	active: 'Rats are swarming toward the city',
+	success: 'Success: The rat invasion has been averted',
+	failure: 'Failure: The rats have made it to the city',
+	escapeCounter: 'Escapees: $ratEscapees$'
+};
+
+const idFirstSpawnPhase = 0;
+
+const ratTargetPos = {
+	x: 97,
+	y: 87
+};
 
 const rat = {
 	name: 'Swarmer Rat',
-	cell: 16,
+	cell: 24,
 	level,
 	faction,
 	grantRep,
@@ -22,8 +35,8 @@ const rat = {
 		x: 61,
 		y: 62
 	},
-	originX: 97,
-	originY: 87,
+	originX: ratTargetPos.x,
+	originY: ratTargetPos.y,
 	maxChaseDistance: 1000,
 	spells: [{
 		type: 'smokeBomb',
@@ -74,7 +87,26 @@ const rat = {
 				h: 20
 			}
 		}
-	}]
+	}],
+	events: {
+		afterMove: function () {
+			const { obj: { x, y } } = this;
+			if (x !== ratTargetPos.x || y !== ratTargetPos.y)
+				return;
+
+			const eventManager = this.obj.instance.events;
+			const eventName = this.obj.event.config.name;
+
+			eventManager.incrementEventVariable(eventName, 'ratEscapees', 1);
+
+			const { active, escapeCounter } = descriptionStrings;
+			const newDesc = `${active}<br /><br />${escapeCounter}`;
+
+			eventManager.setEventDescription(eventName, newDesc);
+
+			this.obj.destroyed = true;
+		}
+	}
 };
 
 module.exports = {

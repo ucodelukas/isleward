@@ -2,6 +2,18 @@ let phaseTemplate = require('../config/eventPhases/phaseTemplate');
 let fs = require('fs');
 let mapList = require('../config/maps/mapList');
 
+const applyVariablesToDescription = (desc, variables) => {
+	if (!variables)
+		return desc;
+
+	Object.entries(variables).forEach(e => {
+		const [key, value] = e;
+		desc = desc.split(`$${key}$`).join(value);
+	});
+
+	return desc;
+};
+
 module.exports = {
 	configs: [],
 	nextId: 0,
@@ -42,8 +54,11 @@ module.exports = {
 		if ((config.events) && (config.events.beforeSetDescription))
 			config.events.beforeSetDescription(this);
 
-		if (desc)
+		if (desc) {
+			desc = applyVariablesToDescription(desc, event.variables);
+
 			config.description = desc;
+		}
 
 		event.participators.forEach(p => p.events.syncList());
 	},
@@ -63,6 +78,25 @@ module.exports = {
 			return;
 
 		event.winText = text;
+	},
+
+	setEventVariable: function (eventName, variableName, value) {
+		let config = this.getEvent(eventName);
+		let event = config.event;
+		if (!event)
+			return;
+
+		event.variables[variableName] = value;
+	},
+
+	incrementEventVariable: function (eventName, variableName, delta) {
+		let config = this.getEvent(eventName);
+		let event = config.event;
+		if (!event)
+			return;
+
+		const currentValue = event.variables[variableName] || 0;
+		event.variables[variableName] = currentValue + delta;
 	},
 
 	update: function () {
@@ -103,6 +137,7 @@ module.exports = {
 		let event = {
 			id: this.nextId++,
 			config: extend({}, config),
+			variables: {},
 			phases: [],
 			participators: [],
 			objects: [],
