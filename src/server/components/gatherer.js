@@ -23,6 +23,8 @@ module.exports = {
 		if (nodes.length === 0)
 			return;
 
+		const { obj: { equipment, stats } } = this;
+
 		let firstNode = nodes[0];
 
 		this.gathering = firstNode;
@@ -30,17 +32,14 @@ module.exports = {
 		let ttlMax = firstNode.resourceNode.ttl || this.defaultTtlMax;
 
 		if (firstNode.resourceNode.nodeType === 'fish') {
-			let rod = this.obj.equipment.eq.tool;
-			if (!rod) {
+			if (equipment.isSlotEmpty('tool')) {
 				this.sendAnnouncement('You need a fishing rod to fish');
 				this.gathering = null;
 
 				return;
 			}
 
-			rod = this.obj.inventory.findItem(rod);
-
-			let statCatchSpeed = Math.min(150, this.obj.stats.values.catchSpeed);
+			let statCatchSpeed = Math.min(150, stats.values.catchSpeed);
 			ttlMax *= (1 - (statCatchSpeed / 200));
 		}
 
