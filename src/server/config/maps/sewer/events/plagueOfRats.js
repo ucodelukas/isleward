@@ -1,22 +1,14 @@
 const { mobs: { rat: { level, faction, grantRep, regular: { drops } } } } = require('../zone');
 
 /*
-Steps:
-
-1. Bandit runs in
-2. Bandit pours liquid into grate
-3. Bandit says that rats will now become enraged and attack the city
-4. Bandit laughs
-5. Bandit runs away
-6. Giant Rat spawns every 5 seconds
-7. Giant Rat spawns every 3 seconds
-8. Giant Rat spawns every 1 second
-9. 5 Enraged Rats spawn
-
-Note: All rats run to sewer exit
-Note: Keep track of escapees and if you reach x, you fail
-Note: Chest spawns that everyone can loot
+Todo:
+* Rats escape when they reach exit
+* Show amount that has escaped
+* As soon as 5 has escaped, the event fails
+* Send rewards to everyone that participated
 */
+
+const idFirstSpawnPhase = 5;
 
 const rat = {
 	name: 'Swarmer Rat',
@@ -89,9 +81,70 @@ module.exports = {
 	name: 'Plague of Rats',
 	description: 'Oh lawd, they comin\'',
 	distance: -1,
-	cron: '*/10 * * * *',
+	cron: '* * * * *',
 
 	phases: [{
+		type: 'spawnMob',
+		auto: true,
+		mobs: [{
+			id: 'banditAlchemist',
+			name: 'Bandit Alchemist',
+			attackable: false,
+			hpMult: 1,
+			cell: 79,
+			level: 15,
+			pos: {
+				x: 117,
+				y: 62
+			}
+		}]
+	}, {
+		type: 'moveMob',
+		id: 'banditAlchemist',
+		pos: {
+			x: 64,
+			y: 63
+		}
+	}, {
+		type: 'eventChain',
+		config: [{
+			type: 'mobTalk',
+			id: 'banditAlchemist',
+			text: 'Smeggy smoo?',
+			delay: 10
+		}, {
+			type: 'mobTalk',
+			id: 'banditAlchemist',
+			text: 'Weggaflegga!',
+			delay: 10
+		}, {
+			type: 'mobTalk',
+			id: 'banditAlchemist',
+			text: '*pours a bubbling green liquid into a rat nest*',
+			delay: 10
+		}, {
+			type: 'mobTalk',
+			id: 'banditAlchemist',
+			text: 'Now dey angry lol!',
+			delay: 10
+		}, {
+			type: 'mobTalk',
+			id: 'banditAlchemist',
+			text: '*laughs*',
+			delay: 10
+		}]
+	}, {
+		type: 'moveMob',
+		id: 'banditAlchemist',
+		pos: {
+			x: 117,
+			y: 63
+		},
+		auto: true
+	}, {
+		type: 'despawnMob',
+		id: 'banditAlchemist'
+	}, {
 		type: 'spawnMob',
 		mobs: [rat],
 		auto: true
@@ -100,10 +153,9 @@ module.exports = {
 		ttl: 15
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: 0,
+		gotoPhaseIndex: idFirstSpawnPhase,
 		repeats: 5
-	},
-	{
+	}, {
 		type: 'spawnMob',
 		mobs: [rat],
 		auto: true
@@ -112,7 +164,7 @@ module.exports = {
 		ttl: 7
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: 3,
+		gotoPhaseIndex: idFirstSpawnPhase + 3,
 		repeats: 5
 	},
 	{
@@ -124,7 +176,7 @@ module.exports = {
 		ttl: 3
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: 6,
+		gotoPhaseIndex: idFirstSpawnPhase + 6,
 		repeats: 3
 	},
 	{
