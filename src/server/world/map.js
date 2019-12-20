@@ -444,6 +444,9 @@ module.exports = {
 	canPathFromPos: function (pos) {
 		const canPath = this.spawn.some(s => {
 			const path = physics.getPath(pos, s);
+			if (!path.length)
+				return true;
+			
 			const { x, y } = path[path.length - 1];
 			const isFullPath = (s.x === x && s.y === y);
 
