@@ -69,7 +69,6 @@ module.exports = {
 		try {
 			this.zone = require('../' + this.path + '/' + this.name + '/zone');
 		} catch (e) {
-			console.log(e);
 			this.zone = globalZone;
 		}
 		events.emit('onAfterGetZone', this.name, this.zone);
