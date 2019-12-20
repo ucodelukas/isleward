@@ -442,17 +442,31 @@ module.exports = {
 	//Find if any spawns can path to a position. This is important for when maps change and players 
 	// log in on tiles that aren't blocking but not able to reach anywhere useful
 	canPathFromPos: function (pos) {
-		const canPath = this.spawn.some(s => {
-			const path = physics.getPath(pos, s);
-			if (!path.length)
-				return true;
-			
-			const { x, y } = path[path.length - 1];
-			const isFullPath = (s.x === x && s.y === y);
+		const fnCanPath = positions => {
+			return positions.some(p => {
+				const path = physics.getPath(pos, p);
+				//Are we on the position?
+				if (!path.length)
+					return true;
 
-			return isFullPath;
-		});
+				const { x, y } = path[path.length - 1];
+				//Can we reach the position?
+				const isFullPath = (p.x === x && p.y === y);
+				if (isFullPath)
+					return true;
 
-		return canPath;
+				return false;
+			});
+		};
+
+		const canPathToSpawn = fnCanPath(this.spawn);
+
+		if (canPathToSpawn)
+			return true;
+
+		const portals = objects.objects.filter(o => o.portal);
+		const canPathToPortal = fnCanPath(portals);
+
+		return canPathToPortal;
 	}
 };
