@@ -1,7 +1,7 @@
 define([
 	'js/system/events',
-	'html!ui/templates/options/template',
-	'css!ui/templates/options/styles',
+	'html!ui/templates/mainMenu/template',
+	'css!ui/templates/mainMenu/styles',
 	'js/rendering/renderer',
 	'ui/factory',
 	'js/objects/objects',
@@ -24,7 +24,7 @@ define([
 		modal: true,
 
 		postRender: function () {
-			this.onEvent('onToggleOptions', this.toggle.bind(this));
+			this.onEvent('onToggleMainMenu', this.toggle.bind(this));
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
 			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));

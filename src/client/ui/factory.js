@@ -30,7 +30,7 @@ define([
 				'spells',
 				'messages',
 				'online',
-				'options',
+				'mainMenu',
 				'context',
 				'party',
 				'help',
