@@ -26,9 +26,8 @@ define([
 		postRender: function () {
 			this.onEvent('onToggleMainMenu', this.toggle.bind(this));
 
-			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
-			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
-			this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
+			//this.el.find('.btnOptions').on('click', this.openOptions.bind(this));
+			this.el.find('.btnOptions').on('click', this.handler.bind(this, 'onToggleOptions'));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
@@ -36,6 +35,15 @@ define([
 			this.el.find('.btnIssue').on('click', this.reportIssue.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
+		},
+
+		handler: function (e) {
+			if (isMobile)
+				this.el.removeClass('active');
+
+			events.emit(e);
+
+			return false;
 		},
 		
 		reportIssue: function () {
@@ -69,10 +77,6 @@ define([
 					ui.destroy();
 			});
 			factory.build('characters', {});
-		},
-
-		toggleScreen: function () {
-			this.el.find('.btnScreen').html(renderer.toggleScreen());
 		},
 
 		onResize: function () {

@@ -55,7 +55,8 @@ define([
 				'wardrobe',
 				'passives',
 				'workbench',
-				'middleHud'
+				'middleHud',
+				'options'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);
