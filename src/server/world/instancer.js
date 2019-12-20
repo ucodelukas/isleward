@@ -93,7 +93,7 @@ module.exports = {
 		if (spawnEvent.changed)
 			msg.keepPos = false;
 
-		if ((msg.keepPos) && (!physics.isValid(obj.x, obj.y)))
+		if (msg.keepPos && (!physics.isValid(obj.x, obj.y) || !map.canPathFromPos(obj)))
 			msg.keepPos = false;
 
 		if (!msg.keepPos || !obj.has('x') || (map.mapFile.properties.isRandom && obj.instanceId !== map.seed)) {

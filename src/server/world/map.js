@@ -437,5 +437,19 @@ module.exports = {
 
 		let spawns = this.spawn.filter(s => (((s.maxLevel) && (s.maxLevel >= level)) || (!s.maxLevel)));
 		return spawns[0];
+	},
+
+	//Find if any spawns can path to a position. This is important for when maps change and players 
+	// log in on tiles that aren't blocking but not able to reach anywhere useful
+	canPathFromPos: function (pos) {
+		const canPath = this.spawn.some(s => {
+			const path = physics.getPath(pos, s);
+			const { x, y } = path[path.length - 1];
+			const isFullPath = (s.x === x && s.y === y);
+
+			return isFullPath;
+		});
+
+		return canPath;
 	}
 };
