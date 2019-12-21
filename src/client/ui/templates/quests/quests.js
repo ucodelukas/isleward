@@ -28,6 +28,7 @@ define([
 			this.onEvent('onObtainQuest', this.onObtainQuest.bind(this));
 			this.onEvent('onUpdateQuest', this.onUpdateQuest.bind(this));
 			this.onEvent('onCompleteQuest', this.onCompleteQuest.bind(this));
+			this.onEvent('onToggleQuestVisibility', this.onToggleQuestVisibility.bind(this));
 		},
 
 		onRezone: function () {
@@ -118,6 +119,13 @@ define([
 		toggleButtons: function (e) {
 			this.el.toggleClass('active');
 			e.stopPropagation();
-		}
+		},
+
+		onToggleQuestVisibility: function() {
+			let inactiveQuests = this.quests.filter(f => f.quest.active === false);
+			inactiveQuests.forEach(q => {
+				q.el.toggle();
+			})
+		},
 	};
 });

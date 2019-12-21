@@ -28,7 +28,8 @@ define([
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
             this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
-            this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
+			this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
+			this.el.find('.btnQuests').on('click', events.emit.bind(events, 'onToggleQuestVisibility'));
             this.el.find('.btnCloseOptions').on('click', this.toggle.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
