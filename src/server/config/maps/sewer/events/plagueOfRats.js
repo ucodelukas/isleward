@@ -2,21 +2,22 @@ const { mobs: { rat: { level, faction, grantRep, regular: { drops } } } } = requ
 
 /*
 Todo:
-* Rats escape when they reach exit
-* Show amount that has escaped
-* As soon as 5 has escaped, the event fails
-* Send rewards to everyone that participated
+* Bandit dialogue
+* Decide on and set rewards
+* Rat smoke non additive
 */
 
 const descriptionStrings = {
 	leadup: 'A bandit alchemist has been spotted in the sewer tunnels',
-	active: 'Rats are swarming toward the city',
+	active: 'Rats are swarming towards the city',
 	success: 'Success: The rat invasion has been averted',
 	failure: 'Failure: The rats have made it to the city',
 	escapeCounter: 'Escapees: $ratEscapees$'
 };
 
 const idFirstSpawnPhase = 6;
+const idFailPhase = 19;
+const maxEscapees = 5;
 
 const ratTargetPos = {
 	x: 97,
@@ -105,6 +106,25 @@ const rat = {
 			eventManager.setEventDescription(eventName, newDesc);
 
 			this.obj.destroyed = true;
+
+			const totalEscapees = this.obj.event.variables.ratEscapees;
+			if (totalEscapees >= maxEscapees) {
+				const event = this.obj.event;
+				event.currentPhase.end = true;
+				event.nextPhase = idFailPhase;
+			}
+		},
+
+		afterDeath: function ({ source: { name } }) {
+			const eventManager = this.obj.instance.events;
+			const eventName = this.obj.event.config.name;
+
+			eventManager.addParticipantRewards(eventName, name, { name: 'Angler\'s Mark',
+				sprite: [12, 9],
+				noDrop: true,
+				noDestroy: true,
+				quantity: 1,
+				noSalvage: true });
 		}
 	}
 };
@@ -201,8 +221,7 @@ module.exports = {
 		type: 'goto',
 		gotoPhaseIndex: idFirstSpawnPhase + 3,
 		repeats: 5
-	},
-	{
+	}, {
 		type: 'spawnMob',
 		mobs: [rat],
 		auto: true
@@ -213,8 +232,19 @@ module.exports = {
 		type: 'goto',
 		gotoPhaseIndex: idFirstSpawnPhase + 6,
 		repeats: 3
-	},
-	{
+	}, {
 		type: 'killAllMobs'
+	}, {
+		type: 'setDescription',
+		desc: descriptionStrings.success,
+		ttl: 50
+	}, {
+		type: 'giveRewards'
+	}, {
+		type: 'end'
+	}, {
+		type: 'setDescription',
+		desc: descriptionStrings.failure,
+		ttl: 50
 	}]
 };

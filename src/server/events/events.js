@@ -42,6 +42,7 @@ module.exports = {
 	getEvent: function (name) {
 		return this.configs.find(c => (c.name === name)).event.config;
 	},
+
 	setEventDescription: function (name, desc) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -62,6 +63,7 @@ module.exports = {
 
 		event.participators.forEach(p => p.events.syncList());
 	},
+
 	setEventRewards: function (name, rewards) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -71,6 +73,22 @@ module.exports = {
 		event.rewards = rewards;
 		event.age = event.config.duration - 2;
 	},
+
+	addParticipantRewards: function (eventName, participantName, addRewards) {
+		const { event: { rewards } } = this.getEvent(eventName);
+
+		let pRewards = rewards[participantName];
+		if (!pRewards) {
+			pRewards = [];
+			rewards[participantName] = pRewards;
+		}
+
+		if (rewards.push)
+			pRewards.push(...addRewards);
+		else
+			pRewards.push(addRewards);
+	},
+
 	setWinText: function (name, text) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -137,8 +155,9 @@ module.exports = {
 		let event = {
 			id: this.nextId++,
 			config: extend({}, config),
-			events: this,
+			eventManager: this,
 			variables: {},
+			rewards: {},
 			phases: [],
 			participators: [],
 			objects: [],
@@ -329,6 +348,7 @@ module.exports = {
 				}, phaseTemplate, typeTemplate, p);
 
 				event.phases.push(phase);
+				event.currentPhase = phase;
 			}
 
 			event.nextPhase = i + 1;
