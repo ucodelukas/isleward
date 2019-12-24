@@ -16,14 +16,20 @@
 
 .uiLogin {
 	display: none;
-	width: @totalWidth;
+	width: 562px;
 	height: @totalHeight;
 	margin-top: -80px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	> * {
+		flex-shrink: 0;
+	}
 
 	.logo {
 		width: 562px;
 		height: @logoHeight;
-		margin-left: ((@totalWidth / 2) - (@logoWidth / 2));
 		margin-bottom: (@boxPadding * 3);
 	}
 
@@ -110,10 +116,8 @@
 	}
 
 	.news {
-		margin-left: -100px;
 		margin-top: 40px;
 		color: @white;
-		width: 600px;
 		text-align: center;
 		cursor: pointer;
 
@@ -181,18 +185,13 @@
 .mobile {
 	.uiLogin {
 		margin-top: 0px;
-	}
 
-	.uiLoginExtra .extra {
-		flex-direction: column;
+		.logo {
+			margin-bottom: 30px;
+		}
 
-		.btn {
-			margin-left: 0px;
-			margin-top: 10px;
-
-			&:first-child {
-				margin-top: 0px;
-			}
+		.news {
+			margin-top: 20px;
 		}
 	}
 }
