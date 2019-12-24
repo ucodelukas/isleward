@@ -51,8 +51,8 @@ const descriptionStrings = {
 };
 
 const config = {
-	cron: '0/3 * * * *',
-	//cron: '* * * * *',
+	//cron: '0/3 * * * *',
+	cron: '* * * * *',
 	idFirstSpawnPhase: 6,
 	idFailPhase: 19,
 	maxEscapees: 5,
