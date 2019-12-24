@@ -6,10 +6,10 @@ Todo:
 */
 
 const descriptionStrings = {
-	leadup: 'A bandit alchemist has been spotted in the sewer tunnels',
-	active: 'Rats are swarming towards the city',
-	success: 'Success: The rat invasion has been averted',
-	failure: 'Failure: The rats have made it to the city',
+	leadup: 'A bandit alchemist has been spotted in the sewer tunnels.',
+	active: 'Rats are swarming towards the city.',
+	success: 'Success: The rat invasion has been averted.',
+	failure: 'Failure: The rats have made it to the city.',
 	escapeCounter: 'Escapees: $ratEscapees$'
 };
 
