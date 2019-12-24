@@ -232,6 +232,7 @@ module.exports = {
 			level: 13,
 			walkDistance: 0,
 			faction: 'hostile',
+			noQuest: true,
 			grantRep: {
 				fjolgard: 22
 			},

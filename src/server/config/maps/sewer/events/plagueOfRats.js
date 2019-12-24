@@ -160,28 +160,28 @@ module.exports = {
 		config: [{
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: 'I think I finally cracked it. The serum should finally be complete.',
-			delay: 10
+			text: 'I think I cracked it! The serum should finally be complete.',
+			delay: 15
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: 'A taste of this and the rats\' hunger for blood will be instatiable.',
-			delay: 10
+			text: 'One taste of this and the rats\' hunger for blood will be instatiable.',
+			delay: 15
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
 			text: '*pours a bubbling liquid into a rat nest*',
-			delay: 10
+			delay: 15
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
 			text: 'Let\'s see how Fjolgard handles a rat infestation of the bloodthirsty variety.',
-			delay: 10
+			delay: 15
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
 			text: '*laughs*',
-			delay: 10
+			delay: 15
 		}]
 	}, {
 		type: 'moveMob',
