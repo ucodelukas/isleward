@@ -74,6 +74,12 @@ module.exports = {
 		event.age = event.config.duration - 2;
 	},
 
+	setParticipantRewards: function (eventName, participantName, newRewards) {
+		const { event: { rewards } } = this.getEvent(eventName);
+
+		rewards[participantName] = newRewards;
+	},
+
 	addParticipantRewards: function (eventName, participantName, addRewards) {
 		const { event: { rewards } } = this.getEvent(eventName);
 
@@ -83,10 +89,20 @@ module.exports = {
 			rewards[participantName] = pRewards;
 		}
 
-		if (rewards.push)
-			pRewards.push(...addRewards);
-		else
-			pRewards.push(addRewards);
+		if (!addRewards.push)
+			addRewards = [ addRewards ];
+
+		addRewards.forEach(r => {
+			const { name, quantity = 1 } = r;
+
+			const exists = pRewards.find(f => f.name === name);
+			if (exists)
+				exists.quantity = (exists.quantity || 1) + quantity;
+			else
+				pRewards.push(r);
+		});
+
+		console.log(pRewards);
 	},
 
 	setWinText: function (name, text) {
@@ -182,7 +198,7 @@ module.exports = {
 			if ((rewards) && (rewards[p.name])) {
 				rewards[p.name].forEach(r => rList.push(r));
 				if (rList.length > 1)
-					rList[1].msg = 'Fishing tournament reward:';
+					rList[1].msg = `${event.config.name} reward:`;
 			}
 
 			this.instance.mail.sendMail(p.name, rList);

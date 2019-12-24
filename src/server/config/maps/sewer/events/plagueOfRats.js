@@ -1,9 +1,46 @@
 const { mobs: { rat: { level, faction, grantRep, regular: { drops } } } } = require('../zone');
+const rewardGenerator = require('../../../../misc/rewardGenerator');
 
-/*
-Todo:
-* Decide on and set rewards
-*/
+const rewardConfig = {
+	regularKill: [{
+		name: 'Iron Bar',
+		sprite: [0, 0],
+		quality: 0,
+		quantity: 5,
+		chance: 10
+	}, {
+		name: 'Cloth Scrap',
+		sprite: [0, 1],
+		quality: 0,
+		quantity: 5,
+		chance: 10
+	}, {
+		name: 'Leather Scrap',
+		sprite: [0, 7],
+		quality: 0,
+		quantity: 5,
+		chance: 10
+	}, {
+		name: 'Muddy Runestone',
+		material: true,
+		quality: 0,
+		sprite: [6, 0],
+		spritesheet: 'images/materials.png',
+		chance: 1
+	}, {
+		name: 'Epic Essence',
+		material: true,
+		sprite: [0, 5],
+		quality: 3,
+		chance: 1
+	}, {
+		name: 'Rat Claw',
+		material: true,
+		sprite: [3, 0],
+		spritesheet: 'images/materials.png',
+		chance: 3
+	}]
+};
 
 const descriptionStrings = {
 	leadup: 'A bandit alchemist has been spotted in the sewer tunnels.',
@@ -13,9 +50,16 @@ const descriptionStrings = {
 	escapeCounter: 'Escapees: $ratEscapees$'
 };
 
-const idFirstSpawnPhase = 6;
-const idFailPhase = 19;
-const maxEscapees = 5;
+const config = {
+	cron: '0/3 * * * *',
+	//cron: '* * * * *',
+	idFirstSpawnPhase: 6,
+	idFailPhase: 19,
+	maxEscapees: 5,
+	repeats: [5, 5, 3],
+	//repeats: [1, 1, 1],
+	rewardItemsPerKill: 3
+};
 
 const ratTargetPos = {
 	x: 97,
@@ -106,10 +150,10 @@ const rat = {
 			this.obj.destroyed = true;
 
 			const totalEscapees = this.obj.event.variables.ratEscapees;
-			if (totalEscapees >= maxEscapees) {
+			if (totalEscapees >= config.maxEscapees) {
 				const event = this.obj.event;
 				event.currentPhase.end = true;
-				event.nextPhase = idFailPhase;
+				event.nextPhase = config.idFailPhase;
 			}
 		},
 
@@ -117,12 +161,10 @@ const rat = {
 			const eventManager = this.obj.instance.events;
 			const eventName = this.obj.event.config.name;
 
-			eventManager.addParticipantRewards(eventName, name, { name: 'Angler\'s Mark',
-				sprite: [12, 9],
-				noDrop: true,
-				noDestroy: true,
-				quantity: 1,
-				noSalvage: true });
+			const itemCount = config.rewardItemsPerKill;
+			const rewards = rewardGenerator(itemCount, rewardConfig.regularKill);
+
+			eventManager.addParticipantRewards(eventName, name, rewards);
 		}
 	}
 };
@@ -206,8 +248,8 @@ module.exports = {
 		ttl: 15
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: idFirstSpawnPhase,
-		repeats: 5
+		gotoPhaseIndex: config.idFirstSpawnPhase,
+		repeats: config.repeats[0]
 	}, {
 		type: 'spawnMob',
 		mobs: [rat],
@@ -217,8 +259,8 @@ module.exports = {
 		ttl: 7
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: idFirstSpawnPhase + 3,
-		repeats: 5
+		gotoPhaseIndex: config.idFirstSpawnPhase + 3,
+		repeats: config.repeats[1]
 	}, {
 		type: 'spawnMob',
 		mobs: [rat],
@@ -228,8 +270,8 @@ module.exports = {
 		ttl: 3
 	}, {
 		type: 'goto',
-		gotoPhaseIndex: idFirstSpawnPhase + 6,
-		repeats: 3
+		gotoPhaseIndex: config.idFirstSpawnPhase + 6,
+		repeats: config.repeats[2]
 	}, {
 		type: 'killAllMobs'
 	}, {

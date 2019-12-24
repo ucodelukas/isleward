@@ -65,10 +65,10 @@ module.exports = (itemCount, useConfig) => {
 				material: true,
 				quality: pick.quality,
 				sprite: pick.sprite,
-				quantity: 1
+				quantity: pick.quantity || 1
 			});
 		} else
-			item.quantity++;
+			item.quantity += (pick.quantity || 1);
 	}
 
 	return items;

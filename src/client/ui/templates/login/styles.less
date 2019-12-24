@@ -17,7 +17,7 @@
 .uiLogin {
 	display: none;
 	width: 562px;
-	height: @totalHeight;
+	height: 475px;
 	margin-top: -80px;
 	display: flex;
 	flex-direction: column;
@@ -31,6 +31,12 @@
 		width: 562px;
 		height: @logoHeight;
 		margin-bottom: (@boxPadding * 3);
+
+		filter: 
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
 	}
 
 	.right {
@@ -146,7 +152,7 @@
 			padding-left: 10px;
 			padding-right: 10px;
 			margin-left: 10px;
-			background-color: @redD;
+			background-color: @orangeD;
 			color: @white;
 
 			&:first-child {
@@ -154,7 +160,7 @@
 			}
 
 			&:hover {
-				background-color: @redC;
+				background-color: @orangeC;
 			}
 		}
 	}
