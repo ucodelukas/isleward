@@ -2,9 +2,7 @@ const { mobs: { rat: { level, faction, grantRep, regular: { drops } } } } = requ
 
 /*
 Todo:
-* Bandit dialogue
 * Decide on and set rewards
-* Rat smoke non additive
 */
 
 const descriptionStrings = {
@@ -25,7 +23,7 @@ const ratTargetPos = {
 };
 
 const rat = {
-	name: 'Swarmer Rat',
+	name: 'Bloodthirsty Rat',
 	cell: 24,
 	level,
 	faction,
@@ -79,7 +77,7 @@ const rat = {
 			chance: 0.125,
 			randomColor: true,
 			randomScale: true,
-			blendMode: 'add',
+			blendMode: 'screen',
 			spawnType: 'rect',
 			spawnRect: {
 				x: -10,
@@ -162,22 +160,22 @@ module.exports = {
 		config: [{
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: 'Smeggy smoo?',
+			text: 'I think I finally cracked it. The serum should finally be complete.',
 			delay: 10
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: 'Weggaflegga!',
+			text: 'A taste of this and the rats\' hunger for blood will be instatiable.',
 			delay: 10
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: '*pours a bubbling green liquid into a rat nest*',
+			text: '*pours a bubbling liquid into a rat nest*',
 			delay: 10
 		}, {
 			type: 'mobTalk',
 			id: 'banditAlchemist',
-			text: 'Now dey angry lol!',
+			text: 'Let\'s see how Fjolgard handles a rat infestation of the bloodthirsty variety.',
 			delay: 10
 		}, {
 			type: 'mobTalk',
