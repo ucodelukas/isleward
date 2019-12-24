@@ -14,7 +14,7 @@ module.exports = {
 			if (this.mobName) {
 				let mobType = mobTypes[this.mobName.toLowerCase()];
 				//Maybe the zoneFile changed in the meantime. If so, regenerate
-				if ((!mobType) || (mobType.attackable === false))
+				if (!mobType || mobType.attackable === false || mobType.noQuest)
 					this.mobName = null;
 			}
 
@@ -24,13 +24,14 @@ module.exports = {
 					let mobBlueprint = mobTypes[m];
 
 					return (
-						(m !== 'default') &&
+						m !== 'default' &&
+						!mobBlueprint.noQuest &&
 						(
-							(mobBlueprint.attackable) ||
-							(!mobBlueprint.has('attackable'))
+							mobBlueprint.attackable ||
+							!mobBlueprint.has('attackable')
 						) &&
-						(mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35)) &&
-						(mobCounts[m] > 1)
+						mobBlueprint.level <= ~~(this.obj.stats.values.level * 1.35) &&
+						mobCounts[m] > 1
 					);
 				}, this);
 

@@ -2,6 +2,18 @@ let phaseTemplate = require('../config/eventPhases/phaseTemplate');
 let fs = require('fs');
 let mapList = require('../config/maps/mapList');
 
+const applyVariablesToDescription = (desc, variables) => {
+	if (!variables)
+		return desc;
+
+	Object.entries(variables).forEach(e => {
+		const [key, value] = e;
+		desc = desc.split(`$${key}$`).join(value);
+	});
+
+	return desc;
+};
+
 module.exports = {
 	configs: [],
 	nextId: 0,
@@ -30,6 +42,7 @@ module.exports = {
 	getEvent: function (name) {
 		return this.configs.find(c => (c.name === name)).event.config;
 	},
+
 	setEventDescription: function (name, desc) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -42,11 +55,15 @@ module.exports = {
 		if ((config.events) && (config.events.beforeSetDescription))
 			config.events.beforeSetDescription(this);
 
-		if (desc)
+		if (desc) {
+			desc = applyVariablesToDescription(desc, event.variables);
+
 			config.description = desc;
+		}
 
 		event.participators.forEach(p => p.events.syncList());
 	},
+
 	setEventRewards: function (name, rewards) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -56,6 +73,22 @@ module.exports = {
 		event.rewards = rewards;
 		event.age = event.config.duration - 2;
 	},
+
+	addParticipantRewards: function (eventName, participantName, addRewards) {
+		const { event: { rewards } } = this.getEvent(eventName);
+
+		let pRewards = rewards[participantName];
+		if (!pRewards) {
+			pRewards = [];
+			rewards[participantName] = pRewards;
+		}
+
+		if (rewards.push)
+			pRewards.push(...addRewards);
+		else
+			pRewards.push(addRewards);
+	},
+
 	setWinText: function (name, text) {
 		let config = this.getEvent(name);
 		let event = config.event;
@@ -63,6 +96,25 @@ module.exports = {
 			return;
 
 		event.winText = text;
+	},
+
+	setEventVariable: function (eventName, variableName, value) {
+		let config = this.getEvent(eventName);
+		let event = config.event;
+		if (!event)
+			return;
+
+		event.variables[variableName] = value;
+	},
+
+	incrementEventVariable: function (eventName, variableName, delta) {
+		let config = this.getEvent(eventName);
+		let event = config.event;
+		if (!event)
+			return;
+
+		const currentValue = event.variables[variableName] || 0;
+		event.variables[variableName] = currentValue + delta;
 	},
 
 	update: function () {
@@ -103,6 +155,9 @@ module.exports = {
 		let event = {
 			id: this.nextId++,
 			config: extend({}, config),
+			eventManager: this,
+			variables: {},
+			rewards: {},
 			phases: [],
 			participators: [],
 			objects: [],
@@ -243,10 +298,18 @@ module.exports = {
 					phase.destroyed = true;
 					continue;
 				} else {
-					if (!phase.auto)
+					if (phase.has('ttl')) { 
+						if (phase.ttl === 0) {
+							phase.end = true;
+							continue;
+						}
+
+						phase.ttl--;
+						stillBusy = true;
+					} else if (!phase.auto)
 						stillBusy = true;
 
-					phase.update();
+					phase.update(event);
 				}
 			}
 		}
@@ -275,18 +338,21 @@ module.exports = {
 		for (let i = event.nextPhase; i < pLen; i++) {
 			let p = phases[i];
 
-			let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
-			let typeTemplate = require('../config/eventPhases/' + phaseFile);
-			let phase = extend({
-				instance: this.instance,
-				event: event
-			}, phaseTemplate, typeTemplate, p);
+			let phase = event.phases[i];
+			if (!phase) {
+				let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
+				let typeTemplate = require('../config/eventPhases/' + phaseFile);
+				phase = extend({
+					instance: this.instance,
+					event: event
+				}, phaseTemplate, typeTemplate, p);
 
-			event.phases.push(phase);
-
-			phase.init();
+				event.phases.push(phase);
+				event.currentPhase = phase;
+			}
 
 			event.nextPhase = i + 1;
+			phase.init(event);
 
 			if (!p.auto) {
 				stillBusy = true;

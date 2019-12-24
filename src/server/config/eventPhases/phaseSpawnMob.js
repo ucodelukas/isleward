@@ -1,12 +1,97 @@
 let mobBuilder = require('../../world/mobBuilder');
 
+const buildMob = (objects, mobConfig, x, y, mobIndex) => {
+	const { id, sheetName, cell, name, properties, originX, originY, maxChaseDistance, dialogue, trade, chats, events } = mobConfig;
+
+	let mob = objects.buildObjects([{
+		x: x,
+		y: y,
+		sheetName: sheetName || 'mobs',
+		cell: cell,
+		name: name,
+		properties: properties
+	}]);
+
+	mobBuilder.build(mob, mobConfig);
+
+	if (id)
+		mob.id = id.split('$').join(mobIndex);
+
+	if (originX) {
+		mob.mob.originX = originX;
+		mob.mob.originY = originY;
+		mob.mob.goHome = true;
+		mob.mob.maxChaseDistance = maxChaseDistance;
+		//This is a hack to make mobs that run somewhere able to take damage
+		delete mob.mob.events.beforeTakeDamage;
+	}
+
+	if (dialogue) {
+		mob.addComponent('dialogue', {
+			config: dialogue.config
+		});
+
+		if (dialogue.auto) {
+			mob.dialogue.trigger = objects.buildObjects([{
+				properties: {
+					x: mob.x - 1,
+					y: mob.y - 1,
+					width: 3,
+					height: 3,
+					cpnNotice: {
+						actions: {
+							enter: {
+								cpn: 'dialogue',
+								method: 'talk',
+								args: [{
+									targetName: 'angler nayla'
+								}]
+							},
+							exit: {
+								cpn: 'dialogue',
+								method: 'stopTalk'
+							}
+						}
+					}
+				}
+			}]);
+		}
+	}
+
+	if (trade)
+		mob.addComponent('trade', trade);
+
+	if (chats)
+		mob.addComponent('chatter', chats);
+
+	if (events) {
+		mob.addBuiltComponent({
+			type: 'eventComponent',
+			events: events
+		});
+	}
+
+	return mob;
+};
+
+const spawnAnimation = (syncer, { x, y }) => {
+	syncer.queue('onGetObject', {
+		x: x,
+		y: y,
+		components: [{
+			type: 'attackAnimation',
+			row: 0,
+			col: 4
+		}]
+	}, -1);
+};
+
 module.exports = {
 	spawnRect: null,
 	mobs: null,
 
 	init: function () {
-		let objects = this.instance.objects;
-		let spawnRect = this.spawnRect;
+		const { spawnRect, instance: { objects, syncer } } = this;
 
 		if (!this.mobs.push)
 			this.mobs = [this.mobs];
@@ -60,79 +145,15 @@ module.exports = {
 					this.spawnAnimation(mob);
 					this.event.objects.push(mob);
 				} else {
-					let mob = objects.buildObjects([{
-						x: x,
-						y: y,
-						sheetName: l.sheetName || 'mobs',
-						cell: l.cell,
-						name: l.name,
-						properties: l.properties
-					}]);
-
-					mobBuilder.build(mob, l);
-					this.spawnAnimation(mob);
-
-					if (l.id) {
-						let id = l.id.split('$').join(i);
-						mob.id = id;
-					}
-
+					const mob = buildMob(objects, l, x, y, i);
 					this.event.objects.push(mob);
-
-					if (l.dialogue) {
-						mob.addComponent('dialogue', {
-							config: l.dialogue.config
-						});
-
-						if (l.dialogue.auto) {
-							mob.dialogue.trigger = objects.buildObjects([{
-								properties: {
-									x: mob.x - 1,
-									y: mob.y - 1,
-									width: 3,
-									height: 3,
-									cpnNotice: {
-										actions: {
-											enter: {
-												cpn: 'dialogue',
-												method: 'talk',
-												args: [{
-													targetName: 'angler nayla'
-												}]
-											},
-											exit: {
-												cpn: 'dialogue',
-												method: 'stopTalk'
-											}
-										}
-									}
-								}
-							}]);
-						}
-					}
-
-					if (l.trade)
-						mob.addComponent('trade', l.trade);
-
-					if (l.chats)
-						mob.addComponent('chatter', l.chats);
+					mob.event = this.event;
+					spawnAnimation(syncer, mob);
 				}
 			}
 		}, this);
 
 		if (!this.endMark)
 			this.end = true;
-	},
-
-	spawnAnimation: function (mob) {
-		this.instance.syncer.queue('onGetObject', {
-			x: mob.x,
-			y: mob.y,
-			components: [{
-				type: 'attackAnimation',
-				row: 0,
-				col: 4
-			}]
-		}, -1);
 	}
 };
