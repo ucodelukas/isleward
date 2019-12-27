@@ -52,13 +52,18 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 		return;
 	}
 
-	const streak = Math.max(1, Math.min(21, accountInfo.loginStreak));
-	accountInfo.loginStreak = streak;
+	let loginStreak = calculateDaysSkipped(lastLogin, time);
+	loginStreak = Math.max(1, Math.min(21, loginStreak));
+	accountInfo.loginStreak = loginStreak;
 
-	const itemCount = 1 + ~~(accountInfo.loginStreak / 2);
+	const itemCount = 1 + ~~(loginStreak / 2);
 	const rewards = rewardGenerator(itemCount);
-	if (rewards.length > 0)
-		rewards[0].msg = `Daily login reward for ${streak} day${(streak > 1) ? 's' : ''}:`;
+	if (!rewards) {
+		cbDone();
+		return;
+	}
+
+	rewards[0].msg = `Daily login reward for ${loginStreak} day${(loginStreak > 1) ? 's' : ''}:`;
 
 	mail.sendMail(character.name, rewards, cbDone);
 };
