@@ -1,16 +1,11 @@
 @import "../../../css/colors.less";
-
 @leftWidth: 400px;
 @rightWidth: 400px;
 @boxPadding: 16px;
-
 @logoWidth: 559px;
 @logoHeight: 200px;
-
 @boxHeight: 169px;
-
 @messageHeight: @boxPadding;
-
 @totalWidth: @rightWidth;
 @totalHeight: (@logoHeight + @boxHeight + (@boxPadding * 3) + @messageHeight);
 
@@ -31,22 +26,20 @@
 		width: 562px;
 		height: @logoHeight;
 		margin-bottom: (@boxPadding * 3);
-
-		filter: 
-			drop-shadow(0px -4px 0px @blackD) 
-			drop-shadow(0px 4px 0px @blackD)
-			drop-shadow(4px 0px 0px @blackD) 
-			drop-shadow(-4px 0px 0px @blackD);
+		filter: drop-shadow(0px -4px 0px @blackD) 
+		drop-shadow(0px 4px 0px @blackD)
+		drop-shadow(4px 0px 0px @blackD) 
+		drop-shadow(-4px 0px 0px @blackD);
 	}
 
 	.right {
 		height: @boxHeight;
 		background-color: #3a3b4a;
-
 		width: @rightWidth;
 		padding: @boxPadding;
 
-		.label, input {
+		.label,
+		input {
 			float: left;
 		}
 
@@ -60,16 +53,19 @@
 			width: 70%;
 		}
 
-		input, .textbox, input:-webkit-autofill {
-		    box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
+		input,
+		.textbox,
+		input:-webkit-autofill {
+			box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
 			color: @white;
 			-webkit-text-fill-color: @white;
 			margin-bottom: @boxPadding;
 		}
 
 		/* We duplicate this for firefox which doesn't like the webkit selector */
-		input, .textbox {
-		    box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
+		input,
+		.textbox {
+			box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
 			color: @white;
 			-webkit-text-fill-color: @white;
 			margin-bottom: @boxPadding;
@@ -83,20 +79,16 @@
 			float: left;
 			text-align: center;
 			color: @orange;
-
-			filter: 
-				brightness(100%)
-				drop-shadow(0px -4px 0px @blackD) 
-				drop-shadow(0px 4px 0px @blackD)
-				drop-shadow(4px 0px 0px @blackD) 
-				drop-shadow(-4px 0px 0px @blackD);
-
-			-moz-filter: 
-				brightness(100%)
-				drop-shadow(0px -4px 0px @blackD) 
-				drop-shadow(0px 4px 0px @blackD)
-				drop-shadow(4px 0px 0px @blackD) 
-				drop-shadow(-4px 0px 0px @blackD);
+			filter: brightness(100%)
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
+			-moz-filter: brightness(100%)
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
 		}
 
 		.top-buttons {
@@ -117,8 +109,11 @@
 				&:hover {
 					background-color: @redB;
 				}
+
 			}
+
 		}
+
 	}
 
 	.news {
@@ -126,17 +121,16 @@
 		color: @white;
 		text-align: center;
 		cursor: pointer;
-
-		filter: 
-			drop-shadow(0px -4px 0px @blackD) 
-			drop-shadow(0px 4px 0px @blackD)
-			drop-shadow(4px 0px 0px @blackD) 
-			drop-shadow(-4px 0px 0px @blackD);
+		filter: drop-shadow(0px -4px 0px @blackD) 
+		drop-shadow(0px 4px 0px @blackD)
+		drop-shadow(4px 0px 0px @blackD) 
+		drop-shadow(-4px 0px 0px @blackD);
 	}
 
 	.spacer-h {
 		height: 61px;
 	}
+
 }
 
 .uiLoginExtra {
@@ -152,7 +146,7 @@
 			padding-left: 10px;
 			padding-right: 10px;
 			margin-left: 10px;
-			background-color: @orangeD;
+			background-color: @greenC;
 			color: @white;
 
 			&:first-child {
@@ -160,9 +154,11 @@
 			}
 
 			&:hover {
-				background-color: @orangeC;
+				background-color: @greenB;
 			}
+
 		}
+
 	}
 
 	.version {
@@ -171,21 +167,18 @@
 		bottom: 10px;
 		color: @yellow;
 		cursor: pointer;
-
-		filter: 
-			brightness(100%)
-			drop-shadow(0px -4px 0px @blackD) 
-			drop-shadow(0px 4px 0px @blackD)
-			drop-shadow(4px 0px 0px @blackD) 
-			drop-shadow(-4px 0px 0px @blackD);
-
-		-moz-filter: 
-			brightness(100%)
-			drop-shadow(0px -4px 0px @blackD) 
-			drop-shadow(0px 4px 0px @blackD)
-			drop-shadow(4px 0px 0px @blackD) 
-			drop-shadow(-4px 0px 0px @blackD);
+		filter: brightness(100%)
+		drop-shadow(0px -4px 0px @blackD) 
+		drop-shadow(0px 4px 0px @blackD)
+		drop-shadow(4px 0px 0px @blackD) 
+		drop-shadow(-4px 0px 0px @blackD);
+		-moz-filter: brightness(100%)
+		drop-shadow(0px -4px 0px @blackD) 
+		drop-shadow(0px 4px 0px @blackD)
+		drop-shadow(4px 0px 0px @blackD) 
+		drop-shadow(-4px 0px 0px @blackD);
 	}
+
 }
 
 .mobile {
@@ -199,5 +192,7 @@
 		.news {
 			margin-top: 20px;
 		}
+
 	}
+
 }

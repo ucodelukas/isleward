@@ -37,7 +37,8 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 	const accountInfo = cpnAuth.accountInfo;
 
 	const time = scheduler.getTime();
-	const lastLogin = accountInfo.lastLogin;
+	let { lastLogin, loginStreak } = accountInfo;
+
 	accountInfo.lastLogin = time;
 
 	if (
@@ -52,7 +53,12 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 		return;
 	}
 
-	let loginStreak = calculateDaysSkipped(lastLogin, time);
+	const daysSkipped = calculateDaysSkipped(lastLogin, time);
+	if (daysSkipped === 1)
+		loginStreak++;
+	else
+		loginStreak = 1;
+
 	loginStreak = Math.max(1, Math.min(21, loginStreak));
 	accountInfo.loginStreak = loginStreak;
 

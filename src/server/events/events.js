@@ -101,8 +101,6 @@ module.exports = {
 			else
 				pRewards.push(r);
 		});
-
-		console.log(pRewards);
 	},
 
 	setWinText: function (name, text) {

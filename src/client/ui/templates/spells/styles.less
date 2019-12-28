@@ -1,5 +1,4 @@
 @import "../../../css/colors.less";
-
 @pad: 8px;
 @btnSize: 64px;
 
@@ -7,7 +6,6 @@
 	position: absolute;
 	right: 10px;
 	top: 10px;
-
 	height: (@btnSize + @pad);
 
 	.spell {
@@ -29,7 +27,6 @@
 
 		&:hover {
 			filter: brightness(160%);
-
 			-moz-filter: brightness(160%);
 		}
 
@@ -61,17 +58,16 @@
 			color: @white;
 			font-size: 18px;
 			z-index: 2;
-			text-shadow: 2px 2px 0 #2d2136,
-			   -2px -2px 0 #2d2136,  
-			    2px -2px 0 #2d2136,
-			   -2px  2px 0 #2d2136,
-			    2px  2px 0 #2d2136;
+			text-shadow: 2px 2px 0 #2d2136, -2px -2px 0 #2d2136, 2px -2px 0 #2d2136, -2px  2px 0 #2d2136, 2px  2px 0 #2d2136;
 
 			&.no-mana {
 				color: @red;
 			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiSpells {
@@ -82,7 +78,6 @@
 	background-color: transparent;
 	display: flex;
 	flex-direction: column-reverse;
-
 
 	.spell {
 		position: relative;
@@ -95,12 +90,14 @@
 
 		&.active:before {
 			content: '';
-		    width: 4px;
-		    height: 100%;
-		    left: -4px;
-		    top: 0%;
-		    background-color: @greenB;
-		    position: absolute;
+			width: 4px;
+			height: 100%;
+			left: -4px;
+			top: 0%;
+			background-color: @greenB;
+			position: absolute;
 		}
+
 	}
+
 }
