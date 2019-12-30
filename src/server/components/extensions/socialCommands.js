@@ -6,6 +6,7 @@ let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
 const ban = require('../social/ban');
+const canChat = require('../social/canChat');
 
 let commandRoles = {
 	//Regular players
@@ -286,13 +287,18 @@ module.exports = {
 	},
 
 	roll: function () {
-		let roll = 1 + ~~(Math.random() * 100);
+		if (!canChat(this.obj)) {
+			this.sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
+			return;
+		}
+
+		const roll = 1 + ~~(Math.random() * 100);
 		cons.emit('event', {
 			event: 'onGetMessages',
 			data: {
 				messages: [{
 					class: 'color-grayB',
-					message: this.obj.name + ' rolled ' + roll,
+					message: `${this.obj.name} rolled ${roll}`,
 					type: 'chat'
 				}]
 			}
