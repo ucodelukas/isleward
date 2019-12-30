@@ -1,13 +1,9 @@
 @import "../../../css/colors.less";
-
 @boxHeight: 276px;
 @boxPadding: 27px;
-
 @logoWidth: 559px;
 @logoHeight: 200px;
-
 @messageHeight: @boxPadding;
-
 @totalWidth: (@logoWidth + (@boxPadding * 2) + 427px);
 @totalHeight: (@logoHeight + @boxHeight + (@boxPadding * 3) + @messageHeight);
 
@@ -28,7 +24,8 @@
 		width: 613px;
 		background-color: #3a3b4a;
 
-		.left, .right {
+		.left,
+		.right {
 			float: left;
 			height: 100%;
 		}
@@ -37,17 +34,18 @@
 			width: calc(100% - (@boxPadding * 2) - 160px);
 			padding: @boxPadding 0px @boxPadding @boxPadding;
 
-			.txtClass, .txtCostume {
+			.txtClass,
+			.txtCostume {
 				cursor: pointer;
 				-webkit-user-select: none;
 
 				&:active {
 					background-color: darken(@gray, 20%);
 				}
+
 			}
 
 			.txtClass {
-
 			}
 
 			.label {
@@ -83,6 +81,7 @@
 					&:hover {
 						background-color: @grayC;
 					}
+
 				}
 
 				.txtCostume {
@@ -92,7 +91,9 @@
 					align-items: center;
 					padding: 0px;
 				}
-			}			
+
+			}
+
 		}
 
 		.right {
@@ -117,6 +118,7 @@
 				image-rendering: crisp-edges;
 				background: url('../../../images/charas.png') -64px 0px;
 			}
+
 		}
 
 		.textbox {
@@ -128,7 +130,7 @@
 		}
 
 		.btn {
-			background-color: @redC;
+			background-color: @blueC;
 			width: calc((100% - @boxPadding) / 2);
 			float: left;
 			margin-right: @boxPadding;
@@ -139,8 +141,9 @@
 			}
 
 			&:hover {
-				background-color: @redB;
+				background-color: @blueB;
 			}
+
 		}
 
 		.message {
@@ -151,6 +154,7 @@
 			text-align: center;
 			color: @redA;
 		}
+
 	}
 
 	.box-right {
@@ -195,6 +199,7 @@
 						&:after {
 							content: '  ✔';
 						}
+
 					}
 
 					&.disabled {
@@ -204,10 +209,15 @@
 					&:hover {
 						color: @white;
 					}
+
 				}
+
 			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiCreateCharacter {
@@ -228,9 +238,11 @@
 		.skinBox {
 			height: 70px;
 		}
+
 	}
 
 	.box-right {
 		width: 45%;
 	}
+
 }

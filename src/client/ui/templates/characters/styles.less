@@ -1,16 +1,11 @@
 @import "../../../css/colors.less";
-
 @leftWidth: 400px;
 @rightWidth: 400px;
 @boxPadding: 35px;
-
 @logoWidth: 559px;
 @logoHeight: 200px;
-
 @boxHeight: 300px;
-
 @messageHeight: @boxPadding;
-
 @totalWidth: (@leftWidth + @rightWidth + @boxPadding);
 @totalHeight: (@logoHeight + @boxHeight + (@boxPadding * 3) + @messageHeight);
 
@@ -25,7 +20,8 @@
 		margin-bottom: (@boxPadding * 2);
 	}
 
-	.left, .right {
+	.left,
+	.right {
 		height: @boxHeight;
 		float: left;
 		background-color: #3a3b4a;
@@ -50,7 +46,9 @@
 			&.selected {
 				background-color: fade(@white, 25%);
 			}
+
 		}
+
 	}
 
 	.right {
@@ -74,6 +72,7 @@
 				image-rendering: crisp-edges;
 				display: none;
 			}
+
 		}
 
 		.info {
@@ -100,10 +99,11 @@
 				text-align: right;
 				color: darken(@white, 25%);
 			}
+
 		}
 
 		.btn {
-			background-color: @redC;
+			background-color: @blueC;
 			width: calc((100% - (16px * 2)) / 3);
 			float: left;
 			margin-right: 16px;
@@ -114,18 +114,20 @@
 			}
 
 			&:hover {
-				background-color: @redB;
+				background-color: @blueB;
 			}
 
 			&.deleting {
-				background-color: @yellow;
-				color: @black;
+				background-color: @red;
+				color: @white;
 			}
+
 		}
 
 		.spacer-h {
 			height: 91px;
 		}
+
 	}
 
 	.message {
@@ -135,12 +137,12 @@
 		float: left;
 		text-align: center;
 		color: @white;
-		filter:
-			drop-shadow(0px -2px 0px @blackD) 
-			drop-shadow(0px 2px 0px @blackD)
-			drop-shadow(2px 0px 0px @blackD) 
-			drop-shadow(-2px 0px 0px @blackD);
+		filter: drop-shadow(0px -2px 0px @blackD) 
+		drop-shadow(0px 2px 0px @blackD)
+		drop-shadow(2px 0px 0px @blackD) 
+		drop-shadow(-2px 0px 0px @blackD);
 	}
+
 }
 
 .mobile .uiCharacters {
@@ -149,4 +151,5 @@
 	.logo {
 		display: none;
 	}
+
 }
