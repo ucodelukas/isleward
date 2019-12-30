@@ -1,6 +1,10 @@
 module.exports = {
 	type: 'stunned',
 
+	init: function () {
+		this.obj.spellbook.stopCasting();
+	},
+
 	events: {
 		beforeMove: function (targetPos) {
 			targetPos.success = false;
