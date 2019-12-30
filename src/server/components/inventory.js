@@ -554,9 +554,12 @@ module.exports = {
 		this.items
 			.filter(i => !i.eq)
 			.map(i => {
+				//If we don't do this, [waist] goes before [undefined]
+				const useSlot = i.slot ? i.slot : 'z';
+
 				return {
 					item: i,
-					sortId: `${i.slot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
+					sortId: `${useSlot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
 				};
 			})
 			.sort((a, b) => {
