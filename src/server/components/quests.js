@@ -30,7 +30,9 @@ module.exports = {
 		if (!quest.init(hideMessage)) {
 			this.quests.spliceWhere(q => (q === quest));
 			return false;
-		} return true;
+		}
+
+		return true;
 	},
 
 	complete: function (id) {
