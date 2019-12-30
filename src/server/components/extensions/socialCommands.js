@@ -6,6 +6,7 @@ let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
 const ban = require('../social/ban');
+const rezone = require('../social/rezone');
 const canChat = require('../social/canChat');
 
 let commandRoles = {
@@ -40,7 +41,8 @@ let commandRoles = {
 	getXp: 10,
 	setPassword: 10,
 	giveSkin: 10,
-	getMaterials: 10
+	getMaterials: 10,
+	rezone: 10
 };
 
 //Commands that should be run on the main thread (not the zone thread)
@@ -680,5 +682,9 @@ module.exports = {
 
 	ban: function (msg) {
 		ban(this, msg);
+	},
+
+	rezone: function (msg) {
+		rezone(this, msg);
 	}
 };
