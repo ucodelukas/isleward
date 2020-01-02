@@ -66,11 +66,12 @@ define([
 			if (!this.el.is(':visible') || (e && (e.cancel || e.button === 2)))
 				return;
 
+			this.config = null;
 			this.el.hide();
 		},
 
 		onUiKeyDown: function (keyEvent) {
-			if (!this.config)
+			if (!this.config || !this.el.is(':visible'))
 				return;
 
 			const configEntry = this.config.find(({ hotkey }) => hotkey === keyEvent.key);
