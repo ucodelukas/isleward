@@ -270,7 +270,7 @@ module.exports = {
 
 	splitStack: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1)
+		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1 || item.quest)
 			return;
 
 		const hasSpace = this.hasSpace(item, true);
@@ -449,8 +449,7 @@ module.exports = {
 	},
 
 	mailItem: async function (msg) {
-		return;
-		let item = this.findItem(msg.itemId);
+		/*let item = this.findItem(msg.itemId);
 		if ((!item) || (item.noDrop) || (item.quest)) {
 			this.resolveCallback(msg);
 			return;
@@ -482,7 +481,7 @@ module.exports = {
 		}
 		this.destroyItem(item.id);
 
-		this.resolveCallback(msg);
+		this.resolveCallback(msg);*/
 	},
 
 	hookItemEvents: function (items) {

@@ -52,6 +52,26 @@ r.db('live').table('character')
 			});
 	});
 
+r.db('live').table('character')
+	.concatMap(row => {
+		return row('value')('components')
+			.filter(cpn => {
+				return cpn('type').eq('inventory');
+			})
+			.concatMap(c => {
+				return [{
+					name: row('value')('name'),
+					account: row('value')('account'),
+					cpn: c('items').filter(item => {
+						return item('quantity').ge(30000);
+					})
+				}];
+			})
+			.filter(c => {
+				return c('cpn').count().ge(1);
+			});
+	});
+
 //Play time per account from low to high
 r.db('live').table('character')
 	.concatMap(row => {

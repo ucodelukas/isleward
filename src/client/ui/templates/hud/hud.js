@@ -15,12 +15,18 @@ define([
 		stats: null,
 		items: null,
 
+		quickItem: null,
+
 		postRender: function () {
 			this.onEvent('onGetStats', this.events.onGetStats.bind(this));
 			this.onEvent('onGetPortrait', this.events.onGetPortrait.bind(this));
 			this.onEvent('onGetItems', this.events.onGetItems.bind(this));
 			this.onEvent('onDestroyItems', this.events.onDestroyItems.bind(this));
 			this.onEvent('onKeyDown', this.events.onKeyDown.bind(this));
+
+			this.find('.quickItem')
+				.on('mousemove', this.showQuickItemTooltip.bind(this, true))
+				.on('mouseleave', this.showQuickItemTooltip.bind(this, false));
 		},
 
 		build: function () {
@@ -61,7 +67,9 @@ define([
 			});
 		},
 
-		showQuickItemTooltip: function (show, item, e) {
+		showQuickItemTooltip: function (show, e) {
+			const item = this.quickItem;
+
 			if (show) {
 				let ttPos = null;
 				if (e) {
@@ -112,6 +120,7 @@ define([
 				this.items = items;
 
 				const quickItem = items.find(f => f.has('quickSlot'));
+				this.quickItem = quickItem;
 				if (!quickItem) {
 					const oldQuickItem = this.find('.quickItem').data('item');
 					if (oldQuickItem)
@@ -132,13 +141,14 @@ define([
 				let imgX = -quickItem.sprite[0] * 64;
 				let imgY = -quickItem.sprite[1] * 64;
 
-				let el = this.find('.quickItem').show();
+				const el = this.find('.quickItem').show();
+				if (el.data('item') && el.data('item').id === quickItem.id)
+					return;
+
 				el
 					.data('item', quickItem)
 					.find('.icon')
-					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
-					.on('mousemove', this.showQuickItemTooltip.bind(this, true, quickItem))
-					.on('mouseleave', this.showQuickItemTooltip.bind(this, false, quickItem));
+					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px');		
 			},
 
 			onKeyDown: function (key) {

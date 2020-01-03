@@ -28,7 +28,6 @@ module.exports = {
 
 		let lessMiddleware = require('less-middleware');
 		app.use(lessMiddleware('../', {
-			force: true,
 			render: {
 				strictMath: true
 			}

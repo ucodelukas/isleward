@@ -194,28 +194,11 @@ define([
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
-					//Hack for xmas
-					tile = 3;
-					let min = Math.min(
-						(i + j),
-						(w - i + j),
-						(i + h - j),
-						(w - i + h - j)
-					);
-					let tree = false;
-					let val = min + (Math.random() * 10);
-					if (val < 23) {
-						if (val < 18)
-							tree = true;
-						tile = 184;
-					}
-
 					if (mRandom() < 0.35) {
 						tile = {
 							5: 6,
 							3: 0,
 							4: 1,
-							184: 185,
 							53: 54
 						}[tile];
 					}
@@ -234,25 +217,6 @@ define([
 					}
 
 					container.addChild(sprite);
-
-					if (tree) {
-						let s = [216, 216, 217, 217, 217, 217, 217, 218, 219, 219, 219][~~(Math.random() * 11)];
-						s += 224;
-						tile = new pixi.Sprite(this.getTexture('sprites', s));
-
-						tile.alpha = 0.7 + (Math.random() * 0.3);
-						tile.position.x = i * scale;
-						tile.position.y = j * scale;
-						tile.width = scale;
-						tile.height = scale;
-
-						if (Math.random() < 0.5) {
-							tile.position.x += scale;
-							tile.scale.x = -scaleMult;
-						}
-
-						container.addChild(tile);
-					}
 				}
 			}
 		},

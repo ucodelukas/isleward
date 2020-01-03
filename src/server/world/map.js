@@ -7,6 +7,7 @@ let randomMap = require('./randomMap');
 let events = require('../misc/events');
 
 const mapObjects = require('./map/mapObjects');
+const canPathFromPos = require('./map/canPathFromPos');
 
 let mapFile = null;
 let mapScale = null;
@@ -69,7 +70,6 @@ module.exports = {
 		try {
 			this.zone = require('../' + this.path + '/' + this.name + '/zone');
 		} catch (e) {
-			console.log(e);
 			this.zone = globalZone;
 		}
 		events.emit('onAfterGetZone', this.name, this.zone);
@@ -442,31 +442,6 @@ module.exports = {
 	//Find if any spawns can path to a position. This is important for when maps change and players 
 	// log in on tiles that aren't blocking but not able to reach anywhere useful
 	canPathFromPos: function (pos) {
-		const fnCanPath = positions => {
-			return positions.some(p => {
-				const path = physics.getPath(pos, p);
-				//Are we on the position?
-				if (!path.length)
-					return true;
-
-				const { x, y } = path[path.length - 1];
-				//Can we reach the position?
-				const isFullPath = (p.x === x && p.y === y);
-				if (isFullPath)
-					return true;
-
-				return false;
-			});
-		};
-
-		const canPathToSpawn = fnCanPath(this.spawn);
-
-		if (canPathToSpawn)
-			return true;
-
-		const portals = objects.objects.filter(o => o.portal);
-		const canPathToPortal = fnCanPath(portals);
-
-		return canPathToPortal;
+		return canPathFromPos(this, pos);
 	}
 };

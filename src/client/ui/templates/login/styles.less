@@ -11,15 +11,25 @@
 
 .uiLogin {
 	display: none;
-	width: @totalWidth;
-	height: @totalHeight;
+	width: 562px;
+	height: 475px;
 	margin-top: -80px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	> * {
+		flex-shrink: 0;
+	}
 
 	.logo {
 		width: 562px;
 		height: @logoHeight;
-		margin-left: ((@totalWidth / 2) - (@logoWidth / 2));
 		margin-bottom: (@boxPadding * 3);
+		filter: drop-shadow(0px -4px 0px @blackD) 
+		drop-shadow(0px 4px 0px @blackD)
+		drop-shadow(4px 0px 0px @blackD) 
+		drop-shadow(-4px 0px 0px @blackD);
 	}
 
 	.right {
@@ -86,7 +96,7 @@
 			height: 35px;
 
 			.btn {
-				background-color: @redC;
+				background-color: @blueC;
 				width: calc((100% - @boxPadding) / 2);
 				float: left;
 				margin-right: @boxPadding;
@@ -97,7 +107,7 @@
 				}
 
 				&:hover {
-					background-color: @redB;
+					background-color: @blueB;
 				}
 
 			}
@@ -107,10 +117,8 @@
 	}
 
 	.news {
-		margin-left: -100px;
 		margin-top: 40px;
 		color: @white;
-		width: 600px;
 		text-align: center;
 		cursor: pointer;
 		filter: drop-shadow(0px -4px 0px @blackD) 
@@ -128,23 +136,25 @@
 .uiLoginExtra {
 	.extra {
 		position: absolute;
-		left: 10px;
+		left: 50%;
 		bottom: 10px;
+		transform: translateX(-50%);
+		display: flex;
 
 		.btn {
+			width: 180px;
 			padding-left: 10px;
 			padding-right: 10px;
-			width: 100%;
-			margin-bottom: 10px;
-			background-color: @redD;
+			margin-left: 10px;
+			background-color: @blueD;
 			color: @white;
 
-			&:last-child {
-				margin-bottom: 0px;
+			&:first-child {
+				margin-left: 0px;
 			}
 
 			&:hover {
-				background-color: @redC;
+				background-color: @blueC;
 			}
 
 		}
@@ -171,6 +181,18 @@
 
 }
 
-.mobile .uiLogin {
-	margin-top: 0px;
+.mobile {
+	.uiLogin {
+		margin-top: 0px;
+
+		.logo {
+			margin-bottom: 30px;
+		}
+
+		.news {
+			margin-top: 20px;
+		}
+
+	}
+
 }

@@ -391,15 +391,16 @@ module.exports = {
 	preDeath: function (source) {
 		const obj = this.obj;
 
-		let deathEvent = {};
-
 		let killSource = source;
-
 		if (source.follower)
 			killSource = source.follower.master;
 
 		if (killSource.player)
 			killSource.stats.kill(obj);
+
+		const deathEvent = {
+			source: killSource
+		}; 
 
 		obj.fireEvent('afterDeath', deathEvent);
 

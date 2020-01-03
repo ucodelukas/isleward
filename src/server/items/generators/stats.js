@@ -660,9 +660,10 @@ module.exports = {
 				stat: i.stat
 			};
 
-			if (i.value) 
-				stat.value = i.value[0] + ~~(Math.random() * (i.value[1] - i.value[0] + 1));
-			else if (i.valueMult) {
+			if (i.value) {
+				const [min, max] = i.value;
+				stat.value = Math.ceil(random.expNorm(min, max));
+			} else if (i.valueMult) {
 				let statBlueprint = this.stats[i.stat];
 
 				if (statBlueprint.generator) {

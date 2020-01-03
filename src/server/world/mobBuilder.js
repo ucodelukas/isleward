@@ -106,7 +106,7 @@ module.exports = {
 		mob.equipment.unequipAll();
 		mob.inventory.clear();
 
-		let hp = level * 32.7;
+		let hp = level * 40;
 		statValues.hpMax = hp;
 
 		statValues.level = level;

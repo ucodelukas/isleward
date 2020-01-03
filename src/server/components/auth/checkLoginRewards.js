@@ -1,5 +1,5 @@
 const scheduler = require('../../misc/scheduler');
-const loginRewards = require('../../config/loginRewards');
+const rewardGenerator = require('../../misc/rewardGenerator');
 const mail = require('../../mail/mail');
 
 const calculateDaysSkipped = (oldTime, newTime) => {
@@ -37,7 +37,8 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 	const accountInfo = cpnAuth.accountInfo;
 
 	const time = scheduler.getTime();
-	const lastLogin = accountInfo.lastLogin;
+	let { lastLogin, loginStreak } = accountInfo;
+
 	accountInfo.lastLogin = time;
 
 	if (
@@ -53,13 +54,22 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 	}
 
 	const daysSkipped = calculateDaysSkipped(lastLogin, time);
-	if (daysSkipped === 1) 
-		accountInfo.loginStreak++;
-	else 
-		accountInfo.loginStreak -= (daysSkipped - 1);
+	if (daysSkipped === 1)
+		loginStreak++;
+	else
+		loginStreak = 1;
 
-	accountInfo.loginStreak = Math.min(1, Math.max(21, accountInfo.loginStreak));
+	loginStreak = Math.max(1, Math.min(21, loginStreak));
+	accountInfo.loginStreak = loginStreak;
 
-	const rewards = loginRewards.generate(accountInfo.loginStreak);
+	const itemCount = 1 + ~~(loginStreak / 2);
+	const rewards = rewardGenerator(itemCount);
+	if (!rewards) {
+		cbDone();
+		return;
+	}
+
+	rewards[0].msg = `Daily login reward for ${loginStreak} day${(loginStreak > 1) ? 's' : ''}:`;
+
 	mail.sendMail(character.name, rewards, cbDone);
 };

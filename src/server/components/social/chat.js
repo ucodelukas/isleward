@@ -6,6 +6,9 @@ module.exports = (cpnSocial, msg) => {
 	if (!msg.data.message)
 		return;
 
+	const { obj } = cpnSocial;
+	const sendMessage = cpnSocial.sendMessage.bind(cpnSocial);
+
 	msg.data.message = msg.data.message
 		.split('<')
 		.join('&lt;')
@@ -19,7 +22,7 @@ module.exports = (cpnSocial, msg) => {
 		return;
 
 	if (cpnSocial.muted) {
-		cpnSocial.sendMessage('You have been muted from talking', 'color-redA');
+		sendMessage('You have been muted from talking', 'color-redA');
 		return;
 	}
 
@@ -34,10 +37,10 @@ module.exports = (cpnSocial, msg) => {
 
 	if (history.length > 0) {
 		if (history[history.length - 1].msg === messageString) {
-			cpnSocial.sendMessage('You have already sent that message', 'color-redA');
+			sendMessage('You have already sent that message', 'color-redA');
 			return;
 		} else if (history.length >= 3) {
-			cpnSocial.sendMessage('You are sending too many messages', 'color-redA');
+			sendMessage('You are sending too many messages', 'color-redA');
 			return;
 		}
 	}
@@ -47,17 +50,17 @@ module.exports = (cpnSocial, msg) => {
 		return;
 
 	if (!msg.data.item && !profanities.isClean(messageString)) {
-		cpnSocial.sendMessage('Profanities detected in message. Blocked.', 'color-redA');
+		sendMessage('Profanities detected in message. Blocked.', 'color-redA');
 		return;
 	}
 
-	let playerLevel = cpnSocial.obj.level;
-	let playedTime = cpnSocial.obj.stats.stats.played * 1000;
-	let sessionStart = cpnSocial.obj.player.sessionStart;
+	let playerLevel = obj.level;
+	let playedTime = obj.stats.stats.played * 1000;
+	let sessionStart = obj.player.sessionStart;
 	let sessionDelta = time - sessionStart;
 
-	if (playerLevel < 3 || playedTime + sessionDelta < 180000) {
-		cpnSocial.sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
+	if (playerLevel < 3 && playedTime + sessionDelta < 180000) {
+		sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
 		return;
 	}
 
@@ -66,9 +69,9 @@ module.exports = (cpnSocial, msg) => {
 		time: time
 	});
 
-	let charname = cpnSocial.obj.auth.charname;
+	let charname = obj.auth.charname;
 
-	let msgStyle = roles.getRoleMessageStyle(cpnSocial.obj) || ('color-grayB');
+	let msgStyle = roles.getRoleMessageStyle(obj) || ('color-grayB');
 
 	let msgEvent = {
 		source: charname,
@@ -83,7 +86,7 @@ module.exports = (cpnSocial, msg) => {
 	else if (messageString[0] === '%') 
 		cpnSocial.sendPartyMessage(msg);
 	else {
-		let prefix = roles.getRoleMessagePrefix(cpnSocial.obj) || '';
+		let prefix = roles.getRoleMessagePrefix(obj) || '';
 
 		cons.emit('event', {
 			event: 'onGetMessages',
@@ -93,7 +96,7 @@ module.exports = (cpnSocial, msg) => {
 					message: prefix + charname + ': ' + msg.data.message,
 					item: msg.data.item,
 					type: 'chat',
-					source: cpnSocial.obj.name
+					source: obj.name
 				}]
 			}
 		});

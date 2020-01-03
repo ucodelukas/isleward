@@ -22,6 +22,8 @@
 			padding: 4px;
 			color: @white;
 			cursor: pointer;
+			display: flex;
+			justify-content: center;
 
 			&:hover:not(.no-hover) {
 				background-color: @lightGray;
@@ -30,6 +32,14 @@
 			&.no-hover {
 				line-height: 2px;
 				color: @blueB;
+			}
+
+			.hotkey {
+				color: @blueA;
+
+				&:not(:empty) {
+					margin-left: 8px;
+				}
 			}
 		}
 	}
