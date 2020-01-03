@@ -51,8 +51,8 @@ const descriptionStrings = {
 };
 
 const config = {
-	//cron: '0/3 * * * *',
-	cron: '* * * * *',
+	cron: '0/3 * * * *',
+	//cron: '* * * * *',
 	idFirstSpawnPhase: 6,
 	idFailPhase: 19,
 	maxEscapees: 5,
@@ -73,7 +73,7 @@ const rat = {
 	faction,
 	grantRep,
 	drops,
-	hpMult: 1,
+	hpMult: 3,
 	pos: {
 		x: 61,
 		y: 62
@@ -115,8 +115,8 @@ const rat = {
 				end: 0
 			},
 			color: {
-				start: ['4ac441', '953f36'],
-				end: ['393268', '386646']
+				start: ['db5538', '4ac441'],
+				end: ['953f36', '386646']
 			},
 			chance: 0.125,
 			randomColor: true,
@@ -173,7 +173,7 @@ module.exports = {
 	name: 'Plague of Rats',
 	description: descriptionStrings.leadup,
 	distance: -1,
-	cron: '* * * * *',
+	cron: config.cron,
 
 	phases: [{
 		type: 'spawnMob',
