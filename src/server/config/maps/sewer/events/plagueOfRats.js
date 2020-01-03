@@ -51,7 +51,7 @@ const descriptionStrings = {
 };
 
 const config = {
-	cron: '0/3 * * * *',
+	cron: '0 */3 * * *',
 	//cron: '* * * * *',
 	idFirstSpawnPhase: 6,
 	idFailPhase: 19,
