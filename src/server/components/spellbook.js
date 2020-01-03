@@ -351,25 +351,6 @@ module.exports = {
 			if (!isAuto)
 				this.sendAnnouncement('Insufficient mana to cast spell');
 			success = false;
-		} else if (spell.manaReserve) {
-			let reserve = spell.manaReserve;
-
-			if (reserve.percentage) {
-				let reserveEvent = {
-					spell: spell.name,
-					reservePercent: reserve.percentage
-				};
-				this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
-
-				if (!spell.active) {
-					if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
-						this.sendAnnouncement('Insufficient mana to cast spell');
-						success = false;
-					} else
-						this.obj.stats.addStat('manaReservePercent', reserveEvent.reservePercent);
-				} else
-					this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
-			}
 		} else if (spell.has('range')) {
 			let distance = Math.max(Math.abs(action.target.x - this.obj.x), Math.abs(action.target.y - this.obj.y));
 			let range = spell.range;
@@ -409,6 +390,27 @@ module.exports = {
 		this.obj.fireEvent('beforeCastSpell', castSuccess);
 		if (!castSuccess.success)
 			return false;
+
+		if (spell.manaReserve) {
+			let reserve = spell.manaReserve;
+
+			if (reserve.percentage) {
+				let reserveEvent = {
+					spell: spell.name,
+					reservePercent: reserve.percentage
+				};
+				this.obj.fireEvent('onBeforeReserveMana', reserveEvent);
+
+				if (!spell.active) {
+					if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
+						this.sendAnnouncement('Insufficient mana to cast spell');
+						success = false;
+					} else
+						this.obj.stats.addStat('manaReservePercent', reserveEvent.reservePercent);
+				} else
+					this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
+			}
+		} 
 
 		if (spell.targetFurthest)
 			spell.target = this.obj.aggro.getFurthest();

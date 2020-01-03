@@ -109,6 +109,7 @@ module.exports = {
 		this.selected.push(passiveTree.nodes.find(n => (n.spiritStart === this.obj.class)).id);
 
 		this.obj.spellbook.calcDps();
+		this.obj.equipment.unequipAttrRqrGear();
 	},
 
 	simplify: function (self) {
