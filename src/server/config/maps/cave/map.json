@@ -1540,6 +1540,40 @@
                  "width":24,
                  "x":680,
                  "y":1024
+                }, 
+                {
+                 "height":24,
+                 "id":924,
+                 "name":"lightpatch",
+                 "properties":[
+                        {
+                         "name":"cpnLightPatch",
+                         "type":"string",
+                         "value":"{\"color\":\"ffff00\"}"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":208,
+                 "y":912
+                }, 
+                {
+                 "height":48,
+                 "id":925,
+                 "name":"lightpatch",
+                 "properties":[
+                        {
+                         "name":"cpnLightPatch",
+                         "type":"string",
+                         "value":"{\"color\":\"ffff00\"}"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":56,
+                 "x":336,
+                 "y":1000
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2455,7 +2489,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":924,
+ "nextobjectid":926,
  "orientation":"orthogonal",
  "properties":[
         {
