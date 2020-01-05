@@ -30,7 +30,7 @@ define([
 				'spells',
 				'messages',
 				'online',
-				'options',
+				'mainMenu',
 				'context',
 				'party',
 				'help',
@@ -55,7 +55,8 @@ define([
 				'wardrobe',
 				'passives',
 				'workbench',
-				'middleHud'
+				'middleHud',
+				'options'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);

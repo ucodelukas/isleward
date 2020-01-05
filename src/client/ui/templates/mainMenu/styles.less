@@ -1,6 +1,6 @@
 @import "../../../css/colors.less";
 
-.uiOptions {
+.uiMainMenu {
 	display: none;
 
 	width: 400px;
@@ -18,17 +18,17 @@
 	    padding-top: 8px;
 	    cursor: pointer;
 
-	    /*&.btnNames {
+	    &.btnNames {
 	    	display: none;
-	    }*/
+	    }
 
 	    &:hover {
 			background-color: lighten(@blue, 15%);
 			color: @black;
 	    }
-    }
+	}
 
-    .btnCloseOptions {
+	.btnIssue {
 		background-color: @red;
 
 		&:hover {
@@ -38,7 +38,7 @@
 	}
 }
 
-.mobile .uiOptions {
+.mobile .uiMainMenu {
 	.btnScreen {
 		display: none;
 	}

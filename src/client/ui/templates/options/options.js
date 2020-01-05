@@ -24,51 +24,15 @@ define([
 		modal: true,
 
 		postRender: function () {
-			this.onEvent('onToggleOptions', this.toggle.bind(this));
+            this.onEvent('onToggleOptions', this.toggle.bind(this));
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
-			this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
+            this.el.find('.btnScreen')[0].addEventListener('click', this.toggleScreen.bind(this));
 			this.el.find('.btnNames').on('click', events.emit.bind(events, 'onKeyDown', 'v'));
-			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
-			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
-			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
-			this.el.find('.btnPatreon').on('click', this.patreon.bind(this));
-			this.el.find('.btnIssue').on('click', this.reportIssue.bind(this));
+			this.el.find('.btnQuests').on('click', events.emit.bind(events, 'onToggleQuestVisibility'));
+            this.el.find('.btnCloseOptions').on('click', this.toggle.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
-		},
-		
-		reportIssue: function () {
-			window.open('https://gitlab.com/Isleward/isleward/issues/new', '_blank');
-		},
-
-		patreon: function () {
-			window.open('https://patreon.com/bigbadwaffle', '_blank');
-		},
-
-		charSelect: function () {
-			this.el.addClass('disabled');
-
-			client.request({
-				module: 'cons',
-				method: 'unzone',
-				callback: this.onCharSelect.bind(this)
-			});
-		},
-
-		onCharSelect: function () {
-			renderer.clean();
-			objects.onRezone();
-			renderer.buildTitleScreen();
-			sound.unload();
-
-			events.emit('onShowCharacterSelect');
-			$('[class^="ui"]:not(.ui-container)').toArray().forEach(el => {
-				let ui = $(el).data('ui');
-				if (ui && ui.destroy)
-					ui.destroy();
-			});
-			factory.build('characters', {});
 		},
 
 		toggleScreen: function () {
@@ -95,13 +59,9 @@ define([
 				this.hide();
 				events.emit('onHideOverlay', this.el);
 			}
-		},
-
-		logOut: function () {
-			window.location = window.location;
-		},
-
-		onKeyDown: function (key) {
+        },
+        
+        onKeyDown: function (key) {
 			if (key === 'esc')
 				this.toggle();
 		}
