@@ -2,48 +2,73 @@
 
 .uiOptions {
 	display: none;
-
 	width: 400px;
-	background-color: @gray;
-	border: 4px solid @lightGray;
+	background-color: @blackC;
 	text-align: center;
-	padding: 0px 16px;
+	border: 5px solid @blackB;
 
-	.btn {
-		color: @white;
-	    width: 100%;
-	    height: 32px;
-	    background-color: @blue;
-	    margin: 16px 0px;
-	    padding-top: 8px;
-	    cursor: pointer;
+	> .heading {
+		color: @blueA;
+		width: 100%;
+		height: 36px;
+		background-color: @blackB;
+		position: relative;
 
-	    /*&.btnNames {
-	    	display: none;
-	    }*/
-
-	    &:hover {
-			background-color: lighten(@blue, 15%);
-			color: @black;
-	    }
-    }
-
-    .btnCloseOptions {
-		background-color: @red;
-
-		&:hover {
-			background-color: lighten(@red, 15%);
-			color: @black;
+		.heading-text {
+			padding-top: 8px;
+			margin: auto;
 		}
+
 	}
+
+	.bottom {
+		padding: 10px;
+
+		.list {
+			display: flex;
+			flex-direction: column;
+
+			.item {
+				height: 30px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.name {
+					color: @blueB;
+					flex: 1;
+					height: 100%;
+					display: flex;
+					align-items: center;
+					padding: 0px 10px;
+					margin-right: 10px;
+					cursor: pointer;
+
+					&:hover {
+						color: @blueA;
+						background-color: @blackA;
+					}
+
+				}
+
+				.value {
+					color: @white;
+					display: flex;
+					align-items: center;
+					justify-content: flex-end;
+				}
+
+			}
+
+		}
+
+	}
+
 }
 
 .mobile .uiOptions {
-	.btnScreen {
+	.item.screen {
 		display: none;
 	}
 
-	.btnNames {
-		display: block;
-	}
 }

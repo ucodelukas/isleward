@@ -3,13 +3,15 @@ define([
 	'js/system/events',
 	'html!ui/templates/quests/template',
 	'html!ui/templates/quests/templateQuest',
-	'css!ui/templates/quests/styles'
+	'css!ui/templates/quests/styles',
+	'js/config'
 ], function (
 	client,
 	events,
 	tpl,
 	templateQuest,
-	styles
+	styles,
+	config
 ) {
 	return {
 		tpl: tpl,
@@ -28,7 +30,9 @@ define([
 			this.onEvent('onObtainQuest', this.onObtainQuest.bind(this));
 			this.onEvent('onUpdateQuest', this.onUpdateQuest.bind(this));
 			this.onEvent('onCompleteQuest', this.onCompleteQuest.bind(this));
-			this.onEvent('onToggleQuestVisibility', this.onToggleQuestVisibility.bind(this));
+			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
+
+			this.onToggleQuestsVisibility(config.showQuests);
 		},
 
 		onRezone: function () {
@@ -121,11 +125,17 @@ define([
 			e.stopPropagation();
 		},
 
-		onToggleQuestVisibility: function() {
-			let inactiveQuests = this.quests.filter(f => f.quest.active === false);
-			inactiveQuests.forEach(q => {
-				q.el.toggle();
-			})
-		},
+		onToggleQuestsVisibility: function (state) {
+			this.shown = state !== 'off';
+
+			if (this.shown) 
+				this.show();
+			else 
+				this.hide();
+
+			this.el.removeClass('minimal');
+			if (state === 'minimal')
+				this.el.addClass('minimal');
+		}
 	};
 });

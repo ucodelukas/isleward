@@ -101,15 +101,25 @@ define([
 
 		onUiKeyDown: function (keyEvent) {
 			if (keyEvent.key === 'esc') {
-				this.uis.forEach(function (u) {
+				const closed = [];
+
+				this.uis.forEach(u => {
 					if (!u.modal || !u.shown)
 						return;
 
 					keyEvent.consumed = true;
 					u.hide();
+
+					closed.push(u);
 				});
+				
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
+
+				closed.forEach(c => {
+					if (c.afterHide)
+						c.afterHide();
+				});
 			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
 				$('.uiOverlay').hide();
 		},

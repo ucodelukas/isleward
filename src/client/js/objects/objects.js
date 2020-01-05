@@ -12,21 +12,14 @@ define([
 	config
 ) {
 	return {
-		showNames: true,
-
 		objects: [],
 
 		init: function () {
-			events.on('onKeyDown', this.onKeyDown.bind(this));
 			events.on('onGetObject', this.onGetObject.bind(this));
 			events.on('onRezone', this.onRezone.bind(this));
 			events.on('onChangeHoverTile', this.getLocation.bind(this));
 			events.on('onTilesVisible', this.onTilesVisible.bind(this));
-
-			//Get saved value for showNames, or use the value set above
-			let showNames = window.localStorage.getItem('iwd_opt_shownames');
-			this.showNames = showNames ? (showNames === 'true') : this.showNames;
-			config.showNames = this.showNames;
+			events.on('onToggleNameplates', this.onToggleNameplates.bind(this));
 		},
 
 		getLocation: function (x, y) {
@@ -282,7 +275,7 @@ define([
 				if (template.hidden !== null) {
 					sprite.visible = !template.hidden;
 					if (obj.nameSprite)
-						obj.nameSprite.visible = this.showNames;
+						obj.nameSprite.visible = config.showNames;
 					if ((obj.stats) && (obj.stats.hpSprite)) {
 						obj.stats.hpSprite.visible = !template.hidden;
 						obj.stats.hpSpriteInner.visible = !template.hidden;
@@ -305,7 +298,7 @@ define([
 					x: (obj.x * scale) + (scale / 2),
 					y: (obj.y * scale) + scale
 				});
-				obj.nameSprite.visible = this.showNames;
+				obj.nameSprite.visible = config.showNames;
 			}
 
 			if (obj.sprite) {
@@ -346,29 +339,6 @@ define([
 			}
 		},
 
-		onKeyDown: function (key) {
-			if (key === 'v') {
-				this.showNames = !this.showNames;
-
-				//Set new value in localStorage for showNames
-				window.localStorage.setItem('iwd_opt_shownames', this.showNames);
-				config.showNames = this.showNames;
-
-				let showNames = this.showNames;
-
-				let objects = this.objects;
-				let oLen = objects.length;
-				for (let i = 0; i < oLen; i++) {
-					let obj = objects[i];
-					let ns = obj.nameSprite;
-					if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
-						continue;
-
-					ns.visible = showNames;
-				}
-			}
-		},
-
 		onTilesVisible: function (tiles, visible) {
 			let objects = this.objects;
 			let oLen = objects.length;
@@ -382,6 +352,19 @@ define([
 					continue;
 
 				o.setVisible(visible);
+			}
+		},
+
+		onToggleNameplates: function (show) {
+			let objects = this.objects;
+			let oLen = objects.length;
+			for (let i = 0; i < oLen; i++) {
+				let obj = objects[i];
+				let ns = obj.nameSprite;
+				if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
+					continue;
+
+				ns.visible = show;
 			}
 		}
 	};

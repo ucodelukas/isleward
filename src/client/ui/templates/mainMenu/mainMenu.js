@@ -26,7 +26,6 @@ define([
 		postRender: function () {
 			this.onEvent('onToggleMainMenu', this.toggle.bind(this));
 
-			//this.el.find('.btnOptions').on('click', this.openOptions.bind(this));
 			this.el.find('.btnOptions').on('click', this.handler.bind(this, 'onToggleOptions'));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
