@@ -41,8 +41,6 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 
 	accountInfo.lastLogin = time;
 
-	time.day = lastLogin.day + 1;
-
 	if (
 		!lastLogin ||
 		(

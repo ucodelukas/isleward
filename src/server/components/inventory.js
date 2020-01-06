@@ -451,7 +451,7 @@ module.exports = {
 	mailItem: async function (msg) {
 		let item = this.findItem(msg.itemId);
 
-		if ((!item) || (item.noDrop) || (item.quest)) {
+		if (!item || item.noDrop || item.quest) {
 			this.resolveCallback(msg);
 			return;
 		}
