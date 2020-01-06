@@ -9,7 +9,7 @@ module.exports = {
 			}];
 
 			const pRewards = rewards[p.name];
-			if (pRewards.length)
+			if (pRewards && pRewards.length)
 				rList.push(...pRewards);
 
 			if (rList.length > 1)
