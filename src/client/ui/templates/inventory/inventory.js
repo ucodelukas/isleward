@@ -147,7 +147,7 @@ define([
 		},
 
 		onToggleQualityIndicators: function (state) {
-			this.el.removeClass('quality-off quality-corner quality-border');
+			this.el.removeClass('quality-off quality-corner quality-border quality-background');
 
 			const className = `quality-${state.toLowerCase()}`;
 			this.el.addClass(className);
