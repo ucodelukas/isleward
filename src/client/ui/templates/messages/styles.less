@@ -1,5 +1,4 @@
 @import "../../../css/colors.less";
-
 @pad: 8px;
 @btnSize: 64px;
 
@@ -7,10 +6,8 @@
 	position: absolute;
 	left: 10px;
 	bottom: 10px;
-
 	width: 480px;
 	padding: @pad;
-
 	pointer-events: none;
 
 	.input {
@@ -28,6 +25,7 @@
 			&.time {
 				display: none;
 			}
+
 		}
 
 		.filters {
@@ -42,13 +40,16 @@
 			.list-message {
 				filter: none;
 			}
+
 		}
+
 	}
 
 	&.active {
 		.list-message {
 			opacity: 1 !important;
 		}
+
 	}
 
 	.filters {
@@ -79,8 +80,11 @@
 					background-color: @blackA;
 					color: @grayB;
 				}
+
 			}
+
 		}
+
 	}
 
 	.list {
@@ -93,18 +97,14 @@
 			width: 100%;
 			padding: 5px 10px;
 			color: white;
-			filter:
-				drop-shadow(0px -2px 0px @blackD)
-				drop-shadow(0px 2px 0px @blackD)
-				drop-shadow(2px 0px 0px @blackD)
-				drop-shadow(-2px 0px 0px @blackD);
-
-			-moz-filter:
-				drop-shadow(0px -2px 0px @blackD)
-				drop-shadow(0px 2px 0px @blackD)
-				drop-shadow(2px 0px 0px @blackD)
-				drop-shadow(-2px 0px 0px @blackD);
-
+			filter: drop-shadow(0px -2px 0px @blackD)
+			drop-shadow(0px 2px 0px @blackD)
+			drop-shadow(2px 0px 0px @blackD)
+			drop-shadow(-2px 0px 0px @blackD);
+			-moz-filter: drop-shadow(0px -2px 0px @blackD)
+			drop-shadow(0px 2px 0px @blackD)
+			drop-shadow(2px 0px 0px @blackD)
+			drop-shadow(-2px 0px 0px @blackD);
 			word-wrap: break-word;
 			line-height: 18px;
 
@@ -120,7 +120,8 @@
 				color: @greenB;
 			}
 
-			a, &.q2 {
+			a,
+			&.q2 {
 				color: @blueB;
 			}
 
@@ -147,12 +148,25 @@
 			&.color-tealC {
 				color: @tealC;
 			}
+
 		}
 
-		&.rep .rep { display: block; }
-		&.chat .chat { display: block; }
-		&.info .info { display: block; }
-		&.loot .loot { display: block; }
+		&.rep .rep {
+			display: block;
+		}
+
+		&.chat .chat {
+			display: block;
+		}
+
+		&.info .info {
+			display: block;
+		}
+
+		&.loot .loot {
+			display: block;
+		}
+
 	}
 
 	.el {
@@ -168,27 +182,24 @@
 			background-color: transparent;
 			text-align: left;
 			padding: 5px 10px;
-
-			filter:
-				drop-shadow(0px -2px 0px @blackD)
-				drop-shadow(0px 2px 0px @blackD)
-				drop-shadow(2px 0px 0px @blackD)
-				drop-shadow(-2px 0px 0px @blackD);
-
-			-moz-filter:
-				drop-shadow(0px -2px 0px @blackD)
-				drop-shadow(0px 2px 0px @blackD)
-				drop-shadow(2px 0px 0px @blackD)
-				drop-shadow(-2px 0px 0px @blackD);
+			filter: drop-shadow(0px -2px 0px @blackD)
+			drop-shadow(0px 2px 0px @blackD)
+			drop-shadow(2px 0px 0px @blackD)
+			drop-shadow(-2px 0px 0px @blackD);
+			-moz-filter: drop-shadow(0px -2px 0px @blackD)
+			drop-shadow(0px 2px 0px @blackD)
+			drop-shadow(2px 0px 0px @blackD)
+			drop-shadow(-2px 0px 0px @blackD);
 		}
 
 		width: 100%;
 		color: @white;
 	}
+
 }
 
 .mobile .uiMessages {
-	padding: 10px 0px;
+	padding: 0px;
 	pointer-events: all;
 
 	.btnClose.active {
@@ -204,6 +215,8 @@
 
 	.filters {
 		margin-bottom: 0px;
+		flex-shrink: 0;
+		background-color: @darkGray;
 	}
 
 	.list {
@@ -223,12 +236,16 @@
 
 		.input {
 			display: block;
+			height: 26px;
+			flex-shrink: 0;
 		}
 
 		.el.textbox:not(.input) {
-			&.message, &.time {
+			&.message,
+			&.time {
 				display: none;
 			}
+
 		}
 
 		.keyboard {
@@ -238,7 +255,8 @@
 			background-color: @blackC;
 			justify-content: center;
 			align-items: center;
-			height: 292px;
+			height: 128px;
+			flex-shrink: 0;
 
 			.key {
 				flex: 1;
@@ -246,9 +264,6 @@
 				color: @white;
 				padding: 8px 10px;
 				text-align: center;
-				border-top: 2px solid #373041;
-				border-left: 1px solid #373041;
-				border-right: 1px solid #373041;
 
 				&.special {
 					color: @orange;
@@ -261,12 +276,20 @@
 				&.space {
 					flex: 5;
 				}
+
 			}
 
 			.newline {
 				width: 100%;
 			}
+
+			.gap {
+				width: 5%;
+				flex-shrink: 0;
+			}
+
 		}
+
 	}
 
 	&:not(.typing) {
@@ -292,5 +315,7 @@
 		> * {
 			display: none;
 		}
+
 	}
+
 }
