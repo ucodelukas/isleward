@@ -13,7 +13,7 @@ define([
 
 	const valueChains = {
 		showQuests: ['on', 'minimal', 'off'],
-		qualityIndicators: ['corner', 'border', 'background', 'off']
+		qualityIndicators: ['border', 'bottom', 'background', 'off']
 	};
 
 	const getNextValue = key => {
