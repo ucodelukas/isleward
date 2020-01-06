@@ -34,14 +34,28 @@ define([
 			this.find('.item.nameplates .name').on('click', events.emit.bind(events, 'onUiKeyDown', { key: 'v' }));
 			this.find('.item.quests .name').on('click', this.toggleQuests.bind(this));
 			this.find('.item.events .name').on('click', this.toggleEvents.bind(this));
+			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
 			this.find('.item.audio .name').on('click', this.toggleAudio.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
 			this.onEvent('onUiKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onToggleAudio', this.onToggleAudio.bind(this));
 			this.onEvent('onToggleNameplates', this.onToggleNameplates.bind(this));
+			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
 			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
 			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
+		},
+
+		toggleQualityIndicators: function () {
+			config.toggle('qualityIndicators');
+
+			events.emit('onToggleQualityIndicators', config.qualityIndicators);
+		},
+
+		onToggleQualityIndicators: function (state) {
+			const newValue = state[0].toUpperCase() + state.substr(1);
+
+			this.find('.item.quality .value').html(newValue);
 		},
 
 		toggleScreen: function () {
@@ -105,6 +119,7 @@ define([
 			this.onToggleAudio(config.playAudio);
 			this.onToggleEventsVisibility(config.showEvents);
 			this.onToggleQuestsVisibility(config.showQuests);
+			this.onToggleQualityIndicators(config.qualityIndicators);
 		},
 
 		toggle: function () {

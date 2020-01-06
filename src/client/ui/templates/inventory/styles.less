@@ -1,6 +1,7 @@
 @import "../../../css/colors.less";
 
-.uiInventory, .uiStash {
+.uiInventory,
+.uiStash {
 	display: none;
 	z-index: 2;
 	width: 818px;
@@ -18,8 +19,9 @@
 			padding-top: 8px;
 			margin: auto;
 		}
+
 	}
-	
+
 	position: relative;
 
 	.grid {
@@ -52,20 +54,18 @@
 				background-color: transparent;
 
 				.icon {
-					filter: 
-						brightness(100%)
-						drop-shadow(0px -4px 0px @blackD) 
-						drop-shadow(0px 4px 0px @blackD)
-						drop-shadow(4px 0px 0px @blackD) 
-						drop-shadow(-4px 0px 0px @blackD);
-
-					-moz-filter: 
-						brightness(100%)
-						drop-shadow(0px -4px 0px @blackD) 
-						drop-shadow(0px 4px 0px @blackD)
-						drop-shadow(4px 0px 0px @blackD) 
-						drop-shadow(-4px 0px 0px @blackD);
+					filter: brightness(100%)
+					drop-shadow(0px -4px 0px @blackD) 
+					drop-shadow(0px 4px 0px @blackD)
+					drop-shadow(4px 0px 0px @blackD) 
+					drop-shadow(-4px 0px 0px @blackD);
+					-moz-filter: brightness(100%)
+					drop-shadow(0px -4px 0px @blackD) 
+					drop-shadow(0px 4px 0px @blackD)
+					drop-shadow(4px 0px 0px @blackD) 
+					drop-shadow(-4px 0px 0px @blackD);
 				}
+
 			}
 
 			.quantity {
@@ -73,18 +73,14 @@
 				bottom: 3px;
 				position: absolute;
 				color: @white;
-				filter:
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
-
-				-moz-filter: 
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
-
+				filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
+				-moz-filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
 			}
 
 			.icon {
@@ -99,30 +95,153 @@
 				.quantity {
 					color: @yellow;
 				}
+
 			}
 
 			&.new {
 				.quantity {
 					color: @green;
 				}
+
 			}
 
 			&:hover {
 				.icon {
 					filter: brightness(160%);
-
 					-moz-filter: brightness(160%);
 				}
+
 			}
+
 		}
+
+	}
+
+	&.quality-corner .grid .item:not(.empty) {
+		&:after {
+			content: '';
+			position: absolute;
+			right: 5px;
+			bottom: 5px;
+			width: 10px;
+			height: 10px;
+			opacity: 0.5;
+		}
+
+		&.quality-0:after {
+			background-color: @qualityCommon;
+		}
+
+		&.quality-1:after {
+			background-color: @qualityMagic;
+		}
+
+		&.quality-2:after {
+			background-color: @qualityRare;
+		}
+
+		&.quality-3:after {
+			background-color: @qualityEpic;
+		}
+
+		&.quality-4:after {
+			background-color: @qualityLegendary;
+		}
+
+	}
+
+	&.quality-border .grid .item:not(.empty) {
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			border-width: 2px;
+			border-style: solid;
+			opacity: 0.5;
+		}
+
+		&.quality-0:after {
+			border-color: @qualityCommon;
+		}
+
+		&.quality-1:after {
+			border-color: @qualityMagic;
+		}
+
+		&.quality-2:after {
+			border-color: @qualityRare;
+		}
+
+		&.quality-3:after {
+			border-color: @qualityEpic;
+		}
+
+		&.quality-4:after {
+			border-color: @qualityLegendary;
+		}
+
+	}
+
+	&.quality-background .grid .item:not(.empty) {
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			opacity: 0.25;
+		}
+
+		.icon {
+			filter: brightness(100%)
+			drop-shadow(0px -4px 0px @blackD) 
+			drop-shadow(0px 4px 0px @blackD)
+			drop-shadow(4px 0px 0px @blackD) 
+			drop-shadow(-4px 0px 0px @blackD);
+
+			&:hover {
+				filter: brightness(160%)
+				drop-shadow(0px -4px 0px @blackD) 
+				drop-shadow(0px 4px 0px @blackD)
+				drop-shadow(4px 0px 0px @blackD) 
+				drop-shadow(-4px 0px 0px @blackD);
+			}
+
+		}
+
+		&.quality-0:before {
+			background-color: @qualityCommon;
+		}
+
+		&.quality-1:before {
+			background-color: @qualityMagic;
+		}
+
+		&.quality-2:before {
+			background-color: @qualityRare;
+		}
+
+		&.quality-3:before {
+			background-color: @qualityEpic;
+		}
+
+		&.quality-4:before {
+			background-color: @qualityLegendary;
+		}
+
 	}
 
 	.menu-bar {
 		background-color: @blackB;
-	    width: 100%;
-	    height: 41px;
-	    padding: 5px 0px;
-	    clear: both;
+		width: 100%;
+		height: 41px;
+		padding: 5px 0px;
+		clear: both;
 
 		.btn {
 			background-color: @blueC;
@@ -136,7 +255,9 @@
 			&.btnSortInv {
 				float: left;
 			}
+
 		}
+
 	}
 
 	.split-box {
@@ -168,6 +289,7 @@
 					padding-top: 8px;
 					margin: auto;
 				}
+
 			}
 
 			.bottom {
@@ -185,7 +307,9 @@
 					border: none;
 				}
 
-				input, .textbox, input:-webkit-autofill {
+				input,
+				.textbox,
+				input:-webkit-autofill {
 					color: @white;
 					-webkit-text-fill-color: @white;
 					background-color: @blackC;
@@ -210,14 +334,20 @@
 						&:hover {
 							background-color: @blackA;
 						}
+
 					}
 
 					&.btnSplit {
 						margin-top: 45px;
 						clear: both;
 					}
+
 				}
+
 			}
-		}		
+
+		}
+
 	}
+
 }

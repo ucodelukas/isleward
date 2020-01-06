@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/inventory/template',
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
-	'js/input'
+	'js/input',
+	'js/config'
 ], function (
 	events,
 	client,
 	template,
 	styles,
 	tplItem,
-	input
+	input,
+	config
 ) {
 	return {
 		tpl: template,
@@ -33,6 +35,8 @@ define([
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 			this.onEvent('onDestroyItems', this.onDestroyItems.bind(this));
 			this.onEvent('onShowInventory', this.toggle.bind(this));
+			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
+			this.onToggleQualityIndicators(config.qualityIndicators);
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
@@ -78,6 +82,7 @@ define([
 						.on('mouseup', this.onMouseDown.bind(this, null, null, false))
 						.on('mousemove', this.onHover.bind(this, itemEl, item))
 						.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
+						.addClass('empty')
 						.children()
 						.remove();
 
@@ -135,7 +140,17 @@ define([
 					itemEl.addClass('new');
 					itemEl.find('.quantity').html('NEW');
 				}
+
+				if (item.has('quality'))
+					itemEl.addClass(`quality-${item.quality}`);
 			}
+		},
+
+		onToggleQualityIndicators: function (state) {
+			this.el.removeClass('quality-off quality-corner quality-border');
+
+			const className = `quality-${state.toLowerCase()}`;
+			this.el.addClass(className);
 		},
 
 		onClick: function (item) {

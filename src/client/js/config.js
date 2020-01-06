@@ -7,11 +7,13 @@ define([
 		showNames: true,
 		showQuests: 'on',
 		showEvents: true,
-		playAudio: true
+		playAudio: true,
+		qualityIndicators: 'off'
 	};
 
 	const valueChains = {
-		showQuests: ['on', 'minimal', 'off']
+		showQuests: ['on', 'minimal', 'off'],
+		qualityIndicators: ['corner', 'border', 'background', 'off']
 	};
 
 	const getNextValue = key => {
