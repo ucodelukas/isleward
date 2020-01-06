@@ -449,7 +449,8 @@ module.exports = {
 	},
 
 	mailItem: async function (msg) {
-		/*let item = this.findItem(msg.itemId);
+		let item = this.findItem(msg.itemId);
+
 		if ((!item) || (item.noDrop) || (item.quest)) {
 			this.resolveCallback(msg);
 			return;
@@ -475,13 +476,13 @@ module.exports = {
 				blocked = true;
 		}
 
-		if (!blocked) {
-			const mappedItem = this.simplifyItem(item);
-			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
-		}
+		const mappedItem = this.simplifyItem(item);
 		this.destroyItem(item.id);
 
-		this.resolveCallback(msg);*/
+		if (!blocked)
+			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
+
+		this.resolveCallback(msg);
 	},
 
 	hookItemEvents: function (items) {
