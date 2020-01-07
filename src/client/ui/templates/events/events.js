@@ -124,7 +124,7 @@ define([
 
 			if (this.shown) 
 				this.show();
-			 else 
+			else 
 				this.hide();
 		}
 	};

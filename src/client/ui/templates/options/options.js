@@ -35,6 +35,7 @@ define([
 			this.find('.item.quests .name').on('click', this.toggleQuests.bind(this));
 			this.find('.item.events .name').on('click', this.toggleEvents.bind(this));
 			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
+			this.find('.item.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
 			this.find('.item.audio .name').on('click', this.toggleAudio.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
@@ -42,12 +43,35 @@ define([
 			this.onEvent('onToggleAudio', this.onToggleAudio.bind(this));
 			this.onEvent('onToggleNameplates', this.onToggleNameplates.bind(this));
 			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
+			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
 			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
 			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
 		},
 
+		toggleUnusableIndicators: function () {
+			config.toggle('unusableIndicators');
+
+			if (config.unusableIndicators === 'background' && config.qualityIndicators === 'background') {
+				config.toggle('qualityIndicators');
+				events.emit('onToggleQualityIndicators', config.qualityIndicators);
+			}
+
+			events.emit('onToggleUnusableIndicators', config.unusableIndicators);
+		},
+
+		onToggleUnusableIndicators: function (state) {
+			const newValue = state[0].toUpperCase() + state.substr(1);
+
+			this.find('.item.unusable .value').html(newValue);
+		},
+
 		toggleQualityIndicators: function () {
 			config.toggle('qualityIndicators');
+
+			if (config.qualityIndicators === 'background' && config.unusableIndicators === 'background') {
+				config.toggle('unusableIndicators');
+				events.emit('onToggleUnusableIndicators', config.unusableIndicators);
+			}
 
 			events.emit('onToggleQualityIndicators', config.qualityIndicators);
 		},
@@ -120,6 +144,7 @@ define([
 			this.onToggleEventsVisibility(config.showEvents);
 			this.onToggleQuestsVisibility(config.showQuests);
 			this.onToggleQualityIndicators(config.qualityIndicators);
+			this.onToggleUnusableIndicators(config.unusableIndicators);
 		},
 
 		toggle: function () {

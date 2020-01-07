@@ -101,7 +101,7 @@ define([
 
 		onUiKeyDown: function (keyEvent) {
 			if (keyEvent.key === 'esc') {
-				const closed = [];
+				const closedUis = [];
 
 				this.uis.forEach(u => {
 					if (!u.modal || !u.shown)
@@ -110,13 +110,13 @@ define([
 					keyEvent.consumed = true;
 					u.hide();
 
-					closed.push(u);
+					closedUis.push(u);
 				});
 				
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
 
-				closed.forEach(c => {
+				closedUis.forEach(c => {
 					if (c.afterHide)
 						c.afterHide();
 				});

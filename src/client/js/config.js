@@ -8,12 +8,14 @@ define([
 		showQuests: 'on',
 		showEvents: true,
 		playAudio: true,
-		qualityIndicators: 'off'
+		qualityIndicators: 'off',
+		unusableIndicators: 'off'
 	};
 
 	const valueChains = {
 		showQuests: ['on', 'minimal', 'off'],
-		qualityIndicators: ['border', 'bottom', 'background', 'off']
+		qualityIndicators: ['border', 'bottom', 'background', 'off'],
+		unusableIndicators: ['off', 'border', 'top', 'background']
 	};
 
 	const getNextValue = key => {
