@@ -119,7 +119,7 @@
 
 	&.quality-border .grid .item:not(.empty),
 	&.quality-bottom .grid .item:not(.empty) {
-		&:after {
+		&:before {
 			content: '';
 			position: absolute;
 			top: 0px;
@@ -131,30 +131,30 @@
 			border-style: solid;
 		}
 
-		&.quality-0:after {
+		&.quality-0:before {
 			border: none;
 		}
 
-		&.quality-1:after {
+		&.quality-1:before {
 			border-color: @greenC;
 		}
 
-		&.quality-2:after {
+		&.quality-2:before {
 			border-color: @blueD;
 		}
 
-		&.quality-3:after {
+		&.quality-3:before {
 			border-color: @purpleC;
 		}
 
-		&.quality-4:after {
+		&.quality-4:before {
 			border-color: @orangeD;
 		}
 
 	}
 
 	&.quality-bottom .grid .item:not(.empty) {
-		&:after {
+		&:before {
 			border-width: 0px 0px 5px 0px;
 		}
 
