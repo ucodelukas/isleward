@@ -5,6 +5,7 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+const transactions = require('../security/transactions');
 
 const { applyItemStats } = require('./equipment/helpers');
 
@@ -469,6 +470,8 @@ module.exports = {
 		} else if (!this.findItem(msg.itemId)) 
 			return;
 
+		const resolveTrans = transactions.register();
+
 		let blocked = false;
 		if (res.components) {
 			let social = res.components.find(f => f.type === 'social');
@@ -480,9 +483,11 @@ module.exports = {
 		this.destroyItem(item.id);
 
 		if (!blocked)
-			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
+			await this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
 
 		this.resolveCallback(msg);
+
+		resolveTrans();
 	},
 
 	hookItemEvents: function (items) {

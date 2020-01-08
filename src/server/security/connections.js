@@ -1,4 +1,5 @@
 let objects = require('../objects/objects');
+const rest = require('../security/rest');
 
 module.exports = {
 	players: [],
@@ -54,6 +55,9 @@ module.exports = {
 	},
 	route: function (socket, msg) {
 		let player = null;
+
+		if (msg.method === 'performAction') 
+			setTimeout(rest.forceSaveAll.bind(rest), 100);
 
 		if (msg.id) {
 			player = this.players.find(p => p.id === msg.id);
