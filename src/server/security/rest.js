@@ -3,6 +3,7 @@ const connections = require('../security/connections');
 const version = serverConfig.version;
 const bcrypt = require('bcrypt-nodejs');
 const roles = require('../config/roles');
+const transactions = require('./transactions')7
 
 module.exports = {
 	init: function (app) {
@@ -37,7 +38,7 @@ module.exports = {
 		bcrypt.compare(config.pwd, storedPassword, this.doSaveAll.bind(this, res, config));
 	},
 
-	doSaveAll: function (res, config, err, compareResult) {
+	doSaveAll: async function (res, config, err, compareResult) {
 		if (!compareResult)
 			return;
 
@@ -47,16 +48,18 @@ module.exports = {
 		if (roleLevel < 9)
 			return;
 
+		await transactions.returnWhenDone();
+
 		cons.emit('event', {
-			event: 'onGetMessages',
-			data: {
-				messages: [{
-					class: 'color-blueA',
-					message: config.msg,
-					type: 'chat'
-				}]
-			}
-		});
+				event: 'onGetMessages',
+				data: {
+					messages: [{
+						class: 'color-blueA',
+						message: config.msg,
+						type: 'chat'
+					}]
+				}
+			});
 
 		connections.forceSaveAll();
 
