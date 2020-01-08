@@ -3,7 +3,7 @@ const connections = require('../security/connections');
 const version = serverConfig.version;
 const bcrypt = require('bcrypt-nodejs');
 const roles = require('../config/roles');
-const transactions = require('./transactions')7
+const transactions = require('./transactions');
 
 module.exports = {
 	init: function (app) {
@@ -51,15 +51,15 @@ module.exports = {
 		await transactions.returnWhenDone();
 
 		cons.emit('event', {
-				event: 'onGetMessages',
-				data: {
-					messages: [{
-						class: 'color-blueA',
-						message: config.msg,
-						type: 'chat'
-					}]
-				}
-			});
+			event: 'onGetMessages',
+			data: {
+				messages: [{
+					class: 'color-blueA',
+					message: config.msg,
+					type: 'chat'
+				}]
+			}
+		});
 
 		connections.forceSaveAll();
 
