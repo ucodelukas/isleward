@@ -238,7 +238,8 @@ module.exports = {
 		id: 'banditAlchemist'
 	}, {
 		type: 'setDescription',
-		desc: descriptionStrings.active
+		desc: descriptionStrings.active,
+		auto: true
 	}, {
 		type: 'spawnMob',
 		mobs: [rat],

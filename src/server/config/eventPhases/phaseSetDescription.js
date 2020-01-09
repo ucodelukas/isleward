@@ -3,7 +3,5 @@ module.exports = {
 
 	init: function (event) {
 		event.eventManager.setEventDescription(event.config.name, this.desc);
-
-		this.end = true;
 	}
 };
