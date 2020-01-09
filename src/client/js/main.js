@@ -8,6 +8,7 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
+	'js/sound/sound',
 	'ui/templates/online/online',
 	'ui/templates/tooltips/tooltips'
 ], function (
@@ -19,7 +20,8 @@ define([
 	numbers,
 	input,
 	events,
-	resources
+	resources,
+	sound
 ) {
 	return {
 		hasFocus: true,
@@ -50,6 +52,8 @@ define([
 			window.onblur = this.onFocus.bind(this, false);
 
 			$(window).on('contextmenu', this.onContextMenu.bind(this));
+
+			sound.init();
 
 			objects.init();
 			renderer.init();

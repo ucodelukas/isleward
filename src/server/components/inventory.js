@@ -270,7 +270,7 @@ module.exports = {
 
 	splitStack: function (msg) {
 		let item = this.findItem(msg.itemId);
-		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1)
+		if (!item || !item.quantity || item.quantity <= msg.stackSize || msg.stackSize < 1 || item.quest)
 			return;
 
 		const hasSpace = this.hasSpace(item, true);
@@ -449,9 +449,9 @@ module.exports = {
 	},
 
 	mailItem: async function (msg) {
-		return;
 		let item = this.findItem(msg.itemId);
-		if ((!item) || (item.noDrop) || (item.quest)) {
+
+		if (!item || item.noDrop || item.quest) {
 			this.resolveCallback(msg);
 			return;
 		}
@@ -476,11 +476,11 @@ module.exports = {
 				blocked = true;
 		}
 
-		if (!blocked) {
-			const mappedItem = this.simplifyItem(item);
-			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
-		}
+		const mappedItem = this.simplifyItem(item);
 		this.destroyItem(item.id);
+
+		if (!blocked)
+			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
 
 		this.resolveCallback(msg);
 	},
@@ -555,9 +555,12 @@ module.exports = {
 		this.items
 			.filter(i => !i.eq)
 			.map(i => {
+				//If we don't do this, [waist] goes before [undefined]
+				const useSlot = i.slot ? i.slot : 'z';
+
 				return {
 					item: i,
-					sortId: `${i.slot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
+					sortId: `${useSlot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
 				};
 			})
 			.sort((a, b) => {

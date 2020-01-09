@@ -32,6 +32,14 @@ module.exports = {
 		return cpn;
 	},
 
+	addBuiltComponent: function (cpn) {
+		this[cpn.type] = cpn;
+		cpn.obj = this;
+		this.components.push(cpn);
+
+		return cpn;
+	},
+
 	removeComponent: function (type) {
 		let cpn = this[type];
 		if (!cpn)

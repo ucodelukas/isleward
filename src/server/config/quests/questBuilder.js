@@ -8,6 +8,7 @@ module.exports = {
 	init: function (instance) {
 		this.instance = instance;
 	},
+
 	obtain: function (obj, template) {
 		let zoneName = template ? template.zoneName : obj.zoneName;
 		let zonePath = mapList.mapList.find(m => m.name === zoneName).path;
@@ -29,6 +30,10 @@ module.exports = {
 		let config = extend({}, zoneTemplate);
 		this.instance.eventEmitter.emit('onBeforeGetQuests', config);
 		if (config.infini.length === 0)
+			return;
+
+		const minPlayerLevel = ~~(obj.instance.map.zone.level[0] * 0.75);
+		if (obj.stats.values.level < minPlayerLevel)
 			return;
 
 		let pickQuest = null;

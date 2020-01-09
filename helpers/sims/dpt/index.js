@@ -1,8 +1,4 @@
-var extend = require('extend');
-var requirejs = require('requirejs');
+global.extend = require('../../../src/server/misc/clone');
 
-global.extend = extend;
-
-requirejs(['sim'], function (sim) {
-	sim.init();
-});
+const sim = require('./sim');
+sim();

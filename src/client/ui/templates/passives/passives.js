@@ -1,3 +1,7 @@
+let zoom = window.devicePixelRatio;
+if (isMobile)
+	zoom /= 2;
+
 define([
 	'js/system/events',
 	'js/system/client',
@@ -51,7 +55,7 @@ define([
 		handlerResize: null,
 
 		postRender: function () {
-			input.init(this.el);
+			input.init(this.el, zoom);
 
 			this.data.nodes = temp.nodes;
 			this.data.links = temp.links.map(l => {
@@ -73,8 +77,6 @@ define([
 
 			this.handlerResize = this.onResize.bind(this);
 			window.addEventListener('resize', this.handlerResize);
-
-			let zoom = window.devicePixelRatio;
 
 			this.canvas = this.find('.canvas')[0];
 			this.size.w = this.canvas.width = this.find('.bottom').width() * zoom;
@@ -120,8 +122,6 @@ define([
 			if (isMobile || !this.shown)
 				return;
 			
-			let zoom = window.devicePixelRatio;
-
 			this.size.w = this.canvas.width = this.find('.bottom').width() * zoom;
 			this.size.h = this.canvas.height = this.find('.bottom').height() * zoom;
 
@@ -357,8 +357,8 @@ define([
 						text = 'Starting node for ' + node.spiritStart + ' spirits';
 
 					let tooltipPos = {
-						x: input.mouse.raw.clientX + 15,
-						y: input.mouse.raw.clientY
+						x: (input.mouse.raw.clientX + 15) / zoom,
+						y: (input.mouse.raw.clientY) / zoom
 					};
 
 					events.emit('onShowTooltip', text, this.el[0], tooltipPos);
@@ -399,10 +399,9 @@ define([
 
 				this.events.onMouseMove.call(this, e);
 
-				let windowZoom = window.devicePixelRatio;
 				this.panOrigin = {
-					x: e.raw.clientX * windowZoom,
-					y: e.raw.clientY * windowZoom
+					x: e.raw.clientX * zoom,
+					y: e.raw.clientY * zoom
 				};
 			},
 
@@ -419,12 +418,11 @@ define([
 					};
 				}
 
-				let windowZoom = window.devicePixelRatio;
 				let zoomPanMultiplier = this.currentZoom;
 				let scrollSpeed = constants.scrollSpeed / zoomPanMultiplier;
 
-				const rawX = e.raw.clientX * windowZoom;
-				const rawY = e.raw.clientY * windowZoom;
+				const rawX = e.raw.clientX * zoom;
+				const rawY = e.raw.clientY * zoom;
 
 				this.pos.x += (this.panOrigin.x - rawX) * scrollSpeed;
 				this.pos.y += (this.panOrigin.y - rawY) * scrollSpeed;

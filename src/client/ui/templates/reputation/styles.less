@@ -17,9 +17,11 @@
 			padding-top: 8px;
 			margin: auto;
 		}
+
 	}
 
-	.list, .info {
+	.list,
+	.info {
 		background-color: fade(@blackC, 90%);
 		float: left;
 		height: calc(100% - 36px);
@@ -44,7 +46,9 @@
 			&:hover {
 				background-color: @grayC;
 			}
+
 		}
+
 	}
 
 	.info {
@@ -59,6 +63,7 @@
 			.heading-bottom {
 				margin: auto;
 			}
+
 		}
 
 		.description {
@@ -96,18 +101,31 @@
 				position: absolute;
 				left: 0px;
 				top: 5px;
-				filter:
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
-
-				-moz-filter:
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
+				filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
+				-moz-filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
 			}
+
 		}
+
 	}
+
+	.list:empty {
+		display: none;
+
+		+ .info {
+			width: 100%;
+		}
+
+	}
+
+}
+
+.mobile .uiReputation {
+	z-index: 2;
 }

@@ -30,7 +30,7 @@ define([
 				'spells',
 				'messages',
 				'online',
-				'options',
+				'mainMenu',
 				'context',
 				'party',
 				'help',
@@ -55,7 +55,8 @@ define([
 				'wardrobe',
 				'passives',
 				'workbench',
-				'middleHud'
+				'middleHud',
+				'options'
 			].forEach(function (u) {
 				this.build(u);
 			}, this);
@@ -100,15 +101,25 @@ define([
 
 		onUiKeyDown: function (keyEvent) {
 			if (keyEvent.key === 'esc') {
-				this.uis.forEach(function (u) {
+				const closedUis = [];
+
+				this.uis.forEach(u => {
 					if (!u.modal || !u.shown)
 						return;
 
 					keyEvent.consumed = true;
 					u.hide();
+
+					closedUis.push(u);
 				});
+				
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
+
+				closedUis.forEach(c => {
+					if (c.afterHide)
+						c.afterHide();
+				});
 			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
 				$('.uiOverlay').hide();
 		},

@@ -28,6 +28,10 @@ module.exports = {
 		};
 	},
 
+	isSlotEmpty: function (slot) {
+		return !this.eq.has(slot);
+	},
+
 	autoEquip: function (itemId) {
 		if (!this.doAutoEq)
 			return;

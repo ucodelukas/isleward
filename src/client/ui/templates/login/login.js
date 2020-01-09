@@ -73,7 +73,7 @@ define([
 				uiFactory.preload();
 
 				$('.uiLoginExtra').remove();
-				this.el.remove();
+				this.destroy();
 			} else
 				this.el.find('.message').html(res);
 		},

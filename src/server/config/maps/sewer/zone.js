@@ -111,6 +111,7 @@ module.exports = {
 
 				drops: {
 					rolls: 3,
+					chance: 100,
 					noRandom: true,
 					alsoRandom: true,
 					magicFind: [2000, 125],
@@ -231,6 +232,7 @@ module.exports = {
 			level: 13,
 			walkDistance: 0,
 			faction: 'hostile',
+			noQuest: true,
 			grantRep: {
 				fjolgard: 22
 			},

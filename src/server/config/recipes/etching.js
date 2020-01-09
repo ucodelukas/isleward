@@ -2,7 +2,7 @@ module.exports = [{
 	id: 'runeWhirlwind',
 	name: 'Rune of Whirlwind',
 	default: false,
-	description: 'Wiggle-wiggly woo-woo.',
+	description: 'You furiously spin in a circle, striking all foes around you.',
 	item: {
 		name: 'Rune of Whirlwind',
 		generate: true,
@@ -20,7 +20,7 @@ module.exports = [{
 	id: 'runeAmbush',
 	name: 'Rune of Ambush',
 	default: false,
-	description: 'Wiggle-wiggly woo-woo.',
+	description: 'Step into the shadows and reappear behind your target before delivering a concussing blow.',
 	item: {
 		name: 'Rune of Ambush',
 		generate: true,

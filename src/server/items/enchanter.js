@@ -103,6 +103,7 @@ const reslot = (item, msg) => {
 	delete item.spell;
 	delete item.implicitStats;
 	delete item.power;
+	delete item.range;
 
 	extend(item, newItem);
 };

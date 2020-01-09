@@ -75,27 +75,32 @@ module.exports = {
 		// the delta by -1
 		let offsetX = 0;
 		if (dx !== 0)
-			offsetX = (dx / Math.abs(dx)) * -1;
+			offsetX = dx / Math.abs(dx);
 
 		let offsetY = 0;
 		if (dy !== 0)
-			offsetY = (dy / Math.abs(dy)) * -1;
+			offsetY = dy / Math.abs(dy);
 
 		let targetPos = {
 			x: target.x,
 			y: target.y
 		};
 
-		let physics = obj.instance.physics;
+		const physics = obj.instance.physics;
+		const fnTileValid = this.isTileValid.bind(this, physics, x, y);
 		//Check where we should land
-		if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y - offsetY)) {
-			if (!this.isTileValid(physics, x, y, targetPos.x - offsetX, targetPos.y)) 
-				targetPos.y -= offsetY;
-			else 
-				targetPos.x -= offsetX;
+		if (!fnTileValid(targetPos.x + offsetX, targetPos.y + offsetY)) {
+			if (!fnTileValid(targetPos.x + offsetX, targetPos.y)) {
+				if (!fnTileValid(targetPos.x, targetPos.y + offsetY)) {
+					targetPos.x -= offsetX;
+					targetPos.y -= offsetY;
+				} else
+					targetPos.y += offsetY;
+			} else 
+				targetPos.x += offsetX;
 		} else {
-			targetPos.x -= offsetX;
-			targetPos.y -= offsetY;
+			targetPos.x += offsetX;
+			targetPos.y += offsetY;
 		}
 
 		let targetEffect = target.effects.addEffect({

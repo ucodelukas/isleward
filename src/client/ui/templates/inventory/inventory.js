@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/inventory/template',
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
-	'js/input'
+	'js/input',
+	'js/config'
 ], function (
 	events,
 	client,
 	template,
 	styles,
 	tplItem,
-	input
+	input,
+	config
 ) {
 	return {
 		tpl: template,
@@ -33,6 +35,11 @@ define([
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 			this.onEvent('onDestroyItems', this.onDestroyItems.bind(this));
 			this.onEvent('onShowInventory', this.toggle.bind(this));
+			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
+			this.onToggleQualityIndicators(config.qualityIndicators);
+
+			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
+			this.onToggleUnusableIndicators(config.unusableIndicators);
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
@@ -78,6 +85,7 @@ define([
 						.on('mouseup', this.onMouseDown.bind(this, null, null, false))
 						.on('mousemove', this.onHover.bind(this, itemEl, item))
 						.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
+						.addClass('empty')
 						.children()
 						.remove();
 
@@ -135,7 +143,30 @@ define([
 					itemEl.addClass('new');
 					itemEl.find('.quantity').html('NEW');
 				}
+
+				if (item.slot) {
+					const equipErrors = window.player.inventory.equipItemErrors(item);
+					if (equipErrors.length)
+						itemEl.addClass('no-equip');
+				}
+
+				if (item.has('quality'))
+					itemEl.addClass(`quality-${item.quality}`);
 			}
+		},
+
+		onToggleQualityIndicators: function (state) {
+			this.el.removeClass('quality-off quality-bottom quality-border quality-background');
+
+			const className = `quality-${state.toLowerCase()}`;
+			this.el.addClass(className);
+		},
+
+		onToggleUnusableIndicators: function (state) {
+			this.el.removeClass('unusable-off unusable-border unusable-top unusable-background');
+
+			const className = `unusable-${state.toLowerCase()}`;
+			this.el.addClass(className);
 		},
 
 		onClick: function (item) {
@@ -274,7 +305,8 @@ define([
 				},
 				salvage: {
 					text: 'salvage',
-					callback: this.performItemAction.bind(this, item, 'salvageItem')
+					callback: this.performItemAction.bind(this, item, 'salvageItem'),
+					hotkey: 'f'
 				},
 				stash: {
 					text: 'stash',
@@ -323,56 +355,56 @@ define([
 			if (item.active)
 				menuItems.activate.text = 'deactivate';
 
-			let config = [];
+			let ctxConfig = [];
 
 			if (item.ability)
-				config.push(menuItems.learn);
+				ctxConfig.push(menuItems.learn);
 			else if (item.type === 'mtx')
-				config.push(menuItems.activate);
+				ctxConfig.push(menuItems.activate);
 			else if (item.type === 'toy' || item.type === 'consumable' || item.useText || item.type === 'recipe') {
 				if (item.useText)
 					menuItems.use.text = item.useText;
-				config.push(menuItems.use);
+				ctxConfig.push(menuItems.use);
 				if (!item.has('quickSlot'))
-					config.push(menuItems.quickSlot);
+					ctxConfig.push(menuItems.quickSlot);
 			} else if (item.slot) {
-				config.push(menuItems.equip);
+				ctxConfig.push(menuItems.equip);
 				if (!item.eq)
-					config.push(menuItems.divider);
+					ctxConfig.push(menuItems.divider);
 
 				if (!item.eq) {
-					config.push(menuItems.augment);
-					config.push(menuItems.divider);
+					ctxConfig.push(menuItems.augment);
+					ctxConfig.push(menuItems.divider);
 				}
 			}
 
 			if ((!item.eq) && (!item.active)) {
 				if (!item.quest) {
 					if ((window.player.stash.active) && (!item.noStash))
-						config.push(menuItems.stash);
+						ctxConfig.push(menuItems.stash);
 
 					if (!item.noDrop)
-						config.push(menuItems.drop);
+						ctxConfig.push(menuItems.drop);
 
 					if ((!item.material) && (!item.noSalvage))
-						config.push(menuItems.salvage);
+						ctxConfig.push(menuItems.salvage);
 				}
 
 				if (!item.noDestroy)
-					config.push(menuItems.destroy);
+					ctxConfig.push(menuItems.destroy);
 			}
 
-			if (item.quantity > 1)
-				config.push(menuItems.split);
+			if (item.quantity > 1 && !item.quest)
+				ctxConfig.push(menuItems.split);
 
-			//if ((!item.noDrop) && (!item.quest))
-			//	config.push(menuItems.mail);
+			if ((!item.noDrop) && (!item.quest))
+				ctxConfig.push(menuItems.mail);
 
 			if (isMobile)
 				this.hideTooltip(null, this.hoverItem);
 
-			if (config.length > 0)
-				events.emit('onContextMenu', config, e);
+			if (ctxConfig.length > 0)
+				events.emit('onContextMenu', ctxConfig, e);
 
 			e.preventDefault();
 			return false;

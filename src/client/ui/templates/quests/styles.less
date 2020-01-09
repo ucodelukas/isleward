@@ -1,9 +1,8 @@
 @import "../../../css/colors.less";
-
 @btnSize: 64px;
 
 .uiQuests {
-	width: 320px;
+	width: 326px;
 
 	.heading {
 		color: @yellow;
@@ -40,6 +39,7 @@
 				.description {
 					display: none;
 				}
+
 			}
 
 			.reward {
@@ -55,6 +55,7 @@
 				> .reward {
 					display: block;
 				}
+
 			}
 
 			.ready-text {
@@ -65,6 +66,7 @@
 				.name {
 					color: @blue;
 				}
+
 			}
 
 			&.ready {
@@ -84,24 +86,34 @@
 					display: block;
 					color: @white;
 				}
+
 			}
+
 		}
+
 	}
 
 	.btn {
 		display: none;
 	}
+
+	&.minimal {
+		.quest.disabled {
+			display: none;
+		}
+
+	}
+
 }
 
 .mobile .uiQuests {
 	background-color: fade(@darkGray, 90%);
 
 	&:not(.active) {
-		position: absolute;
-		top: 10px;
-		right: 158px;
 		width: @btnSize;
 		height: @btnSize;
+		margin-left: 10px;
+		position: relative;
 
 		&:after {
 			content: '';
@@ -117,6 +129,7 @@
 		> * {
 			display: none;
 		}
+
 	}
 
 	&.active {
@@ -129,17 +142,20 @@
 			display: block;
 			position: absolute;
 			right: calc(100% + 10px);
-			top: 50%;
-			transform: translateY(-50%);
+			top: 0px;
 			background-color: fade(@darkGray, 90%);
 			width: @btnSize;
 			height: @btnSize;
+			padding-top: 0px;
 
 			.icon {
 				width: 100%;
 				height: 100%;
 				background: url('../../../images/uiIcons.png') -448px 0px;
 			}
+
 		}
+
 	}
+
 }

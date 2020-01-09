@@ -3,13 +3,15 @@ define([
 	'js/system/events',
 	'html!ui/templates/events/template',
 	'html!ui/templates/events/templateEvent',
-	'css!ui/templates/events/styles'
+	'css!ui/templates/events/styles',
+	'js/config'
 ], function (
 	client,
 	events,
 	tpl,
 	templateEvent,
-	styles
+	styles,
+	config
 ) {
 	return {
 		tpl: tpl,
@@ -30,6 +32,9 @@ define([
 			this.onEvent('onRemoveEvent', this.onRemoveEvent.bind(this));
 			this.onEvent('onUpdateEvent', this.onUpdateEvent.bind(this));
 			this.onEvent('onCompleteEvent', this.onCompleteEvent.bind(this));
+
+			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
+			this.onToggleEventsVisibility(config.showEvents);
 		},
 
 		onRezone: function () {
@@ -112,6 +117,15 @@ define([
 		toggleButtons: function (e) {
 			this.el.toggleClass('active');
 			e.stopPropagation();
+		},
+
+		onToggleEventsVisibility: function (active) {
+			this.shown = active;
+
+			if (this.shown) 
+				this.show();
+			else 
+				this.hide();
 		}
 	};
 });

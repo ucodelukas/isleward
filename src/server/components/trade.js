@@ -265,9 +265,15 @@ module.exports = {
 
 		let targetTrade = target.trade;
 
-		let item = this.obj.inventory.destroyItem(msg.itemId, 1);
+		const item = this.obj.inventory.findItem(msg.itemId);
 		if (!item)
 			return;
+
+		const oldQuantity = item.quantity;
+		this.obj.inventory.destroyItem(msg.itemId);
+
+		if (oldQuantity)
+			item.quantity = oldQuantity;
 
 		let worth = ~~(item.worth * targetTrade.markup.buy);
 

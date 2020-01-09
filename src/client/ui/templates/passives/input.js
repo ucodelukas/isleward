@@ -45,7 +45,9 @@ define([
 
 		enabled: true,
 
-		init: function (el) {
+		init: function (el, zoom) {
+			this.zoom = zoom;
+
 			el
 				.on('mousedown', this.events.mouse.mouseDown.bind(this))
 				.on('mouseup', this.events.mouse.mouseUp.bind(this))
@@ -197,7 +199,7 @@ define([
 
 			touch: {
 				touchStart: function (e) {
-					let pos = this.events.touch.convertTouchPos(e);
+					let pos = this.events.touch.convertTouchPos.call(this, e);
 
 					this.mouse.raw = {
 						clientX: pos.x,
@@ -215,7 +217,7 @@ define([
 				},
 
 				touchMove: function (e) {
-					let pos = this.events.touch.convertTouchPos(e);
+					let pos = this.events.touch.convertTouchPos.call(this, e);
 
 					this.mouse.raw = {
 						clientX: pos.x,
@@ -244,8 +246,8 @@ define([
 				convertTouchPos: function (e) {
 					let rect = e.target.getBoundingClientRect();
 					return {
-						x: e.targetTouches[0].pageX - rect.left,
-						y: e.targetTouches[0].pageY - rect.top
+						x: (e.targetTouches[0].pageX - rect.left) * this.zoom,
+						y: (e.targetTouches[0].pageY - rect.top) * this.zoom
 					};
 				}
 			}

@@ -17,7 +17,7 @@ let spells = {
 		manaCost: 0,
 		range: 9,
 		random: {
-			damage: [2, 7.6]
+			damage: [2, 7.2]
 		}
 	},
 
@@ -25,12 +25,12 @@ let spells = {
 		statType: 'int',
 		statMult: 1,
 		element: 'arcane',
-		cdMax: 6,
-		castTimeMax: 7,
-		manaCost: 4,
+		cdMax: 7,
+		castTimeMax: 6,
+		manaCost: 5,
 		range: 9,
 		random: {
-			damage: [4, 15]
+			damage: [4, 32]
 		}
 	},
 	'ice spear': {
@@ -42,7 +42,7 @@ let spells = {
 		manaCost: 4,
 		range: 9,
 		random: {
-			damage: [2, 8],
+			damage: [2, 15],
 			i_freezeDuration: [6, 10]
 		}
 	},
@@ -54,7 +54,7 @@ let spells = {
 		castTimeMax: 2,
 		manaCost: 5,
 		random: {
-			damage: [2, 5],
+			damage: [2, 10],
 			i_radius: [1, 2.2],
 			i_pushback: [2, 5]
 		}
@@ -63,8 +63,8 @@ let spells = {
 		statType: 'int',
 		statMult: 1,
 		element: 'holy',
-		cdMax: 4,
-		castTimeMax: 6,
+		cdMax: 6,
+		castTimeMax: 3,
 		range: 9,
 		manaCost: 7,
 		random: {
@@ -77,7 +77,7 @@ let spells = {
 		statMult: 1,
 		element: 'holy',
 		cdMax: 5,
-		castTimeMax: 5,
+		castTimeMax: 4,
 		manaCost: 8,
 		range: 9,
 		radius: 3,
@@ -108,7 +108,7 @@ let spells = {
 		range: 10,
 		manaCost: 3,
 		random: {
-			damage: [2, 8],
+			damage: [2, 11],
 			i_stunDuration: [6, 10]
 		}
 	},
@@ -117,10 +117,10 @@ let spells = {
 		statMult: 1,
 		cdMax: 20,
 		castTimeMax: 0,
-		manaCost: 12,
+		manaCost: 10,
 		random: {
 			i_duration: [10, 20],
-			i_chance: [20, 50]
+			i_chance: [30, 60]
 		}
 	},
 	whirlwind: {
@@ -133,18 +133,18 @@ let spells = {
 		noDrop: true,
 		random: {
 			i_range: [1, 2.5],
-			damage: [4, 15]
+			damage: [4, 18]
 		}
 	},
 	smokebomb: {
 		statType: 'dex',
 		statMult: 1,
 		element: 'poison',
-		cdMax: 5,
+		cdMax: 7,
 		castTimeMax: 0,
 		manaCost: 6,
 		random: {
-			damage: [0.25, 1.45],
+			damage: [0.25, 1.2],
 			i_radius: [1, 3],
 			i_duration: [7, 13]
 		}
@@ -152,26 +152,26 @@ let spells = {
 	ambush: {
 		statType: 'dex',
 		statMult: 1,
-		cdMax: 16,
-		castTimeMax: 7,
+		cdMax: 15,
+		castTimeMax: 3,
 		range: 10,
 		manaCost: 7,
 		noDrop: true,
 		random: {
-			damage: [8, 28],
-			i_stunDuration: [4, 6]
+			damage: [8, 35],
+			i_stunDuration: [4, 7]
 		}
 	},
 	'crystal spikes': {
 		statType: ['dex', 'int'],
 		statMult: 1,
-		manaCost: 22,
+		manaCost: 14,
 		needLos: true,
 		cdMax: 20,
 		castTimeMax: 0,
 		range: 9,
 		random: {
-			damage: [3, 14],
+			damage: [3, 16],
 			i_delay: [1, 4]
 		},
 		negativeStats: [
