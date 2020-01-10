@@ -49,7 +49,7 @@ module.exports = {
 		if (roleLevel < 9)
 			return;*/
 
-		await transactions.returnWhenDone();
+		await atlas.returnWhenZonesIdle();
 
 		cons.emit('event', {
 			event: 'onGetMessages',

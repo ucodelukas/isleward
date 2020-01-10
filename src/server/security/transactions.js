@@ -6,7 +6,6 @@ const complete = id => {
 };
 
 const register = () => {
-	console.log('reg');
 	const nextId = ++lastId;
 	list.push(nextId);
 
@@ -14,20 +13,16 @@ const register = () => {
 };
 
 const returnWhenDone = async () => {
-	console.log('check');
 	if (!list.length)
 		return;
 
 	return new Promise(res => {
 		const checker = () => {
 			if (!list.length) {
-				console.log('ok');
 				res();
 
 				return;
 			}
-
-			console.log('nope');
 
 			setTimeout(checker, 100);
 		};

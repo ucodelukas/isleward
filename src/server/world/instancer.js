@@ -12,6 +12,7 @@ let scheduler = require('../misc/scheduler');
 let mail = require('../mail/mail');
 let herbs = require('../config/herbs');
 let eventEmitter = require('../misc/events');
+const transactions = require('../security/transactions');
 
 module.exports = {
 	instances: [],
@@ -211,5 +212,13 @@ module.exports = {
 				}
 			});
 		}
+	},
+
+	notifyOnceIdle: async function () {
+		await transactions.returnWhenDone();
+
+		process.send({
+			method: 'onZoneIdle'
+		});
 	}
 };

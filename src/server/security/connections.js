@@ -56,9 +56,6 @@ module.exports = {
 	route: function (socket, msg) {
 		let player = null;
 
-		if (msg.method === 'performAction') 
-			setTimeout(rest.forceSaveAll.bind(rest), 100);
-
 		if (msg.id) {
 			player = this.players.find(p => p.id === msg.id);
 			let source = this.players.find(p => p.socket.id === socket.id);
