@@ -37,6 +37,7 @@ define([
 			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
 			this.find('.item.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
 			this.find('.item.audio .name').on('click', this.toggleAudio.bind(this));
+			this.find('.item.lastChannel .name').on('click', this.toggleLastChannel.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
 			this.onEvent('onUiKeyDown', this.onKeyDown.bind(this));
@@ -46,6 +47,7 @@ define([
 			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
 			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
 			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
+			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 		},
 
 		toggleUnusableIndicators: function () {
@@ -138,6 +140,18 @@ define([
 			this.find('.item.audio .value').html(newValue);
 		},
 
+		toggleLastChannel: function () {
+			config.toggle('rememberChatChannel');
+
+			events.emit('onToggleLastChannel', config.rememberChatChannel);
+		},
+
+		onToggleLastChannel: function (state) {
+			const newValue = state ? 'On' : 'Off';
+
+			this.find('.item.lastChannel .value').html(newValue);
+		},
+
 		build: function () {
 			this.onToggleNameplates(config.showNames);
 			this.onToggleAudio(config.playAudio);
@@ -145,6 +159,7 @@ define([
 			this.onToggleQuestsVisibility(config.showQuests);
 			this.onToggleQualityIndicators(config.qualityIndicators);
 			this.onToggleUnusableIndicators(config.unusableIndicators);
+			this.onToggleLastChannel(config.rememberChatChannel);
 		},
 
 		toggle: function () {

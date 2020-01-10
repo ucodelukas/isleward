@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/messages/tplTab',
 	'css!ui/templates/messages/styles',
 	'js/input',
-	'js/system/client'
+	'js/system/client',
+	'js/config'
 ], function (
 	events,
 	template,
 	tplTab,
 	styles,
 	input,
-	client
+	client,
+	config
 ) {
 	return {
 		tpl: template,
@@ -29,6 +31,8 @@ define([
 
 		blockedPlayers: [],
 
+		lastChannel: null,
+
 		postRender: function () {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
@@ -36,6 +40,7 @@ define([
 			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
+			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 
 			this
 				.find('.filter:not(.channel):not(.btn)')
@@ -248,8 +253,10 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'enter')
+			if (key === 'enter') {
 				this.toggle(true);
+				this.find('input').val(this.lastChannel || '');
+			}
 			else if (key === 'shift')
 				this.showItemTooltip();
 		},
@@ -393,14 +400,14 @@ define([
 			}
 
 			let textbox = this.find('input');
-			let config = {
+			let msgConfig = {
 				success: true,
 				message: textbox.val()
 			};
 
-			events.emit('onBeforeChat', config);
+			events.emit('onBeforeChat', msgConfig);
 
-			let val = config.message
+			let val = msgConfig.message
 				.split('<')
 				.join('&lt;')
 				.split('>')
@@ -408,11 +415,26 @@ define([
 
 			textbox.blur();
 			
-			if (!config.success)
+			if (!msgConfig.success)
 				return;
 
 			if (val.trim() === '')
 				return;
+
+			if (config.rememberChatChannel) {
+				const firstChar = val[0];
+				let lastChannel = null;
+				if ('@$'.includes(firstChar)) {
+					const firstSpace = val.indexOf(' ');
+					if (firstSpace === -1)
+						lastChannel = val + ' ';
+					else
+						lastChannel = val.substr(0, firstSpace) + ' ';
+				} else if (firstChar === '%')
+					lastChannel = '%';
+
+				this.lastChannel = lastChannel;
+			}
 
 			client.request({
 				cpn: 'social',
@@ -421,6 +443,12 @@ define([
 					message: val
 				}
 			});
+		},
+
+		onToggleLastChannel: function (isOn) {
+			if (!isOn) {
+				this.lastChannel = null;
+			}
 		}
 	};
 });
