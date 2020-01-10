@@ -9,7 +9,8 @@ define([
 		showEvents: true,
 		playAudio: true,
 		qualityIndicators: 'off',
-		unusableIndicators: 'off'
+		unusableIndicators: 'off',
+		rememberChatChannel: true
 	};
 
 	const valueChains = {

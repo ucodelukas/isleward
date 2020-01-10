@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/messages/tplTab',
 	'css!ui/templates/messages/styles',
 	'js/input',
-	'js/system/client'
+	'js/system/client',
+	'js/config'
 ], function (
 	events,
 	template,
 	tplTab,
 	styles,
 	input,
-	client
+	client,
+	config
 ) {
 	return {
 		tpl: template,
@@ -28,6 +30,8 @@ define([
 		hoverFilter: false,
 
 		blockedPlayers: [],
+
+		rememberLastChannel: true,
 
 		lastChannel: null,
 
@@ -65,6 +69,9 @@ define([
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
+
+			events.on('onToggleLastChannel', this.onToggleLastChannel.bind(this));
+			this.onToggleLastChannel(config.rememberChatChannel);
 		},
 
 		update: function () {
@@ -418,18 +425,20 @@ define([
 			if (val.trim() === '')
 				return;
 
-			const firstChar = val[0];
-			let lastChannel = null;
-			if ('@$'.includes(firstChar)) {
-				const firstSpace = val.indexOf(' ');
-				if (firstSpace === -1)
-					lastChannel = val + ' ';
-				else
-					lastChannel = val.substr(0, firstSpace) + ' ';
-			} else if (firstChar === '%')
-				lastChannel = '%';
+			if (this.rememberLastChannel) {
+				const firstChar = val[0];
+				let lastChannel = null;
+				if ('@$'.includes(firstChar)) {
+					const firstSpace = val.indexOf(' ');
+					if (firstSpace === -1)
+						lastChannel = val + ' ';
+					else
+						lastChannel = val.substr(0, firstSpace) + ' ';
+				} else if (firstChar === '%')
+					lastChannel = '%';
 
-			this.lastChannel = lastChannel;
+				this.lastChannel = lastChannel;
+			}
 
 			client.request({
 				cpn: 'social',
@@ -438,6 +447,11 @@ define([
 					message: val
 				}
 			});
+		}, 
+
+		onToggleLastChannel: function (rememberChatChannel) {
+			this.rememberLastChannel = !rememberChatChannel;
+			//this.lastChannel = null;
 		}
 	};
 });
