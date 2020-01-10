@@ -287,11 +287,14 @@ module.exports = {
 	},
 
 	help: function () {
-		this.sendMessage('You can use the following commands:', 'color-yellowB');
-		Object.keys(commandRoles).forEach(function (command) {
-			if (this.roleLevel >= commandRoles[command])
-				this.sendMessage(`/${command}`, 'color-yellowB');
-		}, this);
+		const msg = [
+			'You can use the following commands:', 
+			...Object.keys(commandRoles)
+				.filter(c => this.roleLevel >= commandRoles[c])
+				.map(c => `/${c}`)
+		].join('<br />');
+	
+		this.sendMessage(msg, 'color-yellowB');
 	},
 
 	isInChannel: function (character, channel) {
