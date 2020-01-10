@@ -31,8 +31,6 @@ define([
 
 		blockedPlayers: [],
 
-		rememberLastChannel: true,
-
 		lastChannel: null,
 
 		postRender: function () {
@@ -69,9 +67,6 @@ define([
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
-
-			events.on('onToggleLastChannel', this.onToggleLastChannel.bind(this));
-			this.onToggleLastChannel(config.rememberChatChannel);
 		},
 
 		update: function () {
@@ -425,7 +420,7 @@ define([
 			if (val.trim() === '')
 				return;
 
-			if (this.rememberLastChannel) {
+			if (config.rememberChatChannel) {
 				const firstChar = val[0];
 				let lastChannel = null;
 				if ('@$'.includes(firstChar)) {
@@ -438,6 +433,8 @@ define([
 					lastChannel = '%';
 
 				this.lastChannel = lastChannel;
+			} else {
+				this.lastChannel = null;
 			}
 
 			client.request({
@@ -447,11 +444,6 @@ define([
 					message: val
 				}
 			});
-		}, 
-
-		onToggleLastChannel: function (rememberChatChannel) {
-			this.rememberLastChannel = !rememberChatChannel;
-			//this.lastChannel = null;
 		}
 	};
 });
