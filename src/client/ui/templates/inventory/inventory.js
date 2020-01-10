@@ -5,7 +5,8 @@ define([
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
 	'js/input',
-	'js/config'
+	'js/config',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
@@ -13,7 +14,8 @@ define([
 	styles,
 	tplItem,
 	input,
-	config
+	config,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -78,8 +80,7 @@ define([
 				let item = items.find(f => (f.pos !== null && f.pos === i));
 
 				if (!item) {
-					itemEl = $(tplItem)
-						.appendTo(container);
+					itemEl = renderItem(container, null);
 
 					itemEl
 						.on('mouseup', this.onMouseDown.bind(this, null, null, false))
@@ -93,21 +94,7 @@ define([
 				} else 
 					rendered.push(item);
 
-				let imgX = -item.sprite[0] * 64;
-				let imgY = -item.sprite[1] * 64;
-
-				itemEl = $(tplItem)
-					.appendTo(container);
-
-				let spritesheet = item.spritesheet || '../../../images/items.png';
-				if (!item.spritesheet) {
-					if (item.material)
-						spritesheet = '../../../images/materials.png';
-					else if (item.quest)
-						spritesheet = '../../../images/questItems.png';
-					else if (item.type === 'consumable')
-						spritesheet = '../../../images/consumables.png';
-				}
+				itemEl = renderItem(container, item);
 
 				let clickHandler = this.onMouseDown.bind(this, itemEl, item, true);
 				let moveHandler = this.onHover.bind(this, itemEl, item);
@@ -124,49 +111,24 @@ define([
 					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
-
-				if (item.quantity > 1 || item.eq || item.active || item.has('quickSlot')) {
-					let elQuantity = itemEl.find('.quantity');
-					let txtQuantity = item.quantity;
-					if (!txtQuantity)
-						txtQuantity = item.has('quickSlot') ? 'QS' : 'EQ';
-
-					elQuantity.html(txtQuantity);
-
-					//If the item doesn't have a quantity and we reach this point
-					//it must mean that it's active, EQd or QSd
-					if (!item.quantity)
-						itemEl.addClass('eq');
-				} else if (item.isNew) {
-					itemEl.addClass('new');
-					itemEl.find('.quantity').html('NEW');
-				}
-
-				if (item.slot) {
-					const equipErrors = window.player.inventory.equipItemErrors(item);
-					if (equipErrors.length)
-						itemEl.addClass('no-equip');
-				}
-
-				if (item.has('quality'))
-					itemEl.addClass(`quality-${item.quality}`);
 			}
 		},
 
 		onToggleQualityIndicators: function (state) {
-			this.el.removeClass('quality-off quality-bottom quality-border quality-background');
-
 			const className = `quality-${state.toLowerCase()}`;
-			this.el.addClass(className);
+
+			$('.ui-container')
+				.removeClass('quality-off quality-bottom quality-border quality-background')
+				.addClass(className);
 		},
 
 		onToggleUnusableIndicators: function (state) {
-			this.el.removeClass('unusable-off unusable-border unusable-top unusable-background');
-
 			const className = `unusable-${state.toLowerCase()}`;
-			this.el.addClass(className);
+
+			$('.ui-container')
+				.removeClass('unusable-off unusable-border unusable-top unusable-background')
+				.addClass(className);
 		},
 
 		onClick: function (item) {

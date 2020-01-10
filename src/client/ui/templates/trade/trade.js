@@ -3,13 +3,15 @@ define([
 	'js/system/client',
 	'html!ui/templates/trade/template',
 	'css!ui/templates/trade/styles',
-	'html!ui/templates/inventory/templateItem'
+	'html!ui/templates/inventory/templateItem',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
 	template,
 	styles,
-	tplItem
+	tplItem,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -68,35 +70,11 @@ define([
 
 				item = $.extend(true, {}, item);
 
-				let size = 64;
-				let offset = 0;
-
-				let itemEl = $(tplItem)
-					.appendTo(container);
-
-				let spritesheet = item.spritesheet || '../../../images/items.png';
-				if (!item.spritesheet) {
-					if (item.material)
-						spritesheet = '../../../images/materials.png';
-					else if (item.quest)
-						spritesheet = '../../../images/questItems.png';
-					else if (item.type === 'consumable')
-						spritesheet = '../../../images/consumables.png';
-					else if (item.type === 'skin')
-						spritesheet = '../../../images/characters.png';
-				}
-				if (item.type === 'skin') {
-					offset = 4;
-					size = 8;
-				}
-
-				let imgX = (-item.sprite[0] * size) + offset;
-				let imgY = (-item.sprite[1] * size) + offset;
+				let itemEl = renderItem(container, item);
 
 				itemEl
 					.data('item', item)
 					.find('.icon')
-					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.addClass(item.type);
 
 				if (isMobile)
@@ -107,11 +85,6 @@ define([
 						.on('mousemove', this.onHover.bind(this, itemEl, item, action))
 						.on('mouseleave', uiInventory.hideTooltip.bind(uiInventory, itemEl, item));
 				}
-
-				if (item.quantity)
-					itemEl.find('.quantity').html(item.quantity);
-				else if (item.eq)
-					itemEl.find('.quantity').html('EQ');
 
 				if (action === 'buy') {
 					let noAfford = false;
@@ -132,13 +105,6 @@ define([
 					item.worthText = item.worth.amount + 'x ' + item.worth.currency;
 				else
 					item.worthText = ~~(itemList.markup * item.worth);
-
-				if (item.eq)
-					itemEl.addClass('eq');
-				else if (item.isNew) {
-					itemEl.addClass('new');
-					itemEl.find('.quantity').html('NEW');
-				}
 			}
 
 			this.center();
