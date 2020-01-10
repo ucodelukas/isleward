@@ -2,7 +2,6 @@ const serverConfig = require('../config/serverConfig');
 const version = serverConfig.version;
 const bcrypt = require('bcrypt-nodejs');
 const roles = require('../config/roles');
-const transactions = require('./transactions');
 
 module.exports = {
 	init: function (app) {
@@ -15,8 +14,6 @@ module.exports = {
 	},
 
 	forceSaveAll: async function (req, res, next) {
-		this.doSaveAll();
-		return;
 		let config = {};
 
 		let pars = req.originalUrl.split('?').pop().split('&');
@@ -40,14 +37,14 @@ module.exports = {
 	},
 
 	doSaveAll: async function (res, config, err, compareResult) {
-		/*if (!compareResult)
+		if (!compareResult)
 			return;
 
 		let roleLevel = roles.getRoleLevel({
 			account: config.username
 		});
 		if (roleLevel < 9)
-			return;*/
+			return;
 
 		await atlas.returnWhenZonesIdle();
 
@@ -64,9 +61,9 @@ module.exports = {
 
 		cons.forceSaveAll();
 
-		/*res.jsonp({
+		res.jsonp({
 			success: true
-		});*/
+		});
 	},
 
 	willHandle: function (url) {

@@ -1,5 +1,4 @@
 let objects = require('../objects/objects');
-const rest = require('../security/rest');
 
 module.exports = {
 	players: [],
