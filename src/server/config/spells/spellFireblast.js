@@ -1,4 +1,4 @@
-const getTargetPos = (physics, obj, m) => {
+const getTargetPos = (physics, obj, m, pushback) => {
 	let targetPos = {
 		x: m.x,
 		y: m.y
@@ -14,7 +14,7 @@ const getTargetPos = (physics, obj, m) => {
 
 	dx = ~~(dx / Math.abs(dx));
 	dy = ~~(dy / Math.abs(dy));
-	for (let l = 0; l < this.pushback; l++) {
+	for (let l = 0; l < pushback; l++) {
 		if (physics.isTileBlocking(targetPos.x + dx, targetPos.y + dy)) {
 			if (physics.isTileBlocking(targetPos.x + dx, targetPos.y)) {
 				if (physics.isTileBlocking(targetPos.x, targetPos.y + dy)) 
@@ -89,7 +89,7 @@ module.exports = {
 					else if (!obj.aggro.canAttack(m))
 						continue;
 
-					const targetPos = getTargetPos(physics, obj, m);
+					const targetPos = getTargetPos(physics, obj, m, this.pushback);
 
 					let distance = Math.max(Math.abs(m.x - targetPos.x), Math.abs(m.y - targetPos.y));
 					let ttl = distance * 125;
