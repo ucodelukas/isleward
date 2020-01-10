@@ -4,22 +4,31 @@ define([
 	'ui/factory',
 	'html!ui/templates/terms/template',
 	'css!ui/templates/terms/styles',
-	'js/rendering/renderer'
+    'js/rendering/renderer',
+    'js/config'
 ], function (
 	events,
 	client,
 	uiFactory,
 	template,
 	styles,
-	renderer
+    renderer,
+    config
 ) {
 	return {
 		tpl: template,
-		centered: true,
+        centered: true,
 
 		postRender: function () {
+            this.tryAutoAccept();
+
             this.find('.btnCancel').on('click', this.cancel.bind(this));
             this.find('.btnAccept').on('click', this.accept.bind(this));
+        },
+
+        tryAutoAccept: function () {
+            if (config.readTos)
+                this.accept();
         },
         
         cancel: function () {
@@ -27,6 +36,7 @@ define([
         },
         
         accept: function () {
+            config.set('readTos', true);
             this.destroy();
             uiFactory.build('characters', {});
         }
