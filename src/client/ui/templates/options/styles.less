@@ -4,7 +4,6 @@
 	display: none;
 	width: 400px;
 	background-color: @blackC;
-	text-align: center;
 	border: 5px solid @blackB;
 
 	> .heading {
@@ -13,6 +12,7 @@
 		height: 36px;
 		background-color: @blackB;
 		position: relative;
+		text-align: center;
 
 		.heading-text {
 			padding-top: 8px;
@@ -30,15 +30,15 @@
 
 			.heading {
 				height: 30px;
-				color: @blueA;
-			}
+				color: @grayC;
+				border-bottom: 2px solid @grayD;
+				margin: 0px 10px 5px 10px;
+				padding-bottom: 10px;
 
-			.heading:before {
-				content: "- ";
-			}
+				&:not(:first-child) {
+					margin: 10px 10px 5px 10px;
+				}
 
-			.heading:after {
-				content: " -";
 			}
 
 			.item {
@@ -69,6 +69,7 @@
 					display: flex;
 					align-items: center;
 					justify-content: flex-end;
+					padding-right: 10px;
 				}
 
 			}
