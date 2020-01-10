@@ -399,14 +399,14 @@ define([
 			}
 
 			let textbox = this.find('input');
-			let config = {
+			let msgConfig = {
 				success: true,
 				message: textbox.val()
 			};
 
-			events.emit('onBeforeChat', config);
+			events.emit('onBeforeChat', msgConfig);
 
-			let val = config.message
+			let val = msgConfig.message
 				.split('<')
 				.join('&lt;')
 				.split('>')
@@ -414,7 +414,7 @@ define([
 
 			textbox.blur();
 			
-			if (!config.success)
+			if (!msgConfig.success)
 				return;
 
 			if (val.trim() === '')
