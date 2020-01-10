@@ -1,5 +1,4 @@
 const serverConfig = require('../config/serverConfig');
-const connections = require('../security/connections');
 const version = serverConfig.version;
 const bcrypt = require('bcrypt-nodejs');
 const roles = require('../config/roles');
@@ -37,7 +36,7 @@ module.exports = {
 		bcrypt.compare(config.pwd, storedPassword, this.doSaveAll.bind(this, res, config));
 	},
 
-	doSaveAll: function (res, config, err, compareResult) {
+	doSaveAll: async function (res, config, err, compareResult) {
 		if (!compareResult)
 			return;
 
@@ -47,18 +46,20 @@ module.exports = {
 		if (roleLevel < 9)
 			return;
 
+		await atlas.returnWhenZonesIdle();
+
 		cons.emit('event', {
 			event: 'onGetMessages',
 			data: {
 				messages: [{
 					class: 'color-blueA',
-					message: config.msg,
+					message: 'asdd',
 					type: 'chat'
 				}]
 			}
 		});
 
-		connections.forceSaveAll();
+		cons.forceSaveAll();
 
 		res.jsonp({
 			success: true
