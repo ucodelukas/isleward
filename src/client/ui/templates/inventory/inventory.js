@@ -86,7 +86,6 @@ define([
 						.on('mouseup', this.onMouseDown.bind(this, null, null, false))
 						.on('mousemove', this.onHover.bind(this, itemEl, item))
 						.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
-						.addClass('empty')
 						.children()
 						.remove();
 

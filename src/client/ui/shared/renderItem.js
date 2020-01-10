@@ -14,7 +14,9 @@ define([
 		let itemEl = null;
 
 		if (!item) {
-			itemEl = $(tplItem).appendTo(container);
+			itemEl = $(tplItem)
+				.appendTo(container)
+				.addClass('empty');
 
 			return itemEl;
 		}

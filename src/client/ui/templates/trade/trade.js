@@ -61,8 +61,7 @@ define([
 				}
 
 				if (!item) {
-					$(tplItem)
-						.appendTo(container)
+					renderItem(container, null)
 						.on('click', uiInventory.hideTooltip.bind(uiInventory));
 
 					continue;
