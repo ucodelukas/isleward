@@ -17,6 +17,7 @@ let commandRoles = {
 	roll: 0,
 	block: 0,
 	unblock: 0,
+	help: 0,
 
 	//Mods
 	ban: 5,
@@ -59,7 +60,8 @@ const localCommands = [
 	'unblock',
 	'broadcast',
 	'saveAll',
-	'ban'
+	'ban',
+	'help'
 ];
 
 //Actions that should appear when a player is right clicked
@@ -282,6 +284,14 @@ module.exports = {
 			event: 'onGetBlockedPlayers',
 			data: this.blockedPlayers
 		});
+	},
+
+	help: function () {
+		this.sendMessage('You can use the following commands:', 'color-yellowB');
+		Object.keys(commandRoles).forEach(function (command) {
+			if (this.roleLevel >= commandRoles[command])
+				this.sendMessage(`/${command}`, 'color-yellowB');
+		}, this);
 	},
 
 	isInChannel: function (character, channel) {
