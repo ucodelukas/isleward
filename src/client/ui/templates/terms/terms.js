@@ -18,6 +18,17 @@ define([
 		centered: true,
 
 		postRender: function () {
-		},
+            this.find('.btnCancel').on('click', this.cancel.bind(this));
+            this.find('.btnAccept').on('click', this.accept.bind(this));
+        },
+        
+        cancel: function () {
+			window.location = window.location;
+        },
+        
+        accept: function () {
+            this.destroy();
+            uiFactory.build('characters', {});
+        }
 	};
 });
