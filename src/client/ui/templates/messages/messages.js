@@ -419,21 +419,17 @@ define([
 				return;
 
 			const firstChar = val[0];
-			this.lastChannel = ({
-				[firstChar]: null,
-				'@': val.substr(0, val.indexOf(' ')),
-				'$': val.substr(0, val.indexOf(' ')),
-				'%': '%'        
-			})[firstChar];
+			let lastChannel = null;
+			if ('@$'.includes(firstChar)) {
+				const firstSpace = val.indexOf(' ');
+				if (firstSpace === -1)
+					lastChannel = val + ' ';
+				else
+					lastChannel = val.substr(0, firstSpace) + ' ';
+			} else if (firstChar === '%')
+				lastChannel = '%';
 
-			// hacky: fix bug with messages with no space, e.g.
-			// $channel
-			// @name
-			if (this.lastChannel != null && this.lastChannel.length > 0) {
-				this.lastChannel += ' ';
-			}
-
-			console.log(`-${this.lastChannel}-`);
+			this.lastChannel = lastChannel;
 
 			client.request({
 				cpn: 'social',
