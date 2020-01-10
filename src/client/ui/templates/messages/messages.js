@@ -40,6 +40,7 @@ define([
 			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
+			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 
 			this
 				.find('.filter:not(.channel):not(.btn)')
@@ -433,8 +434,6 @@ define([
 					lastChannel = '%';
 
 				this.lastChannel = lastChannel;
-			} else {
-				this.lastChannel = null;
 			}
 
 			client.request({
@@ -444,6 +443,12 @@ define([
 					message: val
 				}
 			});
+		},
+
+		onToggleLastChannel: function (isOn) {
+			if (!isOn) {
+				this.lastChannel = null;
+			}
 		}
 	};
 });
