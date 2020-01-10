@@ -256,8 +256,7 @@ define([
 			if (key === 'enter') {
 				this.toggle(true);
 				this.find('input').val(this.lastChannel || '');
-			}
-			else if (key === 'shift')
+			} else if (key === 'shift')
 				this.showItemTooltip();
 		},
 
@@ -446,9 +445,8 @@ define([
 		},
 
 		onToggleLastChannel: function (isOn) {
-			if (!isOn) {
+			if (!isOn) 
 				this.lastChannel = null;
-			}
 		}
 	};
 });
