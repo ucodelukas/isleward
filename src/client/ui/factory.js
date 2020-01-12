@@ -1,9 +1,13 @@
 define([
 	'ui/uiBase',
-	'js/system/events'
+	'js/system/events',
+	'js/system/globals',
+	'js/misc/tosAcceptanceValid'
 ], function (
 	uiBase,
-	events
+	events,
+	globals,
+	tosAcceptanceValid
 ) {
 	const startupUis = [
 		'inventory',
@@ -162,7 +166,13 @@ define([
 		},
 
 		afterPreload: function () {
-			this.build('characters', {});
+			if (!globals.clientConfig.tos.required || tosAcceptanceValid()) {
+				this.build('characters');
+
+				return;
+			}
+
+			this.build('terms');
 		},
 
 		update: function () {

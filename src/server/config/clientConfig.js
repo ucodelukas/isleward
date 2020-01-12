@@ -1,4 +1,5 @@
-let events = require('../misc/events');
+const events = require('../misc/events');
+const tos = require('./tos');
 
 const config = {
 	resourceList: [],
@@ -6,7 +7,8 @@ const config = {
 	contextMenuActions: {
 		player: [],
 		npc: []
-	}
+	},
+	tos
 };
 
 module.exports = {
@@ -14,6 +16,7 @@ module.exports = {
 		events.emit('onBeforeGetResourceList', config.resourceList);
 		events.emit('onBeforeGetUiList', config.uiList);
 		events.emit('onBeforeGetContextMenuActions', config.contextMenuActions);
+		events.emit('onBeforeGetTermsOfService', config.tos);
 	},
 
 	getClientConfig: function (msg) {
