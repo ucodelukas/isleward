@@ -1,44 +1,42 @@
 define([
-    'js/system/events',
-    'js/system/client',
-    'ui/factory',
-    'html!ui/templates/terms/template',
-    'css!ui/templates/terms/styles',
-    'js/rendering/renderer',
-    'js/config'
+	'ui/factory',
+	'html!ui/templates/terms/template',
+	'css!ui/templates/terms/styles',
+	'js/system/globals',
+	'js/system/browserStorage'
 ], function (
-    events,
-    client,
-    uiFactory,
-    template,
-    styles,
-    renderer,
-    config
+	uiFactory,
+	template,
+	styles,
+	globals,
+	browserStorage
 ) {
-    return {
-        tpl: template,
-        centered: true,
+	return {
+		tpl: template,
+		centered: true,
 
-        postRender: function () {
-            this.tryAutoAccept();
+		postRender: function () {
+			const { clientConfig: { tos: { content, version } } } = globals;
+			const morphedContent = content.split('\n').join('<br />');
 
-            this.find('.btnCancel').on('click', this.cancel.bind(this));
-            this.find('.btnAccept').on('click', this.accept.bind(this));
-        },
+			const elHeading = this.find('.heading');
+			elHeading.html(`${elHeading.html()} (v${version})`);
 
-        tryAutoAccept: function () {
-            if (config.readTos)
-                this.accept();
-        },
+			this.find('.content').html(morphedContent);
 
-        cancel: function () {
-            window.location = window.location;
-        },
+			this.find('.btnDecline').on('click', this.onDeclineClick.bind(this));
+			this.find('.btnAccept').on('click', this.onAcceptClick.bind(this, version));
+		},
 
-        accept: function () {
-            config.set('readTos', true);
-            this.destroy();
-            uiFactory.build('characters', {});
-        }
-    };
+		onDeclineClick: function () {
+			window.location = window.location;
+		},
+
+		onAcceptClick: function (version) {
+			browserStorage.set('tos_accepted_version', version);
+			this.destroy();
+
+			uiFactory.build('characters');
+		}
+	};
 });

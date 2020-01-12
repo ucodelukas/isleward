@@ -1,7 +1,7 @@
 define([
-
+	'js/system/browserStorage'
 ], function (
-
+	browserStorage
 ) {
 	const config = {
 		showNames: true,
@@ -31,13 +31,13 @@ define([
 	};
 
 	const getKeyName = key => {
-		return `iwd_opt_${key.toLowerCase()}`;
+		return `opt_${key}`;
 	};
 
 	config.set = (key, value) => {
 		config[key] = value;
 
-		window.localStorage.setItem(getKeyName(key), config[key]);
+		browserStorage.set(getKeyName(key), config[key]);
 	};
 
 	config.toggle = key => {
@@ -46,12 +46,11 @@ define([
 		else
 			config[key] = !config[key];
 
-		window.localStorage.setItem(getKeyName(key), config[key]);
+		browserStorage.set(getKeyName(key), config[key]);
 	};
 
 	const loadValue = key => {
-		const keyName = getKeyName(key);
-		const { [keyName]: currentValue = '{unset}' } = localStorage;
+		const currentValue = browserStorage.get(getKeyName(key));
 
 		if (currentValue === '{unset}')
 			return;
