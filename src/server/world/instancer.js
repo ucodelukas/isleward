@@ -28,7 +28,7 @@ module.exports = {
 		herbs.init();
 		map.init(args);
 
-		let fakeInstance = {
+		const fakeInstance = {
 			objects: objects,
 			syncer: syncer,
 			physics: physics,

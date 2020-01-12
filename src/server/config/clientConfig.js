@@ -1,13 +1,22 @@
 let events = require('../misc/events');
 
-module.exports = {
+const config = {
 	resourceList: [],
+	uiList: [],
+	contextMenuActions: {
+		player: [],
+		npc: []
+	}
+};
 
+module.exports = {
 	init: function () {
-		events.emit('onBeforeGetResourceList', this.resourceList);
+		events.emit('onBeforeGetResourceList', config.resourceList);
+		events.emit('onBeforeGetUiList', config.uiList);
+		events.emit('onBeforeGetContextMenuActions', config.contextMenuActions);
 	},
 
-	getResourcesList: function (msg) {
-		msg.callback(this.resourceList);
+	getClientConfig: function (msg) {
+		msg.callback(config);
 	}
 };

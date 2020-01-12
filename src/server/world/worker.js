@@ -91,6 +91,8 @@ process.on('message', m => {
 			if (found)
 				break;
 		}
-	} else if (m.method)
+	} else if (m.threadModule)
+		global[m.threadModule][m.method](m.data);
+	else if (m.method)
 		instancer[m.method](m.args);
 });

@@ -100,7 +100,10 @@ define([
 				$('.modal').hide();
 
 			this.shown = true;
-			this.el.show();
+			if (this.isFlex)
+				this.el.css('display', 'flex');
+			else
+				this.el.show();
 
 			if (this.onAfterShow)
 				this.onAfterShow();
