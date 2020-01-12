@@ -10,7 +10,8 @@ define([
 		playAudio: true,
 		qualityIndicators: 'off',
 		unusableIndicators: 'off',
-		rememberChatChannel: true
+		rememberChatChannel: true,
+		readTos: false
 	};
 
 	const valueChains = {

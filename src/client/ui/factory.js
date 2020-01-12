@@ -162,7 +162,8 @@ define([
 		},
 
 		afterPreload: function () {
-			this.build('characters', {});
+			this.build('terms', {});
+			//this.build('characters', {});
 		},
 
 		update: function () {
