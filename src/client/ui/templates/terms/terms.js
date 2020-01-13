@@ -29,6 +29,7 @@ define([
 		},
 
 		onDeclineClick: function () {
+			browserStorage.set('tos_accepted_version', null);
 			window.location = window.location;
 		},
 
