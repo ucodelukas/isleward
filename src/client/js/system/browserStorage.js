@@ -4,7 +4,7 @@ define([
 	browserStorage
 ) {
 	const getEntryName = key => {
-		return `iwd_${key}`;
+		return `iwd_${key.toLowerCase()}`;
 	};
 
 	return {

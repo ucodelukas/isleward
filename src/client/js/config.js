@@ -30,7 +30,7 @@ define([
 	};
 
 	const getKeyName = key => {
-		return `opt_${key}`;
+		return `opt_${key.toLowerCase()}`;
 	};
 
 	config.set = (key, value) => {
