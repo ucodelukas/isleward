@@ -172,10 +172,8 @@ define([
 				events.emit('onShowOverlay', this.el);
 
 				this.build();
-			} else {
+			} else
 				this.hide();
-				events.emit('onToggleMainMenu');
-			}
 		},
         
 		onKeyDown: function (keyEvent) {

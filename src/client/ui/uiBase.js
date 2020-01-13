@@ -118,6 +118,9 @@ define([
 
 			this.shown = false;
 			this.el.hide();
+
+			if (this.afterHide)
+				this.afterHide();
 		},
 
 		destroy: function () {
