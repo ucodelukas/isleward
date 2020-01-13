@@ -35,11 +35,15 @@ define([
 		},
 
 		build: function () {
+			this.el.removeClass('scrolls');
+			if (window.player.stash.maxItems > 50)
+				this.el.addClass('scrolls');
+
 			let container = this.el.find('.grid')
 				.empty();
 
 			let items = this.items;
-			let iLen = Math.max(items.length, 50);
+			let iLen = Math.max(items.length, window.player.stash.maxItems);
 
 			for (let i = 0; i < iLen; i++) {
 				let item = items[i];

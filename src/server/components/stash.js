@@ -1,11 +1,15 @@
 const cpnInventory = require('./inventory');
 
+const maxItems = 50;
+
 module.exports = {
 	type: 'stash',
 
 	active: false,
 	items: [],
 	changed: false,
+
+	maxItems,
 
 	init: function (blueprint) {
 		let items = blueprint.items || [];
@@ -16,6 +20,10 @@ module.exports = {
 		delete blueprint.items;
 
 		this.blueprint = blueprint;
+	},
+
+	calculateMaxItems: function (extraSlots) {
+		this.maxItems = maxItems + extraSlots;
 	},
 
 	getItem: function (item) {
@@ -57,7 +65,7 @@ module.exports = {
 	deposit: function (item) {
 		if (!this.active)
 			return;
-		else if (this.items.length >= 50) {
+		else if (this.items.length >= this.maxItems) {
 			let isMaterial = this.items.some(stashedItem => item.name === stashedItem.name && (item.quantity || item.material));
 			if (!isMaterial) {
 				this.obj.instance.syncer.queue('onGetMessages', {
@@ -137,12 +145,12 @@ module.exports = {
 			}
 		});
 
-		if (this.active && this.items.length > 50) {
+		if (this.active && this.items.length > this.maxItems) {
 			obj.instance.syncer.queue('onGetMessages', {
 				id: this.obj.id,
 				messages: [{
 					class: 'color-redA',
-					message: 'You have more than 50 items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit',
+					message: `You have more than ${this.maxItems} items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit`,
 					type: 'info'
 				}]
 			}, [obj.serverId]);
@@ -161,7 +169,8 @@ module.exports = {
 		return {
 			type: 'stash',
 			active: this.active,
-			items: this.items
+			items: this.items,
+			maxItems: this.maxItems
 		};
 	},
 
