@@ -13,6 +13,6 @@ module.exports = {
 			sprite: [12, 0],
 			keyId: 'world'
 		}],
-		extraStashSlots: 10
+		extrastashslots: 10
 	}]
 };
