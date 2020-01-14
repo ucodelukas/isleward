@@ -96,8 +96,14 @@ define([
 		},
 
 		show: function () {
-			if (this.modal)
-				$('.modal').hide();
+			if (this.modal) {
+				//Close any other open modal
+				$('.modal').toArray().forEach(el => {
+					const ui = $(el).data('ui');
+					if (ui.shown)
+						ui.hide();
+				});
+			}
 
 			this.shown = true;
 			if (this.isFlex)

@@ -78,8 +78,6 @@ module.exports = {
 		if (!account)
 			return 0;
 
-		console.log(account);
-
 		return account.extraStashSlots || 0;
 	},
 
