@@ -675,7 +675,19 @@ module.exports = {
 				}
 			},
 			rare: {
-				name: 'Fleshripper'
+				name: 'Fleshripper',
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: 80,
+						name: 'Eagle Feather',
+						material: true,
+						sprite: [0, 0],
+						spritesheet: 'images/questItems.png'
+					}]
+				}
 			}
 		},
 		hermit: {

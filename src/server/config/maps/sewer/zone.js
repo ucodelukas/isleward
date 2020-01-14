@@ -5,6 +5,9 @@ const balance = {
 	giantRat: {
 		clawChance: 5
 	},
+	enragedRat: {
+		clawChance: 80
+	},
 	stinktooth: {
 		runestoneChance: 10,
 		recipeChance: 3,
@@ -63,7 +66,20 @@ module.exports = {
 
 			rare: {
 				name: 'Enraged Rat',
-				cell: 24
+				cell: 24,
+
+				drops: {
+					rolls: 1,
+					noRandom: true,
+					alsoRandom: true,
+					blueprints: [{
+						chance: balance.enragedRat.clawChance,
+						name: 'Rat Claw',
+						material: true,
+						sprite: [3, 0],
+						spritesheet: 'images/materials.png'
+					}]
+				}
 			}
 		},
 
