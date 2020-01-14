@@ -5,13 +5,13 @@ const canPath = (pos, positions, maxDistance = 0) => {
 	return positions.some(p => {
 		const path = physics.getPath(pos, p);
 		//Are we on the position?
-		if (!path.length)
-			return true;
+		if (!path.length) 
+			return (p.x === pos.x && p.y === pos.y);
 
 		const { x, y } = path[path.length - 1];
 		//Can we get close enough to the position?
 		const isCloseEnough = Math.max(Math.abs(p.x - x), Math.abs(p.y - y)) <= maxDistance;
-		if (isCloseEnough)
+		if (isCloseEnough) 
 			return true;
 
 		return false;

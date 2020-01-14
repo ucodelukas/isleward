@@ -278,7 +278,7 @@ module.exports = {
 	}, {
 		type: 'setDescription',
 		desc: descriptionStrings.success,
-		ttl: 50
+		ttl: 100
 	}, {
 		type: 'giveRewards'
 	}, {
@@ -286,6 +286,6 @@ module.exports = {
 	}, {
 		type: 'setDescription',
 		desc: descriptionStrings.failure,
-		ttl: 50
+		ttl: 100
 	}]
 };
