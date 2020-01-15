@@ -165,15 +165,16 @@ define([
 		toggle: function () {
 			this.onResize();
 
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown) {
+			if (!this.shown) {
 				this.show();
+				this.shown = true;
 				events.emit('onShowOverlay', this.el);
 
 				this.build();
-			} else
+			} else {
 				this.hide();
+				this.shown = false;
+			}
 		},
         
 		onKeyDown: function (keyEvent) {
