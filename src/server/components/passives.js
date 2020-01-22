@@ -70,6 +70,16 @@ module.exports = {
 		}, this);
 		if (!linked)
 			return;
+		
+		let passiveResult = {
+			success: true
+		};
+		this.obj.fireEvent('onBeforePassiveChange', passiveResult, this.obj, node);
+		if (!passiveResult.success)
+			return;
+		this.obj.instance.eventEmitter.emitNoSticky('onBeforePassiveChange', passiveResult, this.obj, node);
+		if (!passiveResult.success)
+			return;
 
 		this.points--;
 		this.obj.syncer.set(true, 'passives', 'points', this.points);
@@ -87,6 +97,16 @@ module.exports = {
 	},
 
 	untickNode: function (msg) {
+		let passiveResult = {
+			success: true
+		};
+		this.obj.fireEvent('onBeforePassiveChange', passiveResult, this.obj);
+		if (!passiveResult.success)
+			return;
+		this.obj.instance.eventEmitter.emitNoSticky('onBeforePassiveChange', passiveResult, this.obj);
+		if (!passiveResult.success)
+			return;
+
 		let stats = this.obj.stats;
 
 		this.selected.forEach(function (s) {
