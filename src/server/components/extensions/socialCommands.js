@@ -441,6 +441,9 @@ module.exports = {
 	},
 
 	getItem: function (config) {
+		if (typeof config !== 'object')
+			return;
+
 		if (config.slot === 'set') {
 			configSlots.slots.forEach(function (s) {
 				if (s === 'tool')
