@@ -74,10 +74,10 @@ module.exports = {
 		let passiveResult = {
 			success: true
 		};
-		this.obj.fireEvent('onBeforePassiveChange', passiveResult, this.obj, node);
+		this.obj.fireEvent('onBeforePassivesChange', passiveResult, this.obj, node);
 		if (!passiveResult.success)
 			return;
-		this.obj.instance.eventEmitter.emitNoSticky('onBeforePassiveChange', passiveResult, this.obj, node);
+		this.obj.instance.eventEmitter.emitNoSticky('onBeforePlayerPassivesChange', passiveResult, this.obj, node);
 		if (!passiveResult.success)
 			return;
 
@@ -100,10 +100,10 @@ module.exports = {
 		let passiveResult = {
 			success: true
 		};
-		this.obj.fireEvent('onBeforePassiveChange', passiveResult, this.obj);
+		this.obj.fireEvent('onBeforePassivesChange', passiveResult, this.obj);
 		if (!passiveResult.success)
 			return;
-		this.obj.instance.eventEmitter.emitNoSticky('onBeforePassiveChange', passiveResult, this.obj);
+		this.obj.instance.eventEmitter.emitNoSticky('onBeforePlayerPassivesChange', passiveResult, this.obj);
 		if (!passiveResult.success)
 			return;
 
