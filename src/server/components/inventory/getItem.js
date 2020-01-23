@@ -1,3 +1,5 @@
+const itemHelpers = require('../../items/itemHelpers');
+
 const getNextId = items => {
 	let id = 0;
 	let iLen = items.length;
@@ -25,7 +27,7 @@ module.exports = (cpnInv, item, hideMessage, noStack, hideAlert) => {
 	let quantity = item.quantity;
 
 	let exists = false;
-	if ((item.material || item.quest || item.quantity) && !item.noStack && !item.uses && !noStack) {
+	if (itemHelpers.isItemStackable(item) && !noStack) {
 		let existItem = cpnInv.items.find(i => i.name === item.name);
 		if (existItem) {
 			exists = true;

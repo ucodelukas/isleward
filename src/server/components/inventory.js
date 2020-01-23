@@ -5,6 +5,8 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+
+const itemHelpers = require('../items/itemHelpers');
 const transactions = require('../security/transactions');
 
 const { applyItemStats } = require('./equipment/helpers');
@@ -295,7 +297,7 @@ module.exports = {
 
 		if ((!fromItem) || (!toItem))
 			return;
-		else if ((!fromItem.quantity) || (!toItem.quantity))
+		else if ((!itemHelpers.isItemStackable(fromItem)) || (!itemHelpers.isItemStackable(toItem)))
 			return;
 
 		toItem.quantity += fromItem.quantity;
@@ -698,7 +700,7 @@ module.exports = {
 		if (this.inventorySize !== -1) {
 			if (item) {
 				let exists = this.items.find(i => (i.name === item.name));
-				if (exists && !noStack && (exists.quantity || item.quantity))
+				if ((exists) && (!noStack) && (itemHelpers.isItemStackable(item) && itemHelpers.isItemStackable(exists)))
 					return true;
 			}
 
