@@ -104,6 +104,7 @@ const reslot = (item, msg) => {
 	delete item.implicitStats;
 	delete item.power;
 	delete item.range;
+	delete item.requires;
 
 	extend(item, newItem);
 };
