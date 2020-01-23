@@ -1,5 +1,5 @@
 const cpnInventory = require('./inventory');
-const itemHelpers = require('../items/itemHelpers');
+const itemHelpers = require('./inventory/helpers');
 
 const maxItems = 50;
 

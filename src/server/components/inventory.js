@@ -6,7 +6,7 @@ let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
 
-const itemHelpers = require('../items/itemHelpers');
+const itemHelpers = require('./inventory/helpers');
 const transactions = require('../security/transactions');
 
 const { applyItemStats } = require('./equipment/helpers');

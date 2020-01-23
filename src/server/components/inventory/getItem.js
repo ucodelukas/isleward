@@ -1,4 +1,4 @@
-const itemHelpers = require('../../items/itemHelpers');
+const itemHelpers = require('./helpers');
 
 const getNextId = items => {
 	let id = 0;
