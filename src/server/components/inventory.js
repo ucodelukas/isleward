@@ -6,7 +6,7 @@ let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
 
-const itemHelpers = require('./inventory/helpers');
+const { isItemStackable } = require('./inventory/helpers');
 const transactions = require('../security/transactions');
 
 const { applyItemStats } = require('./equipment/helpers');
@@ -297,7 +297,7 @@ module.exports = {
 
 		if ((!fromItem) || (!toItem))
 			return;
-		else if ((!itemHelpers.isItemStackable(fromItem)) || (!itemHelpers.isItemStackable(toItem)))
+		else if ((!isItemStackable(fromItem)) || (!isItemStackable(toItem)))
 			return;
 
 		toItem.quantity += fromItem.quantity;
@@ -700,7 +700,7 @@ module.exports = {
 		if (this.inventorySize !== -1) {
 			if (item) {
 				let exists = this.items.find(i => (i.name === item.name));
-				if ((exists) && (!noStack) && (itemHelpers.isItemStackable(item) && itemHelpers.isItemStackable(exists)))
+				if ((exists) && (!noStack) && (isItemStackable(item) && isItemStackable(exists)))
 					return true;
 			}
 

@@ -1,5 +1,5 @@
 let qualityGenerator = require('../items/generators/quality');
-let itemHelpers = require('./inventory/helpers');
+let { isItemStackable } = require('./inventory/helpers');
 
 module.exports = {
 	type: 'gatherer',
@@ -201,8 +201,8 @@ module.exports = {
 		let items = node.inventory.items;
 		let slots = this.obj.inventory.inventorySize - this.obj.inventory.items.filter(f => !f.eq).length;
 		for (const item of items) {
-			if (itemHelpers.isItemStackable(item)) {
-				let ownedItem = this.obj.inventory.items.find(owned => (owned.name === item.name) && (itemHelpers.isItemStackable(owned)));
+			if (isItemStackable(item)) {
+				let ownedItem = this.obj.inventory.items.find(owned => (owned.name === item.name) && (isItemStackable(owned)));
 				if (ownedItem)
 					continue;
 			}
