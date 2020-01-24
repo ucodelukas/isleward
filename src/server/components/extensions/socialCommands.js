@@ -258,6 +258,11 @@ module.exports = {
 			return;
 		}
 
+		if (target === this.obj.name) {
+			this.sendMessage('You cannot block yourself', 'color-redA');
+			return;
+		}
+
 		this.blockedPlayers.push(target);
 		this.sendMessage(`Successfully blocked ${target}`, 'color-yellowB');
 
