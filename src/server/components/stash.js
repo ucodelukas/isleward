@@ -1,5 +1,5 @@
 const cpnInventory = require('./inventory');
-const itemHelpers = require('./inventory/helpers');
+const { isItemStackable } = require('./inventory/helpers');
 
 const maxItems = 50;
 
@@ -30,7 +30,7 @@ module.exports = {
 	getItem: function (item) {
 		//Material?
 		let exists = false;
-		if (itemHelpers.isItemStackable(item)) {
+		if (isItemStackable(item)) {
 			let existItem = this.items.find(i => i.name === item.name);
 			if (existItem) {
 				exists = true;
@@ -67,7 +67,7 @@ module.exports = {
 		if (!this.active)
 			return;
 		else if (this.items.length >= this.maxItems) {
-			let isStackable = this.items.some(stashedItem => item.name === stashedItem.name && (itemHelpers.isItemStackable(stashedItem)));
+			let isStackable = this.items.some(stashedItem => item.name === stashedItem.name && (isItemStackable(stashedItem)));
 			if (!isStackable) {
 				this.obj.instance.syncer.queue('onGetMessages', {
 					id: this.obj.id,
