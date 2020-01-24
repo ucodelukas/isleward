@@ -314,7 +314,8 @@ module.exports = {
 				messages: [{
 					class: 'color-grayB',
 					message: `${this.obj.name} rolled ${roll}`,
-					type: 'chat'
+					type: 'chat',
+					source: this.obj.name
 				}]
 			}
 		});
