@@ -195,7 +195,7 @@ module.exports = {
 
 	hasSpace: function (node) {
 		// By default, the player is allowed to gather "nothing"
-		if (!node || !node.inventory || !node.inventory.items)
+		if (!node.inventory || !node.inventory.items)
 			return true;
 		
 		let items = node.inventory.items;
