@@ -103,17 +103,35 @@ module.exports = {
 		let messageText = msg.message;
 		if (messageText[0] !== '/')
 			return;
+		msg.ignore = true;
 
 		messageText = messageText.substr(1).split(' ');
 		let actionName = messageText.splice(0, 1)[0].toLowerCase();
 		actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() === actionName));
 
-		if (!actionName)
+		if (!actionName) {
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'Invalid command.',
+						type: 'info'
+					}]
+				}]
+			});
 			return;
-		else if (this.roleLevel < commandRoles[actionName])
+		} else if (this.roleLevel < commandRoles[actionName]) {
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'You do not have the required permissions.',
+						type: 'info'
+					}]
+				}]
+			});
 			return;
-
-		msg.ignore = true;
+		}
 
 		let config = {};
 		if ((messageText.length === 1) && (messageText[0].indexOf('=') === -1))
