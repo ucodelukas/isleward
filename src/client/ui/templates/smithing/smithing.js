@@ -242,14 +242,18 @@ define([
 			let elQuantity = elMaterial.find('.quantity');
 			let invMaterial = items.find(i => i.name === itemMaterial.name) || { quantity: 0 };
 			
-			let newText = elQuantity.html().split('/');
-			newText = invMaterial.quantity + '/' + newText[1];
+			let currentText = elQuantity.html().split('/');
+			let newText = invMaterial.quantity + '/' + currentText[1];
+			
 			elQuantity.html(newText);
 
 			let elButton = this.find('.actionButton').removeClass('disabled');
-			if (invMaterial.quantity < newText[1]) {
+			if (invMaterial.quantity < currentText[1]) {
 				elButton.addClass('disabled');
 				elQuantity.addClass('red');
+			} else {
+				elButton.removeClass('disabled');
+				elQuantity.removeClass('red');
 			}
 		},
 
