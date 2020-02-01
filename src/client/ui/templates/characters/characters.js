@@ -28,6 +28,15 @@ define([
 				.on('mouseleave', this.onDeleteReset.bind(this));
 
 			this.getCharacters();
+
+			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
+		},
+
+		onKeyDown: function (key) {
+			if (key !== 'enter' || this.el.hasClass('disabled'))
+				return;
+
+			this.onPlayClick();
 		},
 
 		onPlayClick: function () {
@@ -48,13 +57,13 @@ define([
 		},
 		onPlay: function () {
 			this.el.removeClass('disabled');
-			this.el.remove();
+			this.destroy();
 			events.emit('onEnterGame');
 		},
 
 		onNewClick: function () {
 			uiFactory.build('createCharacter', {});
-			this.el.remove();
+			this.destroy();
 		},
 
 		getCharacters: function () {

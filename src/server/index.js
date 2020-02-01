@@ -15,6 +15,7 @@ let mapList = require('./config/maps/mapList');
 let sheets = require('./security/sheets');
 let fixes = require('./fixes/fixes');
 let profanities = require('./misc/profanities');
+const routerConfig = require('./security/routerConfig');
 
 let startup = {
 	init: function () {
@@ -32,6 +33,7 @@ let startup = {
 	},
 
 	onModsLoaded: function () {
+		routerConfig.init();
 		classes.init();
 		spellsConfig.init();
 		spells.init();

@@ -55,6 +55,8 @@ module.exports = {
 					o.messagePrefix = o.messageprefix;
 					delete o.messageprefix;
 
+					o.extraStashSlots = ~~o.extrastashslots;
+
 					if (typeof (o.items) === 'string')
 						o.items = JSON.parse(o.items || '[]');
 					if (typeof (o.skins) === 'string')

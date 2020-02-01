@@ -96,11 +96,20 @@ define([
 		},
 
 		show: function () {
-			if (this.modal)
-				$('.modal').hide();
+			if (this.modal) {
+				//Close any other open modal
+				$('.modal').toArray().forEach(el => {
+					const ui = $(el).data('ui');
+					if (ui.shown)
+						ui.hide();
+				});
+			}
 
 			this.shown = true;
-			this.el.show();
+			if (this.isFlex)
+				this.el.css('display', 'flex');
+			else
+				this.el.show();
 
 			if (this.onAfterShow)
 				this.onAfterShow();
@@ -115,6 +124,9 @@ define([
 
 			this.shown = false;
 			this.el.hide();
+
+			if (this.afterHide)
+				this.afterHide();
 		},
 
 		destroy: function () {

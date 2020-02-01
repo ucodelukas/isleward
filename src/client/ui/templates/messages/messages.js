@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/messages/tplTab',
 	'css!ui/templates/messages/styles',
 	'js/input',
-	'js/system/client'
+	'js/system/client',
+	'js/config'
 ], function (
 	events,
 	template,
 	tplTab,
 	styles,
 	input,
-	client
+	client,
+	config
 ) {
 	return {
 		tpl: template,
@@ -29,6 +31,8 @@ define([
 
 		blockedPlayers: [],
 
+		lastChannel: null,
+
 		postRender: function () {
 			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
 			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
@@ -36,6 +40,7 @@ define([
 			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
 			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
+			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 
 			this
 				.find('.filter:not(.channel):not(.btn)')
@@ -91,37 +96,57 @@ define([
 			let container = $('<div class="keyboard"></div>')
 				.appendTo(this.el);
 
-			let controls = ['|', 'caps', 'space', 'backspace', 'enter'];
-
 			let keyboard = {
-				0: '1234567890|qwertyuiop|asdfghjkl|zxcvbnm',
-				1: '!@#$%^&*()|QWERTYUIOP|ASDFGHJKL|ZXCVBNM',
-				2: '!@#$%^&*()|     {}[]\\|`-=_+;\':"|~,./<>?'
-			}[this.kbUpper].split('').concat(controls);
+				0: 'qwertyuiop|asdfghjkl|zxcvbnm',
+				1: 'QWERTYUIOP|ASDFGHJKL|ZXCVBNM',
+				2: '1234567890|@#&*-+=()|_$"\';/'
+			}[this.kbUpper].split('');
 
-			keyboard
-				.forEach(k => {
-					if (k === '|') {
-						$('<div class="newline"></div>')
-							.appendTo(container);
+			//Hacky: Insert control characters in correct positions
+			//Backspace goes after 'm'
+			if (this.kbUpper === 0) {
+				keyboard.splice(keyboard.indexOf('z'), 0, 'caps');
+				keyboard.splice(keyboard.indexOf('m') + 1, 0, '<<');
+			} else if (this.kbUpper === 1) {
+				keyboard.splice(keyboard.indexOf('Z'), 0, 'caps');
+				keyboard.splice(keyboard.indexOf('M') + 1, 0, '<<');
+			} else if (this.kbUpper === 2) 
+				keyboard.splice(keyboard.indexOf('/') + 1, 0, '<<');
 
-						return;	
-					}
+			keyboard.push(...['|', '123', ',', 'space', '.', 'send']);
 
-					let className = (k.match(/[a-z]/i) || k.length > 1) ? 'key' : 'key special';
-					if (k === ' ') {
-						k = '.';
-						className = 'key hidden';
-					}
+			let row = 0;
+			keyboard.forEach(k => {
+				if (k === '|') {
+					row++;
 
-					className += ' ' + k;
+					const postGapCount = row === 4 ? 0 : row - 1;
+					for (let i = 0; i < postGapCount; i++) 
+						$('<div class="gap" />').appendTo(container);
+					
+					$('<div class="newline" />').appendTo(container);
+					
+					const preGapCount = row === 3 ? 0 : row;
+					for (let i = 0; i < preGapCount; i++) 
+						$('<div class="gap" />').appendTo(container);
 
-					let elKey = $(`<div class="${className}">${k}</div>`)
-						.appendTo(container);
+					return;	
+				}
 
-					if (!className.includes('hidden')) 	
-						elKey.on('click', this.clickKey.bind(this, k));
-				});
+				let className = (k.length === 1) ? 'key' : 'key special';
+				if (k === ' ') {
+					k = '.';
+					className = 'key hidden';
+				}
+
+				className += ' ' + k;
+
+				let elKey = $(`<div class="${className}">${k}</div>`)
+					.appendTo(container);
+
+				if (!className.includes('hidden')) 	
+					elKey.on('click', this.clickKey.bind(this, k));
+			});
 		},
 
 		clickKey: function (key) {
@@ -131,7 +156,12 @@ define([
 
 			const handler = {
 				caps: () => {
-					this.kbUpper = (this.kbUpper + 1) % 3;
+					this.kbUpper = (this.kbUpper + 1) % 2;
+					this.renderKeyboard();
+				},
+
+				123: () => {
+					this.kbUpper = (this.kbUpper === 2) ? 0 : 2;
 					this.renderKeyboard();
 				},
 
@@ -139,12 +169,12 @@ define([
 					this.clickKey(' ');
 				},
 
-				backspace: () => {
+				'<<': () => {
 					elInput.val(elInput.val().slice(0, -1));
 					this.find('.input').html(elInput.val());
 				},
 
-				enter: () => {
+				send: () => {
 					this.sendChat({
 						which: 13
 					});
@@ -223,9 +253,10 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'enter')
+			if (key === 'enter') {
 				this.toggle(true);
-			else if (key === 'shift')
+				this.find('input').val(this.lastChannel || '');
+			} else if (key === 'shift')
 				this.showItemTooltip();
 		},
 
@@ -368,14 +399,14 @@ define([
 			}
 
 			let textbox = this.find('input');
-			let config = {
+			let msgConfig = {
 				success: true,
 				message: textbox.val()
 			};
 
-			events.emit('onBeforeChat', config);
+			events.emit('onBeforeChat', msgConfig);
 
-			let val = config.message
+			let val = msgConfig.message
 				.split('<')
 				.join('&lt;')
 				.split('>')
@@ -383,11 +414,26 @@ define([
 
 			textbox.blur();
 			
-			if (!config.success)
+			if (!msgConfig.success)
 				return;
 
 			if (val.trim() === '')
 				return;
+
+			if (config.rememberChatChannel) {
+				const firstChar = val[0];
+				let lastChannel = null;
+				if ('@$'.includes(firstChar)) {
+					const firstSpace = val.indexOf(' ');
+					if (firstSpace === -1)
+						lastChannel = val + ' ';
+					else
+						lastChannel = val.substr(0, firstSpace) + ' ';
+				} else if (firstChar === '%')
+					lastChannel = '%';
+
+				this.lastChannel = lastChannel;
+			}
 
 			client.request({
 				cpn: 'social',
@@ -396,6 +442,11 @@ define([
 					message: val
 				}
 			});
+		},
+
+		onToggleLastChannel: function (isOn) {
+			if (!isOn) 
+				this.lastChannel = null;
 		}
 	};
 });

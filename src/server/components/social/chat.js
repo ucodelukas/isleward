@@ -1,6 +1,7 @@
 let roles = require('../../config/roles');
 let events = require('../../misc/events');
 const profanities = require('../../misc/profanities');
+const canChat = require('./canChat');
 
 module.exports = (cpnSocial, msg) => {
 	if (!msg.data.message)
@@ -54,12 +55,7 @@ module.exports = (cpnSocial, msg) => {
 		return;
 	}
 
-	let playerLevel = obj.level;
-	let playedTime = obj.stats.stats.played * 1000;
-	let sessionStart = obj.player.sessionStart;
-	let sessionDelta = time - sessionStart;
-
-	if (playerLevel < 3 && playedTime + sessionDelta < 180000) {
+	if (!canChat(obj, time)) {
 		sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
 		return;
 	}

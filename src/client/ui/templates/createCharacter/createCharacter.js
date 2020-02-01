@@ -111,7 +111,7 @@ define([
 		back: function () {
 			this.clear();
 
-			this.el.remove();
+			this.destroy();
 
 			uiFactory.build('characters', {});
 		},
@@ -137,7 +137,7 @@ define([
 
 			if (!result) {
 				this.clear();
-				this.el.remove();
+				this.destroy();
 				events.emit('onEnterGame');
 			} else
 				this.el.find('.message').html(result);

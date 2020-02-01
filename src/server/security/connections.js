@@ -14,6 +14,7 @@ module.exports = {
 
 		this.players.push(p);
 	},
+
 	onDisconnect: function (socket) {
 		let player = this.players.find(p => p.socket.id === socket.id);
 
@@ -52,6 +53,7 @@ module.exports = {
 
 		this.players.spliceWhere(p => p.socket.id === socket.id);
 	},
+
 	route: function (socket, msg) {
 		let player = null;
 
@@ -79,6 +81,17 @@ module.exports = {
 		)
 			return;
 
+		if (msg.threadModule) {
+			const source = this.players.find(p => p.socket.id === socket.id);
+			if (!source)
+				return;
+
+			msg.data.sourceId = source.id;
+			atlas.send(player.zone, msg);
+
+			return;
+		}
+
 		let cpn = player[msg.cpn];
 		if (!cpn)
 			return;
@@ -87,6 +100,7 @@ module.exports = {
 		if (cpn[method])
 			cpn[method](msg);
 	},
+
 	unzone: function (msg) {
 		let socket = msg.socket;
 		let player = this.players.find(p => p.socket.id === socket.id);

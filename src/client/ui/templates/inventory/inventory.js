@@ -4,14 +4,18 @@ define([
 	'html!ui/templates/inventory/template',
 	'css!ui/templates/inventory/styles',
 	'html!ui/templates/inventory/templateItem',
-	'js/input'
+	'js/input',
+	'js/config',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
 	template,
 	styles,
 	tplItem,
-	input
+	input,
+	config,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -33,6 +37,11 @@ define([
 			this.onEvent('onGetItems', this.onGetItems.bind(this));
 			this.onEvent('onDestroyItems', this.onDestroyItems.bind(this));
 			this.onEvent('onShowInventory', this.toggle.bind(this));
+			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
+			this.onToggleQualityIndicators(config.qualityIndicators);
+
+			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
+			this.onToggleUnusableIndicators(config.unusableIndicators);
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
 			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
@@ -71,8 +80,7 @@ define([
 				let item = items.find(f => (f.pos !== null && f.pos === i));
 
 				if (!item) {
-					itemEl = $(tplItem)
-						.appendTo(container);
+					itemEl = renderItem(container, null);
 
 					itemEl
 						.on('mouseup', this.onMouseDown.bind(this, null, null, false))
@@ -85,21 +93,7 @@ define([
 				} else 
 					rendered.push(item);
 
-				let imgX = -item.sprite[0] * 64;
-				let imgY = -item.sprite[1] * 64;
-
-				itemEl = $(tplItem)
-					.appendTo(container);
-
-				let spritesheet = item.spritesheet || '../../../images/items.png';
-				if (!item.spritesheet) {
-					if (item.material)
-						spritesheet = '../../../images/materials.png';
-					else if (item.quest)
-						spritesheet = '../../../images/questItems.png';
-					else if (item.type === 'consumable')
-						spritesheet = '../../../images/consumables.png';
-				}
+				itemEl = renderItem(container, item);
 
 				let clickHandler = this.onMouseDown.bind(this, itemEl, item, true);
 				let moveHandler = this.onHover.bind(this, itemEl, item);
@@ -116,26 +110,24 @@ define([
 					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
-
-				if (item.quantity > 1 || item.eq || item.active || item.has('quickSlot')) {
-					let elQuantity = itemEl.find('.quantity');
-					let txtQuantity = item.quantity;
-					if (!txtQuantity)
-						txtQuantity = item.has('quickSlot') ? 'QS' : 'EQ';
-
-					elQuantity.html(txtQuantity);
-
-					//If the item doesn't have a quantity and we reach this point
-					//it must mean that it's active, EQd or QSd
-					if (!item.quantity)
-						itemEl.addClass('eq');
-				} else if (item.isNew) {
-					itemEl.addClass('new');
-					itemEl.find('.quantity').html('NEW');
-				}
 			}
+		},
+
+		onToggleQualityIndicators: function (state) {
+			const className = `quality-${state.toLowerCase()}`;
+
+			$('.ui-container')
+				.removeClass('quality-off quality-bottom quality-border quality-background')
+				.addClass(className);
+		},
+
+		onToggleUnusableIndicators: function (state) {
+			const className = `unusable-${state.toLowerCase()}`;
+
+			$('.ui-container')
+				.removeClass('unusable-off unusable-border unusable-top unusable-background')
+				.addClass(className);
 		},
 
 		onClick: function (item) {
@@ -324,56 +316,56 @@ define([
 			if (item.active)
 				menuItems.activate.text = 'deactivate';
 
-			let config = [];
+			let ctxConfig = [];
 
 			if (item.ability)
-				config.push(menuItems.learn);
+				ctxConfig.push(menuItems.learn);
 			else if (item.type === 'mtx')
-				config.push(menuItems.activate);
+				ctxConfig.push(menuItems.activate);
 			else if (item.type === 'toy' || item.type === 'consumable' || item.useText || item.type === 'recipe') {
 				if (item.useText)
 					menuItems.use.text = item.useText;
-				config.push(menuItems.use);
+				ctxConfig.push(menuItems.use);
 				if (!item.has('quickSlot'))
-					config.push(menuItems.quickSlot);
+					ctxConfig.push(menuItems.quickSlot);
 			} else if (item.slot) {
-				config.push(menuItems.equip);
+				ctxConfig.push(menuItems.equip);
 				if (!item.eq)
-					config.push(menuItems.divider);
+					ctxConfig.push(menuItems.divider);
 
 				if (!item.eq) {
-					config.push(menuItems.augment);
-					config.push(menuItems.divider);
+					ctxConfig.push(menuItems.augment);
+					ctxConfig.push(menuItems.divider);
 				}
 			}
 
 			if ((!item.eq) && (!item.active)) {
 				if (!item.quest) {
 					if ((window.player.stash.active) && (!item.noStash))
-						config.push(menuItems.stash);
+						ctxConfig.push(menuItems.stash);
 
 					if (!item.noDrop)
-						config.push(menuItems.drop);
+						ctxConfig.push(menuItems.drop);
 
 					if ((!item.material) && (!item.noSalvage))
-						config.push(menuItems.salvage);
+						ctxConfig.push(menuItems.salvage);
 				}
 
 				if (!item.noDestroy)
-					config.push(menuItems.destroy);
+					ctxConfig.push(menuItems.destroy);
 			}
 
 			if (item.quantity > 1 && !item.quest)
-				config.push(menuItems.split);
+				ctxConfig.push(menuItems.split);
 
-			//if ((!item.noDrop) && (!item.quest))
-			//	config.push(menuItems.mail);
+			if ((!item.noDrop) && (!item.quest))
+				ctxConfig.push(menuItems.mail);
 
 			if (isMobile)
 				this.hideTooltip(null, this.hoverItem);
 
-			if (config.length > 0)
-				events.emit('onContextMenu', config, e);
+			if (ctxConfig.length > 0)
+				events.emit('onContextMenu', ctxConfig, e);
 
 			e.preventDefault();
 			return false;

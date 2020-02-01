@@ -5,6 +5,7 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+const transactions = require('../security/transactions');
 
 const { applyItemStats } = require('./equipment/helpers');
 
@@ -449,8 +450,9 @@ module.exports = {
 	},
 
 	mailItem: async function (msg) {
-		/*let item = this.findItem(msg.itemId);
-		if ((!item) || (item.noDrop) || (item.quest)) {
+		let item = this.findItem(msg.itemId);
+
+		if (!item || item.noDrop || item.quest) {
 			this.resolveCallback(msg);
 			return;
 		}
@@ -468,6 +470,8 @@ module.exports = {
 		} else if (!this.findItem(msg.itemId)) 
 			return;
 
+		const resolveTrans = transactions.register();
+
 		let blocked = false;
 		if (res.components) {
 			let social = res.components.find(f => f.type === 'social');
@@ -475,13 +479,15 @@ module.exports = {
 				blocked = true;
 		}
 
-		if (!blocked) {
-			const mappedItem = this.simplifyItem(item);
-			this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
-		}
+		const mappedItem = this.simplifyItem(item);
 		this.destroyItem(item.id);
 
-		this.resolveCallback(msg);*/
+		if (!blocked)
+			await this.obj.instance.mail.sendMail(msg.recipient, [mappedItem]);
+
+		this.resolveCallback(msg);
+
+		resolveTrans();
 	},
 
 	hookItemEvents: function (items) {
@@ -554,9 +560,12 @@ module.exports = {
 		this.items
 			.filter(i => !i.eq)
 			.map(i => {
+				//If we don't do this, [waist] goes before [undefined]
+				const useSlot = i.slot ? i.slot : 'z';
+
 				return {
 					item: i,
-					sortId: `${i.slot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
+					sortId: `${useSlot}${i.material}${i.quest}${i.spell}${i.quality}${i.level}${i.sprite}${i.id}`
 				};
 			})
 			.sort((a, b) => {

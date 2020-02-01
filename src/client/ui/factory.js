@@ -1,17 +1,61 @@
 define([
 	'ui/uiBase',
-	'js/system/events'
+	'js/system/events',
+	'js/system/globals',
+	'js/misc/tosAcceptanceValid'
 ], function (
 	uiBase,
-	events
+	events,
+	globals,
+	tosAcceptanceValid
 ) {
+	const startupUis = [
+		'inventory',
+		'equipment',
+		'hud',
+		'target',
+		'menu',
+		'spells',
+		'messages',
+		'online',
+		'mainMenu',
+		'context',
+		'party',
+		'help',
+		'dialogue',
+		'buffs',
+		'tooltips',
+		'tooltipInfo',
+		'tooltipItem',
+		'announcements',
+		'quests',
+		'events',
+		'progressBar',
+		'stash',
+		'smithing',
+		'talk',
+		'trade',
+		'overlay',
+		'death',
+		'leaderboard',
+		'reputation',
+		'mail',
+		'wardrobe',
+		'passives',
+		'workbench',
+		'middleHud',
+		'options'
+	];
+
 	return {
 		uis: [],
 		root: '',
 
-		init: function (root) {
+		init: function (root, uiList = []) {
 			if (root)
 				this.root = root + '/';
+
+			startupUis.push(...uiList);
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
 			events.on('onUiKeyDown', this.onUiKeyDown.bind(this));
@@ -21,48 +65,23 @@ define([
 		onEnterGame: function () {
 			events.clearQueue();
 
-			[
-				'inventory',
-				'equipment',
-				'hud',
-				'target',
-				'menu',
-				'spells',
-				'messages',
-				'online',
-				'options',
-				'context',
-				'party',
-				'help',
-				'dialogue',
-				'buffs',
-				'tooltips',
-				'tooltipInfo',
-				'tooltipItem',
-				'announcements',
-				'quests',
-				'events',
-				'progressBar',
-				'stash',
-				'smithing',
-				'talk',
-				'trade',
-				'overlay',
-				'death',
-				'leaderboard',
-				'reputation',
-				'mail',
-				'wardrobe',
-				'passives',
-				'workbench',
-				'middleHud'
-			].forEach(function (u) {
-				this.build(u);
+			startupUis.forEach(function (u) {
+				if (u.path)
+					this.buildModUi(u);
+				else
+					this.build(u);
 			}, this);
 		},
 
+		buildModUi: function (config) {
+			const type = config.path.split('/').pop();
+
+			this.build(type, {
+				path: config.path
+			});
+		},
+
 		build: function (type, options) {
-			//Don't make doubles?
 			let className = 'ui' + type[0].toUpperCase() + type.substr(1);
 			let el = $('.' + className);
 			if (el.length > 0)
@@ -72,7 +91,13 @@ define([
 		},
 
 		getTemplate: function (type, options) {
-			require([this.root + 'ui/templates/' + type + '/' + type], this.onGetTemplate.bind(this, options));
+			let path = null;
+			if (options && options.path)
+				path = options.path + `\\${type}.js`;
+			else
+				path = this.root + 'ui/templates/' + type + '/' + type;
+
+			require([path], this.onGetTemplate.bind(this, options));
 		},
 
 		onGetTemplate: function (options, template) {
@@ -100,13 +125,14 @@ define([
 
 		onUiKeyDown: function (keyEvent) {
 			if (keyEvent.key === 'esc') {
-				this.uis.forEach(function (u) {
+				this.uis.forEach(u => {
 					if (!u.modal || !u.shown)
 						return;
 
 					keyEvent.consumed = true;
 					u.hide();
 				});
+				
 				$('.uiOverlay').hide();
 				events.emit('onHideContextMenu');
 			} else if (['o', 'j', 'h', 'i'].indexOf(keyEvent.key) > -1)
@@ -131,7 +157,13 @@ define([
 		},
 
 		afterPreload: function () {
-			this.build('characters', {});
+			if (!globals.clientConfig.tos.required || tosAcceptanceValid()) {
+				this.build('characters');
+
+				return;
+			}
+
+			this.build('terms');
 		},
 
 		update: function () {

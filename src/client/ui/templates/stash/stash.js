@@ -4,14 +4,16 @@ define([
 	'html!ui/templates/stash/template',
 	'css!ui/templates/stash/styles',
 	'html!ui/templates/inventory/templateItem',
-	'js/input'
+	'js/input',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
 	template,
 	styles,
 	tplItem,
-	input
+	input,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -33,33 +35,23 @@ define([
 		},
 
 		build: function () {
+			this.el.removeClass('scrolls');
+			if (window.player.stash.maxItems > 50)
+				this.el.addClass('scrolls');
+
 			let container = this.el.find('.grid')
 				.empty();
 
 			let items = this.items;
-			let iLen = Math.max(items.length, 50);
+			let iLen = Math.max(items.length, window.player.stash.maxItems);
 
 			for (let i = 0; i < iLen; i++) {
 				let item = items[i];
 
-				let itemEl = $(tplItem)
-					.appendTo(container);
+				let itemEl = renderItem(container, item);
 
 				if (!item)
 					continue;
-
-				let imgX = -item.sprite[0] * 64;
-				let imgY = -item.sprite[1] * 64;
-
-				let spritesheet = item.spritesheet || '../../../images/items.png';
-				if (!item.spritesheet) {
-					if (item.material)
-						spritesheet = '../../../images/materials.png';
-					else if (item.quest)
-						spritesheet = '../../../images/questItems.png';
-					else if (item.type === 'consumable')
-						spritesheet = '../../../images/consumables.png';
-				}
 
 				let moveHandler = this.onHover.bind(this, itemEl, item);
 				let downHandler = () => {};
@@ -74,16 +66,7 @@ define([
 					.on('mousemove', moveHandler)
 					.on('mouseleave', this.hideTooltip.bind(this, itemEl, item))
 					.find('.icon')
-					.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px')
 					.on('contextmenu', this.showContext.bind(this, item));
-
-				if (item.quantity)
-					itemEl.find('.quantity').html(item.quantity);
-
-				if (item.eq)
-					itemEl.addClass('eq');
-				if (item.isNew)
-					itemEl.addClass('new');
 			}
 		},
 

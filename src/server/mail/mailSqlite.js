@@ -138,20 +138,14 @@ module.exports = {
 			noParse: true
 		});
 
-		this.doSendMail(playerName, items, callback, result);
-	},
-
-	doSendMail: async function (playerName, items, callback, result) {
 		if (result === 'null')
 			result = null;
 
 		result = JSON.parse(result || '[]');
 
-		items.forEach(function (i) {
-			result.push(i);
-		});
+		result.push(...items);
 
-		let itemString = JSON.stringify(result).split('\'').join('`');
+		const itemString = JSON.stringify(result).split('\'').join('`');
 
 		await io.setAsync({
 			key: playerName,

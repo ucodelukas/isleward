@@ -73,6 +73,14 @@ module.exports = {
 		return skins;
 	},
 
+	getExtraStashSlots: function (accountName) {
+		const account = this.getAccount(accountName);
+		if (!account)
+			return 0;
+
+		return account.extraStashSlots || 0;
+	},
+
 	sendMessage: function (player, msg) {
 		msg = 'Only certain roles can ' + msg + ' at the moment';
 

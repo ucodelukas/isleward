@@ -5,6 +5,8 @@ module.exports = {
 
 	actionQueue: [],
 
+	eventListeners: [],
+
 	addComponent: function (type, blueprint, isTransfer) {
 		let cpn = this[type];
 		if (!cpn) {
@@ -355,6 +357,21 @@ module.exports = {
 		}
 	},
 
+	onEvent: function (eventName, callback) {
+		const entry = {
+			eventName,
+			callback
+		};
+
+		this.eventListeners.push(entry);
+
+		return this.offEvent.bind(this, entry);
+	},
+
+	offEvent: function (entry) {
+		this.eventListeners.spliceWhere(e => e === entry);
+	},
+
 	fireEvent: function (event) {
 		let args = [].slice.call(arguments, 1);
 
@@ -372,6 +389,14 @@ module.exports = {
 
 			callback.apply(cpn, args);
 		}
+
+		this.eventListeners.forEach(l => {
+			const { eventName, callback } = l;
+			if (eventName !== event)
+				return;
+
+			callback.apply(null, args);
+		});
 
 		if (this.effects)
 			this.effects.fireEvent(event, args);

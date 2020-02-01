@@ -73,6 +73,11 @@ module.exports = {
 					return;
 
 				cons.route(socket, msg);
+			} else if (msg.threadModule) {
+				if (!router.allowedGlobalCall(msg.threadModule, msg.method))
+					return;
+
+				cons.route(socket, msg);
 			} else {
 				if (!router.allowedGlobal(msg))
 					return;
@@ -92,7 +97,18 @@ module.exports = {
 
 			file = file.replace('/' + root + '/', '');
 
-			if (root === 'server' && (file.indexOf('mods') === -1 || file.indexOf('png') === -1))
+			const validRequest = (
+				root !== 'server' ||
+				(
+					file.includes('mods/') &&
+					(
+						file.includes('.png') ||
+						file.includes('/ui/')
+					)
+				)
+			);
+
+			if (!validRequest)
 				return null;
 
 			res.sendFile(file, {

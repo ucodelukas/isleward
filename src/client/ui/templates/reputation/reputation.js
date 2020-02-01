@@ -30,25 +30,23 @@ define([
 			this.find('.info .description').html('');
 			this.find('.bar-outer').hide();
 
-			if (list.length === 0)
+			if (!list.length)
 				this.find('.heading-bottom').html("you haven't discovered any factions yet");
 			else
 				this.find('.heading-bottom').html('select a faction to see more info');
 
 			let elList = this.find('.list').empty();
 
-			list.forEach(function (l) {
+			list.forEach(l => {
 				if (l.noGainRep)
 					return;
 
 				let html = '<div class="faction">' + l.name.toLowerCase() + '</div>';
 
-				let el = $(html)
-					.appendTo(elList);
+				let el = $(html).appendTo(elList);
 
-				el
-					.on('click', this.onSelectFaction.bind(this, el, l));
-			}, this);
+				el.on('click', this.onSelectFaction.bind(this, el, l));
+			});
 		},
 
 		onSelectFaction: function (el, faction) {

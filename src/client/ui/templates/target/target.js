@@ -1,11 +1,13 @@
 define([
 	'js/system/client',
 	'js/system/events',
+	'js/system/globals',
 	'html!ui/templates/target/template',
 	'css!ui/templates/target/styles'
 ], function (
 	client,
 	events,
+	globals,
 	template,
 	styles
 ) {
@@ -47,7 +49,7 @@ define([
 			// target.player (only the logged-in player has a player component)
 			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies)) {
 				if (target.prophecies) {
-					let inspectContext = [
+					const inspectContext = [
 						target.name,
 						'----------', {
 							text: 'inspect',
@@ -55,19 +57,33 @@ define([
 						}
 					];
 
+					globals.clientConfig.contextMenuActions.player.forEach(action => {
+						inspectContext.push({
+							text: action.text,
+							callback: this.onAction.bind(this, action, true)
+						});
+					});
+
 					events.emit('onContextMenu', inspectContext, e.event);
 				}
 
 				return;
 			}
 
-			let talkContext = [
+			const talkContext = [
 				target.name,
 				'----------', {
 					text: 'talk',
 					callback: this.onTalk.bind(this)
 				}
 			];
+
+			globals.clientConfig.contextMenuActions.npc.forEach(action => {
+				talkContext.push({
+					text: action.text,
+					callback: this.onAction.bind(this, action, false)
+				});
+			});
 
 			events.emit('onContextMenu', talkContext, e.event);
 
@@ -77,6 +93,21 @@ define([
 
 		onTalk: function () {
 			window.player.dialogue.talk(this.target);
+		},
+
+		onAction: function (action, sendTargetServerId) {
+			const { threadModule, cpn, method, data = {} } = action;
+			if (method === 'performAction')
+				data.data.playerId = this.target.id;
+			else if (threadModule) 
+				data.targetId = sendTargetServerId ? this.target.serverId : this.target.id;
+
+			client.request({
+				threadModule,
+				cpn,
+				method,
+				data
+			});
 		},
 
 		onInspect: function () {

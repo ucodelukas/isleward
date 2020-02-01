@@ -8,6 +8,8 @@ define([
 	'js/input',
 	'js/system/events',
 	'js/resources',
+	'js/sound/sound',
+	'js/system/globals',
 	'ui/templates/online/online',
 	'ui/templates/tooltips/tooltips'
 ], function (
@@ -19,7 +21,9 @@ define([
 	numbers,
 	input,
 	events,
-	resources
+	resources,
+	sound,
+	globals
 ) {
 	return {
 		hasFocus: true,
@@ -34,13 +38,14 @@ define([
 		onClientReady: function () {
 			client.request({
 				module: 'clientConfig',
-				method: 'getResourcesList',
-				callback: this.onGetResourceList.bind(this)
+				method: 'getClientConfig',
+				callback: this.onGetClientConfig.bind(this)
 			});
 		},
 
-		onGetResourceList: function (list) {
-			resources.init(list);
+		onGetClientConfig: function (config) {
+			globals.clientConfig = config;
+			resources.init(config.resourceList);
 
 			events.on('onResourcesLoaded', this.start.bind(this));
 		},
@@ -51,13 +56,15 @@ define([
 
 			$(window).on('contextmenu', this.onContextMenu.bind(this));
 
+			sound.init();
+
 			objects.init();
 			renderer.init();
 			input.init();
 
 			numbers.init();
 
-			uiFactory.init();
+			uiFactory.init(null, globals.clientConfig.uiList);
 			uiFactory.build('login', 'body');
 
 			this.update();

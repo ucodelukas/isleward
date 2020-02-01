@@ -5,6 +5,8 @@ let connections = require('../security/connections');
 let serverConfig = require('../config/serverConfig');
 let events = require('../misc/events');
 
+const listenersOnZoneIdle = [];
+
 module.exports = {
 	nextId: 0,
 	lastCallbackId: 0,
@@ -220,6 +222,34 @@ module.exports = {
 			serverObj.player.broadcastSelf();
 
 			this.addObject(obj, true, true);
+		},
+
+		onZoneIdle: function (thread) {
+			listenersOnZoneIdle.forEach(l => l(thread));
 		}
+	},
+
+	returnWhenZonesIdle: async function () {
+		return new Promise(res => {
+			const waiting = [...this.threads];
+
+			const onZoneIdle = thread => {
+				waiting.spliceWhere(w => w === thread);
+
+				if (waiting.length)
+					return;
+
+				listenersOnZoneIdle.spliceWhere(l => l === onZoneIdle);
+				res();
+			};
+
+			listenersOnZoneIdle.push(onZoneIdle);
+
+			this.threads.forEach(t => {
+				t.worker.send({
+					method: 'notifyOnceIdle'
+				});
+			});
+		});
 	}
 };

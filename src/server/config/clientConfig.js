@@ -1,13 +1,25 @@
-let events = require('../misc/events');
+const events = require('../misc/events');
+const tos = require('./tos');
+
+const config = {
+	resourceList: [],
+	uiList: [],
+	contextMenuActions: {
+		player: [],
+		npc: []
+	},
+	tos
+};
 
 module.exports = {
-	resourceList: [],
-
 	init: function () {
-		events.emit('onBeforeGetResourceList', this.resourceList);
+		events.emit('onBeforeGetResourceList', config.resourceList);
+		events.emit('onBeforeGetUiList', config.uiList);
+		events.emit('onBeforeGetContextMenuActions', config.contextMenuActions);
+		events.emit('onBeforeGetTermsOfService', config.tos);
 	},
 
-	getResourcesList: function (msg) {
-		msg.callback(this.resourceList);
+	getClientConfig: function (msg) {
+		msg.callback(config);
 	}
 };

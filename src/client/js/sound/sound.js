@@ -1,15 +1,23 @@
 define([
 	'howler',
-	'js/misc/physics'
+	'js/misc/physics',
+	'js/system/events',
+	'js/config'
 ], function (
 	howler,
-	physics
+	physics,
+	events,
+	config
 ) {
 	return {
 		sounds: [],
 
-		init: function (zone) {
-			
+		muted: false,
+
+		init: function () {
+			events.on('onToggleAudio', this.onToggleAudio.bind(this));
+
+			this.onToggleAudio(config.playAudio);
 		},
 
 		unload: function (zoneId) {
@@ -24,7 +32,7 @@ define([
 		},
 
 		update: function (x, y) {
-			this.sounds.forEach(function (s) {
+			this.sounds.forEach(s => {
 				let volume;
 
 				if (!s.w) {
@@ -67,9 +75,13 @@ define([
 						loop: true,
 						volume: 0
 					});
+
+					if (this.muted) 
+						s.sound.mute(true);
 				}
 
-				s.sound.volume(volume * s.volume);
+				if (!this.muted) 
+					s.sound.volume(volume * s.volume);
 			});
 		},
 
@@ -96,6 +108,24 @@ define([
 			};
 
 			this.sounds.push(sound);
+		},
+
+		onToggleAudio: function (isAudioOn) {
+			this.muted = !isAudioOn;
+
+			this.sounds.forEach(s => {
+				if (!s.sound)
+					return;
+
+				s.sound.mute(this.muted);
+			});
+
+			if (!window.player)
+				return;
+			
+			const { player: { x, y } } = window;
+
+			this.update(x, y);
 		}
 	};
 });

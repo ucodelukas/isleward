@@ -6,6 +6,8 @@ let factions = require('../../config/factions');
 let connections = require('../../security/connections');
 
 const ban = require('../social/ban');
+const rezone = require('../social/rezone');
+const canChat = require('../social/canChat');
 
 let commandRoles = {
 	//Regular players
@@ -15,6 +17,7 @@ let commandRoles = {
 	roll: 0,
 	block: 0,
 	unblock: 0,
+	help: 0,
 
 	//Mods
 	ban: 5,
@@ -39,7 +42,8 @@ let commandRoles = {
 	getXp: 10,
 	setPassword: 10,
 	giveSkin: 10,
-	getMaterials: 10
+	getMaterials: 10,
+	rezone: 10
 };
 
 //Commands that should be run on the main thread (not the zone thread)
@@ -56,7 +60,8 @@ const localCommands = [
 	'unblock',
 	'broadcast',
 	'saveAll',
-	'ban'
+	'ban',
+	'help'
 ];
 
 //Actions that should appear when a player is right clicked
@@ -281,18 +286,34 @@ module.exports = {
 		});
 	},
 
+	help: function () {
+		const msg = [
+			'You can use the following commands:', 
+			...Object.keys(commandRoles)
+				.filter(c => this.roleLevel >= commandRoles[c])
+				.map(c => `/${c}`)
+		].join('<br />');
+	
+		this.sendMessage(msg, 'color-yellowB');
+	},
+
 	isInChannel: function (character, channel) {
 		return character.auth.customChannels.some(c => (c === channel));
 	},
 
 	roll: function () {
-		let roll = 1 + ~~(Math.random() * 100);
+		if (!canChat(this.obj)) {
+			this.sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
+			return;
+		}
+
+		const roll = 1 + ~~(Math.random() * 100);
 		cons.emit('event', {
 			event: 'onGetMessages',
 			data: {
 				messages: [{
 					class: 'color-grayB',
-					message: this.obj.name + ' rolled ' + roll,
+					message: `${this.obj.name} rolled ${roll}`,
 					type: 'chat'
 				}]
 			}
@@ -674,5 +695,9 @@ module.exports = {
 
 	ban: function (msg) {
 		ban(this, msg);
+	},
+
+	rezone: function (msg) {
+		rezone(this, msg);
 	}
 };

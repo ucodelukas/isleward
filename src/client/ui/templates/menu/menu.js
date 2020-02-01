@@ -22,7 +22,7 @@ define([
 			this.find('.btnOnline').on('click', this.handler.bind(this, 'onShowOnline'));
 			this.find('.btnLeaderboard').on('click', this.handler.bind(this, 'onShowLeaderboard'));
 			this.find('.btnReputation').on('click', this.handler.bind(this, 'onShowReputation'));
-			this.find('.btnOptions').on('click', this.handler.bind(this, 'onToggleOptions'));
+			this.find('.btnMainMenu').on('click', this.handler.bind(this, 'onToggleMainMenu'));
 			this.find('.btnPassives').on('click', this.handler.bind(this, 'onShowPassives'));
 
 			this.onEvent('onGetPassivePoints', this.onGetPassivePoints.bind(this));
