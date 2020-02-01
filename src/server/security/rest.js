@@ -53,7 +53,7 @@ module.exports = {
 			data: {
 				messages: [{
 					class: 'color-blueA',
-					message: 'asdd',
+					message: config.msg,
 					type: 'chat'
 				}]
 			}
