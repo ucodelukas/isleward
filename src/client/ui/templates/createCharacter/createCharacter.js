@@ -3,13 +3,15 @@ define([
 	'js/system/client',
 	'html!ui/templates/createCharacter/template',
 	'css!ui/templates/createCharacter/styles',
-	'ui/factory'
+	'ui/factory',
+	'js/system/globals'
 ], function (
 	events,
 	client,
 	template,
 	styles,
-	uiFactory
+	uiFactory,
+	globals
 ) {
 	return {
 		tpl: template,
@@ -21,6 +23,17 @@ define([
 		skinId: null,
 
 		prophecies: [],
+
+		beforeRender: function () {
+			const { clientConfig: { logoPath } } = globals;
+			if (!logoPath)
+				return;
+
+			const tempEl = $(this.tpl);
+			tempEl.find('.logo').attr('src', logoPath);
+
+			this.tpl = tempEl.prop('outerHTML');
+		},
 
 		postRender: function () {
 			this.getSkins();

@@ -18,6 +18,9 @@ define([
 			if (this.container)
 				container += ' > ' + this.container;
 
+			if (this.beforeRender)
+				this.beforeRender();
+
 			this.el = $(this.tpl)
 				.appendTo(container)
 				.data('ui', this);
