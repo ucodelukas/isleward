@@ -1,4 +1,6 @@
 node_modules
+package-lock.json
+
 storage.db
 *.sublime-project
 *.sublime-workspace
@@ -13,4 +15,6 @@ helpers/sqlite-to-rethink/rethinkdb_data
 helpers/sqlite-to-rethink/tmp
 helpers/sqlite-to-rethink/log_file
 helpers/sqlite-to-rethink/rethinkdb.exe
+
 .idea
+.vscode
