@@ -130,7 +130,7 @@ define([
 				.addClass(className);
 		},
 
-		onClick: function (item) {
+		onClick: function (item, forceCtrl) {
 			let msg = {
 				item: item,
 				success: true
@@ -140,7 +140,7 @@ define([
 			if (!msg.success)
 				return;
 
-			if (!input.isKeyDown('ctrl', true))
+			if (!forceCtrl && !input.isKeyDown('ctrl', true))
 				return;
 
 			client.request({
@@ -305,6 +305,10 @@ define([
 					text: 'split stack',
 					callback: this.splitStackStart.bind(this, item)
 				},
+				link: {
+					text: 'link',
+					callback: this.onClick.bind(this, item, true)
+				},
 				divider: '----------'
 			};
 
@@ -360,6 +364,8 @@ define([
 
 			if ((!item.noDrop) && (!item.quest))
 				ctxConfig.push(menuItems.mail);
+
+			ctxConfig.push(menuItems.link);
 
 			if (isMobile)
 				this.hideTooltip(null, this.hoverItem);
