@@ -197,6 +197,10 @@ define([
 					this.mouse.down = true;
 					this.mouse.event = e;
 
+					//This is needed for casting targetted spells on Mobile...it's hacky.
+					this.mouse.worldX = e.pageX + renderer.pos.x;
+					this.mouse.worldY = e.pageY + renderer.pos.y;
+
 					events.emit('mouseDown', this.mouse);
 				},
 				mouseUp: function (e) {
@@ -223,8 +227,8 @@ define([
 						return;
 
 					const zoom = window.devicePixelRatio;
-					this.mouse.x = e.offsetX * zoom + renderer.pos.x;
-					this.mouse.y = e.offsetY * zoom + renderer.pos.y;
+					this.mouse.x = (e.offsetX * zoom) + renderer.pos.x;
+					this.mouse.y = (e.offsetY * zoom) + renderer.pos.y;
 				}
 			},
 
