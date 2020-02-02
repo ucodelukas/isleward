@@ -1,3 +1,4 @@
+const events = require('../../misc/events');
 const { isItemStackable } = require('./helpers');
 
 const getNextId = items => {
@@ -16,6 +17,7 @@ const getNextId = items => {
 module.exports = (cpnInv, item, hideMessage, noStack, hideAlert) => {
 	const obj = cpnInv.obj;
 	obj.instance.eventEmitter.emit('onBeforeGetItem', item, obj);
+	events.emit('beforePlayerGetItem', obj, item);
 
 	//We need to know if a mob dropped it for quest purposes
 	let fromMob = item.fromMob;

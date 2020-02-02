@@ -5,6 +5,7 @@ let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
+const events = require('../misc/events');
 
 const { isItemStackable } = require('./inventory/helpers');
 const transactions = require('../security/transactions');
@@ -404,6 +405,7 @@ module.exports = {
 		}
 
 		this.obj.fireEvent('afterDestroyItem', item, amount);
+		events.emit('afterPlayerDestroyItem', this.obj, item, amount);
 
 		return item;
 	},
@@ -439,6 +441,8 @@ module.exports = {
 		this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
 
 		this.createBag(dropCell.x, dropCell.y, [item]);
+
+		events.emit('afterPlayerDropItem', this.obj, item);
 	},
 
 	moveItem: function (msgs) {
