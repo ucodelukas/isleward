@@ -71,6 +71,7 @@ define([
 		init: function () {
 			PIXI.settings.GC_MODE = PIXI.GC_MODES.AUTO;
 			PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+			PIXI.settings.SPRITE_MAX_TEXTURES = Math.min(PIXI.settings.SPRITE_MAX_TEXTURES, 16);
 
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
