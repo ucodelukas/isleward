@@ -44,7 +44,7 @@ const buildMob = (objects, mobConfig, x, y, mobIndex) => {
 								cpn: 'dialogue',
 								method: 'talk',
 								args: [{
-									targetName: 'angler nayla'
+									targetName: mob.name.toLowerCase()
 								}]
 							},
 							exit: {
