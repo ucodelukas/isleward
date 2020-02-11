@@ -104,7 +104,7 @@ define([
 
 				itemEl
 					.data('item', item)
-					.on('click', this.onClick.bind(this, item))
+					.on('click', this.onClick.bind(this, item, false))
 					.on('mousedown', clickHandler)
 					.on('mouseup', this.onMouseDown.bind(this, null, null, false))
 					.on('mousemove', moveHandler)
