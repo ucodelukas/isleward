@@ -1,4 +1,5 @@
 let qualityGenerator = require('../items/generators/quality');
+let { isItemStackable } = require('./inventory/helpers');
 
 module.exports = {
 	type: 'gatherer',
@@ -27,6 +28,11 @@ module.exports = {
 
 		let firstNode = nodes[0];
 
+		if (!this.hasSpace(firstNode)) {
+			this.sendAnnouncement('Your bags are too full to gather any more resources.');
+			return;
+		}
+
 		this.gathering = firstNode;
 
 		let ttlMax = firstNode.resourceNode.ttl || this.defaultTtlMax;
@@ -49,19 +55,24 @@ module.exports = {
 
 	update: function () {
 		let gathering = this.gathering;
+
 		if (!gathering)
 			return;
 
-		if (gathering.destroyed) {
+		let isFish = (gathering.resourceNode.nodeType === 'fish');
+		let hasSpace = this.hasSpace(this.gathering);
+
+		if (gathering.destroyed || !hasSpace) {
 			this.gathering = null;
 			this.gatheringTtl = 0;
 			this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 			this.obj.syncer.set(true, 'gatherer', 'progress', 100);
-			this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
+			if (isFish)
+				this.obj.syncer.set(true, 'gatherer', 'action', 'Fishing');
+			if (!hasSpace)
+				this.sendAnnouncement('Your bags are too full to gather any more resources.');
 			return;
 		}
-
-		let isFish = (gathering.resourceNode.nodeType === 'fish');
 
 		if (this.gatheringTtl > 0) {
 			if ((this.gatheringTtl === this.gatheringTtlMax) && (gathering.width)) {
@@ -180,6 +191,25 @@ module.exports = {
 		}
 
 		this.gathering = null;
+	},
+
+	hasSpace: function (node) {
+		// By default, the player is allowed to gather "nothing"
+		if (!node.inventory || !node.inventory.items)
+			return true;
+		
+		let items = node.inventory.items;
+		let slots = this.obj.inventory.inventorySize - this.obj.inventory.items.filter(f => !f.eq).length;
+		for (const item of items) {
+			if (isItemStackable(item)) {
+				let ownedItem = this.obj.inventory.items.find(owned => (owned.name === item.name) && (isItemStackable(owned)));
+				if (ownedItem)
+					continue;
+			}
+			slots--;
+		}
+
+		return (slots >= 0);
 	},
 
 	enter: function (node) {

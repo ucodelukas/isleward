@@ -103,17 +103,35 @@ module.exports = {
 		let messageText = msg.message;
 		if (messageText[0] !== '/')
 			return;
+		msg.ignore = true;
 
 		messageText = messageText.substr(1).split(' ');
 		let actionName = messageText.splice(0, 1)[0].toLowerCase();
 		actionName = Object.keys(commandRoles).find(a => (a.toLowerCase() === actionName));
 
-		if (!actionName)
+		if (!actionName) {
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'Invalid command.',
+						type: 'info'
+					}]
+				}]
+			});
 			return;
-		else if (this.roleLevel < commandRoles[actionName])
+		} else if (this.roleLevel < commandRoles[actionName]) {
+			this.obj.socket.emit('events', {
+				onGetMessages: [{
+					messages: [{
+						class: 'color-redA',
+						message: 'You do not have the required permissions.',
+						type: 'info'
+					}]
+				}]
+			});
 			return;
-
-		msg.ignore = true;
+		}
 
 		let config = {};
 		if ((messageText.length === 1) && (messageText[0].indexOf('=') === -1))
@@ -258,6 +276,11 @@ module.exports = {
 			return;
 		}
 
+		if (target === this.obj.name) {
+			this.sendMessage('You cannot block yourself', 'color-redA');
+			return;
+		}
+
 		this.blockedPlayers.push(target);
 		this.sendMessage(`Successfully blocked ${target}`, 'color-yellowB');
 
@@ -314,7 +337,8 @@ module.exports = {
 				messages: [{
 					class: 'color-grayB',
 					message: `${this.obj.name} rolled ${roll}`,
-					type: 'chat'
+					type: 'chat',
+					source: this.obj.name
 				}]
 			}
 		});
@@ -441,6 +465,9 @@ module.exports = {
 	},
 
 	getItem: function (config) {
+		if (typeof config !== 'object')
+			return;
+
 		if (config.slot === 'set') {
 			configSlots.slots.forEach(function (s) {
 				if (s === 'tool')

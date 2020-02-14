@@ -71,6 +71,7 @@ define([
 		init: function () {
 			PIXI.settings.GC_MODE = PIXI.GC_MODES.AUTO;
 			PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+			PIXI.settings.SPRITE_MAX_TEXTURES = Math.min(PIXI.settings.SPRITE_MAX_TEXTURES, 16);
 
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
@@ -175,31 +176,31 @@ define([
 			let container = this.layers.tileSprites;
 
 			for (let i = 0; i < w; i++) {
-				let ii = i / 10;
+				let ii = i / 7.5;
 				for (let j = 0; j < h; j++) {
 					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
 
-					let tile = 5;
+					let tile = 74;
 					if (roll < -0.2)
-						tile = 3;
+						tile = 108;
 					else if (roll < 0.2)
-						tile = 4;
+						tile = 107;
 					else if (roll < 0.5)
-						tile = 53;
+						tile = 79;
 
 					let alpha = mRandom();
 
-					if ([5, 53].indexOf(tile) > -1)
+					if ([73, 79].indexOf(tile) > -1)
 						alpha *= 2;
 
 					alpha = Math.min(Math.max(0.15, alpha), 0.65);
 
 					if (mRandom() < 0.35) {
 						tile = {
-							5: 6,
-							3: 0,
-							4: 1,
-							53: 54
+							74: 94,
+							108: 110,
+							107: 97,
+							79: 119
 						}[tile];
 					}
 

@@ -237,6 +237,9 @@ module.exports = {
 
 		//If the item has been used up, find another one with the same name
 		const item = inventory.findItem(this.quickSlots[0]);
+		if (!item)
+			return;
+
 		inventory.useItem(this.quickSlots[0]);
 
 		if (item.uses <= 0 && !item.quantity)

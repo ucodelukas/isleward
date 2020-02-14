@@ -4,18 +4,32 @@ define([
 	'ui/factory',
 	'html!ui/templates/login/template',
 	'css!ui/templates/login/styles',
-	'js/rendering/renderer'
+	'js/rendering/renderer',
+	'js/system/globals'
 ], function (
 	events,
 	client,
 	uiFactory,
 	template,
 	styles,
-	renderer
+	renderer,
+	globals
 ) {
 	return {
 		tpl: template,
 		centered: true,
+
+		beforeRender: function () {
+			const { clientConfig: { logoPath } } = globals;
+			if (!logoPath)
+				return;
+
+			const tempEl = $(this.tpl);
+			tempEl.find('.logo').attr('src', logoPath);
+
+			this.tpl = tempEl.prop('outerHTML');
+		},
+
 		postRender: function () {
 			this.onEvent('onHandshake', this.onHandshake.bind(this));
 

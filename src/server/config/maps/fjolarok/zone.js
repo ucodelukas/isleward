@@ -717,6 +717,7 @@ module.exports = {
 						material: true,
 						sprite: [11, 7],
 						worth: 2,
+						quality: 0,
 						infinite: true
 					}],
 					level: {

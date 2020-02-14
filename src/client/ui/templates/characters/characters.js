@@ -4,21 +4,35 @@ define([
 	'ui/factory',
 	'html!ui/templates/characters/template',
 	'html!ui/templates/characters/templateListItem',
-	'css!ui/templates/characters/styles'
+	'css!ui/templates/characters/styles',
+	'js/system/globals'
 ], function (
 	events,
 	client,
 	uiFactory,
 	template,
 	templateListItem,
-	styles
+	styles,
+	globals
 ) {
 	return {
 		tpl: template,
+
 		centered: true,
 		characterInfo: {},
 		selected: null,
 		deleteCount: 0,
+
+		beforeRender: function () {
+			const { clientConfig: { logoPath } } = globals;
+			if (!logoPath)
+				return;
+
+			const tempEl = $(this.tpl);
+			tempEl.find('.logo').attr('src', logoPath);
+
+			this.tpl = tempEl.prop('outerHTML');
+		},
 
 		postRender: function () {
 			this.find('.btnPlay').on('click', this.onPlayClick.bind(this));
@@ -91,7 +105,7 @@ define([
 				.forEach(function (c, i) {
 					let charName = c.name;
 					if (c.level !== null)
-						charName += '<font class="color-yellowB"> (' + c.level + ')</font>';
+						charName += '<font class="color-tealB"> (' + c.level + ')</font>';
 
 					let html = templateListItem
 						.replace('$NAME$', charName);

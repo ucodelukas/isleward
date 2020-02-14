@@ -301,8 +301,14 @@ define([
 					el.addClass('info');
 
 				if (m.item) {
+					let clickHander = () => {};
+					let moveHandler = this.showItemTooltip.bind(this, el, m.item);
+					if (isMobile) 
+						[clickHander, moveHandler] = [moveHandler, clickHander];
+
 					el.find('span')
-						.on('mousemove', this.showItemTooltip.bind(this, el, m.item))
+						.on('mousemove', moveHandler)
+						.on('mousedown', clickHander)
 						.on('mouseleave', this.hideItemTooltip.bind(this));
 				}
 
@@ -357,7 +363,9 @@ define([
 				};
 			}
 
-			events.emit('onShowItemTooltip', item, ttPos, true, true);
+			let bottomAlign = !isMobile;
+
+			events.emit('onShowItemTooltip', item, ttPos, true, bottomAlign);
 		},
 
 		toggle: function (show, isFake, e) {

@@ -6,6 +6,8 @@ module.exports = {
 	lifetime: -1,
 	maxDistance: 10,
 
+	alwaysFollowMaster: false,
+
 	lastMasterPos: {
 		x: 0,
 		y: 0
@@ -85,6 +87,24 @@ module.exports = {
 		}, -1);
 	},
 
+	followMaster: function (distance) {
+		const { obj, maxDistance, master: { x, y }, lastMasterPos: { x: lx, y: ly } } = this;
+
+		if (distance < maxDistance)
+			return;
+
+		const masterDistanceFromLastPos = Math.max(Math.abs(x - lx), Math.abs(y - ly));
+		if (masterDistanceFromLastPos <= maxDistance)
+			return;
+		
+		obj.mob.goHome = true;
+		obj.mob.originX = x;
+		obj.mob.originY = y;
+
+		this.lastMasterPos.x = x;
+		this.lastMasterPos.y = y;
+	},
+
 	update: function () {
 		if (this.lifetime > 0) {
 			this.lifetime--;
@@ -105,6 +125,12 @@ module.exports = {
 		let attacker = null;
 		let maxDistance = this.maxDistance;
 		let distance = Math.max(Math.abs(obj.x - master.x), Math.abs(obj.y - master.y));
+
+		if (this.alwaysFollowMaster) {
+			this.followMaster(distance);
+
+			return;
+		}
 
 		if (obj.aggro)
 			attacker = this.fGetHighest.inCombat();
