@@ -713,7 +713,7 @@ module.exports = {
 		} return true;
 	},
 
-	getItem: function (item, hideMessage, noStack, hideAlert, smee) {
+	getItem: function (item, hideMessage, noStack, hideAlert) {
 		return getItem(this, item, hideMessage, noStack, hideAlert);
 	},
 
