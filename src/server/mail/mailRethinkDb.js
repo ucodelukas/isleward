@@ -71,7 +71,7 @@ module.exports = {
 						}
 					});
 
-					io.deleteAsync({
+					await io.deleteAsync({
 						key: doc.id,
 						table: 'mail'
 					});
