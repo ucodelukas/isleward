@@ -30,6 +30,12 @@ module.exports = {
 
 	fixItems: function (items) {
 		items
+			.filter(i => (i.name === 'Elixir of Infatuation'))
+			.forEach(function (i) {
+				i.cdMax = 342;
+			});
+
+		items
 			.filter(i => ((i.name === 'Cowl of Obscurity') && (!i.factions)))
 			.forEach(function (i) {
 				i.factions = [{
