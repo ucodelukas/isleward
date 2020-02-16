@@ -26,21 +26,21 @@ module.exports = {
 		const zoneEventPath = zonePath + '/' + zoneName + '/events';
 
 		const paths = ['config/globalEvents', zoneEventPath];
+		const files = [];
 		paths.forEach(p => {
 			if (!fs.existsSync(p))
 				return;
 
-			const files = fs.readdirSync(p)
-				.map(f => ('../' + p + '/' + f));
-
-			this.instance.eventEmitter.emit('onBeforeGetEventList', zoneName, files);
-
-			files.forEach(f => {
-				const e = require(f);
-				if (!e.disabled)
-					this.configs.push(extend({}, e));
-			}, this);
+			files.push(...fs.readdirSync(p).map(f => ('../' + p + '/' + f)));
 		});
+
+		this.instance.eventEmitter.emit('onBeforeGetEventList', zoneName, files);
+
+		files.forEach(f => {
+			const e = require(f);
+			if (!e.disabled)
+				this.configs.push(extend({}, e));
+		}, this);
 	},
 
 	getEvent: function (name) {
