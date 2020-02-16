@@ -31,7 +31,16 @@ module.exports = {
 
 		let item = {};
 
-		let currencyChance = this.currencyChance;
+		const dropChancesEvent = {
+			blueprint,
+			spellChance: this.spellChance,
+			currencyChance: this.currencyChance
+		};
+
+		if (!blueprint.slot && !blueprint.type && !blueprint.spell)
+			global.instancer.instances[0].eventEmitter.emitNoSticky('onBeforeGetDropChances', dropChancesEvent);
+
+		let currencyChance = dropChancesEvent.currencyChance;
 		//If you kill a mob that's too low of a level, idols are much more rare
 		if (
 			blueprint.level && 
@@ -48,7 +57,7 @@ module.exports = {
 			isSpell = blueprint.spell;
 			isCurrency = blueprint.currency;
 			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
-				isSpell = Math.random() < this.spellChance;
+				isSpell = Math.random() < dropChancesEvent.spellChance;
 				if (!isSpell)
 					isCurrency = Math.random() < currencyChance;
 			}
