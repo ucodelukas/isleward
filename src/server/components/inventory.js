@@ -707,7 +707,8 @@ module.exports = {
 	},
 
 	hasSpace: function (item, noStack) {
-		return this.hasSpaceList([item], noStack);
+		const itemArray = item ? [item] : [];
+		return this.hasSpaceList(itemArray, noStack);
 	},
 
 	hasSpaceList: function (items, noStack) {
