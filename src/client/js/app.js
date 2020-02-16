@@ -1,4 +1,4 @@
-/* global require */
+/* global require:true*/
 window.require = requirejs;
 
 require.config({
