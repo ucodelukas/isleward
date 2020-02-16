@@ -3,7 +3,7 @@ module.exports = {
 		invalid: 'invalid name chosen',
 		exists: 'username exists, please try another',
 		allFields: 'please complete all fields',
-		illegal: 'illegal characters in username/password',
+		illegal: 'illegal characters in username',
 		incorrect: 'invalid username and password',
 		charExists: 'character name is taken'
 	},
