@@ -3,6 +3,7 @@ global.io = require('../db/io');
 global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
+global.eventManager = require('../events/events');
 
 let components = require('../components/components');
 let mods = require('../misc/mods');

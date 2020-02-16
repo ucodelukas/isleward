@@ -8,6 +8,8 @@ let connections = require('../../security/connections');
 const ban = require('../social/ban');
 const rezone = require('../social/rezone');
 const canChat = require('../social/canChat');
+const startEvent = require('../social/startEvent');
+const stopEvent = require('../social/stopEvent');
 
 let commandRoles = {
 	//Regular players
@@ -43,7 +45,9 @@ let commandRoles = {
 	setPassword: 10,
 	giveSkin: 10,
 	getMaterials: 10,
-	rezone: 10
+	rezone: 10,
+	startEvent: 10,
+	stopEvent: 10
 };
 
 //Commands that should be run on the main thread (not the zone thread)
@@ -61,7 +65,9 @@ const localCommands = [
 	'broadcast',
 	'saveAll',
 	'ban',
-	'help'
+	'help',
+	'startEvent',
+	'stopEvent'
 ];
 
 //Actions that should appear when a player is right clicked
@@ -726,5 +732,13 @@ module.exports = {
 
 	rezone: function (msg) {
 		rezone(this, msg);
+	},
+
+	startEvent: function (msg) {
+		startEvent(this, msg);
+	},
+
+	stopEvent: function (msg) {
+		stopEvent(this, msg);
 	}
 };

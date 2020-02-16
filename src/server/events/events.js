@@ -159,7 +159,8 @@ module.exports = {
 					continue;
 				else if (!c.durationEvent && !scheduler.shouldRun(c))
 					continue;
-			}
+			} else if (c.manualTrigger)
+				continue;
 
 			c.event = this.startEvent(c);
 			this.updateEvent(c.event);
@@ -185,6 +186,23 @@ module.exports = {
 		event.config.event = event;
 
 		return event;
+	},
+
+	startEventByCode: function (eventCode) {
+		const config = this.configs.find(c => c.code === eventCode);
+		if (!config || config.event)
+			return;
+
+		config.event = this.startEvent(config);
+		this.updateEvent(config.event);
+	},
+
+	stopEventByCode: function (eventCode) {
+		const config = this.configs.find(c => c.code === eventCode);
+		if (!config || !config.event)
+			return;
+
+		this.stopEvent(config);
 	},
 
 	giveRewards: function (config) {
