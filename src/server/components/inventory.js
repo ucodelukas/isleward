@@ -354,32 +354,37 @@ module.exports = {
 		let item = this.findItem(id);
 		if ((!item) || (item.material) || (item.quest) || (item.noSalvage) || (item.eq))
 			return;
-
+			
 		let messages = [];
-
+			
 		let items = salvager.salvage(item);
-		let iLen = items.length;
-
-		if (!iLen)
-			return;
-
-		for (let i = 0; i < iLen; i++) {
-			let material = items[i];
-
-			this.getItem(material, true);
-
+		let materialDrop = [];
+			
+		this.destroyItem(id);
+		
+		for (const material of items) {
+			if (this.hasSpace(material))
+				this.getItem(material, true);
+			else
+				materialDrop.push(material);
+				
 			messages.push({
 				class: 'q' + material.quality,
 				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
 			});
 		}
-
+		if (materialDrop.length > 0) {
+			this.createBag(this.obj.x, this.obj.y, materialDrop);
+			messages.push({
+				class: 'color-redA',
+				message: 'Your bags are too full for your salvaged materials, they have been dropped to the ground.'
+			});
+		}
+		
 		this.obj.instance.syncer.queue('onGetMessages', {
 			id: this.obj.id,
 			messages: messages
 		}, [this.obj.serverId]);
-
-		this.destroyItem(id);
 	},
 
 	destroyItem: function (id, amount, force) {
@@ -701,16 +706,24 @@ module.exports = {
 	},
 
 	hasSpace: function (item, noStack) {
-		if (this.inventorySize !== -1) {
-			if (item) {
-				let exists = this.items.find(i => (i.name === item.name));
-				if ((exists) && (!noStack) && (isItemStackable(item) && isItemStackable(exists)))
-					return true;
-			}
+		return this.hasSpaceList([item], noStack);
+	},
 
-			let nonEqItems = this.items.filter(f => !f.eq).length;
-			return (nonEqItems < this.inventorySize);
-		} return true;
+	hasSpaceList: function (items, noStack) {
+		if (this.inventorySize === -1)
+			return true;
+		
+		let slots = this.inventorySize - this.obj.inventory.items.filter(f => !f.eq).length;
+		for (const item of items) {
+			if (isItemStackable(item) && (!noStack)) {
+				let exists = this.items.find(owned => (owned.name === item.name) && (isItemStackable(owned)));
+				if (exists)
+					continue;
+			}
+			slots--;
+		}
+
+		return (slots >= 0);
 	},
 
 	getItem: function (item, hideMessage, noStack, hideAlert) {
