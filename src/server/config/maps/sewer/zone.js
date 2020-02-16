@@ -138,6 +138,8 @@ module.exports = {
 						quality: 4,
 						slot: 'oneHanded',
 						type: 'Dagger',
+						spritesheet: '../../../images/legendaryItems.png',
+						sprite: [0, 1],
 						implicitStat: {
 							stat: 'lifeOnHit',
 							value: [5, 20]
