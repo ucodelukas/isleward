@@ -2,12 +2,14 @@ define([
 	'js/system/events',
 	'js/system/client',
 	'html!ui/templates/mail/template',
-	'css!ui/templates/mail/styles'
+	'css!ui/templates/mail/styles',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
 	template,
-	styles
+	styles,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -17,11 +19,16 @@ define([
 		modal: true,
 		hasClose: true,
 
+		hoverItem: null,
+
 		item: null,
 
 		postRender: function () {
 			this.onEvent('onSetMailItem', this.onSetItem.bind(this));
+			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
+			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 
+			this.find('input').on('keydown', this.onInputKeyDown.bind(this));
 			this.find('.btnSend').on('click', this.onSendClick.bind(this));
 		},
 
@@ -64,32 +71,25 @@ define([
 			this.toggle();
 			this.item = msg.item;
 
+			const itemContainer = this.find('.itemContainer').empty();
 			let item = msg.item;
 
-			let imgX = -item.sprite[0] * 64;
-			let imgY = -item.sprite[1] * 64;
-
-			let spritesheet = item.spritesheet || '../../../images/items.png';
-			if (item.material)
-				spritesheet = '../../../images/materials.png';
-			else if (item.quest)
-				spritesheet = '../../../images/questItems.png';
-			else if (item.type === 'consumable')
-				spritesheet = '../../../images/consumables.png';
-
-			let el = this.find('.item');
-
-			el
-				.data('item', item)
-				.find('.icon')
-				.css('background', 'url(' + spritesheet + ') ' + imgX + 'px ' + imgY + 'px');
-
-			if (item.quantity)
-				el.find('.quantity').html(item.quantity);
-			else
-				el.find('.quantity').html('');
+			const itemEl = renderItem(itemContainer, item);
 
 			this.find('.txtRecipient').val('');
+
+			let moveHandler = this.onHover.bind(this, itemEl, item);
+			let downHandler = () => {};
+			if (isMobile) {
+				moveHandler = () => {};
+				downHandler = this.onHover.bind(this, itemEl, item);
+			}
+
+			itemEl
+				.data('item', item)
+				.on('mousedown', downHandler)
+				.on('mousemove', moveHandler)
+				.on('mouseleave', this.hideTooltip.bind(this, itemEl, item));
 		},
 
 		toggle: function () {
@@ -100,6 +100,56 @@ define([
 				this.find('input').focus();
 			} else
 				this.hide();
+		},
+
+		hideTooltip: function () {
+			events.emit('onHideItemTooltip', this.hoverItem);
+			this.hoverItem = null;
+		},
+
+		onHover: function (el, item, e) {
+			if (item)
+				this.hoverItem = item;
+			else
+				item = this.hoverItem;
+
+			let ttPos = null;
+
+			if (el) {
+				el.removeClass('new');
+				delete item.isNew;
+
+				let elOffset = el.offset();
+				ttPos = {
+					x: ~~(elOffset.left + 74),
+					y: ~~(elOffset.top + 4)
+				};
+			}
+
+			events.emit('onShowItemTooltip', item, ttPos, true);
+		},
+
+		onKeyDown: function (key) {
+			if (!this.shown)
+				return;
+
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
+			else if (key === 'esc')
+				this.toggle();
+		},
+
+		onKeyUp: function (key) {
+			if (!this.shown)
+				return;
+
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
+		},
+
+		onInputKeyDown: function ({ keyCode }) {
+			if (keyCode === 27)
+				this.toggle();
 		}
 	};
 });

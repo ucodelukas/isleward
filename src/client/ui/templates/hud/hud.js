@@ -2,12 +2,14 @@ define([
 	'js/system/events',
 	'html!ui/templates/hud/template',
 	'css!ui/templates/hud/styles',
-	'js/system/client'
+	'js/system/client',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	template,
 	styles,
-	client
+	client,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -134,21 +136,13 @@ define([
 					return;
 				}
 
-				let spritesheet = quickItem.spritesheet || '../../../images/items.png';
-				if (quickItem.type === 'consumable')
-					spritesheet = '../../../images/consumables.png';
+				const itemContainer = this.find('.quickItem').show();
+				const itemEl = renderItem(null, quickItem, itemContainer);
 
-				let imgX = -quickItem.sprite[0] * 64;
-				let imgY = -quickItem.sprite[1] * 64;
-
-				const el = this.find('.quickItem').show();
-				if (el.data('item') && el.data('item').id === quickItem.id)
+				if (itemEl.data('item') && itemEl.data('item').id === quickItem.id)
 					return;
 
-				el
-					.data('item', quickItem)
-					.find('.icon')
-					.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px');		
+				itemEl.data('item', quickItem);
 			},
 
 			onKeyDown: function (key) {
