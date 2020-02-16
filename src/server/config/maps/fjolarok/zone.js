@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'fjolarok',
+	name: 'Fjolarok',
 	level: [1, 10],
 	resources: {
 		Skyblossom: {

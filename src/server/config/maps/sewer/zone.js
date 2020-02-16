@@ -26,7 +26,7 @@ const balance = {
 };
 
 module.exports = {
-	name: 'Sewer',
+	name: 'The Fjolgard Sewer',
 	level: [11, 13],
 
 	resources: {

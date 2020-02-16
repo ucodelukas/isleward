@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'cave',
+	name: 'The Crystal Caves',
 	level: [14, 16],
 	addLevel: 0,
 	resources: {},
