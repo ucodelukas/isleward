@@ -195,6 +195,13 @@ module.exports = {
 
 		config.event = this.startEvent(config);
 		this.updateEvent(config.event);
+
+		this.instance.syncer.queue('onGetMessages', {
+			messages: {
+				class: 'color-pinkA',
+				message: `The ${config.name} event has begun!`
+			}
+		}, -1);
 	},
 
 	stopEventByCode: function (eventCode) {
@@ -203,6 +210,13 @@ module.exports = {
 			return;
 
 		this.stopEvent(config);
+
+		this.instance.syncer.queue('onGetMessages', {
+			messages: {
+				class: 'color-pinkA',
+				message: `The ${config.name} event has come to an end!`
+			}
+		}, -1);
 	},
 
 	giveRewards: function (config) {
