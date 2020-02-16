@@ -134,7 +134,6 @@
     "no-unused-vars": [1, {"args": "none"}],
     "no-use-before-define": 2,
     "no-mixed-requires": [2,false],
-    "no-new-require": 2,
     "no-path-concat": 2,
     "brace-style": [2,"1tbs",{}],
     "camelcase": [1,{"properties":"never"}],
