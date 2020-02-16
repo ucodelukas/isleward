@@ -659,7 +659,7 @@ module.exports = {
 		},
 		eagle: {
 			level: 10,
-			//faction: 'hostile',
+			faction: 'hostile',
 			regular: {
 				drops: {
 					rolls: 1,
