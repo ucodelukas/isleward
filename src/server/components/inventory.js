@@ -389,7 +389,7 @@ module.exports = {
 
 	destroyItem: function (id, amount, force) {
 		let item = this.findItem(id);
-		if ((!item) || ((item.noDestroy) && (!force)))
+		if (!item || (item.noDestroy && !force))
 			return;
 
 		amount = amount || item.quantity;
@@ -407,6 +407,7 @@ module.exports = {
 		} else {
 			this.items.spliceWhere(i => i.id === id);
 			this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
+			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === id);
 		}
 
 		this.obj.fireEvent('afterDestroyItem', item, amount);
