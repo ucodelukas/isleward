@@ -374,7 +374,7 @@ module.exports = {
 			});
 		}
 		if (materialDrop.length > 0) {
-			this.createBag(this.obj.x, this.obj.y, materialDrop);
+			this.createBag(this.obj.x, this.obj.y, materialDrop, this.obj.name);
 			messages.push({
 				class: 'color-redA',
 				message: 'Your bags are too full for your salvaged materials, they have been dropped to the ground.'
