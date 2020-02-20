@@ -10,6 +10,7 @@ const rezone = require('../social/rezone');
 const canChat = require('../social/canChat');
 const startEvent = require('../social/startEvent');
 const stopEvent = require('../social/stopEvent');
+const teleport = require('../social/teleport');
 
 let commandRoles = {
 	//Regular players
@@ -47,7 +48,8 @@ let commandRoles = {
 	getMaterials: 10,
 	rezone: 10,
 	startEvent: 10,
-	stopEvent: 10
+	stopEvent: 10,
+	teleport: 10
 };
 
 //Commands that should be run on the main thread (not the zone thread)
@@ -740,5 +742,9 @@ module.exports = {
 
 	stopEvent: function (msg) {
 		stopEvent(this, msg);
+	},
+
+	teleport: function (msg) {
+		teleport(this, msg);
 	}
 };
