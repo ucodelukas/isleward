@@ -70,7 +70,6 @@ module.exports = {
 				this.target = null;
 				obj.clearQueue();
 
-				//Can we path home?
 				if (canPathHome(this))
 					this.goHome = true;
 				else {
