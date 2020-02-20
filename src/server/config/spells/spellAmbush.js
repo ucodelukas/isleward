@@ -178,8 +178,6 @@ module.exports = {
 		syncer.o.x = targetPos.x;
 		syncer.o.y = targetPos.y;
 
-		obj.instance.physics.addObject(obj, obj.x, obj.y);
-
 		this.onCastTick(0.01);
 
 		this.obj.aggro.move();
