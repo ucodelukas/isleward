@@ -304,39 +304,6 @@ let spells = [{
 	type: 'stealth',
 	icon: [2, 2]
 },
-/*, {
-				name: 'Web Bolt',
-				description: 'Encases your target in webs, preventing them from doing anything for a short period',
-				type: 'cocoon',
-				manaCost: 10,
-				icon: [4, 0],
-				damage: 0,
-				ttl: 15,
-				range: 9,
-				threatMult: 1,
-				row: 4,
-				col: 4,
-				cdMax: 10,
-				particles: {
-					color: {
-						start: ['f2f5f5', '505360'],
-						end: ['505360', 'f2f5f5']
-					},
-					speed: {
-						start: {
-							min: 0,
-							max: 4
-						},
-						end: {
-							min: 0,
-							max: 4
-						}
-					},
-					randomSpeed: true,
-					randomColor: true,
-					chance: 0.4
-				}
-			}*/
 {
 	name: 'Crystal Spikes',
 	description: 'Jagged crystals break through the ground at your target destination',
@@ -383,12 +350,6 @@ let spells = [{
 		chance: 0.075,
 		randomColor: true
 	}
-}, {
-	name: 'Whirlwind',
-	description: 'Wooooo, bitches!.',
-	type: 'whirlwind',
-	icon: [0, 1],
-	animation: 'raiseStaff'
 }, {
 	name: 'Chain Lightning',
 	description: 'Creates a circle of pure holy energy that heals allies for a brief period.',
