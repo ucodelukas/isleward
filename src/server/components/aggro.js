@@ -399,5 +399,9 @@ module.exports = {
 			} else if (l.threat > 0)
 				l.threat *= this.threatDecay;
 		}
+	},
+
+	clearIgnoreList: function () {
+		this.ignoreList = [];
 	}
 };
