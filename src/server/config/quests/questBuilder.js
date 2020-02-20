@@ -11,7 +11,12 @@ module.exports = {
 
 	obtain: function (obj, template) {
 		let zoneName = template ? template.zoneName : obj.zoneName;
-		let zonePath = mapList.mapList.find(m => m.name === zoneName).path;
+		let zone = mapList.mapList.find(m => m.name === zoneName);
+
+		//Zone doesn't exist any more. Probably been renamed
+		if (!zone)
+			return;
+
 		let oQuests = obj.quests;
 		if (oQuests.quests.filter(q => q.zoneName === zoneName).length > 0)
 			return;
@@ -19,7 +24,7 @@ module.exports = {
 		let zoneTemplate = null;
 
 		try {			
-			zoneTemplate = require('../../' + zonePath + '/' + zoneName + '/quests.js');
+			zoneTemplate = require(`../../${zone.path}/${zoneName}/quests.js`);
 		} catch (e) {
 			zoneTemplate = globalQuests;
 		}
@@ -43,7 +48,7 @@ module.exports = {
 		if (!pickQuest)
 			pickQuest = config.infini[~~(Math.random() * config.infini.length)];
 		let pickType = pickQuest.type[0].toUpperCase() + pickQuest.type.substr(1);
-		let questClass = require('../../config/quests/templates/quest' + pickType);
+		let questClass = require(`../../config/quests/templates/quest${pickType}`);
 
 		let quest = extend({}, pickQuest, questTemplate, questClass, template);
 
