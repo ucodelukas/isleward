@@ -363,21 +363,11 @@ module.exports = {
 		this.destroyItem(id);
 		
 		for (const material of items) {
-			if (this.hasSpace(material))
-				this.getItem(material, true);
-			else
-				materialDrop.push(material);
+			this.getItem(material, false, false, false, true);
 				
 			messages.push({
 				class: 'q' + material.quality,
 				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
-			});
-		}
-		if (materialDrop.length > 0) {
-			this.createBag(this.obj.x, this.obj.y, materialDrop, this.obj.name);
-			messages.push({
-				class: 'color-redA',
-				message: 'Your bags are too full for your salvaged materials, they have been dropped to the ground.'
 			});
 		}
 		
@@ -728,8 +718,8 @@ module.exports = {
 		return (slots >= 0);
 	},
 
-	getItem: function (item, hideMessage, noStack, hideAlert) {
-		return getItem(this, item, hideMessage, noStack, hideAlert);
+	getItem: function (item, hideMessage, noStack, hideAlert, createBagIfFull) {
+		return getItem.call(this, this, ...arguments);
 	},
 
 	dropBag: function (ownerName, killSource) {
@@ -815,12 +805,12 @@ module.exports = {
 		return (this.equipItemErrors(item).length === 0);
 	},
 
-	notifyNoBagSpace: function () {
+	notifyNoBagSpace: function (message = 'Your bags are too full to loot any more items') {
 		this.obj.instance.syncer.queue('onGetMessages', {
 			id: this.obj.id,
 			messages: [{
 				class: 'color-redA',
-				message: 'Your bags are too full to loot any more items',
+				message,
 				type: 'info'
 			}]
 		}, [this.obj.serverId]);
