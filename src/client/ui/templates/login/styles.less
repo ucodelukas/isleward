@@ -38,24 +38,21 @@
 		width: @rightWidth;
 		padding: @boxPadding;
 
-		.label,
-		input {
+		.label, input {
 			float: left;
 		}
 
 		.label {
 			width: 30%;
 			padding-top: 10px;
-			color: @tealC;
+			color: @green;
 		}
 
 		input {
 			width: 70%;
 		}
 
-		input,
-		.textbox,
-		input:-webkit-autofill {
+		input, .textbox, input:-webkit-autofill {
 			box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
 			color: @white;
 			-webkit-text-fill-color: @white;
@@ -63,8 +60,7 @@
 		}
 
 		/* We duplicate this for firefox which doesn't like the webkit selector */
-		input,
-		.textbox {
+		input, .textbox {
 			box-shadow: 0 0 0px 1000px darken(@gray, 15%) inset;
 			color: @white;
 			-webkit-text-fill-color: @white;
@@ -78,7 +74,7 @@
 			margin-top: 36px;
 			float: left;
 			text-align: center;
-			color: @pinkA;
+			color: @orangeA;
 			filter: brightness(100%)
 			drop-shadow(0px -4px 0px @blackD) 
 			drop-shadow(0px 4px 0px @blackD)
@@ -96,7 +92,7 @@
 			height: 35px;
 
 			.btn {
-				background-color: @pinkC;
+				background-color: @blueC;
 				width: calc((100% - @boxPadding) / 2);
 				float: left;
 				margin-right: @boxPadding;
@@ -107,7 +103,7 @@
 				}
 
 				&:hover {
-					background-color: @pinkB;
+					background-color: @blueB;
 				}
 
 			}
@@ -146,7 +142,7 @@
 			padding-left: 10px;
 			padding-right: 10px;
 			margin-left: 10px;
-			background-color: @pinkD;
+			background-color: @blueD;
 			color: @white;
 
 			&:first-child {
@@ -154,7 +150,7 @@
 			}
 
 			&:hover {
-				background-color: @pinkC;
+				background-color: @blueC;
 			}
 
 		}
