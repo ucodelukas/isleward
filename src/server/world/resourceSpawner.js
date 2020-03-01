@@ -9,7 +9,7 @@ module.exports = {
 	physics: null,
 	map: null,
 
-	cdMax: 86,
+	cdMax: 171,
 
 	init: function (instance) {
 		Object.assign(this, {
