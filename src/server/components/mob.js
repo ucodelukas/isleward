@@ -4,6 +4,18 @@ let max = Math.max.bind(Math);
 
 const canPathHome = require('./mob/canPathHome');
 
+const teleportHome = (physics, obj, mob) => {
+	physics.removeObject(obj, obj.x, obj.y);
+	obj.x = mob.originX;
+	obj.y = mob.originY;
+	const syncer = obj.syncer;
+	syncer.o.x = obj.x;
+	syncer.o.y = obj.y;
+	physics.addObject(obj, obj.x, obj.y);
+	obj.aggro.clearIgnoreList();
+	obj.aggro.move();
+};
+
 module.exports = {
 	type: 'mob',
 
@@ -72,17 +84,8 @@ module.exports = {
 
 				if (canPathHome(this))
 					this.goHome = true;
-				else {
-					this.physics.removeObject(obj, obj.x, obj.y);
-					obj.x = this.originX;
-					obj.y = this.originY;
-					const syncer = obj.syncer;
-					syncer.o.x = obj.x;
-					syncer.o.y = obj.y;
-					this.physics.addObject(obj, obj.x, obj.y);
-					obj.aggro.clearIgnoreList();
-					obj.aggro.move();
-				}
+				else
+					teleportHome(this.physics, obj, this);
 			}
 		}
 

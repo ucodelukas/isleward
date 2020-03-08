@@ -14,6 +14,17 @@ const getNextId = items => {
 	return id;
 };
 
+const dropBagForOverflow = (cpnInv, item) => {
+	const { obj: { x, y, name, instance } } = cpnInv;
+
+	const dropCell = instance.physics.getOpenCellInArea(x - 1, y - 1, x + 1, y + 1);
+	if (dropCell) {
+		cpnInv.createBag(dropCell.x, dropCell.y, [item], name);
+		const msg = `Your inventory is too full to receive (${item.name}). It has been dropped on the ground.`;
+		cpnInv.notifyNoBagSpace(msg);
+	}
+};
+
 module.exports = (cpnInv, item, hideMessage, noStack, hideAlert, createBagIfFull = false) => {
 	const obj = cpnInv.obj;
 	obj.instance.eventEmitter.emit('onBeforeGetItem', item, obj);
@@ -44,16 +55,9 @@ module.exports = (cpnInv, item, hideMessage, noStack, hideAlert, createBagIfFull
 	//Get next id
 	if (!exists) {
 		if (!cpnInv.hasSpace(item)) {
-			if (createBagIfFull) {
-				const { x, y, name, instance } = obj;
-
-				const dropCell = instance.physics.getOpenCellInArea(x - 1, y - 1, x + 1, y + 1);
-				if (dropCell) {
-					cpnInv.createBag(dropCell.x, dropCell.y, [item], name);
-					const msg = `Your inventory is too full to receive (${item.name}). It has been dropped on the ground.`;
-					cpnInv.notifyNoBagSpace(msg);
-				}
-			} else if (!hideMessage)
+			if (createBagIfFull)
+				dropBagForOverflow(cpnInv, item);
+			else if (!hideMessage)
 				cpnInv.notifyNoBagSpace();
 
 			return false;

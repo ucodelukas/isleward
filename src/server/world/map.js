@@ -333,8 +333,6 @@ module.exports = {
 			}
 
 			let cellInfo = this.builders.getCellInfo(cell);
-			if (!cellInfo.sheetName)
-				console.log(x, y, cell);
 			let sheetName = cellInfo.sheetName;
 			cell = cellInfo.cell;
 			if (sheetName === 'walls')

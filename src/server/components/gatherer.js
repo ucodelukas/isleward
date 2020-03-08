@@ -1,5 +1,4 @@
 let qualityGenerator = require('../items/generators/quality');
-let { isItemStackable } = require('./inventory/helpers');
 
 module.exports = {
 	type: 'gatherer',

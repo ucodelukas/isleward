@@ -358,7 +358,6 @@ module.exports = {
 		let messages = [];
 			
 		let items = salvager.salvage(item);
-		let materialDrop = [];
 			
 		this.destroyItem(id);
 		
