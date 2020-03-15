@@ -354,37 +354,31 @@ module.exports = {
 		let item = this.findItem(id);
 		if ((!item) || (item.material) || (item.quest) || (item.noSalvage) || (item.eq))
 			return;
-
+			
 		let messages = [];
-
+			
 		let items = salvager.salvage(item);
-		let iLen = items.length;
-
-		if (!iLen)
-			return;
-
-		for (let i = 0; i < iLen; i++) {
-			let material = items[i];
-
-			this.getItem(material, true);
-
+			
+		this.destroyItem(id);
+		
+		for (const material of items) {
+			this.getItem(material, false, false, false, true);
+				
 			messages.push({
 				class: 'q' + material.quality,
 				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
 			});
 		}
-
+		
 		this.obj.instance.syncer.queue('onGetMessages', {
 			id: this.obj.id,
 			messages: messages
 		}, [this.obj.serverId]);
-
-		this.destroyItem(id);
 	},
 
 	destroyItem: function (id, amount, force) {
 		let item = this.findItem(id);
-		if ((!item) || ((item.noDestroy) && (!force)))
+		if (!item || (item.noDestroy && !force))
 			return;
 
 		amount = amount || item.quantity;
@@ -402,6 +396,7 @@ module.exports = {
 		} else {
 			this.items.spliceWhere(i => i.id === id);
 			this.obj.syncer.setArray(true, 'inventory', 'destroyItems', id);
+			this.obj.syncer.deleteFromArray(true, 'inventory', 'getItems', i => i.id === id);
 		}
 
 		this.obj.fireEvent('afterDestroyItem', item, amount);
@@ -701,20 +696,29 @@ module.exports = {
 	},
 
 	hasSpace: function (item, noStack) {
-		if (this.inventorySize !== -1) {
-			if (item) {
-				let exists = this.items.find(i => (i.name === item.name));
-				if ((exists) && (!noStack) && (isItemStackable(item) && isItemStackable(exists)))
-					return true;
-			}
-
-			let nonEqItems = this.items.filter(f => !f.eq).length;
-			return (nonEqItems < this.inventorySize);
-		} return true;
+		const itemArray = item ? [item] : [];
+		return this.hasSpaceList(itemArray, noStack);
 	},
 
-	getItem: function (item, hideMessage, noStack, hideAlert) {
-		return getItem(this, item, hideMessage, noStack, hideAlert);
+	hasSpaceList: function (items, noStack) {
+		if (this.inventorySize === -1)
+			return true;
+		
+		let slots = this.inventorySize - this.obj.inventory.items.filter(f => !f.eq).length;
+		for (const item of items) {
+			if (isItemStackable(item) && (!noStack)) {
+				let exists = this.items.find(owned => (owned.name === item.name) && (isItemStackable(owned)));
+				if (exists)
+					continue;
+			}
+			slots--;
+		}
+
+		return (slots >= 0);
+	},
+
+	getItem: function (item, hideMessage, noStack, hideAlert, createBagIfFull) {
+		return getItem.call(this, this, ...arguments);
 	},
 
 	dropBag: function (ownerName, killSource) {
@@ -800,12 +804,12 @@ module.exports = {
 		return (this.equipItemErrors(item).length === 0);
 	},
 
-	notifyNoBagSpace: function () {
+	notifyNoBagSpace: function (message = 'Your bags are too full to loot any more items') {
 		this.obj.instance.syncer.queue('onGetMessages', {
 			id: this.obj.id,
 			messages: [{
 				class: 'color-redA',
-				message: 'Your bags are too full to loot any more items',
+				message,
 				type: 'info'
 			}]
 		}, [this.obj.serverId]);

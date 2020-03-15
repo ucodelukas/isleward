@@ -2,6 +2,20 @@ let abs = Math.abs.bind(Math);
 let rnd = Math.random.bind(Math);
 let max = Math.max.bind(Math);
 
+const canPathHome = require('./mob/canPathHome');
+
+const teleportHome = (physics, obj, mob) => {
+	physics.removeObject(obj, obj.x, obj.y);
+	obj.x = mob.originX;
+	obj.y = mob.originY;
+	const syncer = obj.syncer;
+	syncer.o.x = obj.x;
+	syncer.o.y = obj.y;
+	physics.addObject(obj, obj.x, obj.y);
+	obj.aggro.clearIgnoreList();
+	obj.aggro.move();
+};
+
 module.exports = {
 	type: 'mob',
 
@@ -67,7 +81,11 @@ module.exports = {
 				//Is fight mode over?
 				this.target = null;
 				obj.clearQueue();
-				this.goHome = true;
+
+				if (canPathHome(this))
+					this.goHome = true;
+				else
+					teleportHome(this.physics, obj, this);
 			}
 		}
 

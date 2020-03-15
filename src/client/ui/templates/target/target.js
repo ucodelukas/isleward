@@ -23,6 +23,9 @@ define([
 			this.onEvent('onSetTarget', this.onSetTarget.bind(this));
 			this.onEvent('onDeath', this.onSetTarget.bind(this, null));
 			this.onEvent('onGetTargetCasting', this.onGetTargetCasting.bind(this));
+
+			if (isMobile) 
+				this.el.on('click', this.onContextMenu.bind(this));
 		},
 
 		onGetTargetCasting: function (objId, casting) {
@@ -44,10 +47,14 @@ define([
 		},
 
 		onContextMenu: function (e) {
+			//If we access this method on mobile, we don't go through the event manager
+			// and as such, we just have the original browser event by default
+			const originalEvent = e.event ? e.event : e;
+
 			let target = this.target;
 			//This is kind of a hack. We check if the target has a prophecies component since we can't check for
 			// target.player (only the logged-in player has a player component)
-			if ((e.button !== 2) || (!target) || (!target.dialogue) || (target === window.player) || (target.prophecies)) {
+			if (!target || !target.dialogue || target === window.player || target.prophecies) {
 				if (target.prophecies) {
 					const inspectContext = [
 						target.name,
@@ -64,7 +71,7 @@ define([
 						});
 					});
 
-					events.emit('onContextMenu', inspectContext, e.event);
+					events.emit('onContextMenu', inspectContext, originalEvent);
 				}
 
 				return;
@@ -85,9 +92,12 @@ define([
 				});
 			});
 
-			events.emit('onContextMenu', talkContext, e.event);
+			events.emit('onContextMenu', talkContext, originalEvent);
 
-			e.event.preventDefault();
+			//Cancel the default right click action on desktop
+			if (originalEvent.button === 2)
+				originalEvent.preventDefault();
+
 			return false;
 		},
 
@@ -149,7 +159,7 @@ define([
 				el.show();
 			}
 
-			if ((e) && (e.button === 2) && (this.target))
+			if (e && e.button === 2 && this.target)
 				this.onContextMenu(e);
 		},
 

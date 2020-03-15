@@ -16,10 +16,6 @@ let config = [
 	{
 		name: 'fjolarok',
 		path: 'config/maps'
-	},
-	{
-		name: 'dungeon',
-		path: 'config/maps'
 	}
 ];
 

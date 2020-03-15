@@ -158,7 +158,7 @@ module.exports = {
 				let h = m.height;
 
 				let baseTile = oldMap[x][y];
-				baseTile = baseTile
+				baseTile = (baseTile || '')
 					.replace('0,', '')
 					.replace(',', '');
 

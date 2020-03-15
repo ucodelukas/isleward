@@ -10,18 +10,14 @@ define([
 ], function (
 	
 ) {
-	return (container, item) => {
-		let itemEl = null;
+	return (container, item, useEl) => {
+		const itemEl = useEl || $(tplItem).appendTo(container);
 
 		if (!item) {
-			itemEl = $(tplItem)
-				.appendTo(container)
-				.addClass('empty');
+			itemEl.addClass('empty');
 
 			return itemEl;
 		}
-
-		itemEl = $(tplItem).appendTo(container);
 
 		let size = 64;
 		let offset = 0;

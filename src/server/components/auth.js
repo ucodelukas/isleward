@@ -290,7 +290,7 @@ module.exports = {
 
 		let illegal = ["'", '"', '/', '(', ')', '[', ']', '{', '}', ':', ';', '<', '>'];
 		for (let i = 0; i < illegal.length; i++) {
-			if ((credentials.username.indexOf(illegal[i]) > -1) || (credentials.password.indexOf(illegal[i]) > -1)) {
+			if (credentials.username.indexOf(illegal[i]) > -1) {
 				msg.callback(messages.login.illegal);
 				return;
 			}

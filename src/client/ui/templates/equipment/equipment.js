@@ -3,13 +3,15 @@ define([
 	'js/system/client',
 	'html!ui/templates/equipment/template',
 	'css!ui/templates/equipment/styles',
-	'js/input'
+	'js/input',
+	'ui/shared/renderItem'
 ], function (
 	events,
 	client,
 	template,
 	styles,
-	input
+	input,
+	renderItem
 ) {
 	return {
 		tpl: template,
@@ -127,9 +129,6 @@ define([
 			items
 				.filter(item => item.has('quickSlot') || (item.eq && (item.slot || item.has('runeSlot'))))
 				.forEach(item => {
-					let imgX = -item.sprite[0] * 64;
-					let imgY = -item.sprite[1] * 64;
-
 					let slot = item.slot;
 					if (item.has('runeSlot')) {
 						let runeSlot = item.runeSlot;
@@ -137,18 +136,17 @@ define([
 					} else if (item.has('quickSlot'))
 						slot = 'quick-' + item.quickSlot;
 
-					let spritesheet = item.spritesheet || '../../../images/items.png';
-					if (item.type === 'consumable')
-						spritesheet = '../../../images/consumables.png';
-
 					slot = item.equipSlot || slot;
 
-					let elSlot = this.find('[slot="' + slot + '"]');
-					elSlot
+					const elSlot = this.find('[slot="' + slot + '"]')
+						.removeClass('empty show-default-icon');
+
+					const itemEl = renderItem(null, item, elSlot);
+
+					itemEl
 						.data('item', item)
 						.removeClass('empty show-default-icon')
 						.find('.icon')
-						.css('background', 'url("' + spritesheet + '") ' + imgX + 'px ' + imgY + 'px')
 						.off()
 						.on('contextmenu', this.showContext.bind(this, item))
 						.on('mousedown', this.buildSlot.bind(this, elSlot))

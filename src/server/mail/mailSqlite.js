@@ -89,7 +89,7 @@ module.exports = {
 					sentMessages.push(r.msg);
 					delete r.msg;
 				}
-				inventory.getItem(r);
+				inventory.getItem(r, false, false, false, true);
 			}
 		});
 

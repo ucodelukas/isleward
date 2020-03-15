@@ -21,19 +21,23 @@ module.exports = {
 	init: function (instance) {
 		this.instance = instance;
 
-		let zoneName = this.instance.map.name;
-		let zonePath = mapList.mapList.find(z => z.name === zoneName).path;
-		let path = zonePath + '/' + zoneName + '/events';
-		if (!fs.existsSync(path))
-			return;
+		const zoneName = this.instance.map.name;
+		const zonePath = mapList.mapList.find(z => z.name === zoneName).path;
+		const zoneEventPath = zonePath + '/' + zoneName + '/events';
 
-		let files = fs.readdirSync(path)
-			.map(f => ('../' + path + '/' + f));
+		const paths = ['config/globalEvents', zoneEventPath];
+		const files = [];
+		paths.forEach(p => {
+			if (!fs.existsSync(p))
+				return;
+
+			files.push(...fs.readdirSync(p).map(f => ('../' + p + '/' + f)));
+		});
 
 		this.instance.eventEmitter.emit('onBeforeGetEventList', zoneName, files);
 
-		files.forEach(function (f) {
-			let e = require(f);
+		files.forEach(f => {
+			const e = require(f);
 			if (!e.disabled)
 				this.configs.push(extend({}, e));
 		}, this);
@@ -155,7 +159,8 @@ module.exports = {
 					continue;
 				else if (!c.durationEvent && !scheduler.shouldRun(c))
 					continue;
-			}
+			} else if (c.manualTrigger)
+				continue;
 
 			c.event = this.startEvent(c);
 			this.updateEvent(c.event);
@@ -181,6 +186,37 @@ module.exports = {
 		event.config.event = event;
 
 		return event;
+	},
+
+	startEventByCode: function (eventCode) {
+		const config = this.configs.find(c => c.code === eventCode);
+		if (!config || config.event)
+			return;
+
+		config.event = this.startEvent(config);
+		this.updateEvent(config.event);
+
+		this.instance.syncer.queue('onGetMessages', {
+			messages: {
+				class: 'color-pinkA',
+				message: `The ${config.name} event has begun!`
+			}
+		}, -1);
+	},
+
+	stopEventByCode: function (eventCode) {
+		const config = this.configs.find(c => c.code === eventCode);
+		if (!config || !config.event)
+			return;
+
+		this.stopEvent(config);
+
+		this.instance.syncer.queue('onGetMessages', {
+			messages: {
+				class: 'color-pinkA',
+				message: `The ${config.name} event has come to an end!`
+			}
+		}, -1);
 	},
 
 	giveRewards: function (config) {

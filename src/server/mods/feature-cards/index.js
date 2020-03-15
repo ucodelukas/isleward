@@ -46,6 +46,6 @@ module.exports = {
 		if (!reward.push)
 			reward = [reward];
 
-		reward.forEach(r => obj.inventory.getItem(r));
+		reward.forEach(r => obj.inventory.getItem(r, false, false, false, true));
 	}
 };

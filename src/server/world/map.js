@@ -32,6 +32,12 @@ module.exports = {
 
 	mapFile: null,
 
+	//The size of the base map, before mods are applied
+	originalSize: {
+		w: 0,
+		h: 0
+	},
+	//The size of the map after mods are applied
 	size: {
 		w: 0,
 		h: 0
@@ -202,23 +208,38 @@ module.exports = {
 	},
 
 	build: function () {
-		this.size.w = mapFile.width;
-		this.size.h = mapFile.height;
+		const mapSize = {
+			w: mapFile.width,
+			h: mapFile.height
+		};
 
-		this.layers = _.get2dArray(this.size.w, this.size.h, null);
-		this.hiddenWalls = _.get2dArray(this.size.w, this.size.h, null);
-		this.hiddenTiles = _.get2dArray(this.size.w, this.size.h, null);
+		this.originalSize = {
+			w: mapFile.width,
+			h: mapFile.height
+		};
 
-		this.oldLayers.tiles = _.get2dArray(this.size.w, this.size.h, 0);
-		this.oldLayers.walls = _.get2dArray(this.size.w, this.size.h, 0);
-		this.oldLayers.objects = _.get2dArray(this.size.w, this.size.h, 0);
+		events.emit('onBeforeGetMapSize', this.name, mapSize);
+
+		this.size.w = mapSize.w;
+		this.size.h = mapSize.h;
+
+		const { w: oldW, h: oldH } = this.originalSize;
+		const { w, h } = this.size;
+
+		this.layers = _.get2dArray(w, h, null);
+		this.hiddenWalls = _.get2dArray(w, h, null);
+		this.hiddenTiles = _.get2dArray(w, h, null);
+
+		this.oldLayers.tiles = _.get2dArray(w, h, 0);
+		this.oldLayers.walls = _.get2dArray(w, h, 0);
+		this.oldLayers.objects = _.get2dArray(w, h, 0);
 
 		let builders = {
 			tile: this.builders.tile.bind(this),
 			object: this.builders.object.bind(this)
 		};
 
-		this.collisionMap = _.get2dArray(this.size.w, this.size.h);
+		this.collisionMap = _.get2dArray(w, h);
 
 		//Rooms need to be ahead of exits
 		mapFile.layers.rooms = (mapFile.layers.rooms || [])
@@ -245,25 +266,31 @@ module.exports = {
 				events.emit('onAfterGetLayerObjects', info);
 			}
 
-			let len = data.length;
-			for (let j = 0; j < len; j++) {
-				let cell = data[j];
+			if (layer.objects) {
+				let len = data.length;
+				for (let j = 0; j < len; j++) {
+					let cell = data[j];
 
-				if ((cell.gid) || (cell.id))
 					builders.object(layerName, cell, j);
-				else {
-					let y = ~~(j / this.size.w);
-					let x = j - (y * this.size.w);
+				}
+			} else {
+				for (let x = 0; x < w; x++) {
+					for (let y = 0; y < h; y++) {
+						let index = (y * oldW) + x;
 
-					let info = {
-						map: this.name,
-						layer: layerName,
-						cell: cell,
-						x: x,
-						y: y
-					};
-					events.emit('onBeforeBuildLayerTile', info);
-					builders.tile(layerName, info.cell, j);
+						const info = {
+							map: this.name,
+							layer: layerName,
+							cell: 0,
+							x,
+							y
+						};
+						if (x < oldW && y < oldH)
+							info.cell = data[index];
+
+						events.emit('onBeforeBuildLayerTile', info);
+						builders.tile(info);
+					}
 				}
 			}
 		}
@@ -295,9 +322,8 @@ module.exports = {
 				flipX: flipX
 			};
 		},
-		tile: function (layerName, cell, i) {
-			let y = ~~(i / this.size.w);
-			let x = i - (y * this.size.w);
+		tile: function (info) {
+			let { x, y, cell, layer: layerName } = info;
 
 			if (cell === 0) {
 				if (layerName === 'tiles')

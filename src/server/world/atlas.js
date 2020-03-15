@@ -152,6 +152,11 @@ module.exports = {
 		} else
 			this.thread[message.method].call(this, thread, message);
 	},
+
+	messageAllThreads: function (message) {
+		this.threads.forEach(t => t.worker.send(message));
+	},
+
 	thread: {
 		onReady: function (thread) {
 			thread.worker.send({

@@ -22,7 +22,6 @@ define([
 			if (blueprint.getItems) {
 				let items = this.items;
 				let newItems = blueprint.getItems || [];
-				newItems.spliceWhere(n => (blueprint.destroyItems || []).includes(n.id));
 				let nLen = newItems.length;
 
 				for (let i = 0; i < nLen; i++) {

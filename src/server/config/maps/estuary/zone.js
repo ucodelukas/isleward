@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'estuary',
+	name: 'The Estuary',
 	level: [15, 18],
 	addLevel: 0,
 	resources: {},

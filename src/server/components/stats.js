@@ -258,19 +258,22 @@ module.exports = {
 		let xpEvent = {
 			source: source,
 			target: target,
-			amount: amount
+			amount: amount,
+			multiplier: 1
 		};
 
-		this.obj.fireEvent('beforeGetXp', xpEvent);
+		obj.fireEvent('beforeGetXp', xpEvent);
 		if (xpEvent.amount === 0)
 			return;
 
-		amount = ~~(xpEvent.amount * (1 + (values.xpIncrease / 100)));
+		obj.instance.eventEmitter.emitNoSticky('onBeforeGetGlobalXpMultiplier', xpEvent);
+
+		amount = ~~(xpEvent.amount * (1 + (values.xpIncrease / 100)) * xpEvent.multiplier);
 
 		values.xpTotal = ~~(values.xpTotal + amount);
 		values.xp = ~~(values.xp + amount);
 
-		this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+		obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
 
 		this.syncer.queue('onGetDamage', {
 			id: obj.id,
@@ -284,21 +287,21 @@ module.exports = {
 		while (values.xp >= values.xpMax) {
 			didLevelUp = true;
 			values.xp -= values.xpMax;
-			this.obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
+			obj.syncer.setObject(true, 'stats', 'values', 'xp', values.xp);
 
 			values.level++;
 
-			this.obj.fireEvent('onLevelUp', this.values.level);
+			obj.fireEvent('onLevelUp', this.values.level);
 
 			if (values.level === consts.maxLevel)
 				values.xp = 0;
 
 			this.calcHpMax();
-			this.obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
+			obj.syncer.setObject(true, 'stats', 'values', 'hpMax', values.hpMax);
 
 			this.addLevelAttributes(true);
 
-			this.obj.spellbook.calcDps();
+			obj.spellbook.calcDps();
 
 			this.syncer.queue('onGetDamage', {
 				id: obj.id,

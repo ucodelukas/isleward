@@ -26,7 +26,7 @@ const balance = {
 };
 
 module.exports = {
-	name: 'Sewer',
+	name: 'The Fjolgard Sewer',
 	level: [11, 13],
 
 	resources: {
@@ -138,6 +138,8 @@ module.exports = {
 						quality: 4,
 						slot: 'oneHanded',
 						type: 'Dagger',
+						spritesheet: '../../../images/legendaryItems.png',
+						sprite: [0, 1],
 						implicitStat: {
 							stat: 'lifeOnHit',
 							value: [5, 20]

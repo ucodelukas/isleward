@@ -1,6 +1,3 @@
-/* global require */
-window.require = requirejs;
-
 require.config({
 	baseUrl: '',
 	waitSeconds: 120,
