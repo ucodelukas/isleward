@@ -1,6 +1,6 @@
 {
-  "name": "isleward",
-  "version": "0.0.2",
+  "name": "isleward_server",
+  "version": "0.5.0",
   "description": "isleward",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
