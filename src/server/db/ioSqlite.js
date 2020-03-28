@@ -150,7 +150,10 @@ module.exports = {
 	},
 
 	processGet: async function (options) {
-		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
+		const collate = options.ignoreCase ? 'COLLATE NOCASE' : '';
+		const query = `SELECT * FROM ${options.table} WHERE key = '${options.key}' ${collate} LIMIT 1`;
+		let res = await util.promisify(this.db.get.bind(this.db))(query);
+
 		if (res) {
 			res = res.value;
 

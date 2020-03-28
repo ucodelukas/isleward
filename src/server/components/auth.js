@@ -298,6 +298,7 @@ module.exports = {
 
 		let exists = await io.getAsync({
 			key: credentials.username,
+			ignoreCase: true,
 			table: 'login',
 			noDefault: true,
 			noParse: true
@@ -372,6 +373,7 @@ module.exports = {
 
 		let exists = await io.getAsync({
 			key: name,
+			ignoreCase: true,
 			table: 'character',
 			noDefault: true
 		});

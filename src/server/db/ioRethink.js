@@ -33,15 +33,30 @@ module.exports = {
 		}
 	},
 
+	getAsyncIgnoreCase: async function (table, key) {
+		const res = await r.table(table)
+			.filter(doc => doc('id').match(`(?i)^${key}$`))
+			.run();
+
+		return res[0];
+	},
+
 	getAsync: async function ({
 		table,
 		key,
 		isArray,
-		noDefault
+		noDefault,
+		ignoreCase
 	}) {
-		let res = await r.table(table)
-			.get(key)
-			.run();
+		let res = null;
+
+		if (ignoreCase)
+			res = await this.getAsyncIgnoreCase(table, key);
+		else {
+			res = await r.table(table)
+				.get(key)
+				.run();
+		}
 
 		if (res)
 			return res.value;
