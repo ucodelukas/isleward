@@ -62,8 +62,6 @@ const localCommands = [
 	'setPassword',
 	'roll',
 	'giveSkin',
-	'block',
-	'unblock',
 	'broadcast',
 	'saveAll',
 	'ban',
@@ -279,41 +277,44 @@ module.exports = {
 	},
 
 	block: function (target) {
-		if (this.blockedPlayers.includes(target)) {
-			this.sendMessage('That player has already been blocked', 'color-redA');
+		const { obj, blockedPlayers } = this;
+		const { name, social, syncer } = obj;
+
+		if (blockedPlayers.includes(target)) {
+			social.notifySelf({ message: 'That player has already been blocked' });
+
+			return;
+		} else if (target === name) {
+			social.notifySelf({ message: 'You cannot block yourself' });
+
 			return;
 		}
 
-		if (target === this.obj.name) {
-			this.sendMessage('You cannot block yourself', 'color-redA');
-			return;
-		}
+		blockedPlayers.push(target);
+		syncer.set(true, 'social', 'blockedPlayers', blockedPlayers);
 
-		this.blockedPlayers.push(target);
-		this.sendMessage(`Successfully blocked ${target}`, 'color-yellowB');
-
-		this.updateMainThread('blockedPlayers', this.blockedPlayers);
-
-		this.obj.socket.emit('event', {
-			event: 'onGetBlockedPlayers',
-			data: this.blockedPlayers
+		social.notifySelf({
+			message: `Successfully blocked ${target}`,
+			className: 'color-yellowB'
 		});
 	},
 
 	unblock: function (target) {
-		if (!this.blockedPlayers.includes(target)) {
-			this.sendMessage('That player is not blocked', 'color-redA');
+		const { obj, blockedPlayers } = this;
+		const { social, syncer } = obj;
+
+		if (!blockedPlayers.includes(target)) {
+			social.notifySelf({ message: 'That player is not blocked' });
+
 			return;
 		}
 
-		this.blockedPlayers.spliceWhere(f => f === target);
-		this.sendMessage(`Successfully unblocked ${target}`, 'color-yellowB');
+		blockedPlayers.spliceWhere(f => f === target);
+		syncer.set(true, 'social', 'blockedPlayers', blockedPlayers);
 
-		this.updateMainThread('blockedPlayers', this.blockedPlayers);
-
-		this.obj.socket.emit('event', {
-			event: 'onGetBlockedPlayers',
-			data: this.blockedPlayers
+		social.notifySelf({ 
+			message: `Successfully unblocked ${target}`,
+			className: 'color-yellowB'
 		});
 	},
 
