@@ -136,9 +136,6 @@ module.exports = {
 			else if (config.type === 'delete')
 				await this.processDelete(options);
 		} catch (e) {
-			if (e.toString().indexOf('unrecognized token') > -1)
-				_.log(e);
-			
 			_.log(e);
 
 			this.buffer.splice(0, 0, next);
