@@ -108,7 +108,7 @@ define([
 			//Things like attacks don't have ids
 			let exists = null;
 			if (obj.has('id')) 
-				exists = this.objects.find(f => (f.id === obj.id && !f.destroyed));
+				exists = this.objects.find(({ id, destroyed }) => id === obj.id && !destroyed);
 
 			if (!exists)
 				exists = this.buildObject(obj);

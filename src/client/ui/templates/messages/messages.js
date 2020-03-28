@@ -29,8 +29,6 @@ define([
 
 		hoverFilter: false,
 
-		blockedPlayers: [],
-
 		lastChannel: null,
 
 		postRender: function () {
@@ -39,7 +37,6 @@ define([
 			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
 			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
 			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
-			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
 			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 
 			this
@@ -204,10 +201,6 @@ define([
 			textbox.val(val);
 		},
 
-		onGetBlockedPlayers: function (list) {
-			this.blockedPlayers = list;
-		},
-
 		onGetCustomChatChannels: function (channels) {
 			channels.forEach(function (c) {
 				this.onJoinChannel(c);
@@ -284,7 +277,7 @@ define([
 			messages.forEach(m => {
 				let message = m.message;
 
-				if (m.source && this.blockedPlayers.includes(m.source))
+				if (m.source && window.player.social.isPlayerBlocked(m.source))
 					return;
 
 				if (m.item) {

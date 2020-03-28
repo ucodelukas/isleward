@@ -18,7 +18,6 @@ define([
 		centered: true,
 
 		onlineList: [],
-		blockedList: [],
 
 		modal: true,
 		hasClose: true,
@@ -31,7 +30,6 @@ define([
 			this.onEvent('onGetConnectedPlayer', this.onGetConnectedPlayer.bind(this));
 			this.onEvent('onGetDisconnectedPlayer', this.onGetDisconnectedPlayer.bind(this));
 
-			this.onEvent('onGetBlockedPlayers', this.onGetBlockedPlayers.bind(this));
 			this.onEvent('onGetSocialActions', this.onGetSocialActions.bind(this));
 
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
@@ -40,10 +38,6 @@ define([
 
 		onGetSocialActions: function (actions) {
 			this.actions = actions;
-		},
-
-		onGetBlockedPlayers: function (list) {
-			this.blockedPlayers = list;
 		},
 
 		onKeyDown: function (key) {
@@ -131,7 +125,7 @@ define([
 					};
 				});
 
-				const isBlocked = this.blockedPlayers.includes(char.name);
+				const isBlocked = window.player.social.isPlayerBlocked(char.name);
 
 				const actions = [{
 					text: 'invite to party',
@@ -162,7 +156,7 @@ define([
 		},
 
 		block: function (charName) {
-			let isBlocked = this.blockedPlayers.includes(charName);
+			const isBlocked = window.player.social.isPlayerBlocked(charName);
 			let method = isBlocked ? 'unblock' : 'block';
 
 			this.performAction(method, charName);
