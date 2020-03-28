@@ -27,6 +27,8 @@ define([
 ) {
 	return {
 		hasFocus: true,
+		lastRender: 0,
+		msPerFrame: ~~(1000 / 60),
 
 		init: function () {
 			if (isMobile)			
@@ -89,12 +91,21 @@ define([
 		},
 
 		update: function () {
+			const time = +new Date();
+			if (time - this.lastRender < this.msPerFrame - 1) {
+				requestAnimationFrame(this.update.bind(this));
+
+				return;
+			}
+
 			objects.update();
 			renderer.update();
 			uiFactory.update();
 
 			numbers.render();
 			renderer.render();
+
+			this.lastRender = time;
 
 			requestAnimationFrame(this.update.bind(this));
 		}
