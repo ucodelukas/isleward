@@ -55,7 +55,6 @@ module.exports = {
 			if (config.element) {
 				let elementName = 'element' + config.element[0].toUpperCase() + config.element.substr(1);
 				dmgPercent += (srcValues[elementName + 'Percent'] || 0);
-				dmgPercent += srcValues.elementPercent || 0;
 
 				//Don't mitigate heals
 				if (!config.noMitigate) {
