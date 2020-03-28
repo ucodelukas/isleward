@@ -207,6 +207,13 @@ module.exports = {
 		if (options.serialize)
 			value = JSON.stringify(value);
 
+		//Clean single quotes
+		if (value.split) {
+			value = value
+				.split('\'')
+				.join('`');
+		}
+
 		let exists = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`);
 
 		let query = `INSERT INTO ${table} (key, value) VALUES('${key}', '${value}')`;
