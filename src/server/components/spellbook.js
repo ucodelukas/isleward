@@ -404,13 +404,12 @@ module.exports = {
 				if (!spell.active) {
 					if (1 - this.obj.stats.values.manaReservePercent < reserve.percentage) {
 						this.sendAnnouncement('Insufficient mana to cast spell');
-						success = false;
-					} else
-						this.obj.stats.addStat('manaReservePercent', reserveEvent.reservePercent);
+						return;
+					} this.obj.stats.addStat('manaReservePercent', reserveEvent.reservePercent);
 				} else
 					this.obj.stats.addStat('manaReservePercent', -reserveEvent.reservePercent);
 			}
-		} 
+		}
 
 		if (spell.targetFurthest)
 			spell.target = this.obj.aggro.getFurthest();
