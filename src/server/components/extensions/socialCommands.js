@@ -140,6 +140,7 @@ module.exports = {
 		}
 
 		let config = {};
+		const originalConfig = messageText.join(' ');
 		if ((messageText.length === 1) && (messageText[0].indexOf('=') === -1))
 			config = messageText[0];
 		else {
@@ -150,7 +151,7 @@ module.exports = {
 		}
 
 		if (localCommands.includes(actionName)) 
-			this[actionName](config);
+			this[actionName](config, originalConfig);
 		else {
 			atlas.performAction(this.obj, {
 				cpn: 'social',
@@ -709,7 +710,7 @@ module.exports = {
 		});
 	},
 
-	broadcast: function (msg) {
+	broadcast: function (config, msg) {
 		if (typeof(msg) === 'object')
 			msg = Object.keys(msg).join(' ');
 
