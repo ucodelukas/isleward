@@ -3,5 +3,5 @@ module.exports = {
 	tickTime: 350,
 
 	//The maximum level a player can reach
-	maxLevel: 20
+	maxLevel: 25
 };
