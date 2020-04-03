@@ -1,5 +1,5 @@
 module.exports = {
-	version: '0.4.4',
+	version: '0.5.1',
 	port: 4000,
 	startupMessage: 'Server: ready',
 	defaultZone: 'fjolarok',
