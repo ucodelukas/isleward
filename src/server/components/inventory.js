@@ -362,7 +362,7 @@ module.exports = {
 		this.destroyItem(id);
 		
 		for (const material of items) {
-			this.getItem(material, false, false, false, true);
+			this.getItem(material, true, false, false, true);
 				
 			messages.push({
 				class: 'q' + material.quality,

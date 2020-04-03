@@ -1,6 +1,6 @@
 {
-  "name": "isleward client",
-  "version": "0.0.2",
+  "name": "isleward_client",
+  "version": "0.5.1",
   "description": "isleward",
   "dependencies": {},
   "devDependencies": {

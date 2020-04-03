@@ -395,5 +395,37 @@ module.exports = {
 				[property]: value
 			}]
 		});
+	},
+
+	//Sends a notification to yourself
+	// arg1 = { message, className, type }
+	notifySelf: function ({ message, className = 'color-redA', type = 'info' }) {
+		const { obj: { id, serverId, instance: { syncer } } } = this;
+
+		syncer.queue('onGetMessages', {
+			id,
+			messages: [{
+				class: className,
+				message,
+				type
+			}]
+		}, [serverId]);
+	},
+
+	//Sends multiple notifications to yourself
+	// messages = [{ msg, className, type }]
+	notifySelfArray: function (messages) {
+		const { obj: { id, serverId, instance: { syncer } } } = this;
+
+		messages.forEach(m => {
+			const { className = 'color-redA', type = 'info ' } = m;
+			m.className = className;
+			m.type = type;
+		});
+
+		syncer.queue('onGetMessages', {
+			id,
+			messages
+		}, [serverId]);
 	}
 };

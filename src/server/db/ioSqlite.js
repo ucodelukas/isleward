@@ -136,9 +136,6 @@ module.exports = {
 			else if (config.type === 'delete')
 				await this.processDelete(options);
 		} catch (e) {
-			if (e.toString().indexOf('unrecognized token') > -1)
-				_.log(e);
-			
 			_.log(e);
 
 			this.buffer.splice(0, 0, next);
@@ -153,7 +150,10 @@ module.exports = {
 	},
 
 	processGet: async function (options) {
-		let res = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${options.table} WHERE key = '${options.key}' LIMIT 1`);
+		const collate = options.ignoreCase ? 'COLLATE NOCASE' : '';
+		const query = `SELECT * FROM ${options.table} WHERE key = '${options.key}' ${collate} LIMIT 1`;
+		let res = await util.promisify(this.db.get.bind(this.db))(query);
+
 		if (res) {
 			res = res.value;
 
@@ -206,6 +206,13 @@ module.exports = {
 
 		if (options.serialize)
 			value = JSON.stringify(value);
+
+		//Clean single quotes
+		if (value.split) {
+			value = value
+				.split('\'')
+				.join('`');
+		}
 
 		let exists = await util.promisify(this.db.get.bind(this.db))(`SELECT * FROM ${table} WHERE key = '${key}' LIMIT 1`);
 

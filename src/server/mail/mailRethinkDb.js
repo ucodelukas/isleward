@@ -18,7 +18,7 @@ module.exports = {
 					if (!doc)
 						return;
 
-					let player = this.instance.objects.objects.find(o => (o.name === doc.id));
+					let player = this.instance.objects.objects.find(o => o.name === doc.id && o.player);
 					if (!player)
 						return;
 
@@ -90,7 +90,7 @@ module.exports = {
 		if (!items || !(items instanceof Array))
 			return;
 
-		let player = this.instance.objects.objects.find(o => (o.name === playerName));
+		let player = this.instance.objects.objects.find(o => o.name === playerName && o.player);
 		if (!player)
 			return;
 

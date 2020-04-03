@@ -1,4 +1,4 @@
-let googleSheets = require('google-spreadsheet');
+const { GoogleSpreadsheet: googleSheets } = require('google-spreadsheet');
 let creds = require('./creds');
 let sheetsConfig = require('./sheetsConfig');
 
@@ -8,7 +8,7 @@ module.exports = {
 
 	records: null,
 
-	init: function () {
+	init: async function () {
 		if (sheetsConfig.roles) {
 			this.update = function () {};
 			this.onGetRows(null, sheetsConfig.roles);
@@ -16,20 +16,22 @@ module.exports = {
 		}
 
 		this.doc = new googleSheets(sheetsConfig.sheetId);
-		this.doc.useServiceAccountAuth(creds, this.onAuth.bind(this));
+		await this.doc.useServiceAccountAuth(creds);
+		await this.loadInfo();
 	},
 
-	onAuth: function () {
-		this.doc.getInfo(this.onGetInfo.bind(this));
+	loadInfo: async function () {
+		await this.doc.loadInfo();
+		this.onGetInfo();
 	},
 
 	onGetInfo: function () {
-		if (!this.doc.worksheets) {
-			setTimeout(this.onAuth.bind(this), 300000);
+		this.sheet = this.doc.sheetsByIndex[0];
+
+		if (!this.sheet) {
+			setTimeout(this.loadInfo.bind(this), 300000);
 			return;
 		}
-
-		this.sheet = this.doc.worksheets[0];
 
 		this.update();
 	},
@@ -72,7 +74,8 @@ module.exports = {
 		setTimeout(this.update.bind(this), 300000);
 	},
 
-	update: function () {
-		this.sheet.getRows({}, this.onGetRows.bind(this));
+	update: async function () {
+		const records = await this.sheet.getRows();
+		this.onGetRows(null, records);
 	}
 };

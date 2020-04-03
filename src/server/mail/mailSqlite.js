@@ -10,7 +10,7 @@ module.exports = {
 		if (!noBlock)
 			this.busy[playerName] = (this.busy[playerName] || 0) + 1;
 
-		let player = this.instance.objects.objects.find(o => (o.name === playerName));
+		let player = this.instance.objects.objects.find(o => o.name === playerName && o.player);
 		if (!player) {
 			process.send({
 				method: 'callDifferentThread',

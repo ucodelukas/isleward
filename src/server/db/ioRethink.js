@@ -7,12 +7,6 @@ const r = require('rethinkdbdash')({
 	db: serverConfig.dbName
 });
 
-const dbConfig = {
-	host: serverConfig.dbHost,
-	port: serverConfig.dbPort,
-	db: 'live'
-};
-
 module.exports = {
 	staticCon: null,
 
@@ -22,13 +16,7 @@ module.exports = {
 		cbReady();
 	},
 
-	getConnection: async function () {
-		return await r.connect(dbConfig);
-	},
-
 	create: async function () {
-		const con = await this.getConnection();
-
 		try {
 			await r.dbCreate(serverConfig.dbName).run();
 		} catch (e) {
@@ -43,28 +31,37 @@ module.exports = {
 					_.log(e);
 			}
 		}
+	},
 
-		con.close();
+	getAsyncIgnoreCase: async function (table, key) {
+		const res = await r.table(table)
+			.filter(doc => doc('id').match(`(?i)^${key}$`))
+			.run();
+
+		return res[0];
 	},
 
 	getAsync: async function ({
 		table,
 		key,
 		isArray,
-		noDefault
+		noDefault,
+		ignoreCase
 	}) {
-		const con = await this.getConnection();
+		let res = null;
 
-		let res = await r.table(table)
-			.get(key)
-			.run();
+		if (ignoreCase)
+			res = await this.getAsyncIgnoreCase(table, key);
+		else {
+			res = await r.table(table)
+				.get(key)
+				.run();
+		}
 
 		if (res)
 			return res.value;
 		else if (isArray && !noDefault)
 			return [];
-
-		con.close();
 
 		return res;
 	},
@@ -75,8 +72,6 @@ module.exports = {
 		isArray,
 		noDefault
 	}) {
-		const con = await this.getConnection();
-
 		let res = await r.table(table)
 			.run();
 
@@ -84,8 +79,6 @@ module.exports = {
 			return res;
 		else if (isArray && !noDefault)
 			return [];
-
-		con.close();
 
 		return res;
 	},
