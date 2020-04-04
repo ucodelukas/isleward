@@ -650,8 +650,11 @@ define([
 
 					let moveSpeed = this.moveSpeed;
 
+					if (moveSpeedMax < 1.6)
+						moveSpeed *= 1 + (distance / 200);
+
 					let elapsed = time - this.lastTick;
-					moveSpeed *= (elapsed / 16.67);
+					moveSpeed *= (elapsed / 15);
 
 					if (moveSpeed > distance)
 						moveSpeed = distance;
@@ -830,7 +833,7 @@ define([
 			const factor = Math.sqrt(sprintChance);
 			const maxValue = Math.sqrt(200);
 
-			this.moveSpeedMax = 1.5 + ((sprintChance / 200) * 4);
+			this.moveSpeedMax = 1.5 + ((sprintChance / 200) * 3.5);
 			this.moveSpeedInc = 0.2 + (((maxValue - factor) / maxValue) * 0.3);
 		},
 
