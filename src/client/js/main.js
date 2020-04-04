@@ -25,8 +25,14 @@ define([
 	sound,
 	globals
 ) {
+	let fnQueueTick = null;
+	const getQueueTick = updateMethod => {
+		return () => requestAnimationFrame(updateMethod);
+	};
+
 	return {
 		hasFocus: true,
+
 		lastRender: 0,
 		msPerFrame: ~~(1000 / 60),
 
@@ -71,7 +77,8 @@ define([
 			uiFactory.init(null, globals.clientConfig.uiList);
 			uiFactory.build('login', 'body');
 
-			this.update();
+			fnQueueTick = getQueueTick(this.update.bind(this));
+			fnQueueTick();
 
 			$('.loader-container').remove();
 		},
@@ -95,7 +102,7 @@ define([
 		update: function () {
 			const time = +new Date();
 			if (time - this.lastRender < this.msPerFrame - 1) {
-				requestAnimationFrame(this.update.bind(this));
+				fnQueueTick();
 
 				return;
 			}
@@ -103,13 +110,13 @@ define([
 			objects.update();
 			renderer.update();
 			uiFactory.update();
+			numbers.update();
 
-			numbers.render();
 			renderer.render();
 
 			this.lastRender = time;
 
-			requestAnimationFrame(this.update.bind(this));
+			fnQueueTick();
 		}
 	};
 });

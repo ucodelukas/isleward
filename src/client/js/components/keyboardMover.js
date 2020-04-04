@@ -13,10 +13,11 @@ define([
 		type: 'keyboardMover',
 
 		moveCd: 0,
-		moveCdMax: 8,
+		moveCdMax: 4,
 
 		init: function () {
 			this.hookEvent('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
+			this.hookEvent('onGetStats', this.onGetStats.bind(this));
 		},
 
 		update: function () {
@@ -29,6 +30,13 @@ define([
 			}
 
 			this.keyMove();
+		},
+
+		//Changes the moveCdMax variable
+		// sprintChance: 0		|	moveCdMax: 8
+		// sprintChance: 200	|	moveCdMax: 4
+		onGetStats: function ({ sprintChance = 0 }) {
+			this.moveCdMax = Math.ceil(4 + (((200 - sprintChance) / 200) * 4));
 		},
 
 		onCanvasKeyDown: function (keyEvent) {
