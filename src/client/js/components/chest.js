@@ -38,7 +38,7 @@ define([
 				return;
 			}
 
-			let index = indices[this.obj.cell];
+			let index = indices[this.obj.cell] || 0;
 
 			this.obj.addComponent('particles', {
 				chance: chances[index],
