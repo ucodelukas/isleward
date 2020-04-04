@@ -6,7 +6,8 @@ define([
 	'js/rendering/tileOpacity',
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
-	'js/rendering/spritePool'
+	'js/rendering/spritePool',
+	'js/system/globals'
 ], function (
 	resources,
 	events,
@@ -15,7 +16,8 @@ define([
 	tileOpacity,
 	particles,
 	shaderOutline,
-	spritePool
+	spritePool,
+	globals
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);
@@ -91,29 +93,25 @@ define([
 
 			window.addEventListener('resize', this.onResize.bind(this));
 
-			$(this.renderer.view)
-				.appendTo('.canvas-container');
+			$(this.renderer.view).appendTo('.canvas-container');
 
 			this.stage = new pixi.Container();
 
 			let layers = this.layers;
-			Object.keys(layers).forEach(function (l) {
+			Object.keys(layers).forEach(l => {
 				layers[l] = new pixi.Container();
 				layers[l].layer = (l === 'tileSprites') ? 'tiles' : l;
 
 				this.stage.addChild(layers[l]);
-			}, this);
-
-			let spriteNames = ['tiles', 'mobs', 'bosses', 'animBigObjects', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss', 'white', 'ray'];
-			resources.spriteNames.forEach(function (s) {
-				if (s.indexOf('.png') > -1)
-					spriteNames.push(s);
 			});
 
-			spriteNames.forEach(function (t) {
-				this.textures[t] = new pixi.BaseTexture(resources.sprites[t].image);
+			const textureList = globals.clientConfig.textureList;
+			const sprites = resources.sprites;
+
+			textureList.forEach(t => {
+				this.textures[t] = new pixi.BaseTexture(sprites[t]);
 				this.textures[t].scaleMode = pixi.SCALE_MODES.NEAREST;
-			}, this);
+			});
 
 			particles.init({
 				r: this,

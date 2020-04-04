@@ -4,6 +4,27 @@ const tos = require('./tos');
 const config = {
 	logoPath: null,
 	resourceList: [],
+	textureList: [
+		'tiles',
+		'walls',
+		'mobs',
+		'bosses',
+		'animBigObjects',
+		'bigObjects',
+		'objects',
+		'characters',
+		'attacks',
+		'ui',
+		'auras',
+		'animChar',
+		'animMob',
+		'animBoss',
+		'white',
+		'ray',
+		'images/skins/0001.png',
+		'images/skins/0010.png',
+		'images/skins/0012.png'
+	],
 	uiList: [],
 	contextMenuActions: {
 		player: [],
@@ -21,6 +42,7 @@ module.exports = {
 		events.emit('onBeforeGetUiList', config.uiList);
 		events.emit('onBeforeGetContextMenuActions', config.contextMenuActions);
 		events.emit('onBeforeGetTermsOfService', config.tos);
+		events.emit('onBeforeGetTextureList', config.textureList);
 	},
 
 	getClientConfig: function (msg) {

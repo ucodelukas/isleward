@@ -1,66 +1,27 @@
 define([
-	'js/system/events'
+	'js/system/globals'
 ], function (
-	events
+	globals
 ) {
-	let resources = {
-		spriteNames: [
-			'tiles',
-			'walls',
-			'mobs',
-			'bosses',
-			'animBigObjects',
-			'bigObjects',
-			'objects',
-			'characters',
-			'attacks',
-			'ui',
-			'auras',
-			'animChar',
-			'animMob',
-			'animBoss',
-			'white',
-			'ray',
-			'images/skins/0001.png',
-			'images/skins/0010.png',
-			'images/skins/0012.png'
-		],
+	return {
 		sprites: {},
-		ready: false,
-		init: function (list) {
-			list.forEach(function (l) {
-				this.spriteNames.push(l);
-			}, this);
 
-			this.spriteNames.forEach(function (s) {
-				let sprite = {
-					image: (new Image()),
-					ready: false
-				};
-				sprite.image.src = s.indexOf('png') > -1 ? s : 'images/' + s + '.png';
-				sprite.image.onload = this.onSprite.bind(this, sprite);
+		init: async function () {
+			const { sprites } = this;
+			const { clientConfig: { resourceList, textureList } } = globals;
 
-				this.sprites[s] = sprite;
-			}, this);
-		},
-		onSprite: function (sprite) {
-			sprite.ready = true;
+			const fullList = [].concat(resourceList, textureList);
 
-			let readyCount = 0;
-			for (let s in this.sprites) {
-				if (this.sprites[s].ready)
-					readyCount++;
-			}
+			return Promise.all(fullList.map(s => {
+				return new Promise(res => {
+					const spriteSource = s.includes('.png') ? s : `images/${s}.png`;
 
-			if (readyCount === this.spriteNames.length)
-				this.onReady();
-		},
-		onReady: function () {
-			this.ready = true;
-
-			events.emit('onResourcesLoaded');
+					const sprite = new Image();
+					sprites[s] = sprite;
+					sprite.onload = res;
+					sprite.src = spriteSource;
+				});
+			}));
 		}
 	};
-
-	return resources;
 });

@@ -45,11 +45,13 @@ define([
 			});
 		},
 
-		onGetClientConfig: function (config) {
+		onGetClientConfig: async function (config) {
 			globals.clientConfig = config;
-			resources.init(config.resourceList);
 
-			events.on('onResourcesLoaded', this.start.bind(this));
+			await resources.init();
+			events.emit('onResourcesLoaded');
+
+			this.start();
 		},
 
 		start: function () {
