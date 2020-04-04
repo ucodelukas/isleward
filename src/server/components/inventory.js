@@ -215,14 +215,8 @@ module.exports = {
 		};
 		this.obj.fireEvent('beforeLearnAbility', learnMsg);
 		if (!learnMsg.success) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: learnMsg.msg || 'you cannot learn that ability',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
+			const message = learnMsg.msg || 'you cannot learn that ability';
+			this.obj.social.notifySelf({ message });
 
 			return;
 		}
@@ -365,15 +359,12 @@ module.exports = {
 			this.getItem(material, true, false, false, true);
 				
 			messages.push({
-				class: 'q' + material.quality,
+				className: 'q' + material.quality,
 				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
 			});
 		}
-		
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: messages
-		}, [this.obj.serverId]);
+
+		this.obj.social.notifySelfArray(messages);
 	},
 
 	destroyItem: function (id, amount, force) {
@@ -805,13 +796,6 @@ module.exports = {
 	},
 
 	notifyNoBagSpace: function (message = 'Your bags are too full to loot any more items') {
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: [{
-				class: 'color-redA',
-				message,
-				type: 'info'
-			}]
-		}, [this.obj.serverId]);
+		this.obj.social.notifySelf({ message });
 	}
 };

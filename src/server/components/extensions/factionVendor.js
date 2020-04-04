@@ -161,14 +161,8 @@ module.exports = {
 			result = requestedBy.reputation.canEquipItem(item);
 
 		if (!result) {
-			requestedBy.instance.syncer.queue('onGetMessages', {
-				id: requestedBy.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'your reputation is too low to buy that item',
-					type: 'info'
-				}]
-			}, [requestedBy.serverId]);
+			const message = 'your reputation is too low to buy that item';
+			requestedBy.social.notifySelf({ message });
 		}
 
 		return result;
