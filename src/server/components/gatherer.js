@@ -187,6 +187,7 @@ module.exports = {
 				this.sendAnnouncement('The school has been depleted');
 
 			this.nodes.spliceWhere(n => (n === gathering));
+			this.updateServerActions(false);
 		}
 
 		this.gathering = null;
@@ -201,36 +202,33 @@ module.exports = {
 	},
 
 	enter: function (node) {
+		const { obj } = this;
+
 		let gatherResult = extend({
 			nodeName: node.name
 		});
-		this.obj.instance.eventEmitter.emitNoSticky('beforeEnterPool', gatherResult, this.obj);
+		obj.instance.eventEmitter.emitNoSticky('beforeEnterPool', gatherResult, obj);
 
 		let nodeType = node.resourceNode.nodeType;
-		let msg = `Press G to $ (${gatherResult.nodeName})`;
-		msg = msg.replace('$', {
-			herb: 'gather',
-			fish: 'fish for'
-		}[nodeType]);
 
 		if (nodeType === 'fish') {
-			if (!this.obj.equipment.eq.has('tool'))
-				msg = 'You need a fishing rod to fish';
+			if (!obj.equipment.eq.has('tool')) {
+				this.sendAnnouncement('You need a fishing rod to fish');
+
+				return;
+			}
 		}
 
-		this.sendAnnouncement(msg);
+		this.updateServerActions(true);
 
-		process.send({
-			method: 'events',
-			data: {
-				onEnterGatherNode: [{
-					obj: {
-						id: node.id
-					},
-					to: [this.obj.serverId]
-				}]
-			}
-		});
+		let action = null;
+		if (nodeType === 'fish')
+			action = 'fish for';
+		else if (nodeType === 'herb')
+			action = 'gather the';
+		const actionString = `${action} ${gatherResult.nodeName}`;
+
+		this.sendAnnouncement(`Press U to ${actionString}`);
 
 		this.nodes.spliceWhere(n => (n === node));
 		this.nodes.push(node);
@@ -240,17 +238,7 @@ module.exports = {
 		if (!this.nodes.includes(node))
 			return;
 
-		process.send({
-			method: 'events',
-			data: {
-				onExitGatherNode: [{
-					obj: {
-						id: node.id
-					},
-					to: [this.obj.serverId]
-				}]
-			}
-		});
+		this.updateServerActions(false);
 
 		this.nodes.spliceWhere(n => (n === node));
 	},
@@ -265,6 +253,20 @@ module.exports = {
 					},
 					to: [this.obj.serverId]
 				}]
+			}
+		});
+	},
+
+	updateServerActions: function (isAdd) {
+		const { obj } = this;
+
+		const action = isAdd ? 'addActions' : 'removeActions';
+		obj.syncer.setArray(true, 'serverActions', action, {
+			key: 'u',
+			action: {
+				targetId: obj.id,
+				cpn: 'gatherer',
+				method: 'gather'
 			}
 		});
 	},
