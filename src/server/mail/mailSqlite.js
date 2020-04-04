@@ -77,14 +77,10 @@ module.exports = {
 				}
 			} else {
 				if ((r.msg) && (!sentMessages.some(s => (s === r.msg)))) {
-					player.instance.syncer.queue('onGetMessages', {
-						id: player.id,
-						messages: [{
-							class: 'color-greenB',
-							message: r.msg,
-							type: 'info'
-						}]
-					}, [player.serverId]);
+					player.social.notifySelf({
+						message: r.msg,
+						className: 'color-greenB'
+					});
 
 					sentMessages.push(r.msg);
 					delete r.msg;

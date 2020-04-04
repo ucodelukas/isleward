@@ -69,14 +69,9 @@ module.exports = {
 		else if (this.items.length >= this.maxItems) {
 			let isStackable = this.items.some(stashedItem => item.name === stashedItem.name && (isItemStackable(stashedItem)));
 			if (!isStackable) {
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: 'You do not have room in your stash to deposit that item',
-						type: 'info'
-					}]
-				}, [this.obj.serverId]);
+				const message = 'You do not have room in your stash to deposit that item';
+				this.obj.social.notifySelf({ message });
+
 				return;
 			}
 		}
@@ -109,14 +104,8 @@ module.exports = {
 		if (!item)
 			return;
 		else if (!this.obj.inventory.hasSpace(item)) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'You do not have room in your inventory to withdraw that item',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
+			const message = 'You do not have room in your inventory to withdraw that item';
+			this.obj.social.notifySelf({ message });
 			
 			return;
 		}
@@ -146,14 +135,8 @@ module.exports = {
 		});
 
 		if (this.active && this.items.length > this.maxItems) {
-			obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: `You have more than ${this.maxItems} items in your stash. In the next version (v0.3.1) you will lose all items that put you over the limit`,
-					type: 'info'
-				}]
-			}, [obj.serverId]);
+			const message = `You have more than ${this.maxItems} items in your stash. In the future, these items will be lost.`;
+			obj.social.notifySelf({ message });
 		}
 	},
 

@@ -15,13 +15,11 @@ module.exports = {
 		this.obj.syncer.setArray(true, 'quests', 'obtainQuests', this.simplify(true));
 
 		if (!hideMessage) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-yellowB',
-					message: 'quest obtained (' + this.name + ')'
-				}]
-			}, [this.obj.serverId]);
+			const message = `Quest obtained (${this.name})`;
+			this.obj.social.notifySelf({
+				message,
+				className: 'color-yellowB'
+			});
 		}
 
 		return true;
@@ -33,13 +31,11 @@ module.exports = {
 		if (this.oReady)
 			this.oReady();
 
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: [{
-				class: 'color-yellowB',
-				message: 'quest ready for turn-in (' + this.name + ')'
-			}]
-		}, [this.obj.serverId]);
+		const message = `Quest ready for turn-in (${this.name})`;
+		this.obj.social.notifySelf({
+			message,
+			className: 'color-yellowB'
+		});
 
 		this.obj.syncer.setArray(true, 'quests', 'updateQuests', this.simplify(true));
 	},
@@ -48,27 +44,23 @@ module.exports = {
 		if (this.oComplete)
 			this.oComplete();
 
-		let obj = this.obj;
+		const obj = this.obj;
 
-		this.obj.instance.eventEmitter.emitNoSticky('beforeCompleteAutoquest', this, obj);
+		obj.instance.eventEmitter.emitNoSticky('beforeCompleteAutoquest', this, obj);
 
-		obj.instance.syncer.queue('onGetMessages', {
-			id: obj.id,
-			messages: [{
-				class: 'color-yellowB',
-				message: 'quest completed (' + this.name + ')'
-			}]
-		}, [obj.serverId]);
+		const message = `Quest completed (${this.name})`;
+		obj.social.emitNoSticky({
+			message,
+			className: 'color-yellowB'
+		});
 
 		obj.syncer.setArray(true, 'quests', 'completeQuests', this.id);
 
-		this.obj.instance.eventEmitter.emit('onCompleteQuest', this);
+		obj.instance.eventEmitter.emit('onCompleteQuest', this);
 
-		this.rewards.forEach(function (r) {
-			this.obj.inventory.getItem(r);
-		}, this);
+		this.rewards.forEach(reward => obj.inventory.getItem(reward));
 
-		this.obj.stats.getXp(this.xp || 10, this.obj, this);
+		obj.stats.getXp(this.xp || 10, obj, this);
 	},
 
 	simplify: function (self) {

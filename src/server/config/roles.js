@@ -82,14 +82,8 @@ module.exports = {
 	},
 
 	sendMessage: function (player, msg) {
-		msg = 'Only certain roles can ' + msg + ' at the moment';
+		const message = `Only certain roles can ${msg} at the moment`;
 
-		player.instance.syncer.queue('onGetMessages', {
-			id: player.id,
-			messages: {
-				class: 'color-redA',
-				message: msg
-			}
-		}, [player.serverId]);
+		player.social.notifySelf({ message });
 	}
 };

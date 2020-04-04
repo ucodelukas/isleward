@@ -121,14 +121,11 @@ module.exports = {
 		if (gain < 0)
 			action = 'lost';
 
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: [{
-				class: (action === 'gained') ? 'color-greenB' : 'color-redA',
-				message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
-				type: 'rep'
-			}]
-		}, [this.obj.serverId]);
+		this.obj.social.notifySelf({
+			className: (action === 'gained') ? 'color-greenB' : 'color-redA',
+			message: 'you ' + action + ' ' + Math.abs(gain) + ' reputation with ' + blueprint.name,
+			type: 'rep'
+		});
 
 		if (faction.tier !== oldTier) {
 			this.sendMessage(blueprint.tiers[faction.tier].name, blueprint.name, (faction.tier > oldTier));
@@ -139,14 +136,11 @@ module.exports = {
 	},
 
 	sendMessage: function (tierName, factionName, didIncrease) {
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: [{
-				class: didIncrease ? 'color-greenB' : 'color-redA',
-				message: 'you are now ' + tierName + ' with ' + factionName,
-				type: 'rep'
-			}]
-		}, [this.obj.serverId]);
+		this.obj.social.notifySelf({
+			className: didIncrease ? 'color-greenB' : 'color-redA',
+			message: 'you are now ' + tierName + ' with ' + factionName,
+			type: 'rep'
+		});
 	},
 
 	discoverFaction (factionId) {
@@ -167,14 +161,11 @@ module.exports = {
 		let tier = blueprint.tiers[this.calculateTier(factionId)].name.toLowerCase();
 
 		if (!blueprint.noGainRep) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'q4',
-					message: 'you are now ' + tier + ' with ' + blueprint.name,
-					type: 'rep'
-				}]
-			}, [this.obj.serverId]);
+			this.obj.social.notifySelf({
+				className: 'q4',
+				message: 'you are now ' + tier + ' with ' + blueprint.name,
+				type: 'rep'
+			});
 		}
 
 		this.syncFaction(factionId, true);

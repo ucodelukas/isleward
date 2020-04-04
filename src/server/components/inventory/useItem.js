@@ -68,14 +68,7 @@ module.exports = async (cpnInv, itemId) => {
 		effectEvent.call(obj, effectResult, item, effect);
 
 		if (!effectResult.success) {
-			obj.instance.syncer.queue('onGetMessages', {
-				id: obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: effectResult.errorMessage,
-					type: 'info'
-				}]
-			}, [obj.serverId]);
+			obj.social.notifySelf({ message: effectResult.errorMessage });
 
 			return;
 		}
