@@ -49,7 +49,7 @@ module.exports = {
 		obj.instance.eventEmitter.emitNoSticky('beforeCompleteAutoquest', this, obj);
 
 		const message = `Quest completed (${this.name})`;
-		obj.social.emitNoSticky({
+		obj.social.notifySelf({
 			message,
 			className: 'color-yellowB'
 		});
