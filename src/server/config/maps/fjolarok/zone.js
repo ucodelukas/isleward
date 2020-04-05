@@ -18,14 +18,6 @@ module.exports = {
 			type: 'fish',
 			quantity: [6, 12]
 		},
-		vikardoor: {
-			properties: {
-				cpnDoor: {
-					locked: true,
-					key: 'vikar'
-				}
-			}
-		},
 		shopestrid: {
 			properties: {
 				cpnNotice: {
@@ -521,6 +513,61 @@ module.exports = {
 			components: {
 				cpnWorkbench: {
 					type: 'cooking'
+				}
+			}
+		},
+		'enchanting shrine': {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['48edff', 'fc66f7'],
+									end: ['393268', '42548d']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 4
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -15,
+									y: -28,
+									w: 30,
+									h: 8
+								}
+							}
+						};
+					}
+				},
+				cpnWorkbench: {
+					type: 'enchanting'
 				}
 			}
 		}

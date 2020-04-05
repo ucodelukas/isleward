@@ -1,6 +1,5 @@
 let generator = require('../items/generator');
 let salvager = require('../items/salvager');
-let enchanter = require('../items/enchanter');
 let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
@@ -9,8 +8,6 @@ const events = require('../misc/events');
 
 const { isItemStackable } = require('./inventory/helpers');
 const transactions = require('../security/transactions');
-
-const { applyItemStats } = require('./equipment/helpers');
 
 const getItem = require('./inventory/getItem');
 const dropBag = require('./inventory/dropBag');
@@ -149,45 +146,6 @@ module.exports = {
 
 			this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 		}
-	},
-
-	enchantItem: function (msg) {
-		const { itemId, action } = msg;
-		const item = this.findItem(itemId);
-		if (!item)
-			return;
-
-		const { eq, slot, power, noAugment } = item;
-
-		if (!slot || noAugment || (action === 'scour' && !power)) {
-			this.resolveCallback(msg);
-			return;
-		}
-
-		const obj = this.obj;
-
-		if (eq) {
-			applyItemStats(obj, item, false);
-			enchanter.enchant(obj, item, msg);
-			applyItemStats(obj, item, true);
-
-			if (item.slot !== slot)
-				obj.equipment.unequip(itemId);
-			else
-				obj.spellbook.calcDps();
-		} else
-			enchanter.enchant(obj, item, msg);
-
-		obj.equipment.unequipAttrRqrGear();
-	},
-
-	getEnchantMaterials: function (msg) {
-		let result = [];
-		let item = this.findItem(msg.itemId);
-		if ((item) && (item.slot))
-			result = enchanter.getEnchantMaterials(item, msg.action);
-
-		this.resolveCallback(msg, result);
 	},
 
 	learnAbility: function (itemId, runeSlot) {
