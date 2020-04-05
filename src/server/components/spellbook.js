@@ -613,6 +613,10 @@ module.exports = {
 			this.stopCasting(null, true);
 		},
 
+		onBeforeUseItem: function () {
+			this.stopCasting(null, true);
+		},
+
 		clearQueue: function () {
 			this.stopCasting(null, true);
 		},
