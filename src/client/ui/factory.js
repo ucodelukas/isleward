@@ -32,7 +32,6 @@ define([
 		'events',
 		'progressBar',
 		'stash',
-		'smithing',
 		'talk',
 		'trade',
 		'overlay',
@@ -151,7 +150,6 @@ define([
 				'passives',
 				'quests',
 				'reputation',
-				'smithing',
 				'stash'
 			].map(m => 'ui/templates/' + m + '/' + m), this.afterPreload.bind(this));
 		},

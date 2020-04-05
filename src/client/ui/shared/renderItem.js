@@ -1,5 +1,5 @@
 const tplItem = `
-	<div class="item">
+	<div class="renderItem item">
 		<div class="icon"></div>
 		<div class="quantity"></div>
 	</div>

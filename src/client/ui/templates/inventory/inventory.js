@@ -293,10 +293,6 @@ define([
 					text: 'equip',
 					callback: this.performItemAction.bind(this, item, 'equip')
 				},
-				augment: {
-					text: 'craft',
-					callback: this.openAugmentUi.bind(this, item)
-				},
 				mail: {
 					text: 'mail',
 					callback: this.openMailUi.bind(this, item)
@@ -336,11 +332,6 @@ define([
 				ctxConfig.push(menuItems.equip);
 				if (!item.eq)
 					ctxConfig.push(menuItems.divider);
-
-				if (!item.eq) {
-					ctxConfig.push(menuItems.augment);
-					ctxConfig.push(menuItems.divider);
-				}
 			}
 
 			if ((!item.eq) && (!item.active)) {
@@ -354,9 +345,6 @@ define([
 					if ((!item.material) && (!item.noSalvage))
 						ctxConfig.push(menuItems.salvage);
 				}
-
-				if (!item.noDestroy)
-					ctxConfig.push(menuItems.destroy);
 			}
 
 			if (item.quantity > 1 && !item.quest)
@@ -366,6 +354,11 @@ define([
 				ctxConfig.push(menuItems.mail);
 
 			ctxConfig.push(menuItems.link);
+
+			if (!item.eq && !item.active && !item.noDestroy) {
+				ctxConfig.push(menuItems.divider);
+				ctxConfig.push(menuItems.destroy);
+			}
 
 			if (isMobile)
 				this.hideTooltip(null, this.hoverItem);
@@ -565,12 +558,6 @@ define([
 					method: action,
 					data: data
 				}
-			});
-		},
-
-		openAugmentUi: function (item) {
-			events.emit('onSetSmithItem', {
-				item: item
 			});
 		},
 
