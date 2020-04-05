@@ -506,8 +506,11 @@ module.exports = {
 						try {
 							let effectModule = require('../' + effectUrl);
 							e.events = effectModule.events;
-							e.text = effectModule.events.onGetText(item, e);
-						} catch (error) {}
+							if (effectModule.events.onGetText)
+								e.text = effectModule.events.onGetText(item, e);
+						} catch (error) {
+							_.log(`Effect not found: ${e.type}`);
+						}
 					}
 				});
 			}
