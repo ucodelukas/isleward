@@ -40,6 +40,7 @@ module.exports = async (cpnInv, itemId) => {
 
 	let result = {};
 	obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
+	obj.fireEvent('onBeforeUseItem', item, result);
 
 	if (item.recipe) {
 		const didLearn = await learnRecipe(obj, item);
