@@ -17,7 +17,7 @@ define([
 
 		init: function () {
 			this.hookEvent('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
-			this.hookEvent('onGetStats', this.onGetStats.bind(this));
+			this.hookEvent('onMoveSpeedChange', this.onMoveSpeedChange.bind(this));
 		},
 
 		update: function () {
@@ -33,10 +33,11 @@ define([
 		},
 
 		//Changes the moveCdMax variable
-		// sprintChance: 0		|	moveCdMax: 8
-		// sprintChance: 200	|	moveCdMax: 4
-		onGetStats: function ({ sprintChance = 0 }) {
-			this.moveCdMax = Math.ceil(4 + (((200 - sprintChance) / 200) * 4));
+		// moveSpeed is affected when mounting and unmounting
+		// moveSpeed: 0		|	moveCdMax: 8
+		// moveSpeed: 200	|	moveCdMax: 4
+		onMoveSpeedChange: function (moveSpeed) {
+			this.moveCdMax = Math.ceil(4 + (((200 - moveSpeed) / 200) * 4));
 		},
 
 		onCanvasKeyDown: function (keyEvent) {

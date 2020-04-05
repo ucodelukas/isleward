@@ -77,7 +77,7 @@ define([
 
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
-			events.on('onGetStats', this.adaptCameraMoveSpeed.bind(this));
+			events.on('onMoveSpeedChange', this.adaptCameraMoveSpeed.bind(this));
 
 			let zoom = isMobile ? 1 : window.devicePixelRatio;
 			this.width = $('body').width() * zoom;
@@ -825,15 +825,16 @@ define([
 		},
 
 		//Changes the moveSpeedMax and moveSpeedInc variables
-		// sprintChance: 0		|	moveSpeedMax: 1.5		|		moveSpeedInc: 0.5
-		// sprintChance: 200	|	moveSpeedMax: 5.5		|		moveSpeedInc: 0.2
+		// moveSpeed changes when mounting and unmounting
+		// moveSpeed: 0		|	moveSpeedMax: 1.5		|		moveSpeedInc: 0.5
+		// moveSpeed: 200	|	moveSpeedMax: 5.5		|		moveSpeedInc: 0.2
 		//  Between these values we should follow an exponential curve for moveSpeedInc since
 		//   a higher chance will proc more often, meaning the buildup in distance becomes greater
-		adaptCameraMoveSpeed: function ({ sprintChance }) {
-			const factor = Math.sqrt(sprintChance);
+		adaptCameraMoveSpeed: function (moveSpeed) {
+			const factor = Math.sqrt(moveSpeed);
 			const maxValue = Math.sqrt(200);
 
-			this.moveSpeedMax = 1.5 + ((sprintChance / 200) * 3.5);
+			this.moveSpeedMax = 1.5 + ((moveSpeed / 200) * 3.5);
 			this.moveSpeedInc = 0.2 + (((maxValue - factor) / maxValue) * 0.3);
 		},
 
