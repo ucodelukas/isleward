@@ -102,6 +102,11 @@ module.exports = {
 		)
 			return;
 
+		obj.fireEvent('onBeforeSkinChange', {
+			oldSkinId: obj.skinId,
+			newSkinId: msg.skinId
+		});
+
 		obj.skinId = msg.skinId;
 
 		obj.cell = skins.getCell(obj.skinId);
