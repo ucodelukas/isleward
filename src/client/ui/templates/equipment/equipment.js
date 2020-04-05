@@ -187,13 +187,17 @@ define([
 		},
 
 		unequipItem: function (item) {
+			const isQuickslot = item.has('quickSlot');
+			const method = isQuickslot ? 'setQuickSlot' : 'unequip';
+			const data = isQuickslot ? { slot: item.quickSlot } : item.id;
+
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
 				data: {
 					cpn: 'equipment',
-					method: 'unequip',
-					data: item.id
+					method,
+					data
 				}
 			});
 		},
