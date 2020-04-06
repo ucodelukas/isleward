@@ -179,66 +179,8 @@ module.exports = {
 	vikar: {
 		1: {
 			msg: [{
-				msg: 'Is there anything I can help you with today?',
-				options: [1.1]
-			}],
-			options: {
-				1.1: {
-					msg: 'I want to hand in some cards.',
-					prereq: function (obj) {
-						let fullSet = obj.inventory.items.find(i => ((i.setSize) && (i.setSize <= i.quantity)));
-						return !!fullSet;
-					},
-					goto: 'tradeCards'
-				}
-			}
-		},
-		tradeCards: {
-			msg: [{
-				msg: '',
+				msg: 'How may I help you today?',
 				options: []
-			}],
-			method: function (obj) {
-				let inventory = obj.inventory;
-				let items = inventory.items;
-
-				let sets = items.filter(function (i) {
-					return (
-						(i.type === 'Reward Card') &&
-						(i.quantity >= i.setSize)
-					);
-				});
-
-				if (sets.length === 0)
-					return 'Sorry, you don\'t have any completed sets.';
-
-				sets.forEach(function (s) {
-					obj.instance.eventEmitter.emit('onGetCardSetReward', s.name, obj);
-					inventory.destroyItem(s.id, s.setSize);
-				});
-
-				return 'Thank you.';
-			}
-		},
-		tradeBuy: {
-			cpn: 'trade',
-			method: 'startBuy',
-			args: [{
-				targetName: 'vikar'
-			}]
-		},
-		tradeSell: {
-			cpn: 'trade',
-			method: 'startSell',
-			args: [{
-				targetName: 'vikar'
-			}]
-		},
-		tradeBuyback: {
-			cpn: 'trade',
-			method: 'startBuyback',
-			args: [{
-				targetName: 'vikar'
 			}]
 		}
 	},

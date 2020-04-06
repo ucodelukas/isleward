@@ -261,7 +261,8 @@ module.exports = {
 				let info = {
 					map: this.name,
 					layer: layerName,
-					objects: data
+					objects: data,
+					mapScale
 				};
 				events.emit('onAfterGetLayerObjects', info);
 			}
@@ -376,8 +377,8 @@ module.exports = {
 
 			let blueprint = {
 				clientObj: clientObj,
-				sheetName: cellInfo.sheetName,
-				cell: cellInfo.cell - 1,
+				sheetName: cell.has('sheetName') ? cell.sheetName : cellInfo.sheetName,
+				cell: cell.has('cell') ? cell.cell : cellInfo.cell - 1,
 				x: cell.x / mapScale,
 				y: (cell.y / mapScale) - 1,
 				name: name,
