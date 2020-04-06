@@ -14,5 +14,7 @@ module.exports = (obj, [item]) => {
 		item.level = Math.min(maxLevel, item.level + offset);
 	}
 
-	return { msg: 'Relevel successful' };
+	const msg = `Relevelled item to level ${item.level}`;
+
+	return { msg };
 };

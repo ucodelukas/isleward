@@ -30,5 +30,7 @@ module.exports = (obj, [item]) => {
 
 	extend(item, newItem);
 
-	return { msg: 'Reslot successful' };
+	const msg = `Reslotted item to slot: ${item.slot}`;
+
+	return { msg };
 };

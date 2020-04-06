@@ -17,9 +17,7 @@ module.exports = [{
 		withProps: ['slot'],
 		withoutProps: ['noAugment'],
 		checks: [
-			item => {
-				return !item.power || item.power < 3; 
-			}
+			item => !item.power || item.power < 3
 		]
 	}]
 }, {
@@ -43,9 +41,12 @@ module.exports = [{
 		quantity: 1
 	}],
 	needItems: [{
-		info: 'Pick an item to reroll',
+		info: 'Pick the item you wish to ascend',
 		withProps: ['slot'],
-		withoutProps: ['noAugment']
+		withoutProps: ['noAugment'],
+		checks: [
+			item => item.level && item.level < consts.maxLevel
+		]
 	}],
 	craftAction: relevel
 }, {
@@ -56,7 +57,7 @@ module.exports = [{
 		quantity: 1
 	}],
 	needItems: [{
-		info: 'Pick an item to reroll',
+		info: 'Pick an item to reslot',
 		withProps: ['slot'],
 		withoutProps: ['noAugment', 'effects']
 	}],
@@ -69,22 +70,25 @@ module.exports = [{
 		quantity: 1
 	}],
 	needItems: [{
-		info: 'Pick an item to reroll',
+		info: 'Pick an item to reforge',
 		withProps: ['slot', 'spell'],
 		withoutProps: ['noAugment']
 	}],
 	craftAction: reforge
 }, {
 	name: 'Scour',
-	description: 'Rerolls a weapon\'s damage range.',
+	description: 'Wipe all augments from an item.',
 	materials: [{
-		name: 'Bone Idol',
+		name: 'Smoldering Idol',
 		quantity: 1
 	}],
 	needItems: [{
-		info: 'Pick an item to reroll',
+		info: 'Pick an item to scour',
 		withProps: ['slot', 'power'],
 		withoutProps: ['noAugment']
 	}],
-	craftAction: scour
+	craftAction: scour,
+	checks: [
+		item => item.power && item.power >= 1 
+	]
 }];
