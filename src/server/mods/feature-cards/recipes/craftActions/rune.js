@@ -1,8 +1,8 @@
 let itemGenerator = require('../../../../items/generator');
 
-module.exports = ({ level }, crafter) => {
+module.exports = (config, crafter) => {
 	const result = itemGenerator.generate({
-		level,
+		...config,
 		spell: true
 	});
 

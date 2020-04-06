@@ -10,8 +10,31 @@ module.exports = [{
 		name: 'Runecrafter\'s Toil',
 		quantity: 3
 	}],
+	craftAction: rune.bind(null, { 
+		level: 10,
+		magicFind: 500
+	})
+}, {
+	name: 'Level 15 Rune',
+	description: '',
+	materials: [{
+		name: 'Runecrafter\'s Toil',
+		quantity: 10
+	}],
 	craftAction: rune.bind(null, {
-		level: 10
+		level: 15,
+		magicFind: 1000
+	})
+}, {
+	name: 'Level 20 Rune',
+	description: '',
+	materials: [{
+		name: 'Runecrafter\'s Toil',
+		quantity: 30
+	}],
+	craftAction: rune.bind(null, {
+		level: 20,
+		magicFind: 1500
 	})
 }, {
 	name: 'Legendary Level 15 Weapon',

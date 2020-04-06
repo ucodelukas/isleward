@@ -852,56 +852,56 @@ module.exports = {
 						extra: [{
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'magic missile',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'ice spear',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'smite',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'consecrate',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'slash',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'charge',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'flurry',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'smokebomb',
 							worth: 3

@@ -25,14 +25,14 @@ module.exports = {
 		let newRunes = [{
 			generate: true,
 			spell: true,
-			spellQuality: 'basic',
+			spellQuality: 0,
 			infinite: true,
 			spellName: 'harvest life',
 			worth: 3
 		}, {
 			generate: true,
 			spell: true,
-			spellQuality: 'basic',
+			spellQuality: 0,
 			infinite: true,
 			spellName: 'summon skeleton',
 			worth: 3

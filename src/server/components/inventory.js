@@ -575,7 +575,7 @@ module.exports = {
 			let item = generator.generate({
 				type: classes.weapons[this.obj.class],
 				quality: 0,
-				spellQuality: 'basic'
+				spellQuality: 0
 			});
 			item.worth = 0;
 			item.eq = true;
@@ -594,7 +594,7 @@ module.exports = {
 			if (!hasSpell) {
 				let item = generator.generate({
 					spell: true,
-					spellQuality: 'basic',
+					spellQuality: 0,
 					spellName: spellName
 				});
 				item.worth = 0;
