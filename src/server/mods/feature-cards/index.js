@@ -1,18 +1,52 @@
-let cards = require('./cards');
+const cardRecipes = require('./recipes/recipes');
+const cards = require('./cards');
+const { dealer } = require('./config');
 
 module.exports = {
 	name: 'Feature: Cards',
 
-	extraScripts: [
-		'cards'
-	],
-
 	init: function () {
-		cards.init();
-
+		this.events.on('onBeforeGetClientConfig', this.onBeforeGetClientConfig.bind(this));
 		this.events.on('onBeforeDropBag', this.onBeforeDropBag.bind(this));
-		this.events.on('onGetCardSetReward', this.onGetCardSetReward.bind(this));
-		this.events.on('onBeforeGetItem', this.onBeforeGetItem.bind(this));
+		this.events.on('onBeforeGetRecipes', this.onBeforeGetRecipes.bind(this));
+		this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
+		this.events.on('onAfterGetLayerObjects', this.onAfterGetLayerObjects.bind(this));
+	},
+
+	onBeforeGetClientConfig: function (config) {
+		config.textureList.push(`${this.folderName}/images/mobs.png`);
+	},
+
+	onAfterGetZone: function (zoneName, config) {
+		const { zoneName: dealerZoneName, zoneConfig } = dealer;
+		const dealerName = zoneConfig.name.toLowerCase();
+
+		if (zoneName !== dealerZoneName)
+			return;
+
+		zoneConfig.sheetName = zoneConfig.sheetName.replace('$MODFOLDER$', this.folderName);
+
+		config.objects[dealerName] = zoneConfig;
+	},
+
+	onAfterGetLayerObjects: function ({ map, layer, objects, mapScale }) {
+		const { zoneName: dealerZoneName, pos: { x, y }, zoneConfig: { name } } = dealer;
+
+		if (map !== dealerZoneName || layer !== 'objects')
+			return;
+
+		objects.push({
+			name,
+			x: x * mapScale,
+			y: y * mapScale,
+			height: 8,
+			width: 8,
+			visible: true
+		});
+	},
+
+	onBeforeGetRecipes: function (recipes) {
+		recipes.gambling = cardRecipes;
 	},
 
 	onBeforeDropBag: function (dropper, items, looter) {
@@ -27,25 +61,10 @@ module.exports = {
 		if (Math.random() >= dropEvent.chanceMultiplier)
 			return;
 
-		let res = cards.getCard(looter, dropper);
+		let res = cards.getCard(this.folderName, looter, dropper);
 		if (!res)
 			return;
 
 		items.push(res);
-	},
-
-	onBeforeGetItem: function (item, obj) {
-		if ((!obj.player) && (item.type !== 'Reward Card'))
-			return;
-
-		cards.fixCard(item);
-	},
-
-	onGetCardSetReward: function (set, obj) {
-		let reward = cards.getReward(obj, set);
-		if (!reward.push)
-			reward = [reward];
-
-		reward.forEach(r => obj.inventory.getItem(r, false, false, false, true));
 	}
 };
