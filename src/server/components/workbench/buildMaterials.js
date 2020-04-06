@@ -27,19 +27,11 @@ module.exports = (crafter, recipe, msg) => {
 			i.name.includes(nameLike)
 		));
 
-		const noHaveEnough = (
-			haveMaterial &&
-			(
-				haveMaterial.quantity === 1 || 
-				haveMaterial.quantity < quantity
-			)
-		);
-
 		const id = haveMaterial ? haveMaterial.id : null;
-
 		const haveQuantity = haveMaterial ? (haveMaterial.quantity || 1) : 0;
-
 		const needQuantity = quantity;
+
+		const noHaveEnough = haveQuantity < needQuantity;
 
 		const material = {
 			id,

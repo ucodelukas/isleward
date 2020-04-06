@@ -13,5 +13,8 @@ module.exports = (obj, [item]) => {
 	});
 	item.spell = extend(oldSpell, item.spell);
 
-	return { msg: 'Reforge successful' };
+	const damage = item.spell.values.damage;
+	const msg = `Reforged weapon to damage: ${damage}`;
+
+	return { msg };
 };
