@@ -22,36 +22,34 @@ const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = 
 
 	//We randomise the order so a random property gets to 'pick first'
 	// otherwise it's easier for earlier properties to use more of the valuePool
-	const propEntries = Object
-		.entries(spellProperties)
+	const propKeys = Object
+		.keys(spellProperties)
 		.sort((a, b) => Math.random() - Math.random());
 
-	const propCount = propEntries.length;
+	const propCount = propKeys.length;
 
+	const maxRoll = (quality + 1) / qualityCount;
 	const minSum = (quality / qualityCount) * propCount;
-	const maxSum = ((quality + 1) / qualityCount) * propCount;
 
-	let propRolls = null;
-	let sum = 0;
+	let runningTotal = 0;
 
-	do {
-		sum = 0;
-		propRolls = propEntries.map((e, i) => {
-			let [ prop ] = e;
-			const isNegative = negativeStats.includes(prop);
+	const result = {};
 
-			let roll = Math.random();
-			
-			sum += roll;
-		
-			if (isNegative)
-				roll = 1 - roll;
+	for (let i = 0; i < propCount; i++) {
+		const minRoll = Math.max(0, minSum - runningTotal - ((propCount - (i + 1)) * maxRoll));
 
-			return [prop, roll];
-		});
-	} while (sum < minSum || sum > maxSum);
+		let roll = minRoll + (Math.random() * (maxRoll - minRoll));
 
-	const result = Object.fromEntries(propRolls);
+		runningTotal += roll;
+
+		const prop = propKeys[i];
+		const isNegative = negativeStats.includes(prop);
+
+		if (isNegative)
+			roll = 1 - roll;
+
+		result[prop] = roll;
+	}
 
 	return result;
 };
