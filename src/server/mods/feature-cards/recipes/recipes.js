@@ -12,7 +12,7 @@ module.exports = [{
 	}],
 	craftAction: rune.bind(null, { 
 		level: 10,
-		magicFind: 500
+		magicFind: 900
 	})
 }, {
 	name: 'Level 15 Rune',
@@ -23,7 +23,7 @@ module.exports = [{
 	}],
 	craftAction: rune.bind(null, {
 		level: 15,
-		magicFind: 1000
+		magicFind: 1400
 	})
 }, {
 	name: 'Level 20 Rune',
@@ -34,7 +34,7 @@ module.exports = [{
 	}],
 	craftAction: rune.bind(null, {
 		level: 20,
-		magicFind: 1500
+		magicFind: 1900
 	})
 }, {
 	name: 'Legendary Level 15 Weapon',
