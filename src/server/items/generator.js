@@ -76,6 +76,7 @@ module.exports = {
 			item.noDrop = blueprint.noDrop || null;
 			item.noSalvage = blueprint.noSalvage || null;
 			item.noDestroy = blueprint.noDestroy || null;
+			item.quality = blueprint.quality || 0;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
 		} else if (blueprint.type === 'mtx') {
 			item = extend({}, blueprint);

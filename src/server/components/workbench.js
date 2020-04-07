@@ -8,8 +8,11 @@ module.exports = {
 
 	craftType: null,
 
+	noticeMessage: null,
+
 	init: function (blueprint) {
 		this.craftType = blueprint.type;
+		this.noticeMessage = blueprint.noticeMessage;
 
 		this.obj.instance.objects.buildObjects([{
 			properties: {
@@ -57,7 +60,7 @@ module.exports = {
 		if (!obj.player)
 			return;
 
-		let msg = `Press U to access the ${this.obj.name}`;
+		let msg = `Press U to ${this.noticeMessage || `access the ${this.obj.name}`}`;
 
 		obj.syncer.setArray(true, 'serverActions', 'addActions', {
 			key: 'u',
