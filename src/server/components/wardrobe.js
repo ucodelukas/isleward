@@ -102,15 +102,15 @@ module.exports = {
 		)
 			return;
 
-		obj.fireEvent('onBeforeSkinChange', {
-			oldSkinId: obj.skinId,
-			newSkinId: msg.skinId
-		});
-
 		obj.skinId = msg.skinId;
-
 		obj.cell = skins.getCell(obj.skinId);
 		obj.sheetName = skins.getSpritesheet(obj.skinId);
+
+		obj.fireEvent('onBeforeSkinChange', {
+			newSkinId: obj.skinId,
+			newCell: obj.cell,
+			newSheetName: obj.sheetName
+		});
 
 		let syncer = obj.syncer;
 		syncer.set(false, null, 'cell', obj.cell);
