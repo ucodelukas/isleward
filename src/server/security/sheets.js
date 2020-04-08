@@ -75,7 +75,11 @@ module.exports = {
 	},
 
 	update: async function () {
-		const records = await this.sheet.getRows();
-		this.onGetRows(null, records);
+		try {
+			const records = await this.sheet.getRows();
+			this.onGetRows(null, records);
+		} catch (e) {
+			setTimeout(this.update.bind(this), 300000);
+		}
 	}
 };
