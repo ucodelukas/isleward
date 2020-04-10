@@ -13,7 +13,7 @@ define([
 		type: 'keyboardMover',
 
 		moveCd: 0,
-		moveCdMax: 4,
+		moveCdMax: 8,
 
 		init: function () {
 			this.hookEvent('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
