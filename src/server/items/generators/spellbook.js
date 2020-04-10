@@ -5,21 +5,7 @@ let configTypes = require('../config/types');
 const qualityGenerator = require('./quality');
 const qualityCount = qualityGenerator.qualities.length;
 
-const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = [] }) => {
-	//If the item has a slot, we need to generate a new quality for the rune
-	let quality = item.quality;
-	if (item.slot) {
-		const tempItem = {};
-
-		const tempBlueprint = extend(blueprint);
-		delete tempBlueprint.quality;
-		tempBlueprint.quality = blueprint.spellQuality;
-
-		qualityGenerator.generate(tempItem, tempBlueprint);
-
-		quality = tempItem.quality;
-	}
-
+const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = [] }, quality) => {
 	//We randomise the order so a random property gets to 'pick first'
 	// otherwise it's easier for earlier properties to use more of the valuePool
 	const propKeys = Object
@@ -107,7 +93,22 @@ module.exports = {
 				extend(spell, typeConfig.spellConfig);
 		}
 
-		const rolls = buildRolls(item, blueprint, spell);
+		//If the item has a slot, we need to generate a new quality for the rune
+		let quality = item.quality;
+		if (item.slot) {
+			const tempItem = {};
+
+			const tempBlueprint = extend(blueprint);
+			delete tempBlueprint.quality;
+			tempBlueprint.quality = blueprint.spellQuality;
+
+			qualityGenerator.generate(tempItem, tempBlueprint);
+
+			quality = tempItem.quality;
+			item.spell.quality = quality;
+		}
+
+		const rolls = buildRolls(item, blueprint, spell, quality);
 		
 		Object.entries(spell.random || {}).forEach(entry => {
 			const [ property, range ] = entry;
