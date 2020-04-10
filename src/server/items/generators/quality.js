@@ -1,9 +1,17 @@
 module.exports = {
-	qualities: [
+	/*qualities: [
 		2000,
 		350,
 		80,
 		17,
+		1
+	],*/
+
+	qualities: [
+		0,
+		0,
+		0,
+		0,
 		1
 	],
 
