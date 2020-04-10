@@ -9,6 +9,7 @@ module.exports = {
 	range: 9,
 
 	speed: 150,
+	statMult: 1,
 	damage: 1,
 
 	row: 3,
