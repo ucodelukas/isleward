@@ -34,7 +34,9 @@ const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = 
 		if (isNegative)
 			roll = 1 - roll;
 
-		result[prop] = roll;
+		const scaledRoll = roll * (item.level / consts.maxLevel);
+
+		result[prop] = scaledRoll;
 	}
 
 	return result;
@@ -119,7 +121,7 @@ module.exports = {
 			const isInt = property.indexOf('i_') === 0;
 			let useProperty = property;
 			const minRange = range[0];
-			const maxRange = range[1] * (item.level / consts.maxLevel);
+			const maxRange = range[1];
 
 			let val = minRange + ((maxRange - minRange) * roll);
 
