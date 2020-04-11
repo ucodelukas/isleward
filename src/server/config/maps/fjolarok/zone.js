@@ -1025,6 +1025,10 @@ module.exports = {
 				}
 			},
 
+			rare: {
+				chance: 0
+			},
+
 			spells: [{
 				type: 'warnBlast',
 				range: 8,
