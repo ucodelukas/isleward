@@ -261,7 +261,8 @@ module.exports = {
 				let info = {
 					map: this.name,
 					layer: layerName,
-					objects: data
+					objects: data,
+					mapScale
 				};
 				events.emit('onAfterGetLayerObjects', info);
 			}
@@ -352,7 +353,7 @@ module.exports = {
 
 			if (layerName.indexOf('walls') > -1)
 				this.collisionMap[x][y] = 1;
-			else if (sheetName.toLowerCase().indexOf('tiles') > -1) {
+			else if (layerName === 'tiles' && sheetName === 'tiles') {
 				//Check for water and water-like tiles
 				if ([6, 7, 54, 55, 62, 63, 154, 189, 190, 192, 193, 194, 195, 196, 197].indexOf(cell) > -1)
 					this.collisionMap[x][y] = 1;
@@ -376,8 +377,8 @@ module.exports = {
 
 			let blueprint = {
 				clientObj: clientObj,
-				sheetName: cellInfo.sheetName,
-				cell: cellInfo.cell - 1,
+				sheetName: cell.has('sheetName') ? cell.sheetName : cellInfo.sheetName,
+				cell: cell.has('cell') ? cell.cell : cellInfo.cell - 1,
 				x: cell.x / mapScale,
 				y: (cell.y / mapScale) - 1,
 				name: name,

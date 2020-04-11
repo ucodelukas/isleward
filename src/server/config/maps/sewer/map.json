@@ -1,4 +1,12 @@
 { "backgroundcolor":"#32222e",
+ "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "target":"."
+        }
+    },
  "height":120,
  "infinite":false,
  "layers":[
@@ -2043,7 +2051,7 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":568,
+                 "x":528,
                  "y":736
                 }, 
                 {
@@ -2175,8 +2183,8 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":480,
-                 "y":744
+                 "x":464,
+                 "y":752
                 }, 
                 {
                  "gid":273,
@@ -2307,7 +2315,7 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":536,
+                 "x":520,
                  "y":808
                 }, 
                 {
@@ -2319,8 +2327,20 @@
                  "type":"",
                  "visible":true,
                  "width":8,
-                 "x":600,
-                 "y":776
+                 "x":592,
+                 "y":720
+                }, 
+                {
+                 "gid":273,
+                 "height":8,
+                 "id":1291,
+                 "name":"Rat",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":560,
+                 "y":824
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2329,7 +2349,7 @@
          "y":0
         }],
  "nextlayerid":60,
- "nextobjectid":1291,
+ "nextobjectid":1292,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -2338,7 +2358,7 @@
          "value":"[{\"x\":97,\"y\":87}]"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.2.5",
+ "tiledversion":"1.3.3",
  "tileheight":8,
  "tilesets":[
         {

@@ -1,13 +1,18 @@
 const recipes = require('../config/recipes/recipes');
-const generator = require('../items/generator');
+
+const buildRecipe = require('./workbench/buildRecipe');
+const craft = require('./workbench/craft');
 
 module.exports = {
 	type: 'workbench',
 
 	craftType: null,
 
+	noticeMessage: null,
+
 	init: function (blueprint) {
 		this.craftType = blueprint.type;
+		this.noticeMessage = blueprint.noticeMessage;
 
 		this.obj.instance.objects.buildObjects([{
 			properties: {
@@ -55,7 +60,7 @@ module.exports = {
 		if (!obj.player)
 			return;
 
-		let msg = `Press U to access the ${this.obj.name}`;
+		let msg = `Press U to ${this.noticeMessage || `access the ${this.obj.name}`}`;
 
 		obj.syncer.setArray(true, 'serverActions', 'addActions', {
 			key: 'u',
@@ -98,93 +103,21 @@ module.exports = {
 		}, [obj.serverId]);
 	},
 
-	buildRecipe: function (crafter, recipeName) {
-		let recipe = recipes.getRecipe(this.craftType, recipeName);
-		if (!recipe)
-			return;
-
-		const items = crafter.inventory.items;
-
-		let sendRecipe = extend({}, recipe);
-		(sendRecipe.materials || []).forEach(function (m) {
-			m.need = !items.some(i => (
-				(
-					i.name === m.name ||
-					i.name.indexOf(m.nameLike) > -1
-				) && 
-				(
-					m.quantity === 1 || 
-					i.quantity >= m.quantity
-				)
-			));
-		});
-
-		return sendRecipe;
-	},
-
 	getRecipe: function (msg) {
 		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
 		if ((!obj) || (!obj.player))
 			return;
 
-		const sendRecipe = this.buildRecipe(obj, msg.name);
+		const sendRecipe = buildRecipe(this.craftType, obj, msg);
 
 		this.resolveCallback(msg, sendRecipe);
 	},
 
 	craft: function (msg) {
-		let obj = this.obj.instance.objects.objects.find(o => o.serverId === msg.sourceId);
-		if ((!obj) || (!obj.player))
-			return;
+		const result = craft(this, msg);
 
-		let recipe = recipes.getRecipe(this.craftType, msg.name);
-		if (!recipe)
-			return;
-
-		const items = obj.inventory.items;
-		let canCraft = recipe.materials.every(m => (items.some(i => (
-			(
-				i.name === m.name ||
-				i.name.indexOf(m.nameLike) > -1
-			) &&
-			(
-				m.quantity === 1 || 
-				i.quantity >= m.quantity
-			)
-		))));
-
-		if (!canCraft)
-			return;
-
-		recipe.materials.forEach(m => {
-			let findItem = obj.inventory.items.find(f => (
-				f.name === m.name ||
-				f.name.indexOf(m.nameLike) > -1
-			));
-			obj.inventory.destroyItem(findItem.id, m.quantity);
-		});
-
-		let outputItems = recipe.item ? [ recipe.item ] : recipe.items;
-		outputItems.forEach(itemBpt => {
-			let item = null;
-			if (itemBpt.generate)
-				item = generator.generate(itemBpt);
-			else
-				item = extend({}, itemBpt);
-			
-			if (item.description)
-				item.description += `<br /><br />(Crafted by ${obj.name})`;
-			else
-				item.description = `<br /><br />(Crafted by ${obj.name})`;
-			
-			const quantity = item.quantity;
-			if (quantity && quantity.push)
-				item.quantity = quantity[0] + ~~(Math.random() * (quantity[1] - quantity[0]));
-
-			obj.inventory.getItem(item);
-		});
-
-		this.resolveCallback(msg, this.buildRecipe(obj, msg.name));
+		if (result)
+			this.resolveCallback(msg, result);
 	},
 
 	resolveCallback: function (msg, result) {

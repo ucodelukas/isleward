@@ -14,7 +14,7 @@ let g13 = require('./generators/recipeBook');
 
 let generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
 let materialGenerators = [g6, g8];
-let spellGenerators = [g1, g9, g7];
+let spellGenerators = [g1, g2, g9, g7];
 let currencyGenerators = [g10, g8];
 let recipeGenerators = [g6, g13];
 
@@ -76,6 +76,7 @@ module.exports = {
 			item.noDrop = blueprint.noDrop || null;
 			item.noSalvage = blueprint.noSalvage || null;
 			item.noDestroy = blueprint.noDestroy || null;
+			item.quality = blueprint.quality || 0;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
 		} else if (blueprint.type === 'mtx') {
 			item = extend({}, blueprint);

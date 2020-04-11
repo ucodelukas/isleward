@@ -2,6 +2,46 @@ let spells = require('../../config/spells');
 let spellsConfig = require('../../config/spellsConfig');
 let configTypes = require('../config/types');
 
+const qualityGenerator = require('./quality');
+const qualityCount = qualityGenerator.qualities.length;
+
+const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = [] }, quality) => {
+	//We randomise the order so a random property gets to 'pick first'
+	// otherwise it's easier for earlier properties to use more of the valuePool
+	const propKeys = Object
+		.keys(spellProperties)
+		.sort((a, b) => Math.random() - Math.random());
+
+	const propCount = propKeys.length;
+
+	const maxRoll = (quality + 1) / qualityCount;
+	const minSum = (quality / qualityCount) * propCount;
+
+	let runningTotal = 0;
+
+	const result = {};
+
+	for (let i = 0; i < propCount; i++) {
+		const minRoll = Math.max(0, minSum - runningTotal - ((propCount - (i + 1)) * maxRoll));
+
+		let roll = minRoll + (Math.random() * (maxRoll - minRoll));
+
+		runningTotal += roll;
+
+		const prop = propKeys[i];
+		const isNegative = negativeStats.includes(prop);
+
+		if (isNegative)
+			roll = 1 - roll;
+
+		const scaledRoll = roll * (item.level / consts.maxLevel);
+
+		result[prop] = scaledRoll;
+	}
+
+	return result;
+};
+
 module.exports = {
 	generate: function (item, blueprint) {
 		blueprint = blueprint || {};
@@ -55,40 +95,46 @@ module.exports = {
 				extend(spell, typeConfig.spellConfig);
 		}
 
-		let propertyPerfection = [];
+		//If the item has a slot, we need to generate a new quality for the rune
+		let quality = item.quality;
+		if (item.slot) {
+			const tempItem = {};
 
-		let randomProperties = spell.random || {};
-		let negativeStats = spell.negativeStats || [];
-		for (let r in randomProperties) {
-			let negativeStat = (negativeStats.indexOf(r) > -1);
-			let range = randomProperties[r];
+			const tempBlueprint = extend(blueprint);
+			delete tempBlueprint.quality;
+			tempBlueprint.quality = blueprint.spellQuality;
 
-			let max = Math.min(consts.maxLevel, item.level) / consts.maxLevel;
+			qualityGenerator.generate(tempItem, tempBlueprint);
 
-			let roll = random.expNorm(0, max);
-			if (spellQuality === 'basic')
-				roll = 0;
-			else if (spellQuality === 'mid')
-				roll = 0.5;
+			quality = tempItem.quality;
+			item.spell.quality = quality;
+		}
 
-			item.spell.rolls[r] = roll;
+		const rolls = buildRolls(item, blueprint, spell, quality);
+		
+		Object.entries(spell.random || {}).forEach(entry => {
+			const [ property, range ] = entry;
+			const roll = rolls[property];
 
-			let int = r.indexOf('i_') === 0;
-			let val = range[0] + ((range[1] - range[0]) * roll);
+			item.spell.rolls[property] = roll;
 
-			if (int) {
-				val = ~~val;
-				r = r.replace('i_', '');
+			const isInt = property.indexOf('i_') === 0;
+			let useProperty = property;
+			const minRange = range[0];
+			const maxRange = range[1];
+
+			let val = minRange + ((maxRange - minRange) * roll);
+
+			if (isInt) {
+				useProperty = property.substr(2);
+				val = Math.round(val);
 			} else
 				val = ~~(val * 100) / 100;
 
-			item.spell.values[r] = val;
+			val = Math.max(range[0], Math.min(range[1], val));
 
-			if (negativeStat)
-				propertyPerfection.push(1 - roll);
-			else
-				propertyPerfection.push(roll);
-		}
+			item.spell.values[useProperty] = val;
+		});
 
 		if (blueprint.spellProperties) {
 			item.spell.properties = {};
@@ -100,12 +146,5 @@ module.exports = {
 			item.spell.properties = item.spell.properties || {};
 			item.spell.properties.range = item.range;
 		}
-
-		let per = propertyPerfection.reduce((p, n) => p + n, 0);
-		let perfection = ~~((per / propertyPerfection.length) * 4);
-		if (!item.slot)
-			item.quality = perfection;
-		else
-			item.spell.quality = perfection;
 	}
 };

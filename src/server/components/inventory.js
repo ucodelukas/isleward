@@ -1,6 +1,5 @@
 let generator = require('../items/generator');
 let salvager = require('../items/salvager');
-let enchanter = require('../items/enchanter');
 let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
@@ -9,8 +8,6 @@ const events = require('../misc/events');
 
 const { isItemStackable } = require('./inventory/helpers');
 const transactions = require('../security/transactions');
-
-const { applyItemStats } = require('./equipment/helpers');
 
 const getItem = require('./inventory/getItem');
 const dropBag = require('./inventory/dropBag');
@@ -151,45 +148,6 @@ module.exports = {
 		}
 	},
 
-	enchantItem: function (msg) {
-		const { itemId, action } = msg;
-		const item = this.findItem(itemId);
-		if (!item)
-			return;
-
-		const { eq, slot, power, noAugment } = item;
-
-		if (!slot || noAugment || (action === 'scour' && !power)) {
-			this.resolveCallback(msg);
-			return;
-		}
-
-		const obj = this.obj;
-
-		if (eq) {
-			applyItemStats(obj, item, false);
-			enchanter.enchant(obj, item, msg);
-			applyItemStats(obj, item, true);
-
-			if (item.slot !== slot)
-				obj.equipment.unequip(itemId);
-			else
-				obj.spellbook.calcDps();
-		} else
-			enchanter.enchant(obj, item, msg);
-
-		obj.equipment.unequipAttrRqrGear();
-	},
-
-	getEnchantMaterials: function (msg) {
-		let result = [];
-		let item = this.findItem(msg.itemId);
-		if ((item) && (item.slot))
-			result = enchanter.getEnchantMaterials(item, msg.action);
-
-		this.resolveCallback(msg, result);
-	},
-
 	learnAbility: function (itemId, runeSlot) {
 		if (itemId.has('itemId')) {
 			let msg = itemId;
@@ -215,14 +173,8 @@ module.exports = {
 		};
 		this.obj.fireEvent('beforeLearnAbility', learnMsg);
 		if (!learnMsg.success) {
-			this.obj.instance.syncer.queue('onGetMessages', {
-				id: this.obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: learnMsg.msg || 'you cannot learn that ability',
-					type: 'info'
-				}]
-			}, [this.obj.serverId]);
+			const message = learnMsg.msg || 'you cannot learn that ability';
+			this.obj.social.notifySelf({ message });
 
 			return;
 		}
@@ -365,15 +317,12 @@ module.exports = {
 			this.getItem(material, true, false, false, true);
 				
 			messages.push({
-				class: 'q' + material.quality,
+				className: 'q' + material.quality,
 				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
 			});
 		}
-		
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: messages
-		}, [this.obj.serverId]);
+
+		this.obj.social.notifySelfArray(messages);
 	},
 
 	destroyItem: function (id, amount, force) {
@@ -515,8 +464,11 @@ module.exports = {
 						try {
 							let effectModule = require('../' + effectUrl);
 							e.events = effectModule.events;
-							e.text = effectModule.events.onGetText(item, e);
-						} catch (error) {}
+							if (effectModule.events.onGetText)
+								e.text = effectModule.events.onGetText(item, e);
+						} catch (error) {
+							_.log(`Effect not found: ${e.type}`);
+						}
 					}
 				});
 			}
@@ -623,7 +575,7 @@ module.exports = {
 			let item = generator.generate({
 				type: classes.weapons[this.obj.class],
 				quality: 0,
-				spellQuality: 'basic'
+				spellQuality: 0
 			});
 			item.worth = 0;
 			item.eq = true;
@@ -642,7 +594,7 @@ module.exports = {
 			if (!hasSpell) {
 				let item = generator.generate({
 					spell: true,
-					spellQuality: 'basic',
+					spellQuality: 0,
 					spellName: spellName
 				});
 				item.worth = 0;
@@ -805,13 +757,6 @@ module.exports = {
 	},
 
 	notifyNoBagSpace: function (message = 'Your bags are too full to loot any more items') {
-		this.obj.instance.syncer.queue('onGetMessages', {
-			id: this.obj.id,
-			messages: [{
-				class: 'color-redA',
-				message,
-				type: 'info'
-			}]
-		}, [this.obj.serverId]);
+		this.obj.social.notifySelf({ message });
 	}
 };

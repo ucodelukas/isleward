@@ -21,21 +21,27 @@ define([
 
 		frameDelayCd: 0,
 
+		oldSheetName: null,
+		oldCell: null,
 		oldTexture: null,
 
 		init: function (blueprint) {
-			if (!this.obj.sprite)
+			const { template, frameDelay, obj: { sheetName, cell, sprite } } = this;
+
+			if (!sprite)
 				return true;
 			
-			this.oldTexture = this.obj.sprite.texture;
+			this.oldSheetName = sheetName;
+			this.oldCell = cell;
+			this.oldTexture = sprite.texture;
 
 			this.frame = 0;
 			this.frameDelayCd = 0;
 
-			for (let p in this.template) 
-				this[p] = this.template[p];
+			for (let p in template) 
+				this[p] = template[p];
 
-			this.frameDelayCd = this.frameDelay;
+			this.frameDelayCd = frameDelay;
 
 			this.setSprite();		
 		},
@@ -68,7 +74,21 @@ define([
 		},
 
 		destroy: function () {
-			this.obj.sprite.texture = this.oldTexture;
+			const { oldSheetName, oldCell, oldTexture, obj: { sheetName, cell, sprite } } = this;
+
+			//Make sure something didn't happen while we were in animation form
+			// that made us change sprite
+			if (oldSheetName === sheetName && oldCell === cell) {
+				sprite.texture = oldTexture;
+
+				return;
+			}
+
+			renderer.setSprite({
+				sprite,
+				cell,
+				sheetName
+			});
 		}
 	};
 });

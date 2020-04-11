@@ -13,7 +13,7 @@ module.exports = {
 		this.events.on('onBeforeGetSpellsInfo', this.beforeGetSpellsInfo.bind(this));
 		this.events.on('onBeforeGetSpellsConfig', this.beforeGetSpellsConfig.bind(this));
 		this.events.on('onBeforeGetSpellTemplate', this.beforeGetSpellTemplate.bind(this));
-		this.events.on('onBeforeGetResourceList', this.beforeGetResourceList.bind(this));
+		this.events.on('onBeforeGetClientConfig', this.onBeforeGetClientConfig.bind(this));
 		this.events.on('onBeforeGetAnimations', this.beforeGetAnimations.bind(this));
 		this.events.on('onAfterGetZone', this.onAfterGetZone.bind(this));
 	},
@@ -25,14 +25,14 @@ module.exports = {
 		let newRunes = [{
 			generate: true,
 			spell: true,
-			spellQuality: 'basic',
+			spellQuality: 0,
 			infinite: true,
 			spellName: 'harvest life',
 			worth: 3
 		}, {
 			generate: true,
 			spell: true,
-			spellQuality: 'basic',
+			spellQuality: 0,
 			infinite: true,
 			spellName: 'summon skeleton',
 			worth: 3
@@ -97,10 +97,11 @@ module.exports = {
 		};
 	},
 
-	beforeGetResourceList: function (list) {
-		list.push(`${this.folderName}/images/inGameSprite.png`);
-		list.push(`${this.folderName}/images/abilityIcons.png`);
-		list.push(`${this.folderName}/images/mobs.png`);
+	onBeforeGetClientConfig: function ({ resourceList, textureList }) {
+		resourceList.push(`${this.folderName}/images/abilityIcons.png`);
+
+		textureList.push(`${this.folderName}/images/inGameSprite.png`);
+		textureList.push(`${this.folderName}/images/mobs.png`);
 	},
 
 	beforeGetSpellTemplate: function (spell) {

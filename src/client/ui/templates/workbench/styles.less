@@ -2,17 +2,20 @@
 
 .uiWorkbench {
 	display: none;
-	width: 720px;
-	height: 385px;
-	border: 5px solid fade(@blackB, 90%);
-	text-align: center;
+	width: 827px;
+	height: 447px;
+	border: 5px solid @blackB;
 	color: @white;
+	position: relative;
+	z-index: 2;
 
-	> .heading {
-		color: @blueA;
+	> .heading,
+	> .itemPicker > .heading {
+		color: @orangeA;
 		width: 100%;
 		height: 36px;
-		background-color: fade(@blackB, 90%);
+		background-color: @blackB;
+		text-align: center;
 
 		.heading-text {
 			padding-top: 8px;
@@ -21,14 +24,15 @@
 
 	}
 
-	.bottom {
-		background-color: fade(@blackC, 90%);
+	> .bottom {
+		background-color: @blackC;
 		height: calc(100% - 36px);
 		width: 100%;
 
 		.heading {
 			color: @blueB;
 			margin-bottom: 10px;
+			text-align: center;
 		}
 
 		.left,
@@ -44,14 +48,18 @@
 			.list {
 				height: calc(100% - 25px);
 				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
 
 				.item {
 					width: 100%;
-					padding: 5px 0px;
+					padding: 5px 10px;
 					cursor: pointer;
+					color: @grayB;
 
 					&.selected {
 						background-color: @blackB;
+						color: @white;
 					}
 
 					&:hover {
@@ -66,6 +74,9 @@
 
 		.right {
 			width: calc(100% - 300px);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
 
 			> * {
 				width: 100%;
@@ -73,23 +84,48 @@
 
 			.info {
 				height: calc(100% - 100px - 35px);
+				flex: 1;
 
 				.title {
-					color: @orangeA;
+					color: @blueB;
 					padding-bottom: 10px;
+					text-align: center;
+				}
+
+				.description {
+					color: @grayB;
+					text-align: justify;
 				}
 
 			}
 
 			.materialList {
-				height: 100px;
 				visibility: hidden;
+				margin-bottom: 20px;
 
 				.material {
 					&.need {
 						color: @redB;
 					}
 
+				}
+
+			}
+
+			.needItems {
+				display: none;
+				margin-bottom: 20px;
+				flex-direction: column;
+
+				.title {
+					color: @blueB;
+					padding-bottom: 10px;
+					text-align: center;
+				}
+
+				.list {
+					display: flex;
+					justify-content: space-around;
 				}
 
 			}
@@ -119,6 +155,24 @@
 
 			}
 
+		}
+
+	}
+
+	> .itemPicker {
+		display: none;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		background-color: @blackC;
+		flex-direction: column;
+
+		.list {
+			display: flex;
+			flex-wrap: wrap;
+			overflow-y: auto;
 		}
 
 	}

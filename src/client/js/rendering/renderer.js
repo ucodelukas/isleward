@@ -6,7 +6,8 @@ define([
 	'js/rendering/tileOpacity',
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
-	'js/rendering/spritePool'
+	'js/rendering/spritePool',
+	'js/system/globals'
 ], function (
 	resources,
 	events,
@@ -15,7 +16,8 @@ define([
 	tileOpacity,
 	particles,
 	shaderOutline,
-	spritePool
+	spritePool,
+	globals
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);
@@ -75,6 +77,7 @@ define([
 
 			events.on('onGetMap', this.onGetMap.bind(this));
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
+			events.on('onMoveSpeedChange', this.adaptCameraMoveSpeed.bind(this));
 
 			let zoom = isMobile ? 1 : window.devicePixelRatio;
 			this.width = $('body').width() * zoom;
@@ -91,29 +94,25 @@ define([
 
 			window.addEventListener('resize', this.onResize.bind(this));
 
-			$(this.renderer.view)
-				.appendTo('.canvas-container');
+			$(this.renderer.view).appendTo('.canvas-container');
 
 			this.stage = new pixi.Container();
 
 			let layers = this.layers;
-			Object.keys(layers).forEach(function (l) {
+			Object.keys(layers).forEach(l => {
 				layers[l] = new pixi.Container();
 				layers[l].layer = (l === 'tileSprites') ? 'tiles' : l;
 
 				this.stage.addChild(layers[l]);
-			}, this);
-
-			let spriteNames = ['tiles', 'mobs', 'bosses', 'animBigObjects', 'bigObjects', 'objects', 'characters', 'attacks', 'auras', 'walls', 'ui', 'animChar', 'animMob', 'animBoss', 'white', 'ray'];
-			resources.spriteNames.forEach(function (s) {
-				if (s.indexOf('.png') > -1)
-					spriteNames.push(s);
 			});
 
-			spriteNames.forEach(function (t) {
-				this.textures[t] = new pixi.BaseTexture(resources.sprites[t].image);
+			const textureList = globals.clientConfig.textureList;
+			const sprites = resources.sprites;
+
+			textureList.forEach(t => {
+				this.textures[t] = new pixi.BaseTexture(sprites[t]);
 				this.textures[t].scaleMode = pixi.SCALE_MODES.NEAREST;
-			}, this);
+			});
 
 			particles.init({
 				r: this,
@@ -643,17 +642,19 @@ define([
 				let deltaY = this.moveTo.y - this.pos.y;
 
 				if (deltaX !== 0 || deltaY !== 0) {
-					let moveSpeed = this.moveSpeed;
 					let distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
 
 					let moveSpeedMax = this.moveSpeedMax;
-					if (distance > 100)
-						moveSpeedMax *= 1.75;
 					if (this.moveSpeed < moveSpeedMax)
 						this.moveSpeed += this.moveSpeedInc;
 
+					let moveSpeed = this.moveSpeed;
+
+					if (moveSpeedMax < 1.6)
+						moveSpeed *= 1 + (distance / 200);
+
 					let elapsed = time - this.lastTick;
-					moveSpeed *= (elapsed / 16.67);
+					moveSpeed *= (elapsed / 15);
 
 					if (moveSpeed > distance)
 						moveSpeed = distance;
@@ -821,6 +822,20 @@ define([
 		destroyObject: function (obj) {
 			if (obj.sprite.parent)
 				obj.sprite.parent.removeChild(obj.sprite);
+		},
+
+		//Changes the moveSpeedMax and moveSpeedInc variables
+		// moveSpeed changes when mounting and unmounting
+		// moveSpeed: 0		|	moveSpeedMax: 1.5		|		moveSpeedInc: 0.5
+		// moveSpeed: 200	|	moveSpeedMax: 5.5		|		moveSpeedInc: 0.2
+		//  Between these values we should follow an exponential curve for moveSpeedInc since
+		//   a higher chance will proc more often, meaning the buildup in distance becomes greater
+		adaptCameraMoveSpeed: function (moveSpeed) {
+			const factor = Math.sqrt(moveSpeed);
+			const maxValue = Math.sqrt(200);
+
+			this.moveSpeedMax = 1.5 + ((moveSpeed / 200) * 3.5);
+			this.moveSpeedInc = 0.2 + (((maxValue - factor) / maxValue) * 0.3);
 		},
 
 		render: function () {

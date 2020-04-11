@@ -119,21 +119,15 @@ module.exports = {
 			if (this.autoClose)
 				this.autoCloseCd = this.autoClose;
 
-			let key = obj.inventory.items.find(i => ((i.keyId === this.key) || (i.keyId === 'world')));
+			let key = obj.inventory.items.find(i => (i.keyId === this.key || i.keyId === 'world'));
 			if (!key)
 				return;
 
-			if (((key.singleUse) || (this.destroyKey)) && (key.keyId !== 'world')) {
+			if ((key.singleUse || this.destroyKey) && key.keyId !== 'world') {
 				obj.inventory.destroyItem(key.id, 1);
 
-				obj.instance.syncer.queue('onGetMessages', {
-					id: obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: 'The ' + key.name + ' disintegrates on use',
-						type: 'info'
-					}]
-				}, [obj.serverId]);
+				const message = `The ${key.name} disintegrates on use`;
+				obj.social.notifySelf({ message });
 			}
 		}
 

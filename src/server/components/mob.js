@@ -41,6 +41,9 @@ module.exports = {
 
 		if (blueprint.patrol)
 			this.patrol = blueprint.patrol;
+
+		if (blueprint.maxChaseDistance)
+			this.maxChaseDistance = blueprint.maxChaseDistance;
 	},
 
 	update: function () {

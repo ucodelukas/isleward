@@ -280,6 +280,9 @@ module.exports = {
 			noMitigate: noMitigate
 		};
 
+		if (this.obj.mob)
+			config.noCrit = true;
+
 		this.obj.fireEvent('onBeforeCalculateDamage', config);
 
 		if (this.percentDamage)

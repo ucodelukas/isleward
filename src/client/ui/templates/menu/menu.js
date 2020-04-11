@@ -15,7 +15,6 @@ define([
 				this.find('.btnCollapse').on('click', this.toggleButtons.bind(this));
 			}
 
-			this.find('.btnSmithing').on('click', this.handler.bind(this, 'onShowSmithing'));
 			this.find('.btnHelp').on('click', this.handler.bind(this, 'onShowHelp'));
 			this.find('.btnInventory').on('click', this.handler.bind(this, 'onShowInventory'));
 			this.find('.btnEquipment').on('click', this.handler.bind(this, 'onShowEquipment'));

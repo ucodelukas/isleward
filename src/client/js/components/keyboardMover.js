@@ -17,6 +17,7 @@ define([
 
 		init: function () {
 			this.hookEvent('onCanvasKeyDown', this.onCanvasKeyDown.bind(this));
+			this.hookEvent('onMoveSpeedChange', this.onMoveSpeedChange.bind(this));
 		},
 
 		update: function () {
@@ -29,6 +30,14 @@ define([
 			}
 
 			this.keyMove();
+		},
+
+		//Changes the moveCdMax variable
+		// moveSpeed is affected when mounting and unmounting
+		// moveSpeed: 0		|	moveCdMax: 8
+		// moveSpeed: 200	|	moveCdMax: 4
+		onMoveSpeedChange: function (moveSpeed) {
+			this.moveCdMax = Math.ceil(4 + (((200 - moveSpeed) / 200) * 4));
 		},
 
 		onCanvasKeyDown: function (keyEvent) {

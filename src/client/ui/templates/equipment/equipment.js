@@ -155,30 +155,17 @@ define([
 				});
 		},
 
-		openAugmentUi: function (item) {
-			events.emit('onSetSmithItem', {
-				item: item
-			});
-		},
-
 		showContext: function (item, e) {
 			let menuItems = {
 				unequip: {
 					text: 'unequip',
 					callback: this.unequipItem.bind(this, item)
-				},
-				augment: {
-					text: 'craft',
-					callback: this.openAugmentUi.bind(this, item)
-				}				
+				}			
 			};
 
 			let config = [];
 
 			config.push(menuItems.unequip);
-
-			if (item.slot)
-				config.push(menuItems.augment);
 
 			events.emit('onContextMenu', config, e);
 
@@ -187,13 +174,17 @@ define([
 		},
 
 		unequipItem: function (item) {
+			const isQuickslot = item.has('quickSlot');
+			const method = isQuickslot ? 'setQuickSlot' : 'unequip';
+			const data = isQuickslot ? { slot: item.quickSlot } : item.id;
+
 			client.request({
 				cpn: 'player',
 				method: 'performAction',
 				data: {
 					cpn: 'equipment',
-					method: 'unequip',
-					data: item.id
+					method,
+					data
 				}
 			});
 		},

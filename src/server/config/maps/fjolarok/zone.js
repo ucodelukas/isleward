@@ -18,14 +18,6 @@ module.exports = {
 			type: 'fish',
 			quantity: [6, 12]
 		},
-		vikardoor: {
-			properties: {
-				cpnDoor: {
-					locked: true,
-					key: 'vikar'
-				}
-			}
-		},
 		shopestrid: {
 			properties: {
 				cpnNotice: {
@@ -523,6 +515,61 @@ module.exports = {
 					type: 'cooking'
 				}
 			}
+		},
+		'enchanting shrine': {
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['48edff', 'fc66f7'],
+									end: ['393268', '42548d']
+								},
+								scale: {
+									start: {
+										min: 2,
+										max: 10
+									},
+									end: {
+										min: 0,
+										max: 2
+									}
+								},
+								speed: {
+									start: {
+										min: 4,
+										max: 16
+									},
+									end: {
+										min: 2,
+										max: 8
+									}
+								},
+								lifetime: {
+									min: 1,
+									max: 4
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.2,
+								randomColor: true,
+								spawnType: 'rect',
+								spawnRect: {
+									x: -15,
+									y: -28,
+									w: 30,
+									h: 8
+								}
+							}
+						};
+					}
+				},
+				cpnWorkbench: {
+					type: 'enchanting'
+				}
+			}
 		}
 	},
 	mobs: {
@@ -592,6 +639,8 @@ module.exports = {
 		},
 		thumper: {
 			level: 5,
+			cron: '0 * * * *',
+
 			regular: {
 				hpMult: 3,
 				dmgMult: 3,
@@ -805,56 +854,56 @@ module.exports = {
 						extra: [{
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'magic missile',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'ice spear',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'smite',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'consecrate',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'slash',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'charge',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'flurry',
 							worth: 3
 						}, {
 							generate: true,
 							spell: true,
-							spellQuality: 'basic',
+							spellQuality: 0,
 							infinite: true,
 							spellName: 'smokebomb',
 							worth: 3
@@ -954,6 +1003,116 @@ module.exports = {
 					markup: {
 						buy: 0.25,
 						sell: 10
+					}
+				}
+			}
+		},
+
+		sundfehr: {
+			level: 9,
+			walkDistance: 0,
+
+			cron: '0 */2 * * *',
+
+			regular: {
+				hpMult: 10,
+				dmgMult: 1,
+
+				drops: {
+					chance: 100,
+					rolls: 3,
+					magicFind: [2000]
+				}
+			},
+
+			rare: {
+				chance: 0
+			},
+
+			spells: [{
+				type: 'warnBlast',
+				range: 8,
+				delay: 9,
+				damage: 0.8,
+				statMult: 1,
+				cdMax: 7,
+				targetRandom: true,
+				particles: {
+					color: {
+						start: ['c0c3cf', '929398'],
+						end: ['929398', 'c0c3cf']
+					},
+					spawnType: 'circle',
+					spawnCircle: {
+						x: 0,
+						y: 0,
+						r: 12
+					},
+					randomColor: true,
+					chance: 0.03
+				}
+			}, {
+				type: 'projectile',
+				damage: 0.4,
+				statMult: 1,
+				cdMax: 5,
+				targetRandom: true,
+				row: 2,
+				col: 4
+			}],
+
+			components: {
+				cpnParticles: {
+					simplify: function () {
+						return {
+							type: 'particles',
+							blueprint: {
+								color: {
+									start: ['fc66f7', '802343'],
+									end: ['393268', 'de43ae']
+								},
+								scale: {
+									start: {
+										min: 10,
+										max: 18
+									},
+									end: {
+										min: 4,
+										max: 8
+									}
+								},
+								speed: {
+									start: {
+										min: 6,
+										max: 12
+									},
+									end: {
+										min: 2,
+										max: 4
+									}
+								},
+								lifetime: {
+									min: 5,
+									max: 12
+								},
+								alpha: {
+									start: 0.25,
+									end: 0
+								},
+								randomScale: true,
+								randomSpeed: true,
+								chance: 0.06,
+								randomColor: true,
+								spawnType: 'rect',
+								blendMode: 'add',
+								spawnRect: {
+									x: -24,
+									y: -24,
+									w: 48,
+									h: 48
+								}
+							}
+						};
 					}
 				}
 			}

@@ -89,14 +89,8 @@ module.exports = {
 		};
 		obj.fireEvent('beforeEquipItem', equipMsg);
 		if (!equipMsg.success) {
-			obj.instance.syncer.queue('onGetMessages', {
-				id: obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: equipMsg.msg || 'you cannot equip that item',
-					type: 'info'
-				}]
-			}, [obj.serverId]);
+			const message = equipMsg.msg || 'you cannot equip that item';
+			obj.social.notifySelf({ message });
 
 			return;
 		}
@@ -154,14 +148,8 @@ module.exports = {
 		if (!item)
 			return;
 		else if (!ignoreSpaceCheck && !inventory.hasSpace()) {
-			obj.instance.syncer.queue('onGetMessages', {
-				id: obj.id,
-				messages: [{
-					class: 'color-redA',
-					message: 'You do not have room in your inventory to unequip that item',
-					type: 'info'
-				}]
-			}, [obj.serverId]);
+			const message = 'You do not have room in your inventory to unequip that item';
+			obj.social.notifySelf({ message });
 
 			return;
 		}
@@ -277,14 +265,10 @@ module.exports = {
 					level: `Your level is too low to equip your ${item.name}`
 				})[errors[0]];
 
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: message,
-						type: 'rep'
-					}]
-				}, [this.obj.serverId]);
+				this.obj.social.notifySelf({
+					message,
+					type: 'rep'
+				});
 			}
 		}, this);
 	},
@@ -308,14 +292,11 @@ module.exports = {
 			if (findFaction.tier > tier) {
 				this.unequip(itemId);
 
-				this.obj.instance.syncer.queue('onGetMessages', {
-					id: this.obj.id,
-					messages: [{
-						class: 'color-redA',
-						message: 'You unequip your ' + item.name + ' as it zaps you.',
-						type: 'rep'
-					}]
-				}, [this.obj.serverId]);
+				const message = `You unequip your ${item.name} as it zaps you.`;
+				this.obj.social.notifySelf({
+					message,
+					type: 'rep'
+				});
 			}
 		}, this);
 	},

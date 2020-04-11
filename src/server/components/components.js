@@ -14,13 +14,11 @@ module.exports = {
 	},
 
 	getComponentFolder: function () {
-		let files = fileLister.getFolder('./components/');
-		files = files.filter(w => (
-			(w.indexOf('components') === -1) &&
-			(w.indexOf('cpnBase') === -1) &&
-			(w.indexOf('projectile') === -1)
-		));
-		let fLen = files.length;
+		const ignoreFiles = ['components.js', 'componentBase.js'];
+		const files = fileLister.getFolder('./components/')
+			.filter(f => !ignoreFiles.includes(f));
+
+		const fLen = files.length;
 		for (let i = 0; i < fLen; i++) 
 			this.getComponentFile(`./${files[i]}`);
 

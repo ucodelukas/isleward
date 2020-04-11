@@ -18,6 +18,7 @@ let recipes = require('../config/recipes/recipes');
 let itemTypes = require('../items/config/types');
 let mapList = require('../config/maps/mapList');
 let sheets = require('../security/sheets');
+let itemEffects = require('../items/itemEffects');
 
 let onCpnsReady = function () {
 	factions.init();
@@ -31,6 +32,7 @@ let onCpnsReady = function () {
 	mapList.init();
 	recipes.init();
 	sheets.init();
+	itemEffects.init();
 
 	process.send({
 		method: 'onReady'

@@ -3,17 +3,13 @@ let events = require('../../misc/events');
 const recipesAlchemy = require('./alchemy');
 const recipesCooking = require('./cooking');
 const recipesEtching = require('./etching');
+const recipesEnchanting = require('./enchanting');
 
 let recipes = {
-	alchemy: [
-		...recipesAlchemy
-	],
-	cooking: [
-		...recipesCooking
-	],
-	etching: [
-		...recipesEtching
-	]
+	alchemy: [ ...recipesAlchemy ],
+	cooking: [ ...recipesCooking ],
+	etching: [ ...recipesEtching ],
+	enchanting: [ ...recipesEnchanting ]
 };
 
 module.exports = {
@@ -22,7 +18,11 @@ module.exports = {
 	},
 
 	getList: function (type, unlocked) {
-		return (recipes[type] || [])
+		const useRecipes = recipes[type];
+		if (!useRecipes)
+			return [];
+
+		return useRecipes
 			.filter(r => {
 				let hasUnlocked = (r.default !== false);
 				if (!hasUnlocked)

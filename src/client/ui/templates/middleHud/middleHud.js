@@ -14,11 +14,6 @@ define([
 			this.onEvent('onGetSelfCasting', this.onGetCasting.bind(this));
 
 			if (isMobile) {
-				this.onEvent('onEnterGatherNode', this.toggleGatherButton.bind(this, true));
-				this.onEvent('onExitGatherNode', this.toggleGatherButton.bind(this, false));
-				this.onEvent('onRespawn', this.toggleGatherButton.bind(this, false));
-				this.onEvent('onShowProgress', this.toggleGatherButton.bind(this, false));
-
 				this.onEvent('onGetServerActions', this.onGetServerActions.bind(this));
 
 				this.find('.btnGather').on('click', this.gather.bind(this));
@@ -36,12 +31,6 @@ define([
 					.find('.bar')
 					.width((casting * 100) + '%');
 			}
-		},
-
-		toggleGatherButton: function (show) {
-			let btn = this.find('.btnGather').hide();
-			if (show)
-				btn.show();
 		},
 
 		gather: function () {

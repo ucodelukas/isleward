@@ -61,7 +61,7 @@ define([
 			this.list.push(numberObj);
 		},
 
-		render: function () {
+		update: function () {
 			let list = this.list;
 			let lLen = list.length;
 
