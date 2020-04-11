@@ -26,7 +26,7 @@ module.exports = {
 
 			rare: {
 				count: 1,
-				chance: 0.94,
+				chance: 0.4,
 
 				hpMult: 3,
 				dmgMult: 1.5,
