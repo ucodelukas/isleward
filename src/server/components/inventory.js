@@ -594,7 +594,7 @@ module.exports = {
 			if (!hasSpell) {
 				let item = generator.generate({
 					spell: true,
-					spellQuality: 0,
+					quality: 0,
 					spellName: spellName
 				});
 				item.worth = 0;
