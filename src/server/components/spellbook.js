@@ -2,6 +2,7 @@ let spellTemplate = require('../config/spells/spellTemplate');
 let animations = require('../config/animations');
 let playerSpells = require('../config/spells');
 let playerSpellsConfig = require('../config/spellsConfig');
+const { buildValues: buildRuneValues } = require('../items/generators/spellbook');
 
 module.exports = {
 	type: 'spellbook',
@@ -170,24 +171,15 @@ module.exports = {
 			values: {}
 		}, playerSpell, playerSpellConfig, runeSpell);
 
-		for (let r in builtSpell.random) {
-			let range = builtSpell.random[r];
-			let roll = runeSpell.rolls[r] || 0;
-			runeSpell.rolls[r] = roll;
+		const runeValues = buildRuneValues(builtSpell);
 
-			let int = r.indexOf('i_') === 0;
+		Object.entries(runeValues).forEach(e => {
+			const [ property, value ] = e;
 
-			let val = range[0] + ((range[1] - range[0]) * roll);
-			if (int) {
-				val = ~~val;
-				r = r.replace('i_', '');
-			} else
-				val = ~~(val * 100) / 100;
-
-			builtSpell[r] = val;
-			builtSpell.values[r] = val;
-			runeSpell.values[r] = val;
-		}
+			builtSpell[property] = value;
+			builtSpell.values[property] = value;
+			runeSpell.values[property] = value;
+		});
 
 		if (runeSpell.properties) {
 			for (let p in runeSpell.properties) 

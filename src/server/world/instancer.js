@@ -3,14 +3,13 @@ let syncer = require('./syncer');
 let objects = require('../objects/objects');
 let spawners = require('./spawners');
 let physics = require('./physics');
-let resourceSpawner = require('./resourceSpawner');
 let spellCallbacks = require('../config/spells/spellCallbacks');
 let questBuilder = require('../config/quests/questBuilder');
 let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let mail = require('../mail/mail');
-let herbs = require('../config/herbs');
+let resourceNodes = require('../config/resourceNodes');
 let eventEmitter = require('../misc/events');
 const transactions = require('../security/transactions');
 
@@ -25,7 +24,7 @@ module.exports = {
 		this.zoneId = args.zoneId;
 
 		spellCallbacks.init();
-		herbs.init();
+		resourceNodes.init();
 		map.init(args);
 
 		const fakeInstance = {
@@ -64,15 +63,17 @@ module.exports = {
 
 		map.clientMap.zoneId = this.zoneId;
 
-		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
+		[syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
+		eventEmitter.emitNoSticky('onInitModules', fakeInstance);
 
 		this.tick();
 	},
 
 	tick: function () {
+		eventEmitter.emitNoSticky('onBeforeZoneUpdate');
+
 		events.update();
 		objects.update();
-		resourceSpawner.update();
 		spawners.update();
 		syncer.update();
 		scheduler.update();

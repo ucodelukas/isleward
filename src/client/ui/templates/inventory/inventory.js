@@ -22,8 +22,6 @@ define([
 
 		centered: true,
 
-		items: [],
-
 		dragItem: null,
 		dragEl: null,
 		hoverCell: null,
@@ -65,7 +63,7 @@ define([
 			let container = this.el.find('.grid')
 				.empty();
 
-			let items = this.items
+			let items = window.player.inventory.items
 				.filter(function (item) {
 					return !item.eq;
 				});
@@ -184,7 +182,7 @@ define([
 						pos: this.dragItem.index()
 					}];
 
-					this.items.find(function (i) {
+					window.player.inventory.items.find(function (i) {
 						return (i.id === this.dragItem.data('item').id);
 					}, this).pos = this.dragItem.index();
 
@@ -196,7 +194,7 @@ define([
 								pos: this.hoverCell.index()
 							});
 
-							this.items.find(function (i) {
+							window.player.inventory.items.find(function (i) {
 								return (i.id === hoverCellItem.id);
 							}, this).pos = this.hoverCell.index();
 						} else {
@@ -263,11 +261,6 @@ define([
 				destroy: {
 					text: 'destroy',
 					callback: this.performItemAction.bind(this, item, 'destroyItem')
-				},
-				salvage: {
-					text: 'salvage',
-					callback: this.performItemAction.bind(this, item, 'salvageItem'),
-					hotkey: 'f'
 				},
 				stash: {
 					text: 'stash',
@@ -341,9 +334,6 @@ define([
 
 					if (!item.noDrop)
 						ctxConfig.push(menuItems.drop);
-
-					if ((!item.material) && (!item.noSalvage))
-						ctxConfig.push(menuItems.salvage);
 				}
 			}
 
@@ -477,19 +467,15 @@ define([
 		},
 
 		onGetItems: function (items, rerender) {
-			this.items = items;
-
-			if ((this.shown) && (rerender))
+			if (this.shown && rerender)
 				this.build();
 		},
 		onDestroyItems: function (itemIds) {
-			itemIds.forEach(function (id) {
-				let item = this.items.find(i => i.id === id);
+			itemIds.forEach(id => {
+				const item = window.player.inventory.items.find(i => i.id === id);
 				if (item === this.hoverItem)
 					this.hideTooltip();
-
-				this.items.spliceWhere(i => i.id === id);
-			}, this);
+			});
 
 			if (this.shown)
 				this.build();

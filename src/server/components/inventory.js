@@ -1,5 +1,4 @@
 let generator = require('../items/generator');
-let salvager = require('../items/salvager');
 let classes = require('../config/spirits');
 let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
@@ -300,29 +299,6 @@ module.exports = {
 			return;
 
 		this.destroyItem(id, null, true);
-	},
-
-	salvageItem: function (id) {
-		let item = this.findItem(id);
-		if ((!item) || (item.material) || (item.quest) || (item.noSalvage) || (item.eq))
-			return;
-			
-		let messages = [];
-			
-		let items = salvager.salvage(item);
-			
-		this.destroyItem(id);
-		
-		for (const material of items) {
-			this.getItem(material, true, false, false, true);
-				
-			messages.push({
-				className: 'q' + material.quality,
-				message: 'salvage (' + material.name + ' x' + material.quantity + ')'
-			});
-		}
-
-		this.obj.social.notifySelfArray(messages);
 	},
 
 	destroyItem: function (id, amount, force) {

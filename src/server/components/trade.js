@@ -1,6 +1,7 @@
 let generator = require('../items/generator');
 let statGenerator = require('../items/generators/stats');
 let skins = require('../config/skins');
+const events = require('../misc/events');
 
 const sendMessage = ({ instance, id, serverId }, color, message) => {
 	instance.syncer.queue('onGetMessages', {
@@ -263,24 +264,35 @@ module.exports = {
 		if (!target)
 			return;
 
+		const { obj: { inventory, syncer } } = this;
+
 		let targetTrade = target.trade;
 
-		const item = this.obj.inventory.findItem(msg.itemId);
+		const item = inventory.findItem(msg.itemId);
 		if (!item)
 			return;
 
 		const oldQuantity = item.quantity;
-		this.obj.inventory.destroyItem(msg.itemId);
+		inventory.destroyItem(msg.itemId);
 
 		if (oldQuantity)
 			item.quantity = oldQuantity;
 
-		let worth = ~~(item.worth * targetTrade.markup.buy);
+		const sellEventMsg = {
+			item,
+			worth: ~~(item.worth * targetTrade.markup.buy)
+		};
+		events.emit('onBeforeSellItem', sellEventMsg);
+		
+		const { worth } = sellEventMsg;
 
-		this.gold += worth;
+		if (typeof(worth) !== 'object') {
+			this.gold += worth;
+			syncer.set(true, 'trade', 'gold', this.gold);
+		} else 
+			inventory.getItem(worth, false, false, false, true);
 
-		this.obj.syncer.set(true, 'trade', 'gold', this.gold);
-		this.obj.syncer.setArray(true, 'trade', 'removeItems', item.id);
+		syncer.setArray(true, 'trade', 'removeItems', item.id);
 
 		let buybackList = targetTrade.buybackList;
 		let name = this.obj.name;
@@ -311,14 +323,16 @@ module.exports = {
 
 		this.target = target;
 
-		let itemList = this.obj.inventory.items
-			.filter(i => ((i.worth > 0) && (!i.eq)));
-		itemList = extend([], itemList);
+		const itemList = extend([], this.obj.inventory.items.filter(i => i.worth && !i.eq));
 
-		this.obj.syncer.set(true, 'trade', 'sellList', {
-			markup: target.trade.markup.buy,
-			items: itemList.map(i => this.obj.inventory.simplifyItem(i))
-		});
+		const sellEventMsg = {
+			items: itemList,
+			markup: target.trade.markup.buy
+		};
+
+		events.emit('onBeforeGetSellList', sellEventMsg);
+
+		this.obj.syncer.set(true, 'trade', 'sellList', sellEventMsg);
 	},
 
 	startBuyback: function (msg) {

@@ -10,14 +10,14 @@ module.exports = {
 			type: 'herb',
 			max: 1,
 			cdMax: 1710
+		},
+		'Sun Carp School': {
+			max: 900,
+			type: 'fish',
+			quantity: [6, 12]
 		}
 	},
 	objects: {
-		'sun carp school': {
-			max: 9,
-			type: 'fish',
-			quantity: [6, 12]
-		},
 		shopestrid: {
 			properties: {
 				cpnNotice: {

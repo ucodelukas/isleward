@@ -3,13 +3,11 @@ let events = require('../../misc/events');
 const recipesAlchemy = require('./alchemy');
 const recipesCooking = require('./cooking');
 const recipesEtching = require('./etching');
-const recipesEnchanting = require('./enchanting');
 
 let recipes = {
 	alchemy: [ ...recipesAlchemy ],
 	cooking: [ ...recipesCooking ],
-	etching: [ ...recipesEtching ],
-	enchanting: [ ...recipesEnchanting ]
+	etching: [ ...recipesEtching ]
 };
 
 module.exports = {

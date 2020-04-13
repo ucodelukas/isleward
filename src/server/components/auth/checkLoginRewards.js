@@ -1,6 +1,7 @@
 const scheduler = require('../../misc/scheduler');
 const rewardGenerator = require('../../misc/rewardGenerator');
 const mail = require('../../mail/mail');
+const events = require('../../misc/events');
 
 const calculateDaysSkipped = (oldTime, newTime) => {
 	let daysSkipped = 1;
@@ -63,8 +64,11 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 	accountInfo.loginStreak = loginStreak;
 
 	const itemCount = 1 + ~~(loginStreak / 2);
-	const rewards = rewardGenerator(itemCount);
-	if (!rewards) {
+	const rewardConfig = [];
+	events.emit('onBeforeGenerateLoginRewards', rewardConfig);
+	
+	const rewards = rewardGenerator(itemCount, rewardConfig);
+	if (!rewards.length) {
 		cbDone();
 		return;
 	}

@@ -16,6 +16,7 @@ define([
 
 			if (blueprint.destroyItems) {
 				rerender = true;
+				this.items.spliceWhere(i => blueprint.destroyItems.includes(i.id));
 				events.emit('onDestroyItems', blueprint.destroyItems, this.items);
 			}
 

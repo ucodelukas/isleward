@@ -42,6 +42,42 @@ const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = 
 	return result;
 };
 
+const buildValues = item => {
+	//Weapons have item.spell, runes just have item
+	const spell = item.spell ? item.spell : item;
+	const { name, type, rolls } = spell;
+
+	const useName = (name || type).toLowerCase();
+
+	const randomSpec = spellsConfig.spells[useName].random;
+
+	const result = {};
+
+	Object.entries(rolls).forEach(entry => {
+		const [ property, roll ] = entry;
+		const range = randomSpec[property];
+
+		const isInt = property.indexOf('i_') === 0;
+		let useProperty = property;
+		const minRange = range[0];
+		const maxRange = range[1];
+
+		let val = minRange + ((maxRange - minRange) * roll);
+
+		if (isInt) {
+			useProperty = property.substr(2);
+			val = Math.round(val);
+		} else
+			val = ~~(val * 100) / 100;
+
+		val = Math.max(range[0], Math.min(range[1], val));
+
+		result[useProperty] = val;
+	});
+
+	return result;
+};
+
 module.exports = {
 	generate: function (item, blueprint) {
 		blueprint = blueprint || {};
@@ -111,30 +147,10 @@ module.exports = {
 		}
 
 		const rolls = buildRolls(item, blueprint, spell, quality);
-		
-		Object.entries(spell.random || {}).forEach(entry => {
-			const [ property, range ] = entry;
-			const roll = rolls[property];
+		item.spell.rolls = rolls;
 
-			item.spell.rolls[property] = roll;
-
-			const isInt = property.indexOf('i_') === 0;
-			let useProperty = property;
-			const minRange = range[0];
-			const maxRange = range[1];
-
-			let val = minRange + ((maxRange - minRange) * roll);
-
-			if (isInt) {
-				useProperty = property.substr(2);
-				val = Math.round(val);
-			} else
-				val = ~~(val * 100) / 100;
-
-			val = Math.max(range[0], Math.min(range[1], val));
-
-			item.spell.values[useProperty] = val;
-		});
+		const values = buildValues(item);
+		item.spell.values = values;
 
 		if (blueprint.spellProperties) {
 			item.spell.properties = {};
@@ -146,5 +162,7 @@ module.exports = {
 			item.spell.properties = item.spell.properties || {};
 			item.spell.properties.range = item.range;
 		}
-	}
+	},
+
+	buildValues
 };

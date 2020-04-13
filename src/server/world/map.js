@@ -1,7 +1,6 @@
 let objects = require('../objects/objects');
 let physics = require('./physics');
 let spawners = require('./spawners');
-let resourceSpawner = require('./resourceSpawner');
 let globalZone = require('../config/zoneBase');
 let randomMap = require('./randomMap');
 let events = require('../misc/events');
@@ -96,10 +95,6 @@ module.exports = {
 			this.zone.dialogues = dialogues;
 
 		this.zone = extend({}, globalZone, this.zone);
-
-		let resources = this.zone.resources || {};
-		for (let r in resources)
-			resourceSpawner.register(r, resources[r]);
 
 		mapFile = require('../' + this.path + '/' + this.name + '/map');
 		this.mapFile = mapFile;
@@ -208,6 +203,8 @@ module.exports = {
 	},
 
 	build: function () {
+		events.emit('onBeforeBuildMap', this.name, this.zone);
+
 		const mapSize = {
 			w: mapFile.width,
 			h: mapFile.height
@@ -360,6 +357,17 @@ module.exports = {
 			}
 		},
 		object: function (layerName, cell) {
+			const buildObjectMsg = {
+				layerName,
+				mapScale,
+				obj: cell,
+				zoneConfig: this.zone,
+				ignore: false
+			};
+			events.emit('onBeforeBuildMapObject', buildObjectMsg);
+			if (buildObjectMsg.built)
+				return;
+
 			//Fixes for newer versions of tiled
 			cell.properties = objectifyProperties(cell.properties);
 			cell.polyline = cell.polyline || cell.polygon;
@@ -421,9 +429,7 @@ module.exports = {
 					});
 
 					room.exits.push(blueprint);
-				} else if (blueprint.properties.resource) 
-					resourceSpawner.register(blueprint.properties.resource, blueprint);
-				else {
+				} else {
 					blueprint.exits = [];
 					blueprint.objects = [];
 					this.rooms.push(blueprint);

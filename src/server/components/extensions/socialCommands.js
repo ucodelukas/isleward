@@ -1,9 +1,9 @@
 let roles = require('../../config/roles');
 let generator = require('../../items/generator');
 let configSlots = require('../../items/config/slots');
-let configMaterials = require('../../items/config/materials');
 let factions = require('../../config/factions');
 let connections = require('../../security/connections');
+const events = require('../../misc/events');
 
 const ban = require('../social/ban');
 const rezone = require('../social/rezone');
@@ -45,7 +45,6 @@ let commandRoles = {
 	getXp: 10,
 	setPassword: 10,
 	giveSkin: 10,
-	getMaterials: 10,
 	rezone: 10,
 	startEvent: 10,
 	stopEvent: 10,
@@ -86,6 +85,8 @@ const contextActions = [
 	}
 ];
 
+const commandActions = {};
+
 module.exports = {
 	customChannels: [],
 	roleLevel: null,
@@ -95,6 +96,13 @@ module.exports = {
 			this.customChannels = this.customChannels
 				.filter((c, i) => (this.customChannels.indexOf(c) === i));
 		}
+
+		events.emit('onBeforeGetCommandRoles', commandRoles, commandActions);
+		Object.entries(commandActions).forEach(a => {
+			const [ actionName, actionHandler ] = a;
+
+			this[actionName] = actionHandler.bind(this);
+		});
 
 		this.roleLevel = roles.getRoleLevel(this.obj);
 		this.calculateActions();
@@ -691,22 +699,6 @@ module.exports = {
 			table: 'skins',
 			value: skins,
 			serialize: true
-		});
-	},
-
-	getMaterials: function (config) {
-		if (typeof(config) === 'object')
-			config = 100;
-		
-		let inventory = this.obj.inventory;
-
-		Object.entries(configMaterials).forEach(([material, blueprint]) => {
-			inventory.getItem({
-				name: material,
-				quantity: config,
-				material: true,
-				...blueprint
-			});
 		});
 	},
 

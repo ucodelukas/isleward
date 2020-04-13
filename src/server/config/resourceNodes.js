@@ -2,7 +2,7 @@ let events = require('../misc/events');
 
 module.exports = {
 	init: function () {
-		events.emit('onBeforeGetHerbConfig', this);
+		events.emit('onBeforeGetResourceNodeConfig', this);
 	},
 
 	Moonbell: {
@@ -20,7 +20,7 @@ module.exports = {
 		cell: 51,
 		itemSprite: [1, 0]
 	},
-	'Sun Carp': {
+	'Sun Carp School': {
 		sheetName: 'objects',
 		itemSprite: [11, 2],
 		baseWeight: 3,

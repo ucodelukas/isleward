@@ -20,7 +20,7 @@ module.exports = (cpnWorkbench, msg) => {
 		return null;
 
 	const { needItems = [] } = recipe;
-	const { syncer, inventory, equipment, spellbook } = crafter;
+	const { inventory, equipment, spellbook } = crafter;
 
 	const materials = buildMaterials(crafter, recipe, msg);
 	const pickedItems = buildPickedItems(crafter, recipe, msg);
@@ -47,11 +47,8 @@ module.exports = (cpnWorkbench, msg) => {
 		resultMsg = recipe.craftAction(crafter, pickedItems);
 
 		pickedItems.forEach((p, i) => {
-			if (!p.eq) {
-				pickedItems.forEach(item => syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item)));
-				
+			if (!p.eq)				
 				return;
-			}
 
 			applyItemStats(crafter, p, true);
 
@@ -59,8 +56,6 @@ module.exports = (cpnWorkbench, msg) => {
 				equipment.unequip(p.id);
 
 			spellbook.calcDps();
-
-			pickedItems.forEach(item => syncer.setArray(true, 'inventory', 'getItems', inventory.simplifyItem(item)));
 		});
 
 		equipment.unequipAttrRqrGear();
@@ -83,6 +78,8 @@ module.exports = (cpnWorkbench, msg) => {
 			const quantity = item.quantity;
 			if (quantity && quantity.push)
 				item.quantity = quantity[0] + ~~(Math.random() * (quantity[1] - quantity[0]));
+
+			console.log(item);
 
 			crafter.inventory.getItem(item);
 		});
