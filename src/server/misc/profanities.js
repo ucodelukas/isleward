@@ -146,7 +146,8 @@ let blacklist = [
 	'whoring',
 	'wigger',
 	'gaes',
-	'gaez'
+	'gaez',
+	'gai'
 ];
 
 module.exports = {
