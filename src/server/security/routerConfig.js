@@ -17,8 +17,7 @@ const routerConfig = {
 		door: ['lock', 'unlock'],
 		wardrobe: ['open', 'apply'],
 		stats: ['respawn'],
-		passives: ['tickNode', 'untickNode'],
-		workbench: ['open', 'craft', 'getRecipe']
+		passives: ['tickNode', 'untickNode']
 	},
 	globalAllowed: {
 		clientConfig: ['getClientConfig'],

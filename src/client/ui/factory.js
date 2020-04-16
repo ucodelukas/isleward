@@ -41,7 +41,6 @@ define([
 		'mail',
 		'wardrobe',
 		'passives',
-		'workbench',
 		'middleHud',
 		'options'
 	];

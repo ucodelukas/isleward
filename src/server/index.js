@@ -10,7 +10,6 @@ let classes = require('./config/spirits');
 let spellsConfig = require('./config/spellsConfig');
 let spells = require('./config/spells');
 let itemTypes = require('./items/config/types');
-let recipes = require('./config/recipes/recipes');
 let mapList = require('./config/maps/mapList');
 let sheets = require('./security/sheets');
 let fixes = require('./fixes/fixes');
@@ -37,7 +36,6 @@ let startup = {
 		classes.init();
 		spellsConfig.init();
 		spells.init();
-		recipes.init();
 		itemTypes.init();
 		profanities.init();
 		mapList.init();
