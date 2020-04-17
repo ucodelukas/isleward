@@ -10,6 +10,7 @@ define([
 	'js/resources',
 	'js/sound/sound',
 	'js/system/globals',
+	'js/components/components',
 	'ui/templates/online/online',
 	'ui/templates/tooltips/tooltips'
 ], function (
@@ -23,7 +24,8 @@ define([
 	events,
 	resources,
 	sound,
-	globals
+	globals,
+	components
 ) {
 	let fnQueueTick = null;
 	const getQueueTick = updateMethod => {
@@ -56,6 +58,8 @@ define([
 
 			await resources.init();
 			events.emit('onResourcesLoaded');
+
+			await components.init();
 
 			this.start();
 		},

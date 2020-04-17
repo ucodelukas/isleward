@@ -25,6 +25,9 @@ const config = {
 		'images/skins/0010.png',
 		'images/skins/0012.png'
 	],
+	//Client components required by mods
+	// Format: [ 'cpnPath', ... ]
+	components: [],
 	uiList: [],
 	contextMenuActions: {
 		player: [],

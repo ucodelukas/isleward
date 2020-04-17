@@ -1,78 +1,87 @@
-let components = [
-	'keyboardMover',
-	'mouseMover',
-	'touchMover',
-	'player',
-	'pather',
-	'attackAnimation',
-	'lightningEffect',
-	'moveAnimation',
-	'bumpAnimation',
+const templates = {};
+const eventList = {};
+
+let events = null;
+
+const hookEvent = function (e, cb) {
+	if (!eventList[e])
+		eventList[e] = [];
+
+	eventList[e].push(cb);
+	events.on(e, cb);
+};
+
+const unhookEvents = function () {
+	Object.entries(eventList).forEach(([eventName, callbacks]) => {
+		callbacks.forEach(c => events.off(eventName, c));
+	});
+};
+
+const componentPaths = [
 	'animation',
-	'light',
-	'lightPatch',
-	'projectile',
-	'particles',
-	'explosion',
-	'spellbook',
-	'inventory',
-	'stats',
-	'chest',
-	'effects',
-	'quests',
-	'events',
-	'resourceNode',
-	'gatherer',
-	'stash',
-	'flash',
+	'attackAnimation',
+	'bumpAnimation',
 	'chatter',
+	'chest',
 	'dialogue',
-	'trade',
+	'effects',
+	'events',
+	'explosion',
+	'flash',
+	'inventory',
+	'keyboardMover',
+	'light',
+	'lightningEffect',
+	'lightPatch',
+	'mouseMover',
+	'moveAnimation',
+	'particles',
+	'passives',
+	'pather',
+	'player',
+	'projectile',
+	'quests',
 	'reputation',
 	'serverActions',
 	'social',
-	'passives',
 	'sound',
+	'spellbook',
+	'stash',
+	'stats',
+	'touchMover',
+	'trade',
 	'whirlwind'
-].map(function (c) {
-	return 'js/components/' + c;
-});
+].map(c => 'js/components/' + c);
 
 define([
-	...components, 
-	'../system/events'
-], function () {
-	const events = arguments[arguments.length - 1];
-	
-	const hookEvent = function (e, cb) {
-		if (!this.eventList[e])
-			this.eventList[e] = [];
-
-		this.eventList[e].push(cb);
-		events.on(e, cb);
-	};
-
-	const unhookEvents = function () {
-		Object.entries(this.eventList).forEach(([eventName, callbacks]) => {
-			callbacks.forEach(c => events.off(eventName, c));
-		});
-	};
-
-	let templates = {};
-
-	[].forEach.call(arguments, function (t, i) {
-		//Don't do this for the events module
-		if (i === arguments[2].length - 1)
-			return;
-
-		t.eventList = {};
-		t.hookEvent = hookEvent.bind(t);
-		t.unhookEvents = unhookEvents.bind(t);
-
-		templates[t.type] = t;
-	});
+	'../system/events',
+	'../system/globals'
+], function (
+	eventModule,
+	globals
+) {
+	events = eventModule;
 
 	return {
+		init: async function () {
+			const extraComponents = globals.clientConfig.components;
+			componentPaths.push(...extraComponents);
+
+			await Promise.all(componentPaths.map(path => {
+				return new Promise(async res => {
+					require([path], cpn => {
+						cpn.eventList = {};
+						cpn.hookEvent = hookEvent.bind(cpn);
+						cpn.unhookEvents = unhookEvents.bind(cpn);
+
+						templates[cpn.type] = cpn;
+
+						res();
+					});
+				});
+			}));
+		},
+
 		getTemplate: function (type) {
 			if (type === 'lightpatch')
 				type = 'lightPatch';

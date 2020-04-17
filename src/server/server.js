@@ -103,7 +103,8 @@ module.exports = {
 					file.includes('mods/') &&
 					(
 						file.includes('.png') ||
-						file.includes('/ui/')
+						file.includes('/ui/') ||
+						file.includes('/clientComponents/')
 					)
 				)
 			);
