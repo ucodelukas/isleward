@@ -29,13 +29,6 @@ module.exports = {
 	name: 'The Fjolgard Sewer',
 	level: [11, 13],
 
-	resources: {
-		Stinkcap: {
-			type: 'herb',
-			max: 1
-		}
-	},
-
 	mobs: {
 		default: {
 			faction: 'fjolgard',
