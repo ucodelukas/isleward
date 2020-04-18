@@ -408,6 +408,7 @@ module.exports = {
 		}
 
 		delete item.pos;
+		delete item.quickSlot;
 
 		let res = await io.getAsync({
 			key: msg.recipient,
