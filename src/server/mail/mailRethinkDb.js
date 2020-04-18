@@ -63,6 +63,8 @@ module.exports = {
 								delete r.msg;
 							}
 
+							delete r.pos;
+							delete r.quickSlot;
 							inventory.getItem(r, false, false, false, true);
 						}
 					});
@@ -130,6 +132,8 @@ module.exports = {
 					delete r.msg;
 				}
 
+				delete r.pos;
+				delete r.quickSlot;
 				inventory.getItem(r, false, false, false, true);
 			}
 		});

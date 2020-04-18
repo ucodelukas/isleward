@@ -407,9 +407,6 @@ module.exports = {
 			return;
 		}
 
-		delete item.pos;
-		delete item.quickSlot;
-
 		let res = await io.getAsync({
 			key: msg.recipient,
 			table: 'character'
