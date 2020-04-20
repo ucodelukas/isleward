@@ -1,8 +1,6 @@
 module.exports = {
 	name: 'The Estuary',
 	level: [15, 18],
-	addLevel: 0,
-	resources: {},
 	mobs: {
 		default: {
 			faction: 'hostile',

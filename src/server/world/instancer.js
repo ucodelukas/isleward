@@ -9,7 +9,6 @@ let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let mail = require('../mail/mail');
-let resourceNodes = require('../config/resourceNodes');
 let eventEmitter = require('../misc/events');
 const transactions = require('../security/transactions');
 
@@ -24,7 +23,6 @@ module.exports = {
 		this.zoneId = args.zoneId;
 
 		spellCallbacks.init();
-		resourceNodes.init();
 		map.init(args);
 
 		const fakeInstance = {

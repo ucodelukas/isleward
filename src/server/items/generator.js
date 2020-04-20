@@ -1,3 +1,5 @@
+const events = require('../misc/events');
+
 let g1 = require('./generators/level'); 
 let g2 = require('./generators/quality'); 
 let g3 = require('./generators/slots'); 
@@ -30,6 +32,16 @@ module.exports = {
 		blueprint = blueprint || {};
 
 		let item = {};
+
+		const generateEvent = {
+			blueprint,
+			item,
+			ignore: false
+		};
+
+		events.emit('onBeforeGenerateItem', generateEvent);
+		if (generateEvent.ignore)
+			return item;
 
 		const dropChancesEvent = {
 			blueprint,
@@ -97,6 +109,8 @@ module.exports = {
 
 		if (blueprint.uses)
 			item.uses = blueprint.uses;
+
+		events.emit('onAfterGenerateItem', generateEvent);
 
 		return item;
 	},

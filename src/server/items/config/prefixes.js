@@ -1,4 +1,6 @@
-module.exports = {
+const events = require('../../misc/events');
+
+const prefixes = {
 	generic: [
 		'aether',
 		'abyssal',
@@ -202,11 +204,14 @@ module.exports = {
 		head: [
 			'masked'
 		],
-		tool: [
-			'angler%',
-			'fisherman%',
-			'linesman%',
-			'trawler%'
-		]
+		tool: []
+	}
+};
+
+module.exports = {
+	prefixes,
+
+	init: function () {
+		events.emit('onBeforeGetItemNamePrefixes', prefixes);
 	}
 };

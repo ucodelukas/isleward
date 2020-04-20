@@ -1,4 +1,6 @@
-module.exports = {
+const events = require('../../misc/events');
+
+const suffixes = {
 	generic: [
 		'absence',
 		'abomination',
@@ -187,23 +189,14 @@ module.exports = {
 			'chain',
 			'noose'
 		],
-		tool: [
-			'angler',
-			'bait-caster',
-			'baiter',
-			'branch',
-			'fish-catcher',
-			'fish-stick',
-			'fisher',
-			'hook',
-			'line',
-			'lure',
-			'pole',
-			'reel',
-			'rod',
-			'stick',
-			'tackle',
-			'twig'
-		]
+		tool: []
+	}
+};
+
+module.exports = {
+	suffixes,
+
+	init: function () {
+		events.emit('onBeforeGetItemNameSuffixes', suffixes);
 	}
 };

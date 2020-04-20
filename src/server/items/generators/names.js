@@ -1,5 +1,5 @@
-let prefixes = require('../config/prefixes');
-let suffixes = require('../config/suffixes');
+const { prefixes } = require('../config/prefixes');
+const { suffixes } = require('../config/suffixes');
 
 module.exports = {
 	generators: [

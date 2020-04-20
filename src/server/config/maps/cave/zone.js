@@ -1,8 +1,6 @@
 module.exports = {
 	name: 'The Crystal Caves',
 	level: [14, 16],
-	addLevel: 0,
-	resources: {},
 	mobs: {
 		default: {
 			spells: [{

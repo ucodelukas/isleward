@@ -1,4 +1,4 @@
-let statsFishingRod = require('./statsFishingRod');
+const events = require('../../misc/events');
 
 module.exports = {
 	generators: {
@@ -494,13 +494,18 @@ module.exports = {
 	},
 
 	generate: function (item, blueprint, result) {
-		if (item.slot === 'tool') {
-			statsFishingRod.generate(item, blueprint, result);
-			return;
-		}
-
 		if (!blueprint.statCount)
 			item.stats = {};
+
+		const eventMsg = {
+			item,
+			blueprint,
+			result,
+			ignore: false
+		};
+		events.emit('onBeforeGenerateItemStats', eventMsg);
+		if (eventMsg.ignore)
+			return;
 
 		if (blueprint.noStats)
 			return;

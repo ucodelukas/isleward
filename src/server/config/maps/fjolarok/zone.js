@@ -1,22 +1,6 @@
 module.exports = {
 	name: 'Fjolarok',
 	level: [1, 10],
-	resources: {
-		Skyblossom: {
-			type: 'herb',
-			max: 4
-		},
-		Emberleaf: {
-			type: 'herb',
-			max: 1,
-			cdMax: 1710
-		},
-		'Sun Carp School': {
-			max: 900,
-			type: 'fish',
-			quantity: [6, 12]
-		}
-	},
 	objects: {
 		shopestrid: {
 			properties: {

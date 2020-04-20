@@ -476,15 +476,11 @@ let types = {
 			}
 		}
 	},
-	tool: {
-		'Fishing Rod': {
-			sprite: [11, 0]
-		}
-	}
+	tool: {}
 };
 
 module.exports = {
-	types: types,
+	types,
 	init: function () {
 		events.emit('onBeforeGetItemTypes', types);
 	}
