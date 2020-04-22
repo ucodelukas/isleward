@@ -15,10 +15,5 @@ module.exports = {
 		subType: '',
 		quantity: [3, 7],
 		dropChance: 0.5
-	}, {
-		name: 'Green Fingers',
-		type: 'gatherResource',
-		subType: 'herb',
-		quantity: [5, 10]
 	}]
 };

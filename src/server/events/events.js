@@ -1,4 +1,4 @@
-let phaseTemplate = require('../config/eventPhases/phaseTemplate');
+let phaseTemplate = require('./phases/phaseTemplate');
 let fs = require('fs');
 let mapList = require('../config/maps/mapList');
 
@@ -386,7 +386,7 @@ module.exports = {
 			let phase = event.phases[i];
 			if (!phase) {
 				let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
-				let typeTemplate = require('../config/eventPhases/' + phaseFile);
+				let typeTemplate = require('./phases/' + phaseFile);
 				phase = extend({
 					instance: this.instance,
 					event: event

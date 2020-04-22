@@ -33,7 +33,7 @@ module.exports = {
 			zoneTemplate = globalQuests;
 
 		let config = extend({}, zoneTemplate);
-		this.instance.eventEmitter.emit('onBeforeGetQuests', config);
+		this.instance.eventEmitter.emit('onBeforeGetQuests', config, zoneName);
 		if (config.infini.length === 0)
 			return;
 
@@ -48,7 +48,14 @@ module.exports = {
 		if (!pickQuest)
 			pickQuest = config.infini[~~(Math.random() * config.infini.length)];
 		let pickType = pickQuest.type[0].toUpperCase() + pickQuest.type.substr(1);
-		let questClass = require(`../../config/quests/templates/quest${pickType}`);
+
+		const questMsg = {
+			type: pickType,
+			path: pickQuest.path || `../../config/quests/templates/quest${pickType}`
+		};
+		this.instance.eventEmitter.emit('onBeforeBuildQuest', questMsg);
+
+		let questClass = require(questMsg.path);
 
 		let quest = extend({}, pickQuest, questTemplate, questClass, template);
 
