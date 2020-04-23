@@ -180,7 +180,7 @@ define([
 				}, true);
 			}
 
-			if ((obj.name) && (obj.sprite)) {
+			if (obj.name) {
 				obj.nameSprite = renderer.buildText({
 					layerName: 'effects',
 					text: obj.name,
@@ -361,7 +361,7 @@ define([
 			for (let i = 0; i < oLen; i++) {
 				let obj = objects[i];
 				let ns = obj.nameSprite;
-				if ((!ns) || (obj.dead) || ((obj.sprite) && (!obj.sprite.visible)))
+				if (!ns || obj.dead || (obj.sprite && !obj.sprite.visible) || renderer.isHidden(obj.x, obj.y))
 					continue;
 
 				ns.visible = show;
