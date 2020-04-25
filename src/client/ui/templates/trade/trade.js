@@ -100,10 +100,25 @@ define([
 						$('<div class="no-afford"></div>').appendTo(itemEl);
 				}
 
-				if (item.worth.currency)
-					item.worthText = item.worth.amount + 'x ' + item.worth.currency;
-				else
+				let worth = item.worth;
+				if (typeof(worth) === 'number')
 					item.worthText = ~~(itemList.markup * item.worth);
+				else {
+					if (!worth.push)
+						worth = [worth];
+
+					item.worthText = worth
+						.map(w => {
+							const { currency, amount } = w;
+
+							const result = `${amount}x ${currency}`;
+
+							return result;
+						})
+						.join('<br />');
+
+					item.worthText = '<br />' + item.worthText;
+				}
 			}
 
 			this.center();

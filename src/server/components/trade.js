@@ -137,8 +137,16 @@ module.exports = {
 			markup = target.trade.markup.buy;
 		}
 
+		const eventMsg = {
+			items: itemList,
+			markup,
+			action: msg.action
+		};
+
+		events.emit('onBeforeGetTradeList', eventMsg);
+
 		this.obj.syncer.set(true, 'trade', 'buyList', {
-			markup: markup,
+			markup,
 			items: itemList,
 			buyback: (msg.action === 'buyback')
 		});
@@ -239,13 +247,27 @@ module.exports = {
 			sendMessage(this.obj, 'color-greenB', `Unlocked skin: ${item.name}.`);
 		}
 
-		if (item.worth.currency) {
-			let currencyItem = this.obj.inventory.items.find(i => (i.name === item.worth.currency));
-			this.obj.inventory.destroyItem(currencyItem.id, item.worth.amount, true);
-		} else {
-			targetTrade.gold += ~~(item.worth * markup);
-			this.gold -= ~~(item.worth * markup);
+		const eventMsg = {
+			item,
+			worth: ~~(item.worth * targetTrade.markup.buy),
+			action: msg.action
+		};
+		events.emit('onBeforeTradeItem', eventMsg);
+		
+		let { worth } = eventMsg;
+
+		if (typeof(worth) === 'number') {
+			targetTrade.gold += ~~(worth * markup);
+			this.gold -= ~~(worth * markup);
 			this.obj.syncer.set(true, 'trade', 'gold', this.gold);
+		} else {
+			if (!worth.push)
+				worth = [worth];
+
+			worth.forEach(w => {
+				let currencyItem = this.obj.inventory.items.find(i => (i.name === w.name));
+				this.obj.inventory.destroyItem(currencyItem.id, w.quantity, true);
+			});
 		}
 
 		//Hack to always redraw the UI (to give items the red overlay if they can't be afforded)
@@ -278,19 +300,24 @@ module.exports = {
 		if (oldQuantity)
 			item.quantity = oldQuantity;
 
-		const sellEventMsg = {
+		const eventMsg = {
 			item,
-			worth: ~~(item.worth * targetTrade.markup.buy)
+			worth: ~~(item.worth * targetTrade.markup.buy),
+			action: 'sell'
 		};
-		events.emit('onBeforeSellItem', sellEventMsg);
+		events.emit('onBeforeTradeItem', eventMsg);
 		
-		const { worth } = sellEventMsg;
+		let { worth } = eventMsg;
 
-		if (typeof(worth) !== 'object') {
+		if (typeof(worth) === 'number') {
 			this.gold += worth;
 			syncer.set(true, 'trade', 'gold', this.gold);
-		} else 
-			inventory.getItem(worth, false, false, false, true);
+		} else {
+			if (!worth.push)
+				worth = [worth];
+
+			worth.forEach(w => inventory.getItem(w, false, false, false, true));
+		}
 
 		syncer.setArray(true, 'trade', 'removeItems', item.id);
 
@@ -325,14 +352,15 @@ module.exports = {
 
 		const itemList = extend([], this.obj.inventory.items.filter(i => i.worth && !i.eq));
 
-		const sellEventMsg = {
+		const eventMsg = {
 			items: itemList,
-			markup: target.trade.markup.buy
+			markup: target.trade.markup.sell,
+			action: 'sell'
 		};
 
-		events.emit('onBeforeGetSellList', sellEventMsg);
+		events.emit('onBeforeGetTradeList', eventMsg);
 
-		this.obj.syncer.set(true, 'trade', 'sellList', sellEventMsg);
+		this.obj.syncer.set(true, 'trade', 'sellList', eventMsg);
 	},
 
 	startBuyback: function (msg) {

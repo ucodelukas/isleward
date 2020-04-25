@@ -365,7 +365,7 @@ module.exports = {
 				ignore: false
 			};
 			events.emit('onBeforeBuildMapObject', buildObjectMsg);
-			if (buildObjectMsg.built)
+			if (buildObjectMsg.ignore)
 				return;
 
 			//Fixes for newer versions of tiled
