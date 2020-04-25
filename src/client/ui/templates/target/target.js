@@ -106,13 +106,14 @@ define([
 		},
 
 		onAction: function (action, sendTargetServerId) {
-			const { threadModule, cpn, method, data = {} } = action;
+			const { threadModule, module: actionModule, cpn, method, data = {} } = action;
 			if (method === 'performAction')
 				data.data.playerId = this.target.id;
-			else if (threadModule) 
+			else if (actionModule || threadModule)
 				data.targetId = sendTargetServerId ? this.target.serverId : this.target.id;
 
 			client.request({
+				module: actionModule,
 				threadModule,
 				cpn,
 				method,

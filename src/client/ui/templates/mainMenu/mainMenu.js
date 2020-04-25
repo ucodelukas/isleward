@@ -31,7 +31,6 @@ define([
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
 			this.el.find('.btnPatreon').on('click', this.patreon.bind(this));
-			this.el.find('.btnIssue').on('click', this.reportIssue.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
 		},
@@ -45,10 +44,6 @@ define([
 			return false;
 		},
 		
-		reportIssue: function () {
-			window.open('https://gitlab.com/Isleward/isleward/issues/new', '_blank');
-		},
-
 		patreon: function () {
 			window.open('https://patreon.com/bigbadwaffle', '_blank');
 		},

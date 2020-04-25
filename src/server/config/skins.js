@@ -39,7 +39,21 @@ let config = {
 		name: 'Thief 2',
 		sprite: [7, 0]
 	},
+	//Misc
+	1.9: {
+		name: 'Resplendent Wizard',
+		sprite: [1, 0]
+	},
+	'1.10': {
+		name: 'Apprentice Druid',
+		sprite: [4, 1]
+	},
+	1.11: {
+		name: 'Sashed Wizard',
+		sprite: [5, 1]
+	},
 
+	//Faction Skins
 	'2.0': {
 		name: 'Gaekatlan Druid',
 		sprite: [0, 4]
@@ -112,6 +126,11 @@ let config = {
 	},
 	12.1: {
 		name: 'Frozen Invoker',
+		spritesheet: 'images/skins/0012.png',
+		sprite: [1, 0]
+	},
+	12.2: {
+		name: 'Frozen Duelist',
 		spritesheet: 'images/skins/0012.png',
 		sprite: [1, 0]
 	}
