@@ -137,6 +137,8 @@ define([
 					text: isBlocked ? 'unblock' : 'block',
 					callback: this.block.bind(this, char.name)
 				}, ...extraActions];
+
+				events.emit('onBeforeOnlineListContext', char.id, actions);
 			
 				events.emit('onContextMenu', actions, e);
 			}
