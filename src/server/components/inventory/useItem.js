@@ -1,5 +1,3 @@
-const learnRecipe = require('./learnRecipe');
-
 const isOnCooldown = (obj, cpnInv, item) => {
 	if (item.cdMax) {
 		if (item.cd) {
@@ -38,17 +36,14 @@ module.exports = async (cpnInv, itemId) => {
 	if (isOnCooldown(obj, cpnInv, item))
 		return;
 
-	let result = {};
+	let result = {
+		ignore: false
+	};
 	obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
 	obj.fireEvent('onBeforeUseItem', item, result);
 
-	if (item.recipe) {
-		const didLearn = await learnRecipe(obj, item);
-		if (didLearn)
-			cpnInv.destroyItem(itemId, 1);
-
+	if (result.ignore)
 		return;
-	}
 
 	let effects = (item.effects || []);
 	let eLen = effects.length;

@@ -1,4 +1,6 @@
-module.exports = [
+const events = require('../misc/events');
+
+const tableNames = [
 	'character',
 	'characterList',
 	'stash',
@@ -11,6 +13,9 @@ module.exports = [
 	'error',
 	'modLog',
 	'accountInfo',
-	'mtxStash',
-	'recipes'
+	'mtxStash'
 ];
+
+events.emit('onBeforeGetTableNames', tableNames);
+
+module.exports = tableNames;
