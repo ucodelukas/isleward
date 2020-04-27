@@ -45,7 +45,20 @@ define([
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
 
+			this.registerSounds();
+
 			this.shown = this.el.is(':visible');
+		},
+
+		registerSounds: function () {
+			this.find('[soundName]').toArray().forEach(s => {
+				const el = $(s);
+
+				const soundName = el.attr('soundName');
+				const soundEvent = el.attr('soundEvent') || 'click';
+
+				el.on(soundEvent, events.emit.bind(events, 'onPlaySound', soundName));
+			});
 		},
 
 		onMouseEnter: function (enter) {
