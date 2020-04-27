@@ -2,13 +2,17 @@ define([
 	'howler',
 	'js/misc/physics',
 	'js/system/events',
-	'js/config'
+	'js/config',
+	'js/system/globals'
 ], function (
 	howler,
 	physics,
 	events,
-	config
+	config,
+	globals
 ) {
+	const globalScopes = ['ui'];
+
 	return {
 		sounds: [],
 
@@ -16,19 +20,41 @@ define([
 
 		init: function () {
 			events.on('onToggleAudio', this.onToggleAudio.bind(this));
+			events.on('onPlaySound', this.playSound.bind(this));
+
+			const { clientConfig: { sounds: loadSounds } } = globals;
+
+			Object.entries(loadSounds).forEach(([ scope, soundList ]) => {
+				soundList.forEach(({ name: soundName, file }) => {
+					this.addOtherSound(scope, soundName, file);
+				});
+			});
 
 			this.onToggleAudio(config.playAudio);
 		},
 
-		unload: function (zoneId) {
-			this.sounds.forEach(function (s) {
-				if ((s.sound) && (s.zoneId !== zoneId))
-					s.sound.unload();
-			});
+		//Fired when a character rezones
+		// 'scope' is the new zone name
+		unload: function (newScope) {
+			const { sounds } = this;
 
-			this.sounds.spliceWhere(function (s) {
-				return (s.zoneId !== zoneId);
-			});
+			for (let i = 0; i < sounds.length; i++) {
+				const { scope, sound } = sounds[i];
+
+				if (!globalScopes.includes(scope) && scope !== newScope) {
+					sound.unload();
+					sounds.splice(i, 1);
+					i--;
+				}
+			}
+		},
+
+		playSound: function (soundName) {
+			const soundEntry = this.sounds.find(s => s.name === soundName);
+			if (!soundEntry)
+				return;
+
+			soundEntry.sound.play();
 		},
 
 		update: function (x, y) {
@@ -85,8 +111,8 @@ define([
 			});
 		},
 
-		addSound: function (zoneId, file, volume, x, y, w, h, area) {
-			if ((!area) && (w)) {
+		addSound: function (scope, file, volume, x, y, w, h, area) {
+			if (!area && w) {
 				area = [
 					[x, y],
 					[x + w, y],
@@ -95,19 +121,36 @@ define([
 				];
 			}
 
-			let sound = {
-				file: file,
-				x: x,
-				y: y,
-				w: w,
-				h: h,
-				volume: volume,
-				area: area,
+			const sound = {
+				file,
+				x,
+				y,
+				w,
+				h,
+				volume,
+				area,
 				sound: null,
-				zoneId: zoneId
+				scope
 			};
 
 			this.sounds.push(sound);
+		},
+
+		addOtherSound: function (scope, soundName, file) {
+			//eslint-disable-next-line no-undef
+			const sound = new Howl({
+				src: [file],
+				volume: 1
+			});
+
+			const soundEntry = {
+				name: soundName,
+				file,
+				sound,
+				scope: 'ui'
+			};
+
+			this.sounds.push(soundEntry);
 		},
 
 		onToggleAudio: function (isAudioOn) {
