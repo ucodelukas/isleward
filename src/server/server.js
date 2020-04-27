@@ -97,15 +97,13 @@ module.exports = {
 
 			file = file.replace('/' + root + '/', '');
 
+			const validModPatterns = ['.png', '/ui/', '/clientComponents/', '/audio/'];
+
 			const validRequest = (
 				root !== 'server' ||
 				(
 					file.includes('mods/') &&
-					(
-						file.includes('.png') ||
-						file.includes('/ui/') ||
-						file.includes('/clientComponents/')
-					)
+					validModPatterns.some(v => file.includes(v))
 				)
 			);
 

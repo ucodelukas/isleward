@@ -3,7 +3,7 @@ module.exports = {
 		1: {
 			msg: [{
 				msg: 'What? Oh...what are you doing here?',
-				options: [1.1, 1.2, 1.3, 1.4, 1.5]
+				options: [1.1, 1.2]
 			}],
 			options: {
 				1.1: {
@@ -13,18 +13,6 @@ module.exports = {
 				1.2: {
 					msg: 'My ship got wrecked, just south of here. I\'m stranded on this island.',
 					goto: 3
-				},
-				1.3: {
-					msg: 'Have you scavenged anything worth selling lately?',
-					goto: 'tradeBuy'
-				},
-				1.4: {
-					msg: 'I have some items you might be interested in.',
-					goto: 'tradeSell'
-				},
-				1.5: {
-					msg: 'I changed my mind, I want to buy something back.',
-					goto: 'tradeBuyback'
 				}
 			}
 		},
@@ -84,51 +72,18 @@ module.exports = {
 					goto: 1
 				}
 			}
-		},
-		tradeBuy: {
-			cpn: 'trade',
-			method: 'startBuy',
-			args: [{
-				targetName: 'hermit'
-			}]
-		},
-		tradeSell: {
-			cpn: 'trade',
-			method: 'startSell',
-			args: [{
-				targetName: 'hermit'
-			}]
-		},
-		tradeBuyback: {
-			cpn: 'trade',
-			method: 'startBuyback',
-			args: [{
-				targetName: 'hermit'
-			}]
 		}
 	},
 	estrid: {
 		1: {
 			msg: [{
 				msg: 'Is there anything I can help you with today?',
-				options: [1.1, 1.3, 1.4, 1.5]
+				options: [1.1]
 			}],
 			options: {
 				1.1: {
 					msg: 'How long have you been working here?',
 					goto: 2
-				},
-				1.3: {
-					msg: 'I\'d like to browse your wares.',
-					goto: 'tradeBuy'
-				},
-				1.4: {
-					msg: 'I have some items to sell',
-					goto: 'tradeSell'
-				},
-				1.5: {
-					msg: 'I want to buy something back',
-					goto: 'tradeBuyback'
 				}
 			}
 		},
@@ -153,27 +108,6 @@ module.exports = {
 					goto: 1
 				}
 			}
-		},
-		tradeBuy: {
-			cpn: 'trade',
-			method: 'startBuy',
-			args: [{
-				targetName: 'estrid'
-			}]
-		},
-		tradeSell: {
-			cpn: 'trade',
-			method: 'startSell',
-			args: [{
-				targetName: 'estrid'
-			}]
-		},
-		tradeBuyback: {
-			cpn: 'trade',
-			method: 'startBuyback',
-			args: [{
-				targetName: 'estrid'
-			}]
 		}
 	},
 	vikar: {

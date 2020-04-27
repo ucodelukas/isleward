@@ -556,39 +556,6 @@ module.exports = {
 			attackable: false,
 			rare: {
 				count: 0
-			},
-			properties: {
-				cpnTrade: {
-					items: {
-						min: 3,
-						max: 5
-					},
-					forceItems: [{
-						name: 'Flimsy Fishing Rod',
-						type: 'Fishing Rod',
-						slot: 'tool',
-						quality: 0,
-						worth: 5,
-						sprite: [11, 0],
-						infinite: true,
-						noSalvage: true
-					}, {
-						name: 'Skewering Stick',
-						material: true,
-						sprite: [11, 7],
-						worth: 2,
-						quality: 0,
-						infinite: true
-					}],
-					level: {
-						min: 1,
-						max: 5
-					},
-					markup: {
-						buy: 0.25,
-						sell: 2.5
-					}
-				}
 			}
 		},
 		guard: {
@@ -608,30 +575,6 @@ module.exports = {
 
 			rare: {
 				count: 0
-			},
-
-			properties: {
-				cpnTrade: {
-					items: {
-						min: 0,
-						max: 0,
-						extra: [{
-							name: 'Empty Vial',
-							material: true,
-							sprite: [0, 9],
-							worth: 10,
-							infinite: true
-						}]
-					},
-					faction: {
-						id: 'fjolgard',
-						tier: 5
-					},
-					markup: {
-						buy: 0.25,
-						sell: 2.5
-					}
-				}
 			}
 		},
 		vikar: {

@@ -7,18 +7,12 @@ let g4 = require('./generators/types');
 let g5 = require('./generators/stats'); 
 let g6 = require('./generators/names'); 
 let g7 = require('./generators/worth'); 
-let g8 = require('./generators/quantity'); 
 let g9 = require('./generators/spellbook'); 
-let g10 = require('./generators/currency'); 
 let g11 = require('./generators/effects'); 
 let g12 = require('./generators/attrRequire');
-let g13 = require('./generators/recipeBook');
 
 let generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
-let materialGenerators = [g6, g8];
 let spellGenerators = [g1, g2, g9, g7];
-let currencyGenerators = [g10, g8];
-let recipeGenerators = [g6, g13];
 
 module.exports = {
 	spellChance: 0.035,
@@ -65,7 +59,7 @@ module.exports = {
 		if (blueprint.noCurrency)
 			currencyChance = 0;
 
-		if (!blueprint.slot && !blueprint.noSpell && !blueprint.material) {
+		if (!blueprint.slot && !blueprint.noSpell) {
 			isSpell = blueprint.spell;
 			isCurrency = blueprint.currency;
 			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
@@ -80,22 +74,10 @@ module.exports = {
 
 		if (isSpell)
 			spellGenerators.forEach(g => g.generate(item, blueprint));
-		else if (isCurrency) 
-			currencyGenerators.forEach(g => g.generate(item, blueprint));
-		else if (blueprint.material) {
-			item.material = true;
-			item.sprite = blueprint.sprite || null;
-			item.noDrop = blueprint.noDrop || null;
-			item.noSalvage = blueprint.noSalvage || null;
-			item.noDestroy = blueprint.noDestroy || null;
-			item.quality = blueprint.quality || 0;
-			materialGenerators.forEach(g => g.generate(item, blueprint));
-		} else if (blueprint.type === 'mtx') {
+		else if (blueprint.type === 'mtx') {
 			item = extend({}, blueprint);
 			delete item.chance;
-		} else if (blueprint.type === 'recipe') 
-			recipeGenerators.forEach(g => g.generate(item, blueprint));
-		else {
+		} else {
 			generators.forEach(g => g.generate(item, blueprint));
 			if (blueprint.spellName)
 				g9.generate(item, blueprint);
