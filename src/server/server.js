@@ -94,23 +94,22 @@ module.exports = {
 		default: function (req, res) {
 			let root = req.url.split('/')[1];
 			let file = req.params[0];
-
+		
 			file = file.replace('/' + root + '/', '');
-
+		
+			const validModPatterns = ['.png', '/ui/', '/clientComponents/', '/audio/'];
+		
 			const validRequest = (
 				root !== 'server' ||
 				(
 					file.includes('mods/') &&
-					(
-						file.includes('.png') ||
-						file.includes('/ui/')
-					)
+					validModPatterns.some(v => file.includes(v))
 				)
 			);
-
+		
 			if (!validRequest)
 				return null;
-
+		
 			res.sendFile(file, {
 				root: '../' + root
 			});
