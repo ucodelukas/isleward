@@ -30,6 +30,9 @@ const config = {
 		player: [],
 		npc: []
 	},
+	sounds: {
+		ui: []
+	},
 	tos
 };
 
