@@ -23,6 +23,7 @@ define([
 
 		items: [],
 
+		uiName: 'stash',
 		modal: true,
 		hasClose: true,
 
@@ -139,21 +140,20 @@ define([
 				this.build();
 		},
 
-		toggle: function () {
+		onAfterShow: function() {
 			if ((!this.shown) && (!window.player.stash.active))
 				return;
 
-			this.shown = !this.el.is(':visible');
+			events.emit('onShowOverlay', this.el);
+			this.build();
+		},
 
-			if (this.shown) {
-				this.show();
-				events.emit('onShowOverlay', this.el);
-				this.build();
-			} else {
-				this.hide();
-				events.emit('onHideOverlay', this.el);
-				events.emit('onHideContextMenu');
-			}
+		beforeHide: function() {
+			if ((!this.shown) && (!window.player.stash.active))
+				return;
+
+			events.emit('onHideOverlay', this.el);
+			events.emit('onHideContextMenu');
 		},
 
 		onOpenStash: function () {
