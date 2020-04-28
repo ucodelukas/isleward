@@ -7,20 +7,18 @@ let g4 = require('./generators/types');
 let g5 = require('./generators/stats'); 
 let g6 = require('./generators/names'); 
 let g7 = require('./generators/worth'); 
-let g9 = require('./generators/spellbook'); 
-let g11 = require('./generators/effects'); 
-let g12 = require('./generators/attrRequire');
+let g8 = require('./generators/spellbook'); 
+let g9 = require('./generators/effects'); 
+let g10 = require('./generators/attrRequire');
 
-let generators = [g1, g2, g3, g4, g5, g6, g11, g12, g7];
-let spellGenerators = [g1, g2, g9, g7];
+let generators = [g1, g2, g3, g4, g5, g6, g9, g10, g7];
+let spellGenerators = [g1, g2, g8, g7];
 
 module.exports = {
 	spellChance: 0.035,
-	currencyChance: 0.035,
 
 	generate: function (blueprint, ownerLevel) {
 		let isSpell = false;
-		let isCurrency = false;
 
 		let hadBlueprint = !!blueprint;
 		blueprint = blueprint || {};
@@ -30,6 +28,7 @@ module.exports = {
 		const generateEvent = {
 			blueprint,
 			item,
+			ownerLevel,
 			ignore: false
 		};
 
@@ -39,34 +38,16 @@ module.exports = {
 
 		const dropChancesEvent = {
 			blueprint,
-			spellChance: this.spellChance,
-			currencyChance: this.currencyChance
+			spellChance: this.spellChance
 		};
 
-		if (!blueprint.slot && !blueprint.type && !blueprint.spell)
-			global.instancer.instances[0].eventEmitter.emitNoSticky('onBeforeGetDropChances', dropChancesEvent);
-
-		let currencyChance = dropChancesEvent.currencyChance;
-		//If you kill a mob that's too low of a level, idols are much more rare
-		if (
-			blueprint.level && 
-			ownerLevel && 
-			ownerLevel - blueprint.level > 4
-		) {
-			const levelDelta = ownerLevel - blueprint.level;
-			currencyChance /= Math.pow(levelDelta - 3, 2);
-		}
-		if (blueprint.noCurrency)
-			currencyChance = 0;
+		global.instancer.instances[0].eventEmitter.emitNoSticky('onBeforeGetDropChances', dropChancesEvent);
 
 		if (!blueprint.slot && !blueprint.noSpell) {
 			isSpell = blueprint.spell;
-			isCurrency = blueprint.currency;
-			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
+
+			if (!isSpell && (!hadBlueprint || (!blueprint.type && !blueprint.slot && !blueprint.stats)))
 				isSpell = Math.random() < dropChancesEvent.spellChance;
-				if (!isSpell)
-					isCurrency = Math.random() < currencyChance;
-			}
 		}
 
 		if (blueprint.isSpell)
@@ -80,7 +61,7 @@ module.exports = {
 		} else {
 			generators.forEach(g => g.generate(item, blueprint));
 			if (blueprint.spellName)
-				g9.generate(item, blueprint);
+				g8.generate(item, blueprint);
 		}
 
 		if (blueprint.spritesheet)
