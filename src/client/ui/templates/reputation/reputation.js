@@ -93,14 +93,8 @@ define([
 				this.onSelectFaction(selElement, list[selElement.index() + 1]);
 		},
 
-		toggle: function () {
-			let shown = !this.el.is(':visible');
-
-			if (shown) {
-				this.build();
-				this.show();
-			} else
-				this.hide();
+		onAfterShow: function () {
+			this.build();
 		}
 	};
 });

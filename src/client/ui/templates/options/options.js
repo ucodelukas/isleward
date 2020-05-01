@@ -162,19 +162,12 @@ define([
 			this.onToggleLastChannel(config.rememberChatChannel);
 		},
 
-		toggle: function () {
+		onAfterShow: function () {
 			this.onResize();
 
-			if (!this.shown) {
-				this.show();
-				this.shown = true;
-				events.emit('onShowOverlay', this.el);
+			events.emit('onShowOverlay', this.el);
 
-				this.build();
-			} else {
-				this.hide();
-				this.shown = false;
-			}
+			this.build();
 		},
         
 		onKeyDown: function (keyEvent) {

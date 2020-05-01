@@ -167,11 +167,8 @@ define([
 				this.find('.btn-next, .btn-last').addClass('disabled');
 		},
 
-		toggle: function () {
-			let shown = !this.el.is(':visible');
-
-			if (shown) {
-				this.find('.prophecy[prophecy]').removeClass('selected');
+		onAfterShow: function() {
+			this.find('.prophecy[prophecy]').removeClass('selected');
 				let prophecies = window.player.prophecies;
 				prophecies = prophecies ? prophecies.list : [];
 				prophecies.forEach(function (p) {
@@ -181,9 +178,6 @@ define([
 				this.prophecyFilter = null;
 
 				this.getList();
-				this.show();
-			} else
-				this.hide();
 		}
 	};
 });

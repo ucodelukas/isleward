@@ -81,18 +81,12 @@ define([
 				this.el.find('.btnScreen').html('Fullscreen');
 		},
 
-		toggle: function () {
-			this.onResize();
+		onAfterShow: function() {
+			events.emit('onShowOverlay', this.el);
+		},
 
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown) {
-				this.show();
-				events.emit('onShowOverlay', this.el);
-			} else {
-				this.hide();
-				events.emit('onHideOverlay', this.el);
-			}
+		beforeHide: function() {
+			events.emit('onHideOverlay', this.el);
 		},
 
 		logOut: function () {
