@@ -18,7 +18,6 @@ define([
 
 		centered: true,
 
-		uiName: 'equipment',
 		modal: true,
 		hasClose: true,
 

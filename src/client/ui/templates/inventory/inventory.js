@@ -28,7 +28,6 @@ define([
 		dragEl: null,
 		hoverCell: null,
 
-		uiName: 'inventory',
 		modal: true,
 		hasClose: true,
 		

@@ -23,7 +23,6 @@ define([
 
 		items: [],
 
-		uiName: 'stash',
 		modal: true,
 		hasClose: true,
 
