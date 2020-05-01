@@ -108,7 +108,7 @@ define([
 					});
 				}
 
-				events.emit('onQuestReady');
+				events.emit('onQuestReady', quest);
 			}
 		},
 
