@@ -129,7 +129,7 @@ define([
 						return;
 
 					keyEvent.consumed = true;
-					u.hide();
+					u.toggle();
 				});
 				
 				$('.uiOverlay').hide();
