@@ -439,6 +439,8 @@ define([
 				else if (isMobile && this.tooltipId !== node.id)
 					return;
 
+				events.emit('onTryTickPassiveNode', { tick: !node.selected })	
+
 				client.request({
 					cpn: 'player',
 					method: 'performAction',
