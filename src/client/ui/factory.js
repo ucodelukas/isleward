@@ -95,14 +95,14 @@ define([
 				path = options.path + `\\${type}.js`;
 			else
 				path = this.root + 'ui/templates/' + type + '/' + type;
-
-			require([path], this.onGetTemplate.bind(this, options));
+		
+			require([path], this.onGetTemplate.bind(this, options, type));
 		},
-
-		onGetTemplate: function (options, template) {
-			let ui = $.extend(true, {}, uiBase, template);
+		
+		onGetTemplate: function (options, type, template) {
+			let ui = $.extend(true, { type }, uiBase, template);
 			ui.setOptions(options);
-
+		
 			requestAnimationFrame(this.renderUi.bind(this, ui));
 		},
 
