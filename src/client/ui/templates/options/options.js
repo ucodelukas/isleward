@@ -30,14 +30,14 @@ define([
 			this.onEvent('onToggleOptions', this.toggle.bind(this));
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
-			this.find('.item.screen .name')[0].addEventListener('click', this.toggleScreen.bind(this));
-			this.find('.item.nameplates .name').on('click', events.emit.bind(events, 'onUiKeyDown', { key: 'v' }));
-			this.find('.item.quests .name').on('click', this.toggleQuests.bind(this));
-			this.find('.item.events .name').on('click', this.toggleEvents.bind(this));
-			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
-			this.find('.item.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
-			this.find('.item.audio .name').on('click', this.toggleAudio.bind(this));
-			this.find('.item.lastChannel .name').on('click', this.toggleLastChannel.bind(this));
+			this.find('.optionsItem.screen .name')[0].addEventListener('click', this.toggleScreen.bind(this));
+			this.find('.optionsItem.nameplates .name').on('click', events.emit.bind(events, 'onUiKeyDown', { key: 'v' }));
+			this.find('.optionsItem.quests .name').on('click', this.toggleQuests.bind(this));
+			this.find('.optionsItem.events .name').on('click', this.toggleEvents.bind(this));
+			this.find('.optionsItem.quality .name').on('click', this.toggleQualityIndicators.bind(this));
+			this.find('.optionsItem.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
+			this.find('.optionsItem.audio .name').on('click', this.toggleAudio.bind(this));
+			this.find('.optionsItem.lastChannel .name').on('click', this.toggleLastChannel.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
 			this.onEvent('onUiKeyDown', this.onKeyDown.bind(this));
@@ -64,7 +64,7 @@ define([
 		onToggleUnusableIndicators: function (state) {
 			const newValue = state[0].toUpperCase() + state.substr(1);
 
-			this.find('.item.unusable .value').html(newValue);
+			this.find('.optionsItem.unusable .value').html(newValue);
 		},
 
 		toggleQualityIndicators: function () {
@@ -81,14 +81,14 @@ define([
 		onToggleQualityIndicators: function (state) {
 			const newValue = state[0].toUpperCase() + state.substr(1);
 
-			this.find('.item.quality .value').html(newValue);
+			this.find('.optionsItem.quality .value').html(newValue);
 		},
 
 		toggleScreen: function () {
 			const state = renderer.toggleScreen();
 			const newValue = (state === 'Windowed') ? 'Off' : 'On';
 
-			this.find('.item.screen .value').html(newValue);
+			this.find('.optionsItem.screen .value').html(newValue);
 		},
 
 		toggleEvents: function () {
@@ -106,26 +106,26 @@ define([
 		onToggleEventsVisibility: function (state) {
 			const newValue = state ? 'On' : 'Off';
 
-			this.find('.item.events .value').html(newValue);
+			this.find('.optionsItem.events .value').html(newValue);
 		},
 
 		onToggleQuestsVisibility: function (state) {
 			const newValue = state[0].toUpperCase() + state.substr(1);
 
-			this.find('.item.quests .value').html(newValue);
+			this.find('.optionsItem.quests .value').html(newValue);
 		},
 
 		onResize: function () {
 			let isFullscreen = (window.innerHeight === screen.height);
 			const newValue = isFullscreen ? 'On' : 'Off';
 
-			this.find('.item.screen .value').html(newValue);
+			this.find('.optionsItem.screen .value').html(newValue);
 		},
 
 		onToggleNameplates: function (state) {
 			const newValue = state ? 'On' : 'Off';
 
-			this.find('.item.nameplates .value').html(newValue);
+			this.find('.optionsItem.nameplates .value').html(newValue);
 		},
 
 		toggleAudio: function () {
@@ -137,7 +137,7 @@ define([
 		onToggleAudio: function (isAudioOn) {
 			const newValue = isAudioOn ? 'On' : 'Off';
 
-			this.find('.item.audio .value').html(newValue);
+			this.find('.optionsItem.audio .value').html(newValue);
 		},
 
 		toggleLastChannel: function () {
@@ -149,7 +149,7 @@ define([
 		onToggleLastChannel: function (state) {
 			const newValue = state ? 'On' : 'Off';
 
-			this.find('.item.lastChannel .value').html(newValue);
+			this.find('.optionsItem.lastChannel .value').html(newValue);
 		},
 
 		build: function () {
@@ -179,7 +179,7 @@ define([
 				events.emit('onToggleNameplates', config.showNames);
 
 				const newValue = config.showNames ? 'On' : 'Off';
-				this.find('.item.nameplates .value').html(newValue);
+				this.find('.optionsItem.nameplates .value').html(newValue);
 			}
 		},
 
