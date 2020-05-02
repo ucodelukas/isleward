@@ -46,6 +46,7 @@ define([
 				let el = $(html).appendTo(elList);
 
 				el.on('click', this.onSelectFaction.bind(this, el, l));
+				el.on('click', events.emit.bind(events, 'onClickButton'));
 			});
 		},
 
