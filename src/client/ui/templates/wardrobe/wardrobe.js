@@ -41,6 +41,7 @@ define([
 					.appendTo(container);
 
 				el.on('click', this.setPreview.bind(this, l, el));
+				el.on('click', events.emit.bind(events, 'onClickButton'));
 
 				if (l.id === window.player.skinId) {
 					el.addClass('current');

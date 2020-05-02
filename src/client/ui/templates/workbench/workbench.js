@@ -74,6 +74,7 @@ define([
 					.appendTo(container);
 
 				el.on('click', this.onSelectRecipe.bind(this, el, r));
+				el.on('click', events.emit.bind(events, 'onClickButton'));
 			}, this);
 		},
 
