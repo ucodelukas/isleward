@@ -64,6 +64,7 @@ define([
 				return;
 			}
 
+			events.emit('onSendMail');
 			this.hide();
 		},
 
