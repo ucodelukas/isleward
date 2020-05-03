@@ -81,11 +81,15 @@ define([
 				this.el.find('.btnScreen').html('Fullscreen');
 		},
 
-		onAfterShow: function() {
+		onAfterShow: function () {
+			this.onResize();
+
 			events.emit('onShowOverlay', this.el);
 		},
 
-		beforeHide: function() {
+		beforeHide: function () {
+			this.onResize();
+
 			events.emit('onHideOverlay', this.el);
 		},
 
