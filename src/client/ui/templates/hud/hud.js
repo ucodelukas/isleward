@@ -55,6 +55,7 @@ define([
 				return;
 
 			events.emit('onHideItemTooltip', quickItem);
+			events.emit('onUseQuickItem', quickItem);
 
 			client.request({
 				cpn: 'player',
