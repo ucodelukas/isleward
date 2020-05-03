@@ -52,8 +52,7 @@ define([
 
 		registerUIEvents: function () {
 			this.find('.btn').on('click', events.emit.bind(events, 'onClickButton'));
-			this.find('.tab').on('click', events.emit.bind(events, 'onClickButton'));
-			this.find('.optionsItem').on('click', events.emit.bind(events, 'onClickButton'));
+			this.find('.tab').on('click', events.emit.bind(events, 'onClickTab'));
 		},
 
 		onMouseEnter: function (enter) {
