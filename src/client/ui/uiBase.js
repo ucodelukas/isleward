@@ -126,6 +126,8 @@ define([
 
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
+
+			events.emit('onShowUi', this);
 		},
 
 		hide: function () {
@@ -137,6 +139,8 @@ define([
 
 			if (this.afterHide)
 				this.afterHide();
+
+			events.emit('onHideUi', this);
 		},
 
 		destroy: function () {
