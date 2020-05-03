@@ -45,9 +45,8 @@ define([
 
 				if (c.callback) {
 					row.on('click', this.onClick.bind(this, i, c.callback));
-					row.on('click', events.emit.bind(events, 'onClickButton'));
-				}
-				else
+					row.on('click', events.emit.bind(events, 'onClickContextItem'));
+				} else
 					row.addClass('no-hover');
 			});
 

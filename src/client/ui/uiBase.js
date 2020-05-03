@@ -45,12 +45,12 @@ define([
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
 
-			this.registerUIEvents();
+			this.registerUiEvents();
 
 			this.shown = this.el.is(':visible');
 		},
 
-		registerUIEvents: function () {
+		registerUiEvents: function () {
 			this.find('.btn').on('click', events.emit.bind(events, 'onClickButton'));
 			this.find('.tab').on('click', events.emit.bind(events, 'onClickTab'));
 		},

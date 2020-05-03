@@ -139,7 +139,7 @@ define([
 				this.build();
 		},
 
-		onAfterShow: function() {
+		onAfterShow: function () {
 			if ((!this.shown) && (!window.player.stash.active))
 				return;
 
@@ -147,7 +147,7 @@ define([
 			this.build();
 		},
 
-		beforeHide: function() {
+		beforeHide: function () {
 			if ((!this.shown) && (!window.player.stash.active))
 				return;
 

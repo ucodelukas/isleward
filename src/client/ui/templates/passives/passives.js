@@ -150,7 +150,7 @@ define([
 			nodes.forEach(n => this.renderers.node.call(this, n, n.pos.x, n.pos.y));
 		},
 
-		onAfterShow: function() {
+		onAfterShow: function () {
 			//Calculate midpoint
 			let start = this.data.nodes.find(n => n.spiritStart === window.player.class);
 
@@ -168,7 +168,6 @@ define([
 		},
 
 		beforeHide: function () {
-			events.emit('onHideTooltip', this.el[0]);
 			events.emit('onHideTooltip', this.el[0]);
 			this.tooltipId = null;
 		},
@@ -439,7 +438,7 @@ define([
 				else if (isMobile && this.tooltipId !== node.id)
 					return;
 
-				events.emit('onTryTickPassiveNode', { tick: !node.selected })	
+				events.emit('onTryTickPassiveNode', { tick: !node.selected });	
 
 				client.request({
 					cpn: 'player',
