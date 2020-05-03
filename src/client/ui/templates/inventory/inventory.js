@@ -495,7 +495,7 @@ define([
 				this.build();
 		},
 
-		onAfterShow: function() {
+		onAfterShow: function () {
 			this.find('.split-box').hide();
 			this.build();
 			this.hideTooltip();
