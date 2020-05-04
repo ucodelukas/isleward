@@ -42,7 +42,8 @@ define([
 				const { scope, sound } = sounds[i];
 
 				if (!globalScopes.includes(scope) && scope !== newScope) {
-					sound.unload();
+					if (sound)
+						sound.unload();
 					sounds.splice(i, 1);
 					i--;
 				}
