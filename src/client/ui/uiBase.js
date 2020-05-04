@@ -106,6 +106,9 @@ define([
 		},
 
 		show: function () {
+			if (this.shown)
+				return;
+
 			if (this.modal) {
 				//Close any other open modal
 				$('.modal').toArray().forEach(el => {
@@ -131,6 +134,9 @@ define([
 		},
 
 		hide: function () {
+			if (!this.shown)
+				return;
+
 			if (this.beforeHide)
 				this.beforeHide();
 
@@ -189,9 +195,7 @@ define([
 		},
 
 		toggle: function () {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown)
+			if (!this.shown)
 				this.show();
 			else
 				this.hide();
