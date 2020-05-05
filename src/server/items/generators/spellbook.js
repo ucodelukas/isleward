@@ -100,7 +100,7 @@ module.exports = {
 		if (item.slot) {
 			const tempItem = {};
 
-			const tempBlueprint = extend(blueprint);
+			const tempBlueprint = extend({}, blueprint);
 			delete tempBlueprint.quality;
 			tempBlueprint.quality = blueprint.spellQuality;
 
