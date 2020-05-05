@@ -58,46 +58,54 @@ define([
 			soundEntry.sound.play();
 		},
 
-		update: function (x, y) {
+		update: function (playerX, playerY) {
 			this.sounds.forEach(s => {
+				const { x, y, w, area, sound, minDistance, fadeInOut } = s;
+
 				let volume;
 
-				if (!s.w) {
-					let dx = Math.abs(s.x - x);
-					if (dx > 10) {
-						if (s.sound)
-							s.sound.volume(0);
+				if (!w) {
+					let dx = Math.abs(x - playerX);
+					if (dx >= minDistance) {
+						if (sound)
+							sound.volume(0);
 						return;
 					}
-					let dy = Math.abs(s.y - y);
-					if (dy > 10) {
-						if (s.sound)
-							s.sound.volume(0);
+					let dy = Math.abs(y - playerY);
+					if (dy >= minDistance) {
+						if (sound)
+							sound.volume(0);
 						return;
 					}
 
-					let dist = 10 - Math.max(dx, dy);
-					dist = (dist * dist) / 100;
+					let dist = minDistance - Math.max(dx, dy);
+					dist = (dist * dist) / Math.pow(minDistance, 2);
 					volume = 0.3 * dist;
-				} else if (physics.isInPolygon(x, y, s.area)) 
+				} else if (physics.isInPolygon(playerX, playerY, area))
 					volume = 0.3;
 				else {
-					let distance = physics.distanceToPolygon([x, y], s.area);
-					if (distance > 10) {
-						if (s.sound)
-							s.sound.volume(0);
+					let distance = physics.distanceToPolygon([playerX, playerY], area);
+					if (distance >= minDistance) {
+						if (sound) {
+							if (fadeInOut)
+								sound.fade(sound.volume(), 0, 3000);
+							else
+								sound.volume(0);
+						}
+						
 						return;
 					}
 
-					let dist = 10 - distance;
-					dist = (dist * dist) / 100;
+					let dist = minDistance - distance;
+					dist = (dist * dist) / Math.pow(minDistance, 2);
 					volume = 0.3 * dist;
 				}
 
-				if (!s.sound) {
+				if (!sound) {
+					const file = s.file.includes('server') ? s.file : `audio/${s.file}`;
 					//eslint-disable-next-line no-undef
 					s.sound = new Howl({
-						src: ['audio/' + s.file],
+						src: [file],
 						autoplay: true,
 						loop: true,
 						volume: 0
@@ -107,12 +115,27 @@ define([
 						s.sound.mute(true);
 				}
 
-				if (!this.muted) 
-					s.sound.volume(volume * s.volume);
+				if (this.muted)
+					return;
+
+				const oldVolume = s.sound.volume();
+				const newVolume = volume * s.volume;
+				const volumeChanged = newVolume !== oldVolume;
+
+				if (volumeChanged) {
+					if (fadeInOut)
+						s.sound.fade(oldVolume, newVolume, 3000);
+					else
+						s.sound.volume(newVolume);
+				}
 			});
 		},
 
 		addSound: function (scope, file, volume, x, y, w, h, area) {
+			this.addSoundFromConfig({ scope, file, volume, x, y, w, h, area });
+		},
+
+		addSoundFromConfig: function ({ scope, file, volume, x, y, w, h, area, minDistance, fadeInOut }) {
 			if (!area && w) {
 				area = [
 					[x, y],
@@ -131,7 +154,9 @@ define([
 				volume,
 				area,
 				sound: null,
-				scope
+				scope,
+				minDistance,
+				fadeInOut
 			};
 
 			this.sounds.push(sound);

@@ -3,12 +3,18 @@ module.exports = {
 
 	sound: null,
 	volume: 0,
+	minDistance: 10,
+	fadeInOut: false,
 
 	simplify: function () {
+		const { sound, volume, minDistance, fadeInOut } = this;
+
 		return {
 			type: 'sound',
-			sound: this.sound,
-			volume: this.volume
+			sound,
+			volume,
+			minDistance,
+			fadeInOut
 		};
 	}
 };
