@@ -1042,7 +1042,7 @@
                         {
                          "name":"cpnNotice",
                          "type":"string",
-                         "value":"{\n\t\"msg\": \"Your Stash (U to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
+                         "value":"{\"actions\":{\"enter\":{\"cpn\":\"stash\",\"method\":\"setActive\",\"args\":[true]},\"exit\":{\"cpn\":\"stash\",\"method\":\"setActive\",\"args\":[false]}}}"
                         }],
                  "rotation":0,
                  "type":"",
@@ -1302,7 +1302,7 @@
                         {
                          "name":"cpnNotice",
                          "type":"string",
-                         "value":"{\n\t\"msg\": \"Your Stash (U to Access)\",\n\t\"actions\": {\n\t\t\"enter\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [true]\n\t\t},\n\t\t\"exit\": {\n\t\t\t\"cpn\": \"stash\",\n\t\t\t\"method\": \"setActive\",\n\t\t\t\"args\": [false]\n\t\t}\n\t}\n}"
+                         "value":"{\"actions\":{\"enter\":{\"cpn\":\"stash\",\"method\":\"setActive\",\"args\":[true]},\"exit\":{\"cpn\":\"stash\",\"method\":\"setActive\",\"args\":[false]}}}"
                         }],
                  "rotation":0,
                  "type":"",
