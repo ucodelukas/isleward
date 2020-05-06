@@ -80,6 +80,9 @@ define([
 			volume *= globalVolume;
 
 			if (sound.playing()) {
+				if (sound.volume() === volume)
+					return;
+
 				if (music)
 					sound.fade(sound.volume(), volume, fadeDuration);
 				else
@@ -144,40 +147,18 @@ define([
 			const defaultMusic = sounds.find(s => s.music && s.defaultMusic);
 
 			if (!currentMusic) {
-				this.playSoundHelper(defaultMusic);
+				if (defaultMusic)
+					this.playSoundHelper(defaultMusic);
 
 				const activeMusic = sounds.filter(s => s !== defaultMusic && s.sound && s.sound.playing());
 				activeMusic.forEach(s => this.stopSoundHelper(s));
 			} else {
-				this.stopSoundHelper(defaultMusic);
-				this.playSoundHelper(currentMusic);
+				if (defaultMusic)
+					this.stopSoundHelper(defaultMusic);
+
+				if (currentMusic)
+					this.playSoundHelper(currentMusic);
 			}
-
-			this.sounds.forEach(s => {
-				const { x, y, area, music, scope } = s;
-
-				if (music || scope === 'ui')
-					return;
-
-				let distance = 0;
-
-				if (!area) {
-					let dx = Math.abs(x - playerX);
-					let dy = Math.abs(y - playerY);
-					distance = Math.max(dx, dy);
-				} else if (!physics.isInPolygon(playerX, playerY, area))
-					distance = physics.distanceToPolygon([playerX, playerY], area);
-				
-				if (distance > minDistance) {
-					this.stopSoundHelper(s);
-
-					return;
-				}
-
-				//Exponential fall-off
-				const volume = s.volume * (1 - (Math.pow(distance, 2) / Math.pow(minDistance, 2)));
-				this.playSoundHelper(s, volume);
-			});
 		},
 
 		update: function (playerX, playerY) {

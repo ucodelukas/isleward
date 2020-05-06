@@ -24,9 +24,10 @@ define([
 		modal: true,
 
 		postRender: function () {
-			this.onEvent('onToggleMainMenu', this.toggle.bind(this));
+			this.onEvent('onCloseOptions', this.show.bind(this));
+			this.onEvent('onShowMainMenu', this.show.bind(this));
 
-			this.el.find('.btnOptions').on('click', this.handler.bind(this, 'onToggleOptions'));
+			this.el.find('.btnOptions').on('click', this.openOptions.bind(this));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
 			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
@@ -35,13 +36,11 @@ define([
 			this.onEvent('onResize', this.onResize.bind(this));
 		},
 
-		handler: function (e) {
+		openOptions: function () {
 			if (isMobile)
 				this.el.removeClass('active');
 
-			events.emit(e);
-
-			return false;
+			events.emit('onOpenOptions');
 		},
 		
 		patreon: function () {

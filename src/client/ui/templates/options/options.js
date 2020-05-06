@@ -27,7 +27,7 @@ define([
 		hasClose: true,
 
 		postRender: function () {
-			this.onEvent('onToggleOptions', this.toggle.bind(this));
+			this.onEvent('onOpenOptions', this.show.bind(this));
 
 			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
 			this.find('.item.screen .name')[0].addEventListener('click', this.toggleScreen.bind(this));
@@ -167,7 +167,6 @@ define([
 		onAfterShow: function () {
 			this.onResize();
 
-			events.emit('onToggleMainMenu');
 			events.emit('onShowOverlay', this.el);
 
 			this.build();
@@ -189,7 +188,7 @@ define([
 		afterHide: function () {
 			this.onResize();
 
-			events.emit('onToggleMainMenu');
+			events.emit('onCloseOptions');
 		}
 	};
 });
