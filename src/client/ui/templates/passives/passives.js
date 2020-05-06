@@ -438,6 +438,24 @@ define([
 				else if (isMobile && this.tooltipId !== node.id)
 					return;
 
+				const canReachNode = this.data.links.some(l => {
+					return (
+						(
+							l.to.id === node.id ||
+							l.from.id === node.id
+						) &&
+						this.data.nodes.some(n => {
+							return (
+								(n.id === l.from.id && n.selected) ||
+								(n.id === l.to.id && n.selected)
+							);
+						})
+					);
+				});
+
+				if (!canReachNode)
+					return;
+
 				events.emit('onTryTickPassiveNode', { tick: !node.selected });	
 
 				client.request({
