@@ -1,22 +1,41 @@
+const serializeProps = [
+	'sound',
+	'defaultMusic',
+	'volume',
+	'music'
+];
+
 module.exports = {
 	type: 'sound',
 
-	sound: null,
-	volume: 0,
-	minDistance: 10,
-	fadeInOut: false,
-	defaultMusic: false,
+	simplified: null,
+
+	buildSimplified: function () {
+		const s = Object.fromEntries(
+			serializeProps
+				.map(p => {
+					if (!this.has(p))
+						return null;
+
+					return [p, this[p]];
+				})
+				.filter(p => !!p)
+		);
+
+		s.type = 'sound';
+
+		let file = s.sound;
+		if (!file.includes('server'))
+			file = 'audio/' + file;
+		s.sound = file;
+
+		this.simplified = s;
+	},
 
 	simplify: function () {
-		const { sound, volume, minDistance, fadeInOut, defaultMusic } = this;
+		if (!this.simplified)
+			this.buildSimplified();
 
-		return {
-			type: 'sound',
-			sound,
-			volume,
-			minDistance,
-			fadeInOut,
-			defaultMusic
-		};
+		return this.simplified;
 	}
 };

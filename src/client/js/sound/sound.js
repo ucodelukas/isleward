@@ -12,6 +12,9 @@ define([
 	globals
 ) {
 	const globalScopes = ['ui'];
+	const minDistance = 10;
+	const globalVolume = 0.3;
+	const fadeDuration = 3000;
 
 	return {
 		sounds: [],
@@ -26,7 +29,12 @@ define([
 
 			Object.entries(loadSounds).forEach(([ scope, soundList ]) => {
 				soundList.forEach(({ name: soundName, file }) => {
-					this.addOtherSound(scope, soundName, file);
+					this.addSound({
+						name: soundName,
+						file,
+						scope: 'ui',
+						autoLoad: true
+					});
 				});
 			});
 
@@ -58,105 +66,128 @@ define([
 			soundEntry.sound.play();
 		},
 
-		update: function (playerX, playerY) {
-			this.sounds.forEach((s, i) => {
-				const { x, y, w, area, sound, minDistance, fadeInOut } = s;
+		playSoundHelper: function (soundEntry, volume = 1) {
+			const { sound, music } = soundEntry;
 
-				let volume = 0;
+			if (!sound) {
+				const { file, loop } = soundEntry;
 
-				if (!w) {
-					let dx = Math.abs(x - playerX);
-					if (dx >= minDistance) {
-						if (sound)
-							sound.volume(0);
-						return;
-					}
-					let dy = Math.abs(y - playerY);
-					if (dy >= minDistance) {
-						if (sound)
-							sound.volume(0);
-						return;
-					}
+				soundEntry.sound = this.loadSound(file, loop, true, volume);
 
-					let dist = minDistance - Math.max(dx, dy);
-					dist = (dist * dist) / Math.pow(minDistance, 2);
-					volume = 0.3 * dist;
-				} else if (physics.isInPolygon(playerX, playerY, area))
-					volume = 0.3;
-				else {
-					let distance = physics.distanceToPolygon([playerX, playerY], area);
-					if (distance >= minDistance) {
-						if (sound) {
-							if (fadeInOut) {
-								sound.fade(sound.volume(), 0, 3000);
+				return;
+			}
 
-								//Start the default audio if default audio is before us in the list and playing
-								const defaultAudio = this.sounds.find(f => f.defaultMusic);
-								const defaultAudioBefore = this.sounds.findIndex(f => f === defaultAudio) < i;
-								if (defaultAudioBefore && defaultAudio.sound) 
-									defaultAudio.sound.fade(defaultAudio.sound.volume(), 0.3 * defaultAudio.volume, 3000);
-							} else
-								sound.volume(0);
-						}
-						
-						return;
-					}
+			volume *= globalVolume;
 
-					let dist = minDistance - distance;
-					dist = (dist * dist) / Math.pow(minDistance, 2);
-					volume = 0.3 * dist;
-				}
+			if (sound.playing()) {
+				if (music)
+					sound.fade(sound.volume(), volume, fadeDuration);
+				else
+					sound.volume(volume);
+			} else {
+				sound.volume(0);
+				sound.play();
 
-				if (!sound) {
-					const file = s.file.includes('server') ? s.file : `audio/${s.file}`;
-					//eslint-disable-next-line no-undef
-					s.sound = new Howl({
-						src: [file],
-						autoplay: true,
-						loop: true,
-						volume: 0
-					});
+				if (music)
+					sound.fade(0, volume, fadeDuration);
+				else
+					sound.volume(volume);
+			}
+		},
 
-					if (this.muted) 
-						s.sound.mute(true);
-				}
+		stopSoundHelper: function (soundEntry) {
+			const { sound, music } = soundEntry;
 
-				if (this.muted)
+			if (!sound || !sound.playing())
+				return;
+
+			if (music)
+				sound.fade(sound.volume(), 0, fadeDuration);
+			else
+				sound.volume(0);
+		},
+
+		updateSounds: function (playerX, playerY) {
+			this.sounds.forEach(s => {
+				const { x, y, area, music, scope } = s;
+
+				if (music || scope === 'ui')
 					return;
 
-				if (s.defaultMusic) {
-					//Only play if no other music is playing
-					const musicPlaying = this.sounds.some(f => f.sound && f.fadeInOut && f.sound.playing());
-					if (musicPlaying)
-						volume = 0;
-					else
-						volume = 1;
-				} else if (s.fadeInOut) {
-					//Stop the default audio if default audio is before us in the list and playing
-					const defaultAudio = this.sounds.find(f => f.defaultMusic);
-					const defaultAudioBefore = this.sounds.findIndex(f => f === defaultAudio) < i;
-					if (defaultAudioBefore && defaultAudio.sound && defaultAudio.sound.playing()) 
-						defaultAudio.sound.fade(defaultAudio.sound.volume(), 0, 3000);
+				let distance = 0;
+
+				if (!area) {
+					let dx = Math.abs(x - playerX);
+					let dy = Math.abs(y - playerY);
+					distance = Math.max(dx, dy);
+				} else if (!physics.isInPolygon(playerX, playerY, area))
+					distance = physics.distanceToPolygon([playerX, playerY], area);
+				
+				if (distance > minDistance) {
+					this.stopSoundHelper(s);
+
+					return;
 				}
 
-				const oldVolume = s.sound.volume();
-				const newVolume = volume * s.volume;
-				const volumeChanged = newVolume !== oldVolume;
-
-				if (volumeChanged) {
-					if (fadeInOut)
-						s.sound.fade(oldVolume, newVolume, 3000);
-					else
-						s.sound.volume(newVolume);
-				}
+				//Exponential fall-off
+				const volume = s.volume * (1 - (Math.pow(distance, 2) / Math.pow(minDistance, 2)));
+				this.playSoundHelper(s, volume);
 			});
 		},
 
-		addSound: function (scope, file, volume, x, y, w, h, area) {
-			this.addSoundFromConfig({ scope, file, volume, x, y, w, h, area });
+		updateMusic: function (playerX, playerY) {
+			const sounds = this.sounds;
+
+			const areaMusic = sounds.filter(s => s.music && s.area);
+			const currentMusic = areaMusic.find(s => physics.isInPolygon(playerX, playerY, s.area));
+			
+			const defaultMusic = sounds.find(s => s.music && s.defaultMusic);
+
+			if (!currentMusic) {
+				this.playSoundHelper(defaultMusic);
+
+				const activeMusic = sounds.filter(s => s !== defaultMusic && s.sound && s.sound.playing());
+				activeMusic.forEach(s => this.stopSoundHelper(s));
+			} else {
+				this.stopSoundHelper(defaultMusic);
+				this.playSoundHelper(currentMusic);
+			}
+
+			this.sounds.forEach(s => {
+				const { x, y, area, music, scope } = s;
+
+				if (music || scope === 'ui')
+					return;
+
+				let distance = 0;
+
+				if (!area) {
+					let dx = Math.abs(x - playerX);
+					let dy = Math.abs(y - playerY);
+					distance = Math.max(dx, dy);
+				} else if (!physics.isInPolygon(playerX, playerY, area))
+					distance = physics.distanceToPolygon([playerX, playerY], area);
+				
+				if (distance > minDistance) {
+					this.stopSoundHelper(s);
+
+					return;
+				}
+
+				//Exponential fall-off
+				const volume = s.volume * (1 - (Math.pow(distance, 2) / Math.pow(minDistance, 2)));
+				this.playSoundHelper(s, volume);
+			});
 		},
 
-		addSoundFromConfig: function ({ scope, file, volume, x, y, w, h, area, minDistance, fadeInOut, defaultMusic }) {
+		update: function (playerX, playerY) {
+			this.updateSounds(playerX, playerY);
+			this.updateMusic(playerX, playerY);
+		},
+
+		addSound: function (
+			{ name: soundName, scope, file, volume = 1, x, y, w, h, area, music, defaultMusic, autoLoad, loop }
+		) {
 			if (!area && w) {
 				area = [
 					[x, y],
@@ -166,39 +197,37 @@ define([
 				];
 			}
 
-			const sound = {
-				file,
-				x,
-				y,
-				w,
-				h,
-				volume,
-				area,
-				sound: null,
-				scope,
-				minDistance,
-				fadeInOut,
-				defaultMusic
-			};
-
-			this.sounds.push(sound);
-		},
-
-		addOtherSound: function (scope, soundName, file) {
-			//eslint-disable-next-line no-undef
-			const sound = new Howl({
-				src: [file],
-				volume: 1
-			});
+			let sound = null;
+			if (autoLoad)
+				sound = this.loadSound(file, loop);
 
 			const soundEntry = {
 				name: soundName,
-				file,
 				sound,
-				scope: 'ui'
+				scope,
+				file,
+				loop,
+				x,
+				y,
+				volume,
+				area,
+				music,
+				defaultMusic
 			};
 
 			this.sounds.push(soundEntry);
+		},
+
+		loadSound: function (file, loop = false, autoplay = false, volume = 1) {
+			//eslint-disable-next-line no-undef
+			const sound = new Howl({
+				src: [file],
+				volume,
+				loop,
+				autoplay
+			});
+
+			return sound;
 		},
 
 		onToggleAudio: function (isAudioOn) {
@@ -215,7 +244,6 @@ define([
 				return;
 			
 			const { player: { x, y } } = window;
-
 			this.update(x, y);
 		}
 	};
