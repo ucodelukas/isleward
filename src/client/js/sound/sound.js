@@ -59,10 +59,10 @@ define([
 		},
 
 		update: function (playerX, playerY) {
-			this.sounds.forEach(s => {
+			this.sounds.forEach((s, i) => {
 				const { x, y, w, area, sound, minDistance, fadeInOut } = s;
 
-				let volume;
+				let volume = 0;
 
 				if (!w) {
 					let dx = Math.abs(x - playerX);
@@ -87,9 +87,15 @@ define([
 					let distance = physics.distanceToPolygon([playerX, playerY], area);
 					if (distance >= minDistance) {
 						if (sound) {
-							if (fadeInOut)
+							if (fadeInOut) {
 								sound.fade(sound.volume(), 0, 3000);
-							else
+
+								//Start the default audio if default audio is before us in the list and playing
+								const defaultAudio = this.sounds.find(f => f.defaultMusic);
+								const defaultAudioBefore = this.sounds.findIndex(f => f === defaultAudio) < i;
+								if (defaultAudioBefore && defaultAudio.sound) 
+									defaultAudio.sound.fade(defaultAudio.sound.volume(), 0.3 * defaultAudio.volume, 3000);
+							} else
 								sound.volume(0);
 						}
 						
@@ -118,6 +124,21 @@ define([
 				if (this.muted)
 					return;
 
+				if (s.defaultMusic) {
+					//Only play if no other music is playing
+					const musicPlaying = this.sounds.some(f => f.sound && f.fadeInOut && f.sound.playing());
+					if (musicPlaying)
+						volume = 0;
+					else
+						volume = 1;
+				} else if (s.fadeInOut) {
+					//Stop the default audio if default audio is before us in the list and playing
+					const defaultAudio = this.sounds.find(f => f.defaultMusic);
+					const defaultAudioBefore = this.sounds.findIndex(f => f === defaultAudio) < i;
+					if (defaultAudioBefore && defaultAudio.sound && defaultAudio.sound.playing()) 
+						defaultAudio.sound.fade(defaultAudio.sound.volume(), 0, 3000);
+				}
+
 				const oldVolume = s.sound.volume();
 				const newVolume = volume * s.volume;
 				const volumeChanged = newVolume !== oldVolume;
@@ -135,7 +156,7 @@ define([
 			this.addSoundFromConfig({ scope, file, volume, x, y, w, h, area });
 		},
 
-		addSoundFromConfig: function ({ scope, file, volume, x, y, w, h, area, minDistance, fadeInOut }) {
+		addSoundFromConfig: function ({ scope, file, volume, x, y, w, h, area, minDistance, fadeInOut, defaultMusic }) {
 			if (!area && w) {
 				area = [
 					[x, y],
@@ -156,7 +177,8 @@ define([
 				sound: null,
 				scope,
 				minDistance,
-				fadeInOut
+				fadeInOut,
+				defaultMusic
 			};
 
 			this.sounds.push(sound);

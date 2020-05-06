@@ -10,7 +10,7 @@ define([
 		volume: 0,
 
 		init: function () {
-			const { obj: { zoneId, x, y, width, height, area }, sound, volume, minDistance, fadeInOut } = this;
+			const { obj: { zoneId, x, y, width, height, area }, sound, volume, minDistance, fadeInOut, defaultMusic } = this;
 
 			soundManager.addSoundFromConfig({
 				scope: zoneId,
@@ -22,7 +22,8 @@ define([
 				h: height, 
 				area,
 				minDistance,
-				fadeInOut
+				fadeInOut,
+				defaultMusic
 			});
 		}
 	};
