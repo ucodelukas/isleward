@@ -66,8 +66,10 @@ define([
 			soundEntry.sound.play();
 		},
 
-		playSoundHelper: function (soundEntry, volume = 1) {
-			const { sound, music } = soundEntry;
+		playSoundHelper: function (soundEntry, volume) {
+			const { sound } = soundEntry;
+
+			volume *= globalVolume;
 
 			if (!sound) {
 				const { file, loop } = soundEntry;
@@ -77,25 +79,34 @@ define([
 				return;
 			}
 
-			volume *= globalVolume;
-
 			if (sound.playing()) {
 				if (sound.volume() === volume)
 					return;
 
-				if (music)
-					sound.fade(sound.volume(), volume, fadeDuration);
-				else
-					sound.volume(volume);
+				sound.volume(volume);
 			} else {
-				sound.volume(0);
+				sound.volume(1);
 				sound.play();
-
-				if (music)
-					sound.fade(0, volume, fadeDuration);
-				else
-					sound.volume(volume);
 			}
+		},
+
+		playMusicHelper: function (soundEntry) {
+			const { sound } = soundEntry;
+
+			if (!sound) {
+				const { file, loop } = soundEntry;
+
+				soundEntry.sound = this.loadSound(file, loop, true, globalVolume);
+
+				return;
+			}
+
+			if (sound.playing())
+				return;
+
+			sound.volume(0);
+			sound.play();
+			sound.fade(0, globalVolume, fadeDuration);
 		},
 
 		stopSoundHelper: function (soundEntry) {
@@ -107,7 +118,7 @@ define([
 			if (music)
 				sound.fade(sound.volume(), 0, fadeDuration);
 			else
-				sound.volume(0);
+				sound.stop();
 		},
 
 		updateSounds: function (playerX, playerY) {
@@ -148,16 +159,16 @@ define([
 
 			if (!currentMusic) {
 				if (defaultMusic)
-					this.playSoundHelper(defaultMusic);
+					this.playMusicHelper(defaultMusic);
 
-				const activeMusic = sounds.filter(s => s !== defaultMusic && s.sound && s.sound.playing());
+				const activeMusic = sounds.filter(s => s.music && s !== defaultMusic && s.sound && s.sound.playing());
 				activeMusic.forEach(s => this.stopSoundHelper(s));
 			} else {
 				if (defaultMusic)
 					this.stopSoundHelper(defaultMusic);
 
 				if (currentMusic)
-					this.playSoundHelper(currentMusic);
+					this.playMusicHelper(currentMusic);
 			}
 		},
 
@@ -181,6 +192,9 @@ define([
 			let sound = null;
 			if (autoLoad)
 				sound = this.loadSound(file, loop);
+
+			if (music)
+				volume = 0;
 
 			const soundEntry = {
 				name: soundName,
