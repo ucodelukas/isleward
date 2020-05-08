@@ -401,7 +401,7 @@ module.exports = {
 
 	//Sends a notification to yourself
 	// arg1 = { message, className, type }
-	notifySelf: function ({ message, className = 'color-redA', type = 'info' }) {
+	notifySelf: function ({ message, className = 'color-redA', type = 'info', subType }) {
 		const { obj: { id, serverId, instance: { syncer } } } = this;
 
 		syncer.queue('onGetMessages', {
@@ -409,7 +409,8 @@ module.exports = {
 			messages: [{
 				class: className,
 				message,
-				type
+				type,
+				subType
 			}]
 		}, [serverId]);
 	},
@@ -420,9 +421,10 @@ module.exports = {
 		const { obj: { id, serverId, instance: { syncer } } } = this;
 
 		messages.forEach(m => {
-			const { className = 'color-redA', type = 'info ' } = m;
+			const { className = 'color-redA', type = 'info ', subType } = m;
 			m.className = className;
 			m.type = type;
+			m.subType = subType;
 		});
 
 		syncer.queue('onGetMessages', {
