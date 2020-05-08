@@ -172,6 +172,7 @@ module.exports = {
 					class: 'color-yellowB',
 					message: '(you to ' + playerName + '): ' + messageString,
 					type: 'chat',
+					subType: 'privateOut',
 					source: this.obj.name
 				}]
 			}
@@ -184,6 +185,7 @@ module.exports = {
 					class: 'color-yellowB',
 					message: '(' + this.obj.name + ' to you): ' + messageString,
 					type: 'chat',
+					subType: 'privateIn',
 					source: this.obj.name
 				}]
 			}
