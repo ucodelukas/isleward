@@ -130,6 +130,12 @@ module.exports = {
 
 					sentMessages.push(r.msg);
 					delete r.msg;
+				} else {
+					player.social.notifySelf({
+						message: 'You have received a mail',
+						className: 'color-greenB',
+						subType: 'mail'
+					});
 				}
 
 				delete r.pos;
