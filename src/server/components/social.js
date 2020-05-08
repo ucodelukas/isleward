@@ -418,7 +418,7 @@ module.exports = {
 		const { obj: { id, serverId, instance: { syncer } } } = this;
 
 		messages.forEach(m => {
-			const { className = 'color-redA', type = 'info ' } = m;
+			const { className = 'color-redA', type = 'info' } = m;
 			m.className = className;
 			m.type = type;
 		});

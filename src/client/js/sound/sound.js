@@ -14,12 +14,14 @@ define([
 	const globalScopes = ['ui'];
 	const minDistance = 10;
 	const globalVolume = 0.3;
-	const fadeDuration = 3000;
+	const fadeDuration = 1800;
 
 	return {
 		sounds: [],
 
 		muted: false,
+
+		currentMusic: null,
 
 		init: function () {
 			events.on('onToggleAudio', this.onToggleAudio.bind(this));
@@ -85,7 +87,7 @@ define([
 
 				sound.volume(volume);
 			} else {
-				sound.volume(1);
+				sound.volume(volume);
 				sound.play();
 			}
 		},
@@ -101,12 +103,17 @@ define([
 				return;
 			}
 
-			if (sound.playing())
+			if (!sound.playing()) {
+				sound.volume(0);
+				sound.play();
+			}
+
+			if (this.currentMusic === soundEntry)
 				return;
 
-			sound.volume(0);
-			sound.play();
-			sound.fade(0, globalVolume, fadeDuration);
+			this.currentMusic = soundEntry;
+
+			sound.fade(sound.volume(), globalVolume, fadeDuration);
 		},
 
 		stopSoundHelper: function (soundEntry) {
@@ -117,8 +124,10 @@ define([
 
 			if (music)
 				sound.fade(sound.volume(), 0, fadeDuration);
-			else
+			else {
 				sound.stop();
+				sound.volume(0);
+			}
 		},
 
 		updateSounds: function (playerX, playerY) {
@@ -161,7 +170,7 @@ define([
 				if (defaultMusic)
 					this.playMusicHelper(defaultMusic);
 
-				const activeMusic = sounds.filter(s => s.music && s !== defaultMusic && s.sound && s.sound.playing());
+				const activeMusic = sounds.filter(s => s.music && s !== defaultMusic);
 				activeMusic.forEach(s => this.stopSoundHelper(s));
 			} else {
 				if (defaultMusic)
