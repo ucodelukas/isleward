@@ -128,6 +128,8 @@ define([
 				callback: this.onServerRespond.bind(this, el)
 			});
 
+			events.emit('onBuySellItem', this.el);
+
 			let uiInventory = $('.uiInventory').data('ui');
 			uiInventory.hideTooltip(el, item, e);
 		},
