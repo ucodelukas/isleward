@@ -1,6 +1,6 @@
 window.isMobile = /Mobi|Android/i.test(navigator.userAgent);
-window.scale = isMobile ? 32 : 40;
-window.scaleMult = isMobile ? 4 : 5;
+window.scale = isMobile ? 32 : 40 * window.devicePixelRatio;
+window.scaleMult = isMobile ? 4 : 5 * window.devicePixelRatio;
 
 //eslint-disable-next-line no-extend-native
 Array.prototype.spliceWhere = function (callback, thisArg) {
