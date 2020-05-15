@@ -36,20 +36,35 @@ define([
 			this.find('.item.events .name').on('click', this.toggleEvents.bind(this));
 			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
 			this.find('.item.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
-			this.find('.item.audio .name').on('click', this.toggleAudio.bind(this));
 			this.find('.item.lastChannel .name').on('click', this.toggleLastChannel.bind(this));
+
+			this.find('.item.volume .btn').on('click', this.modifyVolume.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
 			this.onEvent('onUiKeyDown', this.onKeyDown.bind(this));
-			this.onEvent('onToggleAudio', this.onToggleAudio.bind(this));
 			this.onEvent('onToggleNameplates', this.onToggleNameplates.bind(this));
 			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
 			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
 			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
 			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
 			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
+			this.onEvent('onVolumeChange', this.onVolumeChange.bind(this));
 
 			this.find('.item').on('click', events.emit.bind(events, 'onClickOptionsItem'));
+		},
+
+		modifyVolume: function (e) {
+			const el = $(e.target);
+
+			const isIncrease = el.hasClass('increase');
+			const delta = isIncrease ? 10 : -10;
+			
+			const soundType = el.parent().parent().hasClass('sound') ? 'sound' : 'music';
+
+			events.emit('onManipulateVolume', {
+				soundType,
+				delta
+			});
 		},
 
 		toggleUnusableIndicators: function () {
@@ -154,6 +169,26 @@ define([
 			this.find('.item.lastChannel .value').html(newValue);
 		},
 
+		onVolumeChange: function ({ soundType, volume }) {
+			const item = this.find(`.item.volume.${soundType}`);
+			
+			item.find('.value').html(volume);
+
+			const tickLeftPosition = `${volume}%`;
+			item.find('.tick').css({ left: tickLeftPosition });
+			
+			const btnDecrease = item.find('.btn.decrease').removeClass('disabled');
+			const btnIncrease = item.find('.btn.increase').removeClass('disabled');
+
+			if (volume === 0)
+				btnDecrease.addClass('disabled');
+			else if (volume === 100)
+				btnIncrease.addClass('disabled');
+
+			const configKey = `${soundType}Volume`;
+			config.set(configKey, volume);
+		},
+
 		build: function () {
 			this.onToggleNameplates(config.showNames);
 			this.onToggleAudio(config.playAudio);
@@ -162,6 +197,18 @@ define([
 			this.onToggleQualityIndicators(config.qualityIndicators);
 			this.onToggleUnusableIndicators(config.unusableIndicators);
 			this.onToggleLastChannel(config.rememberChatChannel);
+
+			console.log(config);
+			
+			this.onVolumeChange({
+				soundType: 'sound',
+				volume: config.soundVolume
+			});
+
+			this.onVolumeChange({
+				soundType: 'music',
+				volume: config.musicVolume
+			});
 		},
 
 		onAfterShow: function () {

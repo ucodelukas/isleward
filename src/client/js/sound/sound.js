@@ -11,10 +11,16 @@ define([
 	config,
 	globals
 ) {
+	const globalVolume = 0.3;
+	
+	let soundVolume = config.soundVolume;
+	let musicVolume = config.musicVolume;
+
 	const globalScopes = ['ui'];
 	const minDistance = 10;
-	const globalVolume = 0.3;
 	const fadeDuration = 1800;
+
+	window.Howler.volume(globalVolume);
 
 	return {
 		sounds: [],
@@ -26,6 +32,7 @@ define([
 		init: function () {
 			events.on('onToggleAudio', this.onToggleAudio.bind(this));
 			events.on('onPlaySound', this.playSound.bind(this));
+			events.on('onManipulateVolume', this.onManipulateVolume.bind(this));
 
 			const { clientConfig: { sounds: loadSounds } } = globals;
 
@@ -65,13 +72,14 @@ define([
 			if (!soundEntry)
 				return;
 
-			soundEntry.sound.play();
+			const { sound } = soundEntry;
+
+			sound.volume(soundVolume / 100);
+			sound.play();
 		},
 
 		playSoundHelper: function (soundEntry, volume) {
 			const { sound } = soundEntry;
-
-			volume *= globalVolume;
 
 			if (!sound) {
 				const { file, loop } = soundEntry;
@@ -80,6 +88,10 @@ define([
 
 				return;
 			}
+
+			soundEntry.volume = volume;
+
+			volume *= (soundVolume / 100);
 
 			if (sound.playing()) {
 				if (sound.volume() === volume)
@@ -98,22 +110,26 @@ define([
 			if (!sound) {
 				const { file, loop } = soundEntry;
 
-				soundEntry.sound = this.loadSound(file, loop, true, globalVolume);
+				soundEntry.volume = musicVolume;
+				soundEntry.sound = this.loadSound(file, loop, true, musicVolume / 100);
 
 				return;
 			}
 
 			if (!sound.playing()) {
+				soundEntry.volume = 0;
 				sound.volume(0);
 				sound.play();
 			}
 
-			if (this.currentMusic === soundEntry)
+			if (this.currentMusic === soundEntry && sound.volume() === musicVolume / 100)
 				return;
+
+			soundEntry.volume = 1;
 
 			this.currentMusic = soundEntry;
 
-			sound.fade(sound.volume(), globalVolume, fadeDuration);
+			sound.fade(sound.volume(), (musicVolume / 100), fadeDuration);
 		},
 
 		stopSoundHelper: function (soundEntry) {
@@ -247,6 +263,23 @@ define([
 			if (!window.player)
 				return;
 			
+			const { player: { x, y } } = window;
+			this.update(x, y);
+		},
+
+		onManipulateVolume: function ({ soundType, delta }) {
+			if (soundType === 'sound')
+				soundVolume = Math.max(0, Math.min(100, soundVolume + delta));
+			else if (soundType === 'music')
+				musicVolume = Math.max(0, Math.min(100, musicVolume + delta));
+
+			const volume = soundType === 'sound' ? soundVolume : musicVolume;
+
+			events.emit('onVolumeChange', {
+				soundType,
+				volume
+			});
+
 			const { player: { x, y } } = window;
 			this.update(x, y);
 		}
