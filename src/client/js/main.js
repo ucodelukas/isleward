@@ -74,8 +74,7 @@ define([
 
 			numbers.init();
 
-			uiFactory.init(null, globals.clientConfig.uiList);
-			uiFactory.build('login', 'body');
+			uiFactory.init(null);
 
 			fnQueueTick = getQueueTick(this.update.bind(this));
 			fnQueueTick();
