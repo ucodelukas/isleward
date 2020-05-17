@@ -186,7 +186,7 @@ define([
 
 			const items = window.player.inventory.items
 				.filter(item => {
-					const isValidItem = allowedItemIds.find(f => f === item.id);
+					const isValidItem = allowedItemIds.some(f => f === item.id);
 
 					return isValidItem;
 				});

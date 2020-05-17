@@ -197,8 +197,6 @@ define([
 			this.onToggleQualityIndicators(config.qualityIndicators);
 			this.onToggleUnusableIndicators(config.unusableIndicators);
 			this.onToggleLastChannel(config.rememberChatChannel);
-
-			console.log(config);
 			
 			this.onVolumeChange({
 				soundType: 'sound',
