@@ -495,19 +495,9 @@ define([
 				this.build();
 		},
 
-		toggle: function (show) {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown) {
-				this.find('.split-box').hide();
-				this.show();
-				this.build();
-			} else {
-				this.hide();
-				events.emit('onHideInventory');
-				events.emit('onHideContextMenu');
-			}
-
+		onAfterShow: function () {
+			this.find('.split-box').hide();
+			this.build();
 			this.hideTooltip();
 		},
 
@@ -521,6 +511,10 @@ define([
 				$('.uiSpells').css('z-index', this.oldSpellsZIndex);
 				this.oldSpellsZIndex = null;
 			}
+
+			events.emit('onHideInventory');
+			events.emit('onHideContextMenu');
+			this.hideTooltip();
 		},
 
 		performItemAction: function (item, action) {

@@ -47,21 +47,20 @@ define([
 		beforeHide: function () {
 			this.isInspecting = false;
 			delete this.result;
+
+			this.find('.itemList').hide();
+
+			this.onHoverItem(null, null, null);
 		},
 
-		toggle: function (show) {
-			this.shown = !this.el.is(':visible');
+		onAfterShow: function () {
 			this.isInspecting = false;
 			delete this.result;
 
 			this.find('.itemList').hide();
 
-			if (this.shown) {
-				this.show();
-				this.onGetStats();
-				this.onGetItems();
-			} else
-				this.hide();
+			this.onGetStats();
+			this.onGetItems();
 
 			this.onHoverItem(null, null, null);
 		},

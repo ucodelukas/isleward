@@ -64,6 +64,7 @@ define([
 				return;
 			}
 
+			events.emit('onSendMail');
 			this.hide();
 		},
 
@@ -92,14 +93,8 @@ define([
 				.on('mouseleave', this.hideTooltip.bind(this, itemEl, item));
 		},
 
-		toggle: function () {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown) {
-				this.show();
-				this.find('input').focus();
-			} else
-				this.hide();
+		onAfterShow: function () {
+			this.find('input').focus();
 		},
 
 		hideTooltip: function () {

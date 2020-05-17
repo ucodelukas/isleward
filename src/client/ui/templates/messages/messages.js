@@ -40,7 +40,7 @@ define([
 			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
 
 			this
-				.find('.filter:not(.channel):not(.btn)')
+				.find('.filter:not(.channel)')
 				.on('mouseover', this.onFilterHover.bind(this, true))
 				.on('mouseleave', this.onFilterHover.bind(this, false))
 				.on('click', this.onClickFilter.bind(this));

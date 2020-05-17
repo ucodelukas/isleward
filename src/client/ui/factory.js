@@ -9,67 +9,35 @@ define([
 	globals,
 	tosAcceptanceValid
 ) {
-	const startupUis = [
-		'inventory',
-		'equipment',
-		'hud',
-		'target',
-		'menu',
-		'spells',
-		'messages',
-		'online',
-		'mainMenu',
-		'context',
-		'party',
-		'help',
-		'dialogue',
-		'buffs',
-		'tooltips',
-		'tooltipInfo',
-		'tooltipItem',
-		'announcements',
-		'quests',
-		'events',
-		'progressBar',
-		'stash',
-		'talk',
-		'trade',
-		'overlay',
-		'death',
-		'leaderboard',
-		'reputation',
-		'mail',
-		'wardrobe',
-		'passives',
-		'workbench',
-		'middleHud',
-		'options'
-	];
-
 	return {
 		uis: [],
 		root: '',
 
-		init: function (root, uiList = []) {
+		init: function (root) {
 			if (root)
 				this.root = root + '/';
-
-			startupUis.push(...uiList);
 
 			events.on('onEnterGame', this.onEnterGame.bind(this));
 			events.on('onUiKeyDown', this.onUiKeyDown.bind(this));
 			events.on('onResize', this.onResize.bind(this));
+
+			globals.clientConfig.uiLoginList.forEach(u => {
+				if (u.path)
+					this.buildModUi(u);
+				else
+					this.build(u);
+			});
 		},
 
 		onEnterGame: function () {
 			events.clearQueue();
 
-			startupUis.forEach(function (u) {
+			globals.clientConfig.uiList.forEach(u => {
 				if (u.path)
 					this.buildModUi(u);
 				else
 					this.build(u);
-			}, this);
+			});
 		},
 
 		buildModUi: function (config) {
@@ -95,14 +63,14 @@ define([
 				path = options.path + `\\${type}.js`;
 			else
 				path = this.root + 'ui/templates/' + type + '/' + type;
-
-			require([path], this.onGetTemplate.bind(this, options));
+		
+			require([path], this.onGetTemplate.bind(this, options, type));
 		},
-
-		onGetTemplate: function (options, template) {
-			let ui = $.extend(true, {}, uiBase, template);
+		
+		onGetTemplate: function (options, type, template) {
+			let ui = $.extend(true, { type }, uiBase, template);
 			ui.setOptions(options);
-
+		
 			requestAnimationFrame(this.renderUi.bind(this, ui));
 		},
 
@@ -129,7 +97,7 @@ define([
 						return;
 
 					keyEvent.consumed = true;
-					u.hide();
+					u.toggle();
 				});
 				
 				$('.uiOverlay').hide();

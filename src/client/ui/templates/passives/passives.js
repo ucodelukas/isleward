@@ -150,31 +150,24 @@ define([
 			nodes.forEach(n => this.renderers.node.call(this, n, n.pos.x, n.pos.y));
 		},
 
-		toggle: function (show) {
-			this.shown = !this.el.is(':visible');
+		onAfterShow: function () {
+			//Calculate midpoint
+			let start = this.data.nodes.find(n => n.spiritStart === window.player.class);
 
-			if (this.shown) {
-				//Calculate midpoint
-				let start = this.data.nodes.find(n => n.spiritStart === window.player.class);
+			this.pos.x = start.pos.x * constants.gridSize;
+			this.pos.y = start.pos.y * constants.gridSize;
 
-				this.pos.x = start.pos.x * constants.gridSize;
-				this.pos.y = start.pos.y * constants.gridSize;
+			this.pos.x -= ~~(this.canvas.width / 2);
+			this.pos.y -= ~~(this.canvas.height / 2);
 
-				this.pos.x -= ~~(this.canvas.width / 2);
-				this.pos.y -= ~~(this.canvas.height / 2);
-
-				this.show();
-				this.onResize();
-				this.renderNodes();
-			} else
-				this.hide();
+			this.onResize();
+			this.renderNodes();
 
 			events.emit('onHideTooltip', this.el[0]);
 			this.tooltipId = null;
 		},
 
 		beforeHide: function () {
-			events.emit('onHideTooltip', this.el[0]);
 			events.emit('onHideTooltip', this.el[0]);
 			this.tooltipId = null;
 		},
@@ -444,6 +437,26 @@ define([
 					return;
 				else if (isMobile && this.tooltipId !== node.id)
 					return;
+
+				const canReachNode = this.data.links.some(l => {
+					return (
+						(
+							l.to.id === node.id ||
+							l.from.id === node.id
+						) &&
+						this.data.nodes.some(n => {
+							return (
+								(n.id === l.from.id && n.selected) ||
+								(n.id === l.to.id && n.selected)
+							);
+						})
+					);
+				});
+
+				if (!canReachNode)
+					return;
+
+				events.emit('onTryTickPassiveNode', { tick: !node.selected });	
 
 				client.request({
 					cpn: 'player',

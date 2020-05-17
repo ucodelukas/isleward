@@ -57,6 +57,11 @@ define([
 			if (this.obj.pather.path.length > 0)
 				return;
 
+			if (this.obj.bumpAnimation)
+				return;
+
+			events.emit('onObjCollideBump', this.obj);
+
 			this.obj.addComponent('bumpAnimation', {
 				deltaX: dx,
 				deltaY: dy

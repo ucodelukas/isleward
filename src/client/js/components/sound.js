@@ -1,7 +1,7 @@
 define([
 	'js/sound/sound'
 ], function (
-	sound
+	soundManager
 ) {
 	return {
 		type: 'sound',
@@ -10,8 +10,26 @@ define([
 		volume: 0,
 
 		init: function () {
-			let obj = this.obj;
-			sound.addSound(obj.zoneId, this.sound, this.volume, obj.x, obj.y, obj.width, obj.height, obj.area);
+			const { 
+				sound, volume, music, defaultMusic,
+				obj: { zoneId, x, y, width, height, area }
+			} = this;
+
+			const config = {
+				scope: zoneId,
+				file: sound,
+				volume, 
+				x, 
+				y, 
+				w: width, 
+				h: height, 
+				area,
+				music,
+				defaultMusic,
+				loop: true
+			};
+
+			soundManager.addSound(config);
 		}
 	};
 });

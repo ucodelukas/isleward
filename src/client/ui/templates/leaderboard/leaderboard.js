@@ -167,23 +167,17 @@ define([
 				this.find('.btn-next, .btn-last').addClass('disabled');
 		},
 
-		toggle: function () {
-			let shown = !this.el.is(':visible');
+		onAfterShow: function () {
+			this.find('.prophecy[prophecy]').removeClass('selected');
+			let prophecies = window.player.prophecies;
+			prophecies = prophecies ? prophecies.list : [];
+			prophecies.forEach(function (p) {
+				this.find('.prophecy[prophecy="' + p + '"]').addClass('selected');
+			}, this);
 
-			if (shown) {
-				this.find('.prophecy[prophecy]').removeClass('selected');
-				let prophecies = window.player.prophecies;
-				prophecies = prophecies ? prophecies.list : [];
-				prophecies.forEach(function (p) {
-					this.find('.prophecy[prophecy="' + p + '"]').addClass('selected');
-				}, this);
+			this.prophecyFilter = null;
 
-				this.prophecyFilter = null;
-
-				this.getList();
-				this.show();
-			} else
-				this.hide();
+			this.getList();
 		}
 	};
 });

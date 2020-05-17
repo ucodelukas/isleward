@@ -45,14 +45,8 @@ define([
 				this.toggle();
 		},
 
-		toggle: function () {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown) {
-				this.show();
-				this.build();
-			} else
-				this.hide();
+		onAfterShow: function () {
+			this.build();
 		},
 
 		onGetConnectedPlayer: function (list) {
