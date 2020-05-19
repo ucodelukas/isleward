@@ -28,11 +28,11 @@ let startup = {
 		process.on('unhandledRejection', this.onError.bind(this));
 		process.on('uncaughtException', this.onError.bind(this));
 
-		animations.init();
 		mods.init(this.onModsLoaded.bind(this));
 	},
 
 	onModsLoaded: function () {
+		animations.init();
 		routerConfig.init();
 		classes.init();
 		spellsConfig.init();
