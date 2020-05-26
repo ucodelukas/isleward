@@ -172,6 +172,7 @@ module.exports = {
 					class: 'color-yellowB',
 					message: '(you to ' + playerName + '): ' + messageString,
 					type: 'chat',
+					subType: 'privateOut',
 					source: this.obj.name
 				}]
 			}
@@ -184,6 +185,7 @@ module.exports = {
 					class: 'color-yellowB',
 					message: '(' + this.obj.name + ' to you): ' + messageString,
 					type: 'chat',
+					subType: 'privateIn',
 					source: this.obj.name
 				}]
 			}
@@ -399,7 +401,7 @@ module.exports = {
 
 	//Sends a notification to yourself
 	// arg1 = { message, className, type }
-	notifySelf: function ({ message, className = 'color-redA', type = 'info' }) {
+	notifySelf: function ({ message, className = 'color-redA', type = 'info', subType }) {
 		const { obj: { id, serverId, instance: { syncer } } } = this;
 
 		syncer.queue('onGetMessages', {
@@ -407,7 +409,8 @@ module.exports = {
 			messages: [{
 				class: className,
 				message,
-				type
+				type,
+				subType
 			}]
 		}, [serverId]);
 	},
@@ -418,9 +421,10 @@ module.exports = {
 		const { obj: { id, serverId, instance: { syncer } } } = this;
 
 		messages.forEach(m => {
-			const { className = 'color-redA', type = 'info ' } = m;
+			const { className = 'color-redA', type = 'info', subType } = m;
 			m.className = className;
 			m.type = type;
+			m.subType = subType;
 		});
 
 		syncer.queue('onGetMessages', {

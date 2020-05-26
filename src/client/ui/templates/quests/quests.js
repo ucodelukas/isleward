@@ -107,6 +107,8 @@ define([
 						msg: 'Quest ready for turn-in'
 					});
 				}
+
+				events.emit('onQuestReady', quest);
 			}
 		},
 

@@ -22,15 +22,6 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'h') 
 				this.toggle();
-		},
-
-		toggle: function () {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown)
-				this.show();
-			else
-				this.hide();
 		}
 	};
 });

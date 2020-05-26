@@ -134,6 +134,12 @@ module.exports = {
 			}
 		});
 
+		let msg = 'Press U to access your Shared Stash';
+		this.obj.instance.syncer.queue('onGetAnnouncement', {
+			src: this.obj.id,
+			msg: msg
+		}, [obj.serverId]);
+
 		if (this.active && this.items.length > this.maxItems) {
 			const message = `You have more than ${this.maxItems} items in your stash. In the future, these items will be lost.`;
 			obj.social.notifySelf({ message });

@@ -38,6 +38,7 @@ module.exports = {
 		});
 
 		this.obj.syncer.setArray(true, 'quests', 'updateQuests', this.simplify(true));
+		this.obj.fireEvent('onQuestReady', this);
 	},
 
 	complete: function () {

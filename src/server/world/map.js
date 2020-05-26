@@ -256,8 +256,7 @@ module.exports = {
 				continue;
 
 			let data = layer.data || layer.objects;
-			let firstItem = data[0];
-			if (firstItem && firstItem.has('width')) {
+			if (layer.objects) {
 				let info = {
 					map: this.name,
 					layer: layerName,

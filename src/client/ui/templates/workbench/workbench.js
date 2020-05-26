@@ -74,6 +74,7 @@ define([
 					.appendTo(container);
 
 				el.on('click', this.onSelectRecipe.bind(this, el, r));
+				el.on('click', events.emit.bind(events, 'onClickListItem'));
 			}, this);
 		},
 
@@ -185,7 +186,7 @@ define([
 
 			const items = window.player.inventory.items
 				.filter(item => {
-					const isValidItem = allowedItemIds.find(f => f === item.id);
+					const isValidItem = allowedItemIds.some(f => f === item.id);
 
 					return isValidItem;
 				});

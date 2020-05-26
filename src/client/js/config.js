@@ -10,7 +10,9 @@ define([
 		playAudio: true,
 		qualityIndicators: 'off',
 		unusableIndicators: 'off',
-		rememberChatChannel: true
+		rememberChatChannel: true,
+		soundVolume: 100,
+		musicVolume: 100
 	};
 
 	const valueChains = {
@@ -54,8 +56,12 @@ define([
 		if (currentValue === '{unset}')
 			return;
 
-		const morphedValue = valueChains[key] ? currentValue : (currentValue === 'true');
-		config[key] = morphedValue;
+		if (['true', 'false'].includes(currentValue))
+			config[key] = currentValue === 'true';
+		else if (~~currentValue === parseInt(currentValue))
+			config[key] = ~~currentValue;
+		else
+			config[key] = currentValue;
 	};
 
 	Object.keys(config).forEach(key => loadValue(key) );

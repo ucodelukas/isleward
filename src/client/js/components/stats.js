@@ -77,7 +77,7 @@ define([
 			this.hpSpriteInner.visible = this.hpSprite.visible;
 		},
 
-		extend: function (blueprint) {	
+		extend: function (blueprint) {
 			let bValues = blueprint.values || {};
 
 			let values = this.values;
@@ -86,7 +86,7 @@ define([
 				values[b] = bValues[b];
 
 			if (this.obj.self)
-				events.emit('onGetStats', this.values);
+				events.emit('onGetStats', this.values, blueprint);
 
 			if (this.obj.has('serverId'))
 				events.emit('onGetPartyStats', this.obj.serverId, this.values);

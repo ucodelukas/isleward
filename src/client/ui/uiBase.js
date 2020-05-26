@@ -45,7 +45,14 @@ define([
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
 
+			this.registerUiEvents();
+
 			this.shown = this.el.is(':visible');
+		},
+
+		registerUiEvents: function () {
+			this.find('.btn').on('click', events.emit.bind(events, 'onClickButton'));
+			this.find('.tab').on('click', events.emit.bind(events, 'onClickTab'));
 		},
 
 		onMouseEnter: function (enter) {
@@ -99,6 +106,9 @@ define([
 		},
 
 		show: function () {
+			if (this.shown)
+				return;
+
 			if (this.modal) {
 				//Close any other open modal
 				$('.modal').toArray().forEach(el => {
@@ -119,9 +129,14 @@ define([
 
 			if ((this.centeredX) || (this.centeredY))
 				this.center(this.centeredX, this.centeredY);
+
+			events.emit('onShowUi', this);
 		},
 
 		hide: function () {
+			if (!this.shown)
+				return;
+
 			if (this.beforeHide)
 				this.beforeHide();
 
@@ -130,6 +145,8 @@ define([
 
 			if (this.afterHide)
 				this.afterHide();
+
+			events.emit('onHideUi', this);
 		},
 
 		destroy: function () {
@@ -178,12 +195,12 @@ define([
 		},
 
 		toggle: function () {
-			this.shown = !this.el.is(':visible');
-
-			if (this.shown)
+			if (!this.shown)
 				this.show();
 			else
 				this.hide();
+
+			events.emit('onToggleUi', this);
 		},
 
 		buildClose: function () {

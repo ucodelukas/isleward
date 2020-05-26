@@ -17,6 +17,7 @@
 			padding-top: 8px;
 			margin: auto;
 		}
+
 	}
 
 	.result {
@@ -37,6 +38,7 @@
 				float: left;
 				color: @white;
 			}
+
 		}
 
 		.list {
@@ -50,12 +52,14 @@
 					.col {
 						color: @green;
 					}
+
 				}
 
 				&.online {
 					.col {
 						color: @greenB;
 					}
+
 				}
 
 				.col {
@@ -69,7 +73,9 @@
 					white-space: nowrap;
 					text-overflow: ellipsis;
 				}
+
 			}
+
 		}
 
 		.buttons {
@@ -93,8 +99,11 @@
 				&:last-child {
 					margin-right: 0px;
 				}
+
 			}
+
 		}
+
 	}
 
 	.prophecies {
@@ -113,18 +122,20 @@
 			.heading-text {
 				margin: auto;
 			}
+
 		}
 
-		.prophecy, .btn {
+		.prophecy,
+		.btn {
 			cursor: pointer;
 		}
-		
+
 		.prophecy {
 			width: 100%;
 			padding: 5px 10px;
 			background-color: @grayD;
 			color: @white;
-			margin-bottom: 15px;
+			margin-bottom: 12px;
 
 			&.selected {
 				color: @green;
@@ -134,16 +145,19 @@
 				background-color: @grayC;
 			}
 
-			&.prophecy-mine, &.prophecy-none {
+			&.prophecy-mine,
+			&.prophecy-none {
 				background-color: @grayC;
 
 				&:hover {
 					background-color: @grayB;
 				}
+
 			}
+
 		}
 
-		.btn {
+		.btn-refresh {
 			width: calc(100% - 10px);
 			background-color: @blueC;
 			padding: 5px 10px;
@@ -154,8 +168,11 @@
 			&:hover {
 				background-color: @blueB;
 			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiLeaderboard {
