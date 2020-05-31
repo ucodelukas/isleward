@@ -1,24 +1,23 @@
-let fileLister = require('../misc/fileLister');
-let events = require('../misc/events');
-
-let cbDone = null;
+const fileLister = require('../misc/fileLister');
+const events = require('../misc/events');
 
 module.exports = {
-	init: function (_cbDone) {
-		cbDone = _cbDone;
-		let modList = fileLister.getFolderList('mods');
+	init: function () {
+		const modList = fileLister.getFolderList('mods');
 
-		modList.forEach(function (m) {
-			let mod = require('../mods/' + m + '/index');
+		modList.forEach(m => {
+			const mod = require('../mods/' + m + '/index');
 			this.onGetMod(m, mod);
-		}, this);
-
-		cbDone();
+		});
 	},
 
 	onGetMod: function (name, mod) {
-		let isMapThread = !!process.send;
+		if (mod.disabled)
+			return;
+
+		const isMapThread = !!process.send;
 		mod.isMapThread = isMapThread;
+
 		mod.events = events;
 		mod.folderName = 'server/mods/' + name;
 		mod.relativeFolderName = 'mods/' + name;

@@ -64,10 +64,12 @@ const onCrash = async e => {
 let onDbReady = function () {
 	require('../misc/random');
 
-	mods.init(onModsReady);
-
 	process.on('uncaughtException', onCrash);
 	process.on('unhandledRejection', onCrash);
+
+	mods.init();
+
+	onModsReady();
 };
 
 io.init(onDbReady);
