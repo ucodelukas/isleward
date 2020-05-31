@@ -2,12 +2,37 @@ body {
 	background-color: #2d2136;
 	padding: 10px;
 	margin: 0px;
+	display: flex;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
 }
 
-@font-face
-{
-    font-family: bitty;
-    src: url('../../src/client/fonts/bitty.ttf');
+* {
+	box-sizing: border-box;
+}
+
+.text {
+	background-color: #3c3f4c;
+	text-align: center;
+	padding: 10px;
+	margin-bottom: 10px;
+	font-family: bitty;
+	color: #fafcfc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: max-content;
+}
+
+.text,
+.tooltip {
+	margin-right: 10px;
+}
+
+@font-face {
+	font-family: bitty;
+	src: url('../../src/client/fonts/bitty.ttf');
 }
 
 .tooltip {
@@ -16,7 +41,6 @@ body {
 	padding: 10px;
 	margin-bottom: 10px;
 	font-family: bitty;
-	width: 400px;
 }
 
 .sprite-box {
