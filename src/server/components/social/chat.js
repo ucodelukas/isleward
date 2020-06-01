@@ -1,100 +1,242 @@
-let roles = require('../../config/roles');
-let events = require('../../misc/events');
+const roles = require('../../config/roles');
+const events = require('../../misc/events');
 const profanities = require('../../misc/profanities');
 const canChat = require('./canChat');
 
-module.exports = (cpnSocial, msg) => {
-	if (!msg.data.message)
+const sendRegularMessage = ({ obj }, msg) => {
+	let charname = obj.auth.charname;
+
+	let prefix = roles.getRoleMessagePrefix(obj) || '';
+	let msgStyle = roles.getRoleMessageStyle(obj) || 'color-grayB';
+
+	cons.emit('event', {
+		event: 'onGetMessages',
+		data: {
+			messages: [{
+				class: msgStyle,
+				message: prefix + charname + ': ' + msg.data.message,
+				item: msg.data.item,
+				type: 'chat',
+				source: obj.name
+			}]
+		}
+	});
+};
+
+const sendPartyMessage = ({ party, obj }, msg) => {
+	if (!party) {
+		obj.socket.emit('events', {
+			onGetMessages: [{
+				messages: [{
+					class: 'color-redA',
+					message: 'you are not in a party',
+					type: 'info'
+				}]
+			}]
+		});
+
+		return;
+	}
+
+	let charname = obj.auth.charname;
+	let message = msg.data.message.substr(1);
+
+	party.forEach(p => {
+		let player = cons.players.find(c => c.id === p);
+
+		player.socket.emit('events', {
+			onGetMessages: [{
+				messages: [{
+					class: 'color-tealC',
+					message: '(party: ' + charname + '): ' + message,
+					type: 'chat',
+					source: obj.name
+				}]
+			}]
+		});
+	});
+};
+
+const sendCustomChannelMessage = (cpnSocial, msg) => {
+	const { obj } = cpnSocial;
+
+	let pList = cons.players;
+	let pLen = pList.length;
+	let origMessage = msg.data.message.substr(1);
+
+	let channel = origMessage.split(' ')[0];
+	let message = origMessage.substr(channel.length);
+
+	if ((!channel) || (!message)) {
+		obj.socket.emit('events', {
+			onGetMessages: [{
+				messages: [{
+					class: 'color-redA',
+					message: 'syntax: $channel message',
+					type: 'info'
+				}]
+			}]
+		});
+		return;
+	} else if (!cpnSocial.isInChannel(obj, channel)) {
+		obj.socket.emit('events', {
+			onGetMessages: [{
+				messages: [{
+					class: 'color-redA',
+					message: 'you are not currently in channel: ' + channel,
+					type: 'info'
+				}]
+			}]
+		});
+		return;
+	} else if (pLen > 0) {
+		for (let i = 0; i < pLen; i++) {
+			if (cpnSocial.isInChannel(pList[i], channel)) {
+				pList[i].socket.emit('events', {
+					onGetMessages: [{
+						messages: [{
+							class: 'color-grayB',
+							message: '[' + channel + '] ' + obj.auth.charname + ': ' + message,
+							type: channel.trim(),
+							source: obj.name
+						}]
+					}]
+				});
+			}
+		}
+	}
+};
+
+const sendPrivateMessage = ({ obj: { name: sourcePlayerName, socket } }, msg) => {
+	let message = msg.data.message.substr(1);
+
+	let playerName = '';
+	//Check if there's a space in the name
+	if (message[0] === "'")
+		playerName = message.substring(1, message.indexOf("'", 1));
+	else
+		playerName = message.substring(0, message.indexOf(' '));
+
+	message = message.substr(playerName.length);
+
+	if (playerName === sourcePlayerName)
 		return;
 
-	const { obj } = cpnSocial;
-	const sendMessage = cpnSocial.sendMessage.bind(cpnSocial);
+	let target = cons.players.find(p => p.name === playerName);
+	if (!target)
+		return;
 
-	msg.data.message = msg.data.message
+	socket.emit('event', {
+		event: 'onGetMessages',
+		data: {
+			messages: [{
+				class: 'color-yellowB',
+				message: '(you to ' + playerName + '): ' + message,
+				type: 'chat',
+				subType: 'privateOut',
+				source: sourcePlayerName
+			}]
+		}
+	});
+
+	target.socket.emit('event', {
+		event: 'onGetMessages',
+		data: {
+			messages: [{
+				class: 'color-yellowB',
+				message: '(' + sourcePlayerName + ' to you): ' + message,
+				type: 'chat',
+				subType: 'privateIn',
+				source: sourcePlayerName
+			}]
+		}
+	});
+};
+
+const sendErrorMsg = (cpnSocial, msgString) => {
+	cpnSocial.sendMessage(msgString, 'color-redA');
+};
+
+module.exports = (cpnSocial, msg) => {
+	const { data: msgData } = msg;
+
+	if (!msgData.message)
+		return;
+
+	const { obj, muted, maxChatLength, messageHistory } = cpnSocial;
+	const sendError = sendErrorMsg.bind(null, cpnSocial);
+
+	msgData.message = msgData.message
 		.split('<')
 		.join('&lt;')
 		.split('>')
 		.join('&gt;');
 
-	if (!msg.data.message)
+	if (!msgData.message)
 		return;
 
-	if (msg.data.message.trim() === '')
+	if (msgData.message.trim() === '')
 		return;
 
-	if (cpnSocial.muted) {
-		sendMessage('You have been muted from talking', 'color-redA');
+	if (muted) {
+		sendError('You have been muted from talking');
+
 		return;
 	}
 
-	let messageString = msg.data.message;
-	if (messageString.length > cpnSocial.maxChatLength)
+	let messageString = msgData.message;
+	if (messageString.length > maxChatLength)
 		return;
 
-	let history = cpnSocial.messageHistory;
-
 	let time = +new Date();
-	history.spliceWhere(h => ((time - h.time) > 5000));
+	messageHistory.spliceWhere(h => ((time - h.time) > 5000));
 
-	if (history.length > 0) {
-		if (history[history.length - 1].msg === messageString) {
-			sendMessage('You have already sent that message', 'color-redA');
+	if (messageHistory.length) {
+		if (messageHistory[messageHistory.length - 1].msg === messageString) {
+			sendError('You have already sent that message');
+
 			return;
-		} else if (history.length >= 3) {
-			sendMessage('You are sending too many messages', 'color-redA');
+		} else if (messageHistory.length >= 3) {
+			sendError('You are sending too many messages');
+
 			return;
 		}
 	}
 
-	cpnSocial.onBeforeChat(msg.data);
-	if (msg.data.ignore)
+	cpnSocial.onBeforeChat(msgData);
+	if (msgData.ignore)
 		return;
 
-	if (!msg.data.item && !profanities.isClean(messageString)) {
-		sendMessage('Profanities detected in message. Blocked.', 'color-redA');
+	if (!msgData.item && !profanities.isClean(messageString)) {
+		sendError('Profanities detected in message. Blocked.');
+
 		return;
 	}
 
 	if (!canChat(obj, time)) {
-		sendMessage('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.', 'color-redA');
+		sendError('Your character needs to be played for at least 3 minutes or be at least level 3 to be able to send messages in chat.');
+
 		return;
 	}
 
-	history.push({
+	messageHistory.push({
 		msg: messageString,
 		time: time
 	});
 
-	let charname = obj.auth.charname;
-
-	let msgStyle = roles.getRoleMessageStyle(obj) || ('color-grayB');
-
 	let msgEvent = {
-		source: charname,
+		source: obj.auth.charname,
 		msg: messageString
 	};
 	events.emit('onBeforeSendMessage', msgEvent);
-	messageString = msgEvent.msg;
-	if (messageString[0] === '@') 
-		cpnSocial.sendPrivateMessage(messageString);
-	else if (messageString[0] === '$') 
-		cpnSocial.sendCustomChannelMessage(msg);
-	else if (messageString[0] === '%') 
-		cpnSocial.sendPartyMessage(msg);
-	else {
-		let prefix = roles.getRoleMessagePrefix(obj) || '';
 
-		cons.emit('event', {
-			event: 'onGetMessages',
-			data: {
-				messages: [{
-					class: msgStyle,
-					message: prefix + charname + ': ' + msg.data.message,
-					item: msg.data.item,
-					type: 'chat',
-					source: obj.name
-				}]
-			}
-		});
-	}
+	const firstChar = messageString[0];
+
+	const messageHandler = {
+		$: sendCustomChannelMessage,
+		'@': sendPrivateMessage,
+		'%': sendPartyMessage
+	}[firstChar] || sendRegularMessage;
+
+	messageHandler(cpnSocial, msg);
 };
