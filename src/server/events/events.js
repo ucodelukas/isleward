@@ -1,4 +1,4 @@
-let phaseTemplate = require('../config/eventPhases/phaseTemplate');
+let phaseTemplate = require('./phases/phaseTemplate');
 let fs = require('fs');
 let mapList = require('../config/maps/mapList');
 
@@ -220,26 +220,21 @@ module.exports = {
 	},
 
 	giveRewards: function (config) {
-		let event = config.event;
+		const { event: { rewards = {} } } = config;
 
-		config.event.participators.forEach(function (p) {
-			let rList = [{
-				nameLike: 'Ancient Carp',
-				removeAll: true
-			}];
+		Object.entries(rewards).forEach(e => {
+			const [ name, rList ] = e;
 
-			let rewards = event.rewards;
-			if ((rewards) && (rewards[p.name])) {
-				rewards[p.name].forEach(r => rList.push(r));
-				if (rList.length > 1)
-					rList[1].msg = `${event.config.name} reward:`;
-			}
+			if (!rList || !rList.length)
+				return;
 
-			this.instance.mail.sendMail(p.name, rList);
-		}, this);
+			rList[0].msg = `${config.name} reward:`;
+
+			this.instance.mail.sendMail(name, rList);
+		});
 
 		if ((config.events) && (config.events.afterGiveRewards))
-			config.events.afterGiveRewards(this);
+			config.events.afterGiveRewards(this, config);
 	},
 
 	stopEvent: function (config) {
@@ -391,7 +386,7 @@ module.exports = {
 			let phase = event.phases[i];
 			if (!phase) {
 				let phaseFile = 'phase' + p.type[0].toUpperCase() + p.type.substr(1);
-				let typeTemplate = require('../config/eventPhases/' + phaseFile);
+				let typeTemplate = require('./phases/' + phaseFile);
 				phase = extend({
 					instance: this.instance,
 					event: event
@@ -452,12 +447,8 @@ module.exports = {
 				event.participators.push(obj);
 				result.push(event);
 
-				let rList = [{
-					nameLike: 'Ancient Carp',
-					removeAll: true
-				}];
-
-				this.instance.mail.sendMail(obj.name, rList);
+				if (event.config.events && event.config.events.onParticipantJoin)
+					event.config.events.onParticipantJoin(this, obj);
 
 				continue;
 			}
@@ -478,12 +469,8 @@ module.exports = {
 					event.participators.push(obj);
 					result.push(event);
 
-					let rList = [{
-						nameLike: 'Ancient Carp',
-						removeAll: true
-					}];
-
-					this.instance.mail.sendMail(obj.name, rList);
+					if (event.config.events && event.config.events.onParticipantJoin)
+						event.config.events.onParticipantJoin(this, obj);
 
 					break;
 				}
