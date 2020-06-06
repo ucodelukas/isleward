@@ -39,7 +39,7 @@ const sendPartyMessage = ({ party, obj }, msg) => {
 	}
 
 	let charname = obj.auth.charname;
-	let message = msg.data.message.substr(1);
+	let message = msg.data.message;
 
 	party.forEach(p => {
 		let player = cons.players.find(c => c.id === p);
@@ -60,69 +60,53 @@ const sendPartyMessage = ({ party, obj }, msg) => {
 const sendCustomChannelMessage = (cpnSocial, msg) => {
 	const { obj } = cpnSocial;
 
-	let pList = cons.players;
-	let pLen = pList.length;
-	let origMessage = msg.data.message.substr(1);
+	const { data: { message, subType: channel } } = msg;
 
-	let channel = origMessage.split(' ')[0];
-	let message = origMessage.substr(channel.length);
+	if (!channel)
+		return;
 
-	if ((!channel) || (!message)) {
+	if (!cpnSocial.isInChannel(obj, channel)) {
 		obj.socket.emit('events', {
 			onGetMessages: [{
 				messages: [{
 					class: 'color-redA',
-					message: 'syntax: $channel message',
+					message: 'You are not currently in that channel',
 					type: 'info'
 				}]
 			}]
 		});
 		return;
-	} else if (!cpnSocial.isInChannel(obj, channel)) {
-		obj.socket.emit('events', {
-			onGetMessages: [{
-				messages: [{
-					class: 'color-redA',
-					message: 'you are not currently in channel: ' + channel,
-					type: 'info'
-				}]
-			}]
-		});
-		return;
-	} else if (pLen > 0) {
-		for (let i = 0; i < pLen; i++) {
-			if (cpnSocial.isInChannel(pList[i], channel)) {
-				pList[i].socket.emit('events', {
-					onGetMessages: [{
-						messages: [{
-							class: 'color-grayB',
-							message: '[' + channel + '] ' + obj.auth.charname + ': ' + message,
-							type: channel.trim(),
-							source: obj.name
-						}]
-					}]
-				});
-			}
-		}
 	}
+
+	const sendMessage = `[${channel}] ${obj.auth.charname}: ${message}`;
+	const eventData = {
+		onGetMessages: [{
+			messages: [{
+				class: 'color-grayB',
+				message: sendMessage,
+				type: 'chat',
+				subType: 'custom',
+				channel: channel.trim(),
+				source: obj.name
+			}]
+		}]
+	};
+
+	cons.players.forEach(p => {
+		if (!cpnSocial.isInChannel(p, channel))
+			return;
+
+		p.socket.emit('events', eventData);
+	});
 };
 
-const sendPrivateMessage = ({ obj: { name: sourcePlayerName, socket } }, msg) => {
-	let message = msg.data.message.substr(1);
+const sendPrivateMessage = ({ obj: { name: sourceName, socket } }, msg) => {
+	const { data: { message, subType: targetName } } = msg;
 
-	let playerName = '';
-	//Check if there's a space in the name
-	if (message[0] === "'")
-		playerName = message.substring(1, message.indexOf("'", 1));
-	else
-		playerName = message.substring(0, message.indexOf(' '));
-
-	message = message.substr(playerName.length);
-
-	if (playerName === sourcePlayerName)
+	if (targetName === sourceName)
 		return;
 
-	let target = cons.players.find(p => p.name === playerName);
+	let target = cons.players.find(p => p.name === targetName);
 	if (!target)
 		return;
 
@@ -131,10 +115,10 @@ const sendPrivateMessage = ({ obj: { name: sourcePlayerName, socket } }, msg) =>
 		data: {
 			messages: [{
 				class: 'color-yellowB',
-				message: '(you to ' + playerName + '): ' + message,
+				message: '(you to ' + targetName + '): ' + message,
 				type: 'chat',
 				subType: 'privateOut',
-				source: sourcePlayerName
+				target: targetName
 			}]
 		}
 	});
@@ -144,10 +128,10 @@ const sendPrivateMessage = ({ obj: { name: sourcePlayerName, socket } }, msg) =>
 		data: {
 			messages: [{
 				class: 'color-yellowB',
-				message: '(' + sourcePlayerName + ' to you): ' + message,
+				message: '(' + sourceName + ' to you): ' + message,
 				type: 'chat',
 				subType: 'privateIn',
-				source: sourcePlayerName
+				source: sourceName
 			}]
 		}
 	});
@@ -196,7 +180,7 @@ module.exports = (cpnSocial, msg) => {
 			sendError('You have already sent that message');
 
 			return;
-		} else if (messageHistory.length >= 3) {
+		} else if (messageHistory.length >= 300) {
 			sendError('You are sending too many messages');
 
 			return;
@@ -230,13 +214,15 @@ module.exports = (cpnSocial, msg) => {
 	};
 	events.emit('onBeforeSendMessage', msgEvent);
 
-	const firstChar = messageString[0];
-
 	const messageHandler = {
-		$: sendCustomChannelMessage,
-		'@': sendPrivateMessage,
-		'%': sendPartyMessage
-	}[firstChar] || sendRegularMessage;
+		global: sendRegularMessage,
+		custom: sendCustomChannelMessage,
+		direct: sendPrivateMessage,
+		party: sendPartyMessage
+	}[msgData.type];
+
+	if (!messageHandler)
+		return;
 
 	messageHandler(cpnSocial, msg);
 };

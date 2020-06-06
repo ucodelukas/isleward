@@ -29,21 +29,35 @@ define([
 
 		hoverFilter: false,
 
-		lastChannel: null,
+		currentChannel: 'global',
+		currentSubChannel: null,
+
+		privateChannels: [],
+		lastPrivateChannel: null,
+		customChannels: [],
+		lastCustomChannel: null,
 
 		postRender: function () {
-			this.onEvent('onGetMessages', this.onGetMessages.bind(this));
-			this.onEvent('onDoWhisper', this.onDoWhisper.bind(this));
-			this.onEvent('onJoinChannel', this.onJoinChannel.bind(this));
-			this.onEvent('onLeaveChannel', this.onLeaveChannel.bind(this));
-			this.onEvent('onGetCustomChatChannels', this.onGetCustomChatChannels.bind(this));
-			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
+			[
+				'onGetMessages',
+				'onDoWhisper',
+				'onJoinChannel',
+				'onLeaveChannel',
+				'onClickFilter',
+				'onGetCustomChatChannels',
+				'onToggleLastChannel',
+				'onKeyDown',
+				'onKeyUp'
+			].forEach(e => this.onEvent(e, this[e].bind(this)));
 
-			this
-				.find('.filter:not(.channel)')
+			//This whole hoverFilter business is a filthy hack
+			this.find('.channelPicker, .channelOptions, .filter:not(.channel)')
 				.on('mouseover', this.onFilterHover.bind(this, true))
-				.on('mouseleave', this.onFilterHover.bind(this, false))
-				.on('click', this.onClickFilter.bind(this));
+				.on('mouseleave', this.onFilterHover.bind(this, false));
+
+			this.find('.channelPicker').on('click', this.onShowChannelOptions.bind(this, null));
+
+			this.find('.filter:not(.channel)').on('click', this.onClickFilter.bind(this));
 
 			if (isMobile) {
 				this.kbUpper = 0;
@@ -62,9 +76,6 @@ define([
 					.on('input', this.checkChatLength.bind(this))
 					.on('blur', this.toggle.bind(this, false, true));
 			}
-
-			this.onEvent('onKeyDown', this.onKeyDown.bind(this));
-			this.onEvent('onKeyUp', this.onKeyUp.bind(this));
 		},
 
 		update: function () {
@@ -202,12 +213,12 @@ define([
 		},
 
 		onGetCustomChatChannels: function (channels) {
-			channels.forEach(function (c) {
-				this.onJoinChannel(c);
-			}, this);
+			channels.forEach(c => this.onJoinChannel(c));
 		},
 
 		onJoinChannel: function (channel) {
+			this.customChannels.push(channel);
+
 			this.find('[filter="' + channel.trim() + '"]').remove();
 
 			let container = this.find('.filters');
@@ -222,7 +233,9 @@ define([
 		},
 
 		onLeaveChannel: function (channel) {
-			this.find('.filters [filter="' + channel + '"]').remove();
+			this.customChannels.spliceWhere(c => c === channel);
+
+			this.find('.filters div[filter="' + channel + '"]').remove();
 		},
 
 		onFilterHover: function (hover) {
@@ -260,11 +273,37 @@ define([
 
 		onDoWhisper: function (charName) {
 			this.toggle(true);
-			let toName = charName;
-			if (charName.indexOf(' ') > -1)
-				toName = "'" + toName + "'";
 
-			this.find('input').val('@' + toName + ' ');
+			this.currentChannel = 'direct';
+			this.currentSubChannel = charName;
+
+			this.find('.channelPicker').html(charName);
+
+			const elInput = this.find('input')
+				.val('message')
+				.focus();
+
+			elInput[0].setSelectionRange(0, 7);
+		},
+
+		//Remember private and custom channels used
+		trackHistory: function (msg) {
+			const { subType, source, target, channel } = msg;
+
+			if (subType === 'privateIn' || subType === 'privateOut') {
+				const list = this.privateChannels;
+				list.spliceWhere(l => l === source);
+
+				//Newest sources are always at the end
+				list.push(source);
+
+				if (list.length > 5)
+					list.splice(0, list.length - 5);
+
+				if (subType === 'privateOut' && config.rememberChatChannel)
+					this.lastPrivateChannel = target;
+			} else if (subType === 'custom' && config.rememberChatChannel)
+				this.lastCustomChannel = channel;
 		},
 
 		onGetMessages: function (e) {
@@ -275,10 +314,14 @@ define([
 			let container = this.find('.list');
 
 			messages.forEach(m => {
+				this.trackHistory(m);
+
 				let message = m.message;
 
-				if (m.source && window.player.social.isPlayerBlocked(m.source))
-					return;
+				if (m.source) {
+					if (window.player.social.isPlayerBlocked(m.source))
+						return;
+				}
 
 				if (m.item) {
 					let source = message.split(':')[0];
@@ -362,7 +405,7 @@ define([
 		},
 
 		toggle: function (show, isFake, e) {
-			if ((isFake) && (this.hoverFilter))
+			if (isFake && this.hoverFilter)
 				return;
 
 			input.resetKeys();
@@ -373,16 +416,98 @@ define([
 
 			if (show) {
 				this.el.addClass('typing');
+
+				this.find('.channelPicker').html(this.currentSubChannel || this.currentChannel);
 				textbox.focus();
 				this.find('.list').scrollTop(9999999);
-			} else 
+			} else {
+				this.find('.channelOptions').removeClass('active');
 				textbox.val('');
+				this.el.removeClass('picking');
+
+				if (['direct', 'custom'].includes(this.currentChannel) && (!this.currentSubChannel || ['join new', 'leave'].includes(this.currentSubChannel))) {
+					this.currentSubChannel = null;
+					this.currentChannel = 'global';
+				}
+			}
 
 			if (e)
 				e.stopPropagation();
 		},
 
+		processChat: function (msgConfig) {
+			const { message, event: keyboardEvent } = msgConfig;
+			const { key } = keyboardEvent;
+
+			if (message.length) {
+				if (this.el.hasClass('picking')) 
+					msgConfig.cancel = true;
+				
+				return;
+			}
+			
+			if (key === 'Enter') {
+				const selectedSubPick = this.find('.channelOptions .option.selected');
+				if (selectedSubPick.length) {
+					this.onPickSubChannel(selectedSubPick.html(), this.currentChannel);
+					return;
+				}
+			}
+
+			//If we're busy picking a sub channel, we can use keyboard nav
+			const isPicking = this.el.hasClass('picking');
+			const optionContainer = this.find('.channelOptions');
+			const currentSelection = optionContainer.find('.option.selected');
+			if (isPicking && currentSelection.length) {
+				const delta = {
+					ArrowUp: -1,
+					ArrowDown: 1
+				}[key];
+
+				if (delta) {
+					const options = optionContainer.find('.option');
+					const currentIndex = currentSelection.eq(0).index();
+					let nextIndex = (currentIndex + delta) % options.length;
+					currentSelection.removeClass('selected');
+					options.eq(nextIndex).addClass('selected');
+				}
+			}
+
+			const pick = {
+				'%': 'party',
+				'!': 'global',
+				$: 'custom',
+				'@': 'direct'
+			}[key];
+
+			if (!pick) {
+				if (this.el.hasClass('picking'))
+					msgConfig.cancel = true;
+
+				return;
+			}
+
+			if (this.currentChannel === pick)
+				this.lastCustomChannel = null;
+
+			this.onPickChannel(pick, true);
+			msgConfig.cancel = true;
+		},
+
 		sendChat: function (e) {
+			let textbox = this.find('input');
+			let msgConfig = {
+				success: true,
+				message: textbox.val(),
+				event: e,
+				cancel: false
+			};
+
+			if (this.el.hasClass('picking')) {
+				this.processChat(msgConfig);
+				return;
+			}
+
 			if (e.which === 27) {
 				this.toggle(false);
 				return;
@@ -391,19 +516,18 @@ define([
 				let textfield = this.find('input');
 				textfield.val(`${textfield.val()}    `);
 				return;
-			} else if (e.which !== 13)
-				return; 
+			} else if (e.which !== 13) {
+				this.processChat(msgConfig);
+
+				const result = msgConfig.cancel === true ? false : null;
+
+				return result;
+			}
 
 			if (!this.el.hasClass('typing')) {
 				this.toggle(true);
 				return;
 			}
-
-			let textbox = this.find('input');
-			let msgConfig = {
-				success: true,
-				message: textbox.val()
-			};
 
 			events.emit('onBeforeChat', msgConfig);
 
@@ -412,42 +536,153 @@ define([
 				.join('&lt;')
 				.split('>')
 				.join('&gt;');
-
-			textbox.blur();
-			
+		
 			if (!msgConfig.success)
 				return;
 
 			if (val.trim() === '')
 				return;
 
-			if (config.rememberChatChannel) {
-				const firstChar = val[0];
-				let lastChannel = null;
-				if ('@$'.includes(firstChar)) {
-					const firstSpace = val.indexOf(' ');
-					if (firstSpace === -1)
-						lastChannel = val + ' ';
-					else
-						lastChannel = val.substr(0, firstSpace) + ' ';
-				} else if (firstChar === '%')
-					lastChannel = '%';
-
-				this.lastChannel = lastChannel;
-			}
-
 			client.request({
 				cpn: 'social',
 				method: 'chat',
 				data: {
-					message: val
+					message: val,
+					type: this.currentChannel,
+					subType: this.currentSubChannel
 				}
 			});
+
+			this.toggle();
 		},
 
 		onToggleLastChannel: function (isOn) {
-			if (!isOn) 
-				this.lastChannel = null;
+			if (isOn)
+				return;
+
+			this.lastPrivateChannel = null;
+			this.lastCustomChannel = null;
+			this.currentChannel = null;
+			this.currentSubChannel = null;
+		},
+
+		onPickChannel: function (channel, autoPickSub) {
+			this.currentChannel = channel;
+			this.currentSubChannel = null;
+
+			const showSubChannels = (
+				['direct', 'custom'].includes(channel) &&
+				(
+					!autoPickSub ||
+					(
+						channel === 'direct' &&
+						!this.lastPrivateChannel
+					) ||
+					(
+						channel === 'custom' &&
+						!this.lastCustomChannel
+					)
+				)
+			);
+
+			if (!showSubChannels) {
+				this.find('.channelOptions').removeClass('active');
+
+				let showValue = {
+					direct: this.lastPrivateChannel,
+					custom: this.lastCustomChannel
+				}[channel];
+
+				if (channel === 'direct' || channel === 'custom')
+					this.currentSubChannel = showValue;
+
+				showValue = showValue || channel;
+
+				this.find('.channelPicker').html(showValue);
+
+				this.find('input').focus();
+
+				this.el.removeClass('picking');
+			} else
+				this.onShowChannelOptions(channel);
+		},
+
+		onPickSubChannel: function (subChannel, channel) {
+			this.currentSubChannel = subChannel;
+			this.find('.channelOptions').removeClass('active');
+			this.find('.channelPicker').html(subChannel);
+
+			const elInput = this.find('input');
+
+			elInput.focus();
+
+			if (channel === 'custom') {
+				if (subChannel === 'join new') {
+					elInput.val('/join channelName');
+					elInput[0].setSelectionRange(6, 17);
+				} else if (subChannel === 'leave') {
+					elInput.val('/leave channelName');
+					elInput[0].setSelectionRange(7, 18);
+				}
+			}
+
+			this.el.removeClass('picking');
+		},
+
+		/* Todo
+			Don't allow party switch if not in a party
+			Arrow navigation fo different DMs and custom channels
+			Type name of private and custom channel
+			Typing @ while DMing someone should pop up the channels again
+			Mobile
+		*/
+
+		onShowChannelOptions: function (currentPick) {
+			const optionContainer = this.find('.channelOptions')
+				.addClass('active')
+				.empty();
+
+			const options = [];
+			let handlerOnClick = this.onPickChannel;
+
+			this.el.addClass('picking');
+
+			if (!currentPick) {
+				options.push('global', 'custom');
+
+				if (this.privateChannels.length)
+					options.push('direct');
+
+				//Hack...surely we can find a more sane way to do this
+				if ($('.uiParty .member').length)
+					options.push('party');
+			} else {
+				handlerOnClick = this.onPickSubChannel;
+				
+				if (currentPick === 'direct')
+					options.push(...this.privateChannels);
+				else if (currentPick === 'custom')
+					options.push(...this.customChannels, 'join new', 'leave');
+			}
+			
+			let addSelectStyleTo = null;
+			if (currentPick)
+				addSelectStyleTo = this.currentSubChannel || options[0];
+			options.forEach(o => {
+				const html = `<div class='option'>${o}</div>`;
+
+				const el = $(html)
+					.appendTo(optionContainer)
+					.on('click', handlerOnClick.bind(this, o, currentPick))
+					.on('hover', this.stopKeyboardNavForOptions.bind(this));
+
+				if (o === addSelectStyleTo)
+					el.addClass('selected');
+			});
+		},
+
+		stopKeyboardNavForOptions: function () {
+			this.find('.channelOptions .option.selected').removeClass('selected');
 		}
 	};
 });
