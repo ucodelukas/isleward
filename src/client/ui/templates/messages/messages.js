@@ -292,10 +292,10 @@ define([
 
 			if (subType === 'privateIn' || subType === 'privateOut') {
 				const list = this.privateChannels;
-				list.spliceWhere(l => l === source);
+				list.spliceWhere(l => l === source || l === target);
 
 				//Newest sources are always at the end
-				list.push(source);
+				list.push(source || target);
 
 				if (list.length > 5)
 					list.splice(0, list.length - 5);
@@ -487,8 +487,12 @@ define([
 				return;
 			}
 
-			if (this.currentChannel === pick)
-				this.lastCustomChannel = null;
+			if (this.currentChannel === pick) {
+				if (pick === 'direct')
+					this.lastPrivateChannel = null;
+				else if (pick === 'custom')
+					this.lastCustomChannel = null;
+			}
 
 			this.onPickChannel(pick, true);
 			msgConfig.cancel = true;
@@ -505,7 +509,7 @@ define([
 
 			if (this.el.hasClass('picking')) {
 				this.processChat(msgConfig);
-				return;
+				return false;
 			}
 
 			if (e.which === 27) {
@@ -629,14 +633,6 @@ define([
 			this.el.removeClass('picking');
 		},
 
-		/* Todo
-			Don't allow party switch if not in a party
-			Arrow navigation fo different DMs and custom channels
-			Type name of private and custom channel
-			Typing @ while DMing someone should pop up the channels again
-			Mobile
-		*/
-
 		onShowChannelOptions: function (currentPick) {
 			const optionContainer = this.find('.channelOptions')
 				.addClass('active')
@@ -663,6 +659,11 @@ define([
 					options.push(...this.privateChannels);
 				else if (currentPick === 'custom')
 					options.push(...this.customChannels, 'join new', 'leave');
+			}
+
+			if (!options.length) {
+				this.onPickChannel('global');
+				return;
 			}
 			
 			let addSelectStyleTo = null;

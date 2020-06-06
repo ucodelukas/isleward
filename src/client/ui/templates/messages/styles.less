@@ -268,7 +268,7 @@
 
 	&.picking {
 		> *:not(.channelOptions) {
-			opacity: 0.5;
+			opacity: 0.4;
 			pointer-events: none;
 		}
 
@@ -312,14 +312,21 @@
 		flex-direction: column;
 		z-index: 999999998;
 
+		.channelPicker {
+			display: none;
+		}
+
 		.channelOptions {
 			z-index: 999999999;
 		}
 
-		.input {
-			display: block;
-			height: 26px;
-			flex-shrink: 0;
+		.bottom {
+			.input {
+				display: block;
+				height: 26px;
+				flex-shrink: 0;
+			}
+
 		}
 
 		.el.textbox.message:not(.input),.time {
@@ -333,7 +340,7 @@
 			background-color: @blackC;
 			justify-content: center;
 			align-items: center;
-			height: 128px;
+			height: 140px;
 			flex-shrink: 0;
 
 			.key {
