@@ -6,10 +6,6 @@ let config = [
 		path: 'config/maps'
 	},
 	{
-		name: 'estuary',
-		path: 'config/maps'
-	},
-	{
 		name: 'sewer',
 		path: 'config/maps'
 	},
