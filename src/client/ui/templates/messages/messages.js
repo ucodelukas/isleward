@@ -249,7 +249,7 @@ define([
 		onKeyDown: function (key) {
 			if (key === 'enter') 
 				this.toggle(true);
-			 else if (key === 'shift')
+			else if (key === 'shift')
 				this.showItemTooltip();
 		},
 
@@ -322,6 +322,9 @@ define([
 					el.addClass(m.type);
 				else
 					el.addClass('info');
+
+				if (m.has('channel'))
+					el.addClass(m.channel);
 
 				if (m.item) {
 					let clickHander = () => {};
@@ -425,25 +428,27 @@ define([
 		processChat: function (msgConfig) {
 			const { message, event: keyboardEvent } = msgConfig;
 			const { key } = keyboardEvent;
+			const { el, currentChannel } = this;
+
+			const optionContainer = this.find('.channelOptions');
 
 			if (message.length) {
-				if (this.el.hasClass('picking')) 
+				if (el.hasClass('picking')) 
 					msgConfig.cancel = true;
 				
 				return;
 			}
 			
 			if (key === 'Enter') {
-				const selectedSubPick = this.find('.channelOptions .option.selected');
+				const selectedSubPick = optionContainer.find('.option.selected');
 				if (selectedSubPick.length) {
-					this.onPickSubChannel(selectedSubPick.html(), this.currentChannel);
+					this.onPickSubChannel(selectedSubPick.html(), currentChannel);
 					return;
 				}
 			}
 
 			//If we're busy picking a sub channel, we can use keyboard nav
-			const isPicking = this.el.hasClass('picking');
-			const optionContainer = this.find('.channelOptions');
+			const isPicking = el.hasClass('picking');
 			const currentSelection = optionContainer.find('.option.selected');
 			if (isPicking && currentSelection.length) {
 				const delta = {
@@ -468,13 +473,13 @@ define([
 			}[key];
 
 			if (!pick) {
-				if (this.el.hasClass('picking'))
+				if (isPicking)
 					msgConfig.cancel = true;
 
 				return;
 			}
 
-			if (this.currentChannel === pick) {
+			if (currentChannel === pick) {
 				if (pick === 'direct')
 					this.lastPrivateChannel = null;
 				else if (pick === 'custom')
@@ -494,39 +499,27 @@ define([
 				cancel: false
 			};
 
-			if (this.el.hasClass('picking')) {
-				this.processChat(msgConfig);
+			this.processChat(msgConfig);
+			if (msgConfig.cancel || this.el.hasClass('picking'))
 				return false;
-			}
 
-			if (e.which === 27) {
-				this.toggle(false);
-				return;
-			} else if (e.which === 9) {
-				e.preventDefault();
-				let textfield = this.find('input');
-				textfield.val(`${textfield.val()}    `);
-				return;
-			} else if (e.which !== 13) {
-				this.processChat(msgConfig);
+			const { which: charCode } = e;
 
-				const result = msgConfig.cancel === true ? false : null;
+			if ([9, 27].includes(charCode) || charCode !== 13) {
+				if (charCode === 9) {
+					e.preventDefault();
+					textbox.val(`${textbox.val()}    `);
+				} else if (charCode === 27)
+					this.toggle(false);
 
-				return result;
-			}
-
-			if (!this.el.hasClass('typing')) {
-				this.toggle(true);
 				return;
 			}
 
 			events.emit('onBeforeChat', msgConfig);
 
 			let val = msgConfig.message
-				.split('<')
-				.join('&lt;')
-				.split('>')
-				.join('&gt;');
+				.split('<').join('&lt;')
+				.split('>').join('&gt;');
 		
 			if (!msgConfig.success)
 				return;

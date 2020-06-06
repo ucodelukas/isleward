@@ -180,7 +180,7 @@ module.exports = (cpnSocial, msg) => {
 			sendError('You have already sent that message');
 
 			return;
-		} else if (messageHistory.length >= 300) {
+		} else if (messageHistory.length >= 3) {
 			sendError('You are sending too many messages');
 
 			return;
