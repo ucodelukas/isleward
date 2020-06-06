@@ -18,11 +18,6 @@ define([
 	return {
 		tpl: template,
 
-		currentFilter: 'info',
-
-		messages: [],
-		maxTtl: 500,
-
 		maxChatLength: 255,
 
 		hoverItem: null,
@@ -45,7 +40,6 @@ define([
 				'onLeaveChannel',
 				'onClickFilter',
 				'onGetCustomChatChannels',
-				'onToggleLastChannel',
 				'onKeyDown',
 				'onKeyUp'
 			].forEach(e => this.onEvent(e, this[e].bind(this)));
@@ -73,7 +67,7 @@ define([
 			} else {
 				this.find('input')
 					.on('keydown', this.sendChat.bind(this))
-					.on('input', this.checkChatLength.bind(this))
+					.on('input', this.enforceMaxMsgLength.bind(this))
 					.on('blur', this.toggle.bind(this, false, true));
 			}
 		},
@@ -86,14 +80,12 @@ define([
 				return;
 
 			const time = new Date();
+			const hours = time.getUTCHours().toString().padStart(2, 0);
+			const minutes = time.getUTCMinutes().toString().padStart(2, 0);
+
 			let elTime = this.find('.time');
-			const timeString = (
-				'[ ' + 
-				time.getUTCHours().toString().padStart(2, 0) + 
-				':' + 
-				time.getUTCMinutes().toString().padStart(2, 0) + 
-				' ]'
-			);
+			const timeString = `[ ${hours}:${minutes} ]`;
+
 			if (elTime.html() !== timeString)
 				elTime.html(timeString);
 		},
@@ -173,9 +165,7 @@ define([
 					this.renderKeyboard();
 				},
 
-				space: () => {
-					this.clickKey(' ');
-				},
+				space: () => this.clickKey(' '),
 
 				'<<': () => {
 					elInput.val(elInput.val().slice(0, -1));
@@ -183,9 +173,7 @@ define([
 				},
 
 				send: () => {
-					this.sendChat({
-						which: 13
-					});
+					this.sendChat({ which: 13 });
 					this.find('.input').html('');
 					this.find('input').val('');
 				}
@@ -196,12 +184,12 @@ define([
 			}
 
 			elInput.val(elInput.val() + key);
-			this.checkChatLength();
+			this.enforceMaxMsgLength();
 
 			this.find('.input').html(elInput.val());
 		},
 
-		checkChatLength: function () {
+		enforceMaxMsgLength: function () {
 			let textbox = this.find('input');
 			let val = textbox.val();
 
@@ -219,7 +207,7 @@ define([
 		onJoinChannel: function (channel) {
 			this.customChannels.push(channel);
 
-			this.find('[filter="' + channel.trim() + '"]').remove();
+			this.find(`[filter="${channel.trim()}"]`).remove();
 
 			let container = this.find('.filters');
 			$(tplTab)
@@ -235,7 +223,7 @@ define([
 		onLeaveChannel: function (channel) {
 			this.customChannels.spliceWhere(c => c === channel);
 
-			this.find('.filters div[filter="' + channel + '"]').remove();
+			this.find(`.filters div[filter="${channel}"]`).remove();
 		},
 
 		onFilterHover: function (hover) {
@@ -259,10 +247,9 @@ define([
 		},
 
 		onKeyDown: function (key) {
-			if (key === 'enter') {
+			if (key === 'enter') 
 				this.toggle(true);
-				this.find('input').val(this.lastChannel || '');
-			} else if (key === 'shift')
+			 else if (key === 'shift')
 				this.showItemTooltip();
 		},
 
@@ -361,11 +348,6 @@ define([
 						});
 					}
 				}
-
-				this.messages.push({
-					ttl: this.maxTtl,
-					el: el
-				});
 			});
 
 			if (!this.el.hasClass('typing'))
@@ -416,6 +398,11 @@ define([
 
 			if (show) {
 				this.el.addClass('typing');
+
+				if (!config.rememberChatChannel) {
+					this.currentChannel = 'global';
+					this.currentSubChannel = null;
+				}
 
 				this.find('.channelPicker').html(this.currentSubChannel || this.currentChannel);
 				textbox.focus();
@@ -558,16 +545,6 @@ define([
 			});
 
 			this.toggle();
-		},
-
-		onToggleLastChannel: function (isOn) {
-			if (isOn)
-				return;
-
-			this.lastPrivateChannel = null;
-			this.lastCustomChannel = null;
-			this.currentChannel = null;
-			this.currentSubChannel = null;
 		},
 
 		onPickChannel: function (channel, autoPickSub) {
