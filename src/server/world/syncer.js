@@ -1,3 +1,5 @@
+const { viewDistanceX, viewDistanceY } = consts;
+
 module.exports = {
 	buffer: {},
 	dirty: false,
@@ -84,7 +86,7 @@ module.exports = {
 				let px = p.x;
 				let py = p.y;
 
-				let canSee = (Math.abs(ox - px) <= 25 && Math.abs(oy - py) < 14);
+				let canSee = (Math.abs(ox - px) <= viewDistanceX && Math.abs(oy - py) < viewDistanceY);
 
 				let hasSeen = p.player.hasSeen(oId);
 
