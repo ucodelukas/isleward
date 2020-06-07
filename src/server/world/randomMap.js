@@ -5,8 +5,17 @@ module.exports = {
 	rooms: [],
 	exitAreas: [],
 
-	maxDistance: 14,
-	minDistance: 0,
+	leafConstraints: {
+		minDistance: 4,
+		maxDistance: 12,
+		minCount: 3,
+		maxCount: 7
+	},
+
+	endConstraints: {
+		minDistance: 10,
+		maxDistance: 12
+	},
 
 	bounds: [0, 0, 0, 0],
 
@@ -18,6 +27,14 @@ module.exports = {
 		this.templates = extend([], instance.map.rooms);
 
 		this.setupTemplates(instance.map);
+
+		const hasEndRoom = this.templates.some(t => t.properties.end);
+		if (!hasEndRoom) {
+			console.log(`Random map has no end room defined: ${instance.map.name}`);
+
+			return;
+		}
+
 		this.generateMappings(instance.map);
 
 		let startTemplate = this.templates.filter(t => t.properties.start);
@@ -34,23 +51,40 @@ module.exports = {
 	},
 
 	isValidDungeon: function () {
-		let endRooms = this.rooms.filter(r => r.connections.length === 0);
-		let endDistanceReached = endRooms.find(r => r.distance === this.maxDistance, this);
+		const { rooms, leafConstraints, endConstraints } = this;
+		const leafRooms = rooms.filter(r => !r.connections.length);
 
-		if (!endDistanceReached)
+		//Ensure that we have enough leaf rooms
+		const { minCount: minLeafRooms, maxCount: maxLeafRooms } = leafConstraints;
+
+		const leafRoomCount = leafRooms.length;
+		if (leafRoomCount < minLeafRooms || leafRoomCount > maxLeafRooms)
 			return false;
 
-		let valid = true;
+		//Ensure that the end room exists
+		const endRoom = rooms.find(r => r.template.properties.end);
 
-		endRooms
-			.forEach(function (r) {
-				if (r.distance < this.minDistance)
-					valid = false;
-				else if (r.distance > this.maxDistance)
-					valid = false;
-			}, this);
+		if (!endRoom)
+			return false;
 
-		return valid;
+		//Ensure that the end room is the correct distance
+		const { minDistance: minEndDistance, maxDistance: maxEndDistance } = endConstraints;
+
+		const endDistance = endRoom.distance;
+		if (endDistance < minEndDistance || endDistance > maxEndDistance)
+			return false;
+
+		//Ensure that leaf rooms are correct distances
+		const { minDistance: minLeafDistance, maxDistance: maxLeafDistance } = leafConstraints;
+
+		const leafRoomsDistanceOk = !leafRooms.some(({ distance: roomDistance }) => {
+			return (roomDistance < minLeafDistance || roomDistance > maxLeafDistance);
+		});
+
+		if (!leafRoomsDistanceOk)
+			return false;
+
+		return true;
 	},
 
 	setupTemplates: function (map) {
@@ -369,7 +403,7 @@ module.exports = {
 
 		this.updateBounds(room);
 
-		if (room.distance < this.maxDistance) {
+		if (room.distance < this.leafConstraints.maxDistance) {
 			const maxExits = room.template.exits.length;
 			let count = this.randInt(Math.min(maxExits, 2), maxExits);
 			for (let i = 0; i < count; i++) 
@@ -398,7 +432,7 @@ module.exports = {
 				(t.properties.start) ||
 				(
 					(t.properties.end) &&
-					(fromRoom.distance + 1 !== this.maxDistance)
+					(fromRoom.distance + 1 !== this.leafConstraints.maxDistance)
 				)
 			)
 				return false;
@@ -414,7 +448,7 @@ module.exports = {
 					isValid = false;
 			}
 
-			if ((isValid) && (fromRoom.distance + 1 === this.maxDistance)) {
+			if ((isValid) && (fromRoom.distance + 1 === this.leafConstraints.maxDistance)) {
 				//If there is an exit available, rather use that
 				if (!t.properties.end) {
 					let endsAvailable = this.templates.filter(function (tt) {
