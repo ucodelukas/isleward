@@ -148,7 +148,8 @@ define([
 				method: 'chat',
 				data: {
 					message: '{' + item.name + '}',
-					item: item
+					item: item,
+					type: 'global'
 				}
 			});
 		},
