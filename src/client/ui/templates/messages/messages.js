@@ -142,6 +142,8 @@ define([
 				this.toggle(true);
 			else if (key === 'shift')
 				this.showItemTooltip();
+			else if (key === 'esc' && this.el.hasClass('typing'))
+				this.toggle(false);
 		},
 
 		onKeyUp: function (key) {
