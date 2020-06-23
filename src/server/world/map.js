@@ -435,14 +435,15 @@ module.exports = {
 				if (!mapFile.properties.isRandom)
 					spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
 				else {
-					let room = this.rooms.find(function (r) {
-						return (!(
-							(blueprint.x < r.x) ||
-								(blueprint.y < r.y) ||
-								(blueprint.x >= r.x + r.width) ||
-								(blueprint.y >= r.y + r.height)
-						));
+					let room = this.rooms.find(r => {
+						return !(
+							blueprint.x < r.x ||
+							blueprint.y < r.y ||
+							blueprint.x >= r.x + r.width ||
+							blueprint.y >= r.y + r.height
+						);
 					});
+
 					room.objects.push(blueprint);
 				}
 			} else {
