@@ -42,7 +42,7 @@ module.exports = {
 
 		let startRoom = this.buildRoom(startTemplate);
 
-		if (!this.isValidDungeon())
+		if (!this.isValidDungeon()) 
 			this.generate(instance);
 		else {
 			this.offsetRooms(startRoom);
@@ -84,15 +84,28 @@ module.exports = {
 		if (!leafRoomsDistanceOk)
 			return false;
 
+		//Ensure that enough minOccur templates have been included
+		const minOccurOk = this.templates.every(t => {
+			const minOccur = ~~t.properties.minOccur || 0;
+			const occurs = rooms.filter(r => r.template.typeId === t.typeId).length;
+			return occurs >= minOccur;
+		});
+
+		if (!minOccurOk)
+			return false;
+
 		return true;
 	},
 
 	setupTemplates: function (map) {
 		this.templates.forEach(function (r, typeId) {
-			if (r.properties.mapping || r.properties.noRotate)
+			if (r.properties.mapping)
 				return;
 
 			r.typeId = typeId;
+
+			if (r.properties.noRotate)
+				return;
 
 			for (let i = 0; i < 2; i++) {
 				for (let j = 0; j < 2; j++) {
