@@ -25,6 +25,12 @@ const config = {
 		'images/skins/0010.png',
 		'images/skins/0012.png'
 	],
+	//Textures that are 24x24. The renderer needs to know this
+	bigTextures: [
+		'animBigObjects',
+		'bigObjects',
+		'bosses'
+	],
 	uiLoginList: [
 		'login'
 	],

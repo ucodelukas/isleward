@@ -7,7 +7,8 @@ define([
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
 	'js/rendering/spritePool',
-	'js/system/globals'
+	'js/system/globals',
+	'js/rendering/renderLoginBackground'
 ], function (
 	resources,
 	events,
@@ -17,7 +18,8 @@ define([
 	particles,
 	shaderOutline,
 	spritePool,
-	globals
+	globals,
+	renderLoginBackground
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);
@@ -164,61 +166,7 @@ define([
 		buildTitleScreen: function () {
 			this.titleScreen = true;
 
-			this.setPosition({
-				x: 0,
-				y: 0
-			}, true);
-
-			let w = Math.ceil(this.width / scale) + 1;
-			let h = Math.ceil(this.height / scale) + 1;
-
-			let container = this.layers.tileSprites;
-
-			for (let i = 0; i < w; i++) {
-				let ii = i / 10;
-				for (let j = 0; j < h; j++) {
-					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
-
-					let tile = 5;
-					if (roll < -0.2)
-						tile = 3;
-					else if (roll < 0.2)
-						tile = 4;
-					else if (roll < 0.5)
-						tile = 53;
-
-					let alpha = mRandom();
-
-					if ([5, 53].indexOf(tile) > -1)
-						alpha *= 2;
-
-					alpha = Math.min(Math.max(0.15, alpha), 0.65);
-
-					if (mRandom() < 0.35) {
-						tile = {
-							5: 6,
-							3: 0,
-							4: 1,
-							53: 54
-						}[tile];
-					}
-
-					let sprite = new pixi.Sprite(this.getTexture('sprites', tile));
-
-					sprite.alpha = alpha;
-					sprite.position.x = i * scale;
-					sprite.position.y = j * scale;
-					sprite.width = scale;
-					sprite.height = scale;
-
-					if (mRandom() < 0.5) {
-						sprite.position.x += scale;
-						sprite.scale.x = -scaleMult;
-					}
-
-					container.addChild(sprite);
-				}
-			}
+			renderLoginBackground(this);
 		},
 
 		onResize: function () {
@@ -733,8 +681,8 @@ define([
 				h = obj.h / scaleMult;
 			}
 
-			let bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
-			if (bigSheets.includes(sheetName) || sheetName.includes('bosses') || sheetName.includes('BigObjects')) {
+			let bigSheets = globals.clientConfig.bigTextures;
+			if (bigSheets.includes(sheetName)) {
 				obj.layerName = 'mobs';
 				w = 24;
 				h = 24;
@@ -749,7 +697,7 @@ define([
 			sprite.height = obj.h || scale;
 			sprite.visible = obj.has('visible') ? obj.visible : true;
 
-			if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
+			if (bigSheets.includes(sheetName)) {
 				sprite.x -= scale;
 				sprite.y -= (scale * 2);
 			}
