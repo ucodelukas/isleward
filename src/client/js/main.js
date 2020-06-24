@@ -30,6 +30,8 @@ define([
 		return () => requestAnimationFrame(updateMethod);
 	};
 
+	let restoreSoundOnFocus = false;
+
 	return {
 		hasFocus: true,
 
@@ -61,8 +63,8 @@ define([
 		},
 
 		start: function () {
-			window.onfocus = this.onFocus.bind(this, true);
-			window.onblur = this.onFocus.bind(this, false);
+			window.addEventListener('focus', this.onFocus.bind(this, true));
+			window.addEventListener('blur', this.onFocus.bind(this, false));
 
 			$(window).on('contextmenu', this.onContextMenu.bind(this));
 
@@ -82,11 +84,20 @@ define([
 			$('.loader-container').remove();
 		},
 
-		onFocus: function (hasFocus) {
-			//Hack: Later we might want to make it not render when out of focus
-			this.hasFocus = true;
+		onFocus: function (isFocussed) {
+			this.hasFocus = isFocussed;
 
-			if (!hasFocus)
+			if (window.isMobile) {
+				if (!this.hasFocus) {
+					restoreSoundOnFocus = !sound.muted;
+					sound.onToggleAudio(false);
+				} else if (restoreSoundOnFocus) {
+					sound.onToggleAudio(true);
+					restoreSoundOnFocus = false;
+				}
+			}
+
+			if (!isFocussed)
 				input.resetKeys();
 		},
 
