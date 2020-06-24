@@ -28,7 +28,8 @@ define([
 
 			this.find('.quickItem')
 				.on('mousemove', this.showQuickItemTooltip.bind(this, true))
-				.on('mouseleave', this.showQuickItemTooltip.bind(this, false));
+				.on('mouseleave', this.showQuickItemTooltip.bind(this, false))
+				.on('click', this.useQuickItem.bind(this));
 		},
 
 		build: function () {
