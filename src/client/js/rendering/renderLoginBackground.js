@@ -2,9 +2,6 @@ define([
 ], function (
 
 ) {
-	//5 3 4 53
-	//6 0 1 54
-	//5 53 brighter
 	let mRandom = Math.random.bind(Math);
 
 	const renderLoginBackground = renderer => {
@@ -18,12 +15,14 @@ define([
 		let w = Math.ceil(width / scale) + 1;
 		let h = Math.ceil(height / scale) + 1;
 
-		const midX = (w / 2) - 1;
-		const midY = (h / 2) - 2;
+		const midX = ~~(w / 2);
+		const midY = ~~(h / 2);
 
 		const rGrass = 10;
 		const rBeach = 2;
 		const rShallow = 3;
+
+		const noiseFactor = 3;
 
 		let container = layers.tileSprites;
 
@@ -32,11 +31,11 @@ define([
 				let tile = 5;
 
 				let distance = Math.sqrt(Math.pow(i - midX, 2) + Math.pow(j - midY, 2));
-				if (distance < rGrass + (Math.random() * 3))
+				if (distance < rGrass + (Math.random() * noiseFactor))
 					tile = 3;
-				else if (distance < rGrass + rBeach + (Math.random() * 3))
+				else if (distance < rGrass + rBeach + (Math.random() * noiseFactor))
 					tile = 4;
-				else if (distance < rGrass + rBeach + rShallow + (Math.random() * 2))
+				else if (distance < rGrass + rBeach + rShallow + (Math.random() * noiseFactor))
 					tile = 53;
 
 				let alpha = mRandom();
