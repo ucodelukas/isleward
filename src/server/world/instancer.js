@@ -113,12 +113,15 @@ module.exports = {
 		else {
 			let o = objects.transferObject(obj);
 			questBuilder.obtain(o);
+			eventEmitter.emit('onAfterPlayerEnterZone', o);
 		}
 	},
 
 	onAddObject: function (obj) {
-		if (obj.player)
+		if (obj.player) {
 			obj.stats.onLogin();
+			eventEmitter.emit('onAfterPlayerEnterZone', obj);
+		}
 
 		questBuilder.obtain(obj);
 		obj.fireEvent('afterMove');
