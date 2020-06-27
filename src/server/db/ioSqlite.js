@@ -28,6 +28,14 @@ module.exports = {
 			cbReady();
 		}, this);
 	},
+
+	createTable: async function (tableName) {
+		return new Promise(res => {
+			this.db.run(`
+				CREATE TABLE ${tableName} (key VARCHAR(50), value TEXT)
+			`, res);
+		});
+	},
 	
 	onTableCreated: async function (table) {
 		
