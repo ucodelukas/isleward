@@ -2,16 +2,16 @@ const fileLister = require('../misc/fileLister');
 const events = require('../misc/events');
 
 module.exports = {
-	init: function () {
+	init: async function () {
 		const modList = fileLister.getFolderList('mods');
 
-		modList.forEach(m => {
+		for (const m of modList) {
 			const mod = require('../mods/' + m + '/index');
-			this.onGetMod(m, mod);
-		});
+			await this.onGetMod(m, mod);
+		}
 	},
 
-	onGetMod: function (name, mod) {
+	onGetMod: async function (name, mod) {
 		if (mod.disabled)
 			return;
 
@@ -30,13 +30,13 @@ module.exports = {
 			this.onGetExtra(name, mod, extra);
 		}
 
-		if (isMapThread && typeof mod.initMap === 'function')
-			mod.initMap();
-		else if (!isMapThread && typeof mod.initMain === 'function')
-			mod.initMain();
-
 		if (typeof mod.init === 'function')
-			mod.init();
+			await mod.init();
+
+		if (isMapThread && typeof mod.initMap === 'function')
+			await mod.initMapThread();
+		else if (!isMapThread && typeof mod.initMain === 'function')
+			await mod.initMainThread();
 	},
 
 	onGetExtra: function (name, mod, extra) {

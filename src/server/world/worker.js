@@ -61,13 +61,13 @@ const onCrash = async e => {
 	});
 };
 
-let onDbReady = function () {
+let onDbReady = async function () {
 	require('../misc/random');
 
 	process.on('uncaughtException', onCrash);
 	process.on('unhandledRejection', onCrash);
 
-	mods.init();
+	await mods.init();
 
 	onModsReady();
 };

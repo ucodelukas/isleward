@@ -28,7 +28,7 @@ let startup = {
 		process.on('unhandledRejection', this.onError.bind(this));
 		process.on('uncaughtException', this.onError.bind(this));
 
-		mods.init();
+		await mods.init();
 
 		this.onModsLoaded();
 	},
