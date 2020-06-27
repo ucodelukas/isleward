@@ -1,5 +1,4 @@
 @import "../../../css/colors.less";
-
 @pad: 8px;
 
 .uiHud {
@@ -14,6 +13,7 @@
 		width: calc(280px + (@pad * 2));
 		padding: @pad;
 		background-color: fade(#3a3b4a, 90%);
+		box-shadow: 0 -2px 0 @black, 0 2px 0 @black, 2px 0 0 @black, -2px 0 0 @black;
 
 		.portraitBox {
 			float: left;
@@ -24,6 +24,7 @@
 				width: 64px;
 				height: 64px;
 			}
+
 		}
 
 		.boxes {
@@ -67,16 +68,7 @@
 					color: @white;
 					padding: 2px 0px;
 					line-height: 16px;
-
-					text-shadow: 
-						2px 0px #2d2136,
-						-2px 0px #2d2136,
-						0px -2px #2d2136,
-						0px 2px #2d2136,
-						-2px -2px #2d2136,
-						-2px 2px #2d2136,
-						2px -2px #2d2136,
-						2px 2px #2d2136;
+					text-shadow: 2px 0px #2d2136, -2px 0px #2d2136, 0px -2px #2d2136, 0px 2px #2d2136, -2px -2px #2d2136, -2px 2px #2d2136, 2px -2px #2d2136, 2px 2px #2d2136;
 				}
 
 				&:nth-child(1) {
@@ -102,14 +94,18 @@
 				.statXp {
 					background-color: #4ac441;
 				}
+
 			}
+
 		}
+
 	}
 
 	.quickBar {
 		position: absolute;
 		left: calc(290px + (@pad * 2));
 		top: 0px;
+		box-shadow: 0 -2px 0 @black, 0 2px 0 @black, 2px 0 0 @black, -2px 0 0 @black;
 
 		.quickItem {
 			display: none;
@@ -123,13 +119,11 @@
 
 			.icon {
 				height: 100%;
-
-				filter: 
-					brightness(100%)
-					drop-shadow(0px -4px 0px @blackC) 
-					drop-shadow(0px 4px 0px @blackC)
-					drop-shadow(4px 0px 0px @blackC) 
-					drop-shadow(-4px 0px 0px @blackC);
+				filter: brightness(100%)
+				drop-shadow(0px -4px 0px @blackC) 
+				drop-shadow(0px 4px 0px @blackC)
+				drop-shadow(4px 0px 0px @blackC) 
+				drop-shadow(-4px 0px 0px @blackC);
 			}
 
 			.info {
@@ -137,18 +131,14 @@
 				bottom: 3px;
 				position: absolute;
 				color: @white;
-				filter:
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
-
-				-moz-filter: 
-					drop-shadow(0px -2px 0px @blackD) 
-					drop-shadow(0px 2px 0px @blackD)
-					drop-shadow(2px 0px 0px @blackD) 
-					drop-shadow(-2px 0px 0px @blackD);
-
+				filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
+				-moz-filter: drop-shadow(0px -2px 0px @blackD) 
+				drop-shadow(0px 2px 0px @blackD)
+				drop-shadow(2px 0px 0px @blackD) 
+				drop-shadow(-2px 0px 0px @blackD);
 			}
 
 			&:hover {
@@ -160,7 +150,11 @@
 				&.empty {
 					background-color: fade(@blueA, 10%);
 				}
+
 			}
+
 		}
+
 	}
+
 }

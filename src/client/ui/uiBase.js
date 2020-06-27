@@ -204,7 +204,7 @@ define([
 		},
 
 		buildClose: function () {
-			$('<div class="btn btnClose">x</div>')
+			$('<div class="btn btnClose">X</div>')
 				.appendTo(this.find('.heading').eq(0))
 				.on('click', this.toggle.bind(this));	
 		}

@@ -82,14 +82,10 @@ define([
 
 		onAfterShow: function () {
 			this.onResize();
-
-			events.emit('onShowOverlay', this.el);
 		},
 
 		beforeHide: function () {
 			this.onResize();
-
-			events.emit('onHideOverlay', this.el);
 		},
 
 		logOut: function () {

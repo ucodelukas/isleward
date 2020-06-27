@@ -38,7 +38,7 @@ define([
 
 			this.tooltip
 				.html(text)
-				.attr('class', 'tooltip');
+				.attr('class', 'tooltip hasBorderShadow');
 
 			this.tooltip
 				.show();
