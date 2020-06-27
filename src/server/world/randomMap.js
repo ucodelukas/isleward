@@ -30,6 +30,7 @@ module.exports = {
 
 		const hasEndRoom = this.templates.some(t => t.properties.end);
 		if (!hasEndRoom) {
+			/* eslint-disable-next-line no-console */
 			console.log(`Random map has no end room defined: ${instance.map.name}`);
 
 			return;
