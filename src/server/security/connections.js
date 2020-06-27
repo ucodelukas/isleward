@@ -86,6 +86,9 @@ module.exports = {
 			if (!source)
 				return;
 
+			if (msg.callback)
+				msg.data.callbackId = atlas.registerCallback(msg.callback);
+
 			msg.data.sourceId = source.id;
 			atlas.send(player.zone, msg);
 
