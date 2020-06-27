@@ -1,12 +1,13 @@
-let bcrypt = require('bcrypt-nodejs');
-let messages = require('../misc/messages');
-let skins = require('../config/skins');
-let roles = require('../config/roles');
-let profanities = require('../misc/profanities');
-let fixes = require('../fixes/fixes');
-let mail = require('../mail/mail');
-let spirits = require('../config/spirits');
-let ga = require('../security/ga');
+const bcrypt = require('bcrypt-nodejs');
+const messages = require('../misc/messages');
+const skins = require('../config/skins');
+const roles = require('../config/roles');
+const profanities = require('../misc/profanities');
+const fixes = require('../fixes/fixes');
+const mail = require('../mail/mail');
+const spirits = require('../config/spirits');
+const ga = require('../security/ga');
+const events = require('../misc/events');
 
 const checkLoginRewards = require('./auth/checkLoginRewards');
 
@@ -73,6 +74,13 @@ module.exports = {
 			serialize: true
 		});
 
+		await this.doSaveStash();
+
+		if (callback)
+			callback();
+	},
+
+	doSaveStash: async function () {
 		await io.setAsync({
 			key: this.username,
 			table: 'stash',
@@ -80,9 +88,6 @@ module.exports = {
 			clean: true,
 			serialize: true
 		});
-
-		if (callback)
-			callback();
 	},
 
 	simplify: function () {
@@ -123,6 +128,11 @@ module.exports = {
 			clean: true
 		});
 
+		events.emit('onAfterGetCharacter', {
+			obj: this.obj,
+			character
+		});
+
 		fixes.fixCharacter(character);
 
 		character.cell = skins.getCell(character.skinId);
@@ -160,6 +170,11 @@ module.exports = {
 		});
 
 		fixes.fixStash(this.stash);
+
+		events.emit('onAfterGetStash', {
+			obj: this.obj,
+			stash: this.stash
+		});
 	},
 
 	getSkins: async function (character) {
