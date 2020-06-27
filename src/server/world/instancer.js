@@ -62,6 +62,8 @@ module.exports = {
 			map.seed = _.getGuid();
 		}
 
+		_.log('(M ' + map.name + '): Ready');
+
 		map.clientMap.zoneId = this.zoneId;
 
 		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));

@@ -203,8 +203,6 @@ module.exports = {
 		padding = mapFile.properties.padding;
 
 		mapFile = null;
-
-		_.log('(M ' + this.name + '): Ready');
 	},
 
 	build: function () {
