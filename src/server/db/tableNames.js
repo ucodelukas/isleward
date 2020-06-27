@@ -1,4 +1,4 @@
-module.exports = [
+const tableNames = [
 	'character',
 	'characterList',
 	'stash',
@@ -11,6 +11,7 @@ module.exports = [
 	'error',
 	'modLog',
 	'accountInfo',
-	'mtxStash',
 	'recipes'
 ];
+
+module.exports = tableNames;
