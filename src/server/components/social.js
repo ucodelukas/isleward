@@ -295,7 +295,7 @@ module.exports = {
 
 		messages.forEach(m => {
 			const { className = 'color-redA', type = 'info', subType } = m;
-			m.className = className;
+			m.class = className;
 			m.type = type;
 			m.subType = subType;
 		});
