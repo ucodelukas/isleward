@@ -58,7 +58,7 @@ module.exports = {
 	loadMapProperties: function ({ leafConstraints, endConstraints }) {
 		if (leafConstraints)
 			this.leafConstraints = JSON.parse(leafConstraints);
-		
+
 		if (endConstraints)
 			this.endConstraints = JSON.parse(endConstraints);
 	},
@@ -132,7 +132,7 @@ module.exports = {
 							rotate: !!k
 						}, r);
 
-						flipped.exits.forEach(function (e) {
+						flipped.exits.forEach(e => {
 							let direction = JSON.parse(e.properties.exit);
 
 							if (flipped.flipX) {
@@ -156,7 +156,7 @@ module.exports = {
 							e.properties.exit = JSON.stringify(direction);
 						});
 
-						flipped.objects.forEach(function (o) {
+						flipped.objects.forEach(o => {
 							if (flipped.flipX)
 								o.x = r.x + r.width - (o.x - r.x) - 1;
 							if (flipped.flipY)
@@ -431,7 +431,10 @@ module.exports = {
 
 		if (room.distance < this.leafConstraints.maxDistance) {
 			const maxExits = room.template.exits.length;
-			let count = this.randInt(Math.min(maxExits, 2), maxExits + 1);
+			const minExits = Math.min(maxExits, 2);
+
+			const count = this.randInt(minExits, maxExits + 1);
+
 			for (let i = 0; i < count; i++) 
 				this.setupConnection(room, !isHallway);
 		}
@@ -446,7 +449,7 @@ module.exports = {
 	},
 
 	setupConnection: function (fromRoom, isHallway) {
-		if (fromRoom.template.exits.length === 0)
+		if (!fromRoom.template.exits.length)
 			return true;
 
 		let fromExit = fromRoom.template.exits.splice(this.randInt(0, fromRoom.template.exits.length), 1)[0];
