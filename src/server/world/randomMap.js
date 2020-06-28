@@ -20,23 +20,27 @@ module.exports = {
 	bounds: [0, 0, 0, 0],
 
 	generate: function (instance) {
+		const { map } = instance;
+
+		this.loadMapProperties(map.mapFile.properties);
+
 		this.rooms = [];
 		this.exitAreas = [];
 		this.tileMappings = {};
 		this.bounds = [0, 0, 0, 0];
-		this.templates = extend([], instance.map.rooms);
+		this.templates = extend([], map.rooms);
 
-		this.setupTemplates(instance.map);
+		this.setupTemplates(map);
 
 		const hasEndRoom = this.templates.some(t => t.properties.end);
 		if (!hasEndRoom) {
 			/* eslint-disable-next-line no-console */
-			console.log(`Random map has no end room defined: ${instance.map.name}`);
+			console.log(`Random map has no end room defined: ${map.name}`);
 
 			return;
 		}
 
-		this.generateMappings(instance.map);
+		this.generateMappings(map);
 
 		let startTemplate = this.templates.filter(t => t.properties.start);
 		startTemplate = startTemplate[this.randInt(0, startTemplate.length)];
@@ -49,6 +53,14 @@ module.exports = {
 			this.offsetRooms(startRoom);
 			this.buildMap(instance, startRoom);
 		}
+	},
+
+	loadMapProperties: function ({ leafConstraints, endConstraints }) {
+		if (leafConstraints)
+			this.leafConstraints = JSON.parse(leafConstraints);
+		
+		if (endConstraints)
+			this.endConstraints = JSON.parse(endConstraints);
 	},
 
 	isValidDungeon: function () {
@@ -99,7 +111,7 @@ module.exports = {
 	},
 
 	setupTemplates: function (map) {
-		this.templates.forEach(function (r, typeId) {
+		this.templates.forEach((r, typeId) => {
 			if (r.properties.mapping)
 				return;
 
@@ -166,9 +178,9 @@ module.exports = {
 					}
 				}
 			}
-		}, this);
+		});
 
-		this.templates.forEach(function (r) {
+		this.templates.forEach(r => {
 			let rotate = r.rotate;
 			let w = rotate ? r.height : r.width;
 			let h = rotate ? r.width : r.height;
@@ -199,7 +211,7 @@ module.exports = {
 
 		this.templates
 			.filter(r => r.properties.mapping)
-			.forEach(function (m) {
+			.forEach(m => {
 				let x = m.x;
 				let y = m.y;
 				let w = m.width;
@@ -229,7 +241,7 @@ module.exports = {
 						mapping.push(oM);
 					}
 				}
-			}, this);
+			});
 	},
 
 	buildMap: function (instance, startRoom) {
@@ -330,7 +342,7 @@ module.exports = {
 					continue;
 				} else {
 					//Remove objects from this position since it falls in another room
-					template.objects.spliceWhere(function (o) {
+					template.objects.spliceWhere(o => {
 						let ox = o.x - template.x + room.x;
 						let oy = o.y - template.y + room.y;
 						return ((ox === x) && (oy === y));
@@ -340,11 +352,11 @@ module.exports = {
 				let didCollide = collisionMap[x][y];
 				if (collides) {
 					if (didCollide) {
-						let isExitTile = this.exitAreas.find(function (e) {
+						let isExitTile = this.exitAreas.find(e => {
 							return (!((x < e.x) || (y < e.y) || (x >= e.x + e.width) || (y >= e.y + e.height)));
 						});
 						if (isExitTile) {
-							let isThisExit = template.oldExits.find(function (e) {
+							let isThisExit = template.oldExits.find(e => {
 								let ex = room.x + (e.x - template.x);
 								let ey = room.y + (e.y - template.y);
 								return (!((x < ex) || (y < ey) || (x >= ex + e.width) || (y >= ey + e.height)));
@@ -380,7 +392,7 @@ module.exports = {
 		let spawners = instance.spawners;
 		let spawnCd = instance.map.mapFile.properties.spawnCd;
 
-		template.objects.forEach(function (o) {
+		template.objects.forEach(o => {
 			o.x = o.x - template.x + room.x;
 			o.y = o.y - template.y + room.y;
 
@@ -439,7 +451,7 @@ module.exports = {
 
 		let fromExit = fromRoom.template.exits.splice(this.randInt(0, fromRoom.template.exits.length), 1)[0];
 		let exitDirection = JSON.parse(fromExit.properties.exit);
-		let templates = this.templates.filter(function (t) {
+		let templates = this.templates.filter(t => {
 			if (
 				(t.properties.mapping) ||
 				(!!t.properties.hallway !== isHallway) ||
@@ -451,7 +463,7 @@ module.exports = {
 			)
 				return false;
 			
-			let isValid = t.exits.some(function (e) {
+			let isValid = t.exits.some(e => {
 				let direction = JSON.parse(e.properties.exit);
 				return ((direction[0] === -exitDirection[0]) && (direction[1] === -exitDirection[1]));
 			});
@@ -465,14 +477,14 @@ module.exports = {
 			if ((isValid) && (fromRoom.distance + 1 === this.leafConstraints.maxDistance)) {
 				//If there is an exit available, rather use that
 				if (!t.properties.end) {
-					let endsAvailable = this.templates.filter(function (tt) {
+					let endsAvailable = this.templates.filter(tt => {
 						if (!tt.properties.end)
 							return false;
 						else if (!~~tt.properties.maxOccur)
 							return true;
 						else if (this.rooms.filter(r => r.template.typeId === tt.typeId).length < ~~tt.properties.maxOccur)
 							return true;
-					}, this);
+					});
 
 					if (endsAvailable.length > 0)
 						isValid = false;
@@ -480,7 +492,7 @@ module.exports = {
 			}
 
 			return isValid;
-		}, this);
+		});
 
 		if (templates.length === 0) {
 			fromRoom.template.exits.push(fromExit);
@@ -489,7 +501,7 @@ module.exports = {
 
 		let template = extend({}, templates[this.randInt(0, templates.length)]);
 
-		let templateExit = template.exits.filter(function (e) {
+		let templateExit = template.exits.filter(e => {
 			let direction = JSON.parse(e.properties.exit);
 			return ((direction[0] === -exitDirection[0]) && (direction[1] === -exitDirection[1]));
 		});
