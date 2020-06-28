@@ -120,9 +120,7 @@ define([
 		},
 
 		onToggleEventsVisibility: function (active) {
-			this.shown = active;
-
-			if (this.shown) 
+			if (active)
 				this.show();
 			else 
 				this.hide();
