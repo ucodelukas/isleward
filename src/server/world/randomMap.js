@@ -419,7 +419,7 @@ module.exports = {
 
 		if (room.distance < this.leafConstraints.maxDistance) {
 			const maxExits = room.template.exits.length;
-			let count = this.randInt(Math.min(maxExits, 2), maxExits);
+			let count = this.randInt(Math.min(maxExits, 2), maxExits + 1);
 			for (let i = 0; i < count; i++) 
 				this.setupConnection(room, !isHallway);
 		}
