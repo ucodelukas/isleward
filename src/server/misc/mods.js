@@ -33,9 +33,9 @@ module.exports = {
 		if (typeof mod.init === 'function')
 			await mod.init();
 
-		if (isMapThread && typeof mod.initMap === 'function')
+		if (isMapThread && typeof mod.initMapThread === 'function')
 			await mod.initMapThread();
-		else if (!isMapThread && typeof mod.initMain === 'function')
+		else if (!isMapThread && typeof mod.initMainThread === 'function')
 			await mod.initMainThread();
 	},
 
