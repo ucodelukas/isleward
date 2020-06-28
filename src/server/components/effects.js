@@ -192,6 +192,8 @@ module.exports = {
 			this.obj.syncer.setArray(false, 'effects', 'addEffects', options.type);
 		}
 
+		this.obj.instance.eventEmitter.emit('onAddEffect', this.obj, builtEffect);
+
 		return builtEffect;
 	},
 
