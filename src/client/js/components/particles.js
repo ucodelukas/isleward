@@ -27,10 +27,12 @@ define([
 		},
 
 		update: function () {
-			if (this.ttl !== null) {
+			const { ttl, destroyObject, emitter, obj } = this;
+
+			if (ttl !== null) {
 				this.ttl--;
 				if (this.ttl <= 0) {
-					if (this.destroyObject)
+					if (destroyObject)
 						this.obj.destroyed = true;
 					else
 						this.destroyed = true;
@@ -38,11 +40,11 @@ define([
 				}
 			}
 
-			if (!this.emitter.emit)
+			if (!emitter.emit)
 				return;
 
-			this.emitter.spawnPos.x = (this.obj.x * scale) + (scale / 2);
-			this.emitter.spawnPos.y = (this.obj.y * scale) + (scale / 2);
+			emitter.spawnPos.x = (obj.x * scale) + (scale / 2) + obj.offsetX;
+			emitter.spawnPos.y = (obj.y * scale) + (scale / 2) + obj.offsetY;
 		},
 
 		destroy: function () {
