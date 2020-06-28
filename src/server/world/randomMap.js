@@ -1,7 +1,6 @@
 module.exports = {
 	templates: null,
-	tileMappings: {},
-	gapMappings: {},
+	tileMappings: null,
 	rooms: [],
 	exitAreas: [],
 
@@ -40,7 +39,8 @@ module.exports = {
 			return;
 		}
 
-		this.generateMappings(map);
+		if (!this.tileMappings)
+			this.generateMappings(map);
 
 		let startTemplate = this.templates.filter(t => t.properties.start);
 		startTemplate = startTemplate[this.randInt(0, startTemplate.length)];
@@ -221,6 +221,8 @@ module.exports = {
 	},
 
 	generateMappings: function (map) {
+		this.tileMappings = {};
+
 		let oldMap = map.oldMap;
 
 		this.templates
@@ -236,16 +238,12 @@ module.exports = {
 					.replace('0,', '')
 					.replace(',', '');
 
-				let mapping = null;
-
-				if ((!m.properties.wall) && (!m.properties.floor))
-					mapping = this.tileMappings[baseTile] = [];
-				else
-					mapping = this.gapMappings[baseTile] = [];
+				let mapping = this.tileMappings[baseTile] = [];
 
 				for (let i = x + 2; i < x + w; i++) {
 					for (let j = y; j < y + h; j++) {
 						let oM = oldMap[i][j];
+
 						if (oM.replace) {
 							oM = oM
 								.replace('0,', '')
@@ -276,49 +274,13 @@ module.exports = {
 
 		this.drawRoom(instance, startRoom);
 
-		//this.fillGaps(instance);
-
 		instance.physics.init(clientMap.collisionMap);
 
 		this.spawnObjects(instance, startRoom);
 	},
 
-	fillGaps: function (instance) {
-		let map = instance.map.clientMap.map;
-		let oldMap = instance.map.oldMap;
-		let w = map.length;
-		let h = map[0].length;
-		let len = w * h / 120;
-
-		let floorTile = this.templates.find(t => t.properties.floor);
-		floorTile = oldMap[floorTile.x][floorTile.y];
-		let wallTile = this.templates.find(t => t.properties.wall);
-		wallTile = oldMap[wallTile.x][wallTile.y];
-
-		for (let i = 0; i < len; i++) {
-			let xMin = this.randInt(0, w);
-			let yMin = this.randInt(0, h);
-			let xMax = Math.min(w, xMin + this.randInt(2, 7));
-			let yMax = Math.min(h, yMin + this.randInt(2, 7));
-
-			for (let x = xMin; x < xMax; x++) {
-				for (let y = yMin; y < yMax; y++) {
-					if (map[x][y])
-						continue;
-
-					if (this.randInt(0, 10) < 6) {
-						if (this.randInt(0, 10) < 3)
-							map[x][y] = this.randomizeTile(wallTile, null, true);
-						else
-							map[x][y] = this.randomizeTile(floorTile, null, true);
-					}
-				}
-			}
-		}
-	},
-
-	randomizeTile: function (tile, floorTile, gapMapping) {
-		let mapping = gapMapping ? this.gapMappings[tile] : this.tileMappings[tile];
+	randomizeTile: function (tile, floorTile) {
+		let mapping = this.tileMappings[tile];
 		if (!mapping)
 			return tile;
 
