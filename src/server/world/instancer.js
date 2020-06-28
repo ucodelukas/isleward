@@ -203,8 +203,11 @@ module.exports = {
 		if (obj.auth)
 			await obj.auth.doSave();
 
-		if (obj.player)
+		if (obj.player) {
 			obj.fireEvent('beforeRezone');
+
+			eventEmitter.emit('onAfterPlayerLeaveZone', obj);
+		}
 
 		obj.destroyed = true;
 
