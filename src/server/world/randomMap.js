@@ -117,12 +117,23 @@ module.exports = {
 
 			r.typeId = typeId;
 
-			if (r.properties.noRotate)
-				return;
+			const { noRotate = false, canFlipX = true, canFlipY = true } = r.properties;
 
+			//FlipX Loop
 			for (let i = 0; i < 2; i++) {
+				if (i && !canFlipX)
+					continue;
+
+				//FlipY Loop
 				for (let j = 0; j < 2; j++) {
+					if (j && !canFlipY)
+						continue;
+
+					//Rotate Loop
 					for (let k = 0; k < 2; k++) {
+						if (k && noRotate)
+							continue;
+
 						if (i + j + k === 0)
 							continue;
 
