@@ -117,7 +117,10 @@ module.exports = {
 
 			r.typeId = typeId;
 
-			const { noRotate = false, canFlipX = true, canFlipY = true } = r.properties;
+			let { noRotate = false, canFlipX = true, canFlipY = true } = r.properties;
+			//Property values are strings. So we turn '1' and '0' into 1 and 0
+			canFlipX = ~~canFlipX;
+			canFlipY = ~~canFlipY;
 
 			//FlipX Loop
 			for (let i = 0; i < 2; i++) {
@@ -273,7 +276,7 @@ module.exports = {
 
 		this.drawRoom(instance, startRoom);
 
-		this.fillGaps(instance);
+		//this.fillGaps(instance);
 
 		instance.physics.init(clientMap.collisionMap);
 
