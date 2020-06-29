@@ -1,4 +1,4 @@
-window.isMobile = /Mobi|Android/i.test(navigator.userAgent);
+window.isMobile = /Mobi|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 window.scale = isMobile ? 32 : 40 * window.devicePixelRatio;
 window.scaleMult = isMobile ? 4 : 5 * window.devicePixelRatio;
 
