@@ -25,7 +25,6 @@ module.exports = {
 
 		this.rooms = [];
 		this.exitAreas = [];
-		this.tileMappings = {};
 		this.bounds = [0, 0, 0, 0];
 		this.templates = extend([], map.rooms);
 
@@ -285,11 +284,8 @@ module.exports = {
 			return tile;
 
 		tile = mapping[this.randInt(0, mapping.length)];
-		if (!tile) {
-			if (floorTile)
-				return this.randomizeTile(floorTile);
+		if (!tile)
 			return 0;
-		}
 
 		return tile;
 	},
@@ -313,7 +309,21 @@ module.exports = {
 				let floorTile = template.tiles[i][j];
 
 				if (!currentTile) {
-					map[x][y] = this.randomizeTile(tile, floorTile);
+					let cell = tile.split(',');
+					let cLen = cell.length;
+
+					let newCell = '';
+					for (let k = 0; k < cLen; k++) {
+						let c = cell[k];
+						let newC = this.randomizeTile(c);
+						newCell += newC;
+
+						if (k < cLen - 1)
+							newCell += ',';
+					}
+
+					map[x][y] = newCell;
+
 					collisionMap[x][y] = collides;
 					continue;
 				} else {

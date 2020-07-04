@@ -131,58 +131,60 @@ module.exports = {
 	getMapFile: function () {
 		this.build();
 
-		randomMap = extend({}, randomMap);
+		this.randomMap = extend({}, randomMap);
 		this.oldMap = this.layers;
-		randomMap.templates = extend([], this.rooms);
-		randomMap.generateMappings(this);
+		this.randomMap.templates = extend([], this.rooms);
+		this.randomMap.generateMappings(this);
 
-		for (let i = 0; i < this.size.w; i++) {
-			let row = this.layers[i];
-			for (let j = 0; j < this.size.h; j++) {
-				let cell = row[j];
-				if (!cell)
-					continue;
+		if (!mapFile.properties.isRandom) {
+			for (let i = 0; i < this.size.w; i++) {
+				let row = this.layers[i];
+				for (let j = 0; j < this.size.h; j++) {
+					let cell = row[j];
+					if (!cell)
+						continue;
 
-				cell = cell.split(',');
-				let cLen = cell.length;
+					cell = cell.split(',');
+					let cLen = cell.length;
 
-				let newCell = '';
-				for (let k = 0; k < cLen; k++) {
-					let c = cell[k];
-					let newC = randomMap.randomizeTile(c);
-					newCell += newC;
+					let newCell = '';
+					for (let k = 0; k < cLen; k++) {
+						let c = cell[k];
+						let newC = this.randomMap.randomizeTile(c);
+						newCell += newC;
 
-					//Wall?
-					if ((c >= 160) && (c <= 352) && (newC === 0))
-						this.collisionMap[i][j] = 0;
+						//Wall?
+						if ((c >= 160) && (c <= 352) && (newC === 0))
+							this.collisionMap[i][j] = 0;
 
-					if (k < cLen - 1)
-						newCell += ',';
+						if (k < cLen - 1)
+							newCell += ',';
+					}
+
+					let fakeContents = [];
+					const hiddenWall = this.hiddenWalls[i][j];
+					const hiddenTile = this.hiddenTiles[i][j];
+
+					if (hiddenTile)
+						fakeContents.push(-this.randomMap.randomizeTile(hiddenTile));
+					if (hiddenWall)
+						fakeContents.push(-this.randomMap.randomizeTile(hiddenWall));
+
+					if (fakeContents.length)
+						newCell += ',' + fakeContents.join(',');
+
+					row[j] = newCell;
 				}
-
-				let fakeContents = [];
-				const hiddenWall = this.hiddenWalls[i][j];
-				const hiddenTile = this.hiddenTiles[i][j];
-
-				if (hiddenTile)
-					fakeContents.push(-randomMap.randomizeTile(hiddenTile));
-				if (hiddenWall)
-					fakeContents.push(-randomMap.randomizeTile(hiddenWall));
-
-				if (fakeContents.length)
-					newCell += ',' + fakeContents.join(',');
-
-				row[j] = newCell;
 			}
 		}
 
 		//Fix for newer versions of Tiled
-		randomMap.templates
+		this.randomMap.templates
 			.forEach(r => {
 				r.properties = objectifyProperties(r.properties); 
 			});
 
-		randomMap.templates
+		this.randomMap.templates
 			.filter(r => r.properties.mapping)
 			.forEach(function (m) {
 				let x = m.x;

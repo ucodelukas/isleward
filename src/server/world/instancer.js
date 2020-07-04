@@ -6,7 +6,6 @@ let physics = require('./physics');
 let resourceSpawner = require('./resourceSpawner');
 let spellCallbacks = require('../config/spells/spellCallbacks');
 let questBuilder = require('../config/quests/questBuilder');
-let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let mail = require('../mail/mail');
@@ -53,7 +52,7 @@ module.exports = {
 			if (!map.oldCollisionMap)
 				map.oldCollisionMap = map.collisionMap;
 
-			randomMap.generate({
+			map.randomMap.generate({
 				map: map,
 				physics: physics,
 				spawners: spawners
