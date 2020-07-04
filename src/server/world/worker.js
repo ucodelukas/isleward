@@ -4,6 +4,7 @@ global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
 global.eventManager = require('../events/events');
+global.clientConfig = require('../config/clientConfig');
 
 let components = require('../components/components');
 let mods = require('../misc/mods');
@@ -33,6 +34,7 @@ let onCpnsReady = function () {
 	recipes.init();
 	sheets.init();
 	itemEffects.init();
+	clientConfig.init();
 
 	process.send({
 		method: 'onReady'

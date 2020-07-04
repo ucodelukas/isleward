@@ -1,3 +1,5 @@
+const imageSize = require('image-size');
+
 let objects = require('../objects/objects');
 let physics = require('./physics');
 let spawners = require('./spawners');
@@ -24,6 +26,8 @@ const objectifyProperties = oldProperties => {
 			
 	return newProperties;
 };
+
+const cachedImageDimensions = {};
 
 module.exports = {
 	name: null,
@@ -116,8 +120,8 @@ module.exports = {
 				this.spawn = [this.spawn];
 		}
 	},
-	create: function () {
-		this.getMapFile();
+	create: async function () {
+		await this.getMapFile();
 
 		this.clientMap = {
 			zoneId: -1,
@@ -128,8 +132,8 @@ module.exports = {
 			hiddenRooms: this.hiddenRooms
 		};
 	},
-	getMapFile: function () {
-		this.build();
+	getMapFile: async function () {
+		await this.build();
 
 		this.randomMap = extend({}, randomMap);
 		this.oldMap = this.layers;
@@ -207,7 +211,7 @@ module.exports = {
 		mapFile = null;
 	},
 
-	build: function () {
+	build: async function () {
 		const mapSize = {
 			w: mapFile.width,
 			h: mapFile.height
@@ -289,12 +293,38 @@ module.exports = {
 							info.cell = data[index];
 
 						events.emit('onBeforeBuildLayerTile', info);
-						builders.tile(info);
+						await builders.tile(info);
 					}
 				}
 			}
 		}
 	},
+
+	getImageDimensions: async function (path) {
+		let cachedDimensions = cachedImageDimensions[path];
+		if (!cachedDimensions) {
+			cachedDimensions = await imageSize(path);
+			cachedImageDimensions[path] = cachedDimensions;
+		}
+
+		return cachedDimensions;
+	},
+
+	getOffsetCellPos: async function (sheetName, cell) {
+		const atlasTextures = clientConfig.get().atlasTextures;
+		const indexInAtlas = atlasTextures.indexOf(sheetName);
+
+		let offset = 0;
+		for (let i = 0; i < indexInAtlas; i++) {
+			const path = '../client/images/' + atlasTextures[i] + '.png';
+			const dimensions = await this.getImageDimensions(path);
+
+			offset += (dimensions.width / 8) * (dimensions.height / 8);
+		}
+
+		return cell + offset;
+	},
+
 	builders: {
 		getCellInfo: function (cell) {
 			let flipX = null;
@@ -317,12 +347,13 @@ module.exports = {
 			cell = cell - firstGid + 1;
 
 			return {
-				sheetName: sheetName,
-				cell: cell,
-				flipX: flipX
+				sheetName,
+				cell,
+				flipX
 			};
 		},
-		tile: function (info) {
+
+		tile: async function (info) {
 			let { x, y, cell, layer: layerName } = info;
 
 			if (cell === 0) {
@@ -334,30 +365,28 @@ module.exports = {
 
 			let cellInfo = this.builders.getCellInfo(cell);
 			let sheetName = cellInfo.sheetName;
-			cell = cellInfo.cell;
-			if (sheetName === 'walls')
-				cell += 224;
-			else if (sheetName === 'objects')
-				cell += 480;
+
+			const offsetCell = await this.getOffsetCellPos(sheetName, cellInfo.cell);
 
 			if ((layerName !== 'hiddenWalls') && (layerName !== 'hiddenTiles')) {
 				let layer = this.layers;
 				if (this.oldLayers[layerName])
-					this.oldLayers[layerName][x][y] = cell;
-				layer[x][y] = (layer[x][y] === null) ? cell : layer[x][y] + ',' + cell;
+					this.oldLayers[layerName][x][y] = offsetCell;
+				layer[x][y] = (layer[x][y] === null) ? offsetCell : layer[x][y] + ',' + offsetCell;
 			} else if (layerName === 'hiddenWalls')
-				this.hiddenWalls[x][y] = cell;
+				this.hiddenWalls[x][y] = offsetCell;
 			else if (layerName === 'hiddenTiles')
-				this.hiddenTiles[x][y] = cell;
+				this.hiddenTiles[x][y] = offsetCell;
 
 			if (layerName.indexOf('walls') > -1)
 				this.collisionMap[x][y] = 1;
 			else if (layerName === 'tiles' && sheetName === 'tiles') {
 				//Check for water and water-like tiles
-				if ([6, 7, 54, 55, 62, 63, 154, 189, 190, 192, 193, 194, 195, 196, 197].indexOf(cell) > -1)
+				if ([6, 7, 54, 55, 62, 63, 154, 189, 190, 192, 193, 194, 195, 196, 197].includes(offsetCell))
 					this.collisionMap[x][y] = 1;
 			}
 		},
+
 		object: function (layerName, cell) {
 			//Fixes for newer versions of tiled
 			cell.properties = objectifyProperties(cell.properties);

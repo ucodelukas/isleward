@@ -31,6 +31,11 @@ const config = {
 		'bigObjects',
 		'bosses'
 	],
+	atlasTextures: [
+		'tiles',
+		'walls',
+		'objects'
+	],
 	uiLoginList: [
 		'login'
 	],
@@ -92,7 +97,13 @@ module.exports = {
 		events.emit('onBeforeGetTextureList', config.textureList);
 	},
 
+	//Used to send to clients
 	getClientConfig: function (msg) {
 		msg.callback(config);
+	},
+
+	//Just used by the server
+	get: function () {
+		return config;
 	}
 };

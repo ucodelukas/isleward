@@ -20,7 +20,7 @@ module.exports = {
 
 	lastTime: 0,
 
-	init: function (args) {
+	init: async function (args) {
 		this.zoneId = args.zoneId;
 
 		spellCallbacks.init();
@@ -47,7 +47,7 @@ module.exports = {
 		spawners.init(fakeInstance);
 		scheduler.init();
 
-		map.create();
+		await map.create();
 		if (map.mapFile.properties.isRandom) {
 			if (!map.oldCollisionMap)
 				map.oldCollisionMap = map.collisionMap;
