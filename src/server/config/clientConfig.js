@@ -1,3 +1,5 @@
+const imageSize = require('image-size');
+
 const events = require('../misc/events');
 const tos = require('./tos');
 
@@ -36,6 +38,81 @@ const config = {
 		'walls',
 		'objects'
 	],
+	tileOpacities: {
+		default: {
+			default: 0.4,
+			max: 1
+		},
+		tiles: {
+			default: 0.4,
+			max: 0.55,
+			5: 0.7,
+			6: 0.9,
+			23: 0.9,
+			24: 0.9,
+			25: 0.9,
+			50: 1,
+			51: 1,
+			52: 1,
+			53: 0.7,
+			54: 0.5,
+			57: 1,
+			58: 1,
+			59: 1,
+			60: 0.9,
+			61: 0.9,
+			62: 0.75,
+			76: 0.9,
+			80: 1,
+			81: 1,
+			82: 1,
+			83: 1,
+			87: 1,
+			90: 1,
+			95: 1,
+			102: 0.9,
+			152: 0.9,
+			153: 1,
+			163: 0.9,
+			//snow
+			176: 0.55,
+			184: 0.55,
+			185: 0.55
+		},
+		objects: {
+			default: 0.9,
+			50: 1
+		},
+		walls: {
+			default: 0.85,
+			max: 1,
+			84: 1,
+			103: 0.9,
+			107: 0.9,
+			116: 1,
+			120: 0.9,
+			132: 0.9,
+			133: 0.9,
+			134: 0.85,
+			139: 1,
+			148: 1,
+			150: 0.85,
+			156: 1,
+			157: 1,
+			158: 1,
+			159: 1,
+			160: 0.9,
+			161: 1,
+			162: 1,
+			163: 1,
+			164: 0.8,
+			165: 1,
+			166: 0.95,
+			167: 1,
+			168: 1,
+			169: 1
+		}
+	},
 	uiLoginList: [
 		'login'
 	],
@@ -86,7 +163,11 @@ const config = {
 };
 
 module.exports = {
-	init: function () {
+	config,
+
+	atlasTextureDimensions: {},
+
+	init: async function () {
 		events.emit('onBeforeGetClientConfig', config);
 
 		//Deprecated
@@ -95,15 +176,24 @@ module.exports = {
 		events.emit('onBeforeGetContextMenuActions', config.contextMenuActions);
 		events.emit('onBeforeGetTermsOfService', config.tos);
 		events.emit('onBeforeGetTextureList', config.textureList);
+
+		await this.calculateAtlasTextureDimensions();
+	},
+
+	//The client needs to know this as well as the map loader
+	calculateAtlasTextureDimensions: async function () {
+		for (const tex of config.atlasTextures) {
+			const path = tex.includes('.png') ? `../${tex}` : `../client/images/${tex}.png`;
+			const dimensions = await imageSize(path);
+
+			delete dimensions.type;
+
+			this.atlasTextureDimensions[tex] = dimensions;
+		}
 	},
 
 	//Used to send to clients
 	getClientConfig: function (msg) {
 		msg.callback(config);
-	},
-
-	//Just used by the server
-	get: function () {
-		return config;
 	}
 };

@@ -1,5 +1,3 @@
-const imageSize = require('image-size');
-
 let objects = require('../objects/objects');
 let physics = require('./physics');
 let spawners = require('./spawners');
@@ -120,8 +118,8 @@ module.exports = {
 				this.spawn = [this.spawn];
 		}
 	},
-	create: async function () {
-		await this.getMapFile();
+	create: function () {
+		this.getMapFile();
 
 		this.clientMap = {
 			zoneId: -1,
@@ -132,8 +130,9 @@ module.exports = {
 			hiddenRooms: this.hiddenRooms
 		};
 	},
-	getMapFile: async function () {
-		await this.build();
+
+	getMapFile: function () {
+		this.build();
 
 		this.randomMap = extend({}, randomMap);
 		this.oldMap = this.layers;
@@ -211,7 +210,7 @@ module.exports = {
 		mapFile = null;
 	},
 
-	build: async function () {
+	build: function () {
 		const mapSize = {
 			w: mapFile.width,
 			h: mapFile.height
@@ -293,31 +292,20 @@ module.exports = {
 							info.cell = data[index];
 
 						events.emit('onBeforeBuildLayerTile', info);
-						await builders.tile(info);
+						builders.tile(info);
 					}
 				}
 			}
 		}
 	},
 
-	getImageDimensions: async function (path) {
-		let cachedDimensions = cachedImageDimensions[path];
-		if (!cachedDimensions) {
-			cachedDimensions = await imageSize(path);
-			cachedImageDimensions[path] = cachedDimensions;
-		}
-
-		return cachedDimensions;
-	},
-
-	getOffsetCellPos: async function (sheetName, cell) {
-		const atlasTextures = clientConfig.get().atlasTextures;
+	getOffsetCellPos: function (sheetName, cell) {
+		const { atlasTextureDimensions, config: { atlasTextures } } = clientConfig;
 		const indexInAtlas = atlasTextures.indexOf(sheetName);
 
 		let offset = 0;
 		for (let i = 0; i < indexInAtlas; i++) {
-			const path = '../client/images/' + atlasTextures[i] + '.png';
-			const dimensions = await this.getImageDimensions(path);
+			const dimensions = atlasTextureDimensions[atlasTextures[i]];
 
 			offset += (dimensions.width / 8) * (dimensions.height / 8);
 		}
@@ -353,7 +341,7 @@ module.exports = {
 			};
 		},
 
-		tile: async function (info) {
+		tile: function (info) {
 			let { x, y, cell, layer: layerName } = info;
 
 			if (cell === 0) {
@@ -366,7 +354,7 @@ module.exports = {
 			let cellInfo = this.builders.getCellInfo(cell);
 			let sheetName = cellInfo.sheetName;
 
-			const offsetCell = await this.getOffsetCellPos(sheetName, cellInfo.cell);
+			const offsetCell = this.getOffsetCellPos(sheetName, cellInfo.cell);
 
 			if ((layerName !== 'hiddenWalls') && (layerName !== 'hiddenTiles')) {
 				let layer = this.layers;

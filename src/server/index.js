@@ -46,10 +46,10 @@ let startup = {
 		components.init(this.onComponentsReady.bind(this));
 	},
 
-	onComponentsReady: function () {
+	onComponentsReady: async function () {
 		skins.init();
 		factions.init();
-		clientConfig.init();
+		await clientConfig.init();
 		server.init(this.onServerReady.bind(this));
 	},
 

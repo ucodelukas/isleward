@@ -21,7 +21,7 @@ let mapList = require('../config/maps/mapList');
 let sheets = require('../security/sheets');
 let itemEffects = require('../items/itemEffects');
 
-let onCpnsReady = function () {
+let onCpnsReady = async function () {
 	factions.init();
 	skins.init();
 	mtx.init();
@@ -34,7 +34,7 @@ let onCpnsReady = function () {
 	recipes.init();
 	sheets.init();
 	itemEffects.init();
-	clientConfig.init();
+	await clientConfig.init();
 
 	process.send({
 		method: 'onReady'

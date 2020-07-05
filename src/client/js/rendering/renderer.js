@@ -126,16 +126,23 @@ define([
 		},
 
 		buildSpritesTexture: function () {
+			const { clientConfig: { atlasTextures } } = globals;
+
 			let container = new pixi.Container();
 
 			let totalHeight = 0;
-			['tiles', 'walls', 'objects'].forEach(t => {
+			atlasTextures.forEach(t => {
 				let texture = this.textures[t];
 				let tile = new pixi.Sprite(new pixi.Texture(texture));
 				tile.width = texture.width;
 				tile.height = texture.height;
 				tile.x = 0;
 				tile.y = totalHeight;
+
+				tileOpacity.atlasTextureDimensions[t] = {
+					w: texture.width / 8,
+					h: texture.height / 8
+				};
 
 				container.addChild(tile);
 

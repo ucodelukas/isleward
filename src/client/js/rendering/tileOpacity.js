@@ -1,80 +1,11 @@
 define([
-
+	'js/system/globals'
 ], function (
-
+	globals
 ) {
 	return {
-		sheetHeight: 20,
-
-		tiles: {
-			default: 0.4,
-			max: 0.55,
-			5: 0.7,
-			6: 0.9,
-			23: 0.9,
-			24: 0.9,
-			25: 0.9,
-			50: 1,
-			51: 1,
-			52: 1,
-			53: 0.7,
-			54: 0.5,
-			57: 1,
-			58: 1,
-			59: 1,
-			60: 0.9,
-			61: 0.9,
-			62: 0.75,
-			76: 0.9,
-			80: 1,
-			81: 1,
-			82: 1,
-			83: 1,
-			87: 1,
-			90: 1,
-			95: 1,
-			102: 0.9,
-			152: 0.9,
-			153: 1,
-			163: 0.9,
-			//snow
-			176: 0.55,
-			184: 0.55,
-			185: 0.55
-		},
-		objects: {
-			default: 0.9,
-			50: 1
-		},
-		walls: {
-			default: 0.85,
-			max: 1,
-			84: 1,
-			103: 0.9,
-			107: 0.9,
-			116: 1,
-			120: 0.9,
-			132: 0.9,
-			133: 0.9,
-			134: 0.85,
-			139: 1,
-			148: 1,
-			150: 0.85,
-			156: 1,
-			157: 1,
-			158: 1,
-			159: 1,
-			160: 0.9,
-			161: 1,
-			162: 1,
-			163: 1,
-			164: 0.8,
-			165: 1,
-			166: 0.95,
-			167: 1,
-			168: 1,
-			169: 1
-		},
+		//Set by renderer
+		atlasTextureDimensions: {},
 
 		tilesNoFlip: [
 			//Stairs
@@ -114,22 +45,31 @@ define([
 		},
 
 		map: function (tile) {
-			let sheetNum;
+			const { clientConfig: { atlasTextures, tileOpacities } } = globals;
+			const { atlasTextureDimensions } = this;
 
-			if (tile < 224)
-				sheetNum = 0;
-			else if (tile < 480) {
-				tile -= 224;
-				sheetNum = 1;
-			} else {
-				tile -= 480;
-				sheetNum = 2;
+			let offset = 0;
+			let sheetName = null;
+
+			let aLen = atlasTextures.length;
+			for (let i = 0; i < aLen; i++) {
+				sheetName = atlasTextures[i];
+
+				const dimensions = atlasTextureDimensions[sheetName];
+				const spriteCount = dimensions.w * dimensions.h;
+
+				if (offset + spriteCount > tile)
+					break;
+
+				offset += spriteCount;
 			}
 
-			let tilesheet = [this.tiles, this.walls, this.objects][sheetNum];
+			tile -= offset;
 
-			let alpha = (tilesheet[tile] || tilesheet.default);
-			if (tilesheet.max !== null) {
+			const opacityConfig = tileOpacities[sheetName] || tileOpacities.default;
+
+			let alpha = (opacityConfig[tile] || opacityConfig.default);
+			if (opacityConfig.max !== null) {
 				alpha = alpha + (Math.random() * (alpha * 0.2));
 				alpha = Math.min(1, alpha);
 			}
