@@ -33,7 +33,8 @@ let components = [
 	'social',
 	'passives',
 	'sound',
-	'whirlwind'
+	'whirlwind',
+	'fadeInOut'
 ].map(function (c) {
 	return 'js/components/' + c;
 });
