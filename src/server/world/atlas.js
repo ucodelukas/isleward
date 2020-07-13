@@ -205,9 +205,10 @@ module.exports = {
 		},
 
 		rezone: function (thread, message) {
-			let obj = message.args.obj;
+			const { args: { obj, newZone, keepPos = true } } = message;
+
 			obj.destroyed = false;
-			obj.zoneName = message.args.newZone;
+			obj.zoneName = newZone;
 			obj.id = obj.serverId;
 
 			let serverObj = objects.objects.find(o => o.id === obj.id);
@@ -226,7 +227,8 @@ module.exports = {
 
 			serverObj.player.broadcastSelf();
 
-			this.addObject(obj, true, true);
+			const isRezone = true;
+			this.addObject(obj, keepPos, isRezone);
 		},
 
 		onZoneIdle: function (thread) {

@@ -52,13 +52,7 @@ module.exports = {
 			if (!map.oldCollisionMap)
 				map.oldCollisionMap = map.collisionMap;
 
-			map.randomMap.generate({
-				map: map,
-				physics: physics,
-				spawners: spawners
-			});
-
-			map.seed = _.getGuid();
+			this.regenMap();
 		}
 
 		_.log('(M ' + map.name + '): Ready');
@@ -68,6 +62,55 @@ module.exports = {
 		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
 		this.tick();
+	},
+
+	regenMap: function (respawnMap, respawnPos) {
+		//Hack to wait for all player objects to be destroyed
+		const doRegen = () => {
+			const players = objects.objects.filter(o => o.player);
+			players.forEach(p => {
+				if (p.destroyed)
+					return;
+
+				p.fireEvent('beforeRezone');
+				p.destroyed = true;
+
+				const simpleObj = p.getSimple(true, false, true);
+
+				const { x, y } = respawnPos;
+				simpleObj.x = x;
+				simpleObj.y = y;
+
+				process.send({
+					method: 'rezone',
+					id: p.serverId,
+					args: {
+						obj: simpleObj,
+						newZone: respawnMap,
+						keepPos: true
+					}
+				});
+			});
+
+			if (players.length) {
+				setTimeout(doRegen, 1000);
+
+				return;
+			}
+
+			objects.objects.length = 0;
+			objects.objects = [];
+
+			map.randomMap.generate({
+				map: map,
+				physics: physics,
+				spawners: spawners
+			});
+
+			map.seed = _.getGuid();
+		};
+
+		doRegen();
 	},
 
 	tick: function () {
