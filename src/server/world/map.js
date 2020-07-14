@@ -25,8 +25,6 @@ const objectifyProperties = oldProperties => {
 	return newProperties;
 };
 
-const cachedImageDimensions = {};
-
 module.exports = {
 	name: null,
 	path: null,

@@ -19,8 +19,6 @@ define([
 		init: function (blueprint) {
 			if (this.obj.components.some(c => c.type === this.type))
 				return true;
-
-			console.log(blueprint);
 		},
 
 		update: function () {
