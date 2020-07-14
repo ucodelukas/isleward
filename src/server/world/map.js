@@ -311,34 +311,44 @@ module.exports = {
 		return cell + offset;
 	},
 
+	getCellInfo: function (gid, x, y) {
+		const cellInfoMsg = {
+			mapName: this.name,
+			x,
+			y,
+			tilesets: mapFile.tilesets
+		};
+		events.emit('onBeforeGetCellInfo', cellInfoMsg);
+
+		const tilesets = cellInfoMsg.tilesets;
+
+		let flipX = null;
+
+		if ((gid ^ 0x80000000) > 0) {
+			flipX = true;
+			gid = gid ^ 0x80000000;
+		}
+
+		let firstGid = 0;
+		let sheetName = null;
+		for (let s = 0; s < tilesets.length; s++) {
+			let tileset = tilesets[s];
+			if (tileset.firstgid <= gid) {
+				sheetName = tileset.name;
+				firstGid = tileset.firstgid;
+			}
+		}
+
+		gid = gid - firstGid + 1;
+
+		return {
+			cell: gid,
+			sheetName,
+			flipX
+		};
+	},
+
 	builders: {
-		getCellInfo: function (cell) {
-			let flipX = null;
-
-			if ((cell ^ 0x80000000) > 0) {
-				flipX = true;
-				cell = cell ^ 0x80000000;
-			}
-
-			let firstGid = 0;
-			let sheetName = null;
-			for (let s = 0; s < mapFile.tilesets.length; s++) {
-				let tileset = mapFile.tilesets[s];
-				if (tileset.firstgid <= cell) {
-					sheetName = tileset.name;
-					firstGid = tileset.firstgid;
-				}
-			}
-
-			cell = cell - firstGid + 1;
-
-			return {
-				sheetName,
-				cell,
-				flipX
-			};
-		},
-
 		tile: function (info) {
 			let { x, y, cell, layer: layerName } = info;
 
@@ -349,7 +359,7 @@ module.exports = {
 				return;
 			}
 
-			let cellInfo = this.builders.getCellInfo(cell);
+			let cellInfo = this.getCellInfo(cell, x, y);
 			let sheetName = cellInfo.sheetName;
 
 			const offsetCell = this.getOffsetCellPos(sheetName, cellInfo.cell);
@@ -378,8 +388,11 @@ module.exports = {
 			cell.properties = objectifyProperties(cell.properties);
 			cell.polyline = cell.polyline || cell.polygon;
 
+			const x = cell.x / mapScale;
+			const y = (cell.y / mapScale) - 1;
+
 			let clientObj = (layerName === 'clientObjects');
-			let cellInfo = this.builders.getCellInfo(cell.gid);
+			let cellInfo = this.getCellInfo(cell.gid, x, y);
 
 			let name = (cell.name || '');
 			let objZoneName = name;
@@ -393,8 +406,8 @@ module.exports = {
 				clientObj: clientObj,
 				sheetName: cell.has('sheetName') ? cell.sheetName : cellInfo.sheetName,
 				cell: cell.has('cell') ? cell.cell : cellInfo.cell - 1,
-				x: cell.x / mapScale,
-				y: (cell.y / mapScale) - 1,
+				x,
+				y,
 				name: name,
 				properties: cell.properties || {},
 				layerName: layerName
