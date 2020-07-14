@@ -33,7 +33,9 @@ define([
 			//Ship oars
 			140, 143, 
 			//Ship Cannons
-			141, 142 
+			141, 142,
+			//Tent Pegs
+			168, 169
 		],
 
 		getSheetNum: function (tile) {
