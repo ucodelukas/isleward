@@ -18,7 +18,7 @@ module.exports = {
 			return;
 
 		let oQuests = obj.quests;
-		if (oQuests.quests.filter(q => q.zoneName === zoneName).length > 0)
+		if (oQuests.quests.filter(q => q.zoneName === zoneName).length > 0) 
 			return;
 
 		let zoneTemplate = null;
@@ -37,9 +37,13 @@ module.exports = {
 		if (config.infini.length === 0)
 			return;
 
-		const minPlayerLevel = ~~(obj.instance.map.zone.level[0] * 0.75);
-		if (obj.stats.values.level < minPlayerLevel)
-			return;
+		//Only check min level of quests when physically in the zone they belong to
+		if (obj.zoneName === zoneName) {
+			const minPlayerLevel = ~~(obj.instance.map.zone.level[0] * 0.75);
+
+			if (obj.stats.values.level < minPlayerLevel) 
+				return;
+		}
 
 		let pickQuest = null;
 		if ((template) && (template.type))
