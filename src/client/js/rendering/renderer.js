@@ -372,9 +372,11 @@ define([
 
 			const { player: { x: px, y: py } } = window;
 
-			const isVisible = hiddenRooms.every(h => {
-				if (h.discovered)
-					return true;
+			let foundVisible = false;
+			let foundHidden = false;
+
+			hiddenRooms.forEach(h => {
+				const discovered = h.discovered;
 
 				const { x: hx, y: hy, width, height, area } = h;
 
@@ -385,11 +387,11 @@ define([
 					y < hy ||
 					y >= hy + height
 				)
-					return true;
+					return;
 
 				//Is the tile inside the hider
 				if (!physics.isInPolygon(x, y, area))
-					return true;
+					return;
 
 				//Is the player outside the hider
 				if (
@@ -397,17 +399,26 @@ define([
 					px >= hx + width ||
 					py < hy ||
 					py >= hy + height
-				) 
-					return false;
+				) {
+					if (!discovered)
+						foundHidden = true;
+
+					return;
+				}
 
 				//Is the player inside the hider
-				if (!physics.isInPolygon(px, py, area)) 
-					return false;
+				if (!physics.isInPolygon(px, py, area)) {
+					if (!discovered)
+						foundHidden = true;
 
-				return true;
+					return;
+				}
+
+				foundVisible = true;
 			});
 
-			return !isVisible;
+			//If two hiders hide the same tile but you're in one of them, the tile should be visible
+			return foundHidden && !foundVisible;
 		},
 
 		updateSprites: function () {
