@@ -133,8 +133,9 @@ module.exports = {
 
 				if (l.exists) {
 					let mob = objects.objects.find(o => (o.name === l.name));
+
 					mob.mob.walkDistance = 0;
-					this.spawnAnimation(mob);
+					spawnAnimation(syncer, mob);
 					mob.performMove({
 						force: true,
 						data: {
@@ -142,7 +143,7 @@ module.exports = {
 							y: y
 						}
 					});
-					this.spawnAnimation(mob);
+					spawnAnimation(syncer, mob);
 					this.event.objects.push(mob);
 				} else {
 					const mob = buildMob(objects, l, x, y, i);
