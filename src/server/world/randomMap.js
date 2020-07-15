@@ -20,6 +20,7 @@ module.exports = {
 
 	generate: function (instance) {
 		const { map } = instance;
+		map.clientMap.hiddenRooms = [];
 
 		this.loadMapProperties(map.mapFile.properties);
 
@@ -52,6 +53,13 @@ module.exports = {
 			this.offsetRooms(startRoom);
 			this.buildMap(instance, startRoom);
 		}
+
+		//To spawn in another room
+		/*const spawnRoom = this.rooms.find(t => t.template.properties.end);
+		map.spawn = [{
+			x: spawnRoom.x + ~~(spawnRoom.template.width / 2) - 2,
+			y: spawnRoom.y + ~~(spawnRoom.template.height / 2) + 6
+		}];*/
 	},
 
 	loadMapProperties: function ({ leafConstraints, endConstraints }) {
@@ -109,7 +117,9 @@ module.exports = {
 		return true;
 	},
 
+	/* eslint-disable-next-line */
 	setupTemplates: function (map) {
+		/* eslint-disable-next-line */
 		this.templates.forEach((r, typeId) => {
 			if (r.properties.mapping)
 				return;
@@ -120,6 +130,27 @@ module.exports = {
 			//Property values are strings. So we turn '1' and '0' into 1 and 0
 			canFlipX = ~~canFlipX;
 			canFlipY = ~~canFlipY;
+
+			//Fix Polygons
+			r.objects.forEach(o => {
+				if (!o.fog)
+					return;
+
+				const newArea = o.area.map(p => {
+					const [ px, py ] = p;
+
+					const hpx = px - r.x;
+					const hpy = py - r.y;
+
+					return [hpx, hpy];
+				});
+
+				Object.assign(o, {
+					x: o.x - r.x,
+					y: o.y - r.y,
+					area: newArea
+				});
+			});
 
 			//FlipX Loop
 			for (let i = 0; i < 2; i++) {
@@ -170,14 +201,83 @@ module.exports = {
 						});
 
 						flipped.objects.forEach(o => {
-							if (flipped.flipX)
-								o.x = r.x + r.width - (o.x - r.x) - 1;
-							if (flipped.flipY)
-								o.y = r.y + r.height - (o.y - r.y) - 1;
-							if (flipped.rotate) {
-								let t = o.x;
-								o.x = r.x + (o.y - r.y);
-								o.y = r.y + (t - r.x);
+							if (!o.fog) {
+								if (flipped.flipX)
+									o.x = r.x + r.width - (o.x - r.x) - 1;
+								if (flipped.flipY)
+									o.y = r.y + r.height - (o.y - r.y) - 1;
+								if (flipped.rotate) {
+									let t = o.x;
+									o.x = r.x + (o.y - r.y);
+									o.y = r.y + (t - r.x);
+								}
+							} else {
+								if (flipped.flipX) {
+									const newArea = o.area.map(p => {
+										const [ px, py ] = p;
+
+										const hpx = r.width - px;
+
+										return [hpx, py];
+									});
+
+									Object.assign(o, {
+										area: newArea
+									});
+								}
+								if (flipped.flipY) {
+									const newArea = o.area.map(p => {
+										const [ px, py ] = p;
+
+										const hpy = r.height - py;
+
+										return [px, hpy];
+									});
+
+									Object.assign(o, {
+										area: newArea
+									});
+								}
+								if (flipped.rotate) {
+									const newArea = o.area.map(p => {
+										const [ px, py ] = p;
+
+										const t = px;
+										const hpx = py;
+										const hpy = t;
+
+										return [hpx, hpy];
+									});
+
+									Object.assign(o, {
+										area: newArea
+									});
+								}
+
+								//Fix polygon bounds
+								let lowX = r.width;
+								let lowY = r.height;
+								let highX = 0;
+								let highY = 0;
+
+								o.area.forEach(p => {
+									const [ px, py ] = p;
+
+									if (px < lowX)
+										lowX = px;
+									if (px > highX)
+										highX = px;
+
+									if (py < lowY)
+										lowY = py;
+									if (py > highY)
+										highY = py;
+								});
+
+								o.x = lowX;
+								o.y = lowY;
+								o.width = highX - lowX;
+								o.height = highY - lowY;
 							}
 						});
 
@@ -379,10 +479,23 @@ module.exports = {
 		let spawnCd = instance.map.mapFile.properties.spawnCd;
 
 		template.objects.forEach(o => {
-			o.x = o.x - template.x + room.x;
-			o.y = o.y - template.y + room.y;
+			if (!o.fog) {
+				o.x = o.x - template.x + room.x;
+				o.y = o.y - template.y + room.y;
 
-			spawners.register(o, spawnCd);
+				spawners.register(o, spawnCd);
+			} else {
+				o.x += room.x;
+				o.y += room.y;
+
+				o.area = o.area.map(p => {
+					const [px, py] = p;
+
+					return [px + room.x, py + room.y];
+				});
+
+				instance.map.clientMap.hiddenRooms.push(o);
+			}
 		});
 
 		room.connections.forEach(c => this.spawnObjects(instance, c), this);

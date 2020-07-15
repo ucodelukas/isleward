@@ -458,7 +458,21 @@ module.exports = {
 			} else if (layerName === 'hiddenRooms') {
 				blueprint.fog = (cell.properties || {}).fog;
 				blueprint.discoverable = (cell.properties || {}).discoverable;
-				this.hiddenRooms.push(blueprint);
+
+				if (!mapFile.properties.isRandom)
+					this.hiddenRooms.push(blueprint);
+				else {
+					let room = this.rooms.find(r => {
+						return !(
+							blueprint.x < r.x ||
+							blueprint.y < r.y ||
+							blueprint.x >= r.x + r.width ||
+							blueprint.y >= r.y + r.height
+						);
+					});
+
+					room.objects.push(blueprint);
+				}
 			} else if (!clientObj) {
 				if (!mapFile.properties.isRandom)
 					spawners.register(blueprint, blueprint.spawnCd || mapFile.properties.spawnCd);
