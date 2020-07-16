@@ -5,6 +5,7 @@ const tos = require('./tos');
 
 const config = {
 	logoPath: null,
+	loginBgGeneratorPath: null,
 	resourceList: [],
 	textureList: [
 		'tiles',

@@ -1,10 +1,33 @@
 define([
+	'js/system/globals'
 ], function (
-
+	globals
 ) {
 	let mRandom = Math.random.bind(Math);
 
+	let customRenderer = null;
+
+	const renderCustomLoginBg = async (renderer, path) => {
+		if (!customRenderer) {
+			await (new Promise(res => {
+				require([path], loadedModule => {
+					customRenderer = loadedModule;
+					res();
+				});
+			}));
+		}
+
+		customRenderer(renderer);
+	};
+
 	const renderLoginBackground = renderer => {
+		const { loginBgGeneratorPath } = globals.clientConfig;
+		if (loginBgGeneratorPath) {
+			renderCustomLoginBg(renderer, loginBgGeneratorPath);
+
+			return;
+		}
+
 		const { width, height, layers } = renderer;
 
 		renderer.setPosition({
