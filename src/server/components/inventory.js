@@ -626,14 +626,26 @@ module.exports = {
 		else
 			bagCell = 53;
 
+		const createBagMsg = {
+			ownerName,
+			x,
+			y,
+			sprite: {
+				sheetName: 'objects',
+				cell: bagCell
+			},
+			dropSource: this.obj
+		};
+		this.obj.instance.eventEmitter.emit('onBeforeCreateBag', createBagMsg);
+
 		let obj = this.obj.instance.objects.buildObjects([{
-			sheetName: 'objects',
-			cell: bagCell,
-			x: x,
-			y: y,
+			sheetName: createBagMsg.sprite.sheetName,
+			cell: createBagMsg.sprite.cell,
+			x: createBagMsg.x,
+			y: createBagMsg.y,
 			properties: {
 				cpnChest: {
-					ownerName: ownerName,
+					ownerName,
 					ttl: 1710
 				},
 				cpnInventory: {
