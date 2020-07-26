@@ -52,6 +52,7 @@ module.exports = {
 			if (!map.oldCollisionMap)
 				map.oldCollisionMap = map.collisionMap;
 
+			map.randomMap.init(fakeInstance);
 			this.regenMap();
 		}
 
@@ -101,11 +102,7 @@ module.exports = {
 			objects.objects.length = 0;
 			objects.objects = [];
 
-			map.randomMap.generate({
-				map: map,
-				physics: physics,
-				spawners: spawners
-			});
+			map.randomMap.generate();
 
 			map.seed = _.getGuid();
 		};

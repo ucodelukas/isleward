@@ -3,7 +3,8 @@ let physics = require('./physics');
 let spawners = require('./spawners');
 let resourceSpawner = require('./resourceSpawner');
 let globalZone = require('../config/zoneBase');
-let randomMap = require('./randomMap');
+let randomMap = require('./randomMap/randomMap');
+const generateMappings = require('./randomMap/generateMappings');
 let events = require('../misc/events');
 
 const mapObjects = require('./map/mapObjects');
@@ -135,7 +136,7 @@ module.exports = {
 		this.randomMap = extend({}, randomMap);
 		this.oldMap = this.layers;
 		this.randomMap.templates = extend([], this.rooms);
-		this.randomMap.generateMappings(this);
+		generateMappings(this.randomMap, this);
 
 		if (!mapFile.properties.isRandom) {
 			for (let i = 0; i < this.size.w; i++) {
