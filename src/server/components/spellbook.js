@@ -422,8 +422,9 @@ module.exports = {
 		if (success) {
 			spell.consumeMana();
 			spell.setCd();
-			this.obj.fireEvent('afterCastSpell', spell);
 		}
+
+		this.obj.fireEvent('afterCastSpell', success, spell);
 
 		//Null means we didn't fail but are initiating casting
 		return (success === null || success === true);
