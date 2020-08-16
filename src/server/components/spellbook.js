@@ -64,9 +64,9 @@ module.exports = {
 		};
 
 		let spells = this.spells;
-		if (spells.length && spells[0].obj) 
+		if (spells.length && spells[0].obj)
 			spells = spells.map(f => f.simplify());
-		
+
 		s.spells = spells;
 
 		return s;
@@ -118,7 +118,7 @@ module.exports = {
 		}
 
 		if (!builtSpell.castOnDeath && builtSpell.range) {
-			if (this.closestRange === -1 || builtSpell.range < this.closestRange) 
+			if (this.closestRange === -1 || builtSpell.range < this.closestRange)
 				this.closestRange = builtSpell.range;
 			if (this.furthestRange === -1 || builtSpell.range > this.furthestRange)
 				this.furthestRange = builtSpell.range;
@@ -190,7 +190,7 @@ module.exports = {
 		}
 
 		if (runeSpell.properties) {
-			for (let p in runeSpell.properties) 
+			for (let p in runeSpell.properties)
 				builtSpell[p] = runeSpell.properties[p];
 		}
 
@@ -264,7 +264,7 @@ module.exports = {
 					x: this.obj.x,
 					y: this.obj.y
 				};
-			} else if (spell.spellType === 'buff') 
+			} else if (spell.spellType === 'buff')
 				target = this.obj;
 		}
 
@@ -422,6 +422,7 @@ module.exports = {
 		if (success) {
 			spell.consumeMana();
 			spell.setCd();
+			this.obj.fireEvent('afterCastSpell', spell);
 		}
 
 		//Null means we didn't fail but are initiating casting
@@ -437,7 +438,7 @@ module.exports = {
 	getFurthestRange: function (spellNum, checkCanCast) {
 		if (spellNum)
 			return this.spells[spellNum].range;
-		
+
 		let spells = this.spells;
 		let sLen = spells.length;
 		let furthest = 0;
@@ -543,7 +544,7 @@ module.exports = {
 			) {
 				if (c.destroyCallback)
 					c.destroyCallback();
-				
+
 				callbacks.splice(i, 1);
 				i--;
 				cLen--;
