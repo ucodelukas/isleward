@@ -45,20 +45,19 @@ define([
 
 			let buyItems = itemList.items;
 
-			buyItems.forEach(function (item) {
+			buyItems.forEach(item => {
 				if ((item === this.hoverItem))
 					this.onHover(null, item);
-			}, this);
+			});
+
+			const itemsHavePositions = action === 'sell' || buyItems.find(b => b.pos);
 
 			let iLen = Math.max(buyItems.length, 50);
 			for (let i = 0; i < iLen; i++) {
 				let item = buyItems[i];
 
-				if (action === 'sell') {
-					item = buyItems.find(function (b) {
-						return (b.pos === i);
-					});
-				}
+				if (itemsHavePositions)
+					item = buyItems.find(b => b.pos === i);
 
 				if (!item) {
 					renderItem(container, null)
