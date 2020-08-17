@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 module.exports = (scope, map) => {
 	const { templates } = scope;
 
