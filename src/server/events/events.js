@@ -37,6 +37,9 @@ module.exports = {
 		this.instance.eventEmitter.emit('onBeforeGetEventList', zoneName, files);
 
 		files.forEach(f => {
+			if (!f.includes('.js'))
+				return;
+
 			const e = require(f);
 			if (!e.disabled)
 				this.configs.push(extend({}, e));
