@@ -16,47 +16,50 @@ define([
 		endTime: 0,
 
 		particles: null,
+		particleBlueprint: null,
+
+		particleExplosionBlueprint: null,
 
 		init: function (blueprint) {
-			this.particles = this.obj.addComponent('particles', {
-				blueprint: {
-					scale: {
-						start: {
-							min: 6,
-							max: 16
-						},
-						end: {
-							min: 0,
-							max: 10
-						}
+			const particleBlueprint = $.extend({
+				scale: {
+					start: {
+						min: 6,
+						max: 16
 					},
-					opacity: {
-						start: 0.05,
-						end: 0
+					end: {
+						min: 0,
+						max: 10
+					}
+				},
+				opacity: {
+					start: 0.05,
+					end: 0
+				},
+				lifetime: {
+					min: 1,
+					max: 2
+				},
+				speed: {
+					start: {
+						min: 2,
+						max: 20
 					},
-					lifetime: {
-						min: 1,
-						max: 2
-					},
-					speed: {
-						start: {
-							min: 2,
-							max: 20
-						},
-						end: {
-							min: 0,
-							max: 8
-						}
-					},
-					color: {
-						start: 'fcfcfc',
-						end: 'c0c3cf'
-					},
-					randomScale: true,
-					randomSpeed: true,
-					chance: 0.4
-				}
-			});
+					end: {
+						min: 0,
+						max: 8
+					}
+				},
+				color: {
+					start: 'fcfcfc',
+					end: 'c0c3cf'
+				},
+				randomScale: true,
+				randomSpeed: true,
+				chance: 0.4
+			}, this.particleBlueprint);
+
+			this.particles = this.obj.addComponent('particles', { blueprint: particleBlueprint });
 
 			this.endTime = +new Date() + this.ttl;
 
@@ -93,13 +96,11 @@ define([
 
 				//Sometimes we just move to a point without exploding
 				if (target) {
+					const particleExplosionBlueprint = this.particleExplosionBlueprint || {};
+
 					target.addComponent('explosion', {
 						new: true,
-						blueprint: {
-							r: 242,
-							g: 245,
-							b: 245
-						}
+						blueprint: particleExplosionBlueprint
 					}).explode();
 				}
 			} else {

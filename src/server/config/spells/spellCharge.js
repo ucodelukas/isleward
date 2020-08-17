@@ -68,15 +68,18 @@ module.exports = {
 			noMsg: true
 		});
 
+		const moveAnimationEffect = {
+			type: 'moveAnimation',
+			idTarget: target.id,
+			targetX: targetPos.x,
+			targetY: targetPos.y,
+			ttl: ttl
+		};
+		this.obj.fireEvent('beforeAddSpellEffect', this, moveAnimationEffect);
+
 		this.sendAnimation({
 			id: this.obj.id,
-			components: [{
-				type: 'moveAnimation',
-				idTarget: target.id,
-				targetX: targetPos.x,
-				targetY: targetPos.y,
-				ttl: ttl
-			}]
+			components: [moveAnimationEffect]
 		});
 
 		if (this.animation) {
