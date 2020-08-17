@@ -10,7 +10,7 @@ const routerConfig = {
 		dialogue: ['talk'],
 		gatherer: ['gather'],
 		quests: ['complete'],
-		inventory: ['combineStacks', 'splitStack', 'activateMtx', 'useItem', 'moveItem', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem', 'sortInventory'],
+		inventory: ['combineStacks', 'splitStack', 'useItem', 'moveItem', 'learnAbility', 'unlearnAbility', 'dropItem', 'destroyItem', 'salvageItem', 'stashItem', 'mailItem', 'sortInventory'],
 		equipment: ['equip', 'unequip', 'setQuickSlot', 'useQuickSlot', 'inspect'],
 		stash: ['withdraw', 'open'],
 		trade: ['buySell'],

@@ -8,7 +8,6 @@ global.clientConfig = require('../config/clientConfig');
 
 let components = require('../components/components');
 let mods = require('../misc/mods');
-let mtx = require('../mtx/mtx');
 let animations = require('../config/animations');
 let skins = require('../config/skins');
 let factions = require('../config/factions');
@@ -24,7 +23,6 @@ let itemEffects = require('../items/itemEffects');
 let onCpnsReady = async function () {
 	factions.init();
 	skins.init();
-	mtx.init();
 	animations.init();
 	classes.init();
 	spellsConfig.init();
