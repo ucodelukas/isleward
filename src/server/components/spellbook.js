@@ -424,7 +424,10 @@ module.exports = {
 			spell.setCd();
 		}
 
-		this.obj.fireEvent('afterCastSpell', success, spell);
+		this.obj.fireEvent('afterCastSpell', {
+			castSuccess: success,
+			spell
+		});
 
 		//Null means we didn't fail but are initiating casting
 		return (success === null || success === true);
