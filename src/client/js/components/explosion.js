@@ -26,23 +26,8 @@ define([
 							max: 12
 						}
 					},
-					speed: {
-						start: {
-							min: 4,
-							max: 24
-						},
-						end: {
-							min: 2,
-							max: 18
-						}
-					},
-
 					particlesPerWave: 14,
 					particleSpacing: 0,
-					lifetime: {
-						min: 1,
-						max: 3
-					},
 					randomColor: true,
 					randomScale: true,
 					randomSpeed: true,
@@ -60,6 +45,20 @@ define([
 							min: 0,
 							max: 10
 						}
+					},
+					speed: {
+						start: {
+							min: 4,
+							max: 24
+						},
+						end: {
+							min: 2,
+							max: 18
+						}
+					},
+					lifetime: {
+						min: 1,
+						max: 3
 					}
 				})
 			};
