@@ -51,6 +51,8 @@ define([
 			hideTooltip(null, item);
 
 		const contextConfig = getItemContextConfig(item);
+		if (!contextConfig.length)
+			return;
 
 		events.emit('onContextMenu', contextConfig, e);
 
