@@ -110,6 +110,9 @@ module.exports = {
 
 				let pos = l.pos;
 				if (pos) {
+					if (typeof(pos) === 'function')
+						pos = pos();
+
 					if (pos instanceof Array) {
 						x = pos[i].x;
 						y = pos[i].y;
