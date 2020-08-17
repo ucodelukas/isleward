@@ -634,8 +634,10 @@ define([
 				}
 
 				let stage = this.stage;
-				stage.x = -~~this.pos.x;
-				stage.y = -~~this.pos.y;
+				if (window.staticCamera !== true) {
+					stage.x = -~~this.pos.x;
+					stage.y = -~~this.pos.y;
+				}
 
 				let halfScale = scale / 2;
 				if (Math.abs(stage.x - this.lastUpdatePos.x) > halfScale || Math.abs(stage.y - this.lastUpdatePos.y) > halfScale)
