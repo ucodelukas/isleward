@@ -277,7 +277,8 @@ module.exports = {
 			statMult: this.statMult,
 			isAttack: this.isAttack,
 			noScale: this.noScale,
-			noMitigate: noMitigate
+			noMitigate: noMitigate,
+			spell: this
 		};
 
 		if (this.obj.mob)
