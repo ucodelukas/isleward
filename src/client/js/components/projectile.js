@@ -75,6 +75,8 @@ define([
 				}
 			};
 
+			particlesBlueprint.new = this.new;
+
 			this.particles = this.obj.addComponent('particles', particlesBlueprint);
 			this.obj.addComponent('explosion', particlesBlueprint);
 
