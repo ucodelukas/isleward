@@ -3,7 +3,7 @@ let combat = require('../../combat/combat');
 module.exports = {
 	id: 'akarei',
 	name: 'The Akarei',
-	description: 'The last descendents of the ancient Akarei.',
+	description: 'Not much is known about the Akarei. Dwelling deep underground in the Crystal Caves of Fjolarok, they have taken an interest in the local fauna.',
 
 	uniqueStat: {
 		damage: 1,
