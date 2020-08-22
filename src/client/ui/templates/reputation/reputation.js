@@ -41,7 +41,7 @@ define([
 				if (l.noGainRep)
 					return;
 
-				let html = '<div class="faction">' + l.name.toLowerCase() + '</div>';
+				let html = '<div class="faction">' + l.name + '</div>';
 
 				let el = $(html).appendTo(elList);
 
@@ -54,8 +54,8 @@ define([
 			this.find('.selected').removeClass('selected');
 			el.addClass('selected');
 
-			this.find('.info .heading-bottom').html(faction.name.toLowerCase());
-			this.find('.info .description').html(faction.description.toLowerCase());
+			this.find('.info .heading-bottom').html(faction.name);
+			this.find('.info .description').html(faction.description);
 
 			let rep = faction.rep;
 			let tier = faction.tier;

@@ -3,7 +3,7 @@ let mobBuilder = require('../../world/mobBuilder');
 module.exports = {
 	id: 'gaekatla',
 	name: 'Gaekatla',
-	description: 'Gaekatla; the goddess of nature.',
+	description: 'Although her temple is now in ruins, Gaekatla is still revered as the goddess of fertility, nature and life and has a small but dedicated following in Fjolgard.',
 
 	uniqueStat: {
 		chance: {
