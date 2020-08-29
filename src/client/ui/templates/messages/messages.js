@@ -348,12 +348,16 @@ define([
 			let val = msgConfig.message
 				.split('<').join('&lt;')
 				.split('>').join('&gt;');
-		
-			if (!msgConfig.success)
-				return;
 
-			if (val.trim() === '')
+			if (!msgConfig.success) {
+				this.toggle(false);
 				return;
+			}
+
+			if (val.trim() === '') {
+				this.toggle(false);
+				return;
+			}
 
 			client.request({
 				cpn: 'social',
