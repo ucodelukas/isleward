@@ -82,8 +82,9 @@ define([
 			events.on('onToggleFullscreen', this.toggleScreen.bind(this));
 			events.on('onMoveSpeedChange', this.adaptCameraMoveSpeed.bind(this));
 
-			this.width = $('body').width();
-			this.height = $('body').height();
+			let zoom = isMobile ? 1 : window.devicePixelRatio;
+			this.width = $('body').width() * zoom;
+			this.height = $('body').height() * zoom;
 
 			this.showTilesW = Math.ceil((this.width / scale) / 2) + 3;
 			this.showTilesH = Math.ceil((this.height / scale) / 2) + 3;
@@ -179,9 +180,11 @@ define([
 		onResize: function () {
 			if (isMobile)
 				return;
+			
+			let zoom = window.devicePixelRatio;
 
-			this.width = $('body').width();
-			this.height = $('body').height();
+			this.width = $('body').width() * zoom;
+			this.height = $('body').height() * zoom;
 
 			this.showTilesW = Math.ceil((this.width / scale) / 2) + 3;
 			this.showTilesH = Math.ceil((this.height / scale) / 2) + 3;

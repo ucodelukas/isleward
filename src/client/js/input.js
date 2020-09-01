@@ -226,8 +226,9 @@ define([
 					if ((!el.hasClass('ui-container')) || (el.hasClass('blocking')))
 						return;
 
-					this.mouse.x = e.offsetX + renderer.pos.x;
-					this.mouse.y = e.offsetY + renderer.pos.y;
+					const zoom = window.devicePixelRatio;
+					this.mouse.x = (e.offsetX * zoom) + renderer.pos.x;
+					this.mouse.y = (e.offsetY * zoom) + renderer.pos.y;
 				}
 			},
 

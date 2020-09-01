@@ -187,8 +187,9 @@ define([
 					if ((!el.hasClass('canvas')) || (el.hasClass('blocking')))
 						return;
 
-					this.mouse.x = e.offsetX;
-					this.mouse.y = e.offsetY;
+					const zoom = window.devicePixelRatio;
+					this.mouse.x = e.offsetX * zoom;
+					this.mouse.y = e.offsetY * zoom;
 
 					this.mouse.raw = e;
 
