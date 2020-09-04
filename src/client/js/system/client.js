@@ -9,12 +9,8 @@ define([
 		doneConnect: false,
 
 		init: function (onReady) {
-			let tType = 'websocket';
-			if (window.location.href.indexOf('polling') > -1)
-				tType = 'polling';
-
 			this.socket = io({
-				transports: [tType]
+				transports: ['websocket']
 			});
 
 			this.socket.on('connect', this.onConnected.bind(this, onReady));

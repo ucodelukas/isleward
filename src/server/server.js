@@ -8,7 +8,9 @@ module.exports = {
 	init: function (callback) {
 		let app = require('express')();
 		let server = require('http').createServer(app);
-		let socketServer = require('socket.io')(server);
+		let socketServer = require('socket.io')(server, {
+			transports: ['websocket']
+		});
 
 		global.cons.sockets = socketServer.sockets;
 
