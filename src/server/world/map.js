@@ -134,7 +134,8 @@ module.exports = {
 		this.build();
 
 		this.randomMap = extend({}, randomMap);
-		this.oldMap = this.layers;
+		this.oldMap = extend([], this.layers);
+
 		this.randomMap.templates = extend([], this.rooms);
 		generateMappings(this.randomMap, this);
 
