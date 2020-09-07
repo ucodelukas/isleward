@@ -56,7 +56,7 @@ module.exports = {
 		if (typeBlueprint.implicitStat && !blueprint.implicitStat)
 			blueprint.implicitStat = typeBlueprint.implicitStat;
 
-		if (typeBlueprint.attrRequire)
+		if (typeBlueprint.attrRequire && !blueprint.attrRequire)
 			blueprint.attrRequire = typeBlueprint.attrRequire;
 	}
 };
