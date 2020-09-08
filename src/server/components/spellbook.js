@@ -335,7 +335,8 @@ module.exports = {
 			return false;
 
 		action.target = this.getTarget(spell, action);
-		if (!action.target)
+		//If a target has become nonSelectable, we need to stop attacks that are queued/auto
+		if (!action.target || action.target.nonSelectable)
 			return false;
 
 		action.auto = spell.auto;
