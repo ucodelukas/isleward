@@ -308,6 +308,7 @@ define([
 				let isVisible = (
 					!!obj.player || 
 					(
+						!obj.hidden &&
 						renderer.sprites[ix] &&
 						renderer.sprites[ix][iy] &&
 						renderer.sprites[ix][iy].length > 0 &&

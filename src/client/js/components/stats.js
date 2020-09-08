@@ -73,8 +73,10 @@ define([
 				h: 5
 			});
 
-			this.hpSprite.visible = (this.values.hp < this.values.hpMax);
-			this.hpSpriteInner.visible = this.hpSprite.visible;
+			const isVisible = (this.values.hp < this.values.hpMax) && (!sprite || sprite.visible);
+
+			this.hpSprite.visible = isVisible;
+			this.hpSpriteInner.visible = isVisible;
 		},
 
 		extend: function (blueprint) {
