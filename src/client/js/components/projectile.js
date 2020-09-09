@@ -87,14 +87,18 @@ define([
 			let source = this.obj;
 			let target = this.target;
 
-			let dx = target.x - this.x;
-			let dy = target.y - this.y;
+			//Cater for offset (which isn't tile based yet)
+			const tx = target.x + (target.offsetX / scale);
+			const ty = target.y + (target.offsetY / scale);
+
+			let dx = tx - this.x;
+			let dy = ty - this.y;
 
 			let ticksLeft = ~~((this.endTime - (+new Date())) / 16);
 
 			if (ticksLeft <= 0) {
-				source.x = target.x;
-				source.y = target.y;
+				source.x = tx;
+				source.y = ty;
 				this.particles.emitter.emit = false;
 				if (!this.noExplosion)
 					source.explosion.explode();
