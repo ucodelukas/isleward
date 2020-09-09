@@ -61,7 +61,7 @@ module.exports = {
 		let inventory = obj.inventory;
 
 		let item = inventory.findItem(itemId);
-		if (!item)
+		if (!item || item.eq)
 			return;
 		else if ((!item.slot) || (item.material) || (item.quest) || (item.ability) || (!inventory.canEquipItem(item))) {
 			item.eq = false;
