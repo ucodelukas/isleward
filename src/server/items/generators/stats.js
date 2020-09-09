@@ -499,7 +499,7 @@ module.exports = {
 			return;
 		}
 
-		if (!blueprint.statCount)
+		if (!blueprint.statCount || !item.stats)
 			item.stats = {};
 
 		if (blueprint.noStats)
