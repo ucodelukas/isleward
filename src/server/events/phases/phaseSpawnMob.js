@@ -71,6 +71,9 @@ const buildMob = (objects, mobConfig, x, y, mobIndex) => {
 		});
 	}
 
+	if (mobConfig.needLos !== undefined)
+		mob.mob.needLos = mobConfig.needLos;
+
 	if (mobConfig.spawnHpPercent) 
 		mob.stats.values.hp = (mob.stats.values.hpMax * mobConfig.spawnHpPercent);
 
