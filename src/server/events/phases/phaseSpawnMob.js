@@ -117,7 +117,7 @@ module.exports = {
 				let pos = l.pos;
 				if (pos) {
 					if (typeof(pos) === 'function')
-						pos = pos();
+						pos = pos(i);
 
 					if (pos instanceof Array) {
 						x = pos[i].x;

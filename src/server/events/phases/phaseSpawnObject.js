@@ -1,5 +1,10 @@
-const buildMob = (objects, mobConfig) => {
-	const { id, sheetName, cell, name, properties, pos: { x, y } } = mobConfig;
+const buildMob = (objects, mobConfig, i) => {
+	let { id, sheetName, cell, name, properties, pos } = mobConfig;
+
+	if (typeof(pos) === 'function')
+		pos = pos(i);
+
+	const { x, y } = pos;
 
 	let obj = objects.buildObjects([{
 		x,
@@ -10,7 +15,8 @@ const buildMob = (objects, mobConfig) => {
 		properties
 	}]);
 
-	obj.id = id;
+	if (id)
+		obj.id = id.split('$').join(i);
 
 	return obj;
 };
@@ -37,8 +43,8 @@ module.exports = {
 		if (!this.objs.push)
 			this.objs = [this.objs];
 
-		this.objs.forEach(l => {
-			const obj = buildMob(objects, l);
+		this.objs.forEach((l, i) => {
+			const obj = buildMob(objects, l, i);
 
 			this.event.objects.push(obj);
 			obj.event = this.event;
