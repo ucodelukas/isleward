@@ -133,7 +133,7 @@ module.exports = {
 
 		options.caster = options.caster || source;
 
-		if (!this.canApplyEffect(options.type))
+		if (!options.force && !this.canApplyEffect(options.type))
 			return;
 
 		if (!options.new) {
