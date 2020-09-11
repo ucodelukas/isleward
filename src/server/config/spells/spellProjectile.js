@@ -45,7 +45,8 @@ module.exports = {
 				layer: 'projectiles',
 				loop: -1,
 				row: this.row,
-				col: this.col
+				col: this.col,
+				spriteSheet: this.spriteSheet
 			}]
 		};
 
@@ -106,7 +107,8 @@ module.exports = {
 					layer: 'projectiles',
 					loop: -1,
 					row: row,
-					col: col
+					col: col,
+					spriteSheet: this.spriteSheet
 				}]
 			};
 
