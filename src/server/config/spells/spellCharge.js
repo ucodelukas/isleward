@@ -123,7 +123,11 @@ module.exports = {
 		let damage = this.getDamage(target);
 		target.stats.takeDamage(damage, this.threatMult, obj);
 
-		this.obj.fireEvent('afterPositionChange', targetPos);
+		const moveEvent = {
+			newPos: targetPos,
+			source: this
+		};
+		this.obj.fireEvent('afterPositionChange', moveEvent);
 
 		if (this.castOnEnd)
 			this.obj.spellbook.spells[this.castOnEnd].cast();

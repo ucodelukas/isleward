@@ -154,6 +154,10 @@ module.exports = {
 		syncer.o.y = targetPos.y;
 
 		target.instance.physics.addObject(target, target.x, target.y);
-		target.fireEvent('afterPositionChange', targetPos);
+		const moveEvent = {
+			newPos: targetPos,
+			source: this
+		};
+		target.fireEvent('afterPositionChange', moveEvent);
 	}
 };
