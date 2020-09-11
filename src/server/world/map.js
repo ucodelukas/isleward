@@ -460,6 +460,7 @@ module.exports = {
 			} else if (layerName === 'hiddenRooms') {
 				blueprint.fog = (cell.properties || {}).fog;
 				blueprint.discoverable = (cell.properties || {}).discoverable;
+				blueprint.layer = ~~((cell.properties || {}).layer || 0);
 
 				if (!mapFile.properties.isRandom)
 					this.hiddenRooms.push(blueprint);
