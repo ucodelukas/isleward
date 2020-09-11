@@ -62,6 +62,7 @@ module.exports = {
 			if (!destroyed) {
 				sync = o.syncer.get();
 				syncSelf = o.syncer.get(true);
+				o.syncer.locked = true;
 			} else {
 				sync = {
 					id: o.id,

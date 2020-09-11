@@ -1,6 +1,9 @@
 module.exports = {
 	type: 'syncer',
 
+	locked: false,
+	buffer: [],
+
 	o: {
 		components: []
 	},
@@ -16,6 +19,20 @@ module.exports = {
 		this.oSelf = {
 			components: []
 		};
+
+		this.locked = false;
+
+		this.buffer.forEach(q => {
+			const [ method, ...rest ] = q;
+
+			this[method].apply(this, rest);
+		});
+
+		this.buffer = [];
+	},
+
+	queue: function (args) {
+		this.buffer.push(args);
 	},
 
 	get: function (self) {
@@ -36,6 +53,12 @@ module.exports = {
 	},
 
 	set: function (self, cpnType, property, value) {
+		if (this.locked) {
+			this.queue(['set', self, cpnType, property, value]);
+
+			return;
+		}
+
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
@@ -56,6 +79,12 @@ module.exports = {
 	},
 
 	setComponent: function (self, cpnType, cpn) {
+		if (this.locked) {
+			this.queue(['setComponent', self, cpnType, cpn]);
+
+			return;
+		}
+
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
@@ -68,6 +97,12 @@ module.exports = {
 	},
 
 	setObject: function (self, cpnType, object, property, value) {
+		if (this.locked) {
+			this.queue(['setObject', self, cpnType, object, property, value]);
+
+			return;
+		}
+
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
@@ -90,6 +125,12 @@ module.exports = {
 	},
 
 	setArray: function (self, cpnType, property, value, noDuplicate) {
+		if (this.locked) {
+			this.queue(['setArray', self, cpnType, property, value, noDuplicate]);
+
+			return;
+		}
+
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
@@ -112,6 +153,12 @@ module.exports = {
 	},
 
 	setSelfArray: function (self, property, value) {
+		if (this.locked) {
+			this.queue(['setSelfArray', self, property, value]);
+
+			return;
+		}
+
 		let o = this.o;
 		if (self)
 			o = this.oSelf;
