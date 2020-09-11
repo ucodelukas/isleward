@@ -85,9 +85,9 @@ module.exports = (scope, map) => {
 					flipped.objects.forEach(o => {
 						if (!o.fog) {
 							if (flipped.flipX)
-								o.x = r.x + r.width - (o.x - r.x) - 1;
+								o.x = r.x + r.width - (o.x - r.x + (o.width || 0)) - 1;
 							if (flipped.flipY)
-								o.y = r.y + r.height - (o.y - r.y) - 1;
+								o.y = r.y + r.height - (o.y - r.y + (o.height || 0)) - 1;
 							if (flipped.rotate) {
 								let t = o.x;
 								o.x = r.x + (o.y - r.y);
