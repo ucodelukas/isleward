@@ -151,8 +151,19 @@ module.exports = {
 
 			if (c.event) {
 				this.updateEvent(c.event);
-				if (c.event.done)
+
+				const shouldStop = (
+					c.event.done ||
+					(
+						c.cron &&
+						c.durationEvent &&
+						!scheduler.isActive(c)
+					)
+				);
+
+				if (shouldStop)
 					this.stopEvent(c);
+
 				continue;
 			} else if ((c.ttl) && (c.ttl > 0)) {
 				c.ttl--;
