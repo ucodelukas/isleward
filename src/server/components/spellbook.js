@@ -614,6 +614,13 @@ module.exports = {
 		});
 	},
 
+	destroy: function () {
+		this.spells.forEach(s => {
+			if (s.destroy)
+				s.destroy();
+		});
+	},
+
 	events: {
 		beforeMove: function () {
 			this.stopCasting(null, true);
