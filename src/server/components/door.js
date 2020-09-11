@@ -163,5 +163,10 @@ module.exports = {
 
 			this.closed = true;
 		}
+	},
+
+	destroy: function () {
+		this.obj.instance.physics.setCollision(this.obj.x, this.obj.y, false);
+		this.obj.instance.objects.notifyCollisionChange(this.obj.x, this.obj.y, false);
 	}
 };
