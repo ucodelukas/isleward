@@ -251,6 +251,13 @@ module.exports = {
 			config.events.afterGiveRewards(this, config);
 	},
 
+	stopAll: function () {
+		this.configs.forEach(c => {
+			if (c.event)
+				this.stopEvent(c);
+		});
+	},
+
 	stopEvent: function (config) {
 		let event = config.event;
 

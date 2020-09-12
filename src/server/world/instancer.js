@@ -99,8 +99,12 @@ module.exports = {
 				return;
 			}
 
+			spawners.reset();
+
 			objects.objects.length = 0;
 			objects.objects = [];
+
+			events.stopAll();
 
 			map.randomMap.generate();
 
