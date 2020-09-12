@@ -117,8 +117,6 @@ module.exports = {
 			else if (!this.obj.aggro.canAttack(m))
 				continue;
 
-			console.log(this.element, this.statMult, this.statType, this.damage);
-
 			let damage = this.getDamage(m);
 			m.stats.takeDamage(damage, 1, obj);
 		}
