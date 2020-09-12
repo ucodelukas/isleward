@@ -117,6 +117,12 @@ module.exports = {
 
 		let repeat = this.repeat || 1;
 
+		const particleEvent = {
+			source: this,
+			particleConfig: extend({}, this.particles)
+		};
+		obj.fireEvent('beforeSpawnParticles', particleEvent);
+
 		for (let r = 0; r < repeat; r++) {
 			let x = obj.x;
 			let y = obj.y;
@@ -157,7 +163,7 @@ module.exports = {
 										blueprint: this.blueprint
 									};
 								},
-								blueprint: this.particles
+								blueprint: particleEvent.particleConfig
 							}
 						},
 						extraProperties: {

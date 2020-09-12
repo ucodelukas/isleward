@@ -1,7 +1,7 @@
 module.exports = {
 	id: 'anglers',
 	name: 'The Anglers',
-	description: 'Masters of the arts of Angling, Lurecrafting and Baiting.',
+	description: 'A guild of fishermen that have mastered the arts of angling, lurecrafting and baiting. Many Anglers have taken it upon themselves to help others grow their fishing skills.',
 
 	uniqueStat: {
 		chance: {

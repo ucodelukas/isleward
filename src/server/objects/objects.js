@@ -15,13 +15,13 @@ module.exports = {
 		return ++this.lastId;
 	},
 
-	build: function (skipPush, clientObj) {
+	build: function (skipPush, clientObj, id) {
 		let o = extend({}, objBase);
 
 		if (clientObj)
 			o.update = null;
 		else {
-			o.id = this.getNextId();
+			o.id = id || this.getNextId();
 			o.addComponent('syncer');
 			o.instance = this.instance;
 
@@ -65,7 +65,7 @@ module.exports = {
 		for (let i = 0; i < lLen; i++) {
 			let l = list[i];
 
-			let obj = this.build(skipPush, l.clientObj);
+			let obj = this.build(skipPush, l.clientObj, l.id);
 
 			obj.sheetName = l.sheetName;
 			obj.cell = l.cell;

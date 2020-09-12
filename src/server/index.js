@@ -28,7 +28,9 @@ let startup = {
 		process.on('unhandledRejection', this.onError.bind(this));
 		process.on('uncaughtException', this.onError.bind(this));
 
-		mods.init(this.onModsLoaded.bind(this));
+		await mods.init();
+
+		this.onModsLoaded();
 	},
 
 	onModsLoaded: function () {
@@ -44,10 +46,10 @@ let startup = {
 		components.init(this.onComponentsReady.bind(this));
 	},
 
-	onComponentsReady: function () {
+	onComponentsReady: async function () {
 		skins.init();
 		factions.init();
-		clientConfig.init();
+		await clientConfig.init();
 		server.init(this.onServerReady.bind(this));
 	},
 

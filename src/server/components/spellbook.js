@@ -64,9 +64,9 @@ module.exports = {
 		};
 
 		let spells = this.spells;
-		if (spells.length && spells[0].obj) 
+		if (spells.length && spells[0].obj)
 			spells = spells.map(f => f.simplify());
-		
+
 		s.spells = spells;
 
 		return s;
@@ -118,7 +118,7 @@ module.exports = {
 		}
 
 		if (!builtSpell.castOnDeath && builtSpell.range) {
-			if (this.closestRange === -1 || builtSpell.range < this.closestRange) 
+			if (this.closestRange === -1 || builtSpell.range < this.closestRange)
 				this.closestRange = builtSpell.range;
 			if (this.furthestRange === -1 || builtSpell.range > this.furthestRange)
 				this.furthestRange = builtSpell.range;
@@ -190,7 +190,7 @@ module.exports = {
 		}
 
 		if (runeSpell.properties) {
-			for (let p in runeSpell.properties) 
+			for (let p in runeSpell.properties)
 				builtSpell[p] = runeSpell.properties[p];
 		}
 
@@ -264,7 +264,7 @@ module.exports = {
 					x: this.obj.x,
 					y: this.obj.y
 				};
-			} else if (spell.spellType === 'buff') 
+			} else if (spell.spellType === 'buff')
 				target = this.obj;
 		}
 
@@ -335,7 +335,8 @@ module.exports = {
 			return false;
 
 		action.target = this.getTarget(spell, action);
-		if (!action.target)
+		//If a target has become nonSelectable, we need to stop attacks that are queued/auto
+		if (!action.target || action.target.nonSelectable)
 			return false;
 
 		action.auto = spell.auto;
@@ -424,6 +425,11 @@ module.exports = {
 			spell.setCd();
 		}
 
+		this.obj.fireEvent('afterCastSpell', {
+			castSuccess: success,
+			spell
+		});
+
 		//Null means we didn't fail but are initiating casting
 		return (success === null || success === true);
 	},
@@ -437,7 +443,7 @@ module.exports = {
 	getFurthestRange: function (spellNum, checkCanCast) {
 		if (spellNum)
 			return this.spells[spellNum].range;
-		
+
 		let spells = this.spells;
 		let sLen = spells.length;
 		let furthest = 0;
@@ -543,7 +549,7 @@ module.exports = {
 			) {
 				if (c.destroyCallback)
 					c.destroyCallback();
-				
+
 				callbacks.splice(i, 1);
 				i--;
 				cLen--;
@@ -605,6 +611,13 @@ module.exports = {
 
 			if (!ignore || !ignore.castTimeMax)
 				this.obj.syncer.set(false, null, 'casting', 0);
+		});
+	},
+
+	destroy: function () {
+		this.spells.forEach(s => {
+			if (s.destroy)
+				s.destroy();
 		});
 	},
 

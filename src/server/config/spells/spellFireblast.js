@@ -53,9 +53,11 @@ module.exports = {
 
 		let radius = this.radius;
 
-		const particleConfig = extend({}, this.particles);
-
-		obj.fireEvent('beforeSpawnParticles', this, particleConfig);
+		const particleEvent = {
+			source: this,
+			particleConfig: extend({}, this.particles)
+		};
+		obj.fireEvent('beforeSpawnParticles', particleEvent);
 
 		for (let i = x - radius; i <= x + radius; i++) {
 			for (let j = y - radius; j <= y + radius; j++) {
@@ -68,7 +70,7 @@ module.exports = {
 					components: [{
 						type: 'particles',
 						ttl: 10,
-						blueprint: particleConfig
+						blueprint: particleEvent.particleConfig
 					}]
 				};
 
@@ -152,6 +154,10 @@ module.exports = {
 		syncer.o.y = targetPos.y;
 
 		target.instance.physics.addObject(target, target.x, target.y);
-		target.fireEvent('afterPositionChange', targetPos);
+		const moveEvent = {
+			newPos: targetPos,
+			source: this
+		};
+		target.fireEvent('afterPositionChange', moveEvent);
 	}
 };

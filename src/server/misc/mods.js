@@ -1,24 +1,23 @@
-let fileLister = require('../misc/fileLister');
-let events = require('../misc/events');
-
-let cbDone = null;
+const fileLister = require('../misc/fileLister');
+const events = require('../misc/events');
 
 module.exports = {
-	init: function (_cbDone) {
-		cbDone = _cbDone;
-		let modList = fileLister.getFolderList('mods');
+	init: async function () {
+		const modList = fileLister.getFolderList('mods');
 
-		modList.forEach(function (m) {
-			let mod = require('../mods/' + m + '/index');
-			this.onGetMod(m, mod);
-		}, this);
-
-		cbDone();
+		for (const m of modList) {
+			const mod = require('../mods/' + m + '/index');
+			await this.onGetMod(m, mod);
+		}
 	},
 
-	onGetMod: function (name, mod) {
-		let isMapThread = !!process.send;
+	onGetMod: async function (name, mod) {
+		if (mod.disabled)
+			return;
+
+		const isMapThread = !!process.send;
 		mod.isMapThread = isMapThread;
+
 		mod.events = events;
 		mod.folderName = 'server/mods/' + name;
 		mod.relativeFolderName = 'mods/' + name;
@@ -31,13 +30,13 @@ module.exports = {
 			this.onGetExtra(name, mod, extra);
 		}
 
-		if (isMapThread && typeof mod.initMap === 'function')
-			mod.initMap();
-		else if (!isMapThread && typeof mod.initMain === 'function')
-			mod.initMain();
-
 		if (typeof mod.init === 'function')
-			mod.init();
+			await mod.init();
+
+		if (isMapThread && typeof mod.initMapThread === 'function')
+			await mod.initMapThread();
+		else if (!isMapThread && typeof mod.initMainThread === 'function')
+			await mod.initMainThread();
 	},
 
 	onGetExtra: function (name, mod, extra) {

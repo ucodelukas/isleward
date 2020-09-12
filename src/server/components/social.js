@@ -65,133 +65,6 @@ module.exports = {
 		});
 	},
 
-	sendPartyMessage: function (msg) {
-		if (!this.party) {
-			this.obj.socket.emit('events', {
-				onGetMessages: [{
-					messages: [{
-						class: 'color-redA',
-						message: 'you are not in a party',
-						type: 'info'
-					}]
-				}]
-			});
-
-			return;
-		}
-
-		let charname = this.obj.auth.charname;
-		let message = msg.data.message.substr(1);
-
-		this.party.forEach(function (p) {
-			let player = cons.players.find(c => c.id === p);
-
-			player.socket.emit('events', {
-				onGetMessages: [{
-					messages: [{
-						class: 'color-tealC',
-						message: '(party: ' + charname + '): ' + message,
-						type: 'chat',
-						source: this.obj.name
-					}]
-				}]
-			});
-		}, this);
-	},
-
-	sendCustomChannelMessage: function (msg) {
-		let pList = cons.players;
-		let pLen = pList.length;
-		let origMessage = msg.data.message.substr(1);
-
-		let channel = origMessage.split(' ')[0];
-		let message = origMessage.substr(channel.length);
-
-		if ((!channel) || (!message)) {
-			this.obj.socket.emit('events', {
-				onGetMessages: [{
-					messages: [{
-						class: 'color-redA',
-						message: 'syntax: $channel message',
-						type: 'info'
-					}]
-				}]
-			});
-			return;
-		} else if (!this.isInChannel(this.obj, channel)) {
-			this.obj.socket.emit('events', {
-				onGetMessages: [{
-					messages: [{
-						class: 'color-redA',
-						message: 'you are not currently in channel: ' + channel,
-						type: 'info'
-					}]
-				}]
-			});
-			return;
-		} else if (pLen > 0) {
-			for (let i = 0; i < pLen; i++) {
-				if (this.isInChannel(pList[i], channel)) {
-					pList[i].socket.emit('events', {
-						onGetMessages: [{
-							messages: [{
-								class: 'color-grayB',
-								message: '[' + channel + '] ' + this.obj.auth.charname + ': ' + message,
-								type: channel.trim(),
-								source: this.obj.name
-							}]
-						}]
-					});
-				}
-			}
-		}
-	},
-
-	sendPrivateMessage: function (messageString) {
-		let playerName = '';
-		//Check if there's a space in the name
-		if (messageString[1] === "'") {
-			playerName = messageString.substring(2, messageString.indexOf("'", 2));
-			messageString = messageString.replace("@'" + playerName + "' ", '');
-		} else {
-			playerName = messageString.substring(1, messageString.indexOf(' '));
-			messageString = messageString.replace('@' + playerName + ' ', '');
-		}
-
-		if (playerName === this.obj.name)
-			return;
-
-		let target = cons.players.find(p => p.name === playerName);
-		if (!target)
-			return;
-
-		this.obj.socket.emit('event', {
-			event: 'onGetMessages',
-			data: {
-				messages: [{
-					class: 'color-yellowB',
-					message: '(you to ' + playerName + '): ' + messageString,
-					type: 'chat',
-					subType: 'privateOut',
-					source: this.obj.name
-				}]
-			}
-		});
-
-		target.socket.emit('event', {
-			event: 'onGetMessages',
-			data: {
-				messages: [{
-					class: 'color-yellowB',
-					message: '(' + this.obj.name + ' to you): ' + messageString,
-					type: 'chat',
-					subType: 'privateIn',
-					source: this.obj.name
-				}]
-			}
-		});
-	},
-
 	chat: function (msg) {
 		chat(this, msg);
 	},
@@ -422,7 +295,7 @@ module.exports = {
 
 		messages.forEach(m => {
 			const { className = 'color-redA', type = 'info', subType } = m;
-			m.className = className;
+			m.class = className;
 			m.type = type;
 			m.subType = subType;
 		});

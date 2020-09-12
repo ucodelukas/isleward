@@ -95,8 +95,8 @@ define([
 			if (!pat[0])
 				return;
 
-			let posX = ~~((pat.width() / 2) - (el.width() / 2)) - 10;
-			let posY = ~~((pat.height() / 2) - (el.height() / 2)) - 10;
+			let posX = ~~((pat.width() / 2) - (el.width() / 2));
+			let posY = ~~((pat.height() / 2) - (el.height() / 2));
 
 			el.css('position', 'absolute');
 			if (x)
@@ -204,7 +204,7 @@ define([
 		},
 
 		buildClose: function () {
-			$('<div class="btn btnClose">x</div>')
+			$('<div class="btn btnClose">X</div>')
 				.appendTo(this.find('.heading').eq(0))
 				.on('click', this.toggle.bind(this));	
 		}

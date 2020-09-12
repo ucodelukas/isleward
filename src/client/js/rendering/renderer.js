@@ -7,7 +7,8 @@ define([
 	'js/rendering/particles',
 	'js/rendering/shaders/outline',
 	'js/rendering/spritePool',
-	'js/system/globals'
+	'js/system/globals',
+	'js/rendering/renderLoginBackground'
 ], function (
 	resources,
 	events,
@@ -17,7 +18,8 @@ define([
 	particles,
 	shaderOutline,
 	spritePool,
-	globals
+	globals,
+	renderLoginBackground
 ) {
 	let pixi = PIXI;
 	let mRandom = Math.random.bind(Math);
@@ -124,10 +126,12 @@ define([
 		},
 
 		buildSpritesTexture: function () {
+			const { clientConfig: { atlasTextures } } = globals;
+
 			let container = new pixi.Container();
 
 			let totalHeight = 0;
-			['tiles', 'walls', 'objects'].forEach(function (t) {
+			atlasTextures.forEach(t => {
 				let texture = this.textures[t];
 				let tile = new pixi.Sprite(new pixi.Texture(texture));
 				tile.width = texture.width;
@@ -135,10 +139,15 @@ define([
 				tile.x = 0;
 				tile.y = totalHeight;
 
+				tileOpacity.atlasTextureDimensions[t] = {
+					w: texture.width / 8,
+					h: texture.height / 8
+				};
+
 				container.addChild(tile);
 
 				totalHeight += tile.height;
-			}, this);
+			});
 
 			let renderTexture = pixi.RenderTexture.create(this.textures.tiles.width, totalHeight);
 			this.renderer.render(container, renderTexture);
@@ -164,61 +173,7 @@ define([
 		buildTitleScreen: function () {
 			this.titleScreen = true;
 
-			this.setPosition({
-				x: 0,
-				y: 0
-			}, true);
-
-			let w = Math.ceil(this.width / scale) + 1;
-			let h = Math.ceil(this.height / scale) + 1;
-
-			let container = this.layers.tileSprites;
-
-			for (let i = 0; i < w; i++) {
-				let ii = i / 10;
-				for (let j = 0; j < h; j++) {
-					let roll = Math.sin(((j * 0.2) % 5) + Math.cos(ii % 8));
-
-					let tile = 5;
-					if (roll < -0.2)
-						tile = 3;
-					else if (roll < 0.2)
-						tile = 4;
-					else if (roll < 0.5)
-						tile = 53;
-
-					let alpha = mRandom();
-
-					if ([5, 53].indexOf(tile) > -1)
-						alpha *= 2;
-
-					alpha = Math.min(Math.max(0.15, alpha), 0.65);
-
-					if (mRandom() < 0.35) {
-						tile = {
-							5: 6,
-							3: 0,
-							4: 1,
-							53: 54
-						}[tile];
-					}
-
-					let sprite = new pixi.Sprite(this.getTexture('sprites', tile));
-
-					sprite.alpha = alpha;
-					sprite.position.x = i * scale;
-					sprite.position.y = j * scale;
-					sprite.width = scale;
-					sprite.height = scale;
-
-					if (mRandom() < 0.5) {
-						sprite.position.x += scale;
-						sprite.scale.x = -scaleMult;
-					}
-
-					container.addChild(sprite);
-				}
-			}
+			renderLoginBackground(this);
 		},
 
 		onResize: function () {
@@ -280,7 +235,7 @@ define([
 			container.layer = 'tiles';
 			this.stage.addChild(container);
 
-			this.stage.children.sort(function (a, b) {
+			this.stage.children.sort((a, b) => {
 				if (a.layer === 'hiders')
 					return 1;
 				else if (b.layer === 'hiders')
@@ -341,22 +296,22 @@ define([
 
 			this.sprites = _.get2dArray(w, h, 'array');
 
-			this.stage.children.sort(function (a, b) {
+			this.stage.children.sort((a, b) => {
 				if (a.layer === 'tiles')
 					return -1;
 				else if (b.layer === 'tiles')
 					return 1;
 				return 0;
-			}, this);
+			});
 
 			if (this.zoneId !== null)
 				events.emit('onRezone', this.zoneId);
 			this.zoneId = msg.zoneId;
 
-			msg.clientObjects.forEach(function (c) {
+			msg.clientObjects.forEach(c => {
 				c.zoneId = this.zoneId;
 				events.emit('onGetObject', c);
-			}, this);
+			});
 		},
 
 		setPosition: function (pos, instant) {
@@ -417,10 +372,11 @@ define([
 
 			const { player: { x: px, y: py } } = window;
 
-			const isVisible = hiddenRooms.every(h => {
-				if (h.discovered)
-					return true;
+			let foundVisibleLayer = null;
+			let foundHiddenLayer = null;
 
+			hiddenRooms.forEach(h => {
+				const { discovered, layer } = h;
 				const { x: hx, y: hy, width, height, area } = h;
 
 				//Is the tile outside the hider
@@ -430,11 +386,17 @@ define([
 					y < hy ||
 					y >= hy + height
 				)
-					return true;
+					return;
 
 				//Is the tile inside the hider
 				if (!physics.isInPolygon(x, y, area))
-					return true;
+					return;
+
+				if (discovered) {
+					foundVisibleLayer = layer;
+
+					return;
+				}
 
 				//Is the player outside the hider
 				if (
@@ -442,42 +404,46 @@ define([
 					px >= hx + width ||
 					py < hy ||
 					py >= hy + height
-				) 
-					return false;
+				) {
+					foundHiddenLayer = layer;
+
+					return;
+				}
 
 				//Is the player inside the hider
-				if (!physics.isInPolygon(px, py, area)) 
-					return false;
+				if (!physics.isInPolygon(px, py, area)) {
+					foundHiddenLayer = layer;
 
-				return true;
+					return;
+				}
+
+				foundVisibleLayer = layer;
 			});
 
-			return !isVisible;
+			//We compare hider layers to cater for hiders inside hiders
+			return (foundHiddenLayer > foundVisibleLayer) || (foundHiddenLayer === 0 && foundVisibleLayer === null);
 		},
 
 		updateSprites: function () {
 			if (this.titleScreen)
 				return;
 
-			let player = window.player;
+			const player = window.player;
 			if (!player)
 				return;
 
-			let w = this.w;
-			let h = this.h;
+			const { w, h, width, height, stage, map, sprites } = this;
 
-			let x = ~~((-this.stage.x / scale) + (this.width / (scale * 2)));
-			let y = ~~((-this.stage.y / scale) + (this.height / (scale * 2)));
+			const x = ~~((-stage.x / scale) + (width / (scale * 2)));
+			const y = ~~((-stage.y / scale) + (height / (scale * 2)));
 
-			this.lastUpdatePos.x = this.stage.x;
-			this.lastUpdatePos.y = this.stage.y;
+			this.lastUpdatePos.x = stage.x;
+			this.lastUpdatePos.y = stage.y;
 
-			let sprites = this.sprites;
-			let map = this.map;
-			let container = this.layers.tileSprites;
+			const container = this.layers.tileSprites;
 
-			let sw = this.showTilesW;
-			let sh = this.showTilesH;
+			const sw = this.showTilesW;
+			const sh = this.showTilesH;
 
 			let lowX = Math.max(0, x - sw + 1);
 			let lowY = Math.max(0, y - sh + 2);
@@ -486,33 +452,34 @@ define([
 
 			let addedSprite = false;
 
-			let checkHidden = this.isHidden.bind(this);
+			const checkHidden = this.isHidden.bind(this);
+			const buildTile = this.buildTile.bind(this);
 
-			let newVisible = [];
-			let newHidden = [];
+			const newVisible = [];
+			const newHidden = [];
 
 			for (let i = lowX; i < highX; i++) {
 				let mapRow = map[i];
 				let spriteRow = sprites[i];
 
 				for (let j = lowY; j < highY; j++) {
-					let cell = mapRow[j];
+					const cell = mapRow[j];
 					if (!cell)
 						continue;
 
-					let cLen = cell.length;
+					const cLen = cell.length;
 					if (!cLen)
 						return;
 
-					let rendered = spriteRow[j];
-					let isHidden = checkHidden(i, j);
+					const rendered = spriteRow[j];
+					const isHidden = checkHidden(i, j);
 
 					if (isHidden) {
 						const nonFakeRendered = rendered.filter(r => !r.isFake);
 
-						let rLen = nonFakeRendered.length;
+						const rLen = nonFakeRendered.length;
 						for (let k = 0; k < rLen; k++) {
-							let sprite = nonFakeRendered[k];
+							const sprite = nonFakeRendered[k];
 
 							sprite.visible = false;
 							spritePool.store(sprite);
@@ -534,9 +501,9 @@ define([
 					} else {
 						const fakeRendered = rendered.filter(r => r.isFake);
 
-						let rLen = fakeRendered.length;
+						const rLen = fakeRendered.length;
 						for (let k = 0; k < rLen; k++) {
-							let sprite = fakeRendered[k];
+							const sprite = fakeRendered[k];
 
 							sprite.visible = false;
 							spritePool.store(sprite);
@@ -581,7 +548,7 @@ define([
 
 						let tile = spritePool.getSprite(flipped + c);
 						if (!tile) {
-							tile = this.buildTile(c, i, j);
+							tile = buildTile(c, i, j);
 							container.addChild(tile);
 							tile.type = c;
 							tile.sheetNum = tileOpacity.getSheetNum(c);
@@ -670,8 +637,10 @@ define([
 				}
 
 				let stage = this.stage;
-				stage.x = -~~this.pos.x;
-				stage.y = -~~this.pos.y;
+				if (window.staticCamera !== true) {
+					stage.x = -~~this.pos.x;
+					stage.y = -~~this.pos.y;
+				}
 
 				let halfScale = scale / 2;
 				if (Math.abs(stage.x - this.lastUpdatePos.x) > halfScale || Math.abs(stage.y - this.lastUpdatePos.y) > halfScale)
@@ -726,6 +695,8 @@ define([
 		},
 
 		buildObject: function (obj) {
+			const { sheetName } = obj;
+
 			let w = 8;
 			let h = 8;
 			if (obj.w) {
@@ -733,8 +704,8 @@ define([
 				h = obj.h / scaleMult;
 			}
 
-			let bigSheets = ['bosses', 'bigObjects', 'animBigObjects'];
-			if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
+			let bigSheets = globals.clientConfig.bigTextures;
+			if (bigSheets.includes(sheetName)) {
 				obj.layerName = 'mobs';
 				w = 24;
 				h = 24;
@@ -749,7 +720,7 @@ define([
 			sprite.height = obj.h || scale;
 			sprite.visible = obj.has('visible') ? obj.visible : true;
 
-			if ((bigSheets.indexOf(obj.sheetName) > -1) || (obj.sheetName.indexOf('bosses') > -1)) {
+			if (bigSheets.includes(sheetName)) {
 				sprite.x -= scale;
 				sprite.y -= (scale * 2);
 			}

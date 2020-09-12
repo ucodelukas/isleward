@@ -77,7 +77,8 @@ module.exports = {
 					const newComponent = mob.addComponent(c.type, components[j]);
 
 					//Likely, nobody knows about this new component, so we need to sync it
-					mob.syncer.setComponent(false, c.type, newComponent.simplify());
+					if (newComponent.simplify)
+						mob.syncer.setComponent(false, c.type, newComponent.simplify());
 				}
 			}
 		},

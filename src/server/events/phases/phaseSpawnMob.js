@@ -71,6 +71,12 @@ const buildMob = (objects, mobConfig, x, y, mobIndex) => {
 		});
 	}
 
+	if (mobConfig.needLos !== undefined)
+		mob.mob.needLos = mobConfig.needLos;
+
+	if (mobConfig.spawnHpPercent) 
+		mob.stats.values.hp = (mob.stats.values.hpMax * mobConfig.spawnHpPercent);
+
 	return mob;
 };
 
@@ -110,6 +116,9 @@ module.exports = {
 
 				let pos = l.pos;
 				if (pos) {
+					if (typeof(pos) === 'function')
+						pos = pos(i);
+
 					if (pos instanceof Array) {
 						x = pos[i].x;
 						y = pos[i].y;
@@ -133,8 +142,9 @@ module.exports = {
 
 				if (l.exists) {
 					let mob = objects.objects.find(o => (o.name === l.name));
+
 					mob.mob.walkDistance = 0;
-					this.spawnAnimation(mob);
+					spawnAnimation(syncer, mob);
 					mob.performMove({
 						force: true,
 						data: {
@@ -142,7 +152,7 @@ module.exports = {
 							y: y
 						}
 					});
-					this.spawnAnimation(mob);
+					spawnAnimation(syncer, mob);
 					this.event.objects.push(mob);
 				} else {
 					const mob = buildMob(objects, l, x, y, i);

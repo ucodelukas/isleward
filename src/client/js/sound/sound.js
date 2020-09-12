@@ -244,7 +244,8 @@ define([
 				src: [file],
 				volume,
 				loop,
-				autoplay
+				autoplay,
+				html5: loop
 			});
 
 			return sound;

@@ -103,7 +103,7 @@
 				}
 
 				&:hover {
-					background-color: @blueB;
+					background-color: @blueD;
 				}
 
 			}
@@ -141,16 +141,16 @@
 			width: 180px;
 			padding-left: 10px;
 			padding-right: 10px;
-			margin-left: 10px;
-			background-color: @blueD;
+			background-color: @brownC;
 			color: @white;
+			filter: drop-shadow(0 -2px 0 @black) drop-shadow(0 2px 0 @black) drop-shadow(2px 0 0 @black) drop-shadow(-2px 0 0 @black);
 
-			&:first-child {
-				margin-left: 0px;
+			+ .btn {
+				margin-left: 20px;
 			}
 
 			&:hover {
-				background-color: @blueC;
+				background-color: @brownD;
 			}
 
 		}

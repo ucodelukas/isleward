@@ -19,9 +19,10 @@ define([
 ) {
 	return {
 		tpl: template,
-		centered: true,
 
 		modal: true,
+
+		hasClose: true,
 
 		postRender: function () {
 			this.onEvent('onCloseOptions', this.show.bind(this));
@@ -30,7 +31,6 @@ define([
 			this.el.find('.btnOptions').on('click', this.openOptions.bind(this));
 			this.el.find('.btnCharSelect').on('click', this.charSelect.bind(this));
 			this.el.find('.btnLogOut').on('click', this.logOut.bind(this));
-			this.el.find('.btnContinue').on('click', this.toggle.bind(this));
 			this.el.find('.btnPatreon').on('click', this.patreon.bind(this));
 
 			this.onEvent('onResize', this.onResize.bind(this));
@@ -82,14 +82,10 @@ define([
 
 		onAfterShow: function () {
 			this.onResize();
-
-			events.emit('onShowOverlay', this.el);
 		},
 
 		beforeHide: function () {
 			this.onResize();
-
-			events.emit('onHideOverlay', this.el);
 		},
 
 		logOut: function () {

@@ -148,7 +148,8 @@ define([
 				method: 'chat',
 				data: {
 					message: '{' + item.name + '}',
-					item: item
+					item: item,
+					type: 'global'
 				}
 			});
 		},
@@ -281,10 +282,6 @@ define([
 					text: 'quickslot',
 					callback: this.performItemAction.bind(this, item, 'setQuickSlot')
 				},
-				activate: {
-					text: 'activate',
-					callback: this.performItemAction.bind(this, item, 'activateMtx')
-				},
 				use: {
 					text: 'use',
 					callback: this.performItemAction.bind(this, item, 'useItem')
@@ -320,8 +317,6 @@ define([
 
 			if (item.ability)
 				ctxConfig.push(menuItems.learn);
-			else if (item.type === 'mtx')
-				ctxConfig.push(menuItems.activate);
 			else if (item.type === 'toy' || item.type === 'consumable' || item.useText || item.type === 'recipe') {
 				if (item.useText)
 					menuItems.use.text = item.useText;
@@ -520,11 +515,9 @@ define([
 		performItemAction: function (item, action) {
 			if (!item)
 				return;
-			else if ((action === 'equip') && ((item.material) || (item.quest) || (item.type === 'mtx') || (!window.player.inventory.canEquipItem(item))))
+			else if ((action === 'equip') && ((item.material) || (item.quest) || (!window.player.inventory.canEquipItem(item))))
 				return;
 			else if ((action === 'learnAbility') && (!window.player.inventory.canEquipItem(item)))
-				return;
-			else if ((action === 'activateMtx') && (item.type !== 'mtx'))
 				return;
 
 			let data = item.id;

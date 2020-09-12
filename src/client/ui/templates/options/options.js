@@ -212,8 +212,6 @@ define([
 		onAfterShow: function () {
 			this.onResize();
 
-			events.emit('onShowOverlay', this.el);
-
 			this.build();
 		},
         

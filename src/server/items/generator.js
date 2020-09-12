@@ -53,7 +53,7 @@ module.exports = {
 		if (blueprint.noCurrency)
 			currencyChance = 0;
 
-		if (!blueprint.slot && !blueprint.noSpell && !blueprint.material) {
+		if (!blueprint.slot && !blueprint.noSpell && !blueprint.material && !blueprint.type) {
 			isSpell = blueprint.spell;
 			isCurrency = blueprint.currency;
 			if ((!isCurrency) && (!isSpell) && ((!hadBlueprint) || ((!blueprint.type) && (!blueprint.slot) && (!blueprint.stats)))) {
@@ -78,7 +78,8 @@ module.exports = {
 			item.noDestroy = blueprint.noDestroy || null;
 			item.quality = blueprint.quality || 0;
 			materialGenerators.forEach(g => g.generate(item, blueprint));
-		} else if (blueprint.type === 'mtx') {
+		} else if (blueprint.type === 'mtx' || blueprint.type === 'toy') {
+			//TODO: MTXs have been moved to a mod so we shouldn't have this any more
 			item = extend({}, blueprint);
 			delete item.chance;
 		} else if (blueprint.type === 'recipe') 

@@ -33,6 +33,15 @@ module.exports = {
 		}
 	},
 
+	createTable: async function (tableName) {
+		try {
+			await r.tableCreate(tableName).run();
+		} catch (e) {
+			if (!e.message.includes('already exists'))
+				_.log(e);
+		}
+	},
+
 	getAsyncIgnoreCase: async function (table, key) {
 		const res = await r.table(table)
 			.filter(doc => doc('id').match(`(?i)^${key}$`))

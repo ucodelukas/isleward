@@ -45,12 +45,6 @@ module.exports = {
 			});
 
 		items
-			.filter(i => i.mtx)
-			.forEach(i => {
-				delete i.noDestroy;
-			});
-
-		items
 			.filter(i => i.stats && i.stats.magicFind > 135)
 			.forEach(i => {
 				let value = '' + i.stats.magicFind;

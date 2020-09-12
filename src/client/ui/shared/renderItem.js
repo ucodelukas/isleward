@@ -6,11 +6,65 @@ const tplItem = `
 `;
 
 define([
-	
+	'js/system/events'
 ], function (
-	
+	events
 ) {
-	return (container, item, useEl) => {
+	const onHover = (el, item, e) => {
+		if (item)
+			this.hoverItem = item;
+		else
+			item = this.hoverItem;
+
+		let ttPos = null;
+
+		if (el) {
+			ttPos = {
+				x: ~~(e.clientX + 32),
+				y: ~~(e.clientY)
+			};
+		}
+
+		events.emit('onShowItemTooltip', item, ttPos, true);
+	};
+
+	const hideTooltip = (el, item, e) => {
+		events.emit('onHideItemTooltip', item);
+	};
+
+	const addTooltipEvents = (el, item) => {
+		let moveHandler = onHover.bind(null, el, item);
+		let downHandler = () => {};
+		if (isMobile) {
+			moveHandler = () => {};
+			downHandler = onHover.bind(null, el, item);
+		}
+
+		el
+			.on('mousedown', downHandler)
+			.on('mousemove', moveHandler)
+			.on('mouseleave', hideTooltip.bind(null, el, item));
+	};
+
+	const onShowContext = (item, getItemContextConfig, e) => {
+		if (isMobile)
+			hideTooltip(null, item);
+
+		const contextConfig = getItemContextConfig(item);
+		if (!contextConfig.length)
+			return;
+
+		events.emit('onContextMenu', contextConfig, e);
+
+		e.preventDefault();
+		return false;
+	};
+
+	const addContextEvents = (el, item, getItemContextConfig) => {
+		el.on('contextmenu', onShowContext.bind(this, item, getItemContextConfig));
+	};
+
+	return (container, item, useEl, manageTooltip, getItemContextConfig) => {
 		const itemEl = useEl || $(tplItem).appendTo(container);
 
 		if (!item) {
@@ -71,6 +125,12 @@ define([
 
 		if (item.has('quality'))
 			itemEl.addClass(`quality-${item.quality}`);
+
+		if (manageTooltip)
+			addTooltipEvents(itemEl, item);
+
+		if (getItemContextConfig)
+			addContextEvents(itemEl, item, getItemContextConfig);
 
 		return itemEl;
 	};

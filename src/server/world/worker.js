@@ -4,10 +4,10 @@ global._ = require('../misc/helpers');
 global.consts = require('../config/consts');
 global.instancer = require('./instancer');
 global.eventManager = require('../events/events');
+global.clientConfig = require('../config/clientConfig');
 
 let components = require('../components/components');
 let mods = require('../misc/mods');
-let mtx = require('../mtx/mtx');
 let animations = require('../config/animations');
 let skins = require('../config/skins');
 let factions = require('../config/factions');
@@ -20,10 +20,9 @@ let mapList = require('../config/maps/mapList');
 let sheets = require('../security/sheets');
 let itemEffects = require('../items/itemEffects');
 
-let onCpnsReady = function () {
+let onCpnsReady = async function () {
 	factions.init();
 	skins.init();
-	mtx.init();
 	animations.init();
 	classes.init();
 	spellsConfig.init();
@@ -33,6 +32,7 @@ let onCpnsReady = function () {
 	recipes.init();
 	sheets.init();
 	itemEffects.init();
+	await clientConfig.init();
 
 	process.send({
 		method: 'onReady'
@@ -61,13 +61,15 @@ const onCrash = async e => {
 	});
 };
 
-let onDbReady = function () {
+let onDbReady = async function () {
 	require('../misc/random');
-
-	mods.init(onModsReady);
 
 	process.on('uncaughtException', onCrash);
 	process.on('unhandledRejection', onCrash);
+
+	await mods.init();
+
+	onModsReady();
 };
 
 io.init(onDbReady);

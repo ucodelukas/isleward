@@ -1,10 +1,12 @@
-let roles = require('../../config/roles');
-let generator = require('../../items/generator');
-let configSlots = require('../../items/config/slots');
-let configMaterials = require('../../items/config/materials');
-let factions = require('../../config/factions');
-let connections = require('../../security/connections');
+const roles = require('../../config/roles');
+const generator = require('../../items/generator');
+const configSlots = require('../../items/config/slots');
+const configMaterials = require('../../items/config/materials');
+const factions = require('../../config/factions');
+const connections = require('../../security/connections');
+const events = require('../../misc/events');
 
+//Commands
 const ban = require('../social/ban');
 const rezone = require('../social/rezone');
 const canChat = require('../social/canChat');
@@ -86,6 +88,8 @@ const contextActions = [
 	}
 ];
 
+const commandActions = {};
+
 module.exports = {
 	customChannels: [],
 	roleLevel: null,
@@ -95,6 +99,13 @@ module.exports = {
 			this.customChannels = this.customChannels
 				.filter((c, i) => (this.customChannels.indexOf(c) === i));
 		}
+
+		events.emit('onBeforeGetCommandRoles', commandRoles, commandActions);
+		Object.entries(commandActions).forEach(a => {
+			const [ actionName, actionHandler ] = a;
+
+			this[actionName] = actionHandler.bind(this);
+		});
 
 		this.roleLevel = roles.getRoleLevel(this.obj);
 		this.calculateActions();

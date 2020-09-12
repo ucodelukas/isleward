@@ -5,11 +5,13 @@ module.exports = {
 
 	toZone: null,
 	toPos: null,
+	toRelativePos: null,
 
 	patronLevel: 0,
 
 	init: function (blueprint) {
 		this.toPos = blueprint.pos;
+		this.toRelativePos = blueprint.toRelativePos;
 		this.toZone = blueprint.zone;
 		this.patronLevel = ~~blueprint.patron;
 	},
@@ -27,8 +29,15 @@ module.exports = {
 		obj.destroyed = true;
 
 		let simpleObj = obj.getSimple(true, false, true);
-		simpleObj.x = this.toPos.x;
-		simpleObj.y = this.toPos.y;
+
+		const { toPos, toRelativePos } = this;
+		if (toPos) {
+			simpleObj.x = this.toPos.x;
+			simpleObj.y = this.toPos.y;
+		} else if (toRelativePos) {
+			simpleObj.x = this.obj.x + toRelativePos.x;
+			simpleObj.y = this.obj.y + toRelativePos.y;
+		}
 
 		process.send({
 			method: 'rezone',

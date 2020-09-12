@@ -6,7 +6,6 @@ let physics = require('./physics');
 let resourceSpawner = require('./resourceSpawner');
 let spellCallbacks = require('../config/spells/spellCallbacks');
 let questBuilder = require('../config/quests/questBuilder');
-let randomMap = require('./randomMap');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let mail = require('../mail/mail');
@@ -53,20 +52,62 @@ module.exports = {
 			if (!map.oldCollisionMap)
 				map.oldCollisionMap = map.collisionMap;
 
-			randomMap.generate({
-				map: map,
-				physics: physics,
-				spawners: spawners
-			});
-
-			map.seed = _.getGuid();
+			map.randomMap.init(fakeInstance);
+			this.regenMap();
 		}
+
+		_.log('(M ' + map.name + '): Ready');
 
 		map.clientMap.zoneId = this.zoneId;
 
 		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
 		this.tick();
+	},
+
+	regenMap: function (respawnMap, respawnPos) {
+		//Hack to wait for all player objects to be destroyed
+		const doRegen = () => {
+			const players = objects.objects.filter(o => o.player);
+			players.forEach(p => {
+				if (p.destroyed)
+					return;
+
+				p.fireEvent('beforeRezone');
+				p.destroyed = true;
+
+				const simpleObj = p.getSimple(true, false, true);
+
+				const { x, y } = respawnPos;
+				simpleObj.x = x;
+				simpleObj.y = y;
+
+				process.send({
+					method: 'rezone',
+					id: p.serverId,
+					args: {
+						obj: simpleObj,
+						newZone: respawnMap,
+						keepPos: true
+					}
+				});
+			});
+
+			if (players.length) {
+				setTimeout(doRegen, 1000);
+
+				return;
+			}
+
+			objects.objects.length = 0;
+			objects.objects = [];
+
+			map.randomMap.generate();
+
+			map.seed = _.getGuid();
+		};
+
+		doRegen();
 	},
 
 	tick: function () {
@@ -113,12 +154,15 @@ module.exports = {
 		else {
 			let o = objects.transferObject(obj);
 			questBuilder.obtain(o);
+			eventEmitter.emit('onAfterPlayerEnterZone', o);
 		}
 	},
 
 	onAddObject: function (obj) {
-		if (obj.player)
+		if (obj.player) {
 			obj.stats.onLogin();
+			eventEmitter.emit('onAfterPlayerEnterZone', obj);
+		}
 
 		questBuilder.obtain(obj);
 		obj.fireEvent('afterMove');
@@ -198,8 +242,11 @@ module.exports = {
 		if (obj.auth)
 			await obj.auth.doSave();
 
-		if (obj.player)
+		if (obj.player) {
 			obj.fireEvent('beforeRezone');
+
+			eventEmitter.emit('onAfterPlayerLeaveZone', obj);
+		}
 
 		obj.destroyed = true;
 

@@ -113,58 +113,6 @@ module.exports = {
 				}
 			}
 		},
-		'estuary entrance': {
-			components: {
-				cpnParticles: {
-					simplify: function () {
-						return {
-							type: 'particles',
-							blueprint: {
-								color: {
-									start: ['48edff', '80f643'],
-									end: ['80f643', '48edff']
-								},
-								scale: {
-									start: {
-										min: 2,
-										max: 10
-									},
-									end: {
-										min: 0,
-										max: 2
-									}
-								},
-								speed: {
-									start: {
-										min: 4,
-										max: 16
-									},
-									end: {
-										min: 2,
-										max: 8
-									}
-								},
-								lifetime: {
-									min: 1,
-									max: 4
-								},
-								randomScale: true,
-								randomSpeed: true,
-								chance: 0.075,
-								randomColor: true,
-								spawnType: 'rect',
-								spawnRect: {
-									x: -32,
-									y: -48,
-									w: 64,
-									h: 64
-								}
-							}
-						};
-					}
-				}
-			}
-		},
 		gas: {
 			components: {
 				cpnParticles: {

@@ -3,10 +3,9 @@
 .uiHelp {
 	display: none;
 	z-index: 2;
-	height: 500px;
-	width: 818px;
 	border: 5px solid @blackB;
 	text-align: center;
+	flex-direction: column;
 
 	> .heading {
 		color: @blueA;
@@ -19,28 +18,50 @@
 			padding-top: 8px;
 			margin: auto;
 		}
+
 	}
 
 	.content {
-		overflow-y: scroll;
-		background-color: @blackA;
+		overflow-y: auto;
+		background-color: @blackD;
 		width: 100%;
-		height: calc(100% - 36px);
-		text-align: center;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 5px;
 
 		.row {
-			color: darken(@white, 25%);
-			padding: 16px;
+			padding: 5px;
+			display: flex;
+			justify-content: center;
+			background-color: @blackC;
+
+			+ .row {
+				margin-top: 5px;
+			}
 
 			&.mobile {
 				display: none;
 			}
 
 			.topic {
-				color: @white;
+				color: @blueB;
+				text-align: right;
+				width: 30%;
 			}
+
+			.desc {
+				color: @grayB;
+				text-align: left;
+				width: 70%;
+				max-width: 400px;
+				padding-left: 20px;
+			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiHelp {
@@ -50,7 +71,9 @@
 		display: none;
 
 		&.mobile {
-			display: block;
+			display: flex
 		}
+
 	}
+
 }

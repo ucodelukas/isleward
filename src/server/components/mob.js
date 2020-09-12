@@ -197,7 +197,8 @@ module.exports = {
 			doesCollide = this.physics.mobsCollide(x, y, obj, target);
 			if (!doesCollide) {
 				hasLos = this.physics.hasLos(x, y, tx, ty);
-				if (hasLos) {
+				//Maybe we don't care if the mob has LoS
+				if (hasLos || this.needLos === false) {
 					if (((obj.follower) && (obj.follower.master.player)) || (rnd() < 0.65)) {
 						let spell = obj.spellbook.getRandomSpell(target);
 						let success = obj.spellbook.cast({

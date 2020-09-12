@@ -33,6 +33,7 @@ define([
 			config.forEach((c, i) => {
 				const text = (c.text || c);
 				const hotkey = c.hotkey;
+				const suffix = c.suffix;
 
 				const html = templateItem
 					.replace('$TEXT$', text);
@@ -42,12 +43,18 @@ define([
 
 				if (hotkey)
 					row.find('.hotkey').html(`(${hotkey})`);
+				else if (suffix)
+					row.find('.hotkey').html(`${suffix}`);
 
 				if (c.callback) {
 					row.on('click', this.onClick.bind(this, i, c.callback));
 					row.on('click', events.emit.bind(events, 'onClickContextItem'));
-				} else
+				} else {
 					row.addClass('no-hover');
+
+					if (text.includes('---'))
+						row.addClass('divider');
+				}
 			});
 
 			this.el

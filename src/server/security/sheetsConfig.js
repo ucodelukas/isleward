@@ -11,7 +11,10 @@ module.exports = {
 			type: 'key',
 			name: 'Key to the world',
 			sprite: [12, 0],
-			keyId: 'world'
+			keyId: 'world',
+			noSalvage: true,
+			noDrop: true,
+			noDestroy: true
 		}],
 		extrastashslots: 10
 	}]

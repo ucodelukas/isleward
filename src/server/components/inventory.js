@@ -1,7 +1,6 @@
 let generator = require('../items/generator');
 let salvager = require('../items/salvager');
 let classes = require('../config/spirits');
-let mtx = require('../mtx/mtx');
 let factions = require('../config/factions');
 let itemEffects = require('../items/itemEffects');
 const events = require('../misc/events');
@@ -100,7 +99,6 @@ module.exports = {
 				factionId: e.factionId || null,
 				text: e.text || null,
 				properties: e.properties || null,
-				mtx: e.mtx || null,
 				type: e.type || null,
 				rolls: e.rolls || null
 			}));
@@ -207,20 +205,6 @@ module.exports = {
 		delete item.pos;
 
 		spellbook.addSpellFromRune(item.spell, runeSlot);
-		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
-	},
-
-	activateMtx: function (itemId) {
-		let item = this.findItem(itemId);
-		if (!item)
-			return;
-		else if (item.type !== 'mtx') {
-			delete item.active;
-			return;
-		}
-
-		item.active = !item.active;
-
 		this.obj.syncer.setArray(true, 'inventory', 'getItems', item);
 	},
 
@@ -448,12 +432,7 @@ module.exports = {
 
 			if (item.effects) {
 				item.effects.forEach(function (e) {
-					if (e.mtx) {
-						let mtxUrl = mtx.get(e.mtx);
-						let mtxModule = require('../' + mtxUrl);
-
-						e.events = mtxModule.events;
-					} else if (e.factionId) {
+					if (e.factionId) {
 						let faction = factions.getFaction(e.factionId);
 						let statGenerator = faction.uniqueStat;
 						statGenerator.generate(item);
@@ -626,14 +605,26 @@ module.exports = {
 		else
 			bagCell = 53;
 
+		const createBagMsg = {
+			ownerName,
+			x,
+			y,
+			sprite: {
+				sheetName: 'objects',
+				cell: bagCell
+			},
+			dropSource: this.obj
+		};
+		this.obj.instance.eventEmitter.emit('onBeforeCreateBag', createBagMsg);
+
 		let obj = this.obj.instance.objects.buildObjects([{
-			sheetName: 'objects',
-			cell: bagCell,
-			x: x,
-			y: y,
+			sheetName: createBagMsg.sprite.sheetName,
+			cell: createBagMsg.sprite.cell,
+			x: createBagMsg.x,
+			y: createBagMsg.y,
 			properties: {
 				cpnChest: {
-					ownerName: ownerName,
+					ownerName,
 					ttl: 1710
 				},
 				cpnInventory: {

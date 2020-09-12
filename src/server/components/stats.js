@@ -402,9 +402,11 @@ module.exports = {
 			killSource.stats.kill(obj);
 
 		const deathEvent = {
+			target: obj,
 			source: killSource
 		}; 
 
+		obj.instance.eventEmitter.emitNoSticky('onAfterActorDies', deathEvent);
 		obj.fireEvent('afterDeath', deathEvent);
 
 		if (obj.player) {

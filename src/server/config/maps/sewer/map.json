@@ -373,6 +373,12 @@
                          "x":24,
                          "y":0
                         }],
+                 "properties":[
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"1"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -400,6 +406,12 @@
                         {
                          "x":40,
                          "y":0
+                        }],
+                 "properties":[
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"1"
                         }],
                  "rotation":0,
                  "type":"",
@@ -436,6 +448,12 @@
                         {
                          "x":32,
                          "y":0
+                        }],
+                 "properties":[
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"1"
                         }],
                  "rotation":0,
                  "type":"",

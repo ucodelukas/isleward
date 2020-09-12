@@ -1,5 +1,4 @@
 @import "../../../css/colors.less";
-
 @pad: 8px;
 
 .uiTarget {
@@ -30,8 +29,8 @@
 			.infoName {
 				width: 70%;
 				overflow: hidden;
-			    text-overflow: ellipsis;
-			    white-space: nowrap;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 
 			.infoLevel {
@@ -39,17 +38,11 @@
 				text-align: right;
 
 				&.high-level {
-					text-shadow: 
-						2px 0 @red,
-						-2px 0 @red,
-						0 -2px @red,
-						0 2px @red,
-						-2px -2px @red,
-						-2px 2px @red,
-						2px -2px @red,
-						2px 2px @red;
+					text-shadow: 2px 0 @red, -2px 0 @red, 0 -2px @red, 0 2px @red, -2px -2px @red, -2px 2px @red, 2px -2px @red, 2px 2px @red;
 				}
+
 			}
+
 		}
 
 		.statBox {
@@ -62,7 +55,7 @@
 				margin-bottom: 0px;
 			}
 
-			&:last-child { 
+			&:last-child {
 				display: none;
 				position: absolute;
 				margin-left: -8px;
@@ -86,16 +79,7 @@
 				text-align: center;
 				color: @white;
 				padding: 2px 0px;
-
-				text-shadow: 
-					2px 0px #2d2136,
-					-2px 0px #2d2136,
-					0px -2px #2d2136,
-					0px 2px #2d2136,
-					-2px -2px #2d2136,
-					-2px 2px #2d2136,
-					2px -2px #2d2136,
-					2px 2px #2d2136;
+				text-shadow: 2px 0px #2d2136, -2px 0px #2d2136, 0px -2px #2d2136, 0px 2px #2d2136, -2px -2px #2d2136, -2px 2px #2d2136, 2px -2px #2d2136, 2px 2px #2d2136;
 			}
 
 			&:nth-child(2) {
@@ -121,8 +105,11 @@
 			.statCasting {
 				background-color: @yellowB;
 			}
+
 		}
+
 	}
+
 }
 
 .mobile .uiTarget {

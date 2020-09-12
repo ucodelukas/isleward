@@ -68,15 +68,18 @@ module.exports = {
 			noMsg: true
 		});
 
+		const moveAnimationEffect = {
+			type: 'moveAnimation',
+			idTarget: target.id,
+			targetX: targetPos.x,
+			targetY: targetPos.y,
+			ttl: ttl
+		};
+		this.obj.fireEvent('beforeAddSpellEffect', this, moveAnimationEffect);
+
 		this.sendAnimation({
 			id: this.obj.id,
-			components: [{
-				type: 'moveAnimation',
-				idTarget: target.id,
-				targetX: targetPos.x,
-				targetY: targetPos.y,
-				ttl: ttl
-			}]
+			components: [moveAnimationEffect]
 		});
 
 		if (this.animation) {
@@ -120,7 +123,11 @@ module.exports = {
 		let damage = this.getDamage(target);
 		target.stats.takeDamage(damage, this.threatMult, obj);
 
-		this.obj.fireEvent('afterPositionChange', targetPos);
+		const moveEvent = {
+			newPos: targetPos,
+			source: this
+		};
+		this.obj.fireEvent('afterPositionChange', moveEvent);
 
 		if (this.castOnEnd)
 			this.obj.spellbook.spells[this.castOnEnd].cast();

@@ -379,6 +379,10 @@ module.exports = {
 		let cLen = cpns.length;
 		for (let i = 0; i < cLen; i++) {
 			let cpn = cpns[i];
+
+			if (cpn.fireEvent)
+				cpn.fireEvent(event, args);
+
 			let events = cpn.events;
 			if (!events)
 				continue;
@@ -397,17 +401,6 @@ module.exports = {
 
 			callback.apply(null, args);
 		});
-
-		if (this.effects)
-			this.effects.fireEvent(event, args);
-		if (this.quests)
-			this.quests.fireEvent(event, args);
-		if (this.prophecies)
-			this.prophecies.fireEvent(event, args);
-		if (this.inventory)
-			this.inventory.fireEvent(event, args);
-		if (this.spellbook)
-			this.spellbook.fireEvent(event, args);
 	},
 
 	destroy: function () {

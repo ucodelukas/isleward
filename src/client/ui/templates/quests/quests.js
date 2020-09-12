@@ -128,12 +128,12 @@ define([
 		},
 
 		onToggleQuestsVisibility: function (state) {
-			this.shown = state !== 'off';
+			const shouldHide = state === 'off';
 
-			if (this.shown) 
-				this.show();
-			else 
+			if (shouldHide)
 				this.hide();
+			else
+				this.show();
 
 			this.el.removeClass('minimal');
 			if (state === 'minimal')

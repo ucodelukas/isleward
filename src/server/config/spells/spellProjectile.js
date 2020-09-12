@@ -45,7 +45,8 @@ module.exports = {
 				layer: 'projectiles',
 				loop: -1,
 				row: this.row,
-				col: this.col
+				col: this.col,
+				spriteSheet: this.spriteSheet
 			}]
 		};
 
@@ -78,42 +79,47 @@ module.exports = {
 		return true;
 	},
 
+	getAllTargets: function () {
+		const targets = this.obj.aggro.list.map(a => a.obj);
+
+		return targets;
+	},
+
 	castAll: function (action) {
-		let obj = this.obj;
+		const { obj, projectileOffset, particles, row, col, speed } = this;
 
-		let list = this.obj.aggro.list;
-		let lLen = list.length;
-		for (let i = 0; i < lLen; i++) {
-			let target = list[i].obj;
+		const targets = this.getAllTargets();
 
-			let ttl = (Math.sqrt(Math.pow(target.x - obj.x, 2) + Math.pow(target.y - obj.y, 2)) * this.speed) - 50;
+		targets.forEach(t => {
+			let ttl = (Math.sqrt(Math.pow(t.x - obj.x, 2) + Math.pow(t.y - obj.y, 2)) * speed) - 50;
 
 			let projectileConfig = {
-				caster: this.obj.id,
+				caster: obj.id,
 				components: [{
-					idSource: this.obj.id,
-					idTarget: target.id,
+					idSource: obj.id,
+					idTarget: t.id,
 					type: 'projectile',
 					ttl: ttl,
-					projectileOffset: this.projectileOffset,
-					particles: this.particles
+					projectileOffset: projectileOffset,
+					particles: particles
 				}, {
 					type: 'attackAnimation',
 					layer: 'projectiles',
 					loop: -1,
-					row: this.row,
-					col: this.col
+					row: row,
+					col: col,
+					spriteSheet: this.spriteSheet
 				}]
 			};
 
-			this.obj.fireEvent('beforeSpawnProjectile', this, projectileConfig);
+			obj.fireEvent('beforeSpawnProjectile', this, projectileConfig);
 
 			this.sendAnimation(projectileConfig);
 
-			this.sendBump(target);
+			this.sendBump(t);
 
-			this.queueCallback(this.explode.bind(this, target), ttl, null, target);
-		}
+			this.queueCallback(this.explode.bind(this, t), ttl, null, t);
+		});
 	},
 
 	explode: function (target) {

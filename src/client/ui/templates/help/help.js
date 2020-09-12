@@ -9,10 +9,11 @@ define([
 ) {
 	return {
 		tpl: template,
-		centered: true,
 
 		modal: true,
 		hasClose: true,
+
+		isFlex: true,
 
 		postRender: function () {
 			this.onEvent('onKeyDown', this.onKeyDown.bind(this));

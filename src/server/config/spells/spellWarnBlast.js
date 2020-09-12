@@ -17,6 +17,8 @@ module.exports = {
 
 	radius: 1,
 
+	rowOptions: [10, 10, 10, 10, 10, 10, 10, 8, 8, 8, 7, 7, 7],
+
 	cast: function (action) {
 		let obj = this.obj;
 
@@ -93,7 +95,7 @@ module.exports = {
 			components: [{
 				type: 'attackAnimation',
 				destroyObject: true,
-				row: [10, 10, 10, 10, 10, 10, 10, 8, 8, 8, 7, 7, 7][~~(Math.random() * 13)],
+				row: this.rowOptions[~~(Math.random() * this.rowOptions.length)],
 				col: 4,
 				frameDelay: 4 + ~~(Math.random() * 7)
 			}]
