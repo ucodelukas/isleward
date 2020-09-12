@@ -254,7 +254,7 @@ module.exports = {
 	stopAll: function () {
 		this.configs.forEach(c => {
 			if (c.event)
-				this.stopEvent(c);
+				c.event.done = true;
 		});
 	},
 
