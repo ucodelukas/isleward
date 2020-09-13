@@ -64,6 +64,14 @@ module.exports = {
 	updateBase: function () {
 		if (this.castTime > 0) {
 			let action = this.currentAction;
+			if (!action) {
+				io.setAsync({
+					key: new Date(),
+					table: 'error',
+					value: 'no action ' + this.obj.name + ' ' + this.type
+				});
+			}
+
 			if (action && (_.getDeepProperty(action, 'target.destroyed') || !this.canCast(action.target))) {
 				this.currentAction = null;
 				this.castTime = 0;
