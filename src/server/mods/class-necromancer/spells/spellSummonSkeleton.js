@@ -15,6 +15,8 @@ module.exports = {
 	killMinionsOnDeath: true,
 	minionsDieOnAggroClear: false,
 
+	maxSummon: 1,
+
 	minions: [],
 
 	name: 'Skeletal Minion',
@@ -31,6 +33,9 @@ module.exports = {
 	cast: function (action) {
 		if (this.killMinionsBeforeSummon)
 			this.killMinions();
+
+		if (this.minions.length >= this.maxSummon)
+			return false;
 
 		let obj = this.obj;
 		let target = action.target;
