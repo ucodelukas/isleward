@@ -31,7 +31,7 @@ define([
 			for (let i = 0; i < oLen; i++) {
 				let o = objects[i];
 				
-				if ((!o.stats) || (o.nonSelectable) || (o === window.player) || (!o.sprite.visible))
+				if (!o.stats || o.nonSelectable || o === window.player || !o.sprite || !o.sprite.visible)
 					continue;
 
 				let dx = Math.abs(o.x - x);

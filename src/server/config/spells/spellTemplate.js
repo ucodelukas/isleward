@@ -62,17 +62,15 @@ module.exports = {
 	},
 
 	updateBase: function () {
+		//It's possible that we rezoned midway through casting (map regen)
+		// We'll have a hanging cast bar but at least we won't crash
+		if (this.castTime > 0 && !this.currentAction)
+			this.castTime = 0;
+
 		if (this.castTime > 0) {
 			let action = this.currentAction;
-			if (!action) {
-				io.setAsync({
-					key: new Date(),
-					table: 'error',
-					value: 'no action ' + this.obj.name + ' ' + this.type
-				});
-			}
 
-			if (action && (_.getDeepProperty(action, 'target.destroyed') || !this.canCast(action.target))) {
+			if (_.getDeepProperty(action, 'target.destroyed') || !this.canCast(action.target)) {
 				this.currentAction = null;
 				this.castTime = 0;
 				this.obj.syncer.set(false, null, 'casting', 0);
