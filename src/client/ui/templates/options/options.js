@@ -29,26 +29,34 @@ define([
 		postRender: function () {
 			this.onEvent('onOpenOptions', this.show.bind(this));
 
-			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it
-			this.find('.item.screen .name')[0].addEventListener('click', this.toggleScreen.bind(this));
 			this.find('.item.nameplates .name').on('click', events.emit.bind(events, 'onUiKeyDown', { key: 'v' }));
 			this.find('.item.quests .name').on('click', this.toggleQuests.bind(this));
 			this.find('.item.events .name').on('click', this.toggleEvents.bind(this));
 			this.find('.item.quality .name').on('click', this.toggleQualityIndicators.bind(this));
 			this.find('.item.unusable .name').on('click', this.toggleUnusableIndicators.bind(this));
 			this.find('.item.lastChannel .name').on('click', this.toggleLastChannel.bind(this));
+			this.find('.item.partyView .name').on('click', this.togglePartyView.bind(this));
+
+			//Can only toggle fullscreen directly in a listener, not deferred the way jQuery does it,
+			// so we register this handler in a different way
+			this.find('.item.screen .name')[0].addEventListener('click', this.toggleScreen.bind(this));
 
 			this.find('.item.volume .btn').on('click', this.modifyVolume.bind(this));
 
-			this.onEvent('onResize', this.onResize.bind(this));
-			this.onEvent('onUiKeyDown', this.onKeyDown.bind(this));
-			this.onEvent('onToggleNameplates', this.onToggleNameplates.bind(this));
-			this.onEvent('onToggleQualityIndicators', this.onToggleQualityIndicators.bind(this));
-			this.onEvent('onToggleUnusableIndicators', this.onToggleUnusableIndicators.bind(this));
-			this.onEvent('onToggleEventsVisibility', this.onToggleEventsVisibility.bind(this));
-			this.onEvent('onToggleQuestsVisibility', this.onToggleQuestsVisibility.bind(this));
-			this.onEvent('onToggleLastChannel', this.onToggleLastChannel.bind(this));
-			this.onEvent('onVolumeChange', this.onVolumeChange.bind(this));
+			[
+				'onResize',
+				'onUiKeyDown',
+				'onToggleNameplates',
+				'onToggleQualityIndicators',
+				'onToggleUnusableIndicators',
+				'onToggleEventsVisibility',
+				'onToggleQuestsVisibility',
+				'onToggleLastChannel',
+				'onVolumeChange',
+				'onTogglePartyView'
+			].forEach(e => {
+				this.onEvent(e, this[e].bind(this));
+			});
 
 			this.find('.item').on('click', events.emit.bind(events, 'onClickOptionsItem'));
 		},
@@ -169,6 +177,18 @@ define([
 			this.find('.item.lastChannel .value').html(newValue);
 		},
 
+		togglePartyView: function () {
+			config.toggle('partyView');
+
+			events.emit('onTogglePartyView', config.partyView);
+		},
+
+		onTogglePartyView: function (state) {
+			const newValue = state[0].toUpperCase() + state.substr(1);
+
+			this.find('.item.partyView .value').html(newValue);
+		},
+
 		onVolumeChange: function ({ soundType, volume }) {
 			const item = this.find(`.item.volume.${soundType}`);
 			
@@ -215,7 +235,7 @@ define([
 			this.build();
 		},
         
-		onKeyDown: function (keyEvent) {
+		onUiKeyDown: function (keyEvent) {
 			const { key } = keyEvent;
 	
 			if (key === 'v') {

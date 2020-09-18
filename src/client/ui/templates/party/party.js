@@ -6,7 +6,8 @@ define([
 	'html!ui/templates/party/template',
 	'css!ui/templates/party/styles',
 	'html!ui/templates/party/templateInvite',
-	'html!ui/templates/party/templatePartyMember'
+	'html!ui/templates/party/templatePartyMember',
+	'js/config'
 ], function (
 	events,
 	client,
@@ -15,7 +16,8 @@ define([
 	template,
 	styles,
 	templateInvite,
-	templatePartyMember
+	templatePartyMember,
+	config
 ) {
 	return {
 		tpl: template,
@@ -31,6 +33,9 @@ define([
 			this.onEvent('onGetConnectedPlayer', this.onGetConnectedPlayer.bind(this));
 
 			this.onEvent('onGetPartyStats', this.onGetPartyStats.bind(this));
+
+			this.onEvent('onTogglePartyView', this.onTogglePartyView.bind(this));
+			this.onTogglePartyView(config.partyView);
 		},
 
 		onGetConnectedPlayer: function (msg) {
@@ -41,23 +46,21 @@ define([
 			if (!(msg instanceof Array))
 				msg = [msg];
 
-			msg.forEach(function (m) {
+			msg.forEach(m => {
 				if (party.indexOf(m.id) === -1)
 					return;
 
 				let zone = m.zone;
 				if (m.id === window.player.serverId) {
-					party.forEach(function (p) {
-						let player = globals.onlineList.find(function (o) {
-							return (o.id === p);
-						});
+					party.forEach(p => {
+						let player = globals.onlineList.find(o => o.id === p);
 
 						let el = this.find('.member[memberId="' + p + '"]');
 						el.removeClass('differentZone');
 
 						if (player.zone !== zone)
 							el.addClass('differentZone');
-					}, this);
+					});
 				} else {
 					let el = this.find('.member[memberId="' + m.id + '"]');
 					el.removeClass('differentZone');
@@ -67,7 +70,7 @@ define([
 
 					el.find('.txtLevel').html('level: ' + m.level);
 				}
-			}, this);
+			});
 		},
 
 		onGetPartyStats: function (id, stats) {
@@ -110,13 +113,11 @@ define([
 			if (!party)
 				return;
 
-			party.forEach(function (p) {
+			party.forEach(p => {
 				if (p === window.player.serverId)
 					return;
 
-				let player = globals.onlineList.find(function (o) {
-					return (o.id === p);
-				});
+				let player = globals.onlineList.find(o => o.id === p);
 				let playerName = player ? player.name : 'unknown';
 				let level = 'level: ' + (player ? player.level : '?');
 
@@ -133,12 +134,10 @@ define([
 					el.addClass('differentZone');
 
 				//Find stats
-				let memberObj = objects.objects.find(function (o) {
-					return (o.serverId === p);
-				});
+				let memberObj = objects.objects.find(o => o.serverId === p);
 				if ((memberObj) && (memberObj.stats))
 					this.onGetPartyStats(p, memberObj.stats.values);
-			}, this);
+			});
 		},
 
 		showContext: function (charName, id, e) {
@@ -161,9 +160,7 @@ define([
 			if (this.invite)
 				this.destroyInvite();
 
-			let sourcePlayer = globals.onlineList.find(function (o) {
-				return (o.id === sourceId);
-			});
+			let sourcePlayer = globals.onlineList.find(o => o.id === sourceId);
 
 			let html = templateInvite
 				.replace('$NAME$', sourcePlayer.name);
@@ -171,7 +168,7 @@ define([
 			let el = $(html)
 				.appendTo(this.el);
 			el
-				.find('[class^="btn"]')
+				.find('.btn')
 				.on('click', this.destroyInvite.bind(this));
 
 			this.invite = {
@@ -202,6 +199,7 @@ define([
 				id: this.invite.fromId
 			});
 		},
+
 		declineInvite: function () {
 			client.request({
 				cpn: 'social',
@@ -220,11 +218,17 @@ define([
 				data: id
 			});
 		},
+
 		leaveParty: function () {
 			client.request({
 				cpn: 'social',
 				method: 'leaveParty'
 			});
+		},
+
+		onTogglePartyView: function (state) {
+			this.el.removeClass('full compact minimal');
+			this.el.addClass(state);
 		}
 	};
 });
