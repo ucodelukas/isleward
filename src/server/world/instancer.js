@@ -57,9 +57,8 @@ module.exports = {
 
 			map.randomMap.init(fakeInstance);
 			this.regenBusy = true;
-		}
-
-		_.log('(M ' + map.name + '): Ready');
+		} else
+			_.log('(M ' + map.name + '): Ready');
 
 		map.clientMap.zoneId = this.zoneId;
 
@@ -131,6 +130,8 @@ module.exports = {
 		this.addQueue.forEach(q => this.addObject(q));
 
 		this.addQueue = [];
+
+		_.log('(M ' + map.name + '): Ready');
 	},
 
 	tick: function () {
