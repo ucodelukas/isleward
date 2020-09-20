@@ -118,10 +118,8 @@ module.exports = {
 		//Try a generation
 		const isValid = map.randomMap.generate();
 
-		if (!isValid) {
-			console.log('nope for ', map.name);
+		if (!isValid)
 			return;
-		}
 
 		map.seed = _.getGuid();
 
