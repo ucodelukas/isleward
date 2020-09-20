@@ -18,6 +18,9 @@ module.exports = {
 	zoneId: -1,
 	speed: consts.tickTime,
 
+	//During regens, adds are placed in a queue
+	addQueue: [],
+
 	lastTime: 0,
 
 	init: function (args) {
@@ -53,7 +56,7 @@ module.exports = {
 				map.oldCollisionMap = map.collisionMap;
 
 			map.randomMap.init(fakeInstance);
-			this.regenMap();
+			this.regenBusy = true;
 		}
 
 		_.log('(M ' + map.name + '): Ready');
@@ -65,56 +68,82 @@ module.exports = {
 		this.tick();
 	},
 
-	regenMap: function (respawnMap, respawnPos) {
-		//Hack to wait for all player objects to be destroyed
-		const doRegen = () => {
-			const players = objects.objects.filter(o => o.player);
-			players.forEach(p => {
-				if (p.destroyed)
-					return;
+	tickRegen: function () {
+		const { respawnPos, respawnMap } = this;
 
-				p.fireEvent('beforeRezone');
-				p.destroyed = true;
+		//Ensure that all players are gone
+		const players = objects.objects.filter(o => o.player);
+		players.forEach(p => {
+			if (p.destroyed)
+				return;
 
-				const simpleObj = p.getSimple(true, false, true);
+			p.fireEvent('beforeRezone');
+			p.destroyed = true;
 
+			const simpleObj = p.getSimple(true, false, true);
+
+			if (respawnPos) {
 				const { x, y } = respawnPos;
 				simpleObj.x = x;
 				simpleObj.y = y;
-
-				process.send({
-					method: 'rezone',
-					id: p.serverId,
-					args: {
-						obj: simpleObj,
-						newZone: respawnMap,
-						keepPos: true
-					}
-				});
-			});
-
-			if (players.length) {
-				setTimeout(doRegen, 1000);
-
-				return;
 			}
 
-			spawners.reset();
+			process.send({
+				method: 'rezone',
+				id: p.serverId,
+				args: {
+					obj: simpleObj,
+					newZone: respawnMap,
+					keepPos: true
+				}
+			});
+		});
 
-			objects.objects.length = 0;
-			objects.objects = [];
+		//Only objects and syncer should update if there are players
+		if (players.length) {
+			objects.update();
+			syncer.update();
 
-			events.stopAll();
+			return;
+		}
 
-			map.randomMap.generate();
+		//Clear stuff
+		spawners.reset();
 
-			map.seed = _.getGuid();
-		};
+		objects.objects.length = 0;
+		objects.objects = [];
 
-		doRegen();
+		events.stopAll();
+
+		//Try a generation
+		const isValid = map.randomMap.generate();
+
+		if (!isValid) {
+			console.log('nope for ', map.name);
+			return;
+		}
+
+		map.seed = _.getGuid();
+
+		//If it succeeds, set regenBusy to false and reset vars
+		this.regenBusy = false;
+		this.respawnPos = null;
+		this.respawnMap = null;
+
+		this.addQueue.forEach(q => this.addObject(q));
+
+		this.addQueue = [];
 	},
 
 	tick: function () {
+		if (this.regenBusy) {
+			this.tickRegen();
+
+			setTimeout(this.tick.bind(this), this.speed);
+
+			return;
+		}
+
 		events.update();
 		objects.update();
 		resourceSpawner.update();
@@ -126,6 +155,12 @@ module.exports = {
 	},
 
 	addObject: function (msg) {
+		if (this.regenBusy) {
+			this.addQueue.push(msg);
+
+			return;
+		}
+
 		let obj = msg.obj;
 		obj.serverId = obj.id;
 		delete obj.id;

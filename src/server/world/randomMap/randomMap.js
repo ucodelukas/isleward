@@ -61,12 +61,13 @@ module.exports = {
 
 		let startRoom = buildRoom(this, startTemplate);
 
-		if (!isValidDungeon(this)) 
-			this.generate(instance);
-		else {
-			this.offsetRooms(startRoom);
-			buildMap(this, instance, startRoom);
-		}
+		if (!isValidDungeon(this))
+			return false;
+
+		this.offsetRooms(startRoom);
+		buildMap(this, instance, startRoom);
+
+		return true;
 
 		//To spawn in another room
 		/*const spawnRoom = this.rooms.find(t => t.template.properties.end);
