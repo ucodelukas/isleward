@@ -102,13 +102,13 @@ module.exports = {
 	completeGathering: function (gathering, isFish) {
 		let resourceNode = gathering.resourceNode;
 		let gatherResult = extend({
-			obj: gathering
+			obj: gathering,
+			source: this.obj
 		}, {
 			nodeType: resourceNode.nodeType,
 			blueprint: resourceNode.blueprint,
 			xp: resourceNode.xp,
-			items: gathering.inventory.items,
-			source: this.obj
+			items: gathering.inventory.items
 		});
 		this.obj.instance.eventEmitter.emitNoSticky('beforeGatherResourceComplete', gatherResult);
 		this.obj.fireEvent('beforeGatherResourceComplete', gatherResult);
