@@ -486,10 +486,13 @@ define([
 							rendered.spliceWhere(s => s === sprite);
 						}
 
-						newHidden.push({
-							x: i,
-							y: j
-						});
+						if (cell.visible) {
+							cell.visible = false;
+							newHidden.push({
+								x: i,
+								y: j
+							});
+						}
 
 						const hasFake = cell.some(c => c[0] === '-');
 						if (hasFake) {
@@ -510,10 +513,13 @@ define([
 							rendered.spliceWhere(s => s === sprite);
 						}
 
-						newVisible.push({
-							x: i,
-							y: j
-						});
+						if (!cell.visible) {
+							cell.visible = true;
+							newVisible.push({
+								x: i,
+								y: j
+							});
+						}
 
 						const hasNonFake = cell.some(c => c[0] !== '-');
 						if (hasNonFake) {
