@@ -14,7 +14,7 @@ module.exports = {
 	},
 	objects: {
 		'sun carp school': {
-			max: 90,
+			max: 9,
 			type: 'fish',
 			quantity: [6, 12]
 		},
