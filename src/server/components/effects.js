@@ -246,6 +246,12 @@ module.exports = {
 		}
 	},
 
+	getEffectByType: function (effectType) {
+		const effect = this.effects.find(e => e.type === effectType);
+
+		return effect;
+	},
+
 	fireEvent: function (event, args) {
 		let effects = this.effects;
 		let eLen = effects.length;
