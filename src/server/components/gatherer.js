@@ -55,7 +55,7 @@ module.exports = {
 		}
 
 		this.gatheringTtlMax = ttlMax;
-		this.gatheringTtl = gatheringTtlMax;
+		this.gatheringTtl = ttlMax;
 	},
 
 	update: function () {
