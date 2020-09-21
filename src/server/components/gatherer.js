@@ -16,27 +16,33 @@ module.exports = {
 	},
 
 	gather: function () {
-		if (this.gathering)
+		const { gathering, nodes, defaultTtlMax, gatheringTtlMax, obj } = this;
+		const { equipment, stats, instance: { eventEmitter } } = obj;
+
+		if (gathering)
+			return;
+		else if (!nodes.length)
 			return;
 
-		let nodes = this.nodes;
-		if (nodes.length === 0)
-			return;
+		const [ node ] = nodes;
 
-		const { obj: { equipment, stats } } = this;
-
-		let firstNode = nodes[0];
-
-		if (!this.hasSpace(firstNode)) {
+		if (!this.hasSpace(node)) {
 			this.sendAnnouncement('Your bags are too full to gather any more resources.');
 			return;
 		}
 
-		this.gathering = firstNode;
+		const eGather = {
+			node,
+			obj: this
+		};
+		eventEmitter.emitNoSticky('beforeGatherResource', eGather);
+		obj.fireEvent('beforeGatherResource', eGather);
 
-		let ttlMax = firstNode.resourceNode.ttl || this.defaultTtlMax;
+		this.gathering = node;
 
-		if (firstNode.resourceNode.nodeType === 'fish') {
+		let ttlMax = node.resourceNode.ttl || defaultTtlMax;
+
+		if (node.resourceNode.nodeType === 'fish') {
 			if (equipment.isSlotEmpty('tool')) {
 				this.sendAnnouncement('You need a fishing rod to fish');
 				this.gathering = null;
@@ -49,7 +55,7 @@ module.exports = {
 		}
 
 		this.gatheringTtlMax = ttlMax;
-		this.gatheringTtl = this.gatheringTtlMax;
+		this.gatheringTtl = gatheringTtlMax;
 	},
 
 	update: function () {
@@ -101,10 +107,11 @@ module.exports = {
 			nodeType: resourceNode.nodeType,
 			blueprint: resourceNode.blueprint,
 			xp: resourceNode.xp,
-			items: gathering.inventory.items
+			items: gathering.inventory.items,
+			source: this.obj
 		});
-		this.obj.instance.eventEmitter.emitNoSticky('beforeGatherResource', gatherResult, this.obj);
-		this.obj.fireEvent('beforeGatherResource', gatherResult, this.obj);
+		this.obj.instance.eventEmitter.emitNoSticky('beforeGatherResourceComplete', gatherResult);
+		this.obj.fireEvent('beforeGatherResourceComplete', gatherResult);
 
 		this.obj.syncer.set(false, 'gatherer', 'progress', 100);
 
