@@ -583,11 +583,19 @@ define([
 			highY = Math.min(h - 1, highY + 10);
 
 			for (let i = lowX; i < highX; i++) {
+				const mapRow = map[i];
 				let spriteRow = sprites[i];
 				let outside = ((i >= x - sw) && (i < x + sw));
 				for (let j = lowY; j < highY; j++) {
 					if ((outside) && (j >= y - sh) && (j < y + sh))
 						continue;
+
+					const cell = mapRow[j];
+
+					if (cell.visible) {
+						cell.visible = false;
+						newHidden.push({ x: i, y: j });
+					}
 
 					let list = spriteRow[j];
 					let lLen = list.length;
