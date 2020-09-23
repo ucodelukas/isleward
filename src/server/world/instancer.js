@@ -56,7 +56,7 @@ module.exports = {
 				map.oldCollisionMap = map.collisionMap;
 
 			map.randomMap.init(fakeInstance);
-			this.regenBusy = true;
+			this.startRegen();
 		} else
 			_.log('(M ' + map.name + '): Ready');
 
@@ -65,6 +65,25 @@ module.exports = {
 		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
 
 		this.tick();
+	},
+
+	startRegen: function (respawnMap, respawnPos) {
+		this.addQueue = [];
+
+		this.regenBusy = true;
+
+		this.respawnMap = respawnMap;
+		this.respawnPos = respawnPos;
+	},
+
+	queueMessage: function (msg) {
+		this.unqueueMessage(msg);
+
+		this.addQueue.push(msg);
+	},
+
+	unqueueMessage: function (msg) {
+		this.addQueue.spliceWhere(q => q.obj.id === msg.obj.id);
 	},
 
 	tickRegen: function () {
@@ -155,7 +174,7 @@ module.exports = {
 
 	addObject: function (msg) {
 		if (this.regenBusy) {
-			this.addQueue.push(msg);
+			this.queueMessage(msg);
 
 			return;
 		}
@@ -270,6 +289,12 @@ module.exports = {
 	},
 
 	removeObject: async function (msg) {
+		if (this.regenBusy) {
+			this.unqueueMessage(msg);
+
+			return;
+		}
+
 		let obj = msg.obj;
 		obj = objects.find(o => o.serverId === obj.id);
 		if (!obj) {
