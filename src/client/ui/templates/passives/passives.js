@@ -1,4 +1,4 @@
-let zoom = window.devicePixelRatio;
+let zoom = 1;
 if (isMobile)
 	zoom /= 2;
 
