@@ -29,6 +29,13 @@ module.exports = {
 	},
 
 	fixItems: function (items) {
+		//There are some bugged mounts with cdMax: 0. Set that to 86 as 86 is the new CD (down from 171)
+		items
+			.filter(i => i.type === 'mount')
+			.forEach(i => {
+				i.cdMax = 86;
+			});
+
 		items
 			.filter(i => (i.name === 'Elixir of Infatuation'))
 			.forEach(function (i) {
