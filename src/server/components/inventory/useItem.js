@@ -1,8 +1,8 @@
 const learnRecipe = require('./learnRecipe');
 
-const isOnCooldown = (obj, cpnInv, item) => {
+const isOnCooldown = (obj, cpnInv, { item, cd }) => {
 	if (item.cdMax) {
-		if (item.cd) {
+		if (cd) {
 			process.send({
 				method: 'events',
 				data: {
@@ -24,13 +24,13 @@ const isOnCooldown = (obj, cpnInv, item) => {
 	return false;
 };
 
-const placeItemOnCooldown = (obj, cpnInv, item) => {
-	item.cd = item.cdMax;
+const placeItemOnCooldown = (obj, cpnInv, item, { cdMax }) => {
+	item.cd = cdMax;
 
 	//Find similar items and put them on cooldown too
 	cpnInv.items.forEach(function (i) {
 		if (i.name === item.name && i.cdMax === item.cdMax)
-			i.cd = i.cdMax;
+			i.cd = cdMax;
 	});
 };
 
@@ -41,11 +41,20 @@ module.exports = async (cpnInv, itemId) => {
 
 	let obj = cpnInv.obj;
 
-	if (isOnCooldown(obj, cpnInv, item))
+	const beforeGetCooldownMessage = {
+		obj,
+		item,
+		cd: item.cd
+	};
+	obj.instance.eventEmitter.emit('onBeforeGetItemCd', beforeGetCooldownMessage);
+	obj.fireEvent('onBeforeGetItemCd', beforeGetCooldownMessage);
+
+	if (isOnCooldown(obj, cpnInv, beforeGetCooldownMessage))
 		return;
 
 	let result = {
-		success: true
+		success: true,
+		cdMax: item.cdMax
 	};
 	obj.instance.eventEmitter.emit('onBeforeUseItem', obj, item, result);
 	obj.fireEvent('onBeforeUseItem', item, result);
@@ -53,7 +62,7 @@ module.exports = async (cpnInv, itemId) => {
 	if (!result.success)
 		return;
 
-	placeItemOnCooldown(obj, cpnInv, item);
+	placeItemOnCooldown(obj, cpnInv, item, result);
 
 	if (item.recipe) {
 		const didLearn = await learnRecipe(obj, item);
