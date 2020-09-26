@@ -193,6 +193,9 @@ define([
 
 			let container = this.find('.list');
 
+			const [ { scrollHeight, clientHeight, scrollTop } ] = container;
+			const isAtMaxScroll = scrollTop >= (scrollHeight - clientHeight);
+
 			messages.forEach(m => {
 				this.trackHistory(m);
 
@@ -246,7 +249,7 @@ define([
 				}
 			});
 
-			if (!this.el.hasClass('typing'))
+			if (!this.el.hasClass('typing') || isAtMaxScroll)
 				container.scrollTop(9999999);
 		},
 
