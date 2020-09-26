@@ -191,6 +191,11 @@ module.exports = {
 			}*/
 		});
 
+		//Hack to disallow low level mobs from having any lifeOnHit
+		// since that makes it very difficult (and confusing) for low level players
+		if (level <= 3)
+			mob.stats.values.lifeOnHit = 0;
+
 		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));
 	}
 };
