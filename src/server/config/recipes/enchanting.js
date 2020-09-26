@@ -59,7 +59,7 @@ module.exports = [{
 	needItems: [{
 		info: 'Pick an item to reslot',
 		withProps: ['slot'],
-		withoutProps: ['noAugment', 'effects']
+		withoutProps: ['noAugment', 'effects', 'factions']
 	}],
 	craftAction: reslot
 }, {
