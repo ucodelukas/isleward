@@ -79,7 +79,9 @@ module.exports = (cpnInv, ownerName, killSource) => {
 	}
 
 	playerObject.fireEvent('beforeTargetDeath', obj, cpnInv.items);
+
 	obj.instance.eventEmitter.emit('onBeforeDropBag', obj, cpnInv.items, killSource);
+	obj.fireEvent('onBeforeDropBag', cpnInv.items, killSource);
 
 	if (cpnInv.items.length > 0)
 		cpnInv.createBag(obj.x, obj.y, cpnInv.items, ownerName);
