@@ -16,7 +16,7 @@ module.exports = {
 	},
 
 	gather: function () {
-		const { gathering, nodes, defaultTtlMax, gatheringTtlMax, obj } = this;
+		const { gathering, nodes, defaultTtlMax, obj } = this;
 		const { equipment, stats, instance: { eventEmitter } } = obj;
 
 		if (gathering)
