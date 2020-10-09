@@ -105,8 +105,14 @@ module.exports = {
 					}
 				}
 
-				if (effect.destroy)
+				if (effect.destroy) {
+					this.obj.fireEvent('beforeDestroyEffect', effect);
+
+					if (effect.events && effect.events.beforeDestroy)
+						effect.events.beforeDestroy(effect);
+
 					effect.destroy();
+				}
 
 				this.syncRemove(effect.id, effect.type);
 				effects.splice(i, 1);
@@ -298,6 +304,11 @@ module.exports = {
 				effects.splice(i, 1);
 				eLen--;
 				i--;
+
+				this.obj.fireEvent('beforeDestroyEffect', e);
+
+				if (e.events && e.events.beforeDestroy)
+					e.events.beforeDestroy(e);
 
 				if (e.destroy)
 					e.destroy();
