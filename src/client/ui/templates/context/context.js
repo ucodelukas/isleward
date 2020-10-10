@@ -57,11 +57,19 @@ define([
 				}
 			});
 
+			const pos = {
+				left: e.clientX,
+				top: e.clientY
+			};
+
+			//Check for a customEvent, like long touch
+			if (e.detail) {
+				pos.left = e.detail.clientX;
+				pos.top = e.detail.clientY;
+			}
+
 			this.el
-				.css({
-					left: e.clientX,
-					top: e.clientY
-				})
+				.css(pos)
 				.show();
 		},
 
