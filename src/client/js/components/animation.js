@@ -43,7 +43,7 @@ define([
 
 			this.frameDelayCd = frameDelay;
 
-			this.setSprite();		
+			this.setSprite();
 		},
 
 		setSprite: function () {
