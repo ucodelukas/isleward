@@ -63,7 +63,7 @@ define([
 			};
 
 			//Check for a customEvent, like long touch
-			if (e.detail) {
+			if (_.isIos()) {
 				pos.left = e.detail.clientX;
 				pos.top = e.detail.clientY;
 			}
