@@ -26,6 +26,8 @@ define([
 		modal: true,
 		hasClose: true,
 
+		isFlex: true,
+
 		postRender: function () {
 			this.onEvent('onOpenOptions', this.show.bind(this));
 
