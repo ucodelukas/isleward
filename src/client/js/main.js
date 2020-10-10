@@ -30,15 +30,26 @@ define([
 		return () => requestAnimationFrame(updateMethod);
 	};
 
+	const loadLongPress = async () => {
+		return new Promise(res => {
+			require(['longPress'], res);
+		});
+	};
+
 	return {
 		hasFocus: true,
 
 		lastRender: 0,
 		msPerFrame: ~~(1000 / 60),
 
-		init: function () {
-			if (isMobile)			
+		init: async function () {
+			if (isMobile) {
 				$('.ui-container').addClass('mobile');
+
+				//If we're on an ios device, we need to load longPress since that polyfills contextmenu for us
+				if (_.isIos())
+					await loadLongPress();
+			}
 
 			client.init(this.onClientReady.bind(this));
 		},
