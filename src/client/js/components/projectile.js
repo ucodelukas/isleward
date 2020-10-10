@@ -88,8 +88,8 @@ define([
 			let target = this.target;
 
 			//Cater for offset (which isn't tile based yet)
-			const tx = target.x + (target.offsetX / scale);
-			const ty = target.y + (target.offsetY / scale);
+			const tx = target.x + ((target.offsetX || 0) / scale);
+			const ty = target.y + ((target.offsetY || 0) / scale);
 
 			let dx = tx - this.x;
 			let dy = ty - this.y;
