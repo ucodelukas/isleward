@@ -185,7 +185,7 @@ module.exports = {
 		if (config.oldDescription)
 			config.description = config.oldDescription;
 
-		let event = {
+		const event = {
 			id: this.nextId++,
 			config: extend({}, config),
 			eventManager: this,
@@ -198,6 +198,10 @@ module.exports = {
 			age: 0
 		};
 		event.config.event = event;
+
+		const onStart = _.getDeepProperty(event, ['config', 'events', 'onStart']);
+		if (onStart)
+			onStart(this, event);
 
 		return event;
 	},
@@ -304,6 +308,10 @@ module.exports = {
 				p.destroy();
 			}
 		});
+
+		const onStop = _.getDeepProperty(event, ['config', 'events', 'onStop']);
+		if (onStop)
+			onStop(this, event);
 
 		delete config.event;
 	},
