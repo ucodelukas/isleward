@@ -31,18 +31,19 @@ module.exports = {
 		map.init(args);
 
 		const fakeInstance = {
-			objects: objects,
-			syncer: syncer,
-			physics: physics,
+			objects,
+			syncer,
+			physics,
 			zoneId: this.zoneId,
-			spawners: spawners,
-			questBuilder: questBuilder,
-			events: events,
+			spawners,
+			questBuilder,
+			events,
 			zone: map.zone,
-			mail: mail,
-			map: map,
-			scheduler: scheduler,
-			eventEmitter: eventEmitter
+			mail,
+			map,
+			scheduler,
+			eventEmitter,
+			resourceSpawner
 		};
 
 		this.instances.push(fakeInstance);
