@@ -94,6 +94,11 @@ module.exports = {
 			mob.addComponent('trade', blueprint.properties.cpnTrade);
 
 		this.scale(mob, blueprint.level);
+
+		mob.instance.eventEmitter.emit('onAfterBuildMob', {
+			zoneName,
+			mob
+		});
 	},
 
 	scale: function (mob, level) {
