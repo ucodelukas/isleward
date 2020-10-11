@@ -427,7 +427,8 @@ module.exports = {
 
 		this.obj.fireEvent('afterCastSpell', {
 			castSuccess: success,
-			spell
+			spell,
+			action
 		});
 
 		//Null means we didn't fail but are initiating casting
