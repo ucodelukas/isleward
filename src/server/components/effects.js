@@ -92,6 +92,16 @@ module.exports = {
 		}
 	},
 
+	destroyEffect: function (effect) {
+		this.obj.fireEvent('beforeDestroyEffect', effect);
+
+		if (effect.events && effect.events.beforeDestroy)
+			effect.events.beforeDestroy(effect);
+
+		if (effect.destroy)
+			effect.destroy();
+	},
+
 	events: {
 		beforeRezone: function (forceDestroy) {
 			let effects = this.effects;
@@ -105,14 +115,7 @@ module.exports = {
 					}
 				}
 
-				if (effect.destroy) {
-					this.obj.fireEvent('beforeDestroyEffect', effect);
-
-					if (effect.events && effect.events.beforeDestroy)
-						effect.events.beforeDestroy(effect);
-
-					effect.destroy();
-				}
+				this.destroyEffect(effect);
 
 				this.syncRemove(effect.id, effect.type);
 				effects.splice(i, 1);
@@ -226,8 +229,8 @@ module.exports = {
 		for (let i = 0; i < eLen; i++) {
 			let effect = effects[i];
 			if (effect === checkEffect) {
-				if (effect.destroy)
-					effect.destroy();
+				this.destroyEffect(effect);
+
 				this.syncRemove(effect.id, effect.type, noMsg || effect.noMsg);
 				effects.splice(i, 1);
 
@@ -241,11 +244,10 @@ module.exports = {
 		for (let i = 0; i < eLen; i++) {
 			let effect = effects[i];
 			if (effect.type === effectName) {
+				this.destroyEffect(effect);
+
 				this.syncRemove(effect.id, effect.type, noMsg || effects.noMsg);
 				effects.splice(i, 1);
-
-				if (effect.destroy)
-					effect.destroy();
 				
 				return effect;
 			}
@@ -305,13 +307,7 @@ module.exports = {
 				eLen--;
 				i--;
 
-				this.obj.fireEvent('beforeDestroyEffect', e);
-
-				if (e.events && e.events.beforeDestroy)
-					e.events.beforeDestroy(e);
-
-				if (e.destroy)
-					e.destroy();
+				this.destroyEffect(e);
 
 				this.syncRemove(e.id, e.type, e.noMsg);
 			}
