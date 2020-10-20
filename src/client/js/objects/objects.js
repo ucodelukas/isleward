@@ -101,7 +101,8 @@ define([
 					o.destroy();
 			}
 
-			window.player.offEvents();
+			if (window.player)
+				window.player.offEvents();
 		},
 
 		onGetObject: function (obj) {

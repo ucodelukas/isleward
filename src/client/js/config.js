@@ -12,10 +12,12 @@ define([
 		unusableIndicators: 'off',
 		rememberChatChannel: true,
 		soundVolume: 100,
-		musicVolume: 100
+		musicVolume: 100,
+		partyView: 'full'
 	};
 
 	const valueChains = {
+		partyView: ['full', 'compact', 'minimal'],
 		showQuests: ['on', 'minimal', 'off'],
 		qualityIndicators: ['border', 'bottom', 'background', 'off'],
 		unusableIndicators: ['off', 'border', 'top', 'background']

@@ -56,7 +56,7 @@ module.exports = {
 		let nodeId = msg.nodeId;
 		let node = passiveTree.nodes.find(n => (n.id === nodeId));
 
-		if (node.spiritStart)
+		if (!node || node.spiritStart)
 			return;
 
 		let linked = passiveTree.links.some(function (l) {

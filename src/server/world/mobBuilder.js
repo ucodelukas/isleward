@@ -94,6 +94,11 @@ module.exports = {
 			mob.addComponent('trade', blueprint.properties.cpnTrade);
 
 		this.scale(mob, blueprint.level);
+
+		mob.instance.eventEmitter.emit('onAfterBuildMob', {
+			zoneName,
+			mob
+		});
 	},
 
 	scale: function (mob, level) {
@@ -190,6 +195,11 @@ module.exports = {
 				console.log('');
 			}*/
 		});
+
+		//Hack to disallow low level mobs from having any lifeOnHit
+		// since that makes it very difficult (and confusing) for low level players
+		if (level <= 3)
+			mob.stats.values.lifeOnHit = 0;
 
 		['hp', 'hpMax', 'mana', 'manaMax', 'level'].forEach(s => mob.syncer.setObject(false, 'stats', 'values', s, statValues[s]));
 	}

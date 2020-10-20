@@ -5,6 +5,9 @@ define([
 	events,
 	renderer
 ) {
+	const hpBarPadding = scaleMult;
+	const hpBarHeight = scaleMult;
+
 	return {
 		type: 'stats',
 
@@ -44,33 +47,38 @@ define([
 		},
 
 		updateHpSprite: function () {
-			if (this.obj.dead)
+			const { obj: { x, y, dead, sprite } } = this;
+
+			if (dead)
 				return;
 
-			let obj = this.obj;
+			//By default, hp sprites are 10px higher than the owner object's sprite. Keeping in
+			// mind that bigger sprites always have their 'origin' in the bottom middle tile
+			const spriteHeight = sprite ? sprite.height : scale;
+			const spriteWidth = sprite ? sprite.width : scale;
 
-			let yOffset = -12;
-			let sprite = this.obj.sprite;
-			if (sprite)
-				yOffset = (sprite.height / 2) - 10;
+			const xOffset = -(spriteWidth - scale) / 2;
+			const yOffset = -(spriteHeight - scale) - (scaleMult * 2);
 
-			let x = obj.x * scale;
-			let y = (obj.y * scale) - yOffset;
+			const hpBarWidth = spriteWidth - (hpBarPadding * 2);
+
+			const newX = (x * scale) + hpBarPadding + xOffset;
+			const newY = (y * scale) + yOffset;
 
 			renderer.moveRectangle({
 				sprite: this.hpSprite,
-				x: x + 4,
-				y: y,
-				w: (scale - 8),
-				h: 5
+				x: newX,
+				y: newY,
+				w: hpBarWidth,
+				h: hpBarHeight
 			});
 
 			renderer.moveRectangle({
 				sprite: this.hpSpriteInner,
-				x: x + 4,
-				y: y,
-				w: (this.values.hp / this.values.hpMax) * (scale - 8),
-				h: 5
+				x: newX,
+				y: newY,
+				w: (this.values.hp / this.values.hpMax) * hpBarWidth,
+				h: hpBarHeight
 			});
 
 			const isVisible = (this.values.hp < this.values.hpMax) && (!sprite || sprite.visible);

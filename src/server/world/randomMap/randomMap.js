@@ -61,12 +61,11 @@ module.exports = {
 
 		let startRoom = buildRoom(this, startTemplate);
 
-		if (!isValidDungeon(this)) 
-			this.generate(instance);
-		else {
-			this.offsetRooms(startRoom);
-			buildMap(this, instance, startRoom);
-		}
+		if (!isValidDungeon(this))
+			return false;
+
+		this.offsetRooms(startRoom);
+		buildMap(this, instance, startRoom);
 
 		//To spawn in another room
 		/*const spawnRoom = this.rooms.find(t => t.template.properties.end);
@@ -74,6 +73,8 @@ module.exports = {
 			x: spawnRoom.x + ~~(spawnRoom.template.width / 2) - 2,
 			y: spawnRoom.y + ~~(spawnRoom.template.height / 2) + 6
 		}];*/
+
+		return true;
 	},
 
 	loadMapProperties: function ({ leafConstraints, endConstraints }) {

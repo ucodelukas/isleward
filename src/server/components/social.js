@@ -147,15 +147,8 @@ module.exports = {
 
 	//Gets called on the player that requested to leave
 	leaveParty: function (msg) {
-		if (!this.party) {
-			io.setAsync({
-				key: new Date(),
-				table: 'error',
-				value: 'no party error ' + this.obj.name
-			});
-
+		if (!this.party)
 			return;
-		}
 
 		let name = this.obj.name;
 

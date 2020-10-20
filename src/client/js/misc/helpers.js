@@ -1,7 +1,3 @@
-window.isMobile = /Mobi|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-window.scale = isMobile ? 32 : 40 * window.devicePixelRatio;
-window.scaleMult = isMobile ? 4 : 5 * window.devicePixelRatio;
-
 //eslint-disable-next-line no-extend-native
 Array.prototype.spliceWhere = function (callback, thisArg) {
 	let T = thisArg;
@@ -62,13 +58,13 @@ if (!String.prototype.padStart) {
 	String.prototype.padStart = function padStart (targetLength, padString) {
 		targetLength = targetLength >> 0;
 		padString = String(typeof padString !== 'undefined' ? padString : ' ');
-		if (this.length >= targetLength) 
+		if (this.length >= targetLength)
 			return String(this);
-         
+
 		targetLength = targetLength - this.length;
-		if (targetLength > padString.length) 
+		if (targetLength > padString.length)
 			padString += padString.repeat(targetLength / padString.length);
-            
+
 		return padString.slice(0, targetLength) + String(this);
 	};
 }
@@ -100,18 +96,42 @@ window._ = {
 		let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
 		let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-		if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) 
+		if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement)
 			requestFullScreen.call(docEl);
 
-		else 
+		else
 			cancelFullScreen.call(doc);
+	},
+
+	isIos: function () {
+		return (
+			[
+				'iPad Simulator',
+				'iPhone Simulator',
+				'iPod Simulator',
+				'iPad',
+				'iPhone',
+				'iPod'
+			].includes(navigator.platform) ||
+			(navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+		);
 	}
 };
 
-define([
-	
-], function (
-	
-) {
+define([], function () {
+	const urlParams = Object.fromEntries(window.location.search.substr(1).split('&').map(k => k.split('=')));
+
+	window.isMobile = (
+		urlParams.forceMobile === 'true' ||
+		/Mobi|Android/i.test(navigator.userAgent) ||
+		(
+			navigator.platform === 'MacIntel' &&
+			navigator.maxTouchPoints > 1
+		)
+	);
+
+	window.scale = isMobile ? 32 : 40;
+	window.scaleMult = isMobile ? 4 : 5;
+
 	return window._;
 });

@@ -16,7 +16,7 @@ module.exports = {
 		this.patronLevel = ~~blueprint.patron;
 	},
 
-	collisionEnter: function (obj) {
+	collisionEnter: async function (obj) {
 		if (!obj.player)
 			return;
 		else if (this.patronLevel) {
@@ -28,7 +28,9 @@ module.exports = {
 
 		obj.destroyed = true;
 
-		let simpleObj = obj.getSimple(true, false, true);
+		await obj.auth.doSave();
+
+		const simpleObj = obj.getSimple(true, false, true);
 
 		const { toPos, toRelativePos } = this;
 		if (toPos) {

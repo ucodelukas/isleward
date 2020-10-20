@@ -5,6 +5,7 @@
 	width: 400px;
 	background-color: @blackC;
 	border: 5px solid @blackB;
+	flex-direction: column;
 
 	> .heading {
 		color: @blueA;
@@ -23,6 +24,8 @@
 
 	.bottom {
 		padding: 10px;
+		height: 100%;
+		overflow-y: auto;
 
 		.list {
 			display: flex;
@@ -149,6 +152,8 @@
 }
 
 .mobile .uiOptions {
+	max-height: 100%;
+
 	.item.screen {
 		display: none;
 	}

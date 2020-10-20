@@ -34,7 +34,8 @@ const buildRolls = (item, blueprint, { random: spellProperties, negativeStats = 
 		if (isNegative)
 			roll = 1 - roll;
 
-		const scaledRoll = roll * (item.level / consts.maxLevel);
+		const useLevel = item.originalLevel || item.level;
+		const scaledRoll = roll * (useLevel / consts.maxLevel);
 
 		result[prop] = scaledRoll;
 	}

@@ -11,7 +11,8 @@ require.config({
 		helpers: 'js/misc/helpers',
 		particles: 'plugins/pixi.particles.min',
 		pixi: 'https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min',
-		howler: 'https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.core.min'
+		howler: 'https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.core.min',
+		longPress: 'plugins/long.press.min'
 	},
 	shim: {
 		howler: {

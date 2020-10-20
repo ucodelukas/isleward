@@ -208,7 +208,10 @@ module.exports = {
 		}
 
 		if (item.type !== 'skin') {
-			let clonedItem = extend({}, item);
+			//Some shop items have both an in-shop definition (item) as well as a definition
+			// for the item that should be given to the player (giveItem)
+			let clonedItem = extend({}, item.giveItem || item);
+
 			if (item.worth.currency)
 				clonedItem.worth = 0;
 			if ((item.stats) && (item.stats.stats)) {

@@ -2,7 +2,7 @@ module.exports = {
 	init: function () {
 		const { respawnMap, respawnPos } = this;
 
-		instancer.regenMap(respawnMap, respawnPos);
+		instancer.startRegen(respawnMap, respawnPos);
 
 		this.end = true;
 	}

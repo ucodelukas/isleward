@@ -96,16 +96,20 @@ define([
 		},
 
 		onJoinChannel: function (channel) {
+			const container = this.find('.filters');
+
+			const channelName = channel.trim();
+
+			this.customChannels.spliceWhere(c => c === channel);
+			this.find(`[filter="${channelName}"]`).remove();
+
 			this.customChannels.push(channel);
 
-			this.find(`[filter="${channel.trim()}"]`).remove();
-
-			let container = this.find('.filters');
 			$(tplTab)
 				.appendTo(container)
 				.addClass('channel')
-				.attr('filter', channel.trim())
-				.html(channel.trim())
+				.attr('filter', channelName)
+				.html(channelName)
 				.on('mouseover', this.onFilterHover.bind(this, true))
 				.on('mouseleave', this.onFilterHover.bind(this, false))
 				.on('click', this.onClickFilter.bind(this));
@@ -193,6 +197,9 @@ define([
 
 			let container = this.find('.list');
 
+			const [ { scrollHeight, clientHeight, scrollTop } ] = container;
+			const isAtMaxScroll = scrollTop >= (scrollHeight - clientHeight);
+
 			messages.forEach(m => {
 				this.trackHistory(m);
 
@@ -246,7 +253,7 @@ define([
 				}
 			});
 
-			if (!this.el.hasClass('typing'))
+			if (!this.el.hasClass('typing') || isAtMaxScroll)
 				container.scrollTop(9999999);
 		},
 

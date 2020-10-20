@@ -85,6 +85,12 @@ module.exports = {
 					this.consumeMana();
 					this.setCd();
 					this.currentAction = null;
+
+					this.obj.fireEvent('afterCastSpell', {
+						castSuccess: true,
+						spell: this,
+						action
+					});
 				}
 			} else {
 				if (this.onCastTick)

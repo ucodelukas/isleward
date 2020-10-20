@@ -41,15 +41,15 @@ module.exports = {
 		},
 
 		events: {
-			beforeGatherResource: function (item, gatherResult, source) {
+			beforeGatherResourceComplete: function (item, { items }) {
 				let effect = item.effects.find(e => (e.factionId === 'anglers'));
 
 				let roll = Math.random() * 100;
 				if (roll >= effect.chance)
 					return;
 
-				let pick = gatherResult.items[~~(Math.random() * gatherResult.items.length)];
-				gatherResult.items.push(extend({}, pick));
+				let pick = items[~~(Math.random() * items.length)];
+				items.push(extend({}, pick));
 			}
 		}
 	},

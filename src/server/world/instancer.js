@@ -18,6 +18,9 @@ module.exports = {
 	zoneId: -1,
 	speed: consts.tickTime,
 
+	//During regens, adds are placed in a queue
+	addQueue: [],
+
 	lastTime: 0,
 
 	init: function (args) {
@@ -28,18 +31,19 @@ module.exports = {
 		map.init(args);
 
 		const fakeInstance = {
-			objects: objects,
-			syncer: syncer,
-			physics: physics,
+			objects,
+			syncer,
+			physics,
 			zoneId: this.zoneId,
-			spawners: spawners,
-			questBuilder: questBuilder,
-			events: events,
+			spawners,
+			questBuilder,
+			events,
 			zone: map.zone,
-			mail: mail,
-			map: map,
-			scheduler: scheduler,
-			eventEmitter: eventEmitter
+			mail,
+			map,
+			scheduler,
+			eventEmitter,
+			resourceSpawner
 		};
 
 		this.instances.push(fakeInstance);
@@ -53,10 +57,9 @@ module.exports = {
 				map.oldCollisionMap = map.collisionMap;
 
 			map.randomMap.init(fakeInstance);
-			this.regenMap();
-		}
-
-		_.log('(M ' + map.name + '): Ready');
+			this.startRegen();
+		} else
+			_.log('(M ' + map.name + '): Ready');
 
 		map.clientMap.zoneId = this.zoneId;
 
@@ -65,56 +68,101 @@ module.exports = {
 		this.tick();
 	},
 
-	regenMap: function (respawnMap, respawnPos) {
-		//Hack to wait for all player objects to be destroyed
-		const doRegen = () => {
-			const players = objects.objects.filter(o => o.player);
-			players.forEach(p => {
-				if (p.destroyed)
-					return;
+	startRegen: function (respawnMap, respawnPos) {
+		this.addQueue = [];
 
-				p.fireEvent('beforeRezone');
-				p.destroyed = true;
+		this.regenBusy = true;
 
-				const simpleObj = p.getSimple(true, false, true);
+		this.respawnMap = respawnMap;
+		this.respawnPos = respawnPos;
+	},
 
+	queueMessage: function (msg) {
+		this.unqueueMessage(msg);
+
+		this.addQueue.push(msg);
+	},
+
+	unqueueMessage: function (msg) {
+		this.addQueue.spliceWhere(q => q.obj.id === msg.obj.id);
+	},
+
+	tickRegen: function () {
+		const { respawnPos, respawnMap } = this;
+
+		//Ensure that all players are gone
+		const players = objects.objects.filter(o => o.player);
+		players.forEach(p => {
+			if (p.destroyed)
+				return;
+
+			p.fireEvent('beforeRezone');
+			p.destroyed = true;
+
+			const simpleObj = p.getSimple(true, false, true);
+
+			if (respawnPos) {
 				const { x, y } = respawnPos;
 				simpleObj.x = x;
 				simpleObj.y = y;
-
-				process.send({
-					method: 'rezone',
-					id: p.serverId,
-					args: {
-						obj: simpleObj,
-						newZone: respawnMap,
-						keepPos: true
-					}
-				});
-			});
-
-			if (players.length) {
-				setTimeout(doRegen, 1000);
-
-				return;
 			}
 
-			spawners.reset();
+			process.send({
+				method: 'rezone',
+				id: p.serverId,
+				args: {
+					obj: simpleObj,
+					newZone: respawnMap,
+					keepPos: true
+				}
+			});
+		});
 
-			objects.objects.length = 0;
-			objects.objects = [];
+		//Only objects and syncer should update if there are players
+		if (players.length) {
+			objects.update();
+			syncer.update();
 
-			events.stopAll();
+			return;
+		}
 
-			map.randomMap.generate();
+		//Clear stuff
+		spawners.reset();
 
-			map.seed = _.getGuid();
-		};
+		objects.objects.length = 0;
+		objects.objects = [];
 
-		doRegen();
+		events.stopAll();
+
+		//Try a generation
+		const isValid = map.randomMap.generate();
+
+		if (!isValid)
+			return;
+
+		map.seed = _.getGuid();
+
+		//If it succeeds, set regenBusy to false and reset vars
+		this.regenBusy = false;
+		this.respawnPos = null;
+		this.respawnMap = null;
+
+		this.addQueue.forEach(q => this.addObject(q));
+
+		this.addQueue = [];
+
+		_.log('(M ' + map.name + '): Ready');
 	},
 
 	tick: function () {
+		if (this.regenBusy) {
+			this.tickRegen();
+
+			setTimeout(this.tick.bind(this), this.speed);
+
+			return;
+		}
+
 		events.update();
 		objects.update();
 		resourceSpawner.update();
@@ -126,6 +174,12 @@ module.exports = {
 	},
 
 	addObject: function (msg) {
+		if (this.regenBusy) {
+			this.queueMessage(msg);
+
+			return;
+		}
+
 		let obj = msg.obj;
 		obj.serverId = obj.id;
 		delete obj.id;
@@ -236,6 +290,12 @@ module.exports = {
 	},
 
 	removeObject: async function (msg) {
+		if (this.regenBusy) {
+			this.unqueueMessage(msg);
+
+			return;
+		}
+
 		let obj = msg.obj;
 		obj = objects.find(o => o.serverId === obj.id);
 		if (!obj) {

@@ -179,7 +179,7 @@ module.exports = {
 
 			let val = range[0] + ((range[1] - range[0]) * roll);
 			if (int) {
-				val = ~~val;
+				val = Math.round(val);
 				r = r.replace('i_', '');
 			} else
 				val = ~~(val * 100) / 100;
@@ -427,7 +427,8 @@ module.exports = {
 
 		this.obj.fireEvent('afterCastSpell', {
 			castSuccess: success,
-			spell
+			spell,
+			action
 		});
 
 		//Null means we didn't fail but are initiating casting

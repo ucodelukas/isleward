@@ -31,33 +31,38 @@ module.exports = {
 	hpPercent: 40,
 
 	cast: function (action) {
-		if (this.killMinionsBeforeSummon)
-			this.killMinions();
+		const { target } = action;
 
-		if (this.minions.length >= this.maxSummon)
-			return false;
-
-		let obj = this.obj;
-		let target = action.target;
-
-		const sheetName = this.sheetName || `${this.folderName}/images/mobs.png`;
+		const {
+			obj, name, cell, minions, maxSummon, summonTemplates, animation,
+			minionsDieOnAggroClear, killMinionsBeforeSummon, killMinionsOnDeath,
+			hpPercent, damagePercent
+		} = this;
 
 		const positions = this.positions || [[target.x, target.y]];
+		const sheetName = this.sheetName || `${this.folderName}/images/mobs.png`;
+
+		if (killMinionsBeforeSummon)
+			this.killMinions();
+
+		if (minions.length >= maxSummon)
+			return false;
+
 		const currentTarget = obj.aggro.getHighest();
 
 		positions.forEach(pos => {
 			const [ x, y ] = pos;
 
 			let template = {};
-			if (this.summonTemplates)
-				template = this.summonTemplates[~~(Math.random() * this.summonTemplates.length)];
+			if (summonTemplates)
+				template = summonTemplates[~~(Math.random() * summonTemplates.length)];
 
 			const blueprint = {
 				x,
 				y,
-				cell: template.cell || this.cell,
+				cell: template.cell || cell,
 				sheetName,
-				name: template.name || this.name,
+				name: template.name || name,
 				properties: {
 					cpnFollower: {
 						maxDistance: 3
@@ -70,7 +75,7 @@ module.exports = {
 				}
 			};
 
-			this.obj.fireEvent('beforeSummonMinion', blueprint);
+			obj.fireEvent('beforeSummonMinion', blueprint);
 
 			//Spawn a mob
 			let mob = obj.instance.spawners.spawn({
@@ -82,10 +87,12 @@ module.exports = {
 				level: obj.stats.values.level,
 				faction: obj.aggro.faction,
 				walkDistance: 2,
+				sheetName,
+				cell,
 				regular: {
 					drops: 0,
-					hpMult: (template.hpPercent || this.hpPercent) / 100,
-					dmgMult: (template.damagePercent || this.damagePercent) / 100
+					hpMult: (template.hpPercent || hpPercent) / 100,
+					dmgMult: (template.damagePercent || damagePercent) / 100
 				},
 				spells: [{
 					type: template.basicSpell || this.basicSpell,
@@ -98,24 +105,25 @@ module.exports = {
 			mob.stats.values.hp = mob.stats.values.hpMax;
 			mob.stats.values.regenHp = mob.stats.values.hpMax / 100;
 
-			let spell = mob.spellbook.spells[0];
+			const spell = mob.spellbook.spells[0];
 			spell.statType = ['str', 'int'];
-			mob.stats.values.str = obj.stats.values.str || 1;
-			mob.stats.values.int = obj.stats.values.int || 1;
 			spell.threatMult *= 8;
 
-			mob.follower.noNeedMaster = !this.killMinionsOnDeath;
-			if (this.killMinionsOnDeath)
+			mob.stats.values.str = obj.stats.values.str || 1;
+			mob.stats.values.int = obj.stats.values.int || 1;
+
+			mob.follower.noNeedMaster = !killMinionsOnDeath;
+			if (killMinionsOnDeath)
 				mob.follower.bindEvents();
 			else {
-				mob.aggro.dieOnAggroClear = this.minionsDieOnAggroClear;
+				mob.aggro.dieOnAggroClear = minionsDieOnAggroClear;
 				mob.removeComponent('follower');
 
 				if (currentTarget)
 					mob.aggro.tryEngage(currentTarget);
 			}
 
-			this.minions.push(mob);
+			minions.push(mob);
 		});
 
 		this.sendBump({
@@ -123,12 +131,12 @@ module.exports = {
 			y: obj.y - 1
 		});
 
-		if (this.animation) {
-			this.obj.instance.syncer.queue('onGetObject', {
-				id: this.obj.id,
+		if (animation) {
+			obj.instance.syncer.queue('onGetObject', {
+				id: obj.id,
 				components: [{
 					type: 'animation',
-					template: this.animation
+					template: animation
 				}]
 			}, -1);
 		}
