@@ -81,10 +81,11 @@ module.exports = {
 			this.obj.syncer.set(false, null, 'casting', (action.castTimeMax - this.castTime) / action.castTimeMax);
 
 			if (!this.castTime) {
+				this.currentAction = null;
+
 				if (this.cast(action)) {
 					this.consumeMana();
 					this.setCd();
-					this.currentAction = null;
 
 					this.obj.fireEvent('afterCastSpell', {
 						castSuccess: true,
