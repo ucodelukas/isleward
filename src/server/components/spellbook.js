@@ -326,8 +326,12 @@ module.exports = {
 
 	cast: function (action, isAuto) {
 		if (!action.has('spell')) {
+			const isCasting = this.isCasting();
 			this.stopCasting();
-			return true;
+
+			const consumeTick = isCasting;
+
+			return consumeTick;
 		}
 
 		let spell = this.spells.find(s => (s.id === action.spell));
