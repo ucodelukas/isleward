@@ -12,7 +12,7 @@ define([
 		col: null,
 		frames: 4,
 		frameDelay: 4,
-		spriteSheet: null,
+		spriteSheet: 'attacks',
 
 		delay: 32,
 		coordinates: [],

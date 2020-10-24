@@ -47,6 +47,7 @@ module.exports = {
 	row: 5,
 	col: 0,
 	frames: 3,
+	spriteSheet: 'attacks',
 
 	damage: 1,
 	isAttack: true,
@@ -55,7 +56,7 @@ module.exports = {
 	targetPlayerPos: true,
 
 	cast: function (action) {
-		const { frames, row, col, delay, obj } = this;
+		const { frames, row, col, delay, obj, spriteSheet } = this;
 		const { id, instance, x: playerX, y: playerY } = obj;
 
 		const coordinates = coordinateDeltas[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
@@ -69,7 +70,8 @@ module.exports = {
 				frames,
 				row,
 				col,
-				delay
+				delay,
+				spriteSheet
 			}]
 		};
 
