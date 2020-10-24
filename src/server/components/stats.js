@@ -429,7 +429,8 @@ module.exports = {
 
 			obj.player.die(killSource, deathEvent.permadeath);
 		} else {
-			obj.effects.die();
+			if (obj.effects)
+				obj.effects.die();
 			if (this.obj.spellbook)
 				this.obj.spellbook.die();
 			obj.destroyed = true;
