@@ -45,7 +45,8 @@ module.exports = {
 		if (killMinionsBeforeSummon)
 			this.killMinions();
 
-		if (minions.length >= maxSummon)
+		const livingMinions = minions.filter(m => !m.destroyed);
+		if (livingMinions.length >= maxSummon)
 			return false;
 
 		const currentTarget = obj.aggro.getHighest();
@@ -163,9 +164,9 @@ module.exports = {
 
 	killMinions: function (minion) {
 		this.minions.forEach(m => {
-			if ((m) && (!m.destroyed)) {
+			if (m && !m.destroyed) {
 				m.destroyed = true;
-				this.minions = [];
+				this.minions.length = 0;
 
 				let animations = require('../../../config/animations');
 

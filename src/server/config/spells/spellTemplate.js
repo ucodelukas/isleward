@@ -46,6 +46,7 @@ module.exports = {
 				castTimeMax = Math.ceil(castTimeMax * (1 - (Math.min(50, speedModifier) / 100)));
 
 				let castEvent = {
+					spell: this,
 					castTimeMax: castTimeMax
 				};
 				this.obj.fireEvent('beforeGetSpellCastTime', castEvent);
@@ -81,10 +82,11 @@ module.exports = {
 			this.obj.syncer.set(false, null, 'casting', (action.castTimeMax - this.castTime) / action.castTimeMax);
 
 			if (!this.castTime) {
+				this.currentAction = null;
+
 				if (this.cast(action)) {
 					this.consumeMana();
 					this.setCd();
-					this.currentAction = null;
 
 					this.obj.fireEvent('afterCastSpell', {
 						castSuccess: true,

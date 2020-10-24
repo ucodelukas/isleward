@@ -17,7 +17,10 @@ module.exports = {
 
 	radius: 1,
 
+	row: null,
+	col: 4,
 	rowOptions: [10, 10, 10, 10, 10, 10, 10, 8, 8, 8, 7, 7, 7],
+	spriteSheet: 'attacks',
 
 	cast: function (action) {
 		let obj = this.obj;
@@ -84,10 +87,12 @@ module.exports = {
 	},
 
 	onWarningOver: function (x, y) {
-		let obj = this.obj;
+		const { obj, spriteSheet, rowOptions, col, row } = this;
 
 		let physics = obj.instance.physics;
 		let syncer = obj.instance.syncer;
+
+		const useRow = (row !== null) ? row : rowOptions[~~(Math.random() * rowOptions.length)];
 
 		let effect = {
 			x: x,
@@ -95,9 +100,10 @@ module.exports = {
 			components: [{
 				type: 'attackAnimation',
 				destroyObject: true,
-				row: this.rowOptions[~~(Math.random() * this.rowOptions.length)],
-				col: 4,
-				frameDelay: 4 + ~~(Math.random() * 7)
+				row: useRow,
+				col,
+				frameDelay: 4 + ~~(Math.random() * 7),
+				spriteSheet
 			}]
 		};
 
