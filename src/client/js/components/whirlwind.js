@@ -11,6 +11,8 @@ define([
 		row: null,
 		col: null,
 		frames: 4,
+		frameDelay: 4,
+		spriteSheet: null,
 
 		delay: 32,
 		coordinates: [],
@@ -44,7 +46,7 @@ define([
 		},
 
 		spawnThing: function (x, y) {
-			const { frames: frameCount, row, col } = this;
+			const { frames: frameCount, row, col, spriteSheet, frameDelay } = this;
 
 			this.objects.buildObject({
 				x,
@@ -53,7 +55,9 @@ define([
 					type: 'attackAnimation',
 					row,
 					col,
-					frames: frameCount
+					frames: frameCount,
+					spriteSheet,
+					frameDelay
 				}]
 			});
 		},

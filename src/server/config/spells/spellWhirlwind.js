@@ -60,7 +60,7 @@ module.exports = {
 
 		const coordinates = coordinateDeltas[this.range - 1].map(([x, y]) => [x + playerX, y + playerY]);
 
-		let blueprint = {
+		const blueprint = {
 			caster: id,
 			components: [{
 				idSource: id,
@@ -77,6 +77,8 @@ module.exports = {
 			x: playerX,
 			y: playerY - 1
 		});
+
+		obj.fireEvent('beforeSpawnWhirlwind', blueprint);
 
 		instance.syncer.queue('onGetObject', blueprint, -1);
 
