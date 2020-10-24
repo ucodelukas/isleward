@@ -39,10 +39,13 @@ build-image-latest:
   services:
     - docker:dind
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
   variables:
-    IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:latest
+    #IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    #IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:latest
+    IMAGE_TAG_REF: isleward/isleward:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_ALIAS: isleward/isleward:latest
   script:
     - docker build -t $IMAGE_TAG_REF -t $IMAGE_TAG_ALIAS .
     - docker push $IMAGE_TAG_REF
@@ -56,10 +59,13 @@ build-image-stable:
   services:
     - docker:dind
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
   variables:
-    IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:stable
+    #IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    #IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:stable
+    IMAGE_TAG_REF: isleward/isleward:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_ALIAS: isleward/isleward:stable
   script:
     - docker build -t $IMAGE_TAG_REF -t $IMAGE_TAG_ALIAS .
     - docker push $IMAGE_TAG_REF
