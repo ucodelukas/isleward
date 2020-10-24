@@ -40,7 +40,7 @@ build-image-latest:
     - docker:dind
   before_script:
     # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - echo "$DOCKERHUB_TOKEN" | docker login --username $DOCKERHUB_USERNAME
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
   variables:
     #IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     #IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:latest
@@ -60,7 +60,7 @@ build-image-stable:
     - docker:dind
   before_script:
     # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - echo "$DOCKERHUB_TOKEN" | docker login --username $DOCKERHUB_USERNAME
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
   variables:
     #IMAGE_TAG_REF: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     #IMAGE_TAG_ALIAS: $CI_REGISTRY_IMAGE:stable
