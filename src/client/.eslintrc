@@ -63,7 +63,7 @@
 				"before": true
 			}
 		],
-		"block-scoped-var": 2,
+		"block-scoped--var": 2,
 		"brace-style": [
 			2,
 			"1tbs",
@@ -82,6 +82,7 @@
 		"comma-spacing": [
 			2,
 			{
+				"before": false,
 				"after": true
 			}
 		],
