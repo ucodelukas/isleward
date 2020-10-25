@@ -37,6 +37,12 @@ module.exports = {
 			});
 
 		items
+			.filter(i => i.name === 'Candy Corn')
+			.forEach(i => {
+				i.noDrop = true;
+			});
+
+		items
 			.filter(i => (i.name === 'Elixir of Infatuation'))
 			.forEach(function (i) {
 				i.cdMax = 342;
