@@ -98,7 +98,8 @@
 				}
 
 				input, input:-webkit-autofill {
-					box-shadow: 0 0 0px 1000px darken(@blackB, 15%) inset;
+					-webkit-appearance: none;
+					box-shadow: 0 0 0px 20px darken(@blackB, 15%) inset;
 					color: @white;
 					-webkit-text-fill-color: @white;
 					margin-bottom: 5px;
@@ -107,7 +108,7 @@
 
 				/* We duplicate this for firefox which doesn't like the webkit selector */
 				input {
-				    box-shadow: 0 0 0px 1000px darken(@blackB, 15%) inset;
+				    box-shadow: 0 0 0px 20px darken(@blackB, 15%) inset;
 					color: @white;
 					-webkit-text-fill-color: @white;
 					margin-bottom: 5px;
