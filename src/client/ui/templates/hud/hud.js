@@ -107,9 +107,8 @@ define([
 
 			let elapsed = quickItem.cdMax - quickItem.cd;
 			let width = 1 - (elapsed / quickItem.cdMax);
-			if (width <= 0) {
+			if (width <= 0)
 				width = 0;
-			}
 
 			width = Math.ceil((width * 100) / 4) * 4;
 
