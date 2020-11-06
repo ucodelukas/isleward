@@ -268,5 +268,11 @@ module.exports = {
 			msg.data.data.callbackId = atlas.registerCallback(msg.callback);
 
 		atlas.performAction(this.obj, msg.data);
+	},
+
+	notifyServerUiReady: function () {
+		this.obj.instance.eventEmitter.emit('onPlayerUiReady', {
+			obj: this.obj
+		});
 	}
 };

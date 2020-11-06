@@ -10,34 +10,51 @@ define([
 ], function (
 	events
 ) {
-	const onHover = (el, item, e) => {
-		if (item)
-			this.hoverItem = item;
-		else
-			item = this.hoverItem;
+	const renderItemManager = {
+		hoverItem: null,
 
-		let ttPos = null;
+		onHover: function (el, item, e) {
+			if (item)
+				this.hoverItem = item;
+			else
+				item = this.hoverItem;
 
-		if (el) {
-			ttPos = {
-				x: ~~(e.clientX + 32),
-				y: ~~(e.clientY)
-			};
+			let ttPos = null;
+
+			if (el) {
+				ttPos = {
+					x: ~~(e.clientX + 32),
+					y: ~~(e.clientY)
+				};
+			}
+
+			events.emit('onShowItemTooltip', item, ttPos, true);
+		},
+
+		onKeyDown: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
+		},
+
+		onKeyUp: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
-
-		events.emit('onShowItemTooltip', item, ttPos, true);
 	};
+
+	events.on('onKeyDown', renderItemManager.onKeyDown.bind(renderItemManager));
+	events.on('onKeyUp', renderItemManager.onKeyUp.bind(renderItemManager));
 
 	const hideTooltip = (el, item, e) => {
 		events.emit('onHideItemTooltip', item);
 	};
 
 	const addTooltipEvents = (el, item) => {
-		let moveHandler = onHover.bind(null, el, item);
+		let moveHandler = renderItemManager.onHover.bind(renderItemManager, el, item);
 		let downHandler = () => {};
 		if (isMobile) {
 			moveHandler = () => {};
-			downHandler = onHover.bind(null, el, item);
+			downHandler = renderItemManager.bind(renderItemManager, el, item);
 		}
 
 		el

@@ -4,7 +4,6 @@ const skins = require('../config/skins');
 const roles = require('../config/roles');
 const profanities = require('../misc/profanities');
 const fixes = require('../fixes/fixes');
-const mail = require('../mail/mail');
 const spirits = require('../config/spirits');
 const ga = require('../security/ga');
 const events = require('../misc/events');
@@ -44,10 +43,6 @@ module.exports = {
 	},
 
 	onSendRewards: async function (data, character) {
-		//Bit of a hack. Rethink doesn't have a busy list
-		if (mail.busy)
-			delete mail.busy[character.name];
-
 		await io.setAsync({
 			key: this.username,
 			table: 'accountInfo',

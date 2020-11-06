@@ -8,7 +8,6 @@ let spellCallbacks = require('../config/spells/spellCallbacks');
 let questBuilder = require('../config/quests/questBuilder');
 let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
-let mail = require('../mail/mail');
 let herbs = require('../config/herbs');
 let eventEmitter = require('../misc/events');
 const transactions = require('../security/transactions');
@@ -39,7 +38,6 @@ module.exports = {
 			questBuilder,
 			events,
 			zone: map.zone,
-			mail,
 			map,
 			scheduler,
 			eventEmitter,
@@ -63,7 +61,7 @@ module.exports = {
 
 		map.clientMap.zoneId = this.zoneId;
 
-		[resourceSpawner, syncer, objects, questBuilder, events, mail].forEach(i => i.init(fakeInstance));
+		[resourceSpawner, syncer, objects, questBuilder, events].forEach(i => i.init(fakeInstance));
 
 		this.tick();
 	},
