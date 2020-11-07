@@ -180,10 +180,8 @@ define([
 		offEvent: function (eventCallback) {
 			for (let e in this.eventCallbacks) {
 				this.eventCallbacks[e].forEach(function (c) {
-					if (c === eventCallback) {
-						console.log('off', e, c);
+					if (c === eventCallback)
 						events.off(e, c);
-					}
 				}, this);
 			}
 		},

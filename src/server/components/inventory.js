@@ -6,7 +6,6 @@ let itemEffects = require('../items/itemEffects');
 const events = require('../misc/events');
 
 const { isItemStackable } = require('./inventory/helpers');
-const transactions = require('../security/transactions');
 
 const getItem = require('./inventory/getItem');
 const dropBag = require('./inventory/dropBag');
