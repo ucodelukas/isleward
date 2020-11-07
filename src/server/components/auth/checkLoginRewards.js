@@ -72,6 +72,7 @@ module.exports = async (cpnAuth, data, character, cbDone) => {
 
 	const msg = `Daily login reward for ${loginStreak} day${(loginStreak > 1) ? 's' : ''}`;
 
+	//Hack: Mail is a mod. As such, events should be a mod that depends on mail
 	if (global.mailManager) {
 		await global.mailManager.sendSystemMail({
 			to: character.name,

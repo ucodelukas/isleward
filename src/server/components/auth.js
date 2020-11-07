@@ -57,7 +57,7 @@ module.exports = {
 		await leaderboard.setLevel(character.name, this.obj.stats.values.level, prophecies);
 	},
 
-	doSave: async function (callback) {	
+	doSave: async function (callback, saveStash = true) {	
 		const simple = this.obj.getSimple(true, true);
 		simple.components.spliceWhere(f => (f.type === 'stash'));
 
@@ -69,7 +69,8 @@ module.exports = {
 			serialize: true
 		});
 
-		await this.doSaveStash();
+		if (saveStash)
+			await this.doSaveStash();
 
 		if (callback)
 			callback();

@@ -12,6 +12,7 @@ module.exports = {
 			if (!rList | !rList.length)
 				return;
 
+			//Hack: Mail is a mod. As such, events should be a mod that depends on mail
 			if (global.mailManager) {
 				global.mailManager.sendSystemMail({
 					to: name,

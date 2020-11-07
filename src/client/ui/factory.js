@@ -167,6 +167,10 @@ define([
 				if (u.update)
 					u.update();
 			}
+		},
+
+		getUi: function (type) {
+			return this.uis.find(u => u.type === type);
 		}
 	};
 });

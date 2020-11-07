@@ -10,6 +10,7 @@ let events = require('../events/events');
 let scheduler = require('../misc/scheduler');
 let herbs = require('../config/herbs');
 let eventEmitter = require('../misc/events');
+const mods = require('../misc/mods');
 const transactions = require('../security/transactions');
 
 module.exports = {
@@ -167,6 +168,7 @@ module.exports = {
 		spawners.update();
 		syncer.update();
 		scheduler.update();
+		mods.tick();
 
 		setTimeout(this.tick.bind(this), this.speed);
 	},

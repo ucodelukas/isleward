@@ -57,10 +57,18 @@ define([
 			downHandler = renderItemManager.bind(renderItemManager, el, item);
 		}
 
+		$.event.special.destroyed = {
+			remove: function (o) {
+				if (o.handler) 
+					o.handler();
+			}
+		};
+
 		el
 			.on('mousedown', downHandler)
 			.on('mousemove', moveHandler)
-			.on('mouseleave', hideTooltip.bind(null, el, item));
+			.on('mouseleave', hideTooltip.bind(null, el, item))
+			.on('destroyed', hideTooltip.bind(null, el, item));
 	};
 
 	const onShowContext = (item, getItemContextConfig, e) => {
@@ -81,7 +89,7 @@ define([
 		el.on('contextmenu', onShowContext.bind(this, item, getItemContextConfig));
 	};
 
-	return (container, item, useEl, manageTooltip, getItemContextConfig) => {
+	return (container, item, useEl, manageTooltip, getItemContextConfig, showNewIndicators = true) => {
 		const itemEl = useEl || $(tplItem).appendTo(container);
 
 		if (!item) {
@@ -129,7 +137,7 @@ define([
 			//it must mean that it's active, EQd or QSd
 			if (!item.quantity)
 				itemEl.addClass('eq');
-		} else if (item.isNew) {
+		} else if (item.isNew && showNewIndicators) {
 			itemEl.addClass('new');
 			itemEl.find('.quantity').html('NEW');
 		}
