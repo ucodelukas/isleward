@@ -2,12 +2,16 @@ const fileLister = require('../misc/fileLister');
 const events = require('../misc/events');
 
 module.exports = {
+	mods: [],
+
 	init: async function () {
 		const modList = fileLister.getFolderList('mods');
 
 		for (const m of modList) {
 			const mod = require('../mods/' + m + '/index');
 			await this.onGetMod(m, mod);
+
+			this.mods.push(mod);
 		}
 	},
 
@@ -41,5 +45,12 @@ module.exports = {
 
 	onGetExtra: function (name, mod, extra) {
 		extra.folderName = 'server/mods/' + name;
+	},
+
+	tick: function () {
+		this.mods.forEach(m => {
+			if (m.tick)
+				m.tick();
+		});
 	}
 };

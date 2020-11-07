@@ -178,7 +178,6 @@ const config = {
 		'death',
 		'leaderboard',
 		'reputation',
-		'mail',
 		'wardrobe',
 		'passives',
 		'workbench',

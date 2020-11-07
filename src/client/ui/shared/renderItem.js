@@ -10,40 +10,65 @@ define([
 ], function (
 	events
 ) {
-	const onHover = (el, item, e) => {
-		if (item)
-			this.hoverItem = item;
-		else
-			item = this.hoverItem;
+	const renderItemManager = {
+		hoverItem: null,
 
-		let ttPos = null;
+		onHover: function (el, item, e) {
+			if (item)
+				this.hoverItem = item;
+			else
+				item = this.hoverItem;
 
-		if (el) {
-			ttPos = {
-				x: ~~(e.clientX + 32),
-				y: ~~(e.clientY)
-			};
+			let ttPos = null;
+
+			if (el) {
+				ttPos = {
+					x: ~~(e.clientX + 32),
+					y: ~~(e.clientY)
+				};
+			}
+
+			events.emit('onShowItemTooltip', item, ttPos, true);
+		},
+
+		onKeyDown: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
+		},
+
+		onKeyUp: function (key) {
+			if (key === 'shift' && this.hoverItem)
+				this.onHover();
 		}
-
-		events.emit('onShowItemTooltip', item, ttPos, true);
 	};
+
+	events.on('onKeyDown', renderItemManager.onKeyDown.bind(renderItemManager));
+	events.on('onKeyUp', renderItemManager.onKeyUp.bind(renderItemManager));
 
 	const hideTooltip = (el, item, e) => {
 		events.emit('onHideItemTooltip', item);
 	};
 
 	const addTooltipEvents = (el, item) => {
-		let moveHandler = onHover.bind(null, el, item);
+		let moveHandler = renderItemManager.onHover.bind(renderItemManager, el, item);
 		let downHandler = () => {};
 		if (isMobile) {
 			moveHandler = () => {};
-			downHandler = onHover.bind(null, el, item);
+			downHandler = renderItemManager.bind(renderItemManager, el, item);
 		}
+
+		$.event.special.destroyed = {
+			remove: function (o) {
+				if (o.handler) 
+					o.handler();
+			}
+		};
 
 		el
 			.on('mousedown', downHandler)
 			.on('mousemove', moveHandler)
-			.on('mouseleave', hideTooltip.bind(null, el, item));
+			.on('mouseleave', hideTooltip.bind(null, el, item))
+			.on('destroyed', hideTooltip.bind(null, el, item));
 	};
 
 	const onShowContext = (item, getItemContextConfig, e) => {
@@ -64,7 +89,7 @@ define([
 		el.on('contextmenu', onShowContext.bind(this, item, getItemContextConfig));
 	};
 
-	return (container, item, useEl, manageTooltip, getItemContextConfig) => {
+	return (container, item, useEl, manageTooltip, getItemContextConfig, showNewIndicators = true) => {
 		const itemEl = useEl || $(tplItem).appendTo(container);
 
 		if (!item) {
@@ -112,7 +137,7 @@ define([
 			//it must mean that it's active, EQd or QSd
 			if (!item.quantity)
 				itemEl.addClass('eq');
-		} else if (item.isNew) {
+		} else if (item.isNew && showNewIndicators) {
 			itemEl.addClass('new');
 			itemEl.find('.quantity').html('NEW');
 		}
