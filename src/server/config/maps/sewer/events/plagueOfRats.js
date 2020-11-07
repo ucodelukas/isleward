@@ -51,13 +51,13 @@ const descriptionStrings = {
 };
 
 const config = {
-	//cron: '0 */3 * * *',
-	cron: '* * * * *',
+	cron: '0 */3 * * *',
+	//cron: '* * * * *',
 	idFirstSpawnPhase: 6,
 	idFailPhase: 19,
-	maxEscapees: 5000,
-	//repeats: [5, 5, 3],
-	repeats: [1, 1, 1],
+	maxEscapees: 5,
+	repeats: [5, 5, 3],
+	//repeats: [1, 1, 1],
 	rewardItemsPerKill: 3
 };
 

@@ -31,7 +31,7 @@ module.exports = {
 		this.buffer = [];
 	},
 
-	queue: function (args, a) {
+	queue: function (args) {
 		this.buffer.push(args);
 	},
 
