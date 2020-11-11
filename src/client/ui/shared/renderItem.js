@@ -10,6 +10,10 @@ define([
 ], function (
 	events
 ) {
+	const hideTooltip = (el, item, e) => {
+		events.emit('onHideItemTooltip', item);
+	};
+
 	const renderItemManager = {
 		hoverItem: null,
 
@@ -39,17 +43,23 @@ define([
 		onKeyUp: function (key) {
 			if (key === 'shift' && this.hoverItem)
 				this.onHover();
+		},
+
+		onMouseLeave: function (el, item, e) {
+			if (this.hoverItem !== item)
+				return;
+
+			hideTooltip(el, item, e);
+
+			this.hoverItem = null;
 		}
 	};
 
 	events.on('onKeyDown', renderItemManager.onKeyDown.bind(renderItemManager));
 	events.on('onKeyUp', renderItemManager.onKeyUp.bind(renderItemManager));
 
-	const hideTooltip = (el, item, e) => {
-		events.emit('onHideItemTooltip', item);
-	};
-
 	const addTooltipEvents = (el, item) => {
+		const leaveHandler = renderItemManager.onMouseLeave.bind(renderItemManager, el, item);
 		let moveHandler = renderItemManager.onHover.bind(renderItemManager, el, item);
 		let downHandler = () => {};
 		if (isMobile) {
@@ -67,8 +77,8 @@ define([
 		el
 			.on('mousedown', downHandler)
 			.on('mousemove', moveHandler)
-			.on('mouseleave', hideTooltip.bind(null, el, item))
-			.on('destroyed', hideTooltip.bind(null, el, item));
+			.on('mouseleave', leaveHandler)
+			.on('destroyed', leaveHandler);
 	};
 
 	const onShowContext = (item, getItemContextConfig, e) => {
