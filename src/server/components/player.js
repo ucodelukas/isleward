@@ -1,6 +1,7 @@
 let classes = require('../config/spirits');
 let roles = require('../config/roles');
 let serverConfig = require('../config/serverConfig');
+const eventEmitter = require('../misc/events');
 
 module.exports = {
 	type: 'player',
@@ -98,6 +99,10 @@ module.exports = {
 
 		['equipment', 'passives', 'inventory', 'quests', 'events'].forEach(c => {
 			obj.addComponent(c, character.components.find(f => f.type === c));
+		});
+
+		eventEmitter.emit('onAfterBuildPlayerObject', {
+			obj: this.obj
 		});
 
 		obj.xp = stats.values.xp;
