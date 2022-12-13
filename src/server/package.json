@@ -5,7 +5,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "compression": "^1.7.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-minify": "^1.0.0",
     "google-spreadsheet": "^3.0.10",
     "less-middleware": "^3.1.0",
